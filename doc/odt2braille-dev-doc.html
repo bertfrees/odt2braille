@@ -1,0 +1,384 @@
+<html lang="en">
+<head>
+<title>odt2braille Developer's Guide - Draft</title>
+<meta http-equiv="Content-Type" content="text/html">
+<meta name="description" content="odt2braille Developer's Guide - Draft">
+<meta name="generator" content="makeinfo 4.7">
+<link title="Top" rel="top" href="#Top">
+<link href="http://www.gnu.org/software/texinfo/" rel="generator-home" title="Texinfo Homepage">
+<!--
+Copyright (C) 2010 by DocArch `http://www.docarch.be'.
+
+     This program is free software: you can redistribute it and/or
+     modify it under the terms of the GNU General Public License as
+     published by the Free Software Foundation, either version 3 of the
+     License, or (at your option) any later version.
+
+     This program is distributed in the hope that it will be useful,
+     but WITHOUT ANY WARRANTY; without even the implied warranty of
+     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+     General Public License for more details.
+
+     You should have received a copy of the GNU General Public License
+     along with this program.  If not, see
+     `http://www.gnu.org/licenses'.
+
+-->
+<meta http-equiv="Content-Style-Type" content="text/css">
+<style type="text/css"><!--
+  pre.display { font-family:inherit }
+  pre.format  { font-family:inherit }
+  pre.smalldisplay { font-family:inherit; font-size:smaller }
+  pre.smallformat  { font-family:inherit; font-size:smaller }
+  pre.smallexample { font-size:smaller }
+  pre.smalllisp    { font-size:smaller }
+  span.sc { font-variant:small-caps }
+  span.roman { font-family: serif; font-weight: normal; } 
+body {
+  margin:50px 0px; padding:0px;
+  text-align:center;
+  font:15px sans-serif;
+}
+	
+#Content {
+  width:700px;
+  margin:0px auto;
+  text-align:left;
+  padding:15px;
+  border:1px dashed #333;
+  background-color:#eee;
+}
+
+h1.settitle {
+
+  font:Myriad,Helvetica,Tahoma,Arial,clean,sans-serif; 
+  font-size:300%;
+
+}--></style>
+</head>
+<body>
+<h1 class="settitle">odt2braille Developer's Guide - Draft</h1>
+<div id="Content">
+
+   <div class="contents">
+<h2>Table of Contents</h2>
+<ul>
+<li><a name="toc_Top" href="#Top">Introduction</a>
+<li><a name="toc_Hacking" href="#Hacking">1 Hacking</a>
+<ul>
+<li><a href="#Hacking">System Requirements</a>
+<ul>
+<li><a href="#Hacking">OpenOffice.org</a>
+<li><a href="#Hacking">OpenOffice.org Software Development Kit</a>
+<li><a href="#Hacking">NetBeans</a>
+<li><a href="#Hacking">OpenOffice.org API Plugin for NetBeans</a>
+</li></ul>
+<li><a href="#Hacking">Odt2braille Source Code</a>
+<li><a href="#Hacking">Build</a>
+<li><a href="#Hacking">Documentation</a>
+<li><a href="#Hacking">Downloads</a>
+</li></ul>
+<li><a name="toc_Projects" href="#Projects">2 Projects</a>
+<ul>
+<li><a href="#Odt2BrailleAddOn">Odt2BrailleAddOn</a>
+<li><a href="#Odt2Braille">Odt2Braille</a>
+<li><a href="#DaisyPipeline">DaisyPipeline</a>
+</li></ul>
+<li><a name="toc_Liblouisxml" href="#Liblouisxml">3 Liblouisxml</a>
+<li><a name="toc_Feature-Requests" href="#Feature-Requests">4 Known Issues, Todo's, Feature Requests</a>
+</li></ul>
+</div>
+
+<p><a name="Top"></a>
+
+<h2 class="unnumbered">Introduction</h2>
+
+<p>Read the <a href="odt2braille-user-doc.html">user's guide</a> here.
+
+<p class="noindent">Copyright &copy; 2010 by DocArch <a href="http://www.docarch.be">http://www.docarch.be</a>.
+
+   <blockquote>
+
+        <p>This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+        <p>This program is distributed in the hope that it will be useful,
+but <span class="sc">without any warranty</span>; without even the implied warranty of
+<span class="sc">merchantability</span> or <span class="sc">fitness for a particular purpose</span>.  See the
+GNU General Public License for more details.
+
+        <p>You should have received a copy of the GNU General Public License
+along with this program.  If not, see <a href="http://www.gnu.org/licenses">http://www.gnu.org/licenses</a>.
+
+   </blockquote>
+
+<p><a name="Hacking"></a>
+
+<h2 class="chapter">1 Hacking</h2>
+
+<h3 class="unnumberedsec">System Requirements</h3>
+
+<p>In order to hack odt2braille, you need the following software:
+
+<h4 class="unnumberedsubsec">OpenOffice.org</h4>
+
+<p>The latest version of the <a href="http://download.openoffice.org/other.html">OpenOffice.org</a> office
+suite can be downloaded here.
+
+<h4 class="unnumberedsubsec">OpenOffice.org Software Development Kit</h4>
+
+<p>The OpenOffice.org SDK is an add-on for OpenOffice.org. It provides the necessary tools
+and documentation for programming the OpenOffice.org APIs and creating own extensions. 
+The latest version of
+<a href="http://download.openoffice.org/sdk/index.html">OpenOffice.org SDK</a> can be downloaded here. 
+Make sure you install OpenOffice.org first. 
+The version of OpenOffice.org SDK should be equal or lower than the version of OpenOffice.org.
+
+<h4 class="unnumberedsubsec">NetBeans</h4>
+
+<p>Odt2braille was developed in NetBeans, an integrated development environment. 
+The latest version of <a href="http://netbeans.org/downloads/">NetBeans</a> can be downloaded here. 
+Make sure the Java SE pack is included.
+
+<h4 class="unnumberedsubsec">OpenOffice.org API Plugin for NetBeans</h4>
+
+<p>To install the OOo API Plugin for NetBeans, launch NetBeans, go to [<em>Tools &gt; Plugins</em>],
+then select <em>OpenOffice.org API Plugin</em> in <em>Available Plugins</em> and click on <em>Install</em>. 
+Now relaunch NetBeans and
+configure the plugin in [<em>Tools &gt; Options &gt; Miscellaneous &gt; OOo API Plugin</em>]
+by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK folder.
+
+   <p>[@TODO] NetBeans with OpenOffice.org API plugin may be replaced by Eclipse with OOEclipse plugin.
+
+<h3 class="unnumberedsec">Odt2braille Source Code</h3>
+
+<p>[@TODO] The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
+     <ul>
+<li>Team - SVN - Checkout
+<li>... 
+</ul>
+
+   <p>The source code can also be downloaded without NetBeans:
+     <ul>
+<li><code>svn co https://odt2braille.svn.sourceforge.net/svnroot/odt2braille path/to/odt2braille/folder/</code>
+</ul>
+
+<h3 class="unnumberedsec">Build</h3>
+
+<p>Build projects with NetBeans:
+     <ul>
+<li>Open "Projects" window, than right click a project and choose menu item "Build". 
+</ul>
+
+   <p>Build projects with Apache ANT:
+     <ul>
+<li><code>cd</code> to project directory
+<li><code>ant</code>
+</ul>
+
+   <p>Build .oxt with NetBeans:
+     <ul>
+<li>Open "Projects" window, than right click "Odt2BrailleAddOn" and choose menu item "Create OXT" or "Deploy and Run Extension in OpenOffice.org". 
+<li>.oxt in Odt2BrailleAddOn/dist
+</ul>
+
+   <p>Build .oxt with Apache ANT:
+     <ul>
+<li><code>cd</code> to Odt2BrailleAddOn directory
+<li><code>ant uno-package</code>
+<li>.oxt in Odt2BrailleAddOn/dist
+</ul>
+
+<h3 class="unnumberedsec">Documentation</h3>
+
+<p>Texinfo:
+     <ul>
+<li><code>cd</code> to Odt2BrailleAddOn/doc
+<li><code>
+texi2dvi --pdf<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+odt2braille-user-doc.texi</code>
+<li><code>
+makeinfo --html<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--no-split]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--no-headers]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--css-include=body.css]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+--output=odt2braille-user-doc.html<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+odt2braille-user-doc.texi</code>
+<li><code>
+makeinfo --html<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--no-split]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--no-headers]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[--css-include=body.css]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+--output=odt2braille-dev-doc.html<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+odt2braille-dev-doc.texi
+</code>
+</ul>
+
+   <p>Javadoc:
+
+     <ul>
+<li><code>cd</code> to directory containing all projects
+<li><code>
+javadoc [-private]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[-author]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[-version]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+[-breakiterator]<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+-d Odt2BrailleAddOn\doc\javadoc<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+-subpackages be.docarch:org_pef_text<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->
+-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
+</code>
+</ul>
+
+<h3 class="unnumberedsec">Downloads</h3>
+
+     <ul>
+<li>Apache Subversion: http://subversion.apache.org/
+<li>Apache Ant (1.7.1 or higher): http://ant.apache.org/
+<li>Javadoc: http://java.sun.com/j2se/javadoc/downloads/index.html#findjavadoc
+<li>Texinfo: http://www.gnu.org/software/texinfo/
+</ul>
+
+<p><a name="Projects"></a>
+
+<h2 class="chapter">2 Projects</h2>
+
+<p>This is an overview of the projects that are created in NetBeans after odt2braille has been succesfully checked out.
+
+<p><a name="Odt2BrailleAddOn"></a>
+
+<h3 class="unnumberedsec">Odt2BrailleAddOn</h3>
+
+<p>Odt2BrailleAddOn is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API. 
+It takes care of the graphical user interface (menu's, dialogs, progress bars, etc.) and
+allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document. 
+For the actual document processing, Odt2BrailleAddOn relies on the Odt2Braille library.
+
+   <p>Packages in Odt2BrailleAddOn:
+
+   <p><code><a href="javadoc/be/docarch/odt2braille/addon/package-summary.html">be.docarch.odt2braille.addon</a></code>
+
+<p><a name="Odt2Braille"></a>
+
+<h3 class="unnumberedsec">Odt2Braille</h3>
+
+<p>The Odt2Braille library takes care of the actual document processing. It enables the conversion of a
+flat xml odt file to a <a href="http://www.daisy.org/projects/braille/braille_workarea/pef.html">pef</a>
+(Portable Embosser Format) file. Furthermore, this pef file can be converted to a variety of other
+generic braille formats, or it can be converted to an embosser-specific braille file
+(and optionally sent to an embosser device). 
+The braille transcription is powered by liblouisxml, and for the pef processing, Odt2Braille uses
+the DaisyPipeline library. The Java OpenDocument Library (JODL) is used for creating and cleaning
+the flat .odt file (see <a href="http://odt2daisy.sourceforge.net/downloads/">http://odt2daisy.sourceforge.net/downloads/</a>).
+
+   <p>Packages in Odt2Braille:
+
+   <p><code><a href="javadoc/be/docarch/odt2braille/package-summary.html">be.docarch.odt2braille</a></code>
+
+<p><a name="DaisyPipeline"></a>
+
+<h3 class="unnumberedsec">DaisyPipeline</h3>
+
+<p>The DaisyPipeline project contains the <code>org_pef_text</code> and <code>org_pef_text.pef2text</code> packages. 
+These packages have been adopted from the <a href="http://www.daisy.org/project/pipeline">DAISY Pipeline</a> and
+have been slightly modified. 
+Their purpose is to convert a PEF 2008-1 document into a plain text braille file (see also the
+<code><a href="http://data.daisy.org/projects/pipeline/doc/transformers/org_pef_pef2text.html">pef2text</a></code> documentation).
+
+   <p>Packages in DaisyPipeline:
+
+   <p><code><a href="javadoc/org_pef_text/package-tree.html">org_pef_text</a></code> and
+<code><a href="javadoc/org_pef_text/pef2text/package-tree.html">org_pef_text.pef2text</a></code>
+
+<p><a name="Liblouisxml"></a>
+
+<h2 class="chapter">3 Liblouisxml</h2>
+
+<p><a href="http://liblouisxml.googlecode.com">Liblouisxml</a> is the heart of the braille transcription. 
+It is an open-source library intended to provide complete Braille transcription services for XML documents. 
+Liblouisxml is built on top of <a href="http://liblouis.googlecode.com">liblouis</a>, its translation engine. 
+The translation is driven through text based translation tables which define the translation rules. 
+The formatting of braille is defined in semantic mappings that define how a specific XML input tag is
+to be rendered in the Braille output. Liblouisxml is embedded in odt2braille as an executable. 
+It can be found in the Odt2BrailleAddOn project under <code>liblouis/bin</code>. 
+The translation tables and configuration files are kept under <code>liblouis/share</code>.
+
+   <p>For more information read the
+<code><a href="http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html">liblouisxml</a></code> and
+<code><a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html">libouis</a></code> manuals.
+
+<p><a name="Feature-Requests"></a>
+
+<h2 class="chapter">4 Known Issues, Todo's, Feature Requests</h2>
+
+     <ul>
+<li>More flexibility by providing more settings! 
+Create a new tab in the settings dialog for each category of settings. 
+Each language should have its own default settings. 
+E.g.:
+
+          <ul>
+<li>Left margin, first line indent, lines before, lines after, ... 
+for headings, paragraphs, lists, listitems, tables, footnotes, endnotes, TNs, ... 
+<li>Border lines of tables &amp; textboxes. 
+<li>Headings on new page. 
+<li>Braille page numbers: top or bottom. 
+<li>Print page numbers: top or bottom. 
+<li>Braille &amp; print page numbers on same line. 
+<li>Page numbers on seperate line. 
+<li>Disable page change indicator. 
+<li>Disable page number to the right of page change indicator. 
+<li>Print page number RANGE instead of single print page number. 
+<li>Volume info and transcription info. 
+<li>Continued suffix. 
+<li>Special symbols to be included in the special symbols list. 
+<li>Special symbols descriptions. 
+<li>Braille page number format for preliminary pages (e.g. p1,p2, ... or i,ii,iii,iv,... or ?) 
+<li>... 
+</ul>
+
+     <li>Tooltips in dialogs. 
+<li>Focus management in dialogs. 
+<li>Complete documentation. 
+<li>Documentation in Braille. 
+<li>Localization. 
+<li>Support more embossers. 
+<li>Only Interpoint55 is tested. 
+<li>Keyboard shortcut for braille menu. 
+<li>Replace DOM processing with XSL transformation where this is possible. 
+This will result in better performance. 
+<li>8 dot braille. 
+<li>When the document is saved as PEF at an existing file location, the file is not overwritten. 
+<li>Tactile graphics. 
+<li>Detect which ranges of unicode characters are used in the document and include the appropriate liblouis-tables. 
+<li>If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding. 
+<li>The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog). 
+<li>OpenOffice.org accessibility for screen readers? 
+<li>'SimBraille' font included in OpenOffice.org distribution? 
+<li>OCR plugin for OpenOffice.org? 
+<li>Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail). 
+<li>Custom paper size. 
+<li>General settings: select DEFAULT Braille specifications (BANA, UEB, ...) or CUSTOM
+<li>Localization of braille menu. 
+<li>Checking of volume lengths: should be dependent on the recto/recto-verso setting. 
+<li>When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified. 
+<li>UTD: could be used to make a preview of the braille document with print text added for readability/understandability. 
+<li>Some liblouisxml bugs (pagination, table of contents, special typeface, ...) 
+<li>Auto-update link in Extension Manager (Rss feed)
+<li>Replace the option to specify braille symbols for bulleted listitem of level 1 to 4
+with a new option to specify the braille representation of each different unicode bullet symbol that is used somewhere in a list in the document. 
+For this purpose, in insertListNumbering(), also insert &lt;bullet value="..." braille="&amp;#x28??;"&gt; tags besides &lt;num value="..."&gt; tags. 
+<li>Multiple paragraphs (&lt;text:p&gt; or &lt;text:h&gt;) in a list item (&lt;text:list-item&gt;) =&gt; insert linebreaks between them. 
+<li>odt2braille website. 
+<li>Presentations &amp; spreadsheets. 
+<li>Commandline tool (Odt2Braille.jar). 
+<li>Hyphenation
+<li>Mac OS, Linux, ... 
+<li>... 
+</ul>
+
+   <p></div>
+
+</body></html>
+

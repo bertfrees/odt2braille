@@ -1,0 +1,28 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 10000..1007F  Linear B Syllabary
+# Unicode 10080..100FF  Linear B Ideograms
+# Unicode 10100..1013F  Aegean Numbers
+# Unicode 10300..1032F  Old Italic
+# Unicode 10330..1034F  Gothic
+# Unicode 10380..1039F  Ugaritic
+# Unicode 10400..1044F  Deseret
+# Unicode 10450..1047F  Shavian
+# Unicode 10480..104AF  Osmanya
+# Unicode 10800..1083F  Cypriot Syllabary
+# Unicode 1D000..1D0FF  Byzantine Musical Symbols
+# Unicode 1D100..1D1FF  Musical Symbols
+# Unicode 1D300..1D35F  Tai Xuan Jing Symbols
+# Unicode 1D400..1D7FF  Mathematical Alphanumeric Symbols
+# Unicode 20000..2A6DF  CJK Unified Ideographs Extension B
+# Unicode 2F800..2FA1F  CJK Compatibility Ideographs Supplement
+# Unicode E0000..E007F  Tags
+# Unicode E0100..E01EF  Variation Selectors Supplement
+# Unicode F0000..FFFFF  Supplementary Private Use Area-A
+# Unicode 100000..10FFFD  Supplementary Private Use Area-B
+# ----------------------------------------------------------------------------------------------

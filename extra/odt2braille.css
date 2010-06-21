@@ -1,0 +1,49 @@
+pef {
+}
+
+head {
+  display: none;
+}
+
+volume {
+  float:left;
+  display:block;
+  padding:20px;
+  clear:both;
+}
+
+section {
+  float:left;
+  clear:both;
+  display:block;
+  width:auto;
+}
+
+page:nth-child(n+1){
+  clear:both;
+  border-color:black;
+  border-width:1px;
+  border-style:solid;
+  float:left;
+  display:block;
+  background-color:#E0E0E0;
+  width:auto;
+  font-family:"Monaco", monospace;
+}
+page:nth-child(n){
+  clear:both;
+  border-color:black;
+  border-width:1px;
+  border-style:solid;
+  float:left;
+  display:block;
+  width:auto;
+  font-family:"Monaco", monospace;
+}
+row{
+  clear:both;
+  display: block;
+  font-size: 16px;
+  height:20px;
+}
+

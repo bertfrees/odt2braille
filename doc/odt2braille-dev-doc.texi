@@ -1,0 +1,382 @@
+\input texinfo
+@setfilename odt2braille-dev-doc.info
+@include version.texi
+@settitle odt2braille Developer's Guide - Draft
+@finalout
+
+@defindex class
+
+@include copying.texi
+
+@titlepage
+@title odt2braille Developer's Guide - Draft
+@subtitle for version @value{VERSION}, @value{UPDATED}
+@author by Bert Frees
+@page
+@vskip 0pt plus 1filll
+@insertcopying
+@end titlepage
+
+@html
+<div id="Content">
+@end html
+
+@contents
+
+@node Top
+@top Introduction
+
+Read the @url{odt2braille-user-doc.html, user's guide} here.
+
+@ifnottex
+@insertcopying
+@end ifnottex
+
+@menu
+* Hacking::
+* Projects::
+* Liblouisxml::
+* Feature Requests::
+@end menu
+
+@node Hacking
+@chapter Hacking
+
+@unnumberedsec System Requirements
+
+In order to hack odt2braille, you need the following software:
+
+@unnumberedsubsec OpenOffice.org
+
+The latest version of the @url{http://download.openoffice.org/other.html, OpenOffice.org} office
+suite can be downloaded here.
+
+@unnumberedsubsec OpenOffice.org Software Development Kit
+
+The OpenOffice.org SDK is an add-on for OpenOffice.org. It provides the necessary tools 
+and documentation for programming the OpenOffice.org APIs and creating own extensions.
+The latest version of
+@url{http://download.openoffice.org/sdk/index.html, OpenOffice.org SDK} can be downloaded here.
+Make sure you install OpenOffice.org first.
+The version of OpenOffice.org SDK should be equal or lower than the version of OpenOffice.org.
+
+@unnumberedsubsec NetBeans
+
+Odt2braille was developed in NetBeans, an integrated development environment.
+The latest version of @url{http://netbeans.org/downloads/, NetBeans} can be downloaded here.
+Make sure the Java SE pack is included.
+
+@unnumberedsubsec OpenOffice.org API Plugin for NetBeans
+
+To install the OOo API Plugin for NetBeans, launch NetBeans, go to [@emph{Tools > Plugins}], 
+then select @emph{OpenOffice.org API Plugin} in @emph{Available Plugins} and click on @emph{Install}.
+Now relaunch NetBeans and
+configure the plugin in [@emph{Tools > Options > Miscellaneous > OOo API Plugin}]
+by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK folder.
+
+[@@TODO] NetBeans with OpenOffice.org API plugin may be replaced by Eclipse with OOEclipse plugin.
+
+@unnumberedsec Odt2braille Source Code
+
+[@@TODO] The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
+@itemize @minus
+@item
+Team - SVN - Checkout
+@item
+...
+@end itemize
+
+The source code can also be downloaded without NetBeans:
+@itemize @minus
+@item
+@code{svn co https://odt2braille.svn.sourceforge.net/svnroot/odt2braille path/to/odt2braille/folder/}
+@end itemize
+
+@unnumberedsec Build
+
+Build projects with NetBeans:
+@itemize @minus
+@item
+Open "Projects" window, than right click a project and choose menu item "Build".
+@end itemize
+
+Build projects with Apache ANT:
+@itemize @minus
+@item
+@code{cd} to project directory
+@item
+@code{ant}
+@end itemize
+
+Build .oxt with NetBeans:
+@itemize @minus
+@item
+Open "Projects" window, than right click "Odt2BrailleAddOn" and choose menu item "Create OXT" or "Deploy and Run Extension in OpenOffice.org".
+@item
+.oxt in Odt2BrailleAddOn/dist
+@end itemize
+
+Build .oxt with Apache ANT:
+@itemize @minus
+@item
+@code{cd} to Odt2BrailleAddOn directory
+@item
+@code{ant uno-package}
+@item
+.oxt in Odt2BrailleAddOn/dist
+@end itemize
+
+@unnumberedsec Documentation
+
+Texinfo:
+@itemize @minus
+@item
+@code{cd} to Odt2BrailleAddOn/doc
+@item
+@code{
+texi2dvi --pdf@*@w{        }
+odt2braille-user-doc.texi}
+@item
+@code{
+makeinfo --html@*@w{       }
+[--no-split]@*@w{       }
+[--no-headers]@*@w{       }
+[--css-include=body.css]@*@w{        }
+--output=odt2braille-user-doc.html@*@w{        }
+odt2braille-user-doc.texi}
+@item
+@code{
+makeinfo --html@*@w{       }
+[--no-split]@*@w{       }
+[--no-headers]@*@w{       }
+[--css-include=body.css]@*@w{        }
+--output=odt2braille-dev-doc.html@*@w{        }
+odt2braille-dev-doc.texi
+}
+@end itemize	
+			
+Javadoc:
+
+@itemize @minus
+@item
+@code{cd} to directory containing all projects
+@item
+@code{
+javadoc [-private]@*@w{       }
+[-author]@*@w{       }
+[-version]@*@w{       }
+[-breakiterator]@*@w{        }
+-d Odt2BrailleAddOn\doc\javadoc@*@w{        }
+-subpackages be.docarch:org_pef_text@*@w{        }
+-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
+}
+@end itemize
+
+@unnumberedsec Downloads
+
+@itemize @minus
+@item
+Apache Subversion: http://subversion.apache.org/
+@item
+Apache Ant (1.7.1 or higher): http://ant.apache.org/
+@item
+Javadoc: http://java.sun.com/j2se/javadoc/downloads/index.html#findjavadoc
+@item
+Texinfo: http://www.gnu.org/software/texinfo/
+@end itemize
+
+@node Projects
+@chapter Projects
+
+This is an overview of the projects that are created in NetBeans after odt2braille has been succesfully checked out.
+
+@menu
+* Odt2BrailleAddOn::
+* Odt2Braille::
+* DaisyPipeline::
+@end menu
+
+@node Odt2BrailleAddOn
+@unnumberedsec Odt2BrailleAddOn
+
+Odt2BrailleAddOn is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API.
+It takes care of the graphical user interface (menu's, dialogs, progress bars, etc.) and
+allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document.
+For the actual document processing, Odt2BrailleAddOn relies on the Odt2Braille library.
+
+Packages in Odt2BrailleAddOn:
+
+@code{@url{javadoc/be/docarch/odt2braille/addon/package-summary.html, be.docarch.odt2braille.addon}}
+
+@node Odt2Braille
+@unnumberedsec Odt2Braille
+
+The Odt2Braille library takes care of the actual document processing. It enables the conversion of a 
+flat xml odt file to a @url{http://www.daisy.org/projects/braille/braille_workarea/pef.html, pef}
+(Portable Embosser Format) file. Furthermore, this pef file can be converted to a variety of other
+generic braille formats, or it can be converted to an embosser-specific braille file
+(and optionally sent to an embosser device).
+The braille transcription is powered by liblouisxml, and for the pef processing, Odt2Braille uses
+the DaisyPipeline library. The Java OpenDocument Library (JODL) is used for creating and cleaning 
+the flat .odt file (see @url{http://odt2daisy.sourceforge.net/downloads/}).
+
+Packages in Odt2Braille:
+
+@code{@url{javadoc/be/docarch/odt2braille/package-summary.html, be.docarch.odt2braille}}
+
+@node DaisyPipeline
+@unnumberedsec DaisyPipeline
+
+The DaisyPipeline project contains the @code{org_pef_text} and @code{org_pef_text.pef2text} packages. 
+These packages have been adopted from the @url{http://www.daisy.org/project/pipeline,DAISY Pipeline} and 
+have been slightly modified. 
+Their purpose is to convert a PEF 2008-1 document into a plain text braille file (see also the 
+@code{@url{http://data.daisy.org/projects/pipeline/doc/transformers/org_pef_pef2text.html, pef2text}} documentation).
+
+Packages in DaisyPipeline:
+
+@code{@url{javadoc/org_pef_text/package-tree.html, org_pef_text}} and
+@code{@url{javadoc/org_pef_text/pef2text/package-tree.html, org_pef_text.pef2text}}
+
+@node Liblouisxml
+@chapter Liblouisxml
+
+@url{http://liblouisxml.googlecode.com, Liblouisxml} is the heart of the braille transcription. 
+It is an open-source library intended to provide complete Braille transcription services for XML documents.
+Liblouisxml is built on top of @url{http://liblouis.googlecode.com, liblouis}, its translation engine.
+The translation is driven through text based translation tables which define the translation rules.
+The formatting of braille is defined in semantic mappings that define how a specific XML input tag is
+to be rendered in the Braille output. Liblouisxml is embedded in odt2braille as an executable.
+It can be found in the Odt2BrailleAddOn project under @code{liblouis/bin}.
+The translation tables and configuration files are kept under @code{liblouis/share}.
+
+For more information read the
+@code{@url{http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html, liblouisxml}} and
+@code{@url{http://liblouis.googlecode.com/svn/documentation/liblouis.html, libouis}} manuals.
+
+@node Feature Requests
+@chapter Known Issues, Todo's, Feature Requests
+
+@itemize @bullet
+@item
+More flexibility by providing more settings!
+Create a new tab in the settings dialog for each category of settings.
+Each language should have its own default settings.
+E.g.:
+
+@itemize @minus
+@item
+Left margin, first line indent, lines before, lines after, ...
+for headings, paragraphs, lists, listitems, tables, footnotes, endnotes, TNs, ...
+@item
+Border lines of tables & textboxes.
+@item
+Headings on new page.
+@item
+Braille page numbers: top or bottom.
+@item
+Print page numbers: top or bottom.
+@item
+Braille & print page numbers on same line.
+@item
+Page numbers on seperate line.
+@item
+Disable page change indicator.
+@item
+Disable page number to the right of page change indicator.
+@item
+Print page number RANGE instead of single print page number.
+@item
+Volume info and transcription info.
+@item
+Continued suffix.
+@item
+Special symbols to be included in the special symbols list.
+@item
+Special symbols descriptions.
+@item
+Braille page number format for preliminary pages (e.g. p1,p2, ... or i,ii,iii,iv,... or ?)
+@item
+...
+@end itemize
+
+@item
+Tooltips in dialogs.
+@item
+Focus management in dialogs.
+@item
+Complete documentation.
+@item
+Documentation in Braille.
+@item
+Localization.
+@item
+Support more embossers.
+@item
+Only Interpoint55 is tested.
+@item
+Keyboard shortcut for braille menu.
+@item
+Replace DOM processing with XSL transformation where this is possible.
+This will result in better performance.
+@item
+8 dot braille.
+@item
+When the document is saved as PEF at an existing file location, the file is not overwritten.
+@item
+Tactile graphics.
+@item
+Detect which ranges of unicode characters are used in the document and include the appropriate liblouis-tables.
+@item
+If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
+@item
+The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog).
+@item
+OpenOffice.org accessibility for screen readers?
+@item
+'SimBraille' font included in OpenOffice.org distribution?
+@item
+OCR plugin for OpenOffice.org?
+@item
+Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).
+@item
+Custom paper size.
+@item
+General settings: select DEFAULT Braille specifications (BANA, UEB, ...) or CUSTOM
+@item
+Localization of braille menu.
+@item
+Checking of volume lengths: should be dependent on the recto/recto-verso setting.
+@item
+When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
+@item
+UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
+@item
+Some liblouisxml bugs (pagination, table of contents, special typeface, ...)
+@item
+Auto-update link in Extension Manager (Rss feed)
+@item
+Replace the option to specify braille symbols for bulleted listitem of level 1 to 4
+with a new option to specify the braille representation of each different unicode bullet symbol that is used somewhere in a list in the document.
+For this purpose, in insertListNumbering(), also insert <bullet value="..." braille="&#x28??;"> tags besides <num value="..."> tags.
+@item
+Multiple paragraphs (<text:p> or <text:h>) in a list item (<text:list-item>) => insert linebreaks between them.
+@item
+odt2braille website.
+@item
+Presentations & spreadsheets.
+@item
+Commandline tool (Odt2Braille.jar).
+@item
+Hyphenation
+@item
+Mac OS, Linux, ...
+@item
+...
+@end itemize
+
+@html
+</div>
+@end html
+
+@bye

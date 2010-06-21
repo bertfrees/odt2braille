@@ -1,0 +1,29 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+include _edit.cti
+
+
+math \x0001 56
+math \x0002 45
+math \x0003 56
+math \x0004 45
+repeated \s 0
+always \ee\s`4 6-256
+always \ee\s`1 6
+always \ee\s`3 6-25
+always \ee\s`2 6-23
+always `7\s\eb 12356
+always \ee\s`7 23456
+always "\s 0
+always \s,\s 6-0
+# context "\eb"[]$l"\ee" @56
+# context "\eb"[]","$l"\ee" @56
+
+pass2 @1b-12 ?
+pass2 @1b-15 ?
+pass2 @1b-12-4-4 @4
+
+# ----------------------------------------------------------------------------------------------

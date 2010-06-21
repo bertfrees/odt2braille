@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8'?>
+
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
+  <node oor:name="AddonUI">
+    <node oor:name="OfficeMenuBar">
+      <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon" oor:op="replace">
+          <prop oor:name="Title" oor:type="xs:string">
+            <value/>
+            <value xml:lang="en">Braille</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value/>
+          </prop>
+          <node oor:name="Submenu">
+              <node oor:name="M1" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>be.docarch.odt2braille.addon.odt2brailleaddon:Command0</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value/>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.text.TextDocument</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value xml:lang="en">~Settings</value>
+                  <value xml:lang="nl">~Instellingen</value>
+                </prop>
+              </node>
+              <node oor:name="M2" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>be.docarch.odt2braille.addon.odt2brailleaddon:Command1</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value/>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.text.TextDocument</value>
+		</prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value xml:lang="en">~Export</value>
+                  <value xml:lang="nl">~Exporteer</value>
+                </prop>
+              </node>
+              <node oor:name="M3" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>be.docarch.odt2braille.addon.odt2brailleaddon:Command2</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value/>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.text.TextDocument</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value xml:lang="nl">~Druk Af</value>
+                  <value xml:lang="en">~Emboss</value>
+                </prop>
+              </node>
+              <node oor:name="M4" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value/>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value/>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.text.TextDocument</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value xml:lang="nl">~Voer In</value>
+                  <value xml:lang="en">~Insert</value>
+                </prop>
+                <node oor:name="Submenu">
+                  <node oor:name="M5" oor:op="replace">
+                    <prop oor:name="URL" oor:type="xs:string">
+                      <value>be.docarch.odt2braille.addon.odt2brailleaddon:Command3</value>
+                    </prop>
+                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                      <value/>
+                    </prop>
+                    <prop oor:name="Target" oor:type="xs:string">
+                      <value>_self</value>
+                    </prop>
+                    <prop oor:name="Context" oor:type="xs:string">
+                      <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <prop oor:name="Title" oor:type="xs:string">
+                      <value xml:lang="en">~Dot Pattern Entry Mode</value>
+                    </prop>
+                  </node>
+                  <node oor:name="M6" oor:op="replace">
+                    <prop oor:name="URL" oor:type="xs:string">
+                      <value>be.docarch.odt2braille.addon.odt2brailleaddon:Command4</value>
+                    </prop>
+                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                      <value/>
+                    </prop>
+                    <prop oor:name="Target" oor:type="xs:string">
+                      <value>_self</value>
+                    </prop>
+                    <prop oor:name="Context" oor:type="xs:string">
+                      <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <prop oor:name="Title" oor:type="xs:string">
+                      <value xml:lang="en">~6 Key Entry Mode</value>
+                    </prop>
+                  </node>
+                </node>
+              </node>
+        </node>
+      </node>
+    </node>
+  </node>
+</oor:component-data>

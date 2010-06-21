@@ -1,0 +1,456 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0100..017F  Latin Extended-A
+# ----------------------------------------------------------------------------------------------
+
+uplow       \x0100\x0101  4-1,4-1             Āā                  LATIN CAPITAL LETTER A WITH MACRON - LATIN SMALL LETTER A WITH MACRON
+#           \x0101                            ā                   LATIN SMALL LETTER A WITH MACRON
+uplow       \x0102\x0103  4-1,4-1             Ăă                  LATIN CAPITAL LETTER A WITH BREVE - LATIN SMALL LETTER A WITH BREVE
+#           \x0103                            ă                   LATIN SMALL LETTER A WITH BREVE
+uplow       \x0104\x0105  4-1,4-1             Ąą                  LATIN CAPITAL LETTER A WITH OGONEK - LATIN SMALL LETTER A WITH OGONEK
+#           \x0105                            ą                   LATIN SMALL LETTER A WITH OGONEK
+uplow       \x0106\x0107  4-14,4-14           Ćć                  LATIN CAPITAL LETTER C WITH ACUTE - LATIN SMALL LETTER C WITH ACUTE
+#           \x0107                            ć                   LATIN SMALL LETTER C WITH ACUTE
+uplow       \x0108\x0109  4-14,4-14           Ĉĉ                  LATIN CAPITAL LETTER C WITH CIRCUMFLEX - LATIN SMALL LETTER C WITH CIRCUMFLEX
+#           \x0109                            ĉ                   LATIN SMALL LETTER C WITH CIRCUMFLEX
+uplow       \x010A\x010A  4-14,4-14           ĊĊ                  LATIN CAPITAL LETTER C WITH DOT ABOVE - LATIN CAPITAL LETTER C WITH DOT ABOVE
+#           \x010B                            ċ                   LATIN SMALL LETTER C WITH DOT ABOVE
+uplow       \x010C\x010C  4-14,4-14           ČČ                  LATIN CAPITAL LETTER C WITH CARON - LATIN CAPITAL LETTER C WITH CARON
+#           \x010D                            č                   LATIN SMALL LETTER C WITH CARON
+uplow       \x010E\x010F  4-145,4-145         Ďď                  LATIN CAPITAL LETTER D WITH CARON - LATIN SMALL LETTER D WITH CARON
+#           \x010F                            ď                   LATIN SMALL LETTER D WITH CARON
+uplow       \x0110\x0111  4-145,4-145         Đđ                  LATIN CAPITAL LETTER D WITH STROKE - LATIN SMALL LETTER D WITH STROKE
+#           \x0111                            đ                   LATIN SMALL LETTER D WITH STROKE
+uplow       \x0112\x0113  4-15,4-15           Ēē                  LATIN CAPITAL LETTER E WITH MACRON - LATIN SMALL LETTER E WITH MACRON
+#           \x0113                            ē                   LATIN SMALL LETTER E WITH MACRON
+uplow       \x0114\x0115  4-15,4-15           Ĕĕ                  LATIN CAPITAL LETTER E WITH BREVE - LATIN SMALL LETTER E WITH BREVE
+#           \x0115                            ĕ                   LATIN SMALL LETTER E WITH BREVE
+uplow       \x0116\x0117  4-15,4-15           Ėė                  LATIN CAPITAL LETTER E WITH DOT ABOVE - LATIN SMALL LETTER E WITH DOT ABOVE
+#           \x0117                            ė                   LATIN SMALL LETTER E WITH DOT ABOVE
+uplow       \x0118\x0119  4-15,4-15           Ęę                  LATIN CAPITAL LETTER E WITH OGONEK - LATIN SMALL LETTER E WITH OGONEK
+#           \x0119                            ę                   LATIN SMALL LETTER E WITH OGONEK
+uplow       \x011A\x011B  4-15,4-15           Ěě                  LATIN CAPITAL LETTER E WITH CARON - LATIN SMALL LETTER E WITH CARON
+#           \x011B                            ě                   LATIN SMALL LETTER E WITH CARON
+uplow       \x011C\x011D  4-1245,4-1245       Ĝĝ                  LATIN CAPITAL LETTER G WITH CIRCUMFLEX - LATIN SMALL LETTER G WITH CIRCUMFLEX
+#           \x011D                            ĝ                   LATIN SMALL LETTER G WITH CIRCUMFLEX
+uplow       \x011E\x011F  4-1245,4-1245       Ğğ                  LATIN CAPITAL LETTER G WITH BREVE - LATIN SMALL LETTER G WITH BREVE
+#           \x011F                            ğ                   LATIN SMALL LETTER G WITH BREVE
+uplow       \x0120\x0121  4-1245,4-1245       Ġġ                  LATIN CAPITAL LETTER G WITH DOT ABOVE - LATIN SMALL LETTER G WITH DOT ABOVE
+#           \x0121                            ġ                   LATIN SMALL LETTER G WITH DOT ABOVE
+uplow       \x0122\x0123  4-1245,4-1245       Ģģ                  LATIN CAPITAL LETTER G WITH CEDILLA - LATIN SMALL LETTER G WITH CEDILLA
+#           \x0123                            ģ                   LATIN SMALL LETTER G WITH CEDILLA
+uplow       \x0124\x0125  4-125,4-125         Ĥĥ                  LATIN CAPITAL LETTER H WITH CIRCUMFLEX - LATIN SMALL LETTER H WITH CIRCUMFLEX
+#           \x0125                            ĥ                   LATIN SMALL LETTER H WITH CIRCUMFLEX
+uplow       \x0126\x0127  4-125,4-125         Ħħ                  LATIN CAPITAL LETTER H WITH STROKE - LATIN SMALL LETTER H WITH STROKE
+#           \x0127                            ħ                   LATIN SMALL LETTER H WITH STROKE
+uplow       \x0128\x0129  4-24,4-24           Ĩĩ                  LATIN CAPITAL LETTER I WITH TILDE - LATIN SMALL LETTER I WITH TILDE
+#           \x0129                            ĩ                   LATIN SMALL LETTER I WITH TILDE
+uplow       \x012A\x012B  4-24,4-24           Īī                  LATIN CAPITAL LETTER I WITH MACRON - LATIN SMALL LETTER I WITH MACRON
+#           \x012B                            ī                   LATIN SMALL LETTER I WITH MACRON
+uplow       \x012C\x012D  4-24,4-24           Ĭĭ                  LATIN CAPITAL LETTER I WITH BREVE - LATIN SMALL LETTER I WITH BREVE
+#           \x012D                            ĭ                   LATIN SMALL LETTER I WITH BREVE
+uplow       \x012E\x012F  4-24,4-24           Įį                  LATIN CAPITAL LETTER I WITH OGONEK - LATIN SMALL LETTER I WITH OGONEK
+#           \x012F                            į                   LATIN SMALL LETTER I WITH OGONEK
+uplow       \x0130\x0131  4-24,4-24           İı                  LATIN CAPITAL LETTER I WITH DOT ABOVE - LATIN SMALL LETTER DOTLESS I
+#           \x0131                            ı                   LATIN SMALL LETTER DOTLESS I
+uplow       \x0132\x0133  4-24,4-24           Ĳĳ                  LATIN CAPITAL LIGATURE IJ - LATIN SMALL LIGATURE IJ
+#           \x0133                            ĳ                   LATIN SMALL LIGATURE IJ
+uplow       \x0134\x0135  4-245,4-245         Ĵĵ                  LATIN CAPITAL LETTER J WITH CIRCUMFLEX - LATIN SMALL LETTER J WITH CIRCUMFLEX
+#           \x0135                            ĵ                   LATIN SMALL LETTER J WITH CIRCUMFLEX
+uplow       \x0136\x0137  4-13,4-13           Ķķ                  LATIN CAPITAL LETTER K WITH CEDILLA - LATIN SMALL LETTER K WITH CEDILLA
+#           \x0137                            ķ                   LATIN SMALL LETTER K WITH CEDILLA
+lowercase   \x0138        4-13                ĸ                   LATIN SMALL LETTER KRA
+uplow       \x0139\x013A  4-123,4-123         Ĺĺ                  LATIN CAPITAL LETTER L WITH ACUTE - LATIN SMALL LETTER L WITH ACUTE
+#           \x013A                            ĺ                   LATIN SMALL LETTER L WITH ACUTE
+uplow       \x013B\x013C  4-123,4-123         Ļļ                  LATIN CAPITAL LETTER L WITH CEDILLA - LATIN SMALL LETTER L WITH CEDILLA
+#           \x013C                            ļ                   LATIN SMALL LETTER L WITH CEDILLA
+uplow       \x013D\x013E  4-123,4-123         Ľľ                  LATIN CAPITAL LETTER L WITH CARON - LATIN SMALL LETTER L WITH CARON
+#           \x013E                            ľ                   LATIN SMALL LETTER L WITH CARON
+uplow       \x013F\x0140  4-123,4-123         Ŀŀ                  LATIN CAPITAL LETTER L WITH MIDDLE DOT - LATIN SMALL LETTER L WITH MIDDLE DOT
+#           \x0140                            ŀ                   LATIN SMALL LETTER L WITH MIDDLE DOT
+uplow       \x0141\x0142  4-123,4-123         Łł                  LATIN CAPITAL LETTER L WITH STROKE - LATIN SMALL LETTER L WITH STROKE
+#           \x0142                            ł                   LATIN SMALL LETTER L WITH STROKE
+uplow       \x0143\x0144  4-1345,4-1345       Ńń                  LATIN CAPITAL LETTER N WITH ACUTE - LATIN SMALL LETTER N WITH ACUTE
+#           \x0144                            ń                   LATIN SMALL LETTER N WITH ACUTE
+uplow       \x0145\x0146  4-1345,4-1345       Ņņ                  LATIN CAPITAL LETTER N WITH CEDILLA - LATIN SMALL LETTER N WITH CEDILLA
+#           \x0146                            ņ                   LATIN SMALL LETTER N WITH CEDILLA
+uplow       \x0147\x0148  4-1345,4-1345       Ňň                  LATIN CAPITAL LETTER N WITH CARON - LATIN SMALL LETTER N WITH CARON
+#           \x0148                            ň                   LATIN SMALL LETTER N WITH CARON
+lowercase   \x0149        4-1345              ŉ                   LATIN SMALL LETTER N PRECEDED BY APOSTROPHE
+uplow       \x014A\x014B  4-1345,4-1345       Ŋŋ                  LATIN CAPITAL LETTER ENG - LATIN SMALL LETTER ENG
+#           \x014B                            ŋ                   LATIN SMALL LETTER ENG
+uplow       \x014C\x014D  4-135,4-135         Ōō                  LATIN CAPITAL LETTER O WITH MACRON - LATIN SMALL LETTER O WITH MACRON
+#           \x014D                            ō                   LATIN SMALL LETTER O WITH MACRON
+uplow       \x014E\x014F  4-135,4-135         Ŏŏ                  LATIN CAPITAL LETTER O WITH BREVE - LATIN SMALL LETTER O WITH BREVE
+#           \x014F                            ŏ                   LATIN SMALL LETTER O WITH BREVE
+uplow       \x0150\x0151  4-135,4-135         Őő                  LATIN CAPITAL LETTER O WITH DOUBLE ACUTE - LATIN SMALL LETTER O WITH DOUBLE ACUTE
+#           \x0151                            ő                   LATIN SMALL LETTER O WITH DOUBLE ACUTE
+uplow       \x0152\x0153  4-135,4-135         Œœ                  LATIN CAPITAL LIGATURE OE - LATIN SMALL LIGATURE OE
+#           \x0153                            œ                   LATIN SMALL LIGATURE OE
+uplow       \x0154\x0155  4-1235,4-1235       Ŕŕ                  LATIN CAPITAL LETTER R WITH ACUTE - LATIN SMALL LETTER R WITH ACUTE
+#           \x0155                            ŕ                   LATIN SMALL LETTER R WITH ACUTE
+uplow       \x0156\x0157  4-1235,4-1235       Ŗŗ                  LATIN CAPITAL LETTER R WITH CEDILLA - LATIN SMALL LETTER R WITH CEDILLA
+#           \x0157                            ŗ                   LATIN SMALL LETTER R WITH CEDILLA
+uplow       \x0158\x0159  4-1235,4-1235       Řř                  LATIN CAPITAL LETTER R WITH CARON - LATIN SMALL LETTER R WITH CARON
+#           \x0159                            ř                   LATIN SMALL LETTER R WITH CARON
+uplow       \x015A\x015B  4-234,4-234         Śś                  LATIN CAPITAL LETTER S WITH ACUTE - LATIN SMALL LETTER S WITH ACUTE
+#           \x015B                            ś                   LATIN SMALL LETTER S WITH ACUTE
+uplow       \x015C\x015D  4-234,4-234         Ŝŝ                  LATIN CAPITAL LETTER S WITH CIRCUMFLEX - LATIN SMALL LETTER S WITH CIRCUMFLEX
+#           \x015D                            ŝ                   LATIN SMALL LETTER S WITH CIRCUMFLEX
+uplow       \x015E\x015F  4-234,4-234         Şş                  LATIN CAPITAL LETTER S WITH CEDILLA - LATIN SMALL LETTER S WITH CEDILLA
+#           \x015F                            ş                   LATIN SMALL LETTER S WITH CEDILLA
+uplow       \x0160\x0161  4-234,4-234         Šš                  LATIN CAPITAL LETTER S WITH CARON - LATIN SMALL LETTER S WITH CARON
+#           \x0161                            š                   LATIN SMALL LETTER S WITH CARON
+uplow       \x0162\x0163  4-2345,4-2345       Ţţ                  LATIN CAPITAL LETTER T WITH CEDILLA - LATIN SMALL LETTER T WITH CEDILLA
+#           \x0163                            ţ                   LATIN SMALL LETTER T WITH CEDILLA
+uplow       \x0164\x0165  4-2345,4-2345       Ťť                  LATIN CAPITAL LETTER T WITH CARON - LATIN SMALL LETTER T WITH CARON
+#           \x0165                            ť                   LATIN SMALL LETTER T WITH CARON
+uplow       \x0166\x0167  4-2345,4-2345       Ŧŧ                  LATIN CAPITAL LETTER T WITH STROKE - LATIN SMALL LETTER T WITH STROKE
+#           \x0167                            ŧ                   LATIN SMALL LETTER T WITH STROKE
+uplow       \x0168\x0169  4-136,4-136         Ũũ                  LATIN CAPITAL LETTER U WITH TILDE - LATIN SMALL LETTER U WITH TILDE
+#           \x0169                            ũ                   LATIN SMALL LETTER U WITH TILDE
+uplow       \x016A\x016B  4-136,4-136         Ūū                  LATIN CAPITAL LETTER U WITH MACRON - LATIN SMALL LETTER U WITH MACRON
+#           \x016B                            ū                   LATIN SMALL LETTER U WITH MACRON
+uplow       \x016C\x016D  4-136,4-136         Ŭŭ                  LATIN CAPITAL LETTER U WITH BREVE - LATIN SMALL LETTER U WITH BREVE
+#           \x016D                            ŭ                   LATIN SMALL LETTER U WITH BREVE
+uplow       \x016E\x016F  4-136,4-136         Ůů                  LATIN CAPITAL LETTER U WITH RING ABOVE - LATIN SMALL LETTER U WITH RING ABOVE
+#           \x016F                            ů                   LATIN SMALL LETTER U WITH RING ABOVE
+uplow       \x0170\x0171  4-136,4-136         Űű                  LATIN CAPITAL LETTER U WITH DOUBLE ACUTE - LATIN SMALL LETTER U WITH DOUBLE ACUTE
+#           \x0171                            ű                   LATIN SMALL LETTER U WITH DOUBLE ACUTE
+uplow       \x0172\x0173  4-136,4-136         Ųų                  LATIN CAPITAL LETTER U WITH OGONEK - LATIN SMALL LETTER U WITH OGONEK
+#           \x0173                            ų                   LATIN SMALL LETTER U WITH OGONEK
+uplow       \x0174\x0175  4-2456,4-2456       Ŵŵ                  LATIN CAPITAL LETTER W WITH CIRCUMFLEX - LATIN SMALL LETTER W WITH CIRCUMFLEX
+#           \x0175                            ŵ                   LATIN SMALL LETTER W WITH CIRCUMFLEX
+uplow       \x0176\x0177  4-13456,4-13456     Ŷŷ                  LATIN CAPITAL LETTER Y WITH CIRCUMFLEX - LATIN SMALL LETTER Y WITH CIRCUMFLEX
+#           \x0177                            ŷ                   LATIN SMALL LETTER Y WITH CIRCUMFLEX
+uplow       \x0178\x00FF  4-13456,4-13456     Ÿÿ                  LATIN CAPITAL LETTER Y WITH DIAERESIS - LATIN SMALL LETTER Y WITH DIAERESIS
+uplow       \x0179\x017A  4-1356,4-1356       Źź                  LATIN CAPITAL LETTER Z WITH ACUTE - LATIN SMALL LETTER Z WITH ACUTE
+#           \x017A                            ź                   LATIN SMALL LETTER Z WITH ACUTE
+uplow       \x017B\x017C  4-1356,4-1356       Żż                  LATIN CAPITAL LETTER Z WITH DOT ABOVE - LATIN SMALL LETTER Z WITH DOT ABOVE
+#           \x017C                            ż                   LATIN SMALL LETTER Z WITH DOT ABOVE
+uplow       \x017D\x017E  4-1356,4-1356       Žž                  LATIN CAPITAL LETTER Z WITH CARON - LATIN SMALL LETTER Z WITH CARON
+#           \x017E                            ž                   LATIN SMALL LETTER Z WITH CARON
+lowercase   \x017F        4-234               ſ                   LATIN SMALL LETTER LONG S
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0180..024F  Latin Extended-B
+# ----------------------------------------------------------------------------------------------
+
+lowercase   \x0180        4-12                ƀ                   LATIN SMALL LETTER B WITH STROKE
+uplow       \x0181\x0253  4-12,4-12           Ɓɓ                  LATIN CAPITAL LETTER B WITH HOOK - LATIN SMALL LETTER B WITH HOOK
+uplow       \x0182\x0183  4-12,4-12           Ƃƃ                  LATIN CAPITAL LETTER B WITH TOPBAR - LATIN SMALL LETTER B WITH TOPBAR
+#           \x0183                            ƃ                   LATIN SMALL LETTER B WITH TOPBAR
+uplow       \x0184\x0185  4-12,4-12           Ƅƅ                  LATIN CAPITAL LETTER TONE SIX - LATIN SMALL LETTER TONE SIX
+#           \x0185                            ƅ                   LATIN SMALL LETTER TONE SIX
+uplow       \x0186\x0254  4-135,4-135         Ɔɔ                  LATIN CAPITAL LETTER OPEN O - LATIN SMALL LETTER OPEN O
+uplow       \x0187\x0188  4-14,4-14           Ƈƈ                  LATIN CAPITAL LETTER C WITH HOOK - LATIN SMALL LETTER C WITH HOOK
+#           \x0188                            ƈ                   LATIN SMALL LETTER C WITH HOOK
+uplow       \x0189\x0256  4-145,4-145         Ɖɖ                  LATIN CAPITAL LETTER AFRICAN D - LATIN SMALL LETTER D WITH TAIL
+uplow       \x018A\x0257  4-145,4-145         Ɗɗ                  LATIN CAPITAL LETTER D WITH HOOK - LATIN SMALL LETTER D WITH HOOK
+uplow       \x018B\x018C  4-145,4-145         Ƌƌ                  LATIN CAPITAL LETTER D WITH TOPBAR - LATIN SMALL LETTER D WITH TOPBAR
+#           \x018C                            ƌ                   LATIN SMALL LETTER D WITH TOPBAR
+lowercase   \x018D        4-145               ƍ                   LATIN SMALL LETTER TURNED DELTA
+uplow       \x018E\x01DD  4-15,4-15           Ǝǝ                  LATIN CAPITAL LETTER REVERSED E - LATIN SMALL LETTER TURNED E
+uplow       \x018F\x0259  4-15,4-15           Əə                  LATIN CAPITAL LETTER SCHWA - LATIN SMALL LETTER SCHWA
+uplow       \x0190\x025B  4-15,4-15           Ɛɛ                  LATIN CAPITAL LETTER OPEN E - LATIN SMALL LETTER OPEN E
+uplow       \x0191\x0192  4-124,4-124         Ƒƒ                  LATIN CAPITAL LETTER F WITH HOOK - LATIN SMALL LETTER F WITH HOOK
+#           \x0192                            ƒ                   LATIN SMALL LETTER F WITH HOOK
+uplow       \x0193\x0260  4-1245,4-1245       Ɠɠ                  LATIN CAPITAL LETTER G WITH HOOK - LATIN SMALL LETTER G WITH HOOK
+uplow       \x0194\x0263  4-1245,4-1245       Ɣɣ                  LATIN CAPITAL LETTER GAMMA - LATIN SMALL LETTER GAMMA
+#           \x0195                            ƕ                   LATIN SMALL LETTER HV
+uplow       \x0196\x0269  4-24,4-24           Ɩɩ                  LATIN CAPITAL LETTER IOTA - LATIN SMALL LETTER IOTA
+uplow       \x0197\x0268  4-24,4-24           Ɨɨ                  LATIN CAPITAL LETTER I WITH STROKE - LATIN SMALL LETTER I WITH STROKE
+uplow       \x0198\x0199  4-13,4-13           Ƙƙ                  LATIN CAPITAL LETTER K WITH HOOK - LATIN SMALL LETTER K WITH HOOK
+#           \x0199                            ƙ                   LATIN SMALL LETTER K WITH HOOK
+lowercase   \x019A        4-123               ƚ                   LATIN SMALL LETTER L WITH BAR
+lowercase   \x019B        4-123               ƛ                   LATIN SMALL LETTER LAMBDA WITH STROKE
+uplow       \x019C\x026F  4-134,4-134         Ɯɯ                  LATIN CAPITAL LETTER TURNED M - LATIN SMALL LETTER TURNED M
+uplow       \x019D\x0272  4-1345,4-1345       Ɲɲ                  LATIN CAPITAL LETTER N WITH LEFT HOOK - LATIN SMALL LETTER N WITH LEFT HOOK
+#           \x019E                            ƞ                   LATIN SMALL LETTER N WITH LONG RIGHT LEG
+uplow       \x019F\x0275  4-135,4-135         Ɵɵ                  LATIN CAPITAL LETTER O WITH MIDDLE TILDE - LATIN SMALL LETTER BARRED O
+uplow       \x01A0\x01A1  4-135,4-135         Ơơ                  LATIN CAPITAL LETTER O WITH HORN - LATIN SMALL LETTER O WITH HORN
+#           \x01A1                            ơ                   LATIN SMALL LETTER O WITH HORN
+uplow       \x01A2\x01A3  4-135,4-135         Ƣƣ                  LATIN CAPITAL LETTER OI - LATIN SMALL LETTER OI
+#           \x01A3                            ƣ                   LATIN SMALL LETTER OI
+uplow       \x01A4\x01A5  4-1234,4-1234       Ƥƥ                  LATIN CAPITAL LETTER P WITH HOOK - LATIN SMALL LETTER P WITH HOOK
+#           \x01A5                            ƥ                   LATIN SMALL LETTER P WITH HOOK
+letter      \x01A6        4-1235              Ʀ                   LATIN LETTER YR
+uplow       \x01A7\x01A8  4-234,4-234         Ƨƨ                  LATIN CAPITAL LETTER TONE TWO - LATIN SMALL LETTER TONE TWO
+#           \x01A8                            ƨ                   LATIN SMALL LETTER TONE TWO
+uplow       \x01A9\x0283  4-234,4-234         Ʃʃ                  LATIN CAPITAL LETTER ESH - LATIN SMALL LETTER ESH
+letter      \x01AA        4-234               ƪ                   LATIN LETTER REVERSED ESH LOOP
+lowercase   \x01AB        4-2345              ƫ                   LATIN SMALL LETTER T WITH PALATAL HOOK
+uplow       \x01AC\x01AD  4-2345,4-2345       Ƭƭ                  LATIN CAPITAL LETTER T WITH HOOK - LATIN SMALL LETTER T WITH HOOK
+#           \x01AD                            ƭ                   LATIN SMALL LETTER T WITH HOOK
+uplow       \x01AE\x0288  4-2345,4-2345       Ʈʈ                  LATIN CAPITAL LETTER T WITH RETROFLEX HOOK - LATIN SMALL LETTER T WITH RETROFLEX HOOK
+uplow       \x01AF\x01B0  4-136,4-136         Ưư                  LATIN CAPITAL LETTER U WITH HORN - LATIN SMALL LETTER U WITH HORN
+#           \x01B0                            ư                   LATIN SMALL LETTER U WITH HORN
+uplow       \x01B1\x028A  4-136,4-136         Ʊʊ                  LATIN CAPITAL LETTER UPSILON - LATIN SMALL LETTER UPSILON
+uplow       \x01B2\x028B  4-1236,4-1236       Ʋʋ                  LATIN CAPITAL LETTER V WITH HOOK - LATIN SMALL LETTER V WITH HOOK
+uplow       \x01B3\x01B4  4-13456,4-13456     Ƴƴ                  LATIN CAPITAL LETTER Y WITH HOOK - LATIN SMALL LETTER Y WITH HOOK
+#           \x01B4                            ƴ                   LATIN SMALL LETTER Y WITH HOOK
+uplow       \x01B5\x01B6  4-1356,4-1356       Ƶƶ                  LATIN CAPITAL LETTER Z WITH STROKE - LATIN SMALL LETTER Z WITH STROKE
+#           \x01B6                            ƶ                   LATIN SMALL LETTER Z WITH STROKE
+uplow       \x01B7\x0292  4-1356,4-1356       Ʒʒ                  LATIN CAPITAL LETTER EZH - LATIN SMALL LETTER EZH
+uplow       \x01B8\x01B9  4-1356,4-1356       Ƹƹ                  LATIN CAPITAL LETTER EZH REVERSED - LATIN SMALL LETTER EZH REVERSED
+#           \x01B9                            ƹ                   LATIN SMALL LETTER EZH REVERSED
+lowercase   \x01BA        4-1356              ƺ                   LATIN SMALL LETTER EZH WITH TAIL
+letter      \x01BB        1456                ƻ                   LATIN LETTER TWO WITH STROKE
+uplow       \x01BC\x01BD  1456,1456           Ƽƽ                  LATIN CAPITAL LETTER TONE FIVE - LATIN SMALL LETTER TONE FIVE
+#           \x01BD                            ƽ                   LATIN SMALL LETTER TONE FIVE
+letter      \x01BE        1456                ƾ                   LATIN LETTER INVERTED GLOTTAL STOP WITH STROKE
+#           \x01BF                            ƿ                   LATIN LETTER WYNN
+letter      \x01C0        1456                ǀ                   LATIN LETTER DENTAL CLICK
+letter      \x01C1        1456                ǁ                   LATIN LETTER LATERAL CLICK
+letter      \x01C2        1456                ǂ                   LATIN LETTER ALVEOLAR CLICK
+letter      \x01C3        1456                ǃ                   LATIN LETTER RETROFLEX CLICK
+uplow       \x01C4\x01C6  4-145,4-145         Ǆǆ                  LATIN CAPITAL LETTER DZ WITH CARON - LATIN SMALL LETTER DZ WITH CARON
+uppercase   \x01C5        4-145               ǅ                   LATIN CAPITAL LETTER D WITH SMALL LETTER Z WITH CARON
+#           \x01C6                            ǆ                   LATIN SMALL LETTER DZ WITH CARON
+uplow       \x01C7\x01C9  4-123,4-123         Ǉǉ                  LATIN CAPITAL LETTER LJ - LATIN SMALL LETTER LJ
+uppercase   \x01C8        4-123               ǈ                   LATIN CAPITAL LETTER L WITH SMALL LETTER J
+#           \x01C9                            ǉ                   LATIN SMALL LETTER LJ
+uplow       \x01CA\x01CC  4-1345,4-1345       Ǌǌ                  LATIN CAPITAL LETTER NJ - LATIN SMALL LETTER NJ
+uppercase   \x01CB        4-1345              ǋ                   LATIN CAPITAL LETTER N WITH SMALL LETTER J
+#           \x01CC                            ǌ                   LATIN SMALL LETTER NJ
+uplow       \x01CD\x01CE  4-1,4-1             Ǎǎ                  LATIN CAPITAL LETTER A WITH CARON - LATIN SMALL LETTER A WITH CARON
+#           \x01CE                            ǎ                   LATIN SMALL LETTER A WITH CARON
+uplow       \x01CF\x01D0  4-24,4-24           Ǐǐ                  LATIN CAPITAL LETTER I WITH CARON - LATIN SMALL LETTER I WITH CARON
+#           \x01D0                            ǐ                   LATIN SMALL LETTER I WITH CARON
+uplow       \x01D1\x01D2  4-135,4-135         Ǒǒ                  LATIN CAPITAL LETTER O WITH CARON - LATIN SMALL LETTER O WITH CARON
+#           \x01D2                            ǒ                   LATIN SMALL LETTER O WITH CARON
+uplow       \x01D3\x01D4  4-136,4-136         Ǔǔ                  LATIN CAPITAL LETTER U WITH CARON - LATIN SMALL LETTER U WITH CARON
+#           \x01D4                            ǔ                   LATIN SMALL LETTER U WITH CARON
+uplow       \x01D5\x01D6  4-136,4-136         Ǖǖ                  LATIN CAPITAL LETTER U WITH DIAERESIS AND MACRON - LATIN SMALL LETTER U WITH DIAERESIS AND MACRON
+#           \x01D6                            ǖ                   LATIN SMALL LETTER U WITH DIAERESIS AND MACRON
+uplow       \x01D7\x01D8  4-136,4-136         Ǘǘ                  LATIN CAPITAL LETTER U WITH DIAERESIS AND ACUTE - LATIN SMALL LETTER U WITH DIAERESIS AND ACUTE
+#           \x01D8                            ǘ                   LATIN SMALL LETTER U WITH DIAERESIS AND ACUTE
+uplow       \x01D9\x01DA  4-136,4-136         Ǚǚ                  LATIN CAPITAL LETTER U WITH DIAERESIS AND CARON - LATIN SMALL LETTER U WITH DIAERESIS AND CARON
+#           \x01DA                            ǚ                   LATIN SMALL LETTER U WITH DIAERESIS AND CARON
+uplow       \x01DB\x01DC  4-136,4-136         Ǜǜ                  LATIN CAPITAL LETTER U WITH DIAERESIS AND GRAVE - LATIN SMALL LETTER U WITH DIAERESIS AND GRAVE
+#           \x01DC                            ǜ                   LATIN SMALL LETTER U WITH DIAERESIS AND GRAVE
+#           \x01DD                            ǝ                   LATIN SMALL LETTER TURNED E
+uplow       \x01DE\x01DF  4-1,4-1             Ǟǟ                  LATIN CAPITAL LETTER A WITH DIAERESIS AND MACRON - LATIN SMALL LETTER A WITH DIAERESIS AND MACRON
+#           \x01DF                            ǟ                   LATIN SMALL LETTER A WITH DIAERESIS AND MACRON
+uplow       \x01E0\x01E1  4-1,4-1             Ǡǡ                  LATIN CAPITAL LETTER A WITH DOT ABOVE AND MACRON - LATIN SMALL LETTER A WITH DOT ABOVE AND MACRON
+#           \x01E1                            ǡ                   LATIN SMALL LETTER A WITH DOT ABOVE AND MACRON
+uplow       \x01E2\x01E3  4-1,4-1             Ǣǣ                  LATIN CAPITAL LETTER AE WITH MACRON - LATIN SMALL LETTER AE WITH MACRON
+#           \x01E3                            ǣ                   LATIN SMALL LETTER AE WITH MACRON
+uplow       \x01E4\x01E5  4-1245,4-1245       Ǥǥ                  LATIN CAPITAL LETTER G WITH STROKE - LATIN SMALL LETTER G WITH STROKE
+#           \x01E5                            ǥ                   LATIN SMALL LETTER G WITH STROKE
+uplow       \x01E6\x01E7  4-1245,4-1245       Ǧǧ                  LATIN CAPITAL LETTER G WITH CARON - LATIN SMALL LETTER G WITH CARON
+#           \x01E7                            ǧ                   LATIN SMALL LETTER G WITH CARON
+uplow       \x01E8\x01E9  4-13,4-13           Ǩǩ                  LATIN CAPITAL LETTER K WITH CARON - LATIN SMALL LETTER K WITH CARON
+#           \x01E9                            ǩ                   LATIN SMALL LETTER K WITH CARON
+uplow       \x01EA\x01EB  4-135,4-135         Ǫǫ                  LATIN CAPITAL LETTER O WITH OGONEK - LATIN SMALL LETTER O WITH OGONEK
+#           \x01EB                            ǫ                   LATIN SMALL LETTER O WITH OGONEK
+uplow       \x01EC\x01ED  4-135,4-135         Ǭǭ                  LATIN CAPITAL LETTER O WITH OGONEK AND MACRON - LATIN SMALL LETTER O WITH OGONEK AND MACRON
+#           \x01ED                            ǭ                   LATIN SMALL LETTER O WITH OGONEK AND MACRON
+uplow       \x01EE\x01EF  4-1356,4-1356       Ǯǯ                  LATIN CAPITAL LETTER EZH WITH CARON - LATIN SMALL LETTER EZH WITH CARON
+#           \x01EF                            ǯ                   LATIN SMALL LETTER EZH WITH CARON
+lowercase   \x01F0        4-245               ǰ                   LATIN SMALL LETTER J WITH CARON
+uplow       \x01F1\x01F3  4-145,4-145         Ǳǳ                  LATIN CAPITAL LETTER DZ - LATIN SMALL LETTER DZ
+uppercase   \x01F2        4-145               ǲ                   LATIN CAPITAL LETTER D WITH SMALL LETTER Z
+#           \x01F3                            ǳ                   LATIN SMALL LETTER DZ
+uplow       \x01F4\x01F5  4-1245,4-1245       Ǵǵ                  LATIN CAPITAL LETTER G WITH ACUTE - LATIN SMALL LETTER G WITH ACUTE
+#           \x01F5                            ǵ                   LATIN SMALL LETTER G WITH ACUTE
+uplow       \x01F6\x0195  4-125,4-125         Ƕƕ                  LATIN CAPITAL LETTER HWAIR - LATIN SMALL LETTER HV
+uplow       \x01F7\x01BF  4-2456,1456         Ƿƿ                  LATIN CAPITAL LETTER WYNN - LATIN LETTER WYNN
+uplow       \x01F8\x01F9  4-1345,4-1345       Ǹǹ                  LATIN CAPITAL LETTER N WITH GRAVE - LATIN SMALL LETTER N WITH GRAVE
+#           \x01F9                            ǹ                   LATIN SMALL LETTER N WITH GRAVE
+uplow       \x01FA\x01FB  4-1,4-1             Ǻǻ                  LATIN CAPITAL LETTER A WITH RING ABOVE AND ACUTE - LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
+#           \x01FB                            ǻ                   LATIN SMALL LETTER A WITH RING ABOVE AND ACUTE
+uplow       \x01FC\x01FD  4-1,4-1             Ǽǽ                  LATIN CAPITAL LETTER AE WITH ACUTE - LATIN SMALL LETTER AE WITH ACUTE
+#           \x01FD                            ǽ                   LATIN SMALL LETTER AE WITH ACUTE
+uplow       \x01FE\x01FF  4-135,4-135         Ǿǿ                  LATIN CAPITAL LETTER O WITH STROKE AND ACUTE - LATIN SMALL LETTER O WITH STROKE AND ACUTE
+#           \x01FF                            ǿ                   LATIN SMALL LETTER O WITH STROKE AND ACUTE
+uplow       \x0200\x0201  4-1,4-1             Ȁȁ                  LATIN CAPITAL LETTER A WITH DOUBLE GRAVE - LATIN SMALL LETTER A WITH DOUBLE GRAVE
+#           \x0201                            ȁ                   LATIN SMALL LETTER A WITH DOUBLE GRAVE
+uplow       \x0202\x0203  4-1,4-1             Ȃȃ                  LATIN CAPITAL LETTER A WITH INVERTED BREVE - LATIN SMALL LETTER A WITH INVERTED BREVE
+#           \x0203                            ȃ                   LATIN SMALL LETTER A WITH INVERTED BREVE
+uplow       \x0204\x0205  4-15,4-15           Ȅȅ                  LATIN CAPITAL LETTER E WITH DOUBLE GRAVE - LATIN SMALL LETTER E WITH DOUBLE GRAVE
+#           \x0205                            ȅ                   LATIN SMALL LETTER E WITH DOUBLE GRAVE
+uplow       \x0206\x0207  4-15,4-15           Ȇȇ                  LATIN CAPITAL LETTER E WITH INVERTED BREVE - LATIN SMALL LETTER E WITH INVERTED BREVE
+#           \x0207                            ȇ                   LATIN SMALL LETTER E WITH INVERTED BREVE
+uplow       \x0208\x0209  4-24,4-24           Ȉȉ                  LATIN CAPITAL LETTER I WITH DOUBLE GRAVE - LATIN SMALL LETTER I WITH DOUBLE GRAVE
+#           \x0209                            ȉ                   LATIN SMALL LETTER I WITH DOUBLE GRAVE
+uplow       \x020A\x020B  4-24,4-24           Ȋȋ                  LATIN CAPITAL LETTER I WITH INVERTED BREVE - LATIN SMALL LETTER I WITH INVERTED BREVE
+#           \x020B                            ȋ                   LATIN SMALL LETTER I WITH INVERTED BREVE
+uplow       \x020C\x020D  4-135,4-135         Ȍȍ                  LATIN CAPITAL LETTER O WITH DOUBLE GRAVE - LATIN SMALL LETTER O WITH DOUBLE GRAVE
+#           \x020D                            ȍ                   LATIN SMALL LETTER O WITH DOUBLE GRAVE
+uplow       \x020E\x020F  4-135,4-135         Ȏȏ                  LATIN CAPITAL LETTER O WITH INVERTED BREVE - LATIN SMALL LETTER O WITH INVERTED BREVE
+#           \x020F                            ȏ                   LATIN SMALL LETTER O WITH INVERTED BREVE
+uplow       \x0210\x0211  4-1235,4-1235       Ȑȑ                  LATIN CAPITAL LETTER R WITH DOUBLE GRAVE - LATIN SMALL LETTER R WITH DOUBLE GRAVE
+#           \x0211                            ȑ                   LATIN SMALL LETTER R WITH DOUBLE GRAVE
+uplow       \x0212\x0213  4-1235,4-1235       Ȓȓ                  LATIN CAPITAL LETTER R WITH INVERTED BREVE - LATIN SMALL LETTER R WITH INVERTED BREVE
+#           \x0213                            ȓ                   LATIN SMALL LETTER R WITH INVERTED BREVE
+uplow       \x0214\x0215  4-136,4-136         Ȕȕ                  LATIN CAPITAL LETTER U WITH DOUBLE GRAVE - LATIN SMALL LETTER U WITH DOUBLE GRAVE
+#           \x0215                            ȕ                   LATIN SMALL LETTER U WITH DOUBLE GRAVE
+uplow       \x0216\x0217  4-136,4-136         Ȗȗ                  LATIN CAPITAL LETTER U WITH INVERTED BREVE - LATIN SMALL LETTER U WITH INVERTED BREVE
+#           \x0217                            ȗ                   LATIN SMALL LETTER U WITH INVERTED BREVE
+uplow       \x0218\x0219  4-234,4-234         Șș                  LATIN CAPITAL LETTER S WITH COMMA BELOW - LATIN SMALL LETTER S WITH COMMA BELOW
+#           \x0219                            ș                   LATIN SMALL LETTER S WITH COMMA BELOW
+uplow       \x021A\x021B  4-2345,4-2345       Țț                  LATIN CAPITAL LETTER T WITH COMMA BELOW - LATIN SMALL LETTER T WITH COMMA BELOW
+#           \x021B                            ț                   LATIN SMALL LETTER T WITH COMMA BELOW
+uplow       \x021C\x021D  4-13456,4-13456     Ȝȝ                  LATIN CAPITAL LETTER YOGH - LATIN SMALL LETTER YOGH
+#           \x021D                            ȝ                   LATIN SMALL LETTER YOGH
+uplow       \x021E\x021F  4-125,4-125         Ȟȟ                  LATIN CAPITAL LETTER H WITH CARON - LATIN SMALL LETTER H WITH CARON
+#           \x021F                            ȟ                   LATIN SMALL LETTER H WITH CARON
+uplow       \x0220\x019E  4-1345,4-1345       Ƞƞ                  LATIN CAPITAL LETTER N WITH LONG RIGHT LEG - LATIN SMALL LETTER N WITH LONG RIGHT LEG
+lowercase   \x0221        1456                ȡ                   LATIN SMALL LETTER D WITH CURL
+uplow       \x0222\x0223  4-135,4-135         Ȣȣ                  LATIN CAPITAL LETTER OU - LATIN SMALL LETTER OU
+#           \x0223                            ȣ                   LATIN SMALL LETTER OU
+uplow       \x0224\x0225  4-1356,4-1356       Ȥȥ                  LATIN CAPITAL LETTER Z WITH HOOK - LATIN SMALL LETTER Z WITH HOOK
+#           \x0225                            ȥ                   LATIN SMALL LETTER Z WITH HOOK
+uplow       \x0226\x0227  4-1,4-1             Ȧȧ                  LATIN CAPITAL LETTER A WITH DOT ABOVE - LATIN SMALL LETTER A WITH DOT ABOVE
+#           \x0227                            ȧ                   LATIN SMALL LETTER A WITH DOT ABOVE
+uplow       \x0228\x0229  4-15,4-15           Ȩȩ                  LATIN CAPITAL LETTER E WITH CEDILLA - LATIN SMALL LETTER E WITH CEDILLA
+#           \x0229                            ȩ                   LATIN SMALL LETTER E WITH CEDILLA
+uplow       \x022A\x022B  4-135,4-135         Ȫȫ                  LATIN CAPITAL LETTER O WITH DIAERESIS AND MACRON - LATIN SMALL LETTER O WITH DIAERESIS AND MACRON
+#           \x022B                            ȫ                   LATIN SMALL LETTER O WITH DIAERESIS AND MACRON
+uplow       \x022C\x022D  4-135,4-135         Ȭȭ                  LATIN CAPITAL LETTER O WITH TILDE AND MACRON - LATIN SMALL LETTER O WITH TILDE AND MACRON
+#           \x022D                            ȭ                   LATIN SMALL LETTER O WITH TILDE AND MACRON
+uplow       \x022E\x022F  4-135,4-135         Ȯȯ                  LATIN CAPITAL LETTER O WITH DOT ABOVE - LATIN SMALL LETTER O WITH DOT ABOVE
+#           \x022F                            ȯ                   LATIN SMALL LETTER O WITH DOT ABOVE
+uplow       \x0230\x0231  4-135,4-135         Ȱȱ                  LATIN CAPITAL LETTER O WITH DOT ABOVE AND MACRON - LATIN SMALL LETTER O WITH DOT ABOVE AND MACRON
+#           \x0231                            ȱ                   LATIN SMALL LETTER O WITH DOT ABOVE AND MACRON
+uplow       \x0232\x0233  4-13456,4-13456     Ȳȳ                  LATIN CAPITAL LETTER Y WITH MACRON - LATIN SMALL LETTER Y WITH MACRON
+#           \x0233                            ȳ                   LATIN SMALL LETTER Y WITH MACRON
+lowercase   \x0234        4-123               ȴ                   LATIN SMALL LETTER L WITH CURL
+lowercase   \x0235        4-1345              ȵ                   LATIN SMALL LETTER N WITH CURL
+lowercase   \x0236        4-2345              ȶ                   LATIN SMALL LETTER T WITH CURL
+lowercase   \x0237        4-245               ȷ                   LATIN SMALL LETTER DOTLESS J
+lowercase   \x0238        4-145               ȸ                   LATIN SMALL LETTER DB DIGRAPH
+lowercase   \x0239        4-12345             ȹ                   LATIN SMALL LETTER QP DIGRAPH
+uppercase   \x023A        4-1                 Ⱥ                   LATIN CAPITAL LETTER A WITH STROKE
+uplow       \x023B\x023C  4-14,4-14           Ȼȼ                  LATIN CAPITAL LETTER C WITH STROKE - LATIN SMALL LETTER C WITH STROKE
+#           \x023C                            ȼ                   LATIN SMALL LETTER C WITH STROKE
+uppercase   \x023D        4-123               Ƚ                   LATIN CAPITAL LETTER L WITH BAR
+uppercase   \x023E        4-2345              Ⱦ                   LATIN CAPITAL LETTER T WITH DIAGONAL STROKE
+lowercase   \x023F        4-234               ȿ                   LATIN SMALL LETTER S WITH SWASH TAIL
+lowercase   \x0240        4-1356              ɀ                   LATIN SMALL LETTER Z WITH SWASH TAIL
+uplow       \x0241\x0242  1456,1456           Ɂɂ                  LATIN CAPITAL LETTER GLOTTAL STOP - LATIN SMALL LETTER GLOTTAL STOP
+#           \x0242                            ɂ                   LATIN SMALL LETTER GLOTTAL STOP
+uppercase   \x0243        4-12                Ƀ                   LATIN CAPITAL LETTER B WITH STROKE
+uppercase   \x0244        4-136               Ʉ                   LATIN CAPITAL LETTER U BAR
+uppercase   \x0245        4-1236              Ʌ                   LATIN CAPITAL LETTER TURNED V
+uplow       \x0246\x0247  4-15,4-15           Ɇɇ                  LATIN CAPITAL LETTER E WITH STROKE - LATIN SMALL LETTER E WITH STROKE
+#           \x0247                            ɇ                   LATIN SMALL LETTER E WITH STROKE
+uplow       \x0248\x0249  4-245,4-245         Ɉɉ                  LATIN CAPITAL LETTER J WITH STROKE - LATIN SMALL LETTER J WITH STROKE
+#           \x0249                            ɉ                   LATIN SMALL LETTER J WITH STROKE
+uplow       \x024A\x024B  4-12345,4-12345     Ɋɋ                  LATIN CAPITAL LETTER SMALL Q WITH HOOK TAIL - LATIN SMALL LETTER Q WITH HOOK TAIL
+#           \x024B                            ɋ                   LATIN SMALL LETTER Q WITH HOOK TAIL
+uplow       \x024C\x024D  4-1235,4-1235       Ɍɍ                  LATIN CAPITAL LETTER R WITH STROKE - LATIN SMALL LETTER R WITH STROKE
+#           \x024D                            ɍ                   LATIN SMALL LETTER R WITH STROKE
+uplow       \x024E\x024E  4-13456,4-13456     ɎɎ                  LATIN CAPITAL LETTER Y WITH STROKE - LATIN CAPITAL LETTER Y WITH STROKE
+#           \x024F                            ɏ                   LATIN SMALL LETTER Y WITH STROKE
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0250..02AF  IPA Extensions
+# ----------------------------------------------------------------------------------------------
+
+lowercase   \x0250        4-1                 ɐ                   LATIN SMALL LETTER TURNED A
+lowercase   \x0251        4-1                 ɑ                   LATIN SMALL LETTER ALPHA
+lowercase   \x0252        4-1                 ɒ                   LATIN SMALL LETTER TURNED ALPHA
+#           \x0253                            ɓ                   LATIN SMALL LETTER B WITH HOOK
+#           \x0254                            ɔ                   LATIN SMALL LETTER OPEN O
+lowercase   \x0255        4-14                ɕ                   LATIN SMALL LETTER C WITH CURL
+#           \x0256                            ɖ                   LATIN SMALL LETTER D WITH TAIL
+#           \x0257                            ɗ                   LATIN SMALL LETTER D WITH HOOK
+lowercase   \x0258        4-15                ɘ                   LATIN SMALL LETTER REVERSED E
+#           \x0259                            ə                   LATIN SMALL LETTER SCHWA
+lowercase   \x025A        4-15                ɚ                   LATIN SMALL LETTER SCHWA WITH HOOK
+#           \x025B                            ɛ                   LATIN SMALL LETTER OPEN E
+lowercase   \x025C        4-15                ɜ                   LATIN SMALL LETTER REVERSED OPEN E
+lowercase   \x025D        4-15                ɝ                   LATIN SMALL LETTER REVERSED OPEN E WITH HOOK
+lowercase   \x025E        4-15                ɞ                   LATIN SMALL LETTER CLOSED REVERSED OPEN E
+lowercase   \x025F        4-245               ɟ                   LATIN SMALL LETTER DOTLESS J WITH STROKE
+#           \x0260                            ɠ                   LATIN SMALL LETTER G WITH HOOK
+lowercase   \x0261        4-1245              ɡ                   LATIN SMALL LETTER SCRIPT G
+letter      \x0262        1456                ɢ                   LATIN LETTER SMALL CAPITAL G
+#           \x0263                            ɣ                   LATIN SMALL LETTER GAMMA
+lowercase   \x0264        4-135               ɤ                   LATIN SMALL LETTER RAMS HORN
+lowercase   \x0265        4-125               ɥ                   LATIN SMALL LETTER TURNED H
+lowercase   \x0266        4-125               ɦ                   LATIN SMALL LETTER H WITH HOOK
+lowercase   \x0267        4-125               ɧ                   LATIN SMALL LETTER HENG WITH HOOK
+#           \x0268                            ɨ                   LATIN SMALL LETTER I WITH STROKE
+#           \x0269                            ɩ                   LATIN SMALL LETTER IOTA
+letter      \x026A        1456                ɪ                   LATIN LETTER SMALL CAPITAL I
+lowercase   \x026B        4-123               ɫ                   LATIN SMALL LETTER L WITH MIDDLE TILDE
+lowercase   \x026C        4-123               ɬ                   LATIN SMALL LETTER L WITH BELT
+lowercase   \x026D        4-123               ɭ                   LATIN SMALL LETTER L WITH RETROFLEX HOOK
+lowercase   \x026E        4-123               ɮ                   LATIN SMALL LETTER LEZH
+#           \x026F                            ɯ                   LATIN SMALL LETTER TURNED M
+lowercase   \x0270        4-134               ɰ                   LATIN SMALL LETTER TURNED M WITH LONG LEG
+lowercase   \x0271        4-134               ɱ                   LATIN SMALL LETTER M WITH HOOK
+#           \x0272                            ɲ                   LATIN SMALL LETTER N WITH LEFT HOOK
+lowercase   \x0273        4-1345              ɳ                   LATIN SMALL LETTER N WITH RETROFLEX HOOK
+letter      \x0274        1456                ɴ                   LATIN LETTER SMALL CAPITAL N
+#           \x0275                            ɵ                   LATIN SMALL LETTER BARRED O
+letter      \x0276        1456                ɶ                   LATIN LETTER SMALL CAPITAL OE
+lowercase   \x0277        4-135               ɷ                   LATIN SMALL LETTER CLOSED OMEGA
+lowercase   \x0278        4-124               ɸ                   LATIN SMALL LETTER PHI
+lowercase   \x0279        4-1235              ɹ                   LATIN SMALL LETTER TURNED R
+lowercase   \x027A        4-1235              ɺ                   LATIN SMALL LETTER TURNED R WITH LONG LEG
+lowercase   \x027B        4-1235              ɻ                   LATIN SMALL LETTER TURNED R WITH HOOK
+lowercase   \x027C        4-1235              ɼ                   LATIN SMALL LETTER R WITH LONG LEG
+lowercase   \x027D        4-1235              ɽ                   LATIN SMALL LETTER R WITH TAIL
+lowercase   \x027E        4-1235              ɾ                   LATIN SMALL LETTER R WITH FISHHOOK
+lowercase   \x027F        4-1235              ɿ                   LATIN SMALL LETTER REVERSED R WITH FISHHOOK
+letter      \x0280        1456                ʀ                   LATIN LETTER SMALL CAPITAL R
+letter      \x0281        1456                ʁ                   LATIN LETTER SMALL CAPITAL INVERTED R
+lowercase   \x0282        4-234               ʂ                   LATIN SMALL LETTER S WITH HOOK
+#           \x0283                            ʃ                   LATIN SMALL LETTER ESH
+lowercase   \x0284        4-245               ʄ                   LATIN SMALL LETTER DOTLESS J WITH STROKE AND HOOK
+lowercase   \x0285        4-234               ʅ                   LATIN SMALL LETTER SQUAT REVERSED ESH
+lowercase   \x0286        4-234               ʆ                   LATIN SMALL LETTER ESH WITH CURL
+lowercase   \x0287        4-2345              ʇ                   LATIN SMALL LETTER TURNED T
+#           \x0288                            ʈ                   LATIN SMALL LETTER T WITH RETROFLEX HOOK
+lowercase   \x0289        4-136               ʉ                   LATIN SMALL LETTER U BAR
+#           \x028A                            ʊ                   LATIN SMALL LETTER UPSILON
+#           \x028B                            ʋ                   LATIN SMALL LETTER V WITH HOOK
+lowercase   \x028C        4-1236              ʌ                   LATIN SMALL LETTER TURNED V
+lowercase   \x028D        4-2456              ʍ                   LATIN SMALL LETTER TURNED W
+lowercase   \x028E        4-13456             ʎ                   LATIN SMALL LETTER TURNED Y
+letter      \x028F        1456                ʏ                   LATIN LETTER SMALL CAPITAL Y
+lowercase   \x0290        4-1356              ʐ                   LATIN SMALL LETTER Z WITH RETROFLEX HOOK
+lowercase   \x0291        4-1356              ʑ                   LATIN SMALL LETTER Z WITH CURL
+#           \x0292                            ʒ                   LATIN SMALL LETTER EZH
+lowercase   \x0293        4-1356              ʓ                   LATIN SMALL LETTER EZH WITH CURL
+letter      \x0294        1456                ʔ                   LATIN LETTER GLOTTAL STOP
+letter      \x0295        1456                ʕ                   LATIN LETTER PHARYNGEAL VOICED FRICATIVE
+letter      \x0296        1456                ʖ                   LATIN LETTER INVERTED GLOTTAL STOP
+letter      \x0297        1456                ʗ                   LATIN LETTER STRETCHED C
+letter      \x0298        1456                ʘ                   LATIN LETTER BILABIAL CLICK
+letter      \x0299        1456                ʙ                   LATIN LETTER SMALL CAPITAL B
+lowercase   \x029A        4-15                ʚ                   LATIN SMALL LETTER CLOSED OPEN E
+letter      \x029B        1456                ʛ                   LATIN LETTER SMALL CAPITAL G WITH HOOK
+letter      \x029C        1456                ʜ                   LATIN LETTER SMALL CAPITAL H
+lowercase   \x029D        4-245               ʝ                   LATIN SMALL LETTER J WITH CROSSED-TAIL
+lowercase   \x029E        4-13                ʞ                   LATIN SMALL LETTER TURNED K
+letter      \x029F        1456                ʟ                   LATIN LETTER SMALL CAPITAL L
+lowercase   \x02A0        4-12345             ʠ                   LATIN SMALL LETTER Q WITH HOOK
+letter      \x02A1        1456                ʡ                   LATIN LETTER GLOTTAL STOP WITH STROKE
+letter      \x02A2        1456                ʢ                   LATIN LETTER REVERSED GLOTTAL STOP WITH STROKE
+lowercase   \x02A3        4-145               ʣ                   LATIN SMALL LETTER DZ DIGRAPH
+lowercase   \x02A4        4-145               ʤ                   LATIN SMALL LETTER DEZH DIGRAPH
+lowercase   \x02A5        4-145               ʥ                   LATIN SMALL LETTER DZ DIGRAPH WITH CURL
+lowercase   \x02A6        4-2345              ʦ                   LATIN SMALL LETTER TS DIGRAPH
+lowercase   \x02A7        4-2345              ʧ                   LATIN SMALL LETTER TESH DIGRAPH
+lowercase   \x02A8        4-2345              ʨ                   LATIN SMALL LETTER TC DIGRAPH WITH CURL
+lowercase   \x02A9        4-124               ʩ                   LATIN SMALL LETTER FENG DIGRAPH
+lowercase   \x02AA        4-123               ʪ                   LATIN SMALL LETTER LS DIGRAPH
+lowercase   \x02AB        4-123               ʫ                   LATIN SMALL LETTER LZ DIGRAPH
+letter      \x02AC        1456                ʬ                   LATIN LETTER BILABIAL PERCUSSIVE
+letter      \x02AD        1456                ʭ                   LATIN LETTER BIDENTAL PERCUSSIVE
+letter      \x02AE        1456                ʮ                   LATIN SMALL LETTER TURNED H WITH FISHHOOK
+letter      \x02AF        1456                ʯ                   LATIN SMALL LETTER TURNED H WITH FISHHOOK AND TAIL
+
+# ----------------------------------------------------------------------------------------------

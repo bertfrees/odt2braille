@@ -1,0 +1,224 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch skip http://www.docarch.be.
+# ----------------------------------------------------------------------------------------------
+
+math         math
+generic      semantics
+
+generic      mi \es
+generic      mn \es
+generic      mo \es
+generic      mtext \et,\et
+generic      mrow
+generic      mfrac @5@23,@1256,\ex
+generic      &xpath(//math:mfrac[descendant::math:mfrac]) @5@23,@1256@1256,\ex
+
+generic      &xpath(//math:mfenced[@open='' and @close=''][not(child::math:mtable)])  (,\*)
+generic      &xpath(//math:mfenced[@open='' and @close=']'][not(child::math:mtable)])  (,\*]
+generic      &xpath(//math:mfenced[@open='[' and @close=''][not(child::math:mtable)])  [,\*)
+generic      &xpath(//math:mfenced[@open='[' and @close=']'][not(child::math:mtable)])  [,\*]
+generic      &xpath(//math:mfenced[@open='[' and @close='['][not(child::math:mtable)])  [,\*[
+generic      &xpath(//math:mfenced[@open=']' and @close=']'][not(child::math:mtable)])  ],\*]
+generic      &xpath(//math:mfenced[@open=']' and @close='['][not(child::math:mtable)])  ],\*[
+generic      &xpath(//math:mfenced[@open='∣' and @close='∣'][not(child::math:mtable)])  @1456,\*@1456
+
+generic      mtable
+skip         &xpath(//math:mtext[ancestor::math:mfrac or ancestor::math:mtable])
+mathnewline	 mtr @56@1256
+mathnewline  &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=1])       @123456
+generic      &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=last()])  @56@1256,\*\ex
+generic      mtd \s
+generic      &xpath(//math:mtd[position()=1])
+
+mathnewline  &xpath(//math:mfenced[@open='']/math:mtable/math:mtr[position()=1])   (@123456
+mathnewline  &xpath(//math:mfenced[@open='[']/math:mtable/math:mtr[position()=1])   [@123456
+mathnewline  &xpath(//math:mfenced[@open=']']/math:mtable/math:mtr[position()=1])   ]@123456
+mathnewline  &xpath(//math:mfenced[@open='∣']/math:mtable/math:mtr[position()=1])   @1456@123456
+
+generic      &xpath(//math:mfenced[@close='']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex)
+generic      &xpath(//math:mfenced[@close=']']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex]
+generic      &xpath(//math:mfenced[@close='[']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex[
+generic      &xpath(//math:mfenced[@close='∣']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex@1456
+
+generic      msub        ,\e_r,\ex
+generic      msup        ,\e^r,\ex
+generic      munder      ,\e_c,\ex
+generic      mover       ,\e^c,\ex
+generic      msubsup     ,\e_r,\ex\e^r,\ex
+generic      munderover  ,\e_c,\ex\e^c,\ex
+
+generic      none \en
+generic      mprescripts
+skip         mmultiscripts
+generic      &xpath(//math:mmultiscripts[not(child::math:mprescripts) and (count(child::*)=3)])  ,\e_r,\ex\e^r,\ex
+generic      &xpath(//math:mmultiscripts[   (child::math:mprescripts) and (count(child::*)=4)])  ,,\e_l,\ex\e^l,\ex
+generic      &xpath(//math:mmultiscripts[   (child::math:mprescripts) and (count(child::*)=6)])  ,\e_r,\ex\e^r,\ex,\e_l,\ex\e^l,\ex
+
+generic      msqrt                                    \ev,\*\ex
+generic      mroot                                    \ev,\*\ex
+generic      &xpath(//math:mroot[count(child::*)=2])  \e^l,\ex\ev,\ex
+
+# ----------------------------------------------------------------------------------------------
+
+skip abs
+skip and
+skip annotation
+skip annotation-xml
+skip apply
+skip approx
+skip arccos
+skip arccosh
+skip arccot
+skip arccoth
+skip arccsc
+skip arccsch
+skip arcsec
+skip arcsech
+skip arcsin
+skip arcsinh
+skip arctan
+skip arctanh
+skip arg
+skip bvar
+skip card
+skip cartesianproduct
+skip ceiling
+skip ci
+skip cn
+skip codomain
+skip complexes
+skip compose
+skip condition
+skip conjugate
+skip cos
+skip cosh
+skip cot
+skip coth
+skip csc
+skip csch
+skip csymbol
+skip curl
+skip declare
+skip degree
+skip determinant
+skip diff
+skip divergence
+skip divide
+skip domain
+skip domainofapplication
+skip emptyset
+skip eq
+skip equivalent
+skip eulergamma
+skip exists
+skip exp
+skip exponentiale
+skip factorial
+skip factorof
+skip false
+skip floor
+skip fn
+skip forall
+skip gcd
+skip geq
+skip grad
+skip gt
+skip ident
+skip image
+skip imaginary
+skip imaginaryi
+skip implies
+skip in
+skip infinity
+skip int
+skip integers
+skip intersect
+skip interval
+skip inverse
+skip lambda
+skip laplacian
+skip lcm
+skip leq
+skip limit
+skip list
+skip ln
+skip log
+skip logbase
+skip lowlimit
+skip lt
+skip maction
+skip maligngroup
+skip malignmark
+skip matrix
+skip matrixrow
+skip max
+skip mean
+skip median
+skip menclose
+skip merror
+skip mglyph
+skip min
+skip minus
+skip mlabeledtr
+skip mode
+skip moment
+skip momentabout
+skip mpadded
+skip mphantom
+skip ms
+skip mspace
+skip mstyle
+skip naturalnumbers
+skip neq
+skip not
+skip notanumber
+skip notin
+skip notprsubset
+skip notsubset
+skip or
+skip otherwise
+skip outerproduct
+skip partialdiff
+skip pi
+skip piece
+skip piecewise
+skip plus
+skip power
+skip primes
+skip product
+skip prsubset
+skip quotient
+skip rationals
+skip real
+skip reals
+skip reln
+skip rem
+skip root
+skip scalarproduct
+skip sdev
+skip sec
+skip sech
+skip selector
+skip semantics
+skip sep
+skip set
+skip setdiff
+skip sin
+skip sinh
+skip subset
+skip sum
+skip tan
+skip tanh
+skip tendsto
+skip times
+skip transpose
+skip true
+skip union
+skip uplimit
+skip variance
+skip vector
+skip vectorproduct
+skip xor
+
+# ----------------------------------------------------------------------------------------------

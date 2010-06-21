@@ -1,0 +1,29 @@
+@unnchapentry{Introduction}{10001}{Top}{1}
+@numchapentry{Document Preparation}{1}{Document Preparation}{2}
+@numsecentry{Paragraphs}{1.1}{Paragraphs}{2}
+@numsecentry{Headings}{1.2}{Headings}{2}
+@numsecentry{Lists}{1.3}{Lists}{3}
+@numsecentry{Tables}{1.4}{Tables}{4}
+@numsecentry{Textboxes}{1.5}{Textboxes}{5}
+@numsecentry{Images}{1.6}{Images}{6}
+@numsecentry{Captions}{1.7}{Captions}{7}
+@numsecentry{Notes}{1.8}{Notes}{8}
+@numsecentry{Special Typeface}{1.9}{Special Typeface}{9}
+@numsecentry{Languages}{1.10}{Languages}{9}
+@numsecentry{Page Numbering}{1.11}{Page Numbering}{10}
+@numsecentry{Preliminary Pages}{1.12}{Preliminary Pages}{10}
+@numsecentry{Volume Management}{1.13}{Volume Management}{11}
+@numsecentry{Title Page}{1.14}{Title Page}{12}
+@numsecentry{List of Special Symbols}{1.15}{List of Special Symbols}{13}
+@numsecentry{Transcriber's Notes}{1.16}{Transcriber's Notes}{14}
+@numsecentry{Table of Contents}{1.17}{Table of Contents}{14}
+@numsecentry{Bibliographies}{1.18}{Bibliographies}{15}
+@numsecentry{Literal Braille}{1.19}{Literal Braille}{16}
+@numsecentry{Braille-only Material}{1.20}{Braille-only Material}{16}
+@numchapentry{Settings}{2}{Settings}{17}
+@numsecentry{General Settings}{2.1}{General Settings}{17}
+@numsecentry{Language Settings}{2.2}{Language Settings}{17}
+@numsecentry{Export / Emboss Settings}{2.3}{Export / Emboss Settings}{17}
+@numchapentry{Exporting}{3}{Exporting}{19}
+@numchapentry{Embossing}{4}{Embossing}{20}
+@unnchapentry{Settings Index}{10002}{Settings Index}{21}
