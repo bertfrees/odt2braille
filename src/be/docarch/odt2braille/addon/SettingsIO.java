@@ -49,6 +49,7 @@ import com.sun.star.text.XTextDocument;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
+import be.docarch.odt2braille.Settings.BrailleRules;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
@@ -82,6 +83,7 @@ public class SettingsIO {
 
     private final static short OPTIONAL = (short) 256;
 
+    private static String brailleRulesProperty =                 "[BRL]BrailleRules";
     private static String languageProperty =                     "[BRL]Language";
     private static String gradeProperty =                        "[BRL]Grade";
     private static String transcriptionInfoEnabledProperty =     "[BRL]TranscriptionInfo";
@@ -395,6 +397,14 @@ public class SettingsIO {
             loadedSettings.setStairstepTable(b);
         }
 
+        if ((s = getStringProperty(brailleRulesProperty)) != null) {
+            try {
+                loadedSettings.setBrailleRules(BrailleRules.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid braille rules type");
+            }
+        }
+
         logger.exiting("SettingsIO", "loadSettingsFromDocument");
 
         return loadedSettings;
@@ -565,6 +575,9 @@ public class SettingsIO {
         setProperty(mathProperty,
                     settingsAfterChange.getMath().name(),
                     settingsBeforeChange.getMath().name());
+        setProperty(brailleRulesProperty,
+                    settingsAfterChange.getBrailleRules().name(),
+                    settingsBeforeChange.getBrailleRules().name());
 
         if (odtModified) {
             xModifiable.setModified(true);

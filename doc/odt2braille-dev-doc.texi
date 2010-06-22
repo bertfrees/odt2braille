@@ -266,8 +266,7 @@ E.g.:
 
 @itemize @minus
 @item
-Left margin, first line indent, lines before, lines after, ...
-for headings, paragraphs, lists, listitems, tables, footnotes, endnotes, TNs, ...
+More settings for footnotes, endnotes, TNs, bibliography, ...
 @item
 Border lines of tables & textboxes.
 @item
@@ -303,8 +302,6 @@ Braille page number format for preliminary pages (e.g. p1,p2, ... or i,ii,iii,iv
 @item
 Tooltips in dialogs.
 @item
-Focus management in dialogs.
-@item
 Complete documentation.
 @item
 Documentation in Braille.
@@ -322,8 +319,6 @@ This will result in better performance.
 @item
 8 dot braille.
 @item
-When the document is saved as PEF at an existing file location, the file is not overwritten.
-@item
 Tactile graphics.
 @item
 Detect which ranges of unicode characters are used in the document and include the appropriate liblouis-tables.
@@ -334,15 +329,17 @@ The Settings class should be responsible for the correctness of its own members 
 @item
 OpenOffice.org accessibility for screen readers?
 @item
-'SimBraille' font included in OpenOffice.org distribution?
-@item
 OCR plugin for OpenOffice.org?
 @item
 Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).
 @item
-Custom paper size.
+Endnotes in preliminary pages: bug.
 @item
-General settings: select DEFAULT Braille specifications (BANA, UEB, ...) or CUSTOM
+makePEF(): should be made more robust.
+@item
+Odt2Daisy.preProcessing(): should be made faster.
+@item
+Custom paper size.
 @item
 Localization of braille menu.
 @item
@@ -356,13 +353,7 @@ Some liblouisxml bugs (pagination, table of contents, special typeface, ...)
 @item
 Auto-update link in Extension Manager (Rss feed)
 @item
-Replace the option to specify braille symbols for bulleted listitem of level 1 to 4
-with a new option to specify the braille representation of each different unicode bullet symbol that is used somewhere in a list in the document.
-For this purpose, in insertListNumbering(), also insert <bullet value="..." braille="&#x28??;"> tags besides <num value="..."> tags.
-@item
-Multiple paragraphs (<text:p> or <text:h>) in a list item (<text:list-item>) => insert linebreaks between them.
-@item
-odt2braille website.
+Website.
 @item
 Presentations & spreadsheets.
 @item

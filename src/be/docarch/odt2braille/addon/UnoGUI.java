@@ -403,7 +403,9 @@ public class UnoGUI {
             if (changedSettings.getGenericBraille() == BrailleFileType.PEF)  {
 
                 // Rename PEF file
-                pefFile.renameTo(new File(brailleUrl));
+                File newFile = new File(brailleUrl);
+                if (newFile.exists()) { newFile.delete(); }
+                pefFile.renameTo(newFile);
 
             } else {
 

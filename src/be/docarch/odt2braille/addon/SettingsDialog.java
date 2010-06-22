@@ -70,18 +70,22 @@ import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
 import be.docarch.odt2braille.Settings.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
+import be.docarch.odt2braille.Settings.BrailleRules;
 
 
 /**
  * Show an OpenOffice.org dialog window for adjusting the braille settings.
- * The dialog has 7 tabs:
+ * The dialog has 10 tabs:
  * <ul>
  * <li>General Settings</li>
+ * <li>Paragraph Settings</li>
+ * <li>Heading Settings</li>
  * <li>List Settings</li>
  * <li>Table Settings</li>
  * <li>Pagenumber Settings</li>
  * <li>Language Settings (only enabled if the document contains multiple languages)</li>
  * <li>Table of Contents Settings</li>
+ * <li>Mathematics Settings</li>
  * <li>Emboss/Export Settings</li>
  * </ul>
  *
@@ -149,7 +153,7 @@ public class SettingsDialog implements XItemListener,
     private XButton cancelButton = null;
     private XButton backButton = null;
     private XButton nextButton = null;
-
+    private XListBox brailleRulesListBox = null;
     private XItemEventBroadcaster roadMapBroadcaster = null;
 
     private XPropertySet windowProperties = null;
@@ -162,6 +166,7 @@ public class SettingsDialog implements XItemListener,
     private static String _cancelButton = "CommandButton2";
     private static String _backButton = "CommandButton3";
     private static String _nextButton = "CommandButton4";
+    private static String _brailleRulesListBox = "ListBox19";
 
     private static String L10N_windowTitle = null;
     private static String L10N_roadmapTitle = null;
@@ -239,6 +244,9 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet paragraphFirstLineFieldProperties = null;
     private XPropertySet paragraphRunoversFieldProperties = null;
+    private XPropertySet paragraphAlignmentListBoxProperties = null;
+    private XPropertySet paragraphLinesAboveProperties = null;
+    private XPropertySet paragraphLinesBelowProperties = null;
 
     private static String _paragraphAlignmentListBox = "ListBox12";
     private static String _paragraphFirstLineField = "NumericField7";
@@ -269,6 +277,9 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet headingFirstLineFieldProperties = null;
     private XPropertySet headingRunoversFieldProperties = null;
+    private XPropertySet headingAlignmentListBoxProperties = null;
+    private XPropertySet headingLinesAboveProperties = null;
+    private XPropertySet headingLinesBelowProperties = null;
 
     private static String _headingLevelListBox = "ListBox13";
     private static String _headingAlignmentListBox = "ListBox14";
@@ -305,6 +316,10 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet listFirstLineFieldProperties = null;
     private XPropertySet listRunoversFieldProperties = null;
+    private XPropertySet listAlignmentListBoxProperties = null;
+    private XPropertySet listLinesAboveProperties = null;
+    private XPropertySet listLinesBelowProperties = null;
+    private XPropertySet listLinesBetweenProperties = null;
 
     private static String _listLinesAboveField = "NumericField17";
     private static String _listLinesBelowField = "NumericField18";
@@ -356,6 +371,11 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet tableColumnDelimiterButtonProperties = null;
     private XPropertySet tableSpacingGroupBoxProperties = null;
     private XPropertySet tablePositionGroupBoxProperties = null;
+    private XPropertySet tableAlignmentListBoxProperties = null;
+    private XPropertySet tableLinesAboveProperties = null;
+    private XPropertySet tableLinesBelowProperties = null;
+    private XPropertySet tableLinesBetweenProperties = null;
+    private XPropertySet tableSimpleRadioButtonProperties = null;
 
     private static String _tableSimpleRadioButton = "OptionButton3";
     private static String _tableStairstepRadioButton = "OptionButton4";
@@ -846,6 +866,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_backButton));
         nextButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_nextButton));
+        brailleRulesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_brailleRulesListBox));
 
         // General Page
 
@@ -1063,6 +1085,12 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphFirstLineField)).getModel());
         paragraphRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphRunoversField)).getModel());
+        paragraphAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphAlignmentListBox)).getModel());
+        paragraphLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphLinesAboveField)).getModel());
+        paragraphLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphLinesBelowField)).getModel());
 
         // Headings Page
 
@@ -1070,6 +1098,12 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingFirstLineField)).getModel());
         headingRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingRunoversField)).getModel());
+        headingAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingAlignmentListBox)).getModel());
+        headingLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingLinesAboveField)).getModel());
+        headingLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingLinesBelowField)).getModel());
 
         // Lists Page
 
@@ -1077,6 +1111,14 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listFirstLineField)).getModel());
         listRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listRunoversField)).getModel());
+        listAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listAlignmentListBox)).getModel());
+        listLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listLinesAboveField)).getModel());
+        listLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listLinesBelowField)).getModel());
+        listLinesBetweenProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listLinesBetweenField)).getModel());
 
         // Tables Page
 
@@ -1090,6 +1132,16 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableColumnDelimiterField)).getModel());
         tableColumnDelimiterButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableColumnDelimiterButton)).getModel());
+        tableAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableAlignmentListBox)).getModel());
+        tableLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableLinesAboveField)).getModel());
+        tableLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableLinesBelowField)).getModel());
+        tableLinesBetweenProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableLinesBetweenField)).getModel());
+        tableSimpleRadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableSimpleRadioButton)).getModel());
 
         // Pagenumbers Page
 
@@ -1144,7 +1196,7 @@ public class SettingsDialog implements XItemListener,
 
         // Group Boxes
 
-        String groupBoxProperties[] = new String[] {"Height", "Name", "PositionX", "PositionY", "Width"};
+        String groupBoxProperties[] = new String[] {"Height", "Name", "PositionX", "PositionY", "Width", "Step"};
 
         String tableSpacingGroupBoxName = "tableSpacingGroupBox";
         String tablePositionGroupBoxName = "tablePositionGroupBox";
@@ -1161,10 +1213,10 @@ public class SettingsDialog implements XItemListener,
         XMultiPropertySet tableOfContentsSpacingGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsSpacingGroupBoxModel);
         XMultiPropertySet tableOfContentsPositionGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsPositionGroupBoxModel);
 
-        tableSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,            new Object[] { 1+roadMapHeight-45,  tableSpacingGroupBoxName,            roadMapWidth, 45,  200 });
-        tablePositionGroupBoxMPSet.setPropertyValues(groupBoxProperties,           new Object[] { 1+roadMapHeight-121, tablePositionGroupBoxName,           roadMapWidth, 121, 200 });
-        tableOfContentsSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,  new Object[] { 1+roadMapHeight-63,  tableOfContentsSpacingGroupBoxName,  roadMapWidth, 63,  200 });
-        tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-96,  tableOfContentsPositionGroupBoxName, roadMapWidth, 96,  200 });
+        tableSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,            new Object[] { 1+roadMapHeight-57,  tableSpacingGroupBoxName,            roadMapWidth, 57,  200, TABLES_PAGE });
+        tablePositionGroupBoxMPSet.setPropertyValues(groupBoxProperties,           new Object[] { 1+roadMapHeight-133, tablePositionGroupBoxName,           roadMapWidth, 133, 200, TABLES_PAGE });
+        tableOfContentsSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,  new Object[] { 1+roadMapHeight-75,  tableOfContentsSpacingGroupBoxName,  roadMapWidth, 75,  200, TOC_PAGE    });
+        tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-108, tableOfContentsPositionGroupBoxName, roadMapWidth, 108, 200, TOC_PAGE    });
 
         dialogNameContainer.insertByName(tableSpacingGroupBoxName, tableSpacingGroupBoxModel);
         dialogNameContainer.insertByName(tablePositionGroupBoxName, tablePositionGroupBoxModel);
@@ -1192,7 +1244,7 @@ public class SettingsDialog implements XItemListener,
     private void addListeners() {
 
         roadMapBroadcaster.addItemListener(this);
-
+        brailleRulesListBox.addItemListener(this);
         backButton.addActionListener(this);
         nextButton.addActionListener(this);
 
@@ -1350,10 +1402,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_listRunoversLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listPrefixLabel));
         xFixedText.setText(L10N_listPrefixLabel);
-//        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listSpacingLabel));
-//        xFixedText.setText(L10N_listSpacingLabel);
-//        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listOutliningLabel));
-//        xFixedText.setText(L10N_listOutliningLabel);
 
         // Tables Page
 
@@ -1474,28 +1522,24 @@ public class SettingsDialog implements XItemListener,
 
             paragraphAlignmentListBox.addItem(L10N_left, (short)0);
             paragraphAlignmentListBox.addItem(L10N_center, (short)1);
-            paragraphAlignmentListBox.selectItemPos((short)(settings.getCentered("paragraph")?1:0), true);
 
             paragraphFirstLineField.setDecimalDigits((short)0);
             paragraphFirstLineField.setMin((double)0);
-            paragraphFirstLineField.setMax((double)Integer.MAX_VALUE);
-            paragraphFirstLineField.setValue((double)settings.getFirstLineMargin("paragraph"));
+            paragraphFirstLineField.setMax((double)Integer.MAX_VALUE);            
 
             paragraphRunoversField.setDecimalDigits((short)0);
             paragraphRunoversField.setMin((double)0);
             paragraphRunoversField.setMax((double)Integer.MAX_VALUE);
-            paragraphRunoversField.setValue((double)settings.getRunoversMargin("paragraph"));
 
             paragraphLinesAboveField.setDecimalDigits((short)0);
             paragraphLinesAboveField.setMin((double)0);
             paragraphLinesAboveField.setMax((double)1);
-            paragraphLinesAboveField.setValue((double)settings.getLinesAbove("paragraph"));
 
             paragraphLinesBelowField.setDecimalDigits((short)0);
             paragraphLinesBelowField.setMin((double)0);
             paragraphLinesBelowField.setMax((double)1);
-            paragraphLinesBelowField.setValue((double)settings.getLinesBelow("paragraph"));
 
+            updateParagraphsPageFieldValues();
             updateParagraphsPageFieldProperties();
 
         }
@@ -1725,6 +1769,10 @@ public class SettingsDialog implements XItemListener,
 
         }
 
+        brailleRulesListBox.addItem("Custom", (short)0);
+        brailleRulesListBox.addItem("BANA",   (short)1);
+        brailleRulesListBox.selectItemPos((short)((settings.getBrailleRules()==BrailleRules.CUSTOM)?0:1), true);
+
         setPage((mode==SAVE_SETTINGS)?GENERAL_PAGE:EXPORT_EMBOSS_PAGE);
         windowProperties.setPropertyValue("Step", currentPage);
         roadmapProperties.setPropertyValue("Complete", true);
@@ -1872,27 +1920,41 @@ public class SettingsDialog implements XItemListener,
     private void updateParagraphsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean centered = settings.getCentered("paragraph");
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        paragraphFirstLineFieldProperties.setPropertyValue("Enabled", !centered);
-        paragraphRunoversFieldProperties.setPropertyValue("Enabled", !centered);
+        paragraphFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        paragraphRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        paragraphAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
+        paragraphLinesAboveProperties.setPropertyValue("Enabled", !bana);
+        paragraphLinesBelowProperties.setPropertyValue("Enabled", !bana);
 
     }
 
     private void updateHeadingsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean centered = settings.getCentered("heading" + currentHeadingLevel);
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        headingFirstLineFieldProperties.setPropertyValue("Enabled", !centered);
-        headingRunoversFieldProperties.setPropertyValue("Enabled", !centered);
+        headingFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        headingRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        headingAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
+        headingLinesAboveProperties.setPropertyValue("Enabled", !bana);
+        headingLinesBelowProperties.setPropertyValue("Enabled", !bana);
 
     }
 
     private void updateListsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean centered = settings.getCentered("list" + currentListLevel);
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        listFirstLineFieldProperties.setPropertyValue("Enabled", !centered);
-        listRunoversFieldProperties.setPropertyValue("Enabled", !centered);
+        listFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        listRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        listAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
+        listLinesAboveProperties.setPropertyValue("Enabled", !bana);
+        listLinesBelowProperties.setPropertyValue("Enabled", !bana);
+        listLinesBetweenProperties.setPropertyValue("Enabled", !bana);
+
 
     }
 
@@ -1903,23 +1965,39 @@ public class SettingsDialog implements XItemListener,
         tableColumnDelimiterButtonProperties.setPropertyValue("Enabled", !settings.stairstepTableIsEnabled());
         
         boolean centered = settings.getCentered("table" + ((currentTableColumn==0)?"":currentTableColumn));
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        tableFirstLineFieldProperties.setPropertyValue("Enabled", !centered);
-        tableRunoversFieldProperties.setPropertyValue("Enabled", !centered);
+        tableFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        tableRunoversFieldProperties.setPropertyValue("Enabled", !centered &&!bana);
+        tableAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
+        tableLinesAboveProperties.setPropertyValue("Enabled", !bana);
+        tableLinesBelowProperties.setPropertyValue("Enabled", !bana);
+        tableLinesBetweenProperties.setPropertyValue("Enabled", !bana);
+        tableSimpleRadioButtonProperties.setPropertyValue("Enabled", !bana);
 
     }
 
     private void updateTableOfContentsPageFieldProperties()  throws com.sun.star.uno.Exception {
 
         boolean enabled = settings.tableOfContentEnabled;
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         tableOfContentsTitleFieldProperties.setPropertyValue("Enabled", enabled);
-        tableOfContentsLinesBetweenFieldProperties.setPropertyValue("Enabled", enabled);
         tableOfContentsLevelListBoxProperties.setPropertyValue("Enabled", enabled);
-        tableOfContentsLineFillFieldProperties.setPropertyValue("Enabled", enabled);
-        tableOfContentsLineFillButtonProperties.setPropertyValue("Enabled", enabled);
-        tableOfContentsFirstLineFieldProperties.setPropertyValue("Enabled", enabled);
-        tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled);
+        tableOfContentsLineFillFieldProperties.setPropertyValue("Enabled", enabled && !bana);
+        tableOfContentsLineFillButtonProperties.setPropertyValue("Enabled", enabled && !bana);
+        tableOfContentsLinesBetweenFieldProperties.setPropertyValue("Enabled", enabled && !bana);
+        tableOfContentsFirstLineFieldProperties.setPropertyValue("Enabled", enabled && !bana);
+        tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled && !bana);
+
+    }
+    private void updateParagraphsPageFieldValues() {
+
+        paragraphAlignmentListBox.selectItemPos((short)(settings.getCentered("paragraph")?1:0), true);
+        paragraphFirstLineField.setValue((double)settings.getFirstLineMargin("paragraph"));
+        paragraphRunoversField.setValue((double)settings.getRunoversMargin("paragraph"));
+        paragraphLinesAboveField.setValue((double)settings.getLinesAbove("paragraph"));
+        paragraphLinesBelowField.setValue((double)settings.getLinesBelow("paragraph"));
 
     }
 
@@ -2420,6 +2498,38 @@ public class SettingsDialog implements XItemListener,
                     setPage(newPage);
 
                 }
+
+            } else if (source.equals(brailleRulesListBox)) {
+
+                settings.setBrailleRules(BrailleRules.values()[brailleRulesListBox.getSelectedItemPos()]);
+
+                if (settings.getBrailleRules()==BrailleRules.BANA) {
+
+                    updateParagraphsPageFieldValues();
+                    updateHeadingsPageFieldValues();
+                    updateListsPageFieldValues();
+                    if (currentTableColumn==0) {
+                        settings.setFirstLineMargin("table", (int)tableFirstLineField.getValue());
+                        settings.setRunoversMargin("table", (int)tableRunoversField.getValue());
+                        currentTableColumn = 1;
+                    }
+                    tableSimpleRadioButton.setState(!settings.stairstepTableIsEnabled());
+                    tableStairstepRadioButton.setState(settings.stairstepTableIsEnabled());
+                    tableLinesAboveField.setValue((double)settings.getLinesAbove("table"));
+                    tableLinesBelowField.setValue((double)settings.getLinesBelow("table"));
+                    tableLinesBetweenField.setValue((double)settings.getLinesBetween("table"));
+                    updateTablesPageFieldValues();
+                    tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
+                    tableOfContentsLinesBetweenField.setValue((double)settings.getLinesBetween("toc"));
+                    updateTableOfContentsPageFieldValues();
+
+                }
+
+                updateParagraphsPageFieldProperties();
+                updateHeadingsPageFieldProperties();
+                updateListsPageFieldProperties();
+                updateTablesPageFieldProperties();
+                updateTableOfContentsPageFieldProperties();
 
             } else {
                 switch (currentPage) {
