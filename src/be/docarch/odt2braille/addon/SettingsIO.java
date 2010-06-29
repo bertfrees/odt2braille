@@ -95,8 +95,6 @@ public class SettingsIO {
     private static String transcribersNotesPageTitleProperty =   "[BRL]TNPageTitle";
     private static String tableOfContentEnabledProperty =        "[BRL]TableOfContent";
     private static String tableOfContentTitleProperty =          "[BRL]TableOfContentTitle";
-    private static String printPageNumbersEnabledProperty =      "[BRL]PrintPageNumbers";
-    private static String braillePageNumbersEnabledProperty =    "[BRL]BraillePageNumbers";
     private static String preliminaryVolumeEnabledProperty =     "[BRL]PreliminaryVolume";
     private static String genericOrSpecificProperty =            "[BRL]ExportAsGeneric";
     private static String genericBrailleProperty =               "[BRL]GenericFileType";
@@ -120,6 +118,19 @@ public class SettingsIO {
     private static String linesBelowProperty =                   "[BRL]LinesBelow";
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
     private static String listPrefixProperty =                   "[BRL]ListPrefix";
+    private static String printPageNumbersProperty =             "[BRL]PrintPageNumbers";
+    private static String braillePageNumbersProperty =           "[BRL]BraillePageNumbers";
+    private static String pageSeparatorProperty =                "[BRL]PageSeparator";
+    private static String pageSeparatorNumberProperty =          "[BRL]PageSeparatorNumber";
+    private static String continuePagesProperty =                "[BRL]ContinuePages";
+    private static String ignoreEmptyPagesProperty =             "[BRL]IgnoreEmptyPages";
+    private static String mergeUnnumberedPagesProperty =         "[BRL]MergeUnnumberedPages";
+    private static String pageNumberAtTopOnSepLineProperty =     "[BRL]PageNumberAtTopOnSepLine";
+    private static String pageNumberAtBottomOnSepLineProperty =  "[BRL]PageNumberAtBottomOnSepLine";
+    private static String printPageNumberRangeProperty =         "[BRL]PrintPageNumberRange";
+    private static String printPageNumberAtProperty =            "[BRL]PrintPageNumberAt";
+    private static String braillePageNumberAtProperty =          "[BRL]BraillePageNumberAt";
+    private static String preliminaryPageNumberFormatProperty =  "[BRL]PreliminaryPageNumberFormat";
 
     /**
      * Creates a new <code>SettingsIO</code> instance.
@@ -361,12 +372,56 @@ public class SettingsIO {
             loadedSettings.setMarginTop(d.intValue());
         }
 
-        if ((b = getBooleanProperty(printPageNumbersEnabledProperty)) != null) {
-            loadedSettings.printPageNumbersEnabled = b;
+        if ((b = getBooleanProperty(printPageNumbersProperty)) != null) {
+            loadedSettings.setPrintPageNumbers(b);
         }
 
-        if ((b = getBooleanProperty(braillePageNumbersEnabledProperty)) != null) {
-            loadedSettings.braillePageNumbersEnabled = b;
+        if ((b = getBooleanProperty(braillePageNumbersProperty)) != null) {
+            loadedSettings.setBraillePageNumbers(b);
+        }
+
+        if ((b = getBooleanProperty(pageSeparatorProperty)) != null) {
+            loadedSettings.setPageSeparator(b);
+        }
+
+        if ((b = getBooleanProperty(pageSeparatorNumberProperty)) != null) {
+            loadedSettings.setPageSeparatorNumber(b);
+        }
+
+        if ((b = getBooleanProperty(continuePagesProperty)) != null) {
+            loadedSettings.setContinuePages(b);
+        }
+
+        if ((b = getBooleanProperty(ignoreEmptyPagesProperty)) != null) {
+            loadedSettings.setIgnoreEmptyPages(b);
+        }
+
+        if ((b = getBooleanProperty(mergeUnnumberedPagesProperty)) != null) {
+            loadedSettings.setMergeUnnumberedPages(b);
+        }
+
+        if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
+            loadedSettings.setPageNumberAtTopOnSeperateLine(b);
+        }
+
+        if ((b = getBooleanProperty(pageNumberAtBottomOnSepLineProperty)) != null) {
+            loadedSettings.setPageNumberAtBottomOnSeperateLine(b);
+        }
+
+        if ((b = getBooleanProperty(printPageNumberRangeProperty)) != null) {
+            loadedSettings.setPrintPageNumberRange(b);
+        }
+
+        if ((s = getStringProperty(printPageNumberAtProperty)) != null) {
+            loadedSettings.setPrintPageNumberAt(s);
+        }
+
+        if ((s = getStringProperty(braillePageNumberAtProperty)) != null) {
+            loadedSettings.setBraillePageNumberAt(s);
+        }
+
+        if ((s = getStringProperty(preliminaryPageNumberFormatProperty)) != null) {
+            loadedSettings.setPreliminaryPageFormat(s);
         }
 
         if ((b = getBooleanProperty(transcribersNotesPageEnabledProperty)) != null) {
@@ -506,12 +561,45 @@ public class SettingsIO {
         setProperty(tableOfContentTitleProperty,
                     settingsAfterChange.tableOfContentTitle,
                     settingsBeforeChange.tableOfContentTitle);
-        setProperty(printPageNumbersEnabledProperty,
-                    settingsAfterChange.printPageNumbersEnabled,
-                    settingsBeforeChange.printPageNumbersEnabled);
-        setProperty(braillePageNumbersEnabledProperty,
-                    settingsAfterChange.braillePageNumbersEnabled,
-                    settingsBeforeChange.braillePageNumbersEnabled);
+        setProperty(printPageNumbersProperty,
+                    settingsAfterChange.getPrintPageNumbers(),
+                    settingsBeforeChange.getPrintPageNumbers());
+        setProperty(braillePageNumbersProperty,
+                    settingsAfterChange.getBraillePageNumbers(),
+                    settingsBeforeChange.getBraillePageNumbers());
+        setProperty(pageSeparatorProperty,
+                    settingsAfterChange.getPageSeparator(),
+                    settingsBeforeChange.getPageSeparator());
+        setProperty(pageSeparatorNumberProperty,
+                    settingsAfterChange.getPageSeparatorNumber(),
+                    settingsBeforeChange.getPageSeparatorNumber());
+        setProperty(continuePagesProperty,
+                    settingsAfterChange.getContinuePages(),
+                    settingsBeforeChange.getContinuePages());
+        setProperty(ignoreEmptyPagesProperty,
+                    settingsAfterChange.getIgnoreEmptyPages(),
+                    settingsBeforeChange.getIgnoreEmptyPages());
+        setProperty(mergeUnnumberedPagesProperty,
+                    settingsAfterChange.getMergeUnnumberedPages(),
+                    settingsBeforeChange.getMergeUnnumberedPages());
+        setProperty(pageNumberAtTopOnSepLineProperty,
+                    settingsAfterChange.getPageNumberAtTopOnSeperateLine(),
+                    settingsBeforeChange.getPageNumberAtTopOnSeperateLine());
+        setProperty(pageNumberAtBottomOnSepLineProperty,
+                    settingsAfterChange.getPageNumberAtBottomOnSeperateLine(),
+                    settingsBeforeChange.getPageNumberAtBottomOnSeperateLine());
+        setProperty(printPageNumberRangeProperty,
+                    settingsAfterChange.getPrintPageNumberRange(),
+                    settingsBeforeChange.getPrintPageNumberRange());
+        setProperty(printPageNumberAtProperty,
+                    settingsAfterChange.getPrintPageNumberAt(),
+                    settingsBeforeChange.getPrintPageNumberAt());
+        setProperty(braillePageNumberAtProperty,
+                    settingsAfterChange.getBraillePageNumberAt(),
+                    settingsBeforeChange.getBraillePageNumberAt());
+        setProperty(preliminaryPageNumberFormatProperty,
+                    settingsAfterChange.getPreliminaryPageFormat(),
+                    settingsBeforeChange.getPreliminaryPageFormat());
         setProperty(transcribersNotesPageEnabledProperty,
                     settingsAfterChange.transcribersNotesPageEnabled,
                     settingsBeforeChange.transcribersNotesPageEnabled);

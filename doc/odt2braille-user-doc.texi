@@ -306,7 +306,9 @@ You can find more help on working with Writer in the online guide:
 				@item
 				@@TODO: Choice between linear / stairstep format. "Table cells separated by" setting.
 				
-				@@TODO: rowspan / colspan
+				@@TODO: Merged cells (rowspan / colspan): 
+				The merged cell is processed as if its whole content were in the left- and uppermost 'sub'-cell. The other (empty) 'sub'-cells are ignored.
+				Merged cells should be avoided.
 			@end itemize
 
 		@subheading Braille

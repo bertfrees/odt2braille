@@ -3,6 +3,6 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
-	preliminary &xpath(//dtb:frontmatter) \*@e		(!! Werkt blijkbaar niet als braille paginanummer bovenaan staat ?)
+	preliminary &xpath(//dtb:frontmatter) \*@e
 	
 # ----------------------------------------------------------------------------------------------

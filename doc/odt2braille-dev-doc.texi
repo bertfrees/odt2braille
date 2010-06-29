@@ -272,20 +272,6 @@ Border lines of tables & textboxes.
 @item
 Headings on new page.
 @item
-Braille page numbers: top or bottom.
-@item
-Print page numbers: top or bottom.
-@item
-Braille & print page numbers on same line.
-@item
-Page numbers on seperate line.
-@item
-Disable page change indicator.
-@item
-Disable page number to the right of page change indicator.
-@item
-Print page number RANGE instead of single print page number.
-@item
 Volume info and transcription info.
 @item
 Continued suffix.
@@ -294,11 +280,11 @@ Special symbols to be included in the special symbols list.
 @item
 Special symbols descriptions.
 @item
-Braille page number format for preliminary pages (e.g. p1,p2, ... or i,ii,iii,iv,... or ?)
-@item
 ...
 @end itemize
 
+@item
+Volume info block: preliminary pages "p1-p..." OR "i-..." dependent on "preliminaryPageNumberFormat"
 @item
 Tooltips in dialogs.
 @item

@@ -416,19 +416,77 @@ public class SettingsDialog implements XItemListener,
 
     // Pagenumbers Page
 
-    private XCheckBox printPageNumbersCheckBox = null;
     private XCheckBox braillePageNumbersCheckBox = null;
-
+    private XListBox braillePageNumberAtListBox = null;
+    private XListBox preliminaryPageNumberFormatListBox = null;
+    private XCheckBox printPageNumbersCheckBox = null;
+    private XListBox printPageNumberAtListBox = null;
+    private XCheckBox printPageNumberRangeCheckBox = null;
+    private XCheckBox continuePagesCheckBox = null;
+    private XCheckBox pageSeparatorCheckBox = null;
+    private XCheckBox pageSeparatorNumberCheckBox = null;
+    private XCheckBox ignoreEmptyPagesCheckBox = null;
+    private XCheckBox mergeUnnumberedPagesCheckBox = null;
+    private XCheckBox numbersAtTopOnSepLineCheckBox = null;
+    private XCheckBox numbersAtBottomOnSepLineCheckBox = null;
+    
     private XPropertySet braillePageNumbersCheckBoxProperties = null;
+    private XPropertySet braillePageNumberAtListBoxProperties = null;
+    private XPropertySet preliminaryPageNumberFormatListBoxProperties = null;
+    private XPropertySet printPageNumbersCheckBoxProperties = null;
+    private XPropertySet printPageNumberAtListBoxProperties = null;
+    private XPropertySet printPageNumberRangeCheckBoxProperties = null;
+    private XPropertySet continuePagesCheckBoxProperties = null;
+    private XPropertySet pageSeparatorCheckBoxProperties = null;
+    private XPropertySet pageSeparatorNumberCheckBoxProperties = null;
+    private XPropertySet ignoreEmptyPagesCheckBoxProperties = null;
+    private XPropertySet mergeUnnumberedPagesCheckBoxProperties = null;
+    private XPropertySet numbersAtTopOnSepLineCheckBoxProperties = null;
+    private XPropertySet numbersAtBottomOnSepLineCheckBoxProperties = null;
 
-    private static String _printPageNumbersCheckBox = "CheckBox6";
     private static String _braillePageNumbersCheckBox = "CheckBox7";
+    private static String _braillePageNumberAtListBox = "ListBox21";
+    private static String _preliminaryPageNumberFormatListBox = "ListBox20";
+    private static String _printPageNumbersCheckBox = "CheckBox6";
+    private static String _printPageNumberAtListBox = "ListBox22";
+    private static String _printPageNumberRangeCheckBox = "CheckBox11";
+    private static String _continuePagesCheckBox = "CheckBox12";
+    private static String _pageSeparatorCheckBox = "CheckBox13";
+    private static String _pageSeparatorNumberCheckBox = "CheckBox14";
+    private static String _ignoreEmptyPagesCheckBox = "CheckBox15";
+    private static String _mergeUnnumberedPagesCheckBox = "CheckBox16";
+    private static String _numbersAtTopOnSepLineCheckBox = "CheckBox17";
+    private static String _numbersAtBottomOnSepLineCheckBox = "CheckBox18";
 
-    private static String _printPageNumbersLabel = "Label9";
     private static String _braillePageNumbersLabel = "Label10";
+    private static String _braillePageNumberAtLabel = "Label57";
+    private static String _preliminaryPageNumberFormatLabel = "Label55";
+    private static String _printPageNumbersLabel = "Label9";
+    private static String _printPageNumberAtLabel = "Label62";
+    private static String _printPageNumberRangeLabel = "Label61";
+    private static String _continuePagesLabel = "Label63";
+    private static String _pageSeparatorLabel = "Label64";
+    private static String _pageSeparatorNumberLabel = "Label65";
+    private static String _ignoreEmptyPagesLabel = "Label66";
+    private static String _mergeUnnumberedPagesLabel = "Label67";
+    private static String _numbersAtTopOnSepLineLabel = "Label68";
+    private static String _numbersAtBottomOnSepLineLabel = "Label69";
 
-    private String L10N_printPageNumbersLabel = null;
     private String L10N_braillePageNumbersLabel = null;
+    private String L10N_braillePageNumberAtLabel = null;
+    private String L10N_preliminaryPageNumberFormatLabel = null;
+    private String L10N_printPageNumbersLabel = null;
+    private String L10N_printPageNumberAtLabel = null;
+    private String L10N_printPageNumberRangeLabel = null;
+    private String L10N_continuePagesLabel = null;
+    private String L10N_pageSeparatorLabel = null;
+    private String L10N_pageSeparatorNumberLabel = null;
+    private String L10N_ignoreEmptyPagesLabel = null;
+    private String L10N_mergeUnnumberedPagesLabel = null;
+    private String L10N_numbersAtTopOnSepLineLabel = null;
+    private String L10N_numbersAtBottomOnSepLineLabel = null;
+    private String L10N_top = null;
+    private String L10N_bottom = null;
 
     // Languages Page
 
@@ -703,8 +761,21 @@ public class SettingsDialog implements XItemListener,
 
         // Pagenumbers Page
 
-        L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
         L10N_braillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumbersLabel");
+        L10N_braillePageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumberAtLabel") + " :";
+        L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryPageNumberFormatLabel") + " :";
+        L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
+        L10N_printPageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberAtLabel") + " :";
+        L10N_printPageNumberRangeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberRangeLabel");
+        L10N_continuePagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("continuePagesLabel");
+        L10N_pageSeparatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("pageSeparatorLabel");
+        L10N_pageSeparatorNumberLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("pageSeparatorNumberLabel");
+        L10N_ignoreEmptyPagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("ignoreEmptyPagesLabel");
+        L10N_mergeUnnumberedPagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mergeUnnumberedPagesLabel");
+        L10N_numbersAtTopOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numbersAtTopOnSepLineLabel");
+        L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numbersAtBottomOnSepLineLabel");
+        L10N_top = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
+        L10N_bottom = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
 
         // Languages Page
 
@@ -968,10 +1039,32 @@ public class SettingsDialog implements XItemListener,
 
         // Pagenumbers Page
 
-        printPageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_printPageNumbersCheckBox));
         braillePageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_braillePageNumbersCheckBox));
+        braillePageNumberAtListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_braillePageNumberAtListBox));
+        preliminaryPageNumberFormatListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_preliminaryPageNumberFormatListBox));
+        printPageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_printPageNumbersCheckBox));
+        printPageNumberAtListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_printPageNumberAtListBox));
+        printPageNumberRangeCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_printPageNumberRangeCheckBox));
+        continuePagesCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_continuePagesCheckBox));
+        pageSeparatorCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_pageSeparatorCheckBox));
+        pageSeparatorNumberCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_pageSeparatorNumberCheckBox));
+        ignoreEmptyPagesCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_ignoreEmptyPagesCheckBox));
+        mergeUnnumberedPagesCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_mergeUnnumberedPagesCheckBox));
+        numbersAtTopOnSepLineCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_numbersAtTopOnSepLineCheckBox));
+        numbersAtBottomOnSepLineCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_numbersAtBottomOnSepLineCheckBox));
 
         // Languages Page
 
@@ -1147,6 +1240,30 @@ public class SettingsDialog implements XItemListener,
 
         braillePageNumbersCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, braillePageNumbersCheckBox)).getModel());
+        braillePageNumberAtListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, braillePageNumberAtListBox)).getModel());
+        preliminaryPageNumberFormatListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, preliminaryPageNumberFormatListBox)).getModel());
+        printPageNumbersCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, printPageNumbersCheckBox)).getModel());
+        printPageNumberAtListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, printPageNumberAtListBox)).getModel());
+        printPageNumberRangeCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, printPageNumberRangeCheckBox)).getModel());
+        continuePagesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, continuePagesCheckBox)).getModel());
+        pageSeparatorCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, pageSeparatorCheckBox)).getModel());
+        pageSeparatorNumberCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, pageSeparatorNumberCheckBox)).getModel());
+        ignoreEmptyPagesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, ignoreEmptyPagesCheckBox)).getModel());
+        mergeUnnumberedPagesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, mergeUnnumberedPagesCheckBox)).getModel());
+        numbersAtTopOnSepLineCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtTopOnSepLineCheckBox)).getModel());
+        numbersAtBottomOnSepLineCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtBottomOnSepLineCheckBox)).getModel());
 
         // Languages Page
 
@@ -1278,6 +1395,13 @@ public class SettingsDialog implements XItemListener,
         genericBrailleListBox.addItemListener(this);
         paperSizeListBox.addItemListener(this);
         duplexCheckBox.addItemListener(this);
+
+        braillePageNumbersCheckBox.addItemListener(this);
+        braillePageNumberAtListBox.addItemListener(this);
+        printPageNumbersCheckBox.addItemListener(this);
+        printPageNumberAtListBox.addItemListener(this);
+        printPageNumberRangeCheckBox.addItemListener(this);
+        pageSeparatorCheckBox.addItemListener(this);
 
         numberOfCellsPerLineTextComponent.addTextListener(this);
         numberOfLinesPerPageTextComponent.addTextListener(this);
@@ -1428,10 +1552,32 @@ public class SettingsDialog implements XItemListener,
 
         // Pagenumbers Page
 
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumbersLabel));
-        xFixedText.setText(L10N_printPageNumbersLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_braillePageNumbersLabel));
         xFixedText.setText(L10N_braillePageNumbersLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_braillePageNumberAtLabel));
+        xFixedText.setText(L10N_braillePageNumberAtLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preliminaryPageNumberFormatLabel));
+        xFixedText.setText(L10N_preliminaryPageNumberFormatLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumbersLabel));
+        xFixedText.setText(L10N_printPageNumbersLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumberAtLabel));
+        xFixedText.setText(L10N_printPageNumberAtLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumberRangeLabel));
+        xFixedText.setText(L10N_printPageNumberRangeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_continuePagesLabel));
+        xFixedText.setText(L10N_continuePagesLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_pageSeparatorLabel));
+        xFixedText.setText(L10N_pageSeparatorLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_pageSeparatorNumberLabel));
+        xFixedText.setText(L10N_pageSeparatorNumberLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_ignoreEmptyPagesLabel));
+        xFixedText.setText(L10N_ignoreEmptyPagesLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mergeUnnumberedPagesLabel));
+        xFixedText.setText(L10N_mergeUnnumberedPagesLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numbersAtTopOnSepLineLabel));
+        xFixedText.setText(L10N_numbersAtTopOnSepLineLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numbersAtBottomOnSepLineLabel));
+        xFixedText.setText(L10N_numbersAtBottomOnSepLineLabel);
 
         // Languages Page
 
@@ -1654,9 +1800,15 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[PAGENUMBERS_PAGE-1]) {
 
-            braillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", false);
-            printPageNumbersCheckBox.setState((short)(settings.printPageNumbersEnabled?1:0));
-            braillePageNumbersCheckBox.setState((short)(settings.braillePageNumbersEnabled?1:0));
+            braillePageNumberAtListBox.addItem(L10N_top, (short)0);
+            braillePageNumberAtListBox.addItem(L10N_bottom, (short)1);
+            preliminaryPageNumberFormatListBox.addItem("p1,p2,p3,...", (short)0);
+            preliminaryPageNumberFormatListBox.addItem("i,ii,iii,...", (short)1);
+            printPageNumberAtListBox.addItem(L10N_top, (short)0);
+            printPageNumberAtListBox.addItem(L10N_bottom, (short)1);
+
+            updatePageNumbersPageFieldValues();
+            updatePageNumbersPageFieldProperties();
 
         }
 
@@ -1824,8 +1976,13 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesVisited[PAGENUMBERS_PAGE-1]) {
 
-            settings.printPageNumbersEnabled = (printPageNumbersCheckBox.getState() == (short) 1);
-            settings.braillePageNumbersEnabled = (braillePageNumbersCheckBox.getState() == (short) 1);
+            settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?"p":"roman"));
+            settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
+            settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
+            settings.setIgnoreEmptyPages(ignoreEmptyPagesCheckBox.getState() == (short) 1);
+            settings.setMergeUnnumberedPages(mergeUnnumberedPagesCheckBox.getState() == (short) 1);
+            settings.setPageNumberAtTopOnSeperateLine(numbersAtTopOnSepLineCheckBox.getState() == (short) 1);
+            settings.setPageNumberAtBottomOnSeperateLine(numbersAtBottomOnSepLineCheckBox.getState() == (short) 1);
 
         }
 
@@ -1977,6 +2134,32 @@ public class SettingsDialog implements XItemListener,
 
     }
 
+    private void updatePageNumbersPageFieldProperties() throws com.sun.star.uno.Exception {
+
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
+
+        braillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
+        braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
+        preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
+        printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
+        printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
+        printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
+        continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
+        pageSeparatorCheckBoxProperties.setPropertyValue("Enabled", !bana);
+        pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator());
+        ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
+        mergeUnnumberedPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
+        numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana &&
+                                                                            (settings.getBraillePageNumberAt().equals("top")
+                                                                                   || settings.getPrintPageNumberAt().equals("top")) &&
+                                                                            !(settings.getPrintPageNumberAt().equals("top")
+                                                                                   && settings.getPrintPageNumbers()
+                                                                                   && settings.getPrintPageNumberRange()));
+        numbersAtBottomOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana && (settings.getBraillePageNumberAt().equals("bottom")
+                                                                                      || settings.getPrintPageNumberAt().equals("bottom")));
+
+    }
+
     private void updateTableOfContentsPageFieldProperties()  throws com.sun.star.uno.Exception {
 
         boolean enabled = settings.tableOfContentEnabled;
@@ -2072,6 +2255,24 @@ public class SettingsDialog implements XItemListener,
             settings.setFirstLineMargin("table", (int)tableFirstLineField.getValue());
             settings.setRunoversMargin("table", (int)tableRunoversField.getValue());
         }
+    }
+
+    private void updatePageNumbersPageFieldValues() {
+
+        braillePageNumbersCheckBox.setState((short)(settings.getBraillePageNumbers()?1:0));
+        braillePageNumberAtListBox.selectItemPos((short)((settings.getBraillePageNumberAt().equals("top"))?0:1), true);
+        preliminaryPageNumberFormatListBox.selectItemPos((short)((settings.getPreliminaryPageFormat().equals("p"))?0:1), true);
+        printPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbers()?1:0));
+        printPageNumberAtListBox .selectItemPos((short)((settings.getPrintPageNumberAt().equals("top"))?0:1), true);
+        printPageNumberRangeCheckBox.setState((short)(settings.getPrintPageNumberRange()?1:0));
+        continuePagesCheckBox.setState((short)(settings.getContinuePages()?1:0));
+        pageSeparatorCheckBox.setState((short)(settings.getPageSeparator()?1:0));
+        pageSeparatorNumberCheckBox.setState((short)(settings.getPageSeparatorNumber()?1:0));
+        ignoreEmptyPagesCheckBox.setState((short)(settings.getIgnoreEmptyPages()?1:0));
+        mergeUnnumberedPagesCheckBox.setState((short)(settings.getMergeUnnumberedPages()?1:0));
+        numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeperateLine()?1:0));
+        numbersAtBottomOnSepLineCheckBox.setState((short)(settings.getPageNumberAtBottomOnSeperateLine()?1:0));
+
     }
 
     private void updateTableOfContentsPageFieldValues() {
@@ -2519,6 +2720,7 @@ public class SettingsDialog implements XItemListener,
                     tableLinesBelowField.setValue((double)settings.getLinesBelow("table"));
                     tableLinesBetweenField.setValue((double)settings.getLinesBetween("table"));
                     updateTablesPageFieldValues();
+                    updatePageNumbersPageFieldValues();
                     tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
                     tableOfContentsLinesBetweenField.setValue((double)settings.getLinesBetween("toc"));
                     updateTableOfContentsPageFieldValues();
@@ -2529,6 +2731,7 @@ public class SettingsDialog implements XItemListener,
                 updateHeadingsPageFieldProperties();
                 updateListsPageFieldProperties();
                 updateTablesPageFieldProperties();
+                updatePageNumbersPageFieldProperties();
                 updateTableOfContentsPageFieldProperties();
 
             } else {
@@ -2621,7 +2824,38 @@ public class SettingsDialog implements XItemListener,
                         
                         break;
 
-                    case PAGENUMBERS_PAGE: break;
+                    case PAGENUMBERS_PAGE:
+
+                        if (source.equals(braillePageNumbersCheckBox)) {
+                            settings.setBraillePageNumbers(braillePageNumbersCheckBox.getState() == (short)1);
+                        } else if (source.equals(braillePageNumberAtListBox)) {
+                            settings.setBraillePageNumberAt(((braillePageNumberAtListBox.getSelectedItemPos() == (short)0)?"top":"bottom"));
+                        } else if (source.equals(pageSeparatorCheckBox)) {
+                            settings.setPageSeparator(pageSeparatorCheckBox.getState() == (short)1);
+                        }
+
+                        else if (source.equals(printPageNumbersCheckBox) ||
+                                 source.equals(printPageNumberAtListBox) ||
+                                 source.equals(printPageNumberRangeCheckBox)) {
+
+                            if (source.equals(printPageNumbersCheckBox)) {
+                                settings.setPrintPageNumbers(printPageNumbersCheckBox.getState() == (short)1);
+                            } else if (source.equals(printPageNumberAtListBox)) {
+                                settings.setPrintPageNumberAt(((printPageNumberAtListBox.getSelectedItemPos() == (short)0)?"top":"bottom"));
+                            } else if (source.equals(printPageNumberRangeCheckBox)) {
+                                settings.setPrintPageNumberRange(printPageNumberRangeCheckBox.getState() == (short) 1);
+                            }
+
+                            if (settings.getPrintPageNumberAt().equals("top") &&
+                                settings.getPrintPageNumbers() &&
+                                settings.getPrintPageNumberRange()) {
+                                    settings.setPageNumberAtTopOnSeperateLine(true);
+                                    numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeperateLine()?1:0));
+                            }
+                        }
+
+                        updatePageNumbersPageFieldProperties();
+                        break;
 
                     case LANGUAGES_PAGE:
 
