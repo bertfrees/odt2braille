@@ -260,31 +260,31 @@ For more information read the
 @itemize @bullet
 @item
 More flexibility by providing more settings!
-Create a new tab in the settings dialog for each category of settings.
-Each language should have its own default settings.
-E.g.:
 
 @itemize @minus
 @item
-More settings for footnotes, endnotes, TNs, bibliography, ...
+Settings for footnotes, endnotes, TNs, bibliography, ...
 @item
-Border lines of tables & textboxes.
-@item
-Headings on new page.
+Border lines of tables & textboxes ???
+ => linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
+  -> Aantal karakters in string = aantal lijnen in border
+  -> n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
 @item
 Volume info and transcription info.
 @item
 Continued suffix.
 @item
-Special symbols to be included in the special symbols list.
-@item
-Special symbols descriptions.
+Special symbols to be included in the special symbols list
+  - Always / only first volume / only if present in current volume / never.
+  - Change description of special symbols.
+  - Add special symbols + their description.
+  - Change order of entries.
 @item
 ...
 @end itemize
 
 @item
-Volume info block: preliminary pages "p1-p..." OR "i-..." dependent on "preliminaryPageNumberFormat"
+Volume info block: - Print pages
 @item
 Tooltips in dialogs.
 @item
@@ -299,9 +299,6 @@ Support more embossers.
 Only Interpoint55 is tested.
 @item
 Keyboard shortcut for braille menu.
-@item
-Replace DOM processing with XSL transformation where this is possible.
-This will result in better performance.
 @item
 8 dot braille.
 @item
@@ -324,8 +321,8 @@ Endnotes in preliminary pages: bug.
 makePEF(): should be made more robust.
 @item
 Odt2Daisy.preProcessing(): should be made faster.
-@item
-Custom paper size.
+Replace DOM processing with XSL transformation where this is possible.
+This will result in better performance.
 @item
 Localization of braille menu.
 @item
@@ -334,8 +331,6 @@ Checking of volume lengths: should be dependent on the recto/recto-verso setting
 When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
 @item
 UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
-@item
-Some liblouisxml bugs (pagination, table of contents, special typeface, ...)
 @item
 Auto-update link in Extension Manager (Rss feed)
 @item

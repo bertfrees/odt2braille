@@ -101,6 +101,8 @@ public class SettingsIO {
     private static String embosserProperty =                     "[BRL]Embosser";
     private static String tableProperty =                        "[BRL]CharacterSet";
     private static String paperSizeProperty =                    "[BRL]PaperSize";
+    private static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
+    private static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
     private static String duplexProperty =                       "[BRL]RectoVerso";
     private static String mirrorAlignProperty =                  "[BRL]MirrorAlign";
     private static String numberOfCellsPerLineProperty =         "[BRL]CellsPerLine";
@@ -131,6 +133,7 @@ public class SettingsIO {
     private static String printPageNumberAtProperty =            "[BRL]PrintPageNumberAt";
     private static String braillePageNumberAtProperty =          "[BRL]BraillePageNumberAt";
     private static String preliminaryPageNumberFormatProperty =  "[BRL]PreliminaryPageNumberFormat";
+    private static String hardPageBreaksProperty =               "[BRL]HardPageBreaks";
 
     /**
      * Creates a new <code>SettingsIO</code> instance.
@@ -236,6 +239,7 @@ public class SettingsIO {
 
         String s;
         Double d;
+        Double d2;
         Boolean b;
 
         ArrayList<String> languages = loadedSettings.getLanguages();
@@ -305,6 +309,12 @@ public class SettingsIO {
         if ((s = getStringProperty(paperSizeProperty)) != null) {
             try {
                 loadedSettings.setPaperSize(PaperSize.valueOf(s));
+                if (s.equals("CUSTOM")) {
+                    if (!(d =  getDoubleProperty(customPaperWidthProperty)).isNaN() &&
+                        !(d2 = getDoubleProperty(customPaperHeightProperty)).isNaN()) {
+                        loadedSettings.setCustomPaperSize(d, d2);
+                    }
+                }
             } catch (IllegalArgumentException ex) {
                 logger.log(Level.SEVERE, null, s + " is no valid papersize");
             }
@@ -326,8 +336,12 @@ public class SettingsIO {
             loadedSettings.setMirrorAlign(b);
         }
 
+        if ((b = getBooleanProperty(hardPageBreaksProperty)) != null) {
+            loadedSettings.setHardPageBreaks(b);
+        }
+
         if ((s = getStringProperty(creatorProperty)) != null) {
-            loadedSettings.creator = s;
+            loadedSettings.setCreator(s);
         }
 
         if ((s = getStringProperty(transcribersNotesPageTitleProperty)) != null) {
@@ -401,11 +415,11 @@ public class SettingsIO {
         }
 
         if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
-            loadedSettings.setPageNumberAtTopOnSeperateLine(b);
+            loadedSettings.setPageNumberAtTopOnSeparateLine(b);
         }
 
         if ((b = getBooleanProperty(pageNumberAtBottomOnSepLineProperty)) != null) {
-            loadedSettings.setPageNumberAtBottomOnSeperateLine(b);
+            loadedSettings.setPageNumberAtBottomOnSeparateLine(b);
         }
 
         if ((b = getBooleanProperty(printPageNumberRangeProperty)) != null) {
@@ -550,8 +564,8 @@ public class SettingsIO {
         }
         
         setProperty(creatorProperty,
-                    settingsAfterChange.creator,
-                    settingsBeforeChange.creator);
+                    settingsAfterChange.getCreator(),
+                    settingsBeforeChange.getCreator());
         setProperty(transcribersNotesPageTitleProperty,
                     settingsAfterChange.transcribersNotesPageTitle,
                     settingsBeforeChange.transcribersNotesPageTitle);
@@ -583,11 +597,11 @@ public class SettingsIO {
                     settingsAfterChange.getMergeUnnumberedPages(),
                     settingsBeforeChange.getMergeUnnumberedPages());
         setProperty(pageNumberAtTopOnSepLineProperty,
-                    settingsAfterChange.getPageNumberAtTopOnSeperateLine(),
-                    settingsBeforeChange.getPageNumberAtTopOnSeperateLine());
+                    settingsAfterChange.getPageNumberAtTopOnSeparateLine(),
+                    settingsBeforeChange.getPageNumberAtTopOnSeparateLine());
         setProperty(pageNumberAtBottomOnSepLineProperty,
-                    settingsAfterChange.getPageNumberAtBottomOnSeperateLine(),
-                    settingsBeforeChange.getPageNumberAtBottomOnSeperateLine());
+                    settingsAfterChange.getPageNumberAtBottomOnSeparateLine(),
+                    settingsBeforeChange.getPageNumberAtBottomOnSeparateLine());
         setProperty(printPageNumberRangeProperty,
                     settingsAfterChange.getPrintPageNumberRange(),
                     settingsBeforeChange.getPrintPageNumberRange());
@@ -633,6 +647,12 @@ public class SettingsIO {
         setProperty(paperSizeProperty,
                     settingsAfterChange.getPaperSize().name(),
                     settingsBeforeChange.getPaperSize().name());
+        setProperty(customPaperWidthProperty,
+                    settingsAfterChange.getPaperWidth(),
+                    settingsBeforeChange.getPaperWidth());
+        setProperty(customPaperHeightProperty,
+                    settingsAfterChange.getPaperHeight(),
+                    settingsBeforeChange.getPaperHeight());
         setProperty(duplexProperty,
                     settingsAfterChange.isDuplex(),
                     settingsBeforeChange.isDuplex());
@@ -663,6 +683,11 @@ public class SettingsIO {
         setProperty(mathProperty,
                     settingsAfterChange.getMath().name(),
                     settingsBeforeChange.getMath().name());
+        setProperty(hardPageBreaksProperty,
+                    settingsAfterChange.getHardPageBreaks(),
+                    settingsBeforeChange.getHardPageBreaks());
+
+        
         setProperty(brailleRulesProperty,
                     settingsAfterChange.getBrailleRules().name(),
                     settingsBeforeChange.getBrailleRules().name());
