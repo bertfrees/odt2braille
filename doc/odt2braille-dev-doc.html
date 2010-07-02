@@ -313,58 +313,49 @@ The translation tables and configuration files are kept under <code>liblouis/sha
 <h2 class="chapter">4 Known Issues, Todo's, Feature Requests</h2>
 
      <ul>
-<li>More flexibility by providing more settings! 
-Create a new tab in the settings dialog for each category of settings. 
-Each language should have its own default settings. 
-E.g.:
+<li>More flexibility by providing more settings!
 
           <ul>
-<li>Left margin, first line indent, lines before, lines after, ... 
-for headings, paragraphs, lists, listitems, tables, footnotes, endnotes, TNs, ... 
-<li>Border lines of tables &amp; textboxes. 
-<li>Headings on new page. 
-<li>Braille page numbers: top or bottom. 
-<li>Print page numbers: top or bottom. 
-<li>Braille &amp; print page numbers on same line. 
-<li>Page numbers on seperate line. 
-<li>Disable page change indicator. 
-<li>Disable page number to the right of page change indicator. 
-<li>Print page number RANGE instead of single print page number. 
+<li>Settings for footnotes, endnotes, TNs, bibliography, ... 
+<li>Border lines of tables &amp; textboxes ??? 
+ =&gt; linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
+  -&gt; Aantal karakters in string = aantal lijnen in border
+  -&gt; n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
 <li>Volume info and transcription info. 
 <li>Continued suffix. 
-<li>Special symbols to be included in the special symbols list. 
-<li>Special symbols descriptions. 
-<li>Braille page number format for preliminary pages (e.g. p1,p2, ... or i,ii,iii,iv,... or ?) 
+<li>Special symbols to be included in the special symbols list
+  - Always / only first volume / only if present in current volume / never. 
+  - Change description of special symbols. 
+  - Add special symbols + their description. 
+  - Change order of entries. 
 <li>... 
 </ul>
 
-     <li>Tooltips in dialogs. 
-<li>Focus management in dialogs. 
+     <li>Volume info block: - Print pages
+<li>Tooltips in dialogs. 
 <li>Complete documentation. 
 <li>Documentation in Braille. 
 <li>Localization. 
 <li>Support more embossers. 
 <li>Only Interpoint55 is tested. 
 <li>Keyboard shortcut for braille menu. 
-<li>Replace DOM processing with XSL transformation where this is possible. 
-This will result in better performance. 
 <li>8 dot braille. 
-<li>When the document is saved as PEF at an existing file location, the file is not overwritten. 
 <li>Tactile graphics. 
 <li>Detect which ranges of unicode characters are used in the document and include the appropriate liblouis-tables. 
 <li>If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding. 
 <li>The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog). 
 <li>OpenOffice.org accessibility for screen readers? 
-<li>'SimBraille' font included in OpenOffice.org distribution? 
 <li>OCR plugin for OpenOffice.org? 
 <li>Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail). 
-<li>Custom paper size. 
-<li>General settings: select DEFAULT Braille specifications (BANA, UEB, ...) or CUSTOM
+<li>Endnotes in preliminary pages: bug. 
+<li>makePEF(): should be made more robust. 
+<li>Odt2Daisy.preProcessing(): should be made faster. 
+Replace DOM processing with XSL transformation where this is possible. 
+This will result in better performance. 
 <li>Localization of braille menu. 
 <li>Checking of volume lengths: should be dependent on the recto/recto-verso setting. 
 <li>When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified. 
 <li>UTD: could be used to make a preview of the braille document with print text added for readability/understandability. 
-<li>Some liblouisxml bugs (pagination, table of contents, special typeface, ...) 
 <li>Auto-update link in Extension Manager (Rss feed)
 <li>Website. 
 <li>Presentations &amp; spreadsheets. 

@@ -2,39 +2,42 @@
 
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
 
-	<!-- Release Number -->
+    <!-- Release Number -->
     <version value="0.0.1"/>
 	
-	<!-- Identifier -->
+    <!-- Platform Target -->
+    <platform value="windows_x86" />
+	
+    <!-- Identifier -->
     <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn"/>
 	
-	<!-- OpenOffice.org Minimal Version -->
+    <!-- OpenOffice.org Minimal Version -->
     <dependencies>
         <OpenOffice.org-minimal-version name="OpenOffice.org 3.0" value="3.0"/>
     </dependencies>
 	
-	<!-- Auto Update Link
+    <!-- Auto Update Link -->
     <update-information>
-        <src xlink:href="http://..."/>
-    </update-information> -->
+        <src xlink:href="http://odt2braille.sf.net/rss/update.feed.xml"/>
+    </update-information>
 	
-	<!-- Extension Dialog Displayed Name -->
+    <!-- Extension Dialog Displayed Name -->
     <display-name>
        <name lang="en">odt2braille</name>
     </display-name>
 	
-	<!-- Publisher Name -->
+    <!-- Publisher Name -->
     <publisher>
         <name lang="en" xlink:href="http://www.aegis-project.eu/">ÆGIS</name>
     </publisher>
 	
-	<!-- Description -->
+    <!-- Description -->
     <extension-description>
         <src xlink:href="description/desc_en.txt" lang="en" />
 		<src xlink:href="description/desc_nl.txt" lang="nl" />
     </extension-description>
 	
-	<!-- Extension Dialog Icon -->
+    <!-- Extension Dialog Icon -->
     <icon>
         <default xlink:href="images/aegis-logo-1275x1275.png" />
         <high-contrast xlink:href="images/aegis-logo-1275x1275.png" />
