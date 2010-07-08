@@ -221,7 +221,7 @@ public class UnoGUI {
 
             // Set liblouis directory
             liblouisDirUrl = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
-                                .getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
+                                .getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
                                 + "/liblouis/bin/",m_xContext)).getAbsolutePath()
                                 + System.getProperty("file.separator");
 

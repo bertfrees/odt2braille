@@ -9,7 +9,7 @@
     <platform value="windows_x86" />
 	
     <!-- Identifier -->
-    <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn"/>
+    <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86"/>
 	
     <!-- OpenOffice.org Minimal Version -->
     <dependencies>
@@ -18,7 +18,7 @@
 	
     <!-- Auto Update Link -->
     <update-information>
-        <src xlink:href="http://odt2braille.sf.net/rss/update.feed.xml"/>
+        <src xlink:href="http://odt2braille.sf.net/atom/update.feed.xml"/>
     </update-information>
 	
     <!-- Extension Dialog Displayed Name -->

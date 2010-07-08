@@ -65,7 +65,7 @@
 	newPageAfter  pagebreak
 	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume' or @class='titlepage']])
 	skip          &xpath(//dtb:pagebreak[not(preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])])])
-	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::div[@class='toc'])])])
+	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'])])])
 	
 # Title pages
 # Notesections

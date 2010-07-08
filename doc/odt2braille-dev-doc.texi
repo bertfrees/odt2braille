@@ -280,6 +280,11 @@ Special symbols to be included in the special symbols list
   - Add special symbols + their description.
   - Change order of entries.
 @item
+Table Of Contents:
+  - headings tot level ? weergeven
+  - printpagina nummers weergeven
+  - braillepagina nummers weergeven
+@item
 ...
 @end itemize
 
@@ -332,10 +337,6 @@ When multi-volume feature of liblouisxml is finished: odt2braille code might be 
 @item
 UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
 @item
-Auto-update link in Extension Manager (Rss feed)
-@item
-Website.
-@item
 Presentations & spreadsheets.
 @item
 Commandline tool (Odt2Braille.jar).
@@ -343,6 +344,11 @@ Commandline tool (Odt2Braille.jar).
 Hyphenation
 @item
 Mac OS, Linux, ...
+@item
+Er kunnen nog lege paragrafen voorkomen (als er lege spans inzaten)
+Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
+@item
+Numbers at top/bottom on seperate line: selectievakjes ook uitschakelen als 'enable page numbers' vakjes zijn uitgeschakeld
 @item
 ...
 @end itemize

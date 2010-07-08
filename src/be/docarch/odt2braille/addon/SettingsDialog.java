@@ -690,7 +690,8 @@ public class SettingsDialog implements XItemListener,
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size()>1);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")+ "/dialogs/SettingsDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
+                                                            + "/dialogs/SettingsDialog.xdl";
 
         // L10N
 

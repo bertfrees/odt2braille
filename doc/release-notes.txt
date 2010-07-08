@@ -1,0 +1,42 @@
+=========================
+Version 0.0.1
+=========================
+
+Features:
+
+
+* Translate OpenOffice.org Writer documents in various languages to Braille.
+* Supported languages are: Arabic, Bulgarian, Tibetan, Welsh, Czech, Danish, Esperanto, Spanish, 
+  Estonian, Finnish, Irish, Scottish Gaelic, Modern Hebrew, Hindi, Croatian, Hungarian, Armenian, 
+  Icelandic, Italian, Lithuanian, Latvian, Maltese, Norwegian, Polish, Portugese, Romanian, Russian,
+  Slovak, Slovene, Swedish, Turkish, Vietnamese, German, Greek, Koine Greek, English, French, Dutch and Chinese.
+* Contracted or uncontracted Braille.
+* Support for multi-language documents.
+* Export the Braille document to a computer file (.brf or .pef) or emboss the document on 
+  a variety of Braille printers. 
+* Supported printers are: the Interpoint 55 from Interpoint NV, the Everest V2, Basic V2, Everest V3 and Basic-D V3 
+  from Index Braille, and the Braillo 200, 400S and 400SR from Braillo Norway AS.
+* The Braille-output is highly configurable through user preferences.
+* Adjust the Braille layout of most common document units: paragraphs, headings, lists, tables, table of contents.
+* Other units are processed as well, but are not configurable: textboxes, captions, image (descriptions), 
+  footnotes, endnoted, bibliographies, ... 
+* Determine how pages are numbered.
+* Translate formula's into Braille math (Nemeth, UK maths, Marburg or Notaert math).
+* Automatic generation of some preliminary pages: a title page, a list of special symbols, 
+  a transcriber's notes page and a table of contents.
+* Split Braille documents into multiple volumes.
+* Transcribe according to formal Braille rules (BANA, ...).
+* Save Braille settings.
+* Insert Braille characters directly with the 6 key entry mode (keys S, D, F, J, K and L).
+* Users are notified in time of structure problems that could lead to unwanted artifacts in the Braille output.
+
+
+
+=========================
+Version ?
+=========================
+
+Fixed bugs:
+
+
+* Hyperlink bug fix (hyperlink sometimes not rendered)
