@@ -1,0 +1,93 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode FB00..FB4F  Alphabetic Presentation Forms
+# ----------------------------------------------------------------------------------------------
+
+sign        \xFB00  1456                 # ﬀ
+sign        \xFB01  1456                 # ﬁ
+sign        \xFB02  1456                 # ﬂ
+sign        \xFB03  1456                 # ﬃ
+sign        \xFB04  1456                 # ﬄ
+sign        \xFB05  1456                 # ﬅ
+sign        \xFB06  1456                 # ﬆ
+sign        \xFB07  1456                 # ﬇
+sign        \xFB08  1456                 # ﬈
+sign        \xFB09  1456                 # ﬉
+sign        \xFB0A  1456                 # ﬊
+sign        \xFB0B  1456                 # ﬋
+sign        \xFB0C  1456                 # ﬌
+sign        \xFB0D  1456                 # ﬍
+sign        \xFB0E  1456                 # ﬎
+sign        \xFB0F  1456                 # ﬏
+sign        \xFB10  1456                 # ﬐
+sign        \xFB11  1456                 # ﬑
+sign        \xFB12  1456                 # ﬒
+sign        \xFB13  1456                 # ﬓ
+sign        \xFB14  1456                 # ﬔ
+sign        \xFB15  1456                 # ﬕ
+sign        \xFB16  1456                 # ﬖ
+sign        \xFB17  1456                 # ﬗ
+sign        \xFB18  1456                 # ﬘
+sign        \xFB19  1456                 # ﬙
+sign        \xFB1A  1456                 # ﬚
+sign        \xFB1B  1456                 # ﬛
+sign        \xFB1C  1456                 # ﬜
+sign        \xFB1D  1456                 # יִ
+sign        \xFB1E  1456                 # ﬞ
+sign        \xFB1F  1456                 # ײַ
+sign        \xFB20  1456                 # ﬠ
+sign        \xFB21  1456                 # ﬡ
+sign        \xFB22  1456                 # ﬢ
+sign        \xFB23  1456                 # ﬣ
+sign        \xFB24  1456                 # ﬤ
+sign        \xFB25  1456                 # ﬥ
+sign        \xFB26  1456                 # ﬦ
+sign        \xFB27  1456                 # ﬧ
+sign        \xFB28  1456                 # ﬨ
+sign        \xFB29  1456                 # ﬩
+sign        \xFB2A  1456                 # שׁ
+sign        \xFB2B  1456                 # שׂ
+sign        \xFB2C  1456                 # שּׁ
+sign        \xFB2D  1456                 # שּׂ
+sign        \xFB2E  1456                 # אַ
+sign        \xFB2F  1456                 # אָ
+sign        \xFB30  1456                 # אּ
+sign        \xFB31  1456                 # בּ
+sign        \xFB32  1456                 # גּ
+sign        \xFB33  1456                 # דּ
+sign        \xFB34  1456                 # הּ
+sign        \xFB35  1456                 # וּ
+sign        \xFB36  1456                 # זּ
+sign        \xFB37  1456                 # ﬷
+sign        \xFB38  1456                 # טּ
+sign        \xFB39  1456                 # יּ
+sign        \xFB3A  1456                 # ךּ
+sign        \xFB3B  1456                 # כּ
+sign        \xFB3C  1456                 # לּ
+sign        \xFB3D  1456                 # ﬽
+sign        \xFB3E  1456                 # מּ
+sign        \xFB3F  1456                 # ﬿
+sign        \xFB40  1456                 # נּ
+sign        \xFB41  1456                 # סּ
+sign        \xFB42  1456                 # ﭂
+sign        \xFB43  1456                 # ףּ
+sign        \xFB44  1456                 # פּ
+sign        \xFB45  1456                 # ﭅
+sign        \xFB46  1456                 # צּ
+sign        \xFB47  1456                 # קּ
+sign        \xFB48  1456                 # רּ
+sign        \xFB49  1456                 # שּ
+sign        \xFB4A  1456                 # תּ
+sign        \xFB4B  1456                 # וֹ
+sign        \xFB4C  1456                 # בֿ
+sign        \xFB4D  1456                 # כֿ
+sign        \xFB4E  1456                 # פֿ
+sign        \xFB4F  1456                 # ﭏ
+
+
+# ----------------------------------------------------------------------------------------------
+

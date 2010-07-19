@@ -80,6 +80,7 @@
 		<copy file="${file.reference.commons-cli-1.1.jar}" tofile="${dist.dir}/${external.jar.dir}/commons-cli-1.1.jar"  overwrite="true" />
 		<copy file="${file.reference.commons-io-1.4.jar}"  tofile="${dist.dir}/${external.jar.dir}/commons-io-1.4.jar"   overwrite="true" />
 		<copy file="${file.reference.jna.jar}"             tofile="${dist.dir}/${external.jar.dir}/jna.jar"              overwrite="true" />
+		<copy file="${file.reference.saxon9he.jar}"        tofile="${dist.dir}/${external.jar.dir}/saxon9he.jar"         overwrite="true" />
 		
 	</target>
 	

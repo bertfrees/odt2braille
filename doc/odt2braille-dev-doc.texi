@@ -272,7 +272,7 @@ Border lines of tables & textboxes ???
 @item
 Volume info and transcription info.
 @item
-Continued suffix.
+'Continued' suffix.
 @item
 Special symbols to be included in the special symbols list
   - Always / only first volume / only if present in current volume / never.
@@ -294,8 +294,6 @@ Volume info block: - Print pages
 Tooltips in dialogs.
 @item
 Complete documentation.
-@item
-Documentation in Braille.
 @item
 Localization.
 @item

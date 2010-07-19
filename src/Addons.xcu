@@ -31,6 +31,7 @@
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="en">~Settings</value>
                   <value xml:lang="nl">~Instellingen</value>
+                  <value xml:lang="fr">~Préférences</value>
                 </prop>
               </node>
               <node oor:name="M2" oor:op="replace">
@@ -49,6 +50,7 @@
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="en">~Export</value>
                   <value xml:lang="nl">~Exporteer</value>
+                  <value xml:lang="fr">~Exporter</value>
                 </prop>
               </node>
               <node oor:name="M3" oor:op="replace">
@@ -67,6 +69,7 @@
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="nl">~Druk Af</value>
                   <value xml:lang="en">~Emboss</value>
+                  <value xml:lang="fr">~Embosser</value>
                 </prop>
               </node>
               <node oor:name="M4" oor:op="replace">
@@ -85,6 +88,7 @@
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="nl">~Voer In</value>
                   <value xml:lang="en">~Insert</value>
+                  <value xml:lang="fr">~Insérer</value>
                 </prop>
                 <node oor:name="Submenu">
                   <node oor:name="M5" oor:op="replace">
@@ -102,6 +106,7 @@
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
                       <value xml:lang="en">~Dot Pattern Entry Mode</value>
+                      <value xml:lang="fr">~Mode de saisie point-à-point</value>
                     </prop>
                   </node>
                   <node oor:name="M6" oor:op="replace">
@@ -119,6 +124,7 @@
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
                       <value xml:lang="en">~6 Key Entry Mode</value>
+                      <value xml:lang="fr">~Mode de saisie 6-touches</value>
                     </prop>
                   </node>
                 </node>

@@ -64,7 +64,6 @@ import be.docarch.odt2braille.Odt2BrailleNamespaceContext;
 import com.versusoft.packages.jodl.OdtUtils;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
-import org_pef_text.pef2text.EmbosserFactoryException;
 import org_pef_text.pef2text.UnsupportedWidthException;
 import org_pef_text.pef2text.EmbosserFactoryException;
 import be.docarch.odt2braille.LiblouisException;

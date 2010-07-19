@@ -1,0 +1,125 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0590..05FF  Hebrew
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0590  1456                 # ֐
+sign        \x0591  1456                 # ֑
+sign        \x0592  1456                 # ֒
+sign        \x0593  1456                 # ֓
+sign        \x0594  1456                 # ֔
+sign        \x0595  1456                 # ֕
+sign        \x0596  1456                 # ֖
+sign        \x0597  1456                 # ֗
+sign        \x0598  1456                 # ֘
+sign        \x0599  1456                 # ֙
+sign        \x059A  1456                 # ֚
+sign        \x059B  1456                 # ֛
+sign        \x059C  1456                 # ֜
+sign        \x059D  1456                 # ֝
+sign        \x059E  1456                 # ֞
+sign        \x059F  1456                 # ֟
+sign        \x05A0  1456                 # ֠
+sign        \x05A1  1456                 # ֡
+sign        \x05A2  1456                 # ֢
+sign        \x05A3  1456                 # ֣
+sign        \x05A4  1456                 # ֤
+sign        \x05A5  1456                 # ֥
+sign        \x05A6  1456                 # ֦
+sign        \x05A7  1456                 # ֧
+sign        \x05A8  1456                 # ֨
+sign        \x05A9  1456                 # ֩
+sign        \x05AA  1456                 # ֪
+sign        \x05AB  1456                 # ֫
+sign        \x05AC  1456                 # ֬
+sign        \x05AD  1456                 # ֭
+sign        \x05AE  1456                 # ֮
+sign        \x05AF  1456                 # ֯
+sign        \x05B0  1456                 # ְ
+sign        \x05B1  1456                 # ֱ
+sign        \x05B2  1456                 # ֲ
+sign        \x05B3  1456                 # ֳ
+sign        \x05B4  1456                 # ִ
+sign        \x05B5  1456                 # ֵ
+sign        \x05B6  1456                 # ֶ
+sign        \x05B7  1456                 # ַ
+sign        \x05B8  1456                 # ָ
+sign        \x05B9  1456                 #  ֹ
+sign        \x05BA  1456                 #  ֹ
+sign        \x05BB  1456                 # ֻ
+sign        \x05BC  1456                 # ּ
+sign        \x05BD  1456                 # ֽ
+sign        \x05BE  1456                 # ־
+sign        \x05BF  1456                 # ֿ
+sign        \x05C0  1456                 # ׀
+sign        \x05C1  1456                 # ׁ
+sign        \x05C2  1456                 # ׂ
+sign        \x05C3  1456                 # ׃
+sign        \x05C4  1456                 # ׄ
+sign        \x05C5  1456                 # ׅ
+sign        \x05C6  1456                 # ׆
+sign        \x05C7  1456                 # ׇ
+sign        \x05C8  1456                 # ׈
+sign        \x05C9  1456                 # ׉
+sign        \x05CA  1456                 # ׊
+sign        \x05CB  1456                 # ׋
+sign        \x05CC  1456                 # ׌
+sign        \x05CD  1456                 # ׍
+sign        \x05CE  1456                 # ׎
+sign        \x05CF  1456                 # ׏
+sign        \x05D0  1456                 # א
+sign        \x05D1  1456                 # ב
+sign        \x05D2  1456                 # ג
+sign        \x05D3  1456                 # ד
+sign        \x05D4  1456                 # ה
+sign        \x05D5  1456                 # ו
+sign        \x05D6  1456                 # ז
+sign        \x05D7  1456                 # ח
+sign        \x05D8  1456                 # ט
+sign        \x05D9  1456                 # י
+sign        \x05DA  1456                 # ך
+sign        \x05DB  1456                 # כ
+sign        \x05DC  1456                 # ל
+sign        \x05DD  1456                 # ם
+sign        \x05DE  1456                 # מ
+sign        \x05DF  1456                 # ן
+sign        \x05E0  1456                 # נ
+sign        \x05E1  1456                 # ס
+sign        \x05E2  1456                 # ע
+sign        \x05E3  1456                 # ף
+sign        \x05E4  1456                 # פ
+sign        \x05E5  1456                 # ץ
+sign        \x05E6  1456                 # צ
+sign        \x05E7  1456                 # ק
+sign        \x05E8  1456                 # ר
+sign        \x05E9  1456                 # ש
+sign        \x05EA  1456                 # ת
+sign        \x05EB  1456                 # ׫
+sign        \x05EC  1456                 # ׬
+sign        \x05ED  1456                 # ׭
+sign        \x05EE  1456                 # ׮
+sign        \x05EF  1456                 # ׯ
+sign        \x05F0  1456                 # װ
+sign        \x05F1  1456                 # ױ
+sign        \x05F2  1456                 # ײ
+sign        \x05F3  1456                 # ׳
+sign        \x05F4  1456                 # ״
+sign        \x05F5  1456                 # ׵
+sign        \x05F6  1456                 # ׶
+sign        \x05F7  1456                 # ׷
+sign        \x05F8  1456                 # ׸
+sign        \x05F9  1456                 # ׹
+sign        \x05FA  1456                 # ׺
+sign        \x05FB  1456                 # ׻
+sign        \x05FC  1456                 # ׼
+sign        \x05FD  1456                 # ׽
+sign        \x05FE  1456                 # ׾
+sign        \x05FF  1456                 # ׿
+
+
+# ----------------------------------------------------------------------------------------------
+

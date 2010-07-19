@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 1780..17FF  Khmer
+# ----------------------------------------------------------------------------------------------
+
+sign        \x1780  1456                 # ក
+sign        \x1781  1456                 # ខ
+sign        \x1782  1456                 # គ
+sign        \x1783  1456                 # ឃ
+sign        \x1784  1456                 # ង
+sign        \x1785  1456                 # ច
+sign        \x1786  1456                 # ឆ
+sign        \x1787  1456                 # ជ
+sign        \x1788  1456                 # ឈ
+sign        \x1789  1456                 # ញ
+sign        \x178A  1456                 # ដ
+sign        \x178B  1456                 # ឋ
+sign        \x178C  1456                 # ឌ
+sign        \x178D  1456                 # ឍ
+sign        \x178E  1456                 # ណ
+sign        \x178F  1456                 # ត
+sign        \x1790  1456                 # ថ
+sign        \x1791  1456                 # ទ
+sign        \x1792  1456                 # ធ
+sign        \x1793  1456                 # ន
+sign        \x1794  1456                 # ប
+sign        \x1795  1456                 # ផ
+sign        \x1796  1456                 # ព
+sign        \x1797  1456                 # ភ
+sign        \x1798  1456                 # ម
+sign        \x1799  1456                 # យ
+sign        \x179A  1456                 # រ
+sign        \x179B  1456                 # ល
+sign        \x179C  1456                 # វ
+sign        \x179D  1456                 # ឝ
+sign        \x179E  1456                 # ឞ
+sign        \x179F  1456                 # ស
+sign        \x17A0  1456                 # ហ
+sign        \x17A1  1456                 # ឡ
+sign        \x17A2  1456                 # អ
+sign        \x17A3  1456                 # ឣ
+sign        \x17A4  1456                 # ឤ
+sign        \x17A5  1456                 # ឥ
+sign        \x17A6  1456                 # ឦ
+sign        \x17A7  1456                 # ឧ
+sign        \x17A8  1456                 # ឨ
+sign        \x17A9  1456                 # ឩ
+sign        \x17AA  1456                 # ឪ
+sign        \x17AB  1456                 # ឫ
+sign        \x17AC  1456                 # ឬ
+sign        \x17AD  1456                 # ឭ
+sign        \x17AE  1456                 # ឮ
+sign        \x17AF  1456                 # ឯ
+sign        \x17B0  1456                 # ឰ
+sign        \x17B1  1456                 # ឱ
+sign        \x17B2  1456                 # ឲ
+sign        \x17B3  1456                 # ឳ
+sign        \x17B4  1456                 # ឴
+sign        \x17B5  1456                 # ឵
+sign        \x17B6  1456                 # ា
+sign        \x17B7  1456                 # ិ
+sign        \x17B8  1456                 # ី
+sign        \x17B9  1456                 # ឹ
+sign        \x17BA  1456                 # ឺ
+sign        \x17BB  1456                 # ុ
+sign        \x17BC  1456                 # ូ
+sign        \x17BD  1456                 # ួ
+sign        \x17BE  1456                 # ើ
+sign        \x17BF  1456                 # ឿ
+sign        \x17C0  1456                 # ៀ
+sign        \x17C1  1456                 # េ
+sign        \x17C2  1456                 # ែ
+sign        \x17C3  1456                 # ៃ
+sign        \x17C4  1456                 # ោ
+sign        \x17C5  1456                 # ៅ
+sign        \x17C6  1456                 # ំ
+sign        \x17C7  1456                 # ះ
+sign        \x17C8  1456                 # ៈ
+sign        \x17C9  1456                 # ៉
+sign        \x17CA  1456                 # ៊
+sign        \x17CB  1456                 # ់
+sign        \x17CC  1456                 # ៌
+sign        \x17CD  1456                 # ៍
+sign        \x17CE  1456                 # ៎
+sign        \x17CF  1456                 # ៏
+sign        \x17D0  1456                 # ័
+sign        \x17D1  1456                 # ៑
+sign        \x17D2  1456                 # ្
+sign        \x17D3  1456                 # ៓
+sign        \x17D4  1456                 # ។
+sign        \x17D5  1456                 # ៕
+sign        \x17D6  1456                 # ៖
+sign        \x17D7  1456                 # ៗ
+sign        \x17D8  1456                 # ៘
+sign        \x17D9  1456                 # ៙
+sign        \x17DA  1456                 # ៚
+sign        \x17DB  1456                 # ៛
+sign        \x17DC  1456                 # ៜ
+sign        \x17DD  1456                 # ៝
+sign        \x17DE  1456                 # ៞
+sign        \x17DF  1456                 # ៟
+sign        \x17E0  1456                 # ០
+sign        \x17E1  1456                 # ១
+sign        \x17E2  1456                 # ២
+sign        \x17E3  1456                 # ៣
+sign        \x17E4  1456                 # ៤
+sign        \x17E5  1456                 # ៥
+sign        \x17E6  1456                 # ៦
+sign        \x17E7  1456                 # ៧
+sign        \x17E8  1456                 # ៨
+sign        \x17E9  1456                 # ៩
+sign        \x17EA  1456                 # ៪
+sign        \x17EB  1456                 # ៫
+sign        \x17EC  1456                 # ៬
+sign        \x17ED  1456                 # ៭
+sign        \x17EE  1456                 # ៮
+sign        \x17EF  1456                 # ៯
+sign        \x17F0  1456                 # ៰
+sign        \x17F1  1456                 # ៱
+sign        \x17F2  1456                 # ៲
+sign        \x17F3  1456                 # ៳
+sign        \x17F4  1456                 # ៴
+sign        \x17F5  1456                 # ៵
+sign        \x17F6  1456                 # ៶
+sign        \x17F7  1456                 # ៷
+sign        \x17F8  1456                 # ៸
+sign        \x17F9  1456                 # ៹
+sign        \x17FA  1456                 # ៺
+sign        \x17FB  1456                 # ៻
+sign        \x17FC  1456                 # ៼
+sign        \x17FD  1456                 # ៽
+sign        \x17FE  1456                 # ៾
+sign        \x17FF  1456                 # ៿
+
+
+# ----------------------------------------------------------------------------------------------
+

@@ -1,0 +1,269 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0400..04FF  Cyrillic
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0400  1456                 # Ѐ                   CYRILLIC CAPITAL LETTER IE WITH GRAVE
+sign        \x0401  1456                 # Ё                   CYRILLIC CAPITAL LETTER IO
+sign        \x0402  1456                 # Ђ                   CYRILLIC CAPITAL LETTER DJE
+sign        \x0403  1456                 # Ѓ                   CYRILLIC CAPITAL LETTER GJE
+sign        \x0404  1456                 # Є                   CYRILLIC CAPITAL LETTER UKRAINIAN IE
+sign        \x0405  1456                 # Ѕ                   CYRILLIC CAPITAL LETTER DZE
+sign        \x0406  1456                 # І                   CYRILLIC CAPITAL LETTER BYELORUSSIAN-UKRAINIAN I
+sign        \x0407  1456                 # Ї                   CYRILLIC CAPITAL LETTER YI
+sign        \x0408  1456                 # Ј                   CYRILLIC CAPITAL LETTER JE
+sign        \x0409  1456                 # Љ                   CYRILLIC CAPITAL LETTER LJE
+sign        \x040A  1456                 # Њ                   CYRILLIC CAPITAL LETTER NJE
+sign        \x040B  1456                 # Ћ                   CYRILLIC CAPITAL LETTER TSHE
+sign        \x040C  1456                 # Ќ                   CYRILLIC CAPITAL LETTER KJE
+sign        \x040D  1456                 # Ѝ                   CYRILLIC CAPITAL LETTER I WITH GRAVE
+sign        \x040E  1456                 # Ў                   CYRILLIC CAPITAL LETTER SHORT U
+sign        \x040F  1456                 # Џ                   CYRILLIC CAPITAL LETTER DZHE
+sign        \x0410  1456                 # А                   CYRILLIC CAPITAL LETTER A
+sign        \x0411  1456                 # Б                   CYRILLIC CAPITAL LETTER BE
+sign        \x0412  1456                 # В                   CYRILLIC CAPITAL LETTER VE
+sign        \x0413  1456                 # Г                   CYRILLIC CAPITAL LETTER GHE
+sign        \x0414  1456                 # Д                   CYRILLIC CAPITAL LETTER DE
+sign        \x0415  1456                 # Е                   CYRILLIC CAPITAL LETTER IE
+sign        \x0416  1456                 # Ж                   CYRILLIC CAPITAL LETTER ZHE
+sign        \x0417  1456                 # З                   CYRILLIC CAPITAL LETTER ZE
+sign        \x0418  1456                 # И                   CYRILLIC CAPITAL LETTER I
+sign        \x0419  1456                 # Й                   CYRILLIC CAPITAL LETTER SHORT I
+sign        \x041A  1456                 # К                   CYRILLIC CAPITAL LETTER KA
+sign        \x041B  1456                 # Л                   CYRILLIC CAPITAL LETTER EL
+sign        \x041C  1456                 # М                   CYRILLIC CAPITAL LETTER EM
+sign        \x041D  1456                 # Н                   CYRILLIC CAPITAL LETTER EN
+sign        \x041E  1456                 # О                   CYRILLIC CAPITAL LETTER O
+sign        \x041F  1456                 # П                   CYRILLIC CAPITAL LETTER PE
+sign        \x0420  1456                 # Р                   CYRILLIC CAPITAL LETTER ER
+sign        \x0421  1456                 # С                   CYRILLIC CAPITAL LETTER ES
+sign        \x0422  1456                 # Т                   CYRILLIC CAPITAL LETTER TE
+sign        \x0423  1456                 # У                   CYRILLIC CAPITAL LETTER U
+sign        \x0424  1456                 # Ф                   CYRILLIC CAPITAL LETTER EF
+sign        \x0425  1456                 # Х                   CYRILLIC CAPITAL LETTER HA
+sign        \x0426  1456                 # Ц                   CYRILLIC CAPITAL LETTER TSE
+sign        \x0427  1456                 # Ч                   CYRILLIC CAPITAL LETTER CHE
+sign        \x0428  1456                 # Ш                   CYRILLIC CAPITAL LETTER SHA
+sign        \x0429  1456                 # Щ                   CYRILLIC CAPITAL LETTER SHCHA
+sign        \x042A  1456                 # Ъ                   CYRILLIC CAPITAL LETTER HARD SIGN
+sign        \x042B  1456                 # Ы                   CYRILLIC CAPITAL LETTER YERU
+sign        \x042C  1456                 # Ь                   CYRILLIC CAPITAL LETTER SOFT SIGN
+sign        \x042D  1456                 # Э                   CYRILLIC CAPITAL LETTER E
+sign        \x042E  1456                 # Ю                   CYRILLIC CAPITAL LETTER YU
+sign        \x042F  1456                 # Я                   CYRILLIC CAPITAL LETTER YA
+sign        \x0430  1456                 # а                   CYRILLIC SMALL LETTER A
+sign        \x0431  1456                 # б                   CYRILLIC SMALL LETTER BE
+sign        \x0432  1456                 # в                   CYRILLIC SMALL LETTER VE
+sign        \x0433  1456                 # г                   CYRILLIC SMALL LETTER GHE
+sign        \x0434  1456                 # д                   CYRILLIC SMALL LETTER DE
+sign        \x0435  1456                 # е                   CYRILLIC SMALL LETTER IE
+sign        \x0436  1456                 # ж                   CYRILLIC SMALL LETTER ZHE
+sign        \x0437  1456                 # з                   CYRILLIC SMALL LETTER ZE
+sign        \x0438  1456                 # и                   CYRILLIC SMALL LETTER I
+sign        \x0439  1456                 # й                   CYRILLIC SMALL LETTER SHORT I
+sign        \x043A  1456                 # к                   CYRILLIC SMALL LETTER KA
+sign        \x043B  1456                 # л                   CYRILLIC SMALL LETTER EL
+sign        \x043C  1456                 # м                   CYRILLIC SMALL LETTER EM
+sign        \x043D  1456                 # н                   CYRILLIC SMALL LETTER EN
+sign        \x043E  1456                 # о                   CYRILLIC SMALL LETTER O
+sign        \x043F  1456                 # п                   CYRILLIC SMALL LETTER PE
+sign        \x0440  1456                 # р                   CYRILLIC SMALL LETTER ER
+sign        \x0441  1456                 # с                   CYRILLIC SMALL LETTER ES
+sign        \x0442  1456                 # т                   CYRILLIC SMALL LETTER TE
+sign        \x0443  1456                 # у                   CYRILLIC SMALL LETTER U
+sign        \x0444  1456                 # ф                   CYRILLIC SMALL LETTER EF
+sign        \x0445  1456                 # х                   CYRILLIC SMALL LETTER HA
+sign        \x0446  1456                 # ц                   CYRILLIC SMALL LETTER TSE
+sign        \x0447  1456                 # ч                   CYRILLIC SMALL LETTER CHE
+sign        \x0448  1456                 # ш                   CYRILLIC SMALL LETTER SHA
+sign        \x0449  1456                 # щ                   CYRILLIC SMALL LETTER SHCHA
+sign        \x044A  1456                 # ъ                   CYRILLIC SMALL LETTER HARD SIGN
+sign        \x044B  1456                 # ы                   CYRILLIC SMALL LETTER YERU
+sign        \x044C  1456                 # ь                   CYRILLIC SMALL LETTER SOFT SIGN
+sign        \x044D  1456                 # э                   CYRILLIC SMALL LETTER E
+sign        \x044E  1456                 # ю                   CYRILLIC SMALL LETTER YU
+sign        \x044F  1456                 # я                   CYRILLIC SMALL LETTER YA
+sign        \x0450  1456                 # ѐ                   CYRILLIC SMALL LETTER IE WITH GRAVE
+sign        \x0451  1456                 # ё                   CYRILLIC SMALL LETTER IO
+sign        \x0452  1456                 # ђ                   CYRILLIC SMALL LETTER DJE
+sign        \x0453  1456                 # ѓ                   CYRILLIC SMALL LETTER GJE
+sign        \x0454  1456                 # є                   CYRILLIC SMALL LETTER UKRAINIAN IE
+sign        \x0455  1456                 # ѕ                   CYRILLIC SMALL LETTER DZE
+sign        \x0456  1456                 # і                   CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I
+sign        \x0457  1456                 # ї                   CYRILLIC SMALL LETTER YI
+sign        \x0458  1456                 # ј                   CYRILLIC SMALL LETTER JE
+sign        \x0459  1456                 # љ                   CYRILLIC SMALL LETTER LJE
+sign        \x045A  1456                 # њ                   CYRILLIC SMALL LETTER NJE
+sign        \x045B  1456                 # ћ                   CYRILLIC SMALL LETTER TSHE
+sign        \x045C  1456                 # ќ                   CYRILLIC SMALL LETTER KJE
+sign        \x045D  1456                 # ѝ                   CYRILLIC SMALL LETTER I WITH GRAVE
+sign        \x045E  1456                 # ў                   CYRILLIC SMALL LETTER SHORT U
+sign        \x045F  1456                 # џ                   CYRILLIC SMALL LETTER DZHE
+sign        \x0460  1456                 # Ѡ                   CYRILLIC CAPITAL LETTER OMEGA
+sign        \x0461  1456                 # ѡ                   CYRILLIC SMALL LETTER OMEGA
+sign        \x0462  1456                 # Ѣ                   CYRILLIC CAPITAL LETTER YAT
+sign        \x0463  1456                 # ѣ                   CYRILLIC SMALL LETTER YAT
+sign        \x0464  1456                 # Ѥ                   CYRILLIC CAPITAL LETTER IOTIFIED E
+sign        \x0465  1456                 # ѥ                   CYRILLIC SMALL LETTER IOTIFIED E
+sign        \x0466  1456                 # Ѧ                   CYRILLIC CAPITAL LETTER LITTLE YUS
+sign        \x0467  1456                 # ѧ                   CYRILLIC SMALL LETTER LITTLE YUS
+sign        \x0468  1456                 # Ѩ                   CYRILLIC CAPITAL LETTER IOTIFIED LITTLE YUS
+sign        \x0469  1456                 # ѩ                   CYRILLIC SMALL LETTER IOTIFIED LITTLE YUS
+sign        \x046A  1456                 # Ѫ                   CYRILLIC CAPITAL LETTER BIG YUS
+sign        \x046B  1456                 # ѫ                   CYRILLIC SMALL LETTER BIG YUS
+sign        \x046C  1456                 # Ѭ                   CYRILLIC CAPITAL LETTER IOTIFIED BIG YUS
+sign        \x046D  1456                 # ѭ                   CYRILLIC SMALL LETTER IOTIFIED BIG YUS
+sign        \x046E  1456                 # Ѯ                   CYRILLIC CAPITAL LETTER KSI
+sign        \x046F  1456                 # ѯ                   CYRILLIC SMALL LETTER KSI
+sign        \x0470  1456                 # Ѱ                   CYRILLIC CAPITAL LETTER PSI
+sign        \x0471  1456                 # ѱ                   CYRILLIC SMALL LETTER PSI
+sign        \x0472  1456                 # Ѳ                   CYRILLIC CAPITAL LETTER FITA
+sign        \x0473  1456                 # ѳ                   CYRILLIC SMALL LETTER FITA
+sign        \x0474  1456                 # Ѵ                   CYRILLIC CAPITAL LETTER IZHITSA
+sign        \x0475  1456                 # ѵ                   CYRILLIC SMALL LETTER IZHITSA
+sign        \x0476  1456                 # Ѷ                   CYRILLIC CAPITAL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT
+sign        \x0477  1456                 # ѷ                   CYRILLIC SMALL LETTER IZHITSA WITH DOUBLE GRAVE ACCENT
+sign        \x0478  1456                 # Ѹ                   CYRILLIC CAPITAL LETTER UK
+sign        \x0479  1456                 # ѹ                   CYRILLIC SMALL LETTER UK
+sign        \x047A  1456                 # Ѻ                   CYRILLIC CAPITAL LETTER ROUND OMEGA
+sign        \x047B  1456                 # ѻ                   CYRILLIC SMALL LETTER ROUND OMEGA
+sign        \x047C  1456                 # Ѽ                   CYRILLIC CAPITAL LETTER OMEGA WITH TITLO
+sign        \x047D  1456                 # ѽ                   CYRILLIC SMALL LETTER OMEGA WITH TITLO
+sign        \x047E  1456                 # Ѿ                   CYRILLIC CAPITAL LETTER OT
+sign        \x047F  1456                 # ѿ                   CYRILLIC SMALL LETTER OT
+sign        \x0480  1456                 # Ҁ                   CYRILLIC CAPITAL LETTER KOPPA
+sign        \x0481  1456                 # ҁ                   CYRILLIC SMALL LETTER KOPPA
+sign        \x0482  1456                 # ҂                   CYRILLIC THOUSANDS SIGN
+sign        \x0483  1456                 # ҃                   COMBINING CYRILLIC TITLO
+sign        \x0484  1456                 # ҄                   COMBINING CYRILLIC PALATALIZATION
+sign        \x0485  1456                 # ҅                   COMBINING CYRILLIC DASIA PNEUMATA
+sign        \x0486  1456                 # ҆                   COMBINING CYRILLIC PSILI PNEUMATA
+sign        \x0487  1456                 # ҇                   <reserved>
+sign        \x0488  1456                 # ҈                   COMBINING CYRILLIC HUNDRED THOUSANDS SIGN
+sign        \x0489  1456                 # ҉                   COMBINING CYRILLIC MILLIONS SIGN
+sign        \x048A  1456                 # Ҋ                   CYRILLIC CAPITAL LETTER SHORT I WITH TAIL
+sign        \x048B  1456                 # ҋ                   CYRILLIC SMALL LETTER SHORT I WITH TAIL
+sign        \x048C  1456                 # Ҍ                   CYRILLIC CAPITAL LETTER SEMISOFT SIGN
+sign        \x048D  1456                 # ҍ                   CYRILLIC SMALL LETTER SEMISOFT SIGN
+sign        \x048E  1456                 # Ҏ                   CYRILLIC CAPITAL LETTER ER WITH TICK
+sign        \x048F  1456                 # ҏ                   CYRILLIC SMALL LETTER ER WITH TICK
+sign        \x0490  1456                 # Ґ                   CYRILLIC CAPITAL LETTER GHE WITH UPTURN
+sign        \x0491  1456                 # ґ                   CYRILLIC SMALL LETTER GHE WITH UPTURN
+sign        \x0492  1456                 # Ғ                   CYRILLIC CAPITAL LETTER GHE WITH STROKE
+sign        \x0493  1456                 # ғ                   CYRILLIC SMALL LETTER GHE WITH STROKE
+sign        \x0494  1456                 # Ҕ                   CYRILLIC CAPITAL LETTER GHE WITH MIDDLE HOOK
+sign        \x0495  1456                 # ҕ                   CYRILLIC SMALL LETTER GHE WITH MIDDLE HOOK
+sign        \x0496  1456                 # Җ                   CYRILLIC CAPITAL LETTER ZHE WITH DESCENDER
+sign        \x0497  1456                 # җ                   CYRILLIC SMALL LETTER ZHE WITH DESCENDER
+sign        \x0498  1456                 # Ҙ                   CYRILLIC CAPITAL LETTER ZE WITH DESCENDER
+sign        \x0499  1456                 # ҙ                   CYRILLIC SMALL LETTER ZE WITH DESCENDER
+sign        \x049A  1456                 # Қ                   CYRILLIC CAPITAL LETTER KA WITH DESCENDER
+sign        \x049B  1456                 # қ                   CYRILLIC SMALL LETTER KA WITH DESCENDER
+sign        \x049C  1456                 # Ҝ                   CYRILLIC CAPITAL LETTER KA WITH VERTICAL STROKE
+sign        \x049D  1456                 # ҝ                   CYRILLIC SMALL LETTER KA WITH VERTICAL STROKE
+sign        \x049E  1456                 # Ҟ                   CYRILLIC CAPITAL LETTER KA WITH STROKE
+sign        \x049F  1456                 # ҟ                   CYRILLIC SMALL LETTER KA WITH STROKE
+sign        \x04A0  1456                 # Ҡ                   CYRILLIC CAPITAL LETTER BASHKIR KA
+sign        \x04A1  1456                 # ҡ                   CYRILLIC SMALL LETTER BASHKIR KA
+sign        \x04A2  1456                 # Ң                   CYRILLIC CAPITAL LETTER EN WITH DESCENDER
+sign        \x04A3  1456                 # ң                   CYRILLIC SMALL LETTER EN WITH DESCENDER
+sign        \x04A4  1456                 # Ҥ                   CYRILLIC CAPITAL LIGATURE EN GHE
+sign        \x04A5  1456                 # ҥ                   CYRILLIC SMALL LIGATURE EN GHE
+sign        \x04A6  1456                 # Ҧ                   CYRILLIC CAPITAL LETTER PE WITH MIDDLE HOOK
+sign        \x04A7  1456                 # ҧ                   CYRILLIC SMALL LETTER PE WITH MIDDLE HOOK
+sign        \x04A8  1456                 # Ҩ                   CYRILLIC CAPITAL LETTER ABKHASIAN HA
+sign        \x04A9  1456                 # ҩ                   CYRILLIC SMALL LETTER ABKHASIAN HA
+sign        \x04AA  1456                 # Ҫ                   CYRILLIC CAPITAL LETTER ES WITH DESCENDER
+sign        \x04AB  1456                 # ҫ                   CYRILLIC SMALL LETTER ES WITH DESCENDER
+sign        \x04AC  1456                 # Ҭ                   CYRILLIC CAPITAL LETTER TE WITH DESCENDER
+sign        \x04AD  1456                 # ҭ                   CYRILLIC SMALL LETTER TE WITH DESCENDER
+sign        \x04AE  1456                 # Ү                   CYRILLIC CAPITAL LETTER STRAIGHT U
+sign        \x04AF  1456                 # ү                   CYRILLIC SMALL LETTER STRAIGHT U
+sign        \x04B0  1456                 # Ұ                   CYRILLIC CAPITAL LETTER STRAIGHT U WITH STROKE
+sign        \x04B1  1456                 # ұ                   CYRILLIC SMALL LETTER STRAIGHT U WITH STROKE
+sign        \x04B2  1456                 # Ҳ                   CYRILLIC CAPITAL LETTER HA WITH DESCENDER
+sign        \x04B3  1456                 # ҳ                   CYRILLIC SMALL LETTER HA WITH DESCENDER
+sign        \x04B4  1456                 # Ҵ                   CYRILLIC CAPITAL LIGATURE TE TSE
+sign        \x04B5  1456                 # ҵ                   CYRILLIC SMALL LIGATURE TE TSE
+sign        \x04B6  1456                 # Ҷ                   CYRILLIC CAPITAL LETTER CHE WITH DESCENDER
+sign        \x04B7  1456                 # ҷ                   CYRILLIC SMALL LETTER CHE WITH DESCENDER
+sign        \x04B8  1456                 # Ҹ                   CYRILLIC CAPITAL LETTER CHE WITH VERTICAL STROKE
+sign        \x04B9  1456                 # ҹ                   CYRILLIC SMALL LETTER CHE WITH VERTICAL STROKE
+sign        \x04BA  1456                 # Һ                   CYRILLIC CAPITAL LETTER SHHA
+sign        \x04BB  1456                 # һ                   CYRILLIC SMALL LETTER SHHA
+sign        \x04BC  1456                 # Ҽ                   CYRILLIC CAPITAL LETTER ABKHASIAN CHE
+sign        \x04BD  1456                 # ҽ                   CYRILLIC SMALL LETTER ABKHASIAN CHE
+sign        \x04BE  1456                 # Ҿ                   CYRILLIC CAPITAL LETTER ABKHASIAN CHE WITH DESCENDER
+sign        \x04BF  1456                 # ҿ                   CYRILLIC SMALL LETTER ABKHASIAN CHE WITH DESCENDER
+sign        \x04C0  1456                 # Ӏ                   CYRILLIC LETTER PALOCHKA
+sign        \x04C1  1456                 # Ӂ                   CYRILLIC CAPITAL LETTER ZHE WITH BREVE
+sign        \x04C2  1456                 # ӂ                   CYRILLIC SMALL LETTER ZHE WITH BREVE
+sign        \x04C3  1456                 # Ӄ                   CYRILLIC CAPITAL LETTER KA WITH HOOK
+sign        \x04C4  1456                 # ӄ                   CYRILLIC SMALL LETTER KA WITH HOOK
+sign        \x04C5  1456                 # Ӆ                   CYRILLIC CAPITAL LETTER EL WITH TAIL
+sign        \x04C6  1456                 # ӆ                   CYRILLIC SMALL LETTER EL WITH TAIL
+sign        \x04C7  1456                 # Ӈ                   CYRILLIC CAPITAL LETTER EN WITH HOOK
+sign        \x04C8  1456                 # ӈ                   CYRILLIC SMALL LETTER EN WITH HOOK
+sign        \x04C9  1456                 # Ӊ                   CYRILLIC CAPITAL LETTER EN WITH TAIL
+sign        \x04CA  1456                 # ӊ                   CYRILLIC SMALL LETTER EN WITH TAIL
+sign        \x04CB  1456                 # Ӌ                   CYRILLIC CAPITAL LETTER KHAKASSIAN CHE
+sign        \x04CC  1456                 # ӌ                   CYRILLIC SMALL LETTER KHAKASSIAN CHE
+sign        \x04CD  1456                 # Ӎ                   CYRILLIC CAPITAL LETTER EM WITH TAIL
+sign        \x04CE  1456                 # ӎ                   CYRILLIC SMALL LETTER EM WITH TAIL
+sign        \x04CF  1456                 # ӏ                   <reserved>
+sign        \x04D0  1456                 # Ӑ                   CYRILLIC CAPITAL LETTER A WITH BREVE
+sign        \x04D1  1456                 # ӑ                   CYRILLIC SMALL LETTER A WITH BREVE
+sign        \x04D2  1456                 # Ӓ                   CYRILLIC CAPITAL LETTER A WITH DIAERESIS
+sign        \x04D3  1456                 # ӓ                   CYRILLIC SMALL LETTER A WITH DIAERESIS
+sign        \x04D4  1456                 # Ӕ                   CYRILLIC CAPITAL LIGATURE A IE
+sign        \x04D5  1456                 # ӕ                   CYRILLIC SMALL LIGATURE A IE
+sign        \x04D6  1456                 # Ӗ                   CYRILLIC CAPITAL LETTER IE WITH BREVE
+sign        \x04D7  1456                 # ӗ                   CYRILLIC SMALL LETTER IE WITH BREVE
+sign        \x04D8  1456                 # Ә                   CYRILLIC CAPITAL LETTER SCHWA
+sign        \x04D9  1456                 # ә                   CYRILLIC SMALL LETTER SCHWA
+sign        \x04DA  1456                 # Ӛ                   CYRILLIC CAPITAL LETTER SCHWA WITH DIAERESIS
+sign        \x04DB  1456                 # ӛ                   CYRILLIC SMALL LETTER SCHWA WITH DIAERESIS
+sign        \x04DC  1456                 # Ӝ                   CYRILLIC CAPITAL LETTER ZHE WITH DIAERESIS
+sign        \x04DD  1456                 # ӝ                   CYRILLIC SMALL LETTER ZHE WITH DIAERESIS
+sign        \x04DE  1456                 # Ӟ                   CYRILLIC CAPITAL LETTER ZE WITH DIAERESIS
+sign        \x04DF  1456                 # ӟ                   CYRILLIC SMALL LETTER ZE WITH DIAERESIS
+sign        \x04E0  1456                 # Ӡ                   CYRILLIC CAPITAL LETTER ABKHASIAN DZE
+sign        \x04E1  1456                 # ӡ                   CYRILLIC SMALL LETTER ABKHASIAN DZE
+sign        \x04E2  1456                 # Ӣ                   CYRILLIC CAPITAL LETTER I WITH MACRON
+sign        \x04E3  1456                 # ӣ                   CYRILLIC SMALL LETTER I WITH MACRON
+sign        \x04E4  1456                 # Ӥ                   CYRILLIC CAPITAL LETTER I WITH DIAERESIS
+sign        \x04E5  1456                 # ӥ                   CYRILLIC SMALL LETTER I WITH DIAERESIS
+sign        \x04E6  1456                 # Ӧ                   CYRILLIC CAPITAL LETTER O WITH DIAERESIS
+sign        \x04E7  1456                 # ӧ                   CYRILLIC SMALL LETTER O WITH DIAERESIS
+sign        \x04E8  1456                 # Ө                   CYRILLIC CAPITAL LETTER BARRED O
+sign        \x04E9  1456                 # ө                   CYRILLIC SMALL LETTER BARRED O
+sign        \x04EA  1456                 # Ӫ                   CYRILLIC CAPITAL LETTER BARRED O WITH DIAERESIS
+sign        \x04EB  1456                 # ӫ                   CYRILLIC SMALL LETTER BARRED O WITH DIAERESIS
+sign        \x04EC  1456                 # Ӭ                   CYRILLIC CAPITAL LETTER E WITH DIAERESIS
+sign        \x04ED  1456                 # ӭ                   CYRILLIC SMALL LETTER E WITH DIAERESIS
+sign        \x04EE  1456                 # Ӯ                   CYRILLIC CAPITAL LETTER U WITH MACRON
+sign        \x04EF  1456                 # ӯ                   CYRILLIC SMALL LETTER U WITH MACRON
+sign        \x04F0  1456                 # Ӱ                   CYRILLIC CAPITAL LETTER U WITH DIAERESIS
+sign        \x04F1  1456                 # ӱ                   CYRILLIC SMALL LETTER U WITH DIAERESIS
+sign        \x04F2  1456                 # Ӳ                   CYRILLIC CAPITAL LETTER U WITH DOUBLE ACUTE
+sign        \x04F3  1456                 # ӳ                   CYRILLIC SMALL LETTER U WITH DOUBLE ACUTE
+sign        \x04F4  1456                 # Ӵ                   CYRILLIC CAPITAL LETTER CHE WITH DIAERESIS
+sign        \x04F5  1456                 # ӵ                   CYRILLIC SMALL LETTER CHE WITH DIAERESIS
+sign        \x04F6  1456                 # Ӷ                   <reserved>
+sign        \x04F7  1456                 # ӷ                   <reserved>
+sign        \x04F8  1456                 # Ӹ                   CYRILLIC CAPITAL LETTER YERU WITH DIAERESIS
+sign        \x04F9  1456                 # ӹ                   CYRILLIC SMALL LETTER YERU WITH DIAERESIS
+sign        \x04FA  1456                 # Ӻ
+sign        \x04FB  1456                 # ӻ
+sign        \x04FC  1456                 # Ӽ
+sign        \x04FD  1456                 # ӽ
+sign        \x04FE  1456                 # Ӿ
+sign        \x04FF  1456                 # ӿ
+
+
+# ----------------------------------------------------------------------------------------------
+

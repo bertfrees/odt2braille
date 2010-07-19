@@ -1,0 +1,77 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 4DC0..4DFF  Yijing Hexagram Symbols
+# ----------------------------------------------------------------------------------------------
+
+sign        \x4DC0  1456                 # ䷀
+sign        \x4DC1  1456                 # ䷁
+sign        \x4DC2  1456                 # ䷂
+sign        \x4DC3  1456                 # ䷃
+sign        \x4DC4  1456                 # ䷄
+sign        \x4DC5  1456                 # ䷅
+sign        \x4DC6  1456                 # ䷆
+sign        \x4DC7  1456                 # ䷇
+sign        \x4DC8  1456                 # ䷈
+sign        \x4DC9  1456                 # ䷉
+sign        \x4DCA  1456                 # ䷊
+sign        \x4DCB  1456                 # ䷋
+sign        \x4DCC  1456                 # ䷌
+sign        \x4DCD  1456                 # ䷍
+sign        \x4DCE  1456                 # ䷎
+sign        \x4DCF  1456                 # ䷏
+sign        \x4DD0  1456                 # ䷐
+sign        \x4DD1  1456                 # ䷑
+sign        \x4DD2  1456                 # ䷒
+sign        \x4DD3  1456                 # ䷓
+sign        \x4DD4  1456                 # ䷔
+sign        \x4DD5  1456                 # ䷕
+sign        \x4DD6  1456                 # ䷖
+sign        \x4DD7  1456                 # ䷗
+sign        \x4DD8  1456                 # ䷘
+sign        \x4DD9  1456                 # ䷙
+sign        \x4DDA  1456                 # ䷚
+sign        \x4DDB  1456                 # ䷛
+sign        \x4DDC  1456                 # ䷜
+sign        \x4DDD  1456                 # ䷝
+sign        \x4DDE  1456                 # ䷞
+sign        \x4DDF  1456                 # ䷟
+sign        \x4DE0  1456                 # ䷠
+sign        \x4DE1  1456                 # ䷡
+sign        \x4DE2  1456                 # ䷢
+sign        \x4DE3  1456                 # ䷣
+sign        \x4DE4  1456                 # ䷤
+sign        \x4DE5  1456                 # ䷥
+sign        \x4DE6  1456                 # ䷦
+sign        \x4DE7  1456                 # ䷧
+sign        \x4DE8  1456                 # ䷨
+sign        \x4DE9  1456                 # ䷩
+sign        \x4DEA  1456                 # ䷪
+sign        \x4DEB  1456                 # ䷫
+sign        \x4DEC  1456                 # ䷬
+sign        \x4DED  1456                 # ䷭
+sign        \x4DEE  1456                 # ䷮
+sign        \x4DEF  1456                 # ䷯
+sign        \x4DF0  1456                 # ䷰
+sign        \x4DF1  1456                 # ䷱
+sign        \x4DF2  1456                 # ䷲
+sign        \x4DF3  1456                 # ䷳
+sign        \x4DF4  1456                 # ䷴
+sign        \x4DF5  1456                 # ䷵
+sign        \x4DF6  1456                 # ䷶
+sign        \x4DF7  1456                 # ䷷
+sign        \x4DF8  1456                 # ䷸
+sign        \x4DF9  1456                 # ䷹
+sign        \x4DFA  1456                 # ䷺
+sign        \x4DFB  1456                 # ䷻
+sign        \x4DFC  1456                 # ䷼
+sign        \x4DFD  1456                 # ䷽
+sign        \x4DFE  1456                 # ䷾
+sign        \x4DFF  1456                 # ䷿
+
+
+# ----------------------------------------------------------------------------------------------
+
