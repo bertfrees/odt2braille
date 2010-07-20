@@ -221,7 +221,7 @@ public class UnoGUI {
             // Set liblouis directory
             liblouisDirUrl = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
                                 .getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
-                                + "/liblouis/bin/",m_xContext)).getAbsolutePath()
+                                + "/liblouis/", m_xContext)).getAbsolutePath()
                                 + System.getProperty("file.separator");
 
             logger.exiting("UnoGUI", "initialize");
@@ -660,7 +660,7 @@ public class UnoGUI {
         try {
 
             XMultiComponentFactory xMCF =(XMultiComponentFactory) UnoRuntime.queryInterface(
-                                          XMultiComponentFactory.class,m_xContext.getServiceManager());
+                                          XMultiComponentFactory.class, m_xContext.getServiceManager());
             Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
             XDesktop xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
             XComponent xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();

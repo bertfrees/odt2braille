@@ -2210,14 +2210,15 @@ public class SettingsDialog implements XItemListener,
         pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator());
         ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         mergeUnnumberedPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
-        numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana &&
-                                                                            (settings.getBraillePageNumberAt().equals("top")
-                                                                                   || settings.getPrintPageNumberAt().equals("top")) &&
-                                                                            !(settings.getPrintPageNumberAt().equals("top")
-                                                                                   && settings.getPrintPageNumbers()
-                                                                                   && settings.getPrintPageNumberRange()));
-        numbersAtBottomOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana && (settings.getBraillePageNumberAt().equals("bottom")
-                                                                                      || settings.getPrintPageNumberAt().equals("bottom")));
+        numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
+                                                                            && ((settings.getBraillePageNumbers() && settings.getBraillePageNumberAt().equals("top"))
+                                                                             || (settings.getPrintPageNumbers()   && settings.getPrintPageNumberAt().equals("top")))
+                                                                            && !(settings.getPrintPageNumberAt().equals("top")
+                                                                              && settings.getPrintPageNumbers()
+                                                                              && settings.getPrintPageNumberRange()));
+        numbersAtBottomOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
+                                                                            && ((settings.getBraillePageNumbers() && settings.getBraillePageNumberAt().equals("bottom"))
+                                                                             || (settings.getPrintPageNumbers()   && settings.getPrintPageNumberAt().equals("bottom"))));
 
     }
 
