@@ -1,5 +1,3 @@
-#--------------------- All chars definitions ------------------------------
-
 space \x000a 0
 space \t 0 tab            #  9
 space \s 0 blank					# 32
@@ -60,23 +58,18 @@ uplow Vv 1236
 uplow Ww 2456
 uplow Xx 1346
 uplow Yy 13456
-uplow Zz 1356					# 90 / 122							x005A / 7A
-
+uplow Zz 1356
 punctuation [ 12356		left square bracket			x005B
 sign \\ 2							reverse solidus					x005C
 punctuation ] 23456		right square bracket		x005D
 sign ^ 5							circumflex accent				x005E
 sign _ 6							low line								x005F
 sign ` 45							grave accent						x0060
-
-# a - z								# 97 - 122							x0061 - x007A
-
 punctuation { 246			left curly bracket			x007B
 sign | 46							vertical line						x007C
 punctuation } 12456		right curly bracket			x007D
 sign ~ 256						tilde										x007E
 sign \x0080 15-136-1235-135										x0080
-
 space \X00A0 0				# no-break space													x00A0
 sign ¢ 4-14						cent sign																	x00A2
 sign £ 45-123					pound sign																x00A3
@@ -95,7 +88,6 @@ punctuation » 2356-12		right-pointing double quotation mark		x00BB
 sign ¼ 6-16-34-1456		vulgar fraction one quarter								x00BC
 sign ½ 6-16-34-126		vulgar fraction one half									x00BD
 sign ¾ 6-126-34-1456					vulgar fraction 3 quarters				x00BE
-
 uplow \x00C0\x00E0 12356			a with grave						x00C0 / 00E0
 uplow Áá 12356								A with acute						x00C1 / 00E1
 uplow Ââ 16										a with circumflex				x00C2 / 00E2
@@ -119,19 +111,14 @@ uplow Úú 23456								U with acute						x00DA / 00FA
 #	uplow Üü 46-1256							U with diaeresis				x00DC / 00FC
 uplow Üü 1256									U with diaeresis				x00DC / 00FC
 math ÷ 256										division sign						x00F7
-
 punctuation	\x2010 46						# 8208			hyphen
 punctuation	\x2011 46						# 8209			non-breaking hyphen
 math	\x2013 36									# 8211			smart minus sign
 punctuation	\x2018 3						# 8216			smart single left quotation mark
 punctuation	\x2019 3						# 8217			smart single right quotation mark
-
 punctuation	\x201C 236					# 8220			smart opening double quote
 punctuation	\x201D 356					# 8221			smart closing double quote
 punctuation	\x201E 236					# 8222			smart double low quotation mark
 punctuation	\x201F 356					# 8223			double high reverse quotation mark
-
 punctuation \x2026 256-256-256	# 8230	smart ellipsis
-
-#-------------- end defintions ------------------------------------------
 

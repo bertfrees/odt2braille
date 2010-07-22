@@ -3,11 +3,15 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
-include _chardefs_U+0000_U+00FF.cti        # ASCII
-include _chardefs_U+0100_U+02AF.cti        # Latin Extended A & B / IPA Extensions
-include _chardefs_U+0370_U+03FF.cti        # Greek / Coptic
-include _chardefs_U+2000_U+214F.cti        # Punctuation / Symbols
-include _chardefs_U+2800_U+28FF.cti        # Braille
-include _chardefs_U+E000_U+F8FF.cti        # Private Use
+include _chardefs_unicode_BASIC_LATIN.cti
+include _chardefs_unicode_LATIN_1_SUPPLEMENT.cti
+include _chardefs_unicode_LATIN_EXTENDED_A.cti
+include _chardefs_unicode_LATIN_EXTENDED_B.cti
+include _chardefs_unicode_IPA_EXTENSIONS.cti
+include _chardefs_unicode_GREEK.cti
+include _chardefs_unicode_GENERAL_PUNCTUATION.cti
+include _chardefs_unicode_BRAILLE_PATTERNS.cti
+include _chardefs_unicode_PRIVATE_USE_AREA.cti
 
 # ----------------------------------------------------------------------------------------------
+

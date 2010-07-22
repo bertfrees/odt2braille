@@ -3,6 +3,10 @@
 
 # Append this table to others to correct scannos, etc.
 
+
+punctuation \x2019        3                   ’                   RIGHT SINGLE QUOTATION MARK
+
+
 repeated ____ 456-456-456-456
 repeated ---- 36-36-36-36
 repeated .... 3-3-3-3 

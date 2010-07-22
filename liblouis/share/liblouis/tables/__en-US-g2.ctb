@@ -4,7 +4,9 @@
 # ----------------------------------------------------------------------------------------------
 
 include _display.dis
+include _chardefs_en-US.cti
 include _chardefs.cti
+include _chardefs_en-US.cti
 include _hyphenation_en-US.dic
 include _translation_en-US-g1.ctb
 include _translation_en-US-g2.ctb

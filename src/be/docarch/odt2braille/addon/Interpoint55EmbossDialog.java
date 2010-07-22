@@ -173,9 +173,9 @@ public class Interpoint55EmbossDialog implements XActionListener {
             oooLocale = Locale.getDefault();
         }
 
-        L10N_brfLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("brfLabel") + " :";
-        L10N_wp55Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("wp55Label") + " :";
-        L10N_iniLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("iniLabel") + " :";
+        L10N_brfLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("brfLabel") + ":";
+        L10N_wp55Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("wp55Label") + ":";
+        L10N_iniLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("iniLabel") + ":";
         L10N_overWriteLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("overWriteLabel");
 
         L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossButton");

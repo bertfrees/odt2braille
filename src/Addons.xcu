@@ -32,6 +32,9 @@
                   <value xml:lang="en">~Settings</value>
                   <value xml:lang="nl">~Instellingen</value>
                   <value xml:lang="fr">~Préférences</value>
+                  <value xml:lang="ca">~Preferències</value>
+				  <value xml:lang="es">~Preferencias</value>
+				  <value xml:lang="pt">~Definições</value>
                 </prop>
               </node>
               <node oor:name="M2" oor:op="replace">
@@ -46,11 +49,14 @@
                 </prop>
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.text.TextDocument</value>
-		</prop>
+		        </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value xml:lang="en">~Export</value>
                   <value xml:lang="nl">~Exporteer</value>
                   <value xml:lang="fr">~Exporter</value>
+				  <value xml:lang="ca">~Exporta</value>
+				  <value xml:lang="es">~Exportar</value>
+				  <value xml:lang="pt">~Exportar</value>
                 </prop>
               </node>
               <node oor:name="M3" oor:op="replace">
@@ -67,9 +73,11 @@
                   <value>com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value xml:lang="nl">~Druk Af</value>
                   <value xml:lang="en">~Emboss</value>
+				  <value xml:lang="nl">~Druk Af</value>
                   <value xml:lang="fr">~Embosser</value>
+				  <value xml:lang="ca">~Imprimeix en braille</value>
+				  <value xml:lang="es">~Imprimir en braille</value>
                 </prop>
               </node>
               <node oor:name="M4" oor:op="replace">
@@ -86,9 +94,12 @@
                   <value>com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value xml:lang="nl">~Voer In</value>
                   <value xml:lang="en">~Insert</value>
+				  <value xml:lang="nl">~Voer In</value>
                   <value xml:lang="fr">~Insérer</value>
+				  <value xml:lang="ca">~Inserta</value>
+				  <value xml:lang="es">~Insertar</value>
+				  <value xml:lang="pt">~Inserir</value>
                 </prop>
                 <node oor:name="Submenu">
                   <node oor:name="M5" oor:op="replace">
@@ -106,6 +117,7 @@
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
                       <value xml:lang="en">~Dot Pattern Entry Mode</value>
+					  <value xml:lang="nl">~Voer in met puntjespatronen</value>
                       <value xml:lang="fr">~Mode de saisie point-à-point</value>
                     </prop>
                   </node>
@@ -124,7 +136,10 @@
                     </prop>
                     <prop oor:name="Title" oor:type="xs:string">
                       <value xml:lang="en">~6 Key Entry Mode</value>
+					  <value xml:lang="nl">~Voer in met 6 toetsen</value>
                       <value xml:lang="fr">~Mode de saisie 6-touches</value>
+					  <value xml:lang="ca">~Mode de 6 tecles</value>
+					  <value xml:lang="es">~Modo 6 teclas</value>
                     </prop>
                   </node>
                 </node>
