@@ -1,6 +1,6 @@
-=========================
-Version 0.0.1
-=========================
+=============================
+Version 0.0.1 - 02/07/2010
+=============================
 
 Features:
 
@@ -31,12 +31,34 @@ Features:
 * Users are notified in time of structure problems that could lead to unwanted artifacts in the Braille output.
 
 
+Localization:
 
-=========================
+
+* English
+* Dutch
+
+
+
+=============================
 Version ?
-=========================
+=============================
 
 Fixed bugs:
 
 
 * Hyperlink bug fix (hyperlink sometimes not rendered)
+* Other small fixes
+
+
+Added features:
+
+
+* Document can now contain every unicode character.
+
+
+Localization:
+
+
+* French
+* Catalan
+

@@ -134,24 +134,24 @@ Texinfo:
 @code{cd} to Odt2BrailleAddOn/doc
 @item
 @code{
-texi2dvi --pdf@*@w{        }
-odt2braille-user-doc.texi}
+texi2dvi --pdf
+@*@w{        }odt2braille-user-doc.texi}
 @item
 @code{
-makeinfo --html@*@w{       }
-[--no-split]@*@w{       }
-[--no-headers]@*@w{       }
-[--css-include=body.css]@*@w{        }
---output=odt2braille-user-doc.html@*@w{        }
-odt2braille-user-doc.texi}
+makeinfo --html
+@*@w{       }[--no-split]
+@*@w{       }[--no-headers]
+@*@w{       }[--css-include=body.css]
+@*@w{        }--output=odt2braille-user-doc.html
+@*@w{        }odt2braille-user-doc.texi}
 @item
 @code{
-makeinfo --html@*@w{       }
-[--no-split]@*@w{       }
-[--no-headers]@*@w{       }
-[--css-include=body.css]@*@w{        }
---output=odt2braille-dev-doc.html@*@w{        }
-odt2braille-dev-doc.texi
+makeinfo --html
+@*@w{       }[--no-split]
+@*@w{       }[--no-headers]
+@*@w{       }[--css-include=body.css]
+@*@w{        }--output=odt2braille-dev-doc.html
+@*@w{        }odt2braille-dev-doc.texi
 }
 @end itemize	
 			
@@ -162,13 +162,13 @@ Javadoc:
 @code{cd} to directory containing all projects
 @item
 @code{
-javadoc [-private]@*@w{       }
-[-author]@*@w{       }
-[-version]@*@w{       }
-[-breakiterator]@*@w{        }
--d Odt2BrailleAddOn\doc\javadoc@*@w{        }
--subpackages be.docarch:org_pef_text@*@w{        }
--sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
+javadoc [-private]
+@*@w{       }[-author]
+@*@w{       }[-version]
+@*@w{       }[-breakiterator]
+@*@w{        }-d Odt2BrailleAddOn\doc\javadoc
+@*@w{        }-subpackages be.docarch:org_pef_text
+@*@w{        }-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
 }
 @end itemize
 
@@ -295,8 +295,6 @@ Tooltips in dialogs.
 @item
 Complete documentation.
 @item
-Localization.
-@item
 Support more embossers.
 @item
 Only Interpoint55 is tested.
@@ -306,8 +304,6 @@ Keyboard shortcut for braille menu.
 8 dot braille.
 @item
 Tactile graphics.
-@item
-Detect which ranges of unicode characters are used in the document and include the appropriate liblouis-tables.
 @item
 If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
 @item
@@ -327,10 +323,6 @@ Odt2Daisy.preProcessing(): should be made faster.
 Replace DOM processing with XSL transformation where this is possible.
 This will result in better performance.
 @item
-Localization of braille menu.
-@item
-Checking of volume lengths: should be dependent on the recto/recto-verso setting.
-@item
 When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
 @item
 UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
@@ -343,10 +335,8 @@ Hyphenation
 @item
 Mac OS, Linux, ...
 @item
-Er kunnen nog lege paragrafen voorkomen (als er lege spans inzaten)
+Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten)
 Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
-@item
-Numbers at top/bottom on seperate line: selectievakjes ook uitschakelen als 'enable page numbers' vakjes zijn uitgeschakeld
 @item
 ...
 @end itemize
