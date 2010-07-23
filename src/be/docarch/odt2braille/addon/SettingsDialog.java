@@ -65,6 +65,9 @@ import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.TextEvent;
 
 import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.SpecialSymbol;
+import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
+import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
 import org_pef_text.pef2text.Paper;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
@@ -114,13 +117,14 @@ public class SettingsDialog implements XItemListener,
     private final static short TABLES_PAGE = 6;
     private final static short PAGENUMBERS_PAGE = 7;
     private final static short TOC_PAGE = 8;
-    private final static short MATH_PAGE = 9;
-    private final static short EXPORT_EMBOSS_PAGE = 10;
+    private final static short SPECIAL_SYMBOLS_PAGE = 9;
+    private final static short MATH_PAGE = 10;
+    private final static short EXPORT_EMBOSS_PAGE = 11;
 
-    private final static short NUMBER_OF_PAGES = 10;
+    private final static short NUMBER_OF_PAGES = 11;
 
-    private boolean[] pagesEnabled = {true,true,true,true,true,true,true,true,true,true};
-    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false};
+    private boolean[] pagesEnabled = {true,true,true,true,true,true,true,true,true,true,true};
+    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false};
     private int currentPage = 1;
     private short mode;
 
@@ -128,10 +132,12 @@ public class SettingsDialog implements XItemListener,
     private int currentListLevel;
     private int currentTableColumn;
     private int currentTableOfContentsLevel;
+    private int selectedLanguagePos;
+    private int selectedSpecialSymbolPos;
     
     private ArrayList<String> supportedTranslationTables = null;
     private ArrayList<String> languages = null;
-    private int selectedLanguagePos;
+    private ArrayList<SpecialSymbol> specialSymbols = null;
 
     private ArrayList<EmbosserType> embosserTypes = null;
     private ArrayList<TableType> tableTypes = null;
@@ -187,33 +193,27 @@ public class SettingsDialog implements XItemListener,
     // General Page
 
     private XTextComponent creatorField = null;
-    private XTextComponent specialSymbolsListField = null;
     private XTextComponent transcribersNotesPageField = null;
     private XListBox mainTranslationTableListBox = null;
     private XListBox mainGradeListBox = null;
-    private XCheckBox specialSymbolsListCheckBox = null;
     private XCheckBox transcribersNotesPageCheckBox = null;
     private XCheckBox transcriptionInfoCheckBox = null;
     private XCheckBox volumeInfoCheckBox = null;
     private XCheckBox preliminaryVolumeCheckBox = null;
 
-    private XPropertySet transcribersNotesPageFieldProperties = null;
-    private XPropertySet specialSymbolsListFieldProperties = null;
+    private XPropertySet transcribersNotesPageFieldProperties = null;    
     private XPropertySet transcriptionInfoCheckBoxProperties = null;
     private XPropertySet volumeInfoCheckBoxProperties = null;
     private XPropertySet transcribersNotesPageCheckBoxProperties = null;
-    private XPropertySet specialSymbolsListCheckBoxProperties = null;
     private XPropertySet creatorFieldProperties = null;
     private XPropertySet preliminaryVolumeCheckBoxProperties = null;
 
     private static String _mainTranslationTableListBox = "ListBox1";
     private static String _mainGradeListBox = "ListBox2";
     private static String _creatorField = "TextField1";
-    private static String _specialSymbolsListField = "TextField2";
     private static String _transcribersNotesPageField = "TextField3";
     private static String _transcriptionInfoCheckBox = "CheckBox1";
     private static String _volumeInfoCheckBox = "CheckBox2";
-    private static String _specialSymbolsListCheckBox = "CheckBox3";
     private static String _transcribersNotesPageCheckBox = "CheckBox4";
     private static String _preliminaryVolumeCheckBox = "CheckBox8";
 
@@ -222,14 +222,12 @@ public class SettingsDialog implements XItemListener,
     private static String _transcriptionInfoLabel = "Label3";
     private static String _creatorLabel = "Label4";
     private static String _volumeInfoLabel = "Label5";
-    private static String _specialSymbolsListLabel = "Label6";
     private static String _transcribersNotesPageLabel = "Label7";
     private static String _preliminaryVolumeLabel = "Label11";
 
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
     private String L10N_mainGradeLabel = null;
-    private String L10N_specialSymbolsListLabel = null;
     private String L10N_transcribersNotesPageLabel = null;
     private String L10N_transcriptionInfoLabel = null;
     private String L10N_volumeInfoLabel = null;
@@ -561,6 +559,74 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableOfContentsLineFillLabel = null;
     private String L10N_tableOfContentsLineFillButton = "...";
 
+    // Special Symbols Page
+    
+    private XCheckBox specialSymbolsListCheckBox = null;
+    private XTextComponent specialSymbolsListField = null;
+    private XListBox specialSymbolsListBox = null;
+    private XTextComponent specialSymbolsSymbolField = null;
+    private XButton specialSymbolsSymbolButton = null;
+    private XTextComponent specialSymbolsDescriptionField = null;
+    private XRadioButton specialSymbolsMode0RadioButton = null;
+    private XRadioButton specialSymbolsMode1RadioButton = null;
+    private XRadioButton specialSymbolsMode2RadioButton = null;
+    private XRadioButton specialSymbolsMode3RadioButton = null;
+    private XButton specialSymbolsAddButton = null;
+    private XButton specialSymbolsRemoveButton = null;
+    private XButton specialSymbolsMoveUpButton = null;
+    private XButton specialSymbolsMoveDownButton = null;
+
+    private XPropertySet specialSymbolsListCheckBoxProperties = null;
+    private XPropertySet specialSymbolsListFieldProperties = null;
+    private XPropertySet specialSymbolsListBoxProperties = null;
+    private XPropertySet specialSymbolsSymbolFieldProperties = null;
+    private XPropertySet specialSymbolsSymbolButtonProperties = null;
+    private XPropertySet specialSymbolsDescriptionFieldProperties = null;
+    private XPropertySet specialSymbolsMode0RadioButtonProperties = null;
+    private XPropertySet specialSymbolsMode1RadioButtonProperties = null;
+    private XPropertySet specialSymbolsMode2RadioButtonProperties = null;
+    private XPropertySet specialSymbolsMode3RadioButtonProperties = null;
+    private XPropertySet specialSymbolsAddButtonProperties = null;
+    private XPropertySet specialSymbolsRemoveButtonProperties = null;
+    private XPropertySet specialSymbolsMoveUpButtonProperties = null;
+    private XPropertySet specialSymbolsMoveDownButtonProperties = null;
+
+    private static String _specialSymbolsListCheckBox = "CheckBox3";
+    private static String _specialSymbolsListField = "TextField2";
+    private static String _specialSymbolsListBox = "ListBox25";
+    private static String _specialSymbolsSymbolField = "TextField8";
+    private static String _specialSymbolsSymbolButton = "CommandButton8";
+    private static String _specialSymbolsDescriptionField = "TextField9";
+    private static String _specialSymbolsMode0RadioButton = "OptionButton8";
+    private static String _specialSymbolsMode1RadioButton = "OptionButton7";
+    private static String _specialSymbolsMode2RadioButton = "OptionButton6";
+    private static String _specialSymbolsMode3RadioButton = "OptionButton5";
+    private static String _specialSymbolsAddButton = "CommandButton11";
+    private static String _specialSymbolsRemoveButton = "CommandButton9";
+    private static String _specialSymbolsMoveUpButton = "CommandButton10";
+    private static String _specialSymbolsMoveDownButton = "CommandButton12";
+    
+    private static String _specialSymbolsListLabel = "Label6";
+    private static String _specialSymbolsListTitleLabel = "Label73";
+    private static String _specialSymbolsLabel = "Label74";
+    private static String _specialSymbolsSymbolLabel = "Label75";
+    private static String _specialSymbolsDescriptionLabel = "Label76";
+    private static String _specialSymbolsMode0Label = "Label81";
+    private static String _specialSymbolsMode1Label = "Label80";
+    private static String _specialSymbolsMode2Label = "Label79";
+    private static String _specialSymbolsMode3Label = "Label78";
+    
+    private String L10N_specialSymbolsListLabel = null;
+    private String L10N_specialSymbolsListTitleLabel = null;
+    private String L10N_specialSymbolsLabel = null;
+    private String L10N_specialSymbolsSymbolLabel = null;
+    private String L10N_specialSymbolsDescriptionLabel = null;
+    private String L10N_specialSymbolsMode0Label = null;
+    private String L10N_specialSymbolsMode1Label = null;
+    private String L10N_specialSymbolsMode2Label = null;
+    private String L10N_specialSymbolsMode3Label = null;
+    private String L10N_specialSymbolsSymbolButton = "...";
+
     // Mathematics Page
 
     private XListBox mathListBox = null;
@@ -715,6 +781,7 @@ public class SettingsDialog implements XItemListener,
         L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("pagenumberSettingsPageTitle");
         L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageSettingsPageTitle");
         L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsSettingsPageTitle");
+        L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsSettingsPageTitle");
         L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mathSettingsPageTitle");
         L10N_roadmapLabels[EXPORT_EMBOSS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exportEmbossSettingsPageTitle");
 
@@ -734,7 +801,6 @@ public class SettingsDialog implements XItemListener,
         L10N_creatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("creatorLabel") + ":";
         L10N_mainTranslationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
         L10N_mainGradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_specialSymbolsListLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsListLabel");
         L10N_transcribersNotesPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcribersNotesPageLabel");
         L10N_transcriptionInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcriptionInfoLabel");
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
@@ -818,6 +884,18 @@ public class SettingsDialog implements XItemListener,
         L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
         L10N_tableOfContentsSpacingLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("spacingLabel");
         L10N_tableOfContentsPositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("positionLabel");
+
+        // Special Symbols Page
+        
+        L10N_specialSymbolsListLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsListLabel");
+        L10N_specialSymbolsListTitleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsListTitleLabel") + ":";
+        L10N_specialSymbolsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsLabel");
+        L10N_specialSymbolsSymbolLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsSymbolLabel") + ":";
+        L10N_specialSymbolsDescriptionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsDescriptionLabel") + ":";
+        L10N_specialSymbolsMode0Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsMode0Label");
+        L10N_specialSymbolsMode1Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsMode1Label");
+        L10N_specialSymbolsMode2Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsMode2Label");
+        L10N_specialSymbolsMode3Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsMode3Label");
 
         // Mathematics Page
 
@@ -979,12 +1057,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_creatorField));
         transcribersNotesPageField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_transcribersNotesPageField));
-        specialSymbolsListField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_specialSymbolsListField));
         transcribersNotesPageCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_transcribersNotesPageCheckBox));
-        specialSymbolsListCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_specialSymbolsListCheckBox));
         transcriptionInfoCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_transcriptionInfoCheckBox));
         volumeInfoCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
@@ -1125,6 +1199,37 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsLineFillButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_tableOfContentsLineFillButton));
 
+        // Special Symbols Page
+
+        specialSymbolsListCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_specialSymbolsListCheckBox));
+        specialSymbolsListField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_specialSymbolsListField));
+        specialSymbolsListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_specialSymbolsListBox));
+        specialSymbolsSymbolField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_specialSymbolsSymbolField));
+        specialSymbolsSymbolButton = (XButton) UnoRuntime.queryInterface(XButton.class,
+                dialogControlContainer.getControl(_specialSymbolsSymbolButton));
+        specialSymbolsDescriptionField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_specialSymbolsDescriptionField));
+        specialSymbolsMode0RadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMode0RadioButton));
+        specialSymbolsMode1RadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMode1RadioButton));
+        specialSymbolsMode2RadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMode2RadioButton));
+        specialSymbolsMode3RadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMode3RadioButton));
+        specialSymbolsAddButton = (XButton) UnoRuntime.queryInterface(XButton.class,
+                dialogControlContainer.getControl(_specialSymbolsAddButton));
+        specialSymbolsRemoveButton = (XButton) UnoRuntime.queryInterface(XButton.class,
+                dialogControlContainer.getControl(_specialSymbolsRemoveButton));
+        specialSymbolsMoveUpButton = (XButton) UnoRuntime.queryInterface(XButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMoveUpButton));
+        specialSymbolsMoveDownButton = (XButton) UnoRuntime.queryInterface(XButton.class,
+                dialogControlContainer.getControl(_specialSymbolsMoveDownButton));
+
         // Mathematics Page
 
         mathListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
@@ -1202,12 +1307,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, creatorField)).getModel());
         transcribersNotesPageFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, transcribersNotesPageField)).getModel());
-        specialSymbolsListFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsListField)).getModel());
         transcribersNotesPageCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, transcribersNotesPageCheckBox)).getModel());
-        specialSymbolsListCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsListCheckBox)).getModel());
         volumeInfoCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, volumeInfoCheckBox)).getModel());
         transcriptionInfoCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1329,6 +1430,39 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsLineFillButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsLineFillButton)).getModel());
 
+        // Special Symbols Page
+        
+        specialSymbolsListCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsListCheckBox)).getModel());
+        specialSymbolsListFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsListField)).getModel());
+        specialSymbolsListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsListBox)).getModel());
+        specialSymbolsSymbolFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsSymbolField)).getModel());
+        specialSymbolsSymbolButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsSymbolButton)).getModel());
+        specialSymbolsDescriptionFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsDescriptionField)).getModel());
+        specialSymbolsMode0RadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMode0RadioButton)).getModel());
+        specialSymbolsMode1RadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMode1RadioButton)).getModel());
+        specialSymbolsMode2RadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMode2RadioButton)).getModel());
+        specialSymbolsMode3RadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMode3RadioButton)).getModel());
+        specialSymbolsAddButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsAddButton)).getModel());
+        specialSymbolsRemoveButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsRemoveButton)).getModel());
+        specialSymbolsMoveUpButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMoveUpButton)).getModel());
+        specialSymbolsMoveDownButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMoveDownButton)).getModel());
+        
+        // Mathematics Page
+
         // Export & Emboss Page
 
         genericRadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1419,10 +1553,14 @@ public class SettingsDialog implements XItemListener,
         tableColumnDelimiterButton.addActionListener(this);
         tableOfContentsLineFillButton.addActionListener(this);
         listPrefixButton.addActionListener(this);
+        specialSymbolsSymbolButton.addActionListener(this);
+        specialSymbolsAddButton.addActionListener(this);
+        specialSymbolsRemoveButton.addActionListener(this);
+        specialSymbolsMoveUpButton.addActionListener(this);
+        specialSymbolsMoveDownButton.addActionListener(this);
 
         transcriptionInfoCheckBox.addItemListener(this);
         volumeInfoCheckBox.addItemListener(this);
-        specialSymbolsListCheckBox.addItemListener(this);
         transcribersNotesPageCheckBox.addItemListener(this);
         mainTranslationTableListBox.addItemListener(this);
         mainGradeListBox.addItemListener(this);
@@ -1440,6 +1578,13 @@ public class SettingsDialog implements XItemListener,
         gradeListBox.addItemListener(this);
         tableOfContentsCheckBox.addItemListener(this);
         tableOfContentsLevelListBox.addItemListener(this);
+        specialSymbolsListCheckBox.addItemListener(this);
+        specialSymbolsListBox.addItemListener(this);
+        specialSymbolsMode0RadioButton.addItemListener(this);
+        specialSymbolsMode1RadioButton.addItemListener(this);
+        specialSymbolsMode2RadioButton.addItemListener(this);
+        specialSymbolsMode3RadioButton.addItemListener(this);
+
         genericRadioButton.addItemListener(this);
         specificRadioButton.addItemListener(this);
         embosserListBox.addItemListener(this);
@@ -1510,6 +1655,7 @@ public class SettingsDialog implements XItemListener,
         tableColumnDelimiterButton.setLabel(L10N_tableColumnDelimiterButton);
         tableOfContentsLineFillButton.setLabel(L10N_tableOfContentsLineFillButton);
         listPrefixButton.setLabel(L10N_listPrefixButton);
+        specialSymbolsSymbolButton.setLabel(L10N_specialSymbolsSymbolButton);
 
         tableSpacingGroupBoxProperties.setPropertyValue("Label", L10N_tableSpacingLabel);
         tablePositionGroupBoxProperties.setPropertyValue("Label", L10N_tablePositionLabel);
@@ -1530,8 +1676,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_volumeInfoLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_transcribersNotesPageLabel));
         xFixedText.setText(L10N_transcribersNotesPageLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsListLabel));
-        xFixedText.setText(L10N_specialSymbolsListLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preliminaryVolumeLabel));
         xFixedText.setText(L10N_preliminaryVolumeLabel);
 
@@ -1660,6 +1804,27 @@ public class SettingsDialog implements XItemListener,
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsLineFillLabel));
         xFixedText.setText(L10N_tableOfContentsLineFillLabel);
 
+        // Special Symbols Page
+
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsListLabel));
+        xFixedText.setText(L10N_specialSymbolsListLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsListTitleLabel));
+        xFixedText.setText(L10N_specialSymbolsListTitleLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsLabel));
+        xFixedText.setText(L10N_specialSymbolsLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsSymbolLabel));
+        xFixedText.setText(L10N_specialSymbolsSymbolLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsDescriptionLabel));
+        xFixedText.setText(L10N_specialSymbolsDescriptionLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsMode0Label));
+        xFixedText.setText(L10N_specialSymbolsMode0Label);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsMode1Label));
+        xFixedText.setText(L10N_specialSymbolsMode1Label);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsMode2Label));
+        xFixedText.setText(L10N_specialSymbolsMode2Label);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsMode3Label));
+        xFixedText.setText(L10N_specialSymbolsMode3Label);
+
         // Mathematics Page
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mathLabel));
@@ -1701,18 +1866,15 @@ public class SettingsDialog implements XItemListener,
         if (pagesEnabled[GENERAL_PAGE-1]) {
 
             transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.PRELIMINARY_PAGES_PRESENT);
-            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.PRELIMINARY_PAGES_PRESENT);
             preliminaryVolumeCheckBoxProperties.setPropertyValue("Enabled", settings.PRELIMINARY_PAGES_PRESENT);
             transcriptionInfoCheckBoxProperties.setPropertyValue("Enabled", settings.TRANSCRIPTION_INFO_AVAILABLE);
             volumeInfoCheckBoxProperties.setPropertyValue("Enabled", settings.VOLUME_INFO_AVAILABLE);
 
             creatorField.setText(settings.getCreator());
             transcribersNotesPageField.setText(settings.transcribersNotesPageTitle);
-            specialSymbolsListField.setText(settings.specialSymbolsListTitle);
             transcriptionInfoCheckBox.setState((short)(settings.transcriptionInfoEnabled?1:0));
             volumeInfoCheckBox.setState((short)(settings.volumeInfoEnabled?1:0));
             transcribersNotesPageCheckBox.setState((short)(settings.transcribersNotesPageEnabled?1:0));
-            specialSymbolsListCheckBox.setState((short)(settings.specialSymbolsListEnabled?1:0));
             preliminaryVolumeCheckBox.setState((short)(settings.preliminaryVolumeEnabled?1:0));
 
             for (int i=0;i<supportedTranslationTables.size();i++) {
@@ -1919,6 +2081,20 @@ public class SettingsDialog implements XItemListener,
             updateTableOfContentsPageFieldProperties();
 
         }
+        
+        if (pagesEnabled[SPECIAL_SYMBOLS_PAGE-1]) {
+
+            selectedSpecialSymbolPos = 0;
+
+            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.PRELIMINARY_PAGES_PRESENT);
+            specialSymbolsListField.setText(settings.specialSymbolsListTitle);
+            specialSymbolsListCheckBox.setState((short)(settings.specialSymbolsListEnabled?1:0));
+
+            updateSpecialSymbolsListBox();
+            updateSpecialSymbolsPageFieldValues();
+            updateSpecialSymbolsPageFieldProperties();
+
+        }
 
         if (pagesEnabled[MATH_PAGE-1]) {
 
@@ -2003,11 +2179,9 @@ public class SettingsDialog implements XItemListener,
 
             settings.setCreator(creatorField.getText());
             settings.transcribersNotesPageTitle = transcribersNotesPageField.getText();
-            settings.specialSymbolsListTitle = specialSymbolsListField.getText();
             settings.transcriptionInfoEnabled = (transcriptionInfoCheckBox.getState() == (short) 1);
             settings.volumeInfoEnabled = (volumeInfoCheckBox.getState() == (short) 1);
-            settings.transcribersNotesPageEnabled = (transcribersNotesPageCheckBox.getState() == (short) 1);
-            settings.specialSymbolsListEnabled = (specialSymbolsListCheckBox.getState() == (short) 1);
+            settings.transcribersNotesPageEnabled = (transcribersNotesPageCheckBox.getState() == (short) 1);            
             settings.preliminaryVolumeEnabled = (preliminaryVolumeCheckBox.getState() == (short) 1);
 
         }
@@ -2054,6 +2228,14 @@ public class SettingsDialog implements XItemListener,
             settings.tableOfContentTitle = tableOfContentsTitleField.getText();
             settings.setLinesBetween("toc", (int)tableOfContentsLinesBetweenField.getValue());
             saveTableOfContentsPageFieldValues();
+
+        }
+
+        if (pagesVisited[SPECIAL_SYMBOLS_PAGE-1]){
+
+            settings.specialSymbolsListTitle = specialSymbolsListField.getText();
+            settings.specialSymbolsListEnabled = (specialSymbolsListCheckBox.getState() == (short) 1);
+            saveSpecialSymbolsPageFieldValues();
 
         }
 
@@ -2131,7 +2313,6 @@ public class SettingsDialog implements XItemListener,
 
         creatorFieldProperties.setPropertyValue("Enabled", settings.transcriptionInfoEnabled);
         transcribersNotesPageFieldProperties.setPropertyValue("Enabled", settings.transcribersNotesPageEnabled);
-        specialSymbolsListFieldProperties.setPropertyValue("Enabled", settings.specialSymbolsListEnabled);
 
     }
 
@@ -2222,7 +2403,7 @@ public class SettingsDialog implements XItemListener,
 
     }
 
-    private void updateTableOfContentsPageFieldProperties()  throws com.sun.star.uno.Exception {
+    private void updateTableOfContentsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean enabled = settings.tableOfContentEnabled;
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
@@ -2236,6 +2417,33 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled && !bana);
 
     }
+
+    private void updateSpecialSymbolsPageFieldProperties() throws com.sun.star.uno.Exception {
+
+        boolean enabled = settings.specialSymbolsListEnabled;
+
+        specialSymbolsListFieldProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsListBoxProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsSymbolFieldProperties.setPropertyValue("Enabled", enabled
+                                                             && specialSymbols.get(selectedSpecialSymbolPos).getType()==SpecialSymbolType.OTHER);
+        specialSymbolsSymbolButtonProperties.setPropertyValue("Enabled", enabled
+                                                             && specialSymbols.get(selectedSpecialSymbolPos).getType()==SpecialSymbolType.OTHER);
+        specialSymbolsDescriptionFieldProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsMode0RadioButtonProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsMode1RadioButtonProperties.setPropertyValue("Enabled", enabled
+                                                             && specialSymbols.get(selectedSpecialSymbolPos).getType()!=SpecialSymbolType.OTHER);
+        specialSymbolsMode2RadioButtonProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsMode3RadioButtonProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsAddButtonProperties.setPropertyValue("Enabled", enabled);
+        specialSymbolsRemoveButtonProperties.setPropertyValue("Enabled", enabled
+                                                             && specialSymbols.get(selectedSpecialSymbolPos).getType()==SpecialSymbolType.OTHER);
+        specialSymbolsMoveUpButtonProperties.setPropertyValue("Enabled", enabled
+                                                             && selectedSpecialSymbolPos>0);
+        specialSymbolsMoveDownButtonProperties.setPropertyValue("Enabled", enabled
+                                                             && selectedSpecialSymbolPos<specialSymbols.size()-1);
+
+    }
+
     private void updateParagraphsPageFieldValues() {
 
         paragraphAlignmentListBox.selectItemPos((short)(settings.getCentered("paragraph")?1:0), true);
@@ -2352,6 +2560,51 @@ public class SettingsDialog implements XItemListener,
 
     }
 
+    private void updateSpecialSymbolsListBox() {
+
+        specialSymbolsListBox.removeItemListener(this);
+
+        specialSymbols = settings.getSpecialSymbolsList();
+        specialSymbolsListBox.removeItems((short)0, Short.MAX_VALUE);
+        for (int i=0;i<specialSymbols.size();i++) {
+            specialSymbolsListBox.addItem(specialSymbols.get(i).getSymbol(), (short)i);
+        }
+        specialSymbolsListBox.selectItemPos((short)(selectedSpecialSymbolPos), true);
+
+        specialSymbolsListBox.addItemListener(this);
+
+    }
+
+    private void updateSpecialSymbolsPageFieldValues() {
+
+        SpecialSymbol selectedSpecialSymbol = specialSymbols.get(selectedSpecialSymbolPos);
+
+        specialSymbolsSymbolField.setText(selectedSpecialSymbol.getSymbol());
+        specialSymbolsDescriptionField.setText(selectedSpecialSymbol.getDescription());
+
+        specialSymbolsMode0RadioButton.removeItemListener(this);
+        specialSymbolsMode1RadioButton.removeItemListener(this);
+        specialSymbolsMode2RadioButton.removeItemListener(this);
+        specialSymbolsMode3RadioButton.removeItemListener(this);
+
+        specialSymbolsMode0RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.NEVER);
+        specialSymbolsMode1RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.IF_PRESENT_IN_VOLUME);
+        specialSymbolsMode2RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.FIRST_VOLUME);
+        specialSymbolsMode3RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.ALWAYS);
+
+        specialSymbolsMode0RadioButton.addItemListener(this);
+        specialSymbolsMode1RadioButton.addItemListener(this);
+        specialSymbolsMode2RadioButton.addItemListener(this);
+        specialSymbolsMode3RadioButton.addItemListener(this);
+
+    }
+
+    private void saveSpecialSymbolsPageFieldValues() {
+
+        specialSymbols.get(selectedSpecialSymbolPos).setDescription(specialSymbolsDescriptionField.getText());
+
+    }
+
     /**
      * Select the correct item in the 'Main translation table' listbox on the 'General Settings' tab.
      *
@@ -2416,6 +2669,9 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateGenericOrSpecific() {
 
+        specificRadioButton.removeItemListener(this);
+        genericRadioButton.removeItemListener(this);
+
         if (!settings.isGenericOrSpecific()) {
             specificRadioButton.setState(false);
             settings.setGenericOrSpecific(true);
@@ -2423,6 +2679,9 @@ public class SettingsDialog implements XItemListener,
             genericRadioButton.setState(false);
             settings.setGenericOrSpecific(false);
         }
+
+        specificRadioButton.addItemListener(this);
+        genericRadioButton.addItemListener(this);
     }
 
     /**
@@ -2857,8 +3116,6 @@ public class SettingsDialog implements XItemListener,
                             settings.volumeInfoEnabled = (volumeInfoCheckBox.getState() == (short) 1);
                         } else if (source.equals(transcribersNotesPageCheckBox)) {
                             settings.transcribersNotesPageEnabled = (transcribersNotesPageCheckBox.getState() == (short) 1);
-                        } else if (source.equals(specialSymbolsListCheckBox)) {
-                            settings.specialSymbolsListEnabled = (specialSymbolsListCheckBox.getState() == (short) 1);
                         } else if (source.equals(mainTranslationTableListBox)) {
                             settings.setTranslationTable(supportedTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainGradeListBox();
@@ -2992,11 +3249,57 @@ public class SettingsDialog implements XItemListener,
                             updateTableOfContentsPageFieldProperties();
                         } else if (source.equals(tableOfContentsLevelListBox)) {
                             saveTableOfContentsPageFieldValues();
-                            currentTableOfContentsLevel = tableOfContentsLevelListBox.getSelectedItemPos() + 1;
+                            currentTableOfContentsLevel = (int)tableOfContentsLevelListBox.getSelectedItemPos() + 1;
                             updateTableOfContentsPageFieldValues();
                             updateTableOfContentsPageFieldProperties();
                         }
                         
+                        break;
+
+                    case SPECIAL_SYMBOLS_PAGE:
+                        
+                        if (source.equals(specialSymbolsListCheckBox)) {
+                            settings.specialSymbolsListEnabled = (specialSymbolsListCheckBox.getState() == (short) 1);
+                            updateSpecialSymbolsPageFieldProperties();
+                        } else if (source.equals(specialSymbolsListBox)) {
+                            saveSpecialSymbolsPageFieldValues();
+                            selectedSpecialSymbolPos = (int)specialSymbolsListBox.getSelectedItemPos();
+                            updateSpecialSymbolsPageFieldValues();
+                            updateSpecialSymbolsPageFieldProperties();                            
+                        } else if (source.equals(specialSymbolsMode0RadioButton) ||
+                                   source.equals(specialSymbolsMode1RadioButton) ||
+                                   source.equals(specialSymbolsMode2RadioButton) ||
+                                   source.equals(specialSymbolsMode3RadioButton)) {
+
+                            SpecialSymbol selectedSpecialSymbol = specialSymbols.get(selectedSpecialSymbolPos);
+
+                            if (source.equals(specialSymbolsMode0RadioButton)) {
+                                selectedSpecialSymbol.setMode(SpecialSymbolMode.NEVER);
+                            } else if (source.equals(specialSymbolsMode1RadioButton)) {
+                                selectedSpecialSymbol.setMode(SpecialSymbolMode.IF_PRESENT_IN_VOLUME);
+                            } else if (source.equals(specialSymbolsMode2RadioButton)) {
+                                selectedSpecialSymbol.setMode(SpecialSymbolMode.FIRST_VOLUME);
+                            } else if (source.equals(specialSymbolsMode3RadioButton)) {
+                                selectedSpecialSymbol.setMode(SpecialSymbolMode.ALWAYS);
+                            }
+
+                            specialSymbolsMode0RadioButton.removeItemListener(this);
+                            specialSymbolsMode1RadioButton.removeItemListener(this);
+                            specialSymbolsMode2RadioButton.removeItemListener(this);
+                            specialSymbolsMode3RadioButton.removeItemListener(this);
+
+                            specialSymbolsMode0RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.NEVER);
+                            specialSymbolsMode1RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.IF_PRESENT_IN_VOLUME);
+                            specialSymbolsMode2RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.FIRST_VOLUME);
+                            specialSymbolsMode3RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.ALWAYS);
+
+                            specialSymbolsMode0RadioButton.addItemListener(this);
+                            specialSymbolsMode1RadioButton.addItemListener(this);
+                            specialSymbolsMode2RadioButton.addItemListener(this);
+                            specialSymbolsMode3RadioButton.addItemListener(this);
+
+                        }
+
                         break;
 
                     case MATH_PAGE: break;
@@ -3162,6 +3465,49 @@ public class SettingsDialog implements XItemListener,
                                     tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
                                 }
                             }
+                        }
+
+                        break;
+
+                    case SPECIAL_SYMBOLS_PAGE:
+
+                        if (source.equals(specialSymbolsSymbolButton)) {
+                            InsertDialog insertBrailleDialog = new InsertDialog(xContext);
+                            SpecialSymbol selectedSpecialSymbol = specialSymbols.get(selectedSpecialSymbolPos);
+                            insertBrailleDialog.setBrailleCharacters(selectedSpecialSymbol.getSymbol());
+                            if (insertBrailleDialog.execute()) {
+                                String symbol = insertBrailleDialog.getBrailleCharacters();
+                                if (selectedSpecialSymbol.setSymbol(symbol)) {
+                                    specialSymbolsSymbolField.setText(symbol);
+                                    updateSpecialSymbolsListBox();
+                                }
+                            }
+                        } else if (source.equals(specialSymbolsAddButton)) {
+                            saveSpecialSymbolsPageFieldValues();
+                            selectedSpecialSymbolPos = settings.addSpecialSymbol();
+                            InsertDialog insertBrailleDialog = new InsertDialog(xContext);
+                            SpecialSymbol selectedSpecialSymbol = specialSymbols.get(selectedSpecialSymbolPos);
+                            insertBrailleDialog.setBrailleCharacters(selectedSpecialSymbol.getSymbol());
+                            if (insertBrailleDialog.execute()) {
+                                String symbol = insertBrailleDialog.getBrailleCharacters();
+                                if (selectedSpecialSymbol.setSymbol(symbol)) {
+                                    specialSymbolsSymbolField.setText(symbol);
+                                }
+                            }
+                            updateSpecialSymbolsPageFieldValues();
+                            updateSpecialSymbolsPageFieldProperties();
+                            updateSpecialSymbolsListBox();
+                        } else if (source.equals(specialSymbolsRemoveButton)) {
+                            selectedSpecialSymbolPos = settings.deleteSpecialSymbol(selectedSpecialSymbolPos);
+                            updateSpecialSymbolsPageFieldValues();
+                            updateSpecialSymbolsPageFieldProperties();
+                            updateSpecialSymbolsListBox();
+                        } else if (source.equals(specialSymbolsMoveUpButton)) {
+                            selectedSpecialSymbolPos = settings.moveSpecialSymbolUp(selectedSpecialSymbolPos);
+                            updateSpecialSymbolsListBox();
+                        } else if (source.equals(specialSymbolsMoveDownButton)) {
+                            selectedSpecialSymbolPos = settings.moveSpecialSymbolDown(selectedSpecialSymbolPos);
+                            updateSpecialSymbolsListBox();
                         }
 
                         break;

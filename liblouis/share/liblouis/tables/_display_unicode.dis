@@ -261,4 +261,6 @@ display \x28FD 1345678
 display \x28FE 2345678
 display \x28FF 12345678
 
+include _chardefs_unicode_BRAILLE_PATTERNS.cti
+
 # ----------------------------------------------------------------------------------------------

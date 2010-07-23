@@ -260,4 +260,6 @@ display \x0019 1345678  #       \x28FD
 display \x00DC 2345678  # Ü     \x28FE
 display \x00CB 12345678 # Ë     \x28FF
 
+include _chardefs_unicode_BRAILLE_PATTERNS.cti
+
 # ----------------------------------------------------------------------------------------------
