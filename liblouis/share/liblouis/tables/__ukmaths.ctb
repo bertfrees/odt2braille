@@ -8,5 +8,6 @@ include _chardefs_ukmaths.cti
 include _chardefs.cti
 include _chardefs_ukmaths.cti
 include _translation_ukmaths.ctb
+include _exactdots_math.ctb
 
 # ----------------------------------------------------------------------------------------------

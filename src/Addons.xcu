@@ -78,6 +78,7 @@
                   <value xml:lang="fr">~Embosser</value>
 				  <value xml:lang="ca">~Imprimeix en braille</value>
 				  <value xml:lang="es">~Imprimir en braille</value>
+				  <value xml:lang="pt">~Gravar</value>
                 </prop>
               </node>
               <node oor:name="M4" oor:op="replace">

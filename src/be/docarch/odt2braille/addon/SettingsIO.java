@@ -50,6 +50,9 @@ import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
+import be.docarch.odt2braille.SpecialSymbol;
+import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
+import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
@@ -134,6 +137,9 @@ public class SettingsIO {
     private static String braillePageNumberAtProperty =          "[BRL]BraillePageNumberAt";
     private static String preliminaryPageNumberFormatProperty =  "[BRL]PreliminaryPageNumberFormat";
     private static String hardPageBreaksProperty =               "[BRL]HardPageBreaks";
+    private static String hyphenateProperty =                    "[BRL]Hyphenation";
+    private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
+    private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
 
     /**
      * Creates a new <code>SettingsIO</code> instance.
@@ -243,6 +249,12 @@ public class SettingsIO {
         Boolean b;
 
         ArrayList<String> languages = loadedSettings.getLanguages();
+        String elements[] = {"Paragraph",
+                             "Heading1", "Heading2", "Heading3", "Heading4",
+                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
+                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
+                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+
         for (int i=0;i<languages.size();i++) {
             if ((s = getStringProperty(languageProperty + "_" + languages.get(i))) != null) {
                 loadedSettings.setTranslationTable(s, languages.get(i));
@@ -251,12 +263,7 @@ public class SettingsIO {
                 loadedSettings.setGrade(d.intValue(), languages.get(i));
             }
         }
-
-        String elements[] = {"Paragraph",
-                             "Heading1", "Heading2", "Heading3", "Heading4",
-                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
-                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
-                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+        
         for (int i=0;i<elements.length;i++) {
             if ((b = getBooleanProperty(centeredProperty + elements[i])) != null) {
                 loadedSettings.setCentered(elements[i].toLowerCase(), b);
@@ -276,6 +283,44 @@ public class SettingsIO {
             if (!(d = getDoubleProperty(linesBetweenProperty + elements[i])).isNaN()) {
                 loadedSettings.setLinesBetween(elements[i].toLowerCase(), d.intValue());
             }
+        }
+
+        int defaultSpecialSymbolsCount = defaultSettings.getSpecialSymbolsList().size();
+        int loadedSpecialSymbolsCount = defaultSpecialSymbolsCount;
+
+        if (!(d = getDoubleProperty(specialSymbolsCountProperty)).isNaN()) {
+            loadedSpecialSymbolsCount = d.intValue();
+        }
+
+        for (int i=0; i<loadedSpecialSymbolsCount; i++) {
+            if (i>=defaultSpecialSymbolsCount) {
+                int j = loadedSettings.addSpecialSymbol();
+                assert(i == j);
+            }
+            if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1))) != null) {
+                loadedSettings.getSpecialSymbol(i).setSymbol(s);
+            }
+            if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1) + "_Description")) != null) {
+                loadedSettings.getSpecialSymbol(i).setDescription(s);
+            }
+            if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1) + "_Type")) != null) {
+                try {
+                    loadedSettings.getSpecialSymbol(i).setType(SpecialSymbolType.valueOf(s));
+                } catch (IllegalArgumentException ex) {
+                    logger.log(Level.SEVERE, null, s + " is no valid special symbol type");
+                }
+            }
+            if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1) + "_Mode")) != null) {
+                try {
+                    loadedSettings.getSpecialSymbol(i).setMode(SpecialSymbolMode.valueOf(s));
+                } catch (IllegalArgumentException ex) {
+                    logger.log(Level.SEVERE, null, s + " is no valid special symbol mode");
+                }
+            }
+        }
+
+        if ((b = getBooleanProperty(hyphenateProperty)) != null) {
+            loadedSettings.setHyphenate(b);
         }
 
         if ((b = getBooleanProperty(genericOrSpecificProperty)) != null) {
@@ -494,7 +539,6 @@ public class SettingsIO {
                        throws com.sun.star.uno.Exception {
 
         if (valueAfterChange!=null) {
-
             if (!valueAfterChange.equals(valueBeforeChange)) {
                 if (!(xPropSetInfo.hasPropertyByName(property))) {
                     xPropCont.addProperty(property,OPTIONAL,valueAfterChange);
@@ -522,6 +566,14 @@ public class SettingsIO {
         odtModified = false;
 
         ArrayList<String> languages = settingsAfterChange.getLanguages();
+        ArrayList<SpecialSymbol> specialSymbolsAfterChange = settingsAfterChange.getSpecialSymbolsList();
+        ArrayList<SpecialSymbol> specialSymbolsBeforeChange = settingsBeforeChange.getSpecialSymbolsList();
+        String elements[] = {"Paragraph",
+                             "Heading1", "Heading2", "Heading3", "Heading4",
+                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
+                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
+                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+
         for (int i=0;i<languages.size();i++) {
             setProperty(languageProperty + "_" + languages.get(i),
                         settingsAfterChange.getTranslationTable(languages.get(i)),
@@ -530,12 +582,7 @@ public class SettingsIO {
                         settingsAfterChange.getGrade(languages.get(i)),
                         settingsBeforeChange.getGrade(languages.get(i)));
         }
-
-        String elements[] = {"Paragraph",
-                             "Heading1", "Heading2", "Heading3", "Heading4",
-                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
-                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
-                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+        
         for (int i=0;i<elements.length;i++) {
             setProperty(centeredProperty + elements[i],
                         settingsAfterChange.getCentered(elements[i].toLowerCase()),
@@ -556,13 +603,47 @@ public class SettingsIO {
                         settingsAfterChange.getLinesBetween(elements[i].toLowerCase()),
                         settingsBeforeChange.getLinesBetween(elements[i].toLowerCase()));
         }
-
+        
         for (int i=0;i<10;i++) {
             setProperty(listPrefixProperty + "_" + Integer.toString(i+1),
                         settingsAfterChange.getListPrefix(i+1),
                         settingsBeforeChange.getListPrefix(i+1));
         }
+
+        setProperty(specialSymbolsCountProperty,
+                    specialSymbolsAfterChange.size(),
+                    specialSymbolsBeforeChange.size());
+
+        for (int i=0;i<Math.min(specialSymbolsAfterChange.size(),
+                                specialSymbolsBeforeChange.size());i++) {
+            setProperty(specialSymbolProperty + "_" + (i+1),
+                        specialSymbolsAfterChange.get(i).getSymbol(),
+                        specialSymbolsBeforeChange.get(i).getSymbol());
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Description",
+                        specialSymbolsAfterChange.get(i).getDescription(),
+                        specialSymbolsBeforeChange.get(i).getDescription());
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Type",
+                        specialSymbolsAfterChange.get(i).getType().name(),
+                        specialSymbolsBeforeChange.get(i).getType().name());
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Mode",
+                        specialSymbolsAfterChange.get(i).getMode().name(),
+                        specialSymbolsBeforeChange.get(i).getMode().name());
+        }
+
+        for (int i=specialSymbolsBeforeChange.size();i<specialSymbolsAfterChange.size();i++) {
+            setProperty(specialSymbolProperty + "_" + (i+1),
+                        specialSymbolsAfterChange.get(i).getSymbol(), null);
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Description",
+                        specialSymbolsAfterChange.get(i).getDescription(), null);
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Type",
+                        specialSymbolsAfterChange.get(i).getType().name(), null);
+            setProperty(specialSymbolProperty + "_" + (i+1) + "_Mode",
+                        specialSymbolsAfterChange.get(i).getMode().name(), null);
+        }
         
+        setProperty(hyphenateProperty,
+                    settingsAfterChange.getHyphenate(),
+                    settingsBeforeChange.getHyphenate());
         setProperty(creatorProperty,
                     settingsAfterChange.getCreator(),
                     settingsBeforeChange.getCreator());
@@ -687,7 +768,6 @@ public class SettingsIO {
                     settingsAfterChange.getHardPageBreaks(),
                     settingsBeforeChange.getHardPageBreaks());
 
-        
         setProperty(brailleRulesProperty,
                     settingsAfterChange.getBrailleRules().name(),
                     settingsBeforeChange.getBrailleRules().name());

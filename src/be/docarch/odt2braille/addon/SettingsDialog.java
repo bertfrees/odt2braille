@@ -200,6 +200,7 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox transcriptionInfoCheckBox = null;
     private XCheckBox volumeInfoCheckBox = null;
     private XCheckBox preliminaryVolumeCheckBox = null;
+    private XCheckBox hyphenateCheckBox = null;
 
     private XPropertySet transcribersNotesPageFieldProperties = null;    
     private XPropertySet transcriptionInfoCheckBoxProperties = null;
@@ -216,6 +217,7 @@ public class SettingsDialog implements XItemListener,
     private static String _volumeInfoCheckBox = "CheckBox2";
     private static String _transcribersNotesPageCheckBox = "CheckBox4";
     private static String _preliminaryVolumeCheckBox = "CheckBox8";
+    private static String _hyphenateCheckBox = "CheckBox20";
 
     private static String _mainTranslationTableLabel = "Label1";
     private static String _mainGradeLabel = "Label2";
@@ -224,6 +226,7 @@ public class SettingsDialog implements XItemListener,
     private static String _volumeInfoLabel = "Label5";
     private static String _transcribersNotesPageLabel = "Label7";
     private static String _preliminaryVolumeLabel = "Label11";
+    private static String _hyphenateLabel = "Label77";
 
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
@@ -232,6 +235,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_transcriptionInfoLabel = null;
     private String L10N_volumeInfoLabel = null;
     private String L10N_preliminaryVolumeLabel = null;
+    private String L10N_hyphenateLabel = null;
 
     // Paragraphs Page
 
@@ -723,6 +727,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_marginLabel = null;
 
+    private TreeMap<Integer,String> L10N_grades = new TreeMap();
     private TreeMap<String,String> L10N_translationTables = new TreeMap();
     private TreeMap<String,String> L10N_embosser = new TreeMap();
     private TreeMap<String,String> L10N_table = new TreeMap();
@@ -805,6 +810,7 @@ public class SettingsDialog implements XItemListener,
         L10N_transcriptionInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcriptionInfoLabel");
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
         L10N_preliminaryVolumeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryVolumeLabel");
+        L10N_hyphenateLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hyphenateLabel");
 
         // Paragraphs Page
 
@@ -914,6 +920,11 @@ public class SettingsDialog implements XItemListener,
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_marginLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("marginLabel") + ":";
+
+        L10N_grades.put(0, "Grade 0 (computer Braille)");
+        L10N_grades.put(1, "Grade 1 (uncontracted)");
+        L10N_grades.put(2, "Grade 2 (contracted)");
+        L10N_grades.put(3, "Grade 3");
 
         L10N_genericBraille.put("NONE",  "-");
         L10N_genericBraille.put("PEF",   "PEF (Portable Embosser Format)");
@@ -1065,6 +1076,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_volumeInfoCheckBox));
         preliminaryVolumeCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_preliminaryVolumeCheckBox));
+        hyphenateCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_hyphenateCheckBox));
 
         // Paragraphs Page
 
@@ -1678,6 +1691,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_transcribersNotesPageLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preliminaryVolumeLabel));
         xFixedText.setText(L10N_preliminaryVolumeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hyphenateLabel));
+        xFixedText.setText(L10N_hyphenateLabel);
 
         // Paragraphs Page
 
@@ -1876,6 +1891,7 @@ public class SettingsDialog implements XItemListener,
             volumeInfoCheckBox.setState((short)(settings.volumeInfoEnabled?1:0));
             transcribersNotesPageCheckBox.setState((short)(settings.transcribersNotesPageEnabled?1:0));
             preliminaryVolumeCheckBox.setState((short)(settings.preliminaryVolumeEnabled?1:0));
+            hyphenateCheckBox.setState((short)(settings.getHyphenate()?1:0));
 
             for (int i=0;i<supportedTranslationTables.size();i++) {
                 mainTranslationTableListBox.addItem(L10N_translationTables.get(supportedTranslationTables.get(i)), (short)i);
@@ -2183,6 +2199,7 @@ public class SettingsDialog implements XItemListener,
             settings.volumeInfoEnabled = (volumeInfoCheckBox.getState() == (short) 1);
             settings.transcribersNotesPageEnabled = (transcribersNotesPageCheckBox.getState() == (short) 1);            
             settings.preliminaryVolumeEnabled = (preliminaryVolumeCheckBox.getState() == (short) 1);
+            settings.setHyphenate(hyphenateCheckBox.getState() == (short) 1);
 
         }
 
@@ -2627,7 +2644,7 @@ public class SettingsDialog implements XItemListener,
         mainGradeListBox.removeItems((short)0, Short.MAX_VALUE);
         ArrayList<Integer> supportedGrades = settings.getSupportedGrades(settings.getMainLanguage());
         for (int i=0;i<supportedGrades.size();i++) {
-            mainGradeListBox.addItem(String.valueOf(supportedGrades.get(i)), (short)i);
+            mainGradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
         mainGradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(settings.getMainLanguage())), true);
         mainGradeListBox.addItemListener(this);
@@ -2656,7 +2673,7 @@ public class SettingsDialog implements XItemListener,
         gradeListBox.removeItems((short)0, Short.MAX_VALUE);
         ArrayList<Integer> supportedGrades = settings.getSupportedGrades(language);
         for (int i=0;i<supportedGrades.size();i++) {
-            gradeListBox.addItem(String.valueOf(supportedGrades.get(i)), (short)i);
+            gradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
         gradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(language)), true);
         gradeListBox.addItemListener(this);

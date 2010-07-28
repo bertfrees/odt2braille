@@ -3,7 +3,6 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
-
 display \x0020 0
 display \x2801 1
 display \x2802 2
@@ -260,7 +259,5 @@ display \x28FC 345678
 display \x28FD 1345678
 display \x28FE 2345678
 display \x28FF 12345678
-
-include _chardefs_unicode_BRAILLE_PATTERNS.cti
 
 # ----------------------------------------------------------------------------------------------

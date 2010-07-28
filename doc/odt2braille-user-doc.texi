@@ -111,6 +111,7 @@ You can find more help on working with Writer in the online guide:
 * Mathematics::
 * Literal Braille::
 * Braille-only Material::
+* Hyphenation::
 * Templates::
 
 @end menu
@@ -1045,14 +1046,17 @@ You can find more help on working with Writer in the online guide:
 	@node Literal Braille
 	@section Literal Braille
 	
-	or: Verbatim Braille
-	
 	@@TODO: Howto insert braille characters in the document that will be rendered identically in the braille version and the print version.
 	
 	@node Braille-only Material
 	@section Braille-only Material
 	
 	@@TODO: Howto format text such that it will only be rendered in the braille version of the document and not in the print version.
+	
+	@node Hyphenation
+	@section Hyphenation
+	
+	@@TODO: How words are split at the end of a Braille line.
 	
 	@node Templates
 	@section Templates

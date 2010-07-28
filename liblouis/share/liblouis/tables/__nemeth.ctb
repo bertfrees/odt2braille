@@ -8,5 +8,6 @@ include _chardefs_nemeth.cti
 include _chardefs.cti
 include _chardefs_nemeth.cti
 include _translation_nemeth.ctb
+include _exactdots_math.ctb
 
 # ----------------------------------------------------------------------------------------------

@@ -1,0 +1,37 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# _display.dis
+# display definition for each dot pattern
+include _display.dis
+
+# language-specific character definitions
+# only character-definition opcodes
+# single-cell dot pattern should be defined before used in a multi-cell character
+# back-translation uses these definitions
+include _chardefs_en-US.cti
+
+# _chardefs.cti
+# default character definitions
+# overwritten by language-specific character definitions
+include _chardefs.cti
+
+# repeat language-specific character definitions
+include _chardefs_en-US.cti
+
+# hyphenation tables
+include _hyphenation_en-US.dic
+
+# translation tables
+# all other opcodes
+include _translation_en-US-g1.ctb
+include _translation_en-US-g2.ctb
+
+# _translation.ctb, _exactdots.ctb & _correct.ctb
+include _translation.ctb
+include _exactdots.ctb
+include _correct.ctb
+
+# ----------------------------------------------------------------------------------------------

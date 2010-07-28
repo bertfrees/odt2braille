@@ -247,16 +247,16 @@
 # Note references
 # Notes
 
-	no       noteref \s@35@35,\*\s
-	no       &xpath(//dtb:note/dtb:noteref) @35@35,\*\s
+	no       noteref \s\x2814\x2814,\*\s
+	no       &xpath(//dtb:note/dtb:noteref) \x2814\x2814,\*\s
 
 	footnote note,class,footnote
 	endnote  note,class,endnote
 	para     &xpath(//dtb:div[@class='tn-page']/dtb:note)
 	trnote   &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) @6@3,\*@6@3
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) @6@3
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*@6@3
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
 	
 # Footers
 # Running headers

@@ -265,20 +265,14 @@ More flexibility by providing more settings!
 @item
 Settings for footnotes, endnotes, TNs, bibliography, ...
 @item
-Border lines of tables & textboxes ???
- => linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
-  -> Aantal karakters in string = aantal lijnen in border
-  -> n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
-@item
 Volume info and transcription info.
 @item
 'Continued' suffix.
 @item
-Special symbols to be included in the special symbols list
-  - Always / only first volume / only if present in current volume / never.
-  - Change description of special symbols.
-  - Add special symbols + their description.
-  - Change order of entries.
+Border lines of tables & textboxes ???
+ => linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
+  -> Aantal karakters in string = aantal lijnen in border
+  -> n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
 @item
 Table Of Contents:
   - headings tot level ? weergeven
@@ -289,7 +283,7 @@ Table Of Contents:
 @end itemize
 
 @item
-Volume info block: - Print pages
+Mac OS, Linux, ... !!!
 @item
 Tooltips in dialogs.
 @item
@@ -299,17 +293,19 @@ Support more embossers.
 @item
 Only Interpoint55 is tested.
 @item
-Keyboard shortcut for braille menu.
+Keyboard shortcut for Braille menu.
 @item
-8 dot braille.
+8 dot Braille.
 @item
 Tactile graphics.
+@item
+It takes rather long to load the Settings dialog => Message while waiting?
 @item
 If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
 @item
 The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog).
 @item
-OpenOffice.org accessibility for screen readers?
+OpenOffice.org accessibility for screen readers (on Windows)?
 @item
 OCR plugin for OpenOffice.org?
 @item
@@ -322,18 +318,17 @@ makePEF(): should be made more robust.
 Odt2Daisy.preProcessing(): should be made faster.
 Replace DOM processing with XSL transformation where this is possible.
 This will result in better performance.
+(Vincent Spiewak is rewriting JODL in XSLT 2.0)
 @item
 When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
+@item
+Jlouis (Michael Whapples) ?
 @item
 UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
 @item
 Presentations & spreadsheets.
 @item
 Commandline tool (Odt2Braille.jar).
-@item
-Hyphenation
-@item
-Mac OS, Linux, ...
 @item
 Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten)
 Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.

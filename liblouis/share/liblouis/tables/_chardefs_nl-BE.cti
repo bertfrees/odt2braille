@@ -3,88 +3,41 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
+# ==============================================================================================
+# SINGLE-CELL
+# ==============================================================================================
 
 # ----------------------------------------------------------------------------------------------
 # Unicode 0000..007F  C0 Controls and Basic Latin
 # ----------------------------------------------------------------------------------------------
 
-space       \x0009        9                                       <control> HORIZONTAL TABULATION
-space       \x000A        0                                       <control> LINE FEED
-space       \x000C        0                                       <control> FORM FEED
-space       \x000D        0                                       <control> CARRIAGE RETURN
-space       \x001B        1b                                      <control> ESCAPE
-space       \x0020        0                                       SPACE
-punctuation \x0021        235                 !                   EXCLAMATION MARK
-punctuation \x0022        2356                "                   QUOTATION MARK
-sign        \x0023        3456                #                   NUMBER SIGN
-sign        \x0024        145                 $                   DOLLAR SIGN
-sign        \x0025        3456-245-356        %                   PERCENT SIGN
-sign        \x0026        12346               &                   AMPERSAND
-punctuation \x0027        36                  '                   APOSTROPHE
-punctuation \x0028        236                 (                   LEFT PARENTHESIS
-punctuation \x0029        356                 )                   RIGHT PARENTHESIS
-sign        \x002A        35                  *                   ASTERISK
-math        \x002B        235                 +                   PLUS SIGN
-punctuation \x002C        2                   ,                   COMMA
-punctuation \x002D        36                  -                   HYPHEN-MINUS
-punctuation \x002E        256                 .                   FULL STOP
-math        \x002F        34                  /                   SOLIDUS
-digit       \x0030        245                 0                   DIGIT ZERO
-digit       \x0031        1                   1                   DIGIT ONE
-digit       \x0032        12                  2                   DIGIT TWO
-digit       \x0033        14                  3                   DIGIT THREE
-digit       \x0034        145                 4                   DIGIT FOUR
-digit       \x0035        15                  5                   DIGIT FIVE
-digit       \x0036        124                 6                   DIGIT SIX
-digit       \x0037        1245                7                   DIGIT SEVEN
-digit       \x0038        125                 8                   DIGIT EIGHT
-digit       \x0039        24                  9                   DIGIT NINE
-punctuation \x003A        25                  :                   COLON
-punctuation \x003B        23                  ;                   SEMICOLON
-math        \x003C        5-246               <                   LESS-THAN SIGN
-math        \x003D        2356                =                   EQUALS SIGN
-math        \x003E        5-135               >                   GREATER-THAN SIGN
-punctuation \x003F        26                  ?                   QUESTION MARK
-sign        \x0040        345                 @                   COMMERCIAL AT
-punctuation \x005B        12356               [                   LEFT SQUARE BRACKET
-sign        \x005C        5-16                \                   REVERSE SOLIDUS
-punctuation \x005D        23456               ]                   RIGHT SQUARE BRACKET
-sign        \x005E        346                 ^                   CIRCUMFLEX ACCENT
-sign        \x005F        456                 _                   LOW LINE
-punctuation \x0060        6                   `                   GRAVE ACCENT
-punctuation \x007B        12356               {                   LEFT CURLY BRACKET
-sign        \x007C        123456              |                   VERTICAL LINE
-punctuation \x007D        23456               }                   RIGHT CURLY BRACKET
-math        \x007E        5-26                ~                   TILDE
+uplow       \x0041\x0061  1,1                 Aa                  LATIN CAPITAL LETTER A - LATIN SMALL LETTER A
+uplow       \x0042\x0062  12,12               Bb                  LATIN CAPITAL LETTER B - LATIN SMALL LETTER B
+uplow       \x0043\x0063  14,14               Cc                  LATIN CAPITAL LETTER C - LATIN SMALL LETTER C
+uplow       \x0044\x0064  145,145             Dd                  LATIN CAPITAL LETTER D - LATIN SMALL LETTER D
+uplow       \x0045\x0065  15,15               Ee                  LATIN CAPITAL LETTER E - LATIN SMALL LETTER E
+uplow       \x0046\x0066  124,124             Ff                  LATIN CAPITAL LETTER F - LATIN SMALL LETTER F
+uplow       \x0047\x0067  1245,1245           Gg                  LATIN CAPITAL LETTER G - LATIN SMALL LETTER G
+uplow       \x0048\x0068  125,125             Hh                  LATIN CAPITAL LETTER H - LATIN SMALL LETTER H
+uplow       \x0049\x0069  24,24               Ii                  LATIN CAPITAL LETTER I - LATIN SMALL LETTER I
+uplow       \x004A\x006A  245,245             Jj                  LATIN CAPITAL LETTER J - LATIN SMALL LETTER J
+uplow       \x004B\x006B  13,13               Kk                  LATIN CAPITAL LETTER K - LATIN SMALL LETTER K
+uplow       \x004C\x006C  123,123             Ll                  LATIN CAPITAL LETTER L - LATIN SMALL LETTER L
+uplow       \x004D\x006D  134,134             Mm                  LATIN CAPITAL LETTER M - LATIN SMALL LETTER M
+uplow       \x004E\x006E  1345,1345           Nn                  LATIN CAPITAL LETTER N - LATIN SMALL LETTER N
+uplow       \x004F\x006F  135,135             Oo                  LATIN CAPITAL LETTER O - LATIN SMALL LETTER O
+uplow       \x0050\x0070  1234,1234           Pp                  LATIN CAPITAL LETTER P - LATIN SMALL LETTER P
+uplow       \x0051\x0071  12345,12345         Qq                  LATIN CAPITAL LETTER Q - LATIN SMALL LETTER Q
+uplow       \x0052\x0072  1235,1235           Rr                  LATIN CAPITAL LETTER R - LATIN SMALL LETTER R
+uplow       \x0053\x0073  234,234             Ss                  LATIN CAPITAL LETTER S - LATIN SMALL LETTER S
+uplow       \x0054\x0074  2345,2345           Tt                  LATIN CAPITAL LETTER T - LATIN SMALL LETTER T
+uplow       \x0055\x0075  136,136             Uu                  LATIN CAPITAL LETTER U - LATIN SMALL LETTER U
+uplow       \x0056\x0076  1236,1236           Vv                  LATIN CAPITAL LETTER V - LATIN SMALL LETTER V
+uplow       \x0057\x0077  2456,2456           Ww                  LATIN CAPITAL LETTER W - LATIN SMALL LETTER W
+uplow       \x0058\x0078  1346,1346           Xx                  LATIN CAPITAL LETTER X - LATIN SMALL LETTER X
+uplow       \x0059\x0079  13456,13456         Yy                  LATIN CAPITAL LETTER Y - LATIN SMALL LETTER Y
+uplow       \x005A\x007A  1356,1356           Zz                  LATIN CAPITAL LETTER Z - LATIN SMALL LETTER Z
 
-
-# ----------------------------------------------------------------------------------------------
-# Unicode 0080..00FF  C1 Controls and Latin-1 Supplement
-# ----------------------------------------------------------------------------------------------
-
-sign        \x0080        15                  €                   <control> - ANSI: EURO-CURRENCY SIGN - MACROMAN: A DIAERESIS
-punctuation \x0092        3                   ’                   <control> PRIVATE USE TWO - ANSI: RIGHT SINGLE QUOTATION MARK - MACROMAN: I ACUTE
-space       \x00A0        a                                       NO-BREAK SPACE
-punctuation \x00A1        4                   ¡                   INVERTED EXCLAMATION MARK
-sign        \x00A2        14                  ¢                   CENT SIGN
-sign        \x00A3        1234                £                   POUND SIGN
-sign        \x00A4        45-15               ¤                   CURRENCY SIGN
-sign        \x00A5        13456               ¥                   YEN SIGN
-sign        \x00A7        346                 §                   SECTION SIGN
-sign        \x00A9        6-14-135-1234-13456-1235-24-1245-125-2345 ©                   COPYRIGHT SIGN
-sign        \x00AA        46                  ª                   FEMININE ORDINAL INDICATOR
-punctuation \x00AB        2356                «                   LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
-sign        \x00AE        5-1235              ®                   REGISTERED SIGN
-sign        \x00B0        4-356               °                   DEGREE SIGN
-sign        \x00B2        4-6-126             ²                   SUPERSCRIPT TWO
-sign        \x00B3        4-6-146             ³                   SUPERSCRIPT THREE
-sign        \x00B5        123456              µ                   MICRO SIGN
-sign        \x00B9        4-6-16              ¹                   SUPERSCRIPT ONE
-punctuation \x00BB        2356                »                   RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
-math        \x00BC        6-16-34-1456        ¼                   VULGAR FRACTION ONE QUARTER
-math        \x00BD        6-16-34-126         ½                   VULGAR FRACTION ONE HALF
-math        \x00BE        6-126-34-1456       ¾                   VULGAR FRACTION THREE QUARTERS
-punctuation \x00BF        35                  ¿                   INVERTED QUESTION MARK
 uplow       \x00C0\x00E0  12356,12356         Àà                  LATIN CAPITAL LETTER A WITH GRAVE - LATIN SMALL LETTER A WITH GRAVE
 uplow       \x00C1\x00E1  1,1                 Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
 uplow       \x00C2\x00E2  16,16               Ââ                  LATIN CAPITAL LETTER A WITH CIRCUMFLEX - LATIN SMALL LETTER A WITH CIRCUMFLEX
@@ -97,36 +50,85 @@ uplow       \x00C8\x00E8  2346,2346           Èè                  LATIN CAPITA
 uplow       \x00C9\x00E9  123456,123456       Éé                  LATIN CAPITAL LETTER E WITH ACUTE - LATIN SMALL LETTER E WITH ACUTE
 uplow       \x00CA\x00EA  126,126             Êê                  LATIN CAPITAL LETTER E WITH CIRCUMFLEX - LATIN SMALL LETTER E WITH CIRCUMFLEX
 uplow       \x00CB\x00EB  1246,1246           Ëë                  LATIN CAPITAL LETTER E WITH DIAERESIS - LATIN SMALL LETTER E WITH DIAERESIS
+uplow       \x00CC\x00EC  24,24               Ìì                  LATIN CAPITAL LETTER I WITH GRAVE - LATIN SMALL LETTER I WITH GRAVE
+uplow       \x00CD\x00ED  24,24               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
+uplow       \x00CE\x00EE  146,146             Îî                  LATIN CAPITAL LETTER I WITH CIRCUMFLEX - LATIN SMALL LETTER I WITH CIRCUMFLEX
+uplow       \x00CF\x00EF  12456,12456         Ïï                  LATIN CAPITAL LETTER I WITH DIAERESIS - LATIN SMALL LETTER I WITH DIAERESIS
 uplow       \x00D1\x00F1  12456,12456         Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
+uplow       \x00D2\x00F2  135,135             Òò                  LATIN CAPITAL LETTER O WITH GRAVE - LATIN SMALL LETTER O WITH GRAVE
+uplow       \x00D3\x00F3  346,346             Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
+uplow       \x00D4\x00F4  1456,1456           Ôô                  LATIN CAPITAL LETTER O WITH CIRCUMFLEX - LATIN SMALL LETTER O WITH CIRCUMFLEX
+uplow       \x00D5\x00F5  246,246             Õõ                  LATIN CAPITAL LETTER O WITH TILDE - LATIN SMALL LETTER O WITH TILDE
 uplow       \x00D6\x00F6  246,246             Öö                  LATIN CAPITAL LETTER O WITH DIAERESIS - LATIN SMALL LETTER O WITH DIAERESIS
+uplow       \x00D9\x00F9  12356,12356         Ùù                  LATIN CAPITAL LETTER U WITH GRAVE - LATIN SMALL LETTER U WITH GRAVE
+uplow       \x00DA\x00FA  136,136             Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
+uplow       \x00DB\x00FB  156,156             Ûû                  LATIN CAPITAL LETTER U WITH CIRCUMFLEX - LATIN SMALL LETTER U WITH CIRCUMFLEX
+uplow       \x00DC\x00FC  1256,1256           Üü                  LATIN CAPITAL LETTER U WITH DIAERESIS - LATIN SMALL LETTER U WITH DIAERESIS
+
+space       \x0009        9                                       <control> HORIZONTAL TABULATION
+space       \x000A        0                                       <control> LINE FEED
+space       \x000C        0                                       <control> FORM FEED
+space       \x000D        0                                       <control> CARRIAGE RETURN
+space       \x001B        1b                                      <control> ESCAPE
+space       \x0020        0                                       SPACE
+punctuation \x0021        235                 !                   EXCLAMATION MARK
+punctuation \x0022        2356                "                   QUOTATION MARK
+sign        \x0023        3456                #                   NUMBER SIGN
+sign        \x0024        145                 $                   DOLLAR SIGN
+sign        \x0026        12346               &                   AMPERSAND
+punctuation \x0027        36                  '                   APOSTROPHE
+punctuation \x0028        236                 (                   LEFT PARENTHESIS
+punctuation \x0029        356                 )                   RIGHT PARENTHESIS
+sign        \x002A        35                  *                   ASTERISK
+math        \x002B        235                 +                   PLUS SIGN
+punctuation \x002C        2                   ,                   COMMA
+punctuation \x002D        36                  -                   HYPHEN-MINUS
+punctuation \x002E        256                 .                   FULL STOP
+math        \x002F        34                  /                   SOLIDUS
+digit       \x0030        356                 0                   DIGIT ZERO
+digit       \x0031        2                   1                   DIGIT ONE
+digit       \x0032        23                  2                   DIGIT TWO
+digit       \x0033        25                  3                   DIGIT THREE
+digit       \x0034        256                 4                   DIGIT FOUR
+digit       \x0035        26                  5                   DIGIT FIVE
+digit       \x0036        235                 6                   DIGIT SIX
+digit       \x0037        2356                7                   DIGIT SEVEN
+digit       \x0038        236                 8                   DIGIT EIGHT
+digit       \x0039        35                  9                   DIGIT NINE
+punctuation \x003A        25                  :                   COLON
+punctuation \x003B        23                  ;                   SEMICOLON
+math        \x003D        2356                =                   EQUALS SIGN
+punctuation \x003F        26                  ?                   QUESTION MARK
+sign        \x0040        345                 @                   COMMERCIAL AT
+punctuation \x005B        12356               [                   LEFT SQUARE BRACKET
+punctuation \x005D        23456               ]                   RIGHT SQUARE BRACKET
+sign        \x005E        346                 ^                   CIRCUMFLEX ACCENT
+sign        \x005F        456                 _                   LOW LINE
+punctuation \x0060        6                   `                   GRAVE ACCENT
+punctuation \x007B        12356               {                   LEFT CURLY BRACKET
+sign        \x007C        123456              |                   VERTICAL LINE
+punctuation \x007D        23456               }                   RIGHT CURLY BRACKET
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0080..00FF  C1 Controls and Latin-1 Supplement
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0080        15                  €                   <control> - ANSI: EURO-CURRENCY SIGN - MACROMAN: A DIAERESIS
+punctuation \x0092        3                   ’                   <control> PRIVATE USE TWO - ANSI: RIGHT SINGLE QUOTATION MARK - MACROMAN: I ACUTE
+space       \x00A0        a                                       NO-BREAK SPACE
+punctuation \x00A1        4                   ¡                   INVERTED EXCLAMATION MARK
+sign        \x00A2        14                  ¢                   CENT SIGN
+sign        \x00A3        1234                £                   POUND SIGN
+sign        \x00A5        13456               ¥                   YEN SIGN
+sign        \x00A7        346                 §                   SECTION SIGN
+sign        \x00AA        46                  ª                   FEMININE ORDINAL INDICATOR
+punctuation \x00AB        2356                «                   LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
+sign        \x00B5        123456              µ                   MICRO SIGN
+punctuation \x00BB        2356                »                   RIGHT-POINTING DOUBLE ANGLE QUOTATION MARK
+punctuation \x00BF        35                  ¿                   INVERTED QUESTION MARK
 math        \x00D7        236                 ×                   MULTIPLICATION SIGN
-#           \x00E0                            à                   LATIN SMALL LETTER A WITH GRAVE
-#           \x00E1                            á                   LATIN SMALL LETTER A WITH ACUTE
-#           \x00E2                            â                   LATIN SMALL LETTER A WITH CIRCUMFLEX
-#           \x00E3                            ã                   LATIN SMALL LETTER A WITH TILDE
-#           \x00E4                            ä                   LATIN SMALL LETTER A WITH DIAERESIS
-#           \x00E5                            å                   LATIN SMALL LETTER A WITH RING ABOVE
-#           \x00E6                            æ                   LATIN SMALL LETTER AE
-#           \x00E7                            ç                   LATIN SMALL LETTER C WITH CEDILLA
-#           \x00E8                            è                   LATIN SMALL LETTER E WITH GRAVE
-#           \x00E9                            é                   LATIN SMALL LETTER E WITH ACUTE
-#           \x00EA                            ê                   LATIN SMALL LETTER E WITH CIRCUMFLEX
-#           \x00EB                            ë                   LATIN SMALL LETTER E WITH DIAERESIS
-#           \x00EC                            ì                   LATIN SMALL LETTER I WITH GRAVE
-#           \x00ED                            í                   LATIN SMALL LETTER I WITH ACUTE
-#           \x00EE                            î                   LATIN SMALL LETTER I WITH CIRCUMFLEX
-#           \x00EF                            ï                   LATIN SMALL LETTER I WITH DIAERESIS
-#           \x00F1                            ñ                   LATIN SMALL LETTER N WITH TILDE
-#           \x00F2                            ò                   LATIN SMALL LETTER O WITH GRAVE
-#           \x00F3                            ó                   LATIN SMALL LETTER O WITH ACUTE
-#           \x00F4                            ô                   LATIN SMALL LETTER O WITH CIRCUMFLEX
-#           \x00F5                            õ                   LATIN SMALL LETTER O WITH TILDE
-#           \x00F6                            ö                   LATIN SMALL LETTER O WITH DIAERESIS
 math        \x00F7        256                 ÷                   DIVISION SIGN
-#           \x00F9                            ù                   LATIN SMALL LETTER U WITH GRAVE
-#           \x00FA                            ú                   LATIN SMALL LETTER U WITH ACUTE
-#           \x00FB                            û                   LATIN SMALL LETTER U WITH CIRCUMFLEX
-#           \x00FC                            ü                   LATIN SMALL LETTER U WITH DIAERESIS
 
 
 # ----------------------------------------------------------------------------------------------
@@ -134,15 +136,62 @@ math        \x00F7        256                 ÷                   DIVISION SIGN
 # ----------------------------------------------------------------------------------------------
 
 uplow       \x0191\x0192  124,124             Ƒƒ                  LATIN CAPITAL LETTER F WITH HOOK - LATIN SMALL LETTER F WITH HOOK
-#           \x0192                            ƒ                   LATIN SMALL LETTER F WITH HOOK
 
 
 # ----------------------------------------------------------------------------------------------
-# Unicode 0180..024F  Latin Extended-B
-# Unicode 0250..02AF  IPA Extensions
-# Unicode 02B0..02FF  Spacing Modifier Letters
-# Unicode 0300..036F  Combining Diacritical Marks
+# Unicode 2000..206F  General Punctuation
 # ----------------------------------------------------------------------------------------------
+
+punctuation \x2010        36                  ‐                   HYPHEN
+punctuation \x2011        36                  ‑                   NON-BREAKING HYPHEN
+punctuation \x2013        36                  –                   EN DASH
+punctuation \x2014        36                  —                   EM DASH
+punctuation \x2018        3                   ‘                   LEFT SINGLE QUOTATION MARK
+punctuation \x2019        3                   ’                   RIGHT SINGLE QUOTATION MARK
+punctuation \x201C        236                 “                   LEFT DOUBLE QUOTATION MARK
+punctuation \x201D        356                 ”                   RIGHT DOUBLE QUOTATION MARK
+sign        \x201E        236                 „                   DOUBLE LOW-9 QUOTATION MARK
+sign        \x201F        356                 ‟                   DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 20A0..20CF  Currency Symbols
+# ----------------------------------------------------------------------------------------------
+
+sign        \x20AC        15                  €                   EURO SIGN
+
+
+
+# ==============================================================================================
+# MULTI-CELL
+# ==============================================================================================
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0000..007F  C0 Controls and Basic Latin
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0025        3456-245-356        %                   PERCENT SIGN
+math        \x003C        5-246               <                   LESS-THAN SIGN
+math        \x003E        5-135               >                   GREATER-THAN SIGN
+sign        \x005C        5-16                \                   REVERSE SOLIDUS
+math        \x007E        5-26                ~                   TILDE
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0080..00FF  C1 Controls and Latin-1 Supplement
+# ----------------------------------------------------------------------------------------------
+
+
+sign        \x00A4        45-15               ¤                   CURRENCY SIGN
+sign        \x00A9        6-14-135-1234-13456-1235-24-1245-125-2345 ©                   COPYRIGHT SIGN
+sign        \x00AE        5-1235              ®                   REGISTERED SIGN
+sign        \x00B0        4-356               °                   DEGREE SIGN
+sign        \x00B2        4-6-126             ²                   SUPERSCRIPT TWO
+sign        \x00B3        4-6-146             ³                   SUPERSCRIPT THREE
+sign        \x00B9        4-6-16              ¹                   SUPERSCRIPT ONE
+math        \x00BC        6-16-34-1456        ¼                   VULGAR FRACTION ONE QUARTER
+math        \x00BD        6-16-34-126         ½                   VULGAR FRACTION ONE HALF
+math        \x00BE        6-126-34-1456       ¾                   VULGAR FRACTION THREE QUARTERS
 
 
 # ----------------------------------------------------------------------------------------------
@@ -202,82 +251,11 @@ lowercase   \x03D5        456-124             ϕ                   GREEK PHI SYM
 
 
 # ----------------------------------------------------------------------------------------------
-# Unicode 0400..04FF  Cyrillic
-# Unicode 0500..052F  Cyrillic Supplementary
-# Unicode 0530..058F  Armenian
-# Unicode 0590..05FF  Hebrew
-# Unicode 0600..06FF  Arabic
-# Unicode 0700..074F  Syriac
-# Unicode 0780..07BF  Thaana
-# Unicode 0900..097F  Devanagari
-# Unicode 0980..09FF  Bengali
-# Unicode 0A00..0A7F  Gurmukhi
-# Unicode 0A80..0AFF  Gujarati
-# Unicode 0B00..0B7F  Oriya
-# Unicode 0B80..0BFF  Tamil
-# Unicode 0C00..0C7F  Telugu
-# Unicode 0C80..0CFF  Kannada
-# Unicode 0D00..0D7F  Malayalam
-# Unicode 0D80..0DFF  Sinhala
-# Unicode 0E00..0E7F  Thai
-# Unicode 0E80..0EFF  Lao
-# Unicode 0F00..0FFF  Tibetan
-# Unicode 1000..109F  Myanmar
-# Unicode 10A0..10FF  Georgian
-# Unicode 1100..11FF  Hangul Jamo
-# Unicode 1200..137F  Ethiopic
-# Unicode 13A0..13FF  Cherokee
-# Unicode 1400..167F  Unified Canadian Aboriginal Syllabics
-# Unicode 1680..169F  Ogham
-# Unicode 16A0..16FF  Runic
-# Unicode 1700..171F  Tagalog
-# Unicode 1720..173F  Hanunoo
-# Unicode 1740..175F  Buhid
-# Unicode 1760..177F  Tagbanwa
-# Unicode 1780..17FF  Khmer
-# Unicode 1800..18AF  Mongolian
-# Unicode 1900..194F  Limbu
-# Unicode 1950..197F  Tai Le
-# Unicode 19E0..19FF  Khmer Symbols
-# Unicode 1D00..1D7F  Phonetic Extensions
-# Unicode 1E00..1EFF  Latin Extended Additional
-# Unicode 1F00..1FFF  Greek Extended
-# ----------------------------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------------------------
 # Unicode 2000..206F  General Punctuation
 # ----------------------------------------------------------------------------------------------
 
-sign        \x2010        46                  ‐                   HYPHEN
-punctuation \x2011        46                  ‑                   NON-BREAKING HYPHEN
-punctuation \x2013        36                  –                   EN DASH
-punctuation \x2014        36                  —                   EM DASH
-punctuation \x2018        3                   ‘                   LEFT SINGLE QUOTATION MARK
-punctuation \x2019        3                   ’                   RIGHT SINGLE QUOTATION MARK
-punctuation \x201C        236                 “                   LEFT DOUBLE QUOTATION MARK
-punctuation \x201D        356                 ”                   RIGHT DOUBLE QUOTATION MARK
-sign        \x201E        236                 „                   DOUBLE LOW-9 QUOTATION MARK
-sign        \x201F        356                 ‟                   DOUBLE HIGH-REVERSED-9 QUOTATION MARK
 punctuation \x2026        256-256-256         …                   HORIZONTAL ELLIPSIS
 sign        \x2030        123456-123456       ‰                   PER MILLE SIGN
-
-
-# ----------------------------------------------------------------------------------------------
-# Unicode 2070..209F  Superscripts and Subscripts
-# ----------------------------------------------------------------------------------------------
-
-
-# ----------------------------------------------------------------------------------------------
-# Unicode 20A0..20CF  Currency Symbols
-# ----------------------------------------------------------------------------------------------
-
-sign        \x20AC        15                  €                   EURO SIGN
-
-
-# ----------------------------------------------------------------------------------------------
-# Unicode 20D0..20FF  Combining Diacritical Marks for Symbols
-# ----------------------------------------------------------------------------------------------
 
 
 # ----------------------------------------------------------------------------------------------
@@ -288,53 +266,3 @@ sign        \x2122        5-2345-134          ™                   TRADE MARK S
 
 
 # ----------------------------------------------------------------------------------------------
-# Unicode 2150..218F  Number Forms
-# Unicode 2190..21FF  Arrows
-# Unicode 2200..22FF  Mathematical Operators
-# Unicode 2300..23FF  Miscellaneous Technical
-# Unicode 2400..243F  Control Pictures
-# Unicode 2440..245F  Optical Character Recognition
-# Unicode 2460..24FF  Enclosed Alphanumerics
-# Unicode 2500..257F  Box Drawing
-# Unicode 2580..259F  Block Elements
-# Unicode 25A0..25FF  Geometric Shapes
-# Unicode 2600..26FF  Miscellaneous Symbols
-# Unicode 2700..27BF  Dingbats
-# Unicode 27C0..27EF  Miscellaneous Mathematical Symbols-A
-# Unicode 27F0..27FF  Supplemental Arrows-A
-# Unicode 2800..28FF  Braille Patterns
-# Unicode 2900..297F  Supplemental Arrows-B
-# Unicode 2980..29FF  Miscellaneous Mathematical Symbols-B
-# Unicode 2A00..2AFF  Supplemental Mathematical Operators
-# Unicode 2B00..2BFF  Miscellaneous Symbols and Arrows
-# Unicode 2E80..2EFF  CJK Radicals Supplement
-# Unicode 2F00..2FDF  Kangxi Radicals
-# Unicode 2FF0..2FFF  Ideographic Description Characters
-# Unicode 3000..303F  CJK Symbols and Punctuation
-# Unicode 3040..309F  Hiragana
-# Unicode 30A0..30FF  Katakana
-# Unicode 31F0..31FF  Katakana Phonetic Extensions
-# Unicode 3200..32FF  Enclosed CJK Letters and Months
-# Unicode 3300..33FF  CJK Compatibility
-# Unicode 3400..4DBF  CJK Unified Ideographs Extension A
-# Unicode 4DC0..4DFF  Yijing Hexagram Symbols
-# Unicode 4E00..9FFF  CJK Unified Ideographs
-# Unicode A000..A48F  Yi Syllables
-# Unicode A490..A4CF  Yi Radicals
-# Unicode AC00..D7AF  Hangul Syllables
-# Unicode D800..DB7F  High Surrogates
-# Unicode DB80..DBFF  High Private Use Surrogates
-# Unicode DC00..DFFF  Low Surrogates
-# Unicode E000..F8FF  Private Use Area
-# Unicode F900..FAFF  CJK Compatibility Ideographs
-# Unicode FB00..FB4F  Alphabetic Presentation Forms
-# Unicode FB50..FDFF  Arabic Presentation Forms-A
-# Unicode FE00..FE0F  Variation Selectors
-# Unicode FE20..FE2F  Combining Half Marks
-# Unicode FE30..FE4F  CJK Compatibility Forms
-# Unicode FE50..FE6F  Small Form Variants
-# Unicode FE70..FEFF  Arabic Presentation Forms-B
-# Unicode FF00..FFEF  Halfwidth and Fullwidth Forms
-# Unicode FFF0..FFFF  Specials
-# ----------------------------------------------------------------------------------------------
-

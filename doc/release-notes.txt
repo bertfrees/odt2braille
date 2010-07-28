@@ -46,7 +46,7 @@ Version ?
 Fixed bugs:
 
 
-* Hyperlink bug fix (hyperlink sometimes not rendered)
+* Hyperlink bug fix (hyperlinks sometimes not rendered)
 * Other small fixes
 
 
@@ -54,6 +54,10 @@ Added features:
 
 
 * Document can now contain every unicode character.
+* List of special symbols can be customized.
+* Other small improvements: 
+    - Print page range information on title page.
+* Hyphenation (German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech, Icelandic)
 
 
 Localization:

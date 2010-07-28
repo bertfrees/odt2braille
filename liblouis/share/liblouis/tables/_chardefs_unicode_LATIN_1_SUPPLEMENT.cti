@@ -52,7 +52,7 @@ sign        \x00A9        45-14               ©                   COPYRIGHT SIG
 sign        \x00AA        46                  ª                   FEMININE ORDINAL INDICATOR
 punctuation \x00AB        2356                «                   LEFT-POINTING DOUBLE ANGLE QUOTATION MARK
 sign        \x00AC        1456                ¬                   NOT SIGN
-punctuation \x00AD        36                  ­                   SOFT HYPHEN
+punctuation \x00AD        367                 ­                   SOFT HYPHEN
 sign        \x00AE        45-1235             ®                   REGISTERED SIGN
 sign        \x00AF        1456                ¯                   MACRON
 sign        \x00B0        56-145-1245         °                   DEGREE SIGN
