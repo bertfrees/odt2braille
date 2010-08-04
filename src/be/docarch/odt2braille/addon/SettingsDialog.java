@@ -63,6 +63,9 @@ import com.sun.star.lang.XSingleServiceFactory;
 import com.sun.star.awt.XItemEventBroadcaster;
 import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.TextEvent;
+import com.sun.star.awt.XWindow;
+import com.sun.star.awt.XToolkit;
+import com.sun.star.lang.XMultiComponentFactory;
 
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.SpecialSymbol;
@@ -72,7 +75,7 @@ import org_pef_text.pef2text.Paper;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
-import be.docarch.odt2braille.Settings.BrailleFileType;
+import be.docarch.odt2braille.GenericFileMaker.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 
@@ -104,6 +107,7 @@ public class SettingsDialog implements XItemListener,
 
     private Settings settings = null;
     private XComponentContext xContext = null;
+    private Locale oooLocale = null;
 
     public final static short SAVE_SETTINGS = 1;
     public final static short EXPORT = 2;
@@ -153,6 +157,7 @@ public class SettingsDialog implements XItemListener,
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
     private XComponent dialogComponent = null;
+    private XControl dialogControl = null;
 
     // Main window
 
@@ -580,6 +585,7 @@ public class SettingsDialog implements XItemListener,
     private XButton specialSymbolsMoveUpButton = null;
     private XButton specialSymbolsMoveDownButton = null;
 
+    private XPropertySet specialSymbolsGroupBoxProperties = null;
     private XPropertySet specialSymbolsListCheckBoxProperties = null;
     private XPropertySet specialSymbolsListFieldProperties = null;
     private XPropertySet specialSymbolsListBoxProperties = null;
@@ -612,7 +618,6 @@ public class SettingsDialog implements XItemListener,
     
     private static String _specialSymbolsListLabel = "Label6";
     private static String _specialSymbolsListTitleLabel = "Label73";
-    private static String _specialSymbolsLabel = "Label74";
     private static String _specialSymbolsSymbolLabel = "Label75";
     private static String _specialSymbolsDescriptionLabel = "Label76";
     private static String _specialSymbolsMode0Label = "Label81";
@@ -670,7 +675,6 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet embosserListBoxProperties = null;
     private XPropertySet genericBrailleListBoxProperties = null;
-    private XPropertySet tableListBoxProperties = null;
     private XPropertySet paperSizeListBoxProperties = null;
     private XPropertySet paperWidthFieldProperties = null;
     private XPropertySet paperHeightFieldProperties = null;
@@ -744,35 +748,63 @@ public class SettingsDialog implements XItemListener,
      * @param   mode        {@link #SAVE_SETTINGS}, {@link #EXPORT} or {@link #EMBOSS}, depending on how the dialog was called.
      *                      Which tab is showed first and the behaviour of the OK button will slightly vary with the mode.
      */
-    public SettingsDialog(XComponentContext xContext,
-                          Settings settings,
-                          short mode)
+    public SettingsDialog(XComponentContext xContext)
                    throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsDialog", "<init>");
 
+        this.xContext = xContext;
+
+        try {
+            this.oooLocale = new Locale(UnoUtils.getUILocale(xContext));
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            this.oooLocale = Locale.getDefault();
+        }
+
+        XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86") + "/dialogs/SettingsDialog.xdl";
+        XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
+        dialog = xDialogProvider.createDialog(dialogUrl);
+        dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
+        dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
+        dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
+        windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
+
+        logger.exiting("SettingsDialog", "<init>");
+
+    }
+
+    public void startLoading(XMultiComponentFactory xMCF)
+                      throws com.sun.star.uno.Exception {
+    
+        logger.entering("SettingsDialog", "startLoading");
+
+        XToolkit xToolkit = (XToolkit) UnoRuntime.queryInterface(XToolkit.class, xMCF.createInstanceWithContext("com.sun.star.awt.Toolkit", xContext));
+        XWindow xWindow = (XWindow) UnoRuntime.queryInterface(XWindow.class, dialogControl);
+        dialogControl.createPeer(xToolkit, null);
+        windowProperties.setPropertyValue("Title",
+                ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("settingsDialogTitle")
+                + "  -  Loading... please wait");
+        xWindow.setVisible(true);
+
+        logger.exiting("SettingsDialog", "startLoading");
+    
+    }
+
+    public void initialize(Settings settings,
+                           short mode)
+                    throws com.sun.star.uno.Exception {
+
+        logger.entering("SettingsDialog", "initialize");
+
         this.settings = settings;
         this.mode = mode;
-        this.xContext = xContext;
 
         supportedTranslationTables = settings.getSupportedTranslationTables();
         languages = settings.getLanguages();
         mathTypes = new ArrayList(Arrays.asList(MathType.values()));
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size()>1);
-
-        XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
-                                                            + "/dialogs/SettingsDialog.xdl";
-
-        // L10N
-
-        Locale oooLocale;
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
 
         // Main Window
 
@@ -929,6 +961,7 @@ public class SettingsDialog implements XItemListener,
         L10N_genericBraille.put("NONE",  "-");
         L10N_genericBraille.put("PEF",   "PEF (Portable Embosser Format)");
         L10N_genericBraille.put("BRF",   "BRF (Braille Formatted)");
+        L10N_genericBraille.put("BRA",   "BRA");
         
         L10N_embosser.put("NONE",              "-");
         L10N_embosser.put("INDEX_BASIC",       "Index Braille - 3.30 Basic V2");
@@ -949,6 +982,8 @@ public class SettingsDialog implements XItemListener,
         L10N_table.put("UNICODE_BRAILLE",      "PEF (Unicode Braille)");
         L10N_table.put("BRF",                  "BRF (ASCII Braille)");
         L10N_table.put("BRL",                  "BRL (Non-ASCII Braille)");
+        L10N_table.put("ES_OLD",               "Spanish Braille (Old)");
+        L10N_table.put("ES_NEW",               "Spanish Braille (New)");
         L10N_table.put("UNDEFINED",            "-");
 
         L10N_paperSize.put("A4",                "A4");
@@ -1002,21 +1037,13 @@ public class SettingsDialog implements XItemListener,
             supportedTranslationTables.add(((Map.Entry<String,String>)i.next()).getKey());
         }
 
-        // Dialog creation
-
-        XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
-        dialog = xDialogProvider.createDialog(dialogUrl);
-        dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
-        dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
-        XControl dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
-        XMultiServiceFactory xMSFDialog = (XMultiServiceFactory)UnoRuntime.queryInterface(XMultiServiceFactory.class, dialogControl.getModel());
-        XNameContainer dialogNameContainer = (XNameContainer)UnoRuntime.queryInterface(XNameContainer.class, dialogControl.getModel());
-        windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,dialogControl.getModel());
-
         // Roadmap
 
         int roadMapWidth = 85;
         int roadMapHeight = 215;
+
+        XMultiServiceFactory xMSFDialog = (XMultiServiceFactory)UnoRuntime.queryInterface(XMultiServiceFactory.class, dialogControl.getModel());
+        XNameContainer dialogNameContainer = (XNameContainer)UnoRuntime.queryInterface(XNameContainer.class, dialogControl.getModel());
 
         Object roadmapModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlRoadmapModel");
         XMultiPropertySet roadMapMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, roadmapModel);
@@ -1484,8 +1511,6 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, embosserListBox)).getModel());
         genericBrailleListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, genericBrailleListBox)).getModel());
-        tableListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, tableListBox)).getModel());
         paperSizeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paperSizeListBox)).getModel());
         paperWidthFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1517,38 +1542,49 @@ public class SettingsDialog implements XItemListener,
         String tablePositionGroupBoxName = "tablePositionGroupBox";
         String tableOfContentsSpacingGroupBoxName = "tableOfContentsSpacingGroupBox";
         String tableOfContentsPositionGroupBoxName = "tableOfContentsPositionGroupBox";
+        String specialSymbolsGroupBoxName = "specialSymbolsGroupBox";
 
         Object tableSpacingGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
         Object tablePositionGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
         Object tableOfContentsSpacingGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
         Object tableOfContentsPositionGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
+        Object specialSymbolsGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
 
         XMultiPropertySet tableSpacingGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableSpacingGroupBoxModel);
         XMultiPropertySet tablePositionGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tablePositionGroupBoxModel);
         XMultiPropertySet tableOfContentsSpacingGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsSpacingGroupBoxModel);
         XMultiPropertySet tableOfContentsPositionGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsPositionGroupBoxModel);
+        XMultiPropertySet specialSymbolsGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, specialSymbolsGroupBoxModel);
 
-        tableSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,            new Object[] { 1+roadMapHeight-57,  tableSpacingGroupBoxName,            roadMapWidth, 57,  200, TABLES_PAGE });
-        tablePositionGroupBoxMPSet.setPropertyValues(groupBoxProperties,           new Object[] { 1+roadMapHeight-133, tablePositionGroupBoxName,           roadMapWidth, 133, 200, TABLES_PAGE });
-        tableOfContentsSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,  new Object[] { 1+roadMapHeight-75,  tableOfContentsSpacingGroupBoxName,  roadMapWidth, 75,  200, TOC_PAGE    });
-        tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-108, tableOfContentsPositionGroupBoxName, roadMapWidth, 108, 200, TOC_PAGE    });
+        tableSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,            new Object[] { 1+roadMapHeight-57,  tableSpacingGroupBoxName,            roadMapWidth, 57,  200, TABLES_PAGE          });
+        tablePositionGroupBoxMPSet.setPropertyValues(groupBoxProperties,           new Object[] { 1+roadMapHeight-133, tablePositionGroupBoxName,           roadMapWidth, 133, 200, TABLES_PAGE          });
+        tableOfContentsSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,  new Object[] { 1+roadMapHeight-75,  tableOfContentsSpacingGroupBoxName,  roadMapWidth, 75,  200, TOC_PAGE             });
+        tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-108, tableOfContentsPositionGroupBoxName, roadMapWidth, 108, 200, TOC_PAGE             });
+        specialSymbolsGroupBoxMPSet.setPropertyValues(groupBoxProperties,          new Object[] { 1+roadMapHeight-63,  specialSymbolsGroupBoxName,          roadMapWidth, 63,  200, SPECIAL_SYMBOLS_PAGE });
 
         dialogNameContainer.insertByName(tableSpacingGroupBoxName, tableSpacingGroupBoxModel);
         dialogNameContainer.insertByName(tablePositionGroupBoxName, tablePositionGroupBoxModel);
         dialogNameContainer.insertByName(tableOfContentsSpacingGroupBoxName, tableOfContentsSpacingGroupBoxModel);
         dialogNameContainer.insertByName(tableOfContentsPositionGroupBoxName, tableOfContentsPositionGroupBoxModel);
+        dialogNameContainer.insertByName(specialSymbolsGroupBoxName, specialSymbolsGroupBoxModel);
 
         tableSpacingGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableSpacingGroupBoxModel);
         tablePositionGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tablePositionGroupBoxModel);
         tableOfContentsSpacingGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableOfContentsSpacingGroupBoxModel);
         tableOfContentsPositionGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableOfContentsPositionGroupBoxModel);
+        specialSymbolsGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, specialSymbolsGroupBoxModel);
 
         tableSpacingGroupBoxProperties.setPropertyValue("Step", TABLES_PAGE);
         tablePositionGroupBoxProperties.setPropertyValue("Step", TABLES_PAGE);
         tableOfContentsSpacingGroupBoxProperties.setPropertyValue("Step", TOC_PAGE);
         tableOfContentsPositionGroupBoxProperties.setPropertyValue("Step", TOC_PAGE);
+        specialSymbolsGroupBoxProperties.setPropertyValue("Step", SPECIAL_SYMBOLS_PAGE);
 
-        logger.exiting("SettingsDialog", "<init>");
+        setDialogValues();
+        addListeners();
+        setLabels();
+
+        logger.exiting("SettingsDialog", "initialize");
 
     }
 
@@ -1634,11 +1670,9 @@ public class SettingsDialog implements XItemListener,
     public boolean execute() throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsDialog", "execute");
-        
-        setLabels();
-        setDialogValues();
-        addListeners();
+
         short ret = dialog.execute();
+
         getDialogValues();
         dialogComponent.dispose();
 
@@ -1674,6 +1708,7 @@ public class SettingsDialog implements XItemListener,
         tablePositionGroupBoxProperties.setPropertyValue("Label", L10N_tablePositionLabel);
         tableOfContentsSpacingGroupBoxProperties.setPropertyValue("Label", L10N_tableOfContentsSpacingLabel);
         tableOfContentsPositionGroupBoxProperties.setPropertyValue("Label", L10N_tableOfContentsPositionLabel);
+        specialSymbolsGroupBoxProperties.setPropertyValue("Label", L10N_specialSymbolsLabel);
 
         // General Page
 
@@ -1825,8 +1860,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_specialSymbolsListLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsListTitleLabel));
         xFixedText.setText(L10N_specialSymbolsListTitleLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsLabel));
-        xFixedText.setText(L10N_specialSymbolsLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsSymbolLabel));
         xFixedText.setText(L10N_specialSymbolsSymbolLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specialSymbolsDescriptionLabel));
@@ -2811,7 +2844,6 @@ public class SettingsDialog implements XItemListener,
             }
 
             tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-            tableListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
 
         tableListBox.addItemListener(this);
 

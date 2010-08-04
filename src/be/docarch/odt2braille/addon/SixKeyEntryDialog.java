@@ -21,8 +21,6 @@ package be.docarch.odt2braille.addon;
 
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.ArrayList;
 
 import com.sun.star.awt.XWindow;
@@ -41,7 +39,6 @@ import com.sun.star.uno.XComponentContext;
 import com.sun.star.awt.XControlContainer;
 import com.sun.star.lang.XComponent;
 import com.sun.star.awt.XTextComponent;
-import com.sun.star.awt.XButton;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.lang.EventObject;
 import com.sun.star.deployment.PackageInformationProvider;
@@ -59,22 +56,18 @@ public class SixKeyEntryDialog implements XKeyHandler {
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
     private XText xText = null;
     private XTextCursor xTextCursor = null;
-    private XExtendedToolkit MyExtToolkit = null;
+    private XExtendedToolkit myExtToolkit = null;
 
     private ArrayList<Short> keyCodes = new ArrayList();
     private ArrayList<Boolean> keysPressed = new ArrayList();
-    private boolean ready = true;
+    private boolean noKeysPressed = true;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
     private XComponent dialogComponent = null;
 
-    private XButton closeButton = null;
     private XTextComponent charField = null;
-
     private static String _charField = "TextField1";
-    private static String _closeButton = "CommandButton1";
-    private static String L10N_closeButton = null;
 
 
     public SixKeyEntryDialog(XComponentContext xContext,
@@ -88,11 +81,10 @@ public class SixKeyEntryDialog implements XKeyHandler {
         xTextCursor = xText.createTextCursorByRange(xViewCursor.getStart());
 
         XWindow xWindow = xFrame.getComponentWindow();
-        XWindowPeer MyWindowPeer = (XWindowPeer) UnoRuntime.queryInterface (XWindowPeer.class, xWindow);
-        XToolkit MyToolkit = MyWindowPeer.getToolkit();
-        MyExtToolkit = (XExtendedToolkit) UnoRuntime.queryInterface (XExtendedToolkit.class, MyToolkit);
+        XWindowPeer myWindowPeer = (XWindowPeer) UnoRuntime.queryInterface (XWindowPeer.class, xWindow);
+        XToolkit myToolkit = myWindowPeer.getToolkit();
+        myExtToolkit = (XExtendedToolkit) UnoRuntime.queryInterface (XExtendedToolkit.class, myToolkit);
 
-        keyCodes.add(Key.SPACE);
         keyCodes.add(Key.F);
         keyCodes.add(Key.D);
         keyCodes.add(Key.S);
@@ -100,23 +92,9 @@ public class SixKeyEntryDialog implements XKeyHandler {
         keyCodes.add(Key.K);
         keyCodes.add(Key.L);
 
-        for (int i=0;i<7;i++) {
+        for (int i=0;i<keyCodes.size();i++) {
             keysPressed.add(false);
         }
-
-        // L10N
-
-        Locale oooLocale;
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
-
-        L10N_closeButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("closeButton");
-
-        // Dialog creation
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
@@ -126,10 +104,6 @@ public class SixKeyEntryDialog implements XKeyHandler {
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
         dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
 
-        // Dialog items
-
-        closeButton = (XButton) UnoRuntime.queryInterface(XButton.class, dialogControlContainer.getControl(_closeButton));
-        closeButton.setLabel(L10N_closeButton);
         charField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class, dialogControlContainer.getControl(_charField));
         charField.setMaxTextLen((short)1);
         charField.setText("\u2800");
@@ -142,10 +116,10 @@ public class SixKeyEntryDialog implements XKeyHandler {
 
         logger.entering("InsertDialog", "execute");
 
-        MyExtToolkit.addKeyHandler(this);
+        myExtToolkit.addKeyHandler(this);
         dialog.execute();
         dialogComponent.dispose();
-        MyExtToolkit.removeKeyHandler(this);
+        myExtToolkit.removeKeyHandler(this);
 
         logger.exiting("InsertDialog", "execute");
 
@@ -158,24 +132,54 @@ public class SixKeyEntryDialog implements XKeyHandler {
         int offset = 0;
         String character = null;
         
-        for (int i=0;i<6;i++) {
-            if (keysPressed.get(i+1)) {
+        for (int i=0;i<keysPressed.size();i++) {
+            if (keysPressed.get(i)) {
                 offset += 1<<i;
             }
         }
+        if (offset>0) {
+            character = Character.toString((char)(0x2800 + offset));
+            charField.setText(character);
+            xText.insertString(xTextCursor.getEnd(), character, false);
+        }
+    }
 
-        character = Character.toString((char)(0x2800 + offset));
-        charField.setText(character);
-        xText.insertString(xTextCursor.getEnd(), character, false);
-        
+    private void insertSpace() {
+
+        logger.log(Level.INFO, "insertSpace");
+
+        charField.setText("\u2800");
+        xText.insertString(xTextCursor.getEnd(), " ", false);
+
+    }
+
+    private void insertSoftReturn() {
+
+        logger.log(Level.INFO, "insertSoftReturn");
+
+        charField.setText("\u2800");
+        xText.insertString(xTextCursor.getEnd(), "\n", false);
+
+    }
+
+    private void backSpace() {
+
+        logger.log(Level.INFO, "backSpace");
+
+        charField.setText("\u2800");
+        xTextCursor.goLeft((short)1, true);
+        xTextCursor.setString("");
+
     }
 
     public boolean keyPressed(KeyEvent e) {
 
-        logger.log(Level.INFO, "Pressed: " + Short.toString(e.KeyCode));
-
         if (keyCodes.contains(e.KeyCode)) {
             keysPressed.set(keyCodes.indexOf(e.KeyCode), true);
+            return true;
+        } else if (e.KeyCode == Key.SPACE ||
+                   e.KeyCode == Key.BACKSPACE ||
+                   e.KeyCode == Key.RETURN) {
             return true;
         } else {
             return false;
@@ -184,18 +188,29 @@ public class SixKeyEntryDialog implements XKeyHandler {
 
     public boolean keyReleased(KeyEvent e) {
 
-        logger.log(Level.INFO, "Released: " + Short.toString(e.KeyCode));
-
         if (keyCodes.contains(e.KeyCode)) {
-            if (ready) {
-                ready = false;
-                logger.log(Level.INFO, "ready = false");
+            if (noKeysPressed) {
+                noKeysPressed = false;
                 insertCharacter();
             }
             keysPressed.set(keyCodes.indexOf(e.KeyCode), false);
             if (!keysPressed.contains(true)) {
-                ready = true;
-                logger.log(Level.INFO, "ready = true");
+                noKeysPressed = true;
+            }
+            return true;
+        } else if (e.KeyCode == Key.SPACE) {
+            if (noKeysPressed) {
+                insertSpace();
+            }
+            return true;
+        } else if (e.KeyCode == Key.BACKSPACE) {
+            if (noKeysPressed) {
+                backSpace();
+            }
+            return true;
+        } else if (e.KeyCode == Key.RETURN) {
+            if (noKeysPressed) {
+                insertSoftReturn();
             }
             return true;
         } else {

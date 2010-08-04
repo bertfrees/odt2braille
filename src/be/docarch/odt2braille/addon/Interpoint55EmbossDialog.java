@@ -148,6 +148,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
      * @param xContext
      */
     public Interpoint55EmbossDialog(XComponentContext xContext,
+                                    XComponent xDesktopComponent,
                                     Settings settings)
                              throws com.sun.star.uno.Exception {
 
@@ -156,7 +157,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
         this.settings = settings;
         this.xContext = xContext;
 
-        embossSettings = new SettingsIO(xContext);
+        embossSettings = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")

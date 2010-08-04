@@ -57,7 +57,11 @@ Added features:
 * List of special symbols can be customized.
 * Other small improvements: 
     - Print page range information on title page.
-* Hyphenation (German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech, Icelandic)
+* Hyphenation (German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
+* Export to BRA file format. Choice between old and new Spanish Braille.
+
+
+Added languages:
 
 
 Localization:
@@ -65,4 +69,6 @@ Localization:
 
 * French
 * Catalan
+* Spanish
+* Portuguese
 

@@ -18,12 +18,14 @@
 @numsecentry{Transcriber's Notes}{1.16}{Transcriber's Notes}{14}
 @numsecentry{Table of Contents}{1.17}{Table of Contents}{14}
 @numsecentry{Bibliographies}{1.18}{Bibliographies}{15}
-@numsecentry{Literal Braille}{1.19}{Literal Braille}{16}
-@numsecentry{Braille-only Material}{1.20}{Braille-only Material}{16}
+@numsecentry{Mathematics}{1.19}{Mathematics}{16}
+@numsecentry{Literal Braille}{1.20}{Literal Braille}{16}
+@numsecentry{Braille-only Material}{1.21}{Braille-only Material}{16}
+@numsecentry{Hyphenation}{1.22}{Hyphenation}{16}
+@numsecentry{Templates}{1.23}{Templates}{16}
 @numchapentry{Settings}{2}{Settings}{17}
 @numsecentry{General Settings}{2.1}{General Settings}{17}
 @numsecentry{Language Settings}{2.2}{Language Settings}{17}
 @numsecentry{Export / Emboss Settings}{2.3}{Export / Emboss Settings}{17}
 @numchapentry{Exporting}{3}{Exporting}{19}
 @numchapentry{Embossing}{4}{Embossing}{20}
-@unnchapentry{Settings Index}{10002}{Settings Index}{21}

@@ -110,9 +110,9 @@ public class ProgressBar extends StatusIndicator {
      * @return  <code>true</true>
      */
     @Override
-    public boolean ready() {
+    public boolean close() {
 
-        super.ready();
+        super.close();
         xStatusIndicator.end();
         return true;
 

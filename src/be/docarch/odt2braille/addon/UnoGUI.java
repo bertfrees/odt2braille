@@ -57,7 +57,7 @@ import javax.print.PrintException;
 import be.docarch.odt2braille.Odt2Braille;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.HandlePEF;
-import be.docarch.odt2braille.Settings.BrailleFileType;
+import be.docarch.odt2braille.GenericFileMaker.BrailleFileType;
 import be.docarch.odt2braille.XPathUtils;
 import be.docarch.odt2braille.Checker;
 import be.docarch.odt2braille.Odt2BrailleNamespaceContext;
@@ -91,11 +91,15 @@ public class UnoGUI {
     private static String L10N_Exception_MessageBox_Title = null;
     private static String L10N_Unexpected_Exception_Message = null;
 
+    private XMultiComponentFactory xMCF = null;
     private XComponentContext m_xContext = null;
     private XFrame m_xFrame = null;
     private XModel xDoc = null;
     private XWindow parentWindow = null;
     private XWindowPeer parentWindowPeer = null;
+    private Object desktop = null;
+    private XDesktop xDesktop = null;
+    private XComponent xDesktopComponent = null;
 
     private Handler fh = null;
     private File logFile = null;
@@ -110,6 +114,7 @@ public class UnoGUI {
     private String liblouisDirUrl = null;
 
     private SettingsIO settingsIO = null;
+    private ProgressBar progressBar = null;
 
     private Settings defaultSettings = null;
     private Settings loadedSettings = null;
@@ -130,10 +135,14 @@ public class UnoGUI {
 
         logger.entering("UnoGUI", "<init>");
 
-        this.m_xContext = m_xContext;
-        this.m_xFrame = m_xFrame;
-
         try {
+
+            this.m_xContext = m_xContext;
+            this.m_xFrame = m_xFrame;
+            this.xMCF = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
+            this.desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
+            this.xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
+            this.xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
 
             // Configuring logger
             logFile = File.createTempFile(LOG_FILE, null);
@@ -157,6 +166,8 @@ public class UnoGUI {
 
         } catch (IOException ex) {
             handleUnexpectedException(ex);
+        } catch (com.sun.star.uno.Exception ex) {
+            handleUnexpectedException(ex);
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
         }
@@ -178,11 +189,6 @@ public class UnoGUI {
             L10N_Warning_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("warningMessageBoxTitle");
             L10N_Exception_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exceptionMessageBoxTitle");
             L10N_Unexpected_Exception_Message = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("unexpectedExceptionMessage");
-
-            // Query Uno Object
-            xDoc = (XModel) UnoRuntime.queryInterface(XModel.class, m_xFrame.getController().getModel());
-            parentWindow = xDoc.getCurrentController().getFrame().getContainerWindow();
-            parentWindowPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, parentWindow);
 
             // Export in ODT Format
             odtFile = File.createTempFile(TMP_NAME,ODT_EXT);
@@ -211,12 +217,6 @@ public class UnoGUI {
             odtLocale = new Locale(XPathUtils.evaluateString(flatOdtFile.toURL().openStream(),
                     "/office:document/office:styles/style:default-style/style:text-properties/@fo:language",
                     new Odt2BrailleNamespaceContext()).toLowerCase());
-
-            // Create new settingsIO
-            settingsIO = new SettingsIO(m_xContext);
-
-            // Create default settings
-            defaultSettings = new Settings(flatOdtFile, odtLocale);
 
             // Set liblouis directory
             liblouisDirUrl = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
@@ -251,18 +251,47 @@ public class UnoGUI {
 
         try {
 
+            // Query Uno Object
+            xDoc = (XModel) UnoRuntime.queryInterface(XModel.class, m_xFrame.getController().getModel());
+            parentWindow = xDoc.getCurrentController().getFrame().getContainerWindow();
+            parentWindowPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, parentWindow);
+
+            // Create dialog
+            SettingsDialog settingsDialog;
+            settingsDialog = new SettingsDialog(m_xContext);
+
+            // Show "Please wait" window
+            settingsDialog.startLoading(xMCF);
+
+            // Create and initialize progress bar
+//            progressBar = new ProgressBar(m_xFrame);
+//            progressBar.init();
+//            progressBar.setSteps(1);
+//            progressBar.reset();
+//            progressBar.setStatus("Loading... Please wait");
+
+            // Export document to flat XML file
             initialize();
 
-            SettingsDialog dialog;
+            // Create new settingsIO
+            settingsIO = new SettingsIO(m_xContext, xDesktopComponent);
 
+            // Create default settings
+            defaultSettings = new Settings(flatOdtFile, odtLocale);
+
+            // Load settings & copy to changedSettings
             loadedSettings = settingsIO.loadSettingsFromDocument(defaultSettings);
             changedSettings = new Settings(loadedSettings);
 
-            // Create Configuration Dialog
-            dialog = new SettingsDialog(m_xContext, changedSettings, mode);
+            // Initialize dialog
+            settingsDialog.initialize(changedSettings, mode);
+
+            // Close progress bar
+//            progressBar.finish(true);
+//            progressBar.close();
 
             // Raise dialog
-            if (!dialog.execute()) {
+            if (!settingsDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled settings dialog");
                 return false;
             }
@@ -273,6 +302,9 @@ public class UnoGUI {
 
             return true;
 
+        } catch (IOException ex) {
+            handleUnexpectedException(ex);
+            return false;
         } catch (com.sun.star.uno.Exception ex) {
             handleUnexpectedException(ex);
             return false;
@@ -311,9 +343,12 @@ public class UnoGUI {
         String fileType = null;
         String warning = null;
         Checker checker = null;
-        ProgressBar progressBar = new ProgressBar(m_xFrame);
 
         try {
+
+            // Create and initialize progress bar
+            progressBar = new ProgressBar(m_xFrame);
+            progressBar.init();
 
             // Change Settings
             if(!changeSettings(SettingsDialog.EXPORT)) {
@@ -379,15 +414,12 @@ public class UnoGUI {
             pefFile.deleteOnExit();
             pefUrl = pefFile.getAbsolutePath();
 
-            // Initialize progress bar
-            progressBar.init();
-
             // Create odt2braille with settings from export dialog
             odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
             // Translate into braille
             if(!odt2braille.makePEF(pefUrl)) {
-                progressBar.ready();
+                progressBar.finish(false);
                 return false;
             }
 
@@ -433,6 +465,12 @@ public class UnoGUI {
                 }
             }
 
+            if (UnoAwtUtils.showInfoMessageBox(parentWindowPeer, "Export", "Succesfully exported to Braille." + "\n\n") == (short) 3) {
+                return false;
+            }
+
+            progressBar.finish(true);
+
             logger.exiting("UnoGUI", "exportBraille");
 
             return true;
@@ -471,7 +509,7 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         } finally {
-            progressBar.ready();
+            progressBar.close();
         }
 
     }
@@ -505,9 +543,12 @@ public class UnoGUI {
         String deviceName = null;
         String warning = null;
         Checker checker = null;
-        ProgressBar progressBar = new ProgressBar(m_xFrame);
         
         try {
+
+            // Create and initialize progress bar
+            progressBar = new ProgressBar(m_xFrame);
+            progressBar.init();
             
             // Change Settings
             if(!changeSettings(SettingsDialog.EMBOSS)) {
@@ -535,15 +576,12 @@ public class UnoGUI {
             // Emboss Dialog
             if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
 
-                Interpoint55EmbossDialog dialog = new Interpoint55EmbossDialog(m_xContext, changedSettings);
+                Interpoint55EmbossDialog dialog = new Interpoint55EmbossDialog(m_xContext, xDesktopComponent, changedSettings);
 
                 if (!dialog.execute()) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
-
-                // Initialize progress bar
-                progressBar.init();
 
                 // Create odt2braille with settings from export dialog
                 odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
@@ -579,9 +617,6 @@ public class UnoGUI {
                     return false;
                 }
 
-                // Initialize progress bar
-                progressBar.init();
-
                 // Create odt2braille with settings from export dialog
                 odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
@@ -606,6 +641,9 @@ public class UnoGUI {
                 }
 
             }
+
+            progressBar.finish(true);
+
             return true;
 
         } catch (PrintException ex) {
@@ -648,7 +686,7 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         } finally {
-            progressBar.ready();
+            progressBar.close();
         }
 
     }
@@ -659,11 +697,6 @@ public class UnoGUI {
 
         try {
 
-            XMultiComponentFactory xMCF =(XMultiComponentFactory) UnoRuntime.queryInterface(
-                                          XMultiComponentFactory.class, m_xContext.getServiceManager());
-            Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
-            XDesktop xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
-            XComponent xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
             XModel xModel = (XModel)UnoRuntime.queryInterface(XModel.class, xDesktopComponent);
             XController xController = xModel.getCurrentController();
             XTextViewCursorSupplier xViewCursorSupplier = (XTextViewCursorSupplier)UnoRuntime.queryInterface(
@@ -693,11 +726,6 @@ public class UnoGUI {
 
         try {
 
-            XMultiComponentFactory xMCF =(XMultiComponentFactory) UnoRuntime.queryInterface(
-                                          XMultiComponentFactory.class,m_xContext.getServiceManager());
-            Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
-            XDesktop xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
-            XComponent xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
             XModel xModel = (XModel)UnoRuntime.queryInterface(XModel.class, xDesktopComponent);
             XController xController = xModel.getCurrentController();
             XTextViewCursorSupplier xViewCursorSupplier = (XTextViewCursorSupplier)UnoRuntime.queryInterface(
@@ -708,16 +736,8 @@ public class UnoGUI {
 
             // Create dialog
 
-            InsertDialog dialog = new InsertDialog(m_xContext);
-
-            if (!dialog.execute()) {
-                logger.log(Level.INFO, "User cancelled insert braille dialog");
-                return false;
-            }
-
-            // Insert Braille in document
-
-            xText.insertString(xTextCursor.getEnd(), dialog.getBrailleCharacters(), false);
+            InsertDialog dialog = new InsertDialog(m_xContext, xViewCursor);
+            dialog.execute();
 
             logger.exiting("UnoGUI", "insertBraille");
 
@@ -749,7 +769,10 @@ public class UnoGUI {
     /**
      * Flush and close the logfile handler.
      */
-    public void flushLogger() {
+    public void clean() {
+        if (progressBar != null) {
+            progressBar.close();
+        }
         if (fh != null) {
             fh.flush();
             fh.close();

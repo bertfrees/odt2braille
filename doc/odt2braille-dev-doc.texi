@@ -36,7 +36,7 @@ Read the @url{odt2braille-user-doc.html, user's guide} here.
 * Hacking::
 * Projects::
 * Liblouisxml::
-* Feature Requests::
+* Todo's::
 @end menu
 
 @node Hacking
@@ -78,12 +78,21 @@ by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK 
 
 @unnumberedsec Odt2braille Source Code
 
-[@@TODO] The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
+The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
 @itemize @minus
 @item
-Team - SVN - Checkout
+[@emph{Team - Subversion - Checkout}]
 @item
-...
+@emph{Repository URL}: "https://odt2braille.svn.sourceforge.net/svnroot/odt2braille".
+Leave @emph{"User"} and @emph{"Password"} fields blank.
+@item
+@emph{Next >}
+@item
+@emph{Repository Folders}: "DaisyPipeline, Odt2Braille, Odt2BrailleAddOn"
+@item
+Check @emph{"Scan for NetBeans Projects after checkout"}.
+@item
+@emph{Finish}
 @end itemize
 
 The source code can also be downloaded without NetBeans:
@@ -97,7 +106,7 @@ The source code can also be downloaded without NetBeans:
 Build projects with NetBeans:
 @itemize @minus
 @item
-Open "Projects" window, than right click a project and choose menu item "Build".
+Open @emph{"Projects"} window, than right click a project and choose menu item @emph{"Build"}.
 @end itemize
 
 Build projects with Apache ANT:
@@ -108,22 +117,23 @@ Build projects with Apache ANT:
 @code{ant}
 @end itemize
 
-Build .oxt with NetBeans:
+Create .oxt file with NetBeans:
 @itemize @minus
 @item
-Open "Projects" window, than right click "Odt2BrailleAddOn" and choose menu item "Create OXT" or "Deploy and Run Extension in OpenOffice.org".
+Open @emph{"Projects"} window, than right click @emph{"Odt2BrailleAddOn"} 
+and choose menu item @emph{"Create OXT"} or @emph{"Deploy and Run Extension in OpenOffice.org"}.
 @item
-.oxt in Odt2BrailleAddOn/dist
+The .oxt file will be created in Odt2BrailleAddOn/dist.
 @end itemize
 
-Build .oxt with Apache ANT:
+Create .oxt file with Apache ANT:
 @itemize @minus
 @item
 @code{cd} to Odt2BrailleAddOn directory
 @item
 @code{ant uno-package}
 @item
-.oxt in Odt2BrailleAddOn/dist
+The .oxt file will be created in Odt2BrailleAddOn/dist.
 @end itemize
 
 @unnumberedsec Documentation
@@ -135,23 +145,23 @@ Texinfo:
 @item
 @code{
 texi2dvi --pdf
-@*@w{        }odt2braille-user-doc.texi}
+@*@w{         }odt2braille-user-doc.texi}
 @item
 @code{
 makeinfo --html
-@*@w{       }[--no-split]
-@*@w{       }[--no-headers]
-@*@w{       }[--css-include=body.css]
-@*@w{        }--output=odt2braille-user-doc.html
-@*@w{        }odt2braille-user-doc.texi}
+@*@w{        }[--no-split]
+@*@w{        }[--no-headers]
+@*@w{        }[--css-include=body.css]
+@*@w{         }--output=odt2braille-user-doc.html
+@*@w{         }odt2braille-user-doc.texi}
 @item
 @code{
 makeinfo --html
-@*@w{       }[--no-split]
-@*@w{       }[--no-headers]
-@*@w{       }[--css-include=body.css]
-@*@w{        }--output=odt2braille-dev-doc.html
-@*@w{        }odt2braille-dev-doc.texi
+@*@w{        }[--no-split]
+@*@w{        }[--no-headers]
+@*@w{        }[--css-include=body.css]
+@*@w{         }--output=odt2braille-dev-doc.html
+@*@w{         }odt2braille-dev-doc.texi
 }
 @end itemize	
 			
@@ -163,12 +173,12 @@ Javadoc:
 @item
 @code{
 javadoc [-private]
-@*@w{       }[-author]
-@*@w{       }[-version]
-@*@w{       }[-breakiterator]
-@*@w{        }-d Odt2BrailleAddOn\doc\javadoc
-@*@w{        }-subpackages be.docarch:org_pef_text
-@*@w{        }-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
+@*@w{        }[-author]
+@*@w{        }[-version]
+@*@w{        }[-breakiterator]
+@*@w{         }-d Odt2BrailleAddOn\doc\javadoc
+@*@w{         }-subpackages be.docarch:org_pef_text
+@*@w{         }-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
 }
 @end itemize
 
@@ -176,13 +186,13 @@ javadoc [-private]
 
 @itemize @minus
 @item
-Apache Subversion: http://subversion.apache.org/
+Apache Subversion: @url{http://subversion.apache.org/}
 @item
-Apache Ant (1.7.1 or higher): http://ant.apache.org/
+Apache Ant (1.7.1 or higher): @url{http://ant.apache.org/}
 @item
-Javadoc: http://java.sun.com/j2se/javadoc/downloads/index.html#findjavadoc
+Javadoc: @url{http://java.sun.com/j2se/javadoc/downloads/index.html#findjavadoc}
 @item
-Texinfo: http://www.gnu.org/software/texinfo/
+Texinfo: @url{http://www.gnu.org/software/texinfo/}
 @end itemize
 
 @node Projects
@@ -254,8 +264,8 @@ For more information read the
 @code{@url{http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html, liblouisxml}} and
 @code{@url{http://liblouis.googlecode.com/svn/documentation/liblouis.html, libouis}} manuals.
 
-@node Feature Requests
-@chapter Known Issues, Todo's, Feature Requests
+@node Todo's
+@chapter Todo's
 
 @itemize @bullet
 @item
@@ -285,15 +295,21 @@ Table Of Contents:
 @item
 Mac OS, Linux, ... !!!
 @item
-Tooltips in dialogs.
+Add more "Braille formatting standards" (now: only BANA)
 @item
-Complete documentation.
+Documentation!
 @item
 Support more embossers.
 @item
 Only Interpoint55 is tested.
 @item
+Tooltips in dialogs.
+@item
 Keyboard shortcut for Braille menu.
+@item
+Howto handle unknown characters? (-> now: dots 3456)
+@item
+Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (braille-only material). TN => settings!
 @item
 8 dot Braille.
 @item
@@ -322,7 +338,7 @@ This will result in better performance.
 @item
 When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
 @item
-Jlouis (Michael Whapples) ?
+Jlouis ?
 @item
 UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
 @item

@@ -41,13 +41,11 @@ import com.sun.star.uno.AnyConverter;
 import com.sun.star.document.XDocumentProperties;
 import com.sun.star.document.XDocumentPropertiesSupplier;
 import com.sun.star.uno.UnoRuntime;
-import com.sun.star.lang.XMultiComponentFactory;
-import com.sun.star.frame.XDesktop;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
 
 import be.docarch.odt2braille.Settings;
-import be.docarch.odt2braille.Settings.BrailleFileType;
+import be.docarch.odt2braille.GenericFileMaker.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.SpecialSymbol;
@@ -146,7 +144,8 @@ public class SettingsIO {
      *
      * @param   xContext
      */
-    public SettingsIO(XComponentContext xContext) 
+    public SettingsIO(XComponentContext xContext,
+                      XComponent xDesktopComponent)
                throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "<init>");
@@ -155,11 +154,7 @@ public class SettingsIO {
         packageLocation = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn");
         this.xContext = xContext;
 
-        XMultiComponentFactory xMCF =(XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class,xContext.getServiceManager());
-        Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", xContext);
-        XDesktop xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
-        XComponent xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
-        XTextDocument xTextDoc = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class,xDesktopComponent);
+        XTextDocument xTextDoc = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class, xDesktopComponent);
         XDocumentPropertiesSupplier xDocInfoSuppl = (XDocumentPropertiesSupplier) UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xTextDoc);
         XDocumentProperties xDocProps = xDocInfoSuppl.getDocumentProperties();
 

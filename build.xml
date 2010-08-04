@@ -116,12 +116,4 @@
              basedir="${build.oxt.dir}" />
              
     </target>
-	
-	<!-- Make documentation ?? -->
-	<target name="documentation">
-		<!-- Texinfo -->
-		<!-- Javadoc -->
-	</target>
-	
-
 </project>
