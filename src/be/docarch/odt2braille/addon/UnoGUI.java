@@ -263,13 +263,6 @@ public class UnoGUI {
             // Show "Please wait" window
             settingsDialog.startLoading(xMCF);
 
-            // Create and initialize progress bar
-//            progressBar = new ProgressBar(m_xFrame);
-//            progressBar.init();
-//            progressBar.setSteps(1);
-//            progressBar.reset();
-//            progressBar.setStatus("Loading... Please wait");
-
             // Export document to flat XML file
             initialize();
 
@@ -285,10 +278,6 @@ public class UnoGUI {
 
             // Initialize dialog
             settingsDialog.initialize(changedSettings, mode);
-
-            // Close progress bar
-//            progressBar.finish(true);
-//            progressBar.close();
 
             // Raise dialog
             if (!settingsDialog.execute()) {
@@ -337,23 +326,26 @@ public class UnoGUI {
 
         Odt2Braille odt2braille = null;
         HandlePEF handlePef = null;
+        File pefFile = null;
+        File brailleFile = null;
         String pefUrl = null;
         String brailleUrl = null;
-        String brailleUnoUrl = null;
+        String exportUrl = null;
+        String exportUnoUrl = null;
         String fileType = null;
         String warning = null;
         Checker checker = null;
 
         try {
 
-            // Create and initialize progress bar
-            progressBar = new ProgressBar(m_xFrame);
-            progressBar.init();
-
             // Change Settings
             if(!changeSettings(SettingsDialog.EXPORT)) {
                 return false;
             }
+
+            // Create and initialize progress bar
+            progressBar = new ProgressBar(m_xFrame);
+            progressBar.init();
 
             // Checker
             checker = new Checker(oooLocale, changedSettings);
@@ -397,20 +389,8 @@ public class UnoGUI {
                 }
             }
                 
-            // Raise Save As... Dialog:
-            logger.entering("UnoAwtUtils", "showSaveAsDialog");
-
-            brailleUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
-            if (brailleUnoUrl.length() < 1) {
-                return false;
-            }
-            if (!brailleUnoUrl.endsWith(brailleExt)) {
-                brailleUnoUrl = brailleUnoUrl.concat(brailleExt);
-            }
-            brailleUrl = UnoUtils.UnoURLtoURL(brailleUnoUrl, m_xContext);
-                
             // Create temporary PEF
-            File pefFile = File.createTempFile(TMP_NAME,PEF_EXT);
+            pefFile = File.createTempFile(TMP_NAME,PEF_EXT);
             pefFile.deleteOnExit();
             pefUrl = pefFile.getAbsolutePath();
 
@@ -431,14 +411,15 @@ public class UnoGUI {
                 }
             }
 
+            // Convert to Braille file or emboss
             if (changedSettings.getGenericBraille() == BrailleFileType.PEF)  {
-
-                // Rename PEF file
-                File newFile = new File(brailleUrl);
-                if (newFile.exists()) { newFile.delete(); }
-                pefFile.renameTo(newFile);
-
+                brailleFile = pefFile;
             } else {
+
+                // Create temporary Braille file
+                brailleFile = File.createTempFile(TMP_NAME,brailleExt);
+                brailleFile.deleteOnExit();
+                brailleUrl = brailleFile.getAbsolutePath();
 
                 // Create HandlePEF entity
                 handlePef = new HandlePEF(pefUrl, changedSettings);
@@ -465,16 +446,42 @@ public class UnoGUI {
                 }
             }
 
-            if (UnoAwtUtils.showInfoMessageBox(parentWindowPeer, "Export", "Succesfully exported to Braille." + "\n\n") == (short) 3) {
+            // Close progressbar
+            progressBar.finish(true);
+            progressBar.close();
+
+            // Show post translation dialog
+            PreviewDialog preview = new PreviewDialog(m_xContext, pefFile, changedSettings);
+            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
+
+            if (!postTranslationDialog.execute()) {
+                logger.log(Level.INFO, "User cancelled post translation dialog");
                 return false;
             }
 
-            progressBar.finish(true);
+            // Show Save As... Dialog:
+            logger.entering("UnoAwtUtils", "showSaveAsDialog");
+            exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+            if (exportUnoUrl.length() < 1) {
+                return false;
+            }
+            if (!exportUnoUrl.endsWith(brailleExt)) {
+                exportUnoUrl = exportUnoUrl.concat(brailleExt);
+            }
+            exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+
+            // Rename Braille file
+            File newFile = new File(exportUrl);
+            if (newFile.exists()) { newFile.delete(); }
+            brailleFile.renameTo(newFile);
 
             logger.exiting("UnoGUI", "exportBraille");
 
             return true;
 
+        } catch (com.sun.star.uno.Exception ex) {
+            handleUnexpectedException(ex);
+            return false;
         } catch (MalformedURLException ex) {
             handleUnexpectedException(ex);
             return false;
@@ -546,14 +553,14 @@ public class UnoGUI {
         
         try {
 
-            // Create and initialize progress bar
-            progressBar = new ProgressBar(m_xFrame);
-            progressBar.init();
-            
             // Change Settings
             if(!changeSettings(SettingsDialog.EMBOSS)) {
                 return false;
             }
+
+            // Create and initialize progress bar
+            progressBar = new ProgressBar(m_xFrame);
+            progressBar.init();
 
             // Checker
             checker = new Checker(oooLocale, changedSettings);
@@ -569,9 +576,41 @@ public class UnoGUI {
             }
 
             // Create temporary PEF
-            pefFile = File.createTempFile(TMP_NAME,PEF_EXT);
+            pefFile = File.createTempFile(TMP_NAME, PEF_EXT);
             pefFile.deleteOnExit();
             pefUrl = pefFile.getAbsolutePath();
+
+            // Create odt2braille with settings from export dialog
+            odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
+
+            // Translate into braille
+            if(!odt2braille.makePEF(pefUrl)) {
+                return false;
+            }
+
+            // Show second checker warning
+            if (!(warning = checker.getSecondWarning()).equals("")) {
+                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
+                    logger.log(Level.INFO, "User cancelled export on second warning");
+                    return false;
+                }
+            }
+
+            // Close progress bar
+            progressBar.finish(true);
+            progressBar.close();
+
+            // Show post translation dialog
+            PreviewDialog preview = new PreviewDialog(m_xContext, pefFile, changedSettings);
+            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
+
+            if (!postTranslationDialog.execute()) {
+                logger.log(Level.INFO, "User cancelled post translation dialog");
+                return false;
+            }
+
+            // Create EmbossPEF entity
+            handlePef = new HandlePEF(pefUrl, changedSettings);
 
             // Emboss Dialog
             if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
@@ -582,25 +621,6 @@ public class UnoGUI {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
-
-                // Create odt2braille with settings from export dialog
-                odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
-
-                // Translate into braille
-                if(!odt2braille.makePEF(pefUrl)) {
-                    return false;
-                }
-
-                // Show second checker warning
-                if (!(warning = checker.getSecondWarning()).equals("")) {
-                    if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                        logger.log(Level.INFO, "User cancelled export on second warning");
-                        return false;
-                    }
-                }
-
-                // Create EmbossPEF entity
-                handlePef = new HandlePEF(pefUrl, changedSettings);
 
                 if(!handlePef.convertToFile(BrailleFileType.BRF_INTERPOINT, dialog.getBrfFile())) {
                     return false;
@@ -617,32 +637,10 @@ public class UnoGUI {
                     return false;
                 }
 
-                // Create odt2braille with settings from export dialog
-                odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
-
-                // Translate into braille
-                if(!odt2braille.makePEF(pefUrl)) {
-                    return false;
-                }
-
-                // Show second checker warning
-                if (!(warning = checker.getSecondWarning()).equals("")) {
-                    if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                        logger.log(Level.INFO, "User cancelled export on second warning");
-                        return false;
-                    }
-                }
-
-                // Create EmbossPEF entity
-                handlePef = new HandlePEF(pefUrl, changedSettings);
-
                 if(!handlePef.embossToDevice(deviceName)) {
                     return false;
                 }
-
             }
-
-            progressBar.finish(true);
 
             return true;
 

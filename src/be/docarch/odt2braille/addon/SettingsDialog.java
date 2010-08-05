@@ -82,7 +82,7 @@ import be.docarch.odt2braille.Settings.BrailleRules;
 
 /**
  * Show an OpenOffice.org dialog window for adjusting the braille settings.
- * The dialog has 10 tabs:
+ * The dialog has 11 tabs:
  * <ul>
  * <li>General Settings</li>
  * <li>Paragraph Settings</li>
@@ -92,6 +92,7 @@ import be.docarch.odt2braille.Settings.BrailleRules;
  * <li>Pagenumber Settings</li>
  * <li>Language Settings (only enabled if the document contains multiple languages)</li>
  * <li>Table of Contents Settings</li>
+ * <li>Special Symbols Settings</li>
  * <li>Mathematics Settings</li>
  * <li>Emboss/Export Settings</li>
  * </ul>
@@ -180,9 +181,9 @@ public class SettingsDialog implements XItemListener,
     private static String _nextButton = "CommandButton4";
     private static String _brailleRulesListBox = "ListBox19";
 
-    private static String L10N_windowTitle = null;
-    private static String L10N_roadmapTitle = null;
-    private static String[] L10N_roadmapLabels = new String[NUMBER_OF_PAGES];
+    private String L10N_windowTitle = null;
+    private String L10N_roadmapTitle = null;
+    private String[] L10N_roadmapLabels = new String[NUMBER_OF_PAGES];
 
     private String L10N_okButton1 = null;
     private String L10N_okButton2 = null;
@@ -744,9 +745,6 @@ public class SettingsDialog implements XItemListener,
      * The dialog is created from an OpenOffice.org .xdl file.
      *
      * @param   xContext
-     * @param   settings    The braille settings.
-     * @param   mode        {@link #SAVE_SETTINGS}, {@link #EXPORT} or {@link #EMBOSS}, depending on how the dialog was called.
-     *                      Which tab is showed first and the behaviour of the OK button will slightly vary with the mode.
      */
     public SettingsDialog(XComponentContext xContext)
                    throws com.sun.star.uno.Exception {
@@ -792,6 +790,11 @@ public class SettingsDialog implements XItemListener,
     
     }
 
+    /**
+     * @param   settings    The braille settings.
+     * @param   mode        {@link #SAVE_SETTINGS}, {@link #EXPORT} or {@link #EMBOSS}, depending on how the dialog was called.
+     *                      Which tab is showed first and the behaviour of the OK button will slightly vary with the mode.
+     */
     public void initialize(Settings settings,
                            short mode)
                     throws com.sun.star.uno.Exception {
@@ -825,7 +828,7 @@ public class SettingsDialog implements XItemListener,
         L10N_okButton1 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossButton");
         L10N_okButton2 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printToFileButton");
         L10N_okButton3 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exportButton");
-        L10N_okButton4 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("saveSettingsButton");
+        L10N_okButton4 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("saveButton");
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("cancelButton");
         L10N_backButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("backButton");
         L10N_nextButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("nextButton");

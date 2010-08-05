@@ -59,9 +59,7 @@ Added features:
     - Print page range information on title page.
 * Hyphenation (German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
 * Export to BRA file format. Choice between old and new Spanish Braille.
-
-
-Added languages:
+* Preview Window
 
 
 Localization:
