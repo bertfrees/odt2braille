@@ -37,6 +37,7 @@
 				  <value xml:lang="pt">~Definições</value>
 				  <value xml:lang="sl">~Nastavitve</value>
 				  <value xml:lang="de">~Einstellungen</value>
+				  <value xml:lang="pt-BR">~Configurações</value>
                 </prop>
               </node>
               <node oor:name="M2" oor:op="replace">
@@ -61,6 +62,7 @@
 				  <value xml:lang="pt">~Exportar</value>
 				  <value xml:lang="sl">~Izvozi</value>
 				  <value xml:lang="de">~Exportieren</value>
+				  <value xml:lang="pt-BR">~Exportar</value>
                 </prop>
               </node>
               <node oor:name="M3" oor:op="replace">
@@ -85,6 +87,7 @@
 				  <value xml:lang="pt">~Gravar</value>
 				  <value xml:lang="sl">~Izboči</value>
 				  <value xml:lang="de">~Prägen</value>
+				  <value xml:lang="pt-BR">~Gravar</value>
                 </prop>
               </node>
               <node oor:name="M4" oor:op="replace">
@@ -109,6 +112,7 @@
 				  <value xml:lang="pt">~Inserir</value>
 				  <value xml:lang="sl">~Vstavi</value>
 				  <value xml:lang="de">~Einfügen</value>
+				  <value xml:lang="pt-BR">~Inserir</value>
                 </prop>
                 <node oor:name="Submenu">
                   <node oor:name="M5" oor:op="replace">
@@ -129,6 +133,7 @@
 					  <value xml:lang="nl">~Voer in met puntjespatronen</value>
                       <value xml:lang="fr">~Mode de saisie point-à-point</value>
 					  <value xml:lang="sl">~Vnosni način vzorca pik</value>
+					  <value xml:lang="pt-BR">~Modo de entrada por padrão de pontos</value>
                     </prop>
                   </node>
                   <node oor:name="M6" oor:op="replace">
@@ -151,6 +156,7 @@
 					  <value xml:lang="ca">~Mode de 6 tecles</value>
 					  <value xml:lang="es">~Modo 6 teclas</value>
 					  <value xml:lang="sl">~Vnosni način šestih tipk</value>
+					  <value xml:lang="pt-BR">~Modo de entrada por 6 teclas</value>
                     </prop>
                   </node>
                 </node>

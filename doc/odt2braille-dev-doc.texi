@@ -1,7 +1,7 @@
 \input texinfo
 @setfilename odt2braille-dev-doc.info
 @include version.texi
-@settitle odt2braille Developer's Guide - Draft
+@settitle odt2braille Developer Guide
 @finalout
 
 @defindex class
@@ -9,7 +9,7 @@
 @include copying.texi
 
 @titlepage
-@title odt2braille Developer's Guide - Draft
+@title odt2braille Developer Guide
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author by Bert Frees
 @page
@@ -25,8 +25,6 @@
 
 @node Top
 @top Introduction
-
-Read the @url{odt2braille-user-doc.html, user's guide} here.
 
 @ifnottex
 @insertcopying
@@ -315,8 +313,6 @@ Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (bra
 @item
 Tactile graphics.
 @item
-It takes rather long to load the Settings dialog => Message while waiting?
-@item
 If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
 @item
 The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog).
@@ -340,7 +336,7 @@ When multi-volume feature of liblouisxml is finished: odt2braille code might be 
 @item
 Jlouis ?
 @item
-UTD: could be used to make a preview of the braille document with print text added for readability/understandability.
+UTD & liblouisutdml?
 @item
 Presentations & spreadsheets.
 @item

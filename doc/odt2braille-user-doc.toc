@@ -1,31 +1,30 @@
 @unnchapentry{Introduction}{10001}{Top}{1}
-@numchapentry{Document Preparation}{1}{Document Preparation}{2}
-@numsecentry{Paragraphs}{1.1}{Paragraphs}{2}
-@numsecentry{Headings}{1.2}{Headings}{2}
-@numsecentry{Lists}{1.3}{Lists}{3}
-@numsecentry{Tables}{1.4}{Tables}{4}
-@numsecentry{Textboxes}{1.5}{Textboxes}{5}
-@numsecentry{Images}{1.6}{Images}{6}
-@numsecentry{Captions}{1.7}{Captions}{7}
-@numsecentry{Notes}{1.8}{Notes}{8}
-@numsecentry{Special Typeface}{1.9}{Special Typeface}{9}
-@numsecentry{Languages}{1.10}{Languages}{9}
-@numsecentry{Page Numbering}{1.11}{Page Numbering}{10}
-@numsecentry{Preliminary Pages}{1.12}{Preliminary Pages}{10}
-@numsecentry{Volume Management}{1.13}{Volume Management}{11}
-@numsecentry{Title Page}{1.14}{Title Page}{12}
-@numsecentry{List of Special Symbols}{1.15}{List of Special Symbols}{13}
-@numsecentry{Transcriber's Notes}{1.16}{Transcriber's Notes}{14}
-@numsecentry{Table of Contents}{1.17}{Table of Contents}{14}
-@numsecentry{Bibliographies}{1.18}{Bibliographies}{15}
-@numsecentry{Mathematics}{1.19}{Mathematics}{16}
-@numsecentry{Literal Braille}{1.20}{Literal Braille}{16}
-@numsecentry{Braille-only Material}{1.21}{Braille-only Material}{16}
-@numsecentry{Hyphenation}{1.22}{Hyphenation}{16}
-@numsecentry{Templates}{1.23}{Templates}{16}
-@numchapentry{Settings}{2}{Settings}{17}
-@numsecentry{General Settings}{2.1}{General Settings}{17}
-@numsecentry{Language Settings}{2.2}{Language Settings}{17}
-@numsecentry{Export / Emboss Settings}{2.3}{Export / Emboss Settings}{17}
-@numchapentry{Exporting}{3}{Exporting}{19}
-@numchapentry{Embossing}{4}{Embossing}{20}
+@unnsecentry{Installation}{10001.1}{}{1}
+@unnsecentry{OpenOffice.org accessibility}{10001.2}{}{1}
+@unnsecentry{Getting started}{10001.3}{}{1}
+@numchapentry{Quick guide}{1}{Quick guide}{2}
+@numchapentry{Advanced guide}{2}{Advanced guide}{3}
+@numsecentry{Languages}{2.1}{Languages}{3}
+@numsecentry{Paragraphs}{2.2}{Paragraphs}{3}
+@numsecentry{Headings}{2.3}{Headings}{3}
+@numsecentry{Lists}{2.4}{Lists}{4}
+@numsecentry{Tables}{2.5}{Tables}{5}
+@numsecentry{Textboxes}{2.6}{Textboxes}{6}
+@numsecentry{Images}{2.7}{Images}{7}
+@numsecentry{Captions}{2.8}{Captions}{8}
+@numsecentry{Notes}{2.9}{Notes}{9}
+@numsecentry{Special Typeface}{2.10}{Special Typeface}{10}
+@numsecentry{Page Numbering}{2.11}{Page Numbering}{11}
+@numsecentry{Preliminary Pages}{2.12}{Preliminary Pages}{11}
+@numsecentry{Volume Management}{2.13}{Volume Management}{12}
+@numsecentry{Title Page}{2.14}{Title Page}{13}
+@numsecentry{List of Special Symbols}{2.15}{List of Special Symbols}{14}
+@numsecentry{Transcriber's Notes}{2.16}{Transcriber's Notes}{15}
+@numsecentry{Table of Contents}{2.17}{Table of Contents}{15}
+@numsecentry{Bibliographies}{2.18}{Bibliographies}{16}
+@numsecentry{Mathematics}{2.19}{Mathematics}{17}
+@numsecentry{Inserting literal Braille}{2.20}{Inserting literal Braille}{17}
+@numsecentry{Braille-only Material}{2.21}{Braille-only Material}{17}
+@numsecentry{Hyphenation}{2.22}{Hyphenation}{17}
+@numsecentry{Templates}{2.23}{Templates}{17}
+@numsecentry{Preview}{2.24}{Preview}{17}

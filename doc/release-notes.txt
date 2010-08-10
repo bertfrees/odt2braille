@@ -69,4 +69,6 @@ Localization:
 * Catalan
 * Spanish
 * Portuguese
+* Slovenian
+* German
 
