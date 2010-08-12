@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode DB80..DBFF  High Private Use Surrogates
+# ----------------------------------------------------------------------------------------------
+
+sign        \xDB80  1456                 # �
+sign        \xDB81  1456                 # �
+sign        \xDB82  1456                 # �
+sign        \xDB83  1456                 # �
+sign        \xDB84  1456                 # �
+sign        \xDB85  1456                 # �
+sign        \xDB86  1456                 # �
+sign        \xDB87  1456                 # �
+sign        \xDB88  1456                 # �
+sign        \xDB89  1456                 # �
+sign        \xDB8A  1456                 # �
+sign        \xDB8B  1456                 # �
+sign        \xDB8C  1456                 # �
+sign        \xDB8D  1456                 # �
+sign        \xDB8E  1456                 # �
+sign        \xDB8F  1456                 # �
+sign        \xDB90  1456                 # �
+sign        \xDB91  1456                 # �
+sign        \xDB92  1456                 # �
+sign        \xDB93  1456                 # �
+sign        \xDB94  1456                 # �
+sign        \xDB95  1456                 # �
+sign        \xDB96  1456                 # �
+sign        \xDB97  1456                 # �
+sign        \xDB98  1456                 # �
+sign        \xDB99  1456                 # �
+sign        \xDB9A  1456                 # �
+sign        \xDB9B  1456                 # �
+sign        \xDB9C  1456                 # �
+sign        \xDB9D  1456                 # �
+sign        \xDB9E  1456                 # �
+sign        \xDB9F  1456                 # �
+sign        \xDBA0  1456                 # �
+sign        \xDBA1  1456                 # �
+sign        \xDBA2  1456                 # �
+sign        \xDBA3  1456                 # �
+sign        \xDBA4  1456                 # �
+sign        \xDBA5  1456                 # �
+sign        \xDBA6  1456                 # �
+sign        \xDBA7  1456                 # �
+sign        \xDBA8  1456                 # �
+sign        \xDBA9  1456                 # �
+sign        \xDBAA  1456                 # �
+sign        \xDBAB  1456                 # �
+sign        \xDBAC  1456                 # �
+sign        \xDBAD  1456                 # �
+sign        \xDBAE  1456                 # �
+sign        \xDBAF  1456                 # �
+sign        \xDBB0  1456                 # �
+sign        \xDBB1  1456                 # �
+sign        \xDBB2  1456                 # �
+sign        \xDBB3  1456                 # �
+sign        \xDBB4  1456                 # �
+sign        \xDBB5  1456                 # �
+sign        \xDBB6  1456                 # �
+sign        \xDBB7  1456                 # �
+sign        \xDBB8  1456                 # �
+sign        \xDBB9  1456                 # �
+sign        \xDBBA  1456                 # �
+sign        \xDBBB  1456                 # �
+sign        \xDBBC  1456                 # �
+sign        \xDBBD  1456                 # �
+sign        \xDBBE  1456                 # �
+sign        \xDBBF  1456                 # �
+sign        \xDBC0  1456                 # �
+sign        \xDBC1  1456                 # �
+sign        \xDBC2  1456                 # �
+sign        \xDBC3  1456                 # �
+sign        \xDBC4  1456                 # �
+sign        \xDBC5  1456                 # �
+sign        \xDBC6  1456                 # �
+sign        \xDBC7  1456                 # �
+sign        \xDBC8  1456                 # �
+sign        \xDBC9  1456                 # �
+sign        \xDBCA  1456                 # �
+sign        \xDBCB  1456                 # �
+sign        \xDBCC  1456                 # �
+sign        \xDBCD  1456                 # �
+sign        \xDBCE  1456                 # �
+sign        \xDBCF  1456                 # �
+sign        \xDBD0  1456                 # �
+sign        \xDBD1  1456                 # �
+sign        \xDBD2  1456                 # �
+sign        \xDBD3  1456                 # �
+sign        \xDBD4  1456                 # �
+sign        \xDBD5  1456                 # �
+sign        \xDBD6  1456                 # �
+sign        \xDBD7  1456                 # �
+sign        \xDBD8  1456                 # �
+sign        \xDBD9  1456                 # �
+sign        \xDBDA  1456                 # �
+sign        \xDBDB  1456                 # �
+sign        \xDBDC  1456                 # �
+sign        \xDBDD  1456                 # �
+sign        \xDBDE  1456                 # �
+sign        \xDBDF  1456                 # �
+sign        \xDBE0  1456                 # �
+sign        \xDBE1  1456                 # �
+sign        \xDBE2  1456                 # �
+sign        \xDBE3  1456                 # �
+sign        \xDBE4  1456                 # �
+sign        \xDBE5  1456                 # �
+sign        \xDBE6  1456                 # �
+sign        \xDBE7  1456                 # �
+sign        \xDBE8  1456                 # �
+sign        \xDBE9  1456                 # �
+sign        \xDBEA  1456                 # �
+sign        \xDBEB  1456                 # �
+sign        \xDBEC  1456                 # �
+sign        \xDBED  1456                 # �
+sign        \xDBEE  1456                 # �
+sign        \xDBEF  1456                 # �
+sign        \xDBF0  1456                 # �
+sign        \xDBF1  1456                 # �
+sign        \xDBF2  1456                 # �
+sign        \xDBF3  1456                 # �
+sign        \xDBF4  1456                 # �
+sign        \xDBF5  1456                 # �
+sign        \xDBF6  1456                 # �
+sign        \xDBF7  1456                 # �
+sign        \xDBF8  1456                 # �
+sign        \xDBF9  1456                 # �
+sign        \xDBFA  1456                 # �
+sign        \xDBFB  1456                 # �
+sign        \xDBFC  1456                 # �
+sign        \xDBFD  1456                 # �
+sign        \xDBFE  1456                 # �
+sign        \xDBFF  1456                 # �
+
+
+# ----------------------------------------------------------------------------------------------
+

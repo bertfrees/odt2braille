@@ -1,0 +1,17 @@
+#**** Braille Indicators
+numsign 3456
+capsign 6
+begcaps 6-6
+
+midnum * 35
+always \\ 3456-1256
+always _ 456
+always | 3456-123
+always ~ 56-26
+always # 56-3456
+always $ 3456-1246
+always & 3456-12346
+always @ 3456-12456
+always % 3456-1234
+
+

@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0C00..0C7F  Telugu
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0C00  1456                 # ఀ
+sign        \x0C01  1456                 # ఁ
+sign        \x0C02  1456                 # ం
+sign        \x0C03  1456                 # ః
+sign        \x0C04  1456                 # ఄ
+sign        \x0C05  1456                 # అ
+sign        \x0C06  1456                 # ఆ
+sign        \x0C07  1456                 # ఇ
+sign        \x0C08  1456                 # ఈ
+sign        \x0C09  1456                 # ఉ
+sign        \x0C0A  1456                 # ఊ
+sign        \x0C0B  1456                 # ఋ
+sign        \x0C0C  1456                 # ఌ
+sign        \x0C0D  1456                 # ఍
+sign        \x0C0E  1456                 # ఎ
+sign        \x0C0F  1456                 # ఏ
+sign        \x0C10  1456                 # ఐ
+sign        \x0C11  1456                 # ఑
+sign        \x0C12  1456                 # ఒ
+sign        \x0C13  1456                 # ఓ
+sign        \x0C14  1456                 # ఔ
+sign        \x0C15  1456                 # క
+sign        \x0C16  1456                 # ఖ
+sign        \x0C17  1456                 # గ
+sign        \x0C18  1456                 # ఘ
+sign        \x0C19  1456                 # ఙ
+sign        \x0C1A  1456                 # చ
+sign        \x0C1B  1456                 # ఛ
+sign        \x0C1C  1456                 # జ
+sign        \x0C1D  1456                 # ఝ
+sign        \x0C1E  1456                 # ఞ
+sign        \x0C1F  1456                 # ట
+sign        \x0C20  1456                 # ఠ
+sign        \x0C21  1456                 # డ
+sign        \x0C22  1456                 # ఢ
+sign        \x0C23  1456                 # ణ
+sign        \x0C24  1456                 # త
+sign        \x0C25  1456                 # థ
+sign        \x0C26  1456                 # ద
+sign        \x0C27  1456                 # ధ
+sign        \x0C28  1456                 # న
+sign        \x0C29  1456                 # ఩
+sign        \x0C2A  1456                 # ప
+sign        \x0C2B  1456                 # ఫ
+sign        \x0C2C  1456                 # బ
+sign        \x0C2D  1456                 # భ
+sign        \x0C2E  1456                 # మ
+sign        \x0C2F  1456                 # య
+sign        \x0C30  1456                 # ర
+sign        \x0C31  1456                 # ఱ
+sign        \x0C32  1456                 # ల
+sign        \x0C33  1456                 # ళ
+sign        \x0C34  1456                 # ఴ
+sign        \x0C35  1456                 # వ
+sign        \x0C36  1456                 # శ
+sign        \x0C37  1456                 # ష
+sign        \x0C38  1456                 # స
+sign        \x0C39  1456                 # హ
+sign        \x0C3A  1456                 # ఺
+sign        \x0C3B  1456                 # ఻
+sign        \x0C3C  1456                 # ఼
+sign        \x0C3D  1456                 # ఽ
+sign        \x0C3E  1456                 # ా
+sign        \x0C3F  1456                 # ి
+sign        \x0C40  1456                 # ీ
+sign        \x0C41  1456                 # ు
+sign        \x0C42  1456                 # ూ
+sign        \x0C43  1456                 # ృ
+sign        \x0C44  1456                 # ౄ
+sign        \x0C45  1456                 # ౅
+sign        \x0C46  1456                 # ె
+sign        \x0C47  1456                 # ే
+sign        \x0C48  1456                 # ై
+sign        \x0C49  1456                 # ౉
+sign        \x0C4A  1456                 # ొ
+sign        \x0C4B  1456                 # ో
+sign        \x0C4C  1456                 # ౌ
+sign        \x0C4D  1456                 # ్
+sign        \x0C4E  1456                 # ౎
+sign        \x0C4F  1456                 # ౏
+sign        \x0C50  1456                 # ౐
+sign        \x0C51  1456                 # ౑
+sign        \x0C52  1456                 # ౒
+sign        \x0C53  1456                 # ౓
+sign        \x0C54  1456                 # ౔
+sign        \x0C55  1456                 # ౕ
+sign        \x0C56  1456                 # ౖ
+sign        \x0C57  1456                 # ౗
+sign        \x0C58  1456                 # ౘ
+sign        \x0C59  1456                 # ౙ
+sign        \x0C5A  1456                 # ౚ
+sign        \x0C5B  1456                 # ౛
+sign        \x0C5C  1456                 # ౜
+sign        \x0C5D  1456                 # ౝ
+sign        \x0C5E  1456                 # ౞
+sign        \x0C5F  1456                 # ౟
+sign        \x0C60  1456                 # ౠ
+sign        \x0C61  1456                 # ౡ
+sign        \x0C62  1456                 # ౢ
+sign        \x0C63  1456                 # ౣ
+sign        \x0C64  1456                 # ౤
+sign        \x0C65  1456                 # ౥
+sign        \x0C66  1456                 # ౦
+sign        \x0C67  1456                 # ౧
+sign        \x0C68  1456                 # ౨
+sign        \x0C69  1456                 # ౩
+sign        \x0C6A  1456                 # ౪
+sign        \x0C6B  1456                 # ౫
+sign        \x0C6C  1456                 # ౬
+sign        \x0C6D  1456                 # ౭
+sign        \x0C6E  1456                 # ౮
+sign        \x0C6F  1456                 # ౯
+sign        \x0C70  1456                 # ౰
+sign        \x0C71  1456                 # ౱
+sign        \x0C72  1456                 # ౲
+sign        \x0C73  1456                 # ౳
+sign        \x0C74  1456                 # ౴
+sign        \x0C75  1456                 # ౵
+sign        \x0C76  1456                 # ౶
+sign        \x0C77  1456                 # ౷
+sign        \x0C78  1456                 # ౸
+sign        \x0C79  1456                 # ౹
+sign        \x0C7A  1456                 # ౺
+sign        \x0C7B  1456                 # ౻
+sign        \x0C7C  1456                 # ౼
+sign        \x0C7D  1456                 # ౽
+sign        \x0C7E  1456                 # ౾
+sign        \x0C7F  1456                 # ౿
+
+
+# ----------------------------------------------------------------------------------------------
+

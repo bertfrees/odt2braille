@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2980..29FF  Miscellaneous Mathematical Symbols-B
+# ----------------------------------------------------------------------------------------------
+
+sign        \x2980  1456                 # ⦀
+sign        \x2981  1456                 # ⦁
+sign        \x2982  1456                 # ⦂
+sign        \x2983  1456                 # ⦃
+sign        \x2984  1456                 # ⦄
+sign        \x2985  1456                 # ⦅
+sign        \x2986  1456                 # ⦆
+sign        \x2987  1456                 # ⦇
+sign        \x2988  1456                 # ⦈
+sign        \x2989  1456                 # ⦉
+sign        \x298A  1456                 # ⦊
+sign        \x298B  1456                 # ⦋
+sign        \x298C  1456                 # ⦌
+sign        \x298D  1456                 # ⦍
+sign        \x298E  1456                 # ⦎
+sign        \x298F  1456                 # ⦏
+sign        \x2990  1456                 # ⦐
+sign        \x2991  1456                 # ⦑
+sign        \x2992  1456                 # ⦒
+sign        \x2993  1456                 # ⦓
+sign        \x2994  1456                 # ⦔
+sign        \x2995  1456                 # ⦕
+sign        \x2996  1456                 # ⦖
+sign        \x2997  1456                 # ⦗
+sign        \x2998  1456                 # ⦘
+sign        \x2999  1456                 # ⦙
+sign        \x299A  1456                 # ⦚
+sign        \x299B  1456                 # ⦛
+sign        \x299C  1456                 # ⦜
+sign        \x299D  1456                 # ⦝
+sign        \x299E  1456                 # ⦞
+sign        \x299F  1456                 # ⦟
+sign        \x29A0  1456                 # ⦠
+sign        \x29A1  1456                 # ⦡
+sign        \x29A2  1456                 # ⦢
+sign        \x29A3  1456                 # ⦣
+sign        \x29A4  1456                 # ⦤
+sign        \x29A5  1456                 # ⦥
+sign        \x29A6  1456                 # ⦦
+sign        \x29A7  1456                 # ⦧
+sign        \x29A8  1456                 # ⦨
+sign        \x29A9  1456                 # ⦩
+sign        \x29AA  1456                 # ⦪
+sign        \x29AB  1456                 # ⦫
+sign        \x29AC  1456                 # ⦬
+sign        \x29AD  1456                 # ⦭
+sign        \x29AE  1456                 # ⦮
+sign        \x29AF  1456                 # ⦯
+sign        \x29B0  1456                 # ⦰
+sign        \x29B1  1456                 # ⦱
+sign        \x29B2  1456                 # ⦲
+sign        \x29B3  1456                 # ⦳
+sign        \x29B4  1456                 # ⦴
+sign        \x29B5  1456                 # ⦵
+sign        \x29B6  1456                 # ⦶
+sign        \x29B7  1456                 # ⦷
+sign        \x29B8  1456                 # ⦸
+sign        \x29B9  1456                 # ⦹
+sign        \x29BA  1456                 # ⦺
+sign        \x29BB  1456                 # ⦻
+sign        \x29BC  1456                 # ⦼
+sign        \x29BD  1456                 # ⦽
+sign        \x29BE  1456                 # ⦾
+sign        \x29BF  1456                 # ⦿
+sign        \x29C0  1456                 # ⧀
+sign        \x29C1  1456                 # ⧁
+sign        \x29C2  1456                 # ⧂
+sign        \x29C3  1456                 # ⧃
+sign        \x29C4  1456                 # ⧄
+sign        \x29C5  1456                 # ⧅
+sign        \x29C6  1456                 # ⧆
+sign        \x29C7  1456                 # ⧇
+sign        \x29C8  1456                 # ⧈
+sign        \x29C9  1456                 # ⧉
+sign        \x29CA  1456                 # ⧊
+sign        \x29CB  1456                 # ⧋
+sign        \x29CC  1456                 # ⧌
+sign        \x29CD  1456                 # ⧍
+sign        \x29CE  1456                 # ⧎
+sign        \x29CF  1456                 # ⧏
+sign        \x29D0  1456                 # ⧐
+sign        \x29D1  1456                 # ⧑
+sign        \x29D2  1456                 # ⧒
+sign        \x29D3  1456                 # ⧓
+sign        \x29D4  1456                 # ⧔
+sign        \x29D5  1456                 # ⧕
+sign        \x29D6  1456                 # ⧖
+sign        \x29D7  1456                 # ⧗
+sign        \x29D8  1456                 # ⧘
+sign        \x29D9  1456                 # ⧙
+sign        \x29DA  1456                 # ⧚
+sign        \x29DB  1456                 # ⧛
+sign        \x29DC  1456                 # ⧜
+sign        \x29DD  1456                 # ⧝
+sign        \x29DE  1456                 # ⧞
+sign        \x29DF  1456                 # ⧟
+sign        \x29E0  1456                 # ⧠
+sign        \x29E1  1456                 # ⧡
+sign        \x29E2  1456                 # ⧢
+sign        \x29E3  1456                 # ⧣
+sign        \x29E4  1456                 # ⧤
+sign        \x29E5  1456                 # ⧥
+sign        \x29E6  1456                 # ⧦
+sign        \x29E7  1456                 # ⧧
+sign        \x29E8  1456                 # ⧨
+sign        \x29E9  1456                 # ⧩
+sign        \x29EA  1456                 # ⧪
+sign        \x29EB  1456                 # ⧫
+sign        \x29EC  1456                 # ⧬
+sign        \x29ED  1456                 # ⧭
+sign        \x29EE  1456                 # ⧮
+sign        \x29EF  1456                 # ⧯
+sign        \x29F0  1456                 # ⧰
+sign        \x29F1  1456                 # ⧱
+sign        \x29F2  1456                 # ⧲
+sign        \x29F3  1456                 # ⧳
+sign        \x29F4  1456                 # ⧴
+sign        \x29F5  1456                 # ⧵
+sign        \x29F6  1456                 # ⧶
+sign        \x29F7  1456                 # ⧷
+sign        \x29F8  1456                 # ⧸
+sign        \x29F9  1456                 # ⧹
+sign        \x29FA  1456                 # ⧺
+sign        \x29FB  1456                 # ⧻
+sign        \x29FC  1456                 # ⧼
+sign        \x29FD  1456                 # ⧽
+sign        \x29FE  1456                 # ⧾
+sign        \x29FF  1456                 # ⧿
+
+
+# ----------------------------------------------------------------------------------------------
+

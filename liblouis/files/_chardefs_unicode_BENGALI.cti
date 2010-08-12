@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0980..09FF  Bengali
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0980  1456                 # ঀ
+sign        \x0981  1456                 # ঁ
+sign        \x0982  1456                 # ং
+sign        \x0983  1456                 # ঃ
+sign        \x0984  1456                 # ঄
+sign        \x0985  1456                 # অ
+sign        \x0986  1456                 # আ
+sign        \x0987  1456                 # ই
+sign        \x0988  1456                 # ঈ
+sign        \x0989  1456                 # উ
+sign        \x098A  1456                 # ঊ
+sign        \x098B  1456                 # ঋ
+sign        \x098C  1456                 # ঌ
+sign        \x098D  1456                 # ঍
+sign        \x098E  1456                 # ঎
+sign        \x098F  1456                 # এ
+sign        \x0990  1456                 # ঐ
+sign        \x0991  1456                 # ঑
+sign        \x0992  1456                 # ঒
+sign        \x0993  1456                 # ও
+sign        \x0994  1456                 # ঔ
+sign        \x0995  1456                 # ক
+sign        \x0996  1456                 # খ
+sign        \x0997  1456                 # গ
+sign        \x0998  1456                 # ঘ
+sign        \x0999  1456                 # ঙ
+sign        \x099A  1456                 # চ
+sign        \x099B  1456                 # ছ
+sign        \x099C  1456                 # জ
+sign        \x099D  1456                 # ঝ
+sign        \x099E  1456                 # ঞ
+sign        \x099F  1456                 # ট
+sign        \x09A0  1456                 # ঠ
+sign        \x09A1  1456                 # ড
+sign        \x09A2  1456                 # ঢ
+sign        \x09A3  1456                 # ণ
+sign        \x09A4  1456                 # ত
+sign        \x09A5  1456                 # থ
+sign        \x09A6  1456                 # দ
+sign        \x09A7  1456                 # ধ
+sign        \x09A8  1456                 # ন
+sign        \x09A9  1456                 # ঩
+sign        \x09AA  1456                 # প
+sign        \x09AB  1456                 # ফ
+sign        \x09AC  1456                 # ব
+sign        \x09AD  1456                 # ভ
+sign        \x09AE  1456                 # ম
+sign        \x09AF  1456                 # য
+sign        \x09B0  1456                 # র
+sign        \x09B1  1456                 # ঱
+sign        \x09B2  1456                 # ল
+sign        \x09B3  1456                 # ঳
+sign        \x09B4  1456                 # ঴
+sign        \x09B5  1456                 # ঵
+sign        \x09B6  1456                 # শ
+sign        \x09B7  1456                 # ষ
+sign        \x09B8  1456                 # স
+sign        \x09B9  1456                 # হ
+sign        \x09BA  1456                 # ঺
+sign        \x09BB  1456                 # ঻
+sign        \x09BC  1456                 # ়
+sign        \x09BD  1456                 # ঽ
+sign        \x09BE  1456                 # া
+sign        \x09BF  1456                 # ি
+sign        \x09C0  1456                 # ী
+sign        \x09C1  1456                 # ু
+sign        \x09C2  1456                 # ূ
+sign        \x09C3  1456                 # ৃ
+sign        \x09C4  1456                 # ৄ
+sign        \x09C5  1456                 # ৅
+sign        \x09C6  1456                 # ৆
+sign        \x09C7  1456                 # ে
+sign        \x09C8  1456                 # ৈ
+sign        \x09C9  1456                 # ৉
+sign        \x09CA  1456                 # ৊
+sign        \x09CB  1456                 # ো
+sign        \x09CC  1456                 # ৌ
+sign        \x09CD  1456                 # ্
+sign        \x09CE  1456                 # ৎ
+sign        \x09CF  1456                 # ৏
+sign        \x09D0  1456                 # ৐
+sign        \x09D1  1456                 # ৑
+sign        \x09D2  1456                 # ৒
+sign        \x09D3  1456                 # ৓
+sign        \x09D4  1456                 # ৔
+sign        \x09D5  1456                 # ৕
+sign        \x09D6  1456                 # ৖
+sign        \x09D7  1456                 # ৗ
+sign        \x09D8  1456                 # ৘
+sign        \x09D9  1456                 # ৙
+sign        \x09DA  1456                 # ৚
+sign        \x09DB  1456                 # ৛
+sign        \x09DC  1456                 # ড়
+sign        \x09DD  1456                 # ঢ়
+sign        \x09DE  1456                 # ৞
+sign        \x09DF  1456                 # য়
+sign        \x09E0  1456                 # ৠ
+sign        \x09E1  1456                 # ৡ
+sign        \x09E2  1456                 # ৢ
+sign        \x09E3  1456                 # ৣ
+sign        \x09E4  1456                 # ৤
+sign        \x09E5  1456                 # ৥
+sign        \x09E6  1456                 # ০
+sign        \x09E7  1456                 # ১
+sign        \x09E8  1456                 # ২
+sign        \x09E9  1456                 # ৩
+sign        \x09EA  1456                 # ৪
+sign        \x09EB  1456                 # ৫
+sign        \x09EC  1456                 # ৬
+sign        \x09ED  1456                 # ৭
+sign        \x09EE  1456                 # ৮
+sign        \x09EF  1456                 # ৯
+sign        \x09F0  1456                 # ৰ
+sign        \x09F1  1456                 # ৱ
+sign        \x09F2  1456                 # ৲
+sign        \x09F3  1456                 # ৳
+sign        \x09F4  1456                 # ৴
+sign        \x09F5  1456                 # ৵
+sign        \x09F6  1456                 # ৶
+sign        \x09F7  1456                 # ৷
+sign        \x09F8  1456                 # ৸
+sign        \x09F9  1456                 # ৹
+sign        \x09FA  1456                 # ৺
+sign        \x09FB  1456                 # ৻
+sign        \x09FC  1456                 # ৼ
+sign        \x09FD  1456                 # ৽
+sign        \x09FE  1456                 # ৾
+sign        \x09FF  1456                 # ৿
+
+
+# ----------------------------------------------------------------------------------------------
+

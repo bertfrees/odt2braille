@@ -1,0 +1,270 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU General Public License as published by
+#  the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU General Public License for more details.
+#
+#  You should have received a copy of the GNU General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+# ----------------------------------------------------------------------------------------------
+
+
+# ----------------------------------------------------------------------------------------------
+# Extract preliminary page range mode (_extractpprangemode.sem)
+#
+#	preliminary &xpath(//dtb:frontmatter) \*@e
+# ----------------------------------------------------------------------------------------------
+
+# General
+
+	namespaces dtb=http://www.daisy.org/z3986/2005/dtbook/,math=http://www.w3.org/1998/Math/MathML
+	document dtbook
+	skip head
+	no book
+	no rearmatter
+	generic a
+	no bodymatter
+	preliminary frontmatter
+	skip flag
+	
+# Volumes
+
+	generic div,class,volume \*@e
+	newPageBefore &xpath(//dtb:div[@class='volume'][position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*@e
+	
+# Special Typefaces
+# Languages
+
+	boldx       strong
+	italicx     em
+	generic     span,class,unspaced
+	no          span,class,spaced
+	changetable span,lang
+	
+# Softreturns
+# Blank lines
+
+	newline	   br
+	softreturn &xpath(//dtb:span/dtb:br)
+	softreturn &xpath(//dtb:p/dtb:br)
+	
+# Page numbers
+# Hard page breaks
+
+    pagenum       pagenum
+	skip          &xpath(//dtb:book/dtb:frontmatter  //dtb:pagenum)
+	
+	newPageAfter  pagebreak
+	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume' or @class='titlepage']])
+	skip          &xpath(//dtb:pagebreak[not(preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])])])
+	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'])])])
+	
+# Title pages
+# Notesections
+# Bibliographies
+# Special symbols lists
+# Transcriber's notes pages
+# Table of contents
+
+    no 					   div,class,titlepage
+    no 					   div,class,notesection
+    no 					   div,class,bibliography
+    no			 		   div,class,special-symbols-list
+    no					   div,class,tn-page
+    no                     div,class,toc
+	
+    skip 				   &xpath(//dtb:div[@class='notesection'          and not(child::dtb:note)])
+    skip 				   &xpath(//dtb:div[@class='tn-page'              and not(child::dtb:note)])
+    skip 				   &xpath(//dtb:div[@class='special-symbols-list' and not(descendant::dtb:li)])
+
+    newPageBeforeAndAfter  &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
+    newPageBefore          &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
+    newPageAfter           &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
+
+# Paragraphs
+
+	para p
+	centeredblock &xpath(//dtb:div[@class='titlepage']/dtb:p)
+	no &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/dtb:p)
+	
+# Headings
+
+	heading1container  &xpath(//dtb:div[@class='heading' and child::dtb:h1])
+	heading2container  &xpath(//dtb:div[@class='heading' and child::dtb:h2])
+	heading3container  &xpath(//dtb:div[@class='heading' and child::dtb:h3])
+	heading4container  &xpath(//dtb:div[@class='heading' and (child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10)])
+
+	heading1 h1
+	heading2 h2
+	heading3 h3
+	heading4 h4
+	heading4 h5
+	heading4 h6
+	heading4 h7
+	heading4 h8
+	heading4 h9
+	heading4 h10
+
+	dummyheading1 h1,class,dummy
+	dummyheading2 h2,class,dummy
+	dummyheading3 h3,class,dummy
+	dummyheading4 h4,class,dummy
+	dummyheading4 h5,class,dummy
+	dummyheading4 h6,class,dummy
+	dummyheading4 h7,class,dummy
+	dummyheading4 h8,class,dummy
+	dummyheading4 h9,class,dummy
+	dummyheading4 h10,class,dummy
+
+	contentsheader  &xpath(//dtb:div[@class='toc']/dtb:h1)
+	centeredblock   &xpath(//dtb:div[@class='titlepage']/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+
+# Captions
+
+	captionContainer div,class,caption
+	caption caption
+	generic &xpath(//dtb:div[@class='tn']//dtb:caption)
+
+# Lists
+	
+	skip       list,class,toc
+
+	list1      &xpath(//*[not(self::dtb:li)]/dtb:list)
+	list2      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list                                                                                                                                 [position()<last()])
+	list3      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                                 [position()<last()])
+	list4      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                 [position()<last()])
+	list5      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                 [position()<last()])
+	list6      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                 [position()<last()])
+	list7      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                 [position()<last()])
+	list8      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                 [position()<last()])
+	list9      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                 [position()<last()])
+	list10     &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list [position()<last()])
+	
+	lastlist2  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list                                                                                                                                 [position()=last()])
+	lastlist3  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                                 [position()=last()])
+	lastlist4  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                 [position()=last()])
+	lastlist5  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                 [position()=last()])
+	lastlist6  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                 [position()=last()])
+	lastlist7  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                 [position()=last()])
+	lastlist8  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                 [position()=last()])
+	lastlist9  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                 [position()=last()])
+	lastlist10 &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list [position()=last()])
+	
+	li1        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li                                                                                                                                                 [position()<last()])
+	li2        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li                                                                                                                                 [position()<last()])
+	li3        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                                                                                                 [position()<last()])
+	li4        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                                                                                 [position()<last()])
+	li5        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                                                                 [position()<last()])
+	li6        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                                                 [position()<last()])
+	li7        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                                 [position()<last()])
+	li8        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                                 [position()<last()])
+	li9        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                 [position()<last()])
+	li10       &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li [position()<last()])
+	
+	listitem1  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/                                                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem2  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem3  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem4  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem5  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem6  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem7  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem8  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem9  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem10 &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/ *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+
+	
+# Tables
+	
+	no table
+	tablenoborder table,border,none
+	no thead
+	no tbody
+    tablerow tr
+    lasttablerow  &xpath(//dtb:tr[position()=last()])
+    generic td
+    generic th
+
+# ----------------------------------------------------------------------------------------------
+# Stairstep table (_stairsteptable.sem)
+#
+#	tablecolumn1  &xpath(//dtb:tr/dtb:td[1])
+#	tablecolumn2  &xpath(//dtb:tr/dtb:td[2])
+#	tablecolumn3  &xpath(//dtb:tr/dtb:td[3])
+#	tablecolumn4  &xpath(//dtb:tr/dtb:td[4])
+#	tablecolumn5  &xpath(//dtb:tr/dtb:td[5])
+#	tablecolumn6  &xpath(//dtb:tr/dtb:td[6])
+#	tablecolumn7  &xpath(//dtb:tr/dtb:td[7])
+#	tablecolumn8  &xpath(//dtb:tr/dtb:td[8])
+#	tablecolumn9  &xpath(//dtb:tr/dtb:td[9])
+#	tablecolumn10 &xpath(//dtb:tr/dtb:td[position()>9])
+#	tablecolumn1  &xpath(//dtb:tr/dtb:th[1])
+#	tablecolumn2  &xpath(//dtb:tr/dtb:th[2])
+#	tablecolumn3  &xpath(//dtb:tr/dtb:th[3])
+#	tablecolumn4  &xpath(//dtb:tr/dtb:th[4])
+#	tablecolumn5  &xpath(//dtb:tr/dtb:th[5])
+#	tablecolumn6  &xpath(//dtb:tr/dtb:th[6])
+#	tablecolumn7  &xpath(//dtb:tr/dtb:th[7])
+#	tablecolumn8  &xpath(//dtb:tr/dtb:th[8])
+#	tablecolumn9  &xpath(//dtb:tr/dtb:th[9])
+#	tablecolumn10 &xpath(//dtb:tr/dtb:th[position()>9])
+#
+# ----------------------------------------------------------------------------------------------
+
+# Textboxes
+	
+	no div,class,frame
+	textboxnoborder &xpath(//dtb:div[@class='frame' and @border='none'])
+	
+# Images
+	
+	no div,class,image
+	
+# Horizontal rules
+
+	boxline &xpath(//*[not(self::dtb:div[@class='frame'])]/dtb:hr[following-sibling::*[1][self::dtb:table[not(@border='none')]]]) 7
+	boxline &xpath(//*[not(self::dtb:div[@class='frame'])]/dtb:hr[preceding-sibling::*[1][self::dtb:table[not(@border='none')]]]) g
+	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:table[not(@border='none')]]]) =
+	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:table[not(@border='none')]]]) =
+	boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:thead]]) 3
+	
+	boxline &xpath(//dtb:hr[following-sibling::*[1][self::dtb:div[@class='frame' and not(@border='none')]]]) 7
+	boxline &xpath(//dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='frame' and not(@border='none')]]]) g
+
+# Transcriber's notes
+	
+	no    div,class,tn
+	skip  &xpath(//dtb:div[@class='tn' and not(child::dtb:note)])
+	
+# Note references
+# Notes
+
+	no       noteref \s\x2814\x2814,\*\s
+	no       &xpath(//dtb:note/dtb:noteref) \x2814\x2814,\*\s
+
+	footnote note,class,footnote
+	endnote  note,class,endnote
+	para     &xpath(//dtb:div[@class='tn-page']/dtb:note)
+	trnote   &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
+	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
+	
+# Footers
+# Running headers
+	
+# Other
+
+	no div,class,omission
+	no div,class,transposition
+	no div,class,notInVolume
+
+# ----------------------------------------------------------------------------------------------

@@ -1,0 +1,61 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 20A0..20CF  Currency Symbols
+# ----------------------------------------------------------------------------------------------
+
+sign        \x20A0        1456                ₠                   EURO-CURRENCY SIGN
+sign        \x20A1        1456                ₡                   COLON SIGN
+sign        \x20A2        1456                ₢                   CRUZEIRO SIGN
+sign        \x20A3        1456                ₣                   FRENCH FRANC SIGN
+sign        \x20A4        1456                ₤                   LIRA SIGN
+sign        \x20A5        1456                ₥                   MILL SIGN
+sign        \x20A6        1456                ₦                   NAIRA SIGN
+sign        \x20A7        1456                ₧                   PESETA SIGN
+sign        \x20A8        1456                ₨                   RUPEE SIGN
+sign        \x20A9        1456                ₩                   WON SIGN
+sign        \x20AA        1456                ₪                   NEW SHEQEL SIGN
+sign        \x20AB        1456                ₫                   DONG SIGN
+sign        \x20AC        1456                €                   EURO SIGN
+sign        \x20AD        1456                ₭                   KIP SIGN
+sign        \x20AE        1456                ₮                   TUGRIK SIGN
+sign        \x20AF        1456                ₯                   DRACHMA SIGN
+sign        \x20B0        1456                ₰                   GERMAN PENNY SIGN
+sign        \x20B1        1456                ₱                   PESO SIGN
+sign        \x20B2        1456                ₲                   GUARANI SIGN
+sign        \x20B3        1456                ₳                   AUSTRAL SIGN
+sign        \x20B4        1456                ₴                   HRYVNIA SIGN
+sign        \x20B5        1456                ₵                   CEDI SIGN
+sign        \x20B6        1456                ₶                   LIVRE TOURNOIS SIGN
+sign        \x20B7        1456                ₷                   SPESMILO SIGN
+sign        \x20B8        1456                ₸                   TENGE SIGN
+sign        \x20B9        1456                ₹
+sign        \x20BA        1456                ₺
+sign        \x20BB        1456                ₻
+sign        \x20BC        1456                ₼
+sign        \x20BD        1456                ₽
+sign        \x20BE        1456                ₾
+sign        \x20BF        1456                ₿
+sign        \x20C0        1456                ⃀
+sign        \x20C1        1456                ⃁
+sign        \x20C2        1456                ⃂
+sign        \x20C3        1456                ⃃
+sign        \x20C4        1456                ⃄
+sign        \x20C5        1456                ⃅
+sign        \x20C6        1456                ⃆
+sign        \x20C7        1456                ⃇
+sign        \x20C8        1456                ⃈
+sign        \x20C9        1456                ⃉
+sign        \x20CA        1456                ⃊
+sign        \x20CB        1456                ⃋
+sign        \x20CC        1456                ⃌
+sign        \x20CD        1456                ⃍
+sign        \x20CE        1456                ⃎
+sign        \x20CF        1456                ⃏
+
+
+# ----------------------------------------------------------------------------------------------
+

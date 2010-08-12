@@ -1,0 +1,27 @@
+prepunc " 236
+postpunc " 356
+
+capsign 46
+begcaps 45
+
+numsign 3456
+midnum , 2
+midnum . 3
+midnum + 235
+midnum - 36
+midnum / 256
+midnum : 25
+midnum = 2356
+
+endnum # 56-3456
+
+repeated \s 0
+repeated \t 0
+repeated \x00a0 0
+
+repeated ... 3-3-3
+repeated --- 36-36-36
+repeated ___ 456-456-456
+
+always \s--\s 36-36	tiret
+

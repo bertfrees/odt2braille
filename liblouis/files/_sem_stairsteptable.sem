@@ -1,0 +1,27 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+	tablecolumn1  &xpath(//dtb:tr/dtb:td[1])
+	tablecolumn2  &xpath(//dtb:tr/dtb:td[2])
+	tablecolumn3  &xpath(//dtb:tr/dtb:td[3])
+	tablecolumn4  &xpath(//dtb:tr/dtb:td[4])
+	tablecolumn5  &xpath(//dtb:tr/dtb:td[5])
+	tablecolumn6  &xpath(//dtb:tr/dtb:td[6])
+	tablecolumn7  &xpath(//dtb:tr/dtb:td[7])
+	tablecolumn8  &xpath(//dtb:tr/dtb:td[8])
+	tablecolumn9  &xpath(//dtb:tr/dtb:td[9])
+	tablecolumn10 &xpath(//dtb:tr/dtb:td[position()>9])
+	tablecolumn1  &xpath(//dtb:tr/dtb:th[1])
+	tablecolumn2  &xpath(//dtb:tr/dtb:th[2])
+	tablecolumn3  &xpath(//dtb:tr/dtb:th[3])
+	tablecolumn4  &xpath(//dtb:tr/dtb:th[4])
+	tablecolumn5  &xpath(//dtb:tr/dtb:th[5])
+	tablecolumn6  &xpath(//dtb:tr/dtb:th[6])
+	tablecolumn7  &xpath(//dtb:tr/dtb:th[7])
+	tablecolumn8  &xpath(//dtb:tr/dtb:th[8])
+	tablecolumn9  &xpath(//dtb:tr/dtb:th[9])
+	tablecolumn10 &xpath(//dtb:tr/dtb:th[position()>9])
+	
+# ----------------------------------------------------------------------------------------------

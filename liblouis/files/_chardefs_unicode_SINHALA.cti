@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0D80..0DFF  Sinhala
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0D80  1456                 # ඀
+sign        \x0D81  1456                 # ඁ
+sign        \x0D82  1456                 # ං
+sign        \x0D83  1456                 # ඃ
+sign        \x0D84  1456                 # ඄
+sign        \x0D85  1456                 # අ
+sign        \x0D86  1456                 # ආ
+sign        \x0D87  1456                 # ඇ
+sign        \x0D88  1456                 # ඈ
+sign        \x0D89  1456                 # ඉ
+sign        \x0D8A  1456                 # ඊ
+sign        \x0D8B  1456                 # උ
+sign        \x0D8C  1456                 # ඌ
+sign        \x0D8D  1456                 # ඍ
+sign        \x0D8E  1456                 # ඎ
+sign        \x0D8F  1456                 # ඏ
+sign        \x0D90  1456                 # ඐ
+sign        \x0D91  1456                 # එ
+sign        \x0D92  1456                 # ඒ
+sign        \x0D93  1456                 # ඓ
+sign        \x0D94  1456                 # ඔ
+sign        \x0D95  1456                 # ඕ
+sign        \x0D96  1456                 # ඖ
+sign        \x0D97  1456                 # ඗
+sign        \x0D98  1456                 # ඘
+sign        \x0D99  1456                 # ඙
+sign        \x0D9A  1456                 # ක
+sign        \x0D9B  1456                 # ඛ
+sign        \x0D9C  1456                 # ග
+sign        \x0D9D  1456                 # ඝ
+sign        \x0D9E  1456                 # ඞ
+sign        \x0D9F  1456                 # ඟ
+sign        \x0DA0  1456                 # ච
+sign        \x0DA1  1456                 # ඡ
+sign        \x0DA2  1456                 # ජ
+sign        \x0DA3  1456                 # ඣ
+sign        \x0DA4  1456                 # ඤ
+sign        \x0DA5  1456                 # ඥ
+sign        \x0DA6  1456                 # ඦ
+sign        \x0DA7  1456                 # ට
+sign        \x0DA8  1456                 # ඨ
+sign        \x0DA9  1456                 # ඩ
+sign        \x0DAA  1456                 # ඪ
+sign        \x0DAB  1456                 # ණ
+sign        \x0DAC  1456                 # ඬ
+sign        \x0DAD  1456                 # ත
+sign        \x0DAE  1456                 # ථ
+sign        \x0DAF  1456                 # ද
+sign        \x0DB0  1456                 # ධ
+sign        \x0DB1  1456                 # න
+sign        \x0DB2  1456                 # ඲
+sign        \x0DB3  1456                 # ඳ
+sign        \x0DB4  1456                 # ප
+sign        \x0DB5  1456                 # ඵ
+sign        \x0DB6  1456                 # බ
+sign        \x0DB7  1456                 # භ
+sign        \x0DB8  1456                 # ම
+sign        \x0DB9  1456                 # ඹ
+sign        \x0DBA  1456                 # ය
+sign        \x0DBB  1456                 # ර
+sign        \x0DBC  1456                 # ඼
+sign        \x0DBD  1456                 # ල
+sign        \x0DBE  1456                 # ඾
+sign        \x0DBF  1456                 # ඿
+sign        \x0DC0  1456                 # ව
+sign        \x0DC1  1456                 # ශ
+sign        \x0DC2  1456                 # ෂ
+sign        \x0DC3  1456                 # ස
+sign        \x0DC4  1456                 # හ
+sign        \x0DC5  1456                 # ළ
+sign        \x0DC6  1456                 # ෆ
+sign        \x0DC7  1456                 # ෇
+sign        \x0DC8  1456                 # ෈
+sign        \x0DC9  1456                 # ෉
+sign        \x0DCA  1456                 # ්
+sign        \x0DCB  1456                 # ෋
+sign        \x0DCC  1456                 # ෌
+sign        \x0DCD  1456                 # ෍
+sign        \x0DCE  1456                 # ෎
+sign        \x0DCF  1456                 # ා
+sign        \x0DD0  1456                 # ැ
+sign        \x0DD1  1456                 # ෑ
+sign        \x0DD2  1456                 # ි
+sign        \x0DD3  1456                 # ී
+sign        \x0DD4  1456                 # ු
+sign        \x0DD5  1456                 # ෕
+sign        \x0DD6  1456                 # ූ
+sign        \x0DD7  1456                 # ෗
+sign        \x0DD8  1456                 # ෘ
+sign        \x0DD9  1456                 # ෙ
+sign        \x0DDA  1456                 # ේ
+sign        \x0DDB  1456                 # ෛ
+sign        \x0DDC  1456                 # ො
+sign        \x0DDD  1456                 # ෝ
+sign        \x0DDE  1456                 # ෞ
+sign        \x0DDF  1456                 # ෟ
+sign        \x0DE0  1456                 # ෠
+sign        \x0DE1  1456                 # ෡
+sign        \x0DE2  1456                 # ෢
+sign        \x0DE3  1456                 # ෣
+sign        \x0DE4  1456                 # ෤
+sign        \x0DE5  1456                 # ෥
+sign        \x0DE6  1456                 # ෦
+sign        \x0DE7  1456                 # ෧
+sign        \x0DE8  1456                 # ෨
+sign        \x0DE9  1456                 # ෩
+sign        \x0DEA  1456                 # ෪
+sign        \x0DEB  1456                 # ෫
+sign        \x0DEC  1456                 # ෬
+sign        \x0DED  1456                 # ෭
+sign        \x0DEE  1456                 # ෮
+sign        \x0DEF  1456                 # ෯
+sign        \x0DF0  1456                 # ෰
+sign        \x0DF1  1456                 # ෱
+sign        \x0DF2  1456                 # ෲ
+sign        \x0DF3  1456                 # ෳ
+sign        \x0DF4  1456                 # ෴
+sign        \x0DF5  1456                 # ෵
+sign        \x0DF6  1456                 # ෶
+sign        \x0DF7  1456                 # ෷
+sign        \x0DF8  1456                 # ෸
+sign        \x0DF9  1456                 # ෹
+sign        \x0DFA  1456                 # ෺
+sign        \x0DFB  1456                 # ෻
+sign        \x0DFC  1456                 # ෼
+sign        \x0DFD  1456                 # ෽
+sign        \x0DFE  1456                 # ෾
+sign        \x0DFF  1456                 # ෿
+
+
+# ----------------------------------------------------------------------------------------------
+
