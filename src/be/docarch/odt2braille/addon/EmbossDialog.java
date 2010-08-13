@@ -34,13 +34,6 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XFixedText;
-//import com.sun.star.beans.XPropertyContainer;
-//import com.sun.star.beans.XPropertySetInfo;
-
-//import com.sun.star.beans.UnknownPropertyException;
-//import com.sun.star.beans.PropertyVetoException;
-//import com.sun.star.lang.IllegalArgumentException;
-//import com.sun.star.lang.WrappedTargetException;
 
 import java.util.logging.Logger;
 import javax.print.DocFlavor;
@@ -92,7 +85,7 @@ public class EmbossDialog {
         logger.entering("EmbossDialog", "<init>");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
                                                             + "/dialogs/EmbossDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
 

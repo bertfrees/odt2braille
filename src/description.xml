@@ -6,10 +6,10 @@
     <version value="0.0.1"/>
 	
     <!-- Platform Target -->
-    <platform value="windows_x86" />
-	
+    <platform value="all" />
+    
     <!-- Identifier -->
-    <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86"/>
+    <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn"/>
 	
     <!-- OpenOffice.org Minimal Version -->
     <dependencies>
@@ -33,8 +33,15 @@
 	
     <!-- Description -->
     <extension-description>
-        <src xlink:href="description/desc_en.txt" lang="en" />
-		<src xlink:href="description/desc_nl.txt" lang="nl" />
+        <src xlink:href="description/desc_en.txt"    lang="en" />
+	<src xlink:href="description/desc_nl.txt"    lang="nl" />
+        <src xlink:href="description/desc_ca.txt"    lang="ca" />
+        <src xlink:href="description/desc_de.txt"    lang="de" />
+        <src xlink:href="description/desc_es.txt"    lang="es" />
+        <src xlink:href="description/desc_fr.txt"    lang="fr" />
+        <src xlink:href="description/desc_sl.txt"    lang="sl" />
+        <src xlink:href="description/desc_pt.txt"    lang="pt" />
+        <src xlink:href="description/desc_pt-BR.txt" lang="pt-BR" />
     </extension-description>
 	
     <!-- Extension Dialog Icon -->

@@ -160,7 +160,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
         embossSettings = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn-windows_x86")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
                                                         + "/dialogs/Interpoint55EmbossDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         XMultiComponentFactory xMCF = xContext.getServiceManager();

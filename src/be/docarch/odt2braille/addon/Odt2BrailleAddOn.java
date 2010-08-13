@@ -92,15 +92,15 @@ public final class Odt2BrailleAddOn extends WeakBase
     {
         if ( aURL.Protocol.compareTo("be.docarch.odt2braille.addon.odt2brailleaddon:") == 0 )
         {
-            if ( aURL.Path.compareTo("Command0") == 0 ) {
+            if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
                 return this;
-            } else if (aURL.Path.compareTo("Command1") == 0) {
+            } else if (aURL.Path.compareTo("ExportCommand") == 0) {
                 return this;
-            } else if (aURL.Path.compareTo("Command2") == 0) {
+            } else if (aURL.Path.compareTo("EmbossCommand") == 0) {
                 return this;
-            } else if (aURL.Path.compareTo("Command3") == 0) {
+            } else if (aURL.Path.compareTo("InsertDotPatternCommand") == 0) {
                 return this;
-            } else if (aURL.Path.compareTo("Command4") == 0) {
+            } else if (aURL.Path.compareTo("InsertSixKeysCommand") == 0) {
                 return this;
             }
         }
@@ -141,7 +141,7 @@ public final class Odt2BrailleAddOn extends WeakBase
     {
          if ( aURL.Protocol.compareTo("be.docarch.odt2braille.addon.odt2brailleaddon:") == 0 )
         {
-             if ( aURL.Path.compareTo("Command0") == 0 ) {
+             if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
 
                  UnoGUI unoGui = null;
 
@@ -155,7 +155,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                  return;
              }
              
-             else if ( aURL.Path.compareTo("Command1") == 0 ) {
+             else if ( aURL.Path.compareTo("ExportCommand") == 0 ) {
 
                  UnoGUI unoGui = null;
 
@@ -169,7 +169,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                  return;
              }
 
-             else if ( aURL.Path.compareTo("Command2") == 0 ) {
+             else if ( aURL.Path.compareTo("EmbossCommand") == 0 ) {
 
                  UnoGUI unoGui = null;
 
@@ -183,7 +183,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                  return;
              }
 
-             else if ( aURL.Path.compareTo("Command3") == 0 ) {
+             else if ( aURL.Path.compareTo("InsertDotPatternCommand") == 0 ) {
 
                  UnoGUI unoGui = null;
 
@@ -197,7 +197,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                  return;
              }
 
-             else if ( aURL.Path.compareTo("Command4") == 0 ) {
+             else if ( aURL.Path.compareTo("InsertSixKeysCommand") == 0 ) {
 
                  UnoGUI unoGui = null;
 
