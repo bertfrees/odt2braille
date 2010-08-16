@@ -378,7 +378,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
     private void saveEmbossSettings() throws IOException {
 
         embossSettings.saveSettingsToOpenOffice("emboss.settings", new String[] {"wp55Folder", "iniFile",  "overWriteIni"},
-                                                            new String[] { wp55FolderUrl,iniFileName,overWriteIniFile?"1":"0"});
+                                                                   new String[] { wp55FolderUrl,iniFileName,overWriteIniFile?"1":"0"});
     }
 
     /**

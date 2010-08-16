@@ -34,7 +34,7 @@
     <!-- Description -->
     <extension-description>
         <src xlink:href="description/desc_en.txt"    lang="en" />
-	<src xlink:href="description/desc_nl.txt"    lang="nl" />
+		<src xlink:href="description/desc_nl.txt"    lang="nl" />
         <src xlink:href="description/desc_ca.txt"    lang="ca" />
         <src xlink:href="description/desc_de.txt"    lang="de" />
         <src xlink:href="description/desc_es.txt"    lang="es" />
@@ -42,6 +42,7 @@
         <src xlink:href="description/desc_sl.txt"    lang="sl" />
         <src xlink:href="description/desc_pt.txt"    lang="pt" />
         <src xlink:href="description/desc_pt-BR.txt" lang="pt-BR" />
+		<src xlink:href="description/desc_da.txt"    lang="da" />
     </extension-description>
 	
     <!-- Extension Dialog Icon -->

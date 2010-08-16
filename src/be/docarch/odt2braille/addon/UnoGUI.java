@@ -66,7 +66,7 @@ import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
 import org_pef_text.pef2text.UnsupportedWidthException;
 import org_pef_text.pef2text.EmbosserFactoryException;
-import be.docarch.odt2braille.LiblouisException;
+import be.docarch.odt2braille.LiblouisxmlException;
 
 
 /**
@@ -111,7 +111,7 @@ public class UnoGUI {
     private String odtUrl = null;
     private String odtUnoUrl = null;
     private String flatOdtUrl = null;
-    private String liblouisDirUrl = null;
+    private String liblouisPath = null;
 
     private SettingsIO settingsIO = null;
     private ProgressBar progressBar = null;
@@ -214,15 +214,16 @@ public class UnoGUI {
             odtutil.saveXML(flatOdtUrl);
 
             // Locale
+            Odt2BrailleNamespaceContext namespace = new Odt2BrailleNamespaceContext();
             odtLocale = new Locale(XPathUtils.evaluateString(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:styles/style:default-style/style:text-properties/@fo:language",
-                    new Odt2BrailleNamespaceContext()).toLowerCase());
+                    "/office:document/office:styles/style:default-style/style:text-properties/@fo:language",namespace).toLowerCase(),
+                                   XPathUtils.evaluateString(flatOdtFile.toURL().openStream(),
+                    "/office:document/office:styles/style:default-style/style:text-properties/@fo:country", namespace).toUpperCase());
 
             // Set liblouis directory
-            liblouisDirUrl = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
+            liblouisPath = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
                                 .getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
-                                + "/liblouis/", m_xContext)).getAbsolutePath()
-                                + System.getProperty("file.separator");
+                                + "/liblouis/", m_xContext)).getAbsolutePath();
 
             logger.exiting("UnoGUI", "initialize");
 
@@ -395,7 +396,7 @@ public class UnoGUI {
             pefUrl = pefFile.getAbsolutePath();
 
             // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
+            odt2braille = new Odt2Braille(flatOdtFile, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
             // Translate into braille
             if(!odt2braille.makePEF(pefUrl)) {
@@ -509,7 +510,7 @@ public class UnoGUI {
         } catch (UnsupportedWidthException ex) {
             handleUnexpectedException(ex);
             return false;
-        } catch (LiblouisException ex) {
+        } catch (LiblouisxmlException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (RuntimeException ex) {
@@ -583,7 +584,7 @@ public class UnoGUI {
             pefUrl = pefFile.getAbsolutePath();
 
             // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(flatOdtFile, liblouisDirUrl, changedSettings, progressBar, checker, odtLocale, oooLocale);
+            odt2braille = new Odt2Braille(flatOdtFile, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
             // Translate into braille
             if(!odt2braille.makePEF(pefUrl)) {
@@ -679,7 +680,7 @@ public class UnoGUI {
         } catch (UnsupportedWidthException ex) {
             handleUnexpectedException(ex);
             return false;
-        } catch (LiblouisException ex) {
+        } catch (LiblouisxmlException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (RuntimeException ex) {

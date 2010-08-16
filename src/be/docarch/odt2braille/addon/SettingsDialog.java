@@ -784,6 +784,7 @@ public class SettingsDialog implements XItemListener,
         windowProperties.setPropertyValue("Title",
                 ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("settingsDialogTitle")
                 + "  -  Loading... please wait");
+        windowProperties.setPropertyValue("Step", 100);
         xWindow.setVisible(true);
 
         logger.exiting("SettingsDialog", "startLoading");

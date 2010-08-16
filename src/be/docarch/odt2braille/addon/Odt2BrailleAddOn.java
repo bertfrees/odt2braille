@@ -90,7 +90,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                                                        String sTargetFrameName,
                                                        int iSearchFlags )
     {
-        if ( aURL.Protocol.compareTo("be.docarch.odt2braille.addon.odt2brailleaddon:") == 0 )
+        if ( aURL.Protocol.startsWith("be.docarch.odt2braille.addon.odt2brailleaddon"))
         {
             if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
                 return this;
@@ -139,7 +139,7 @@ public final class Odt2BrailleAddOn extends WeakBase
      public void dispatch( com.sun.star.util.URL aURL,
                            com.sun.star.beans.PropertyValue[] aArguments )
     {
-         if ( aURL.Protocol.compareTo("be.docarch.odt2braille.addon.odt2brailleaddon:") == 0 )
+         if ( aURL.Protocol.startsWith("be.docarch.odt2braille.addon.odt2brailleaddon"))
         {
              if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
 

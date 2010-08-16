@@ -40,14 +40,8 @@ Localization:
 
 
 =============================
-Version ?
+Version 0.0.2
 =============================
-
-Fixed bugs:
-
-
-* Hyperlink bug fix (hyperlinks sometimes not rendered)
-* Other small fixes
 
 
 Added features:
@@ -55,20 +49,34 @@ Added features:
 
 * Document can now contain every unicode character.
 * List of special symbols can be customized.
-* Other small improvements: 
-    - Print page range information on title page.
-* Hyphenation (German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
+* Hyphenation option (supported languages are: German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
 * Export to BRA file format. Choice between old and new Spanish Braille.
 * Preview Window
+* Other small improvements: 
+    - Print page range information on title page.
 
 
-Localization:
+Changes:
+
+
+* Commands in File menu and Insert menu instead of new Braille menu 
+
+
+Fixed bugs:
+
+
+* Hyperlink bug fix (hyperlinks were sometimes not rendered)
+* Bug 3043068: error when trying to install the extension on Windows XP.
+* Other small fixes
+
+
+Localisation:
 
 
 * French
 * Catalan
 * Spanish
-* Portuguese
+* Portuguese (Portugal)
+* Portuguese (Brazil)
 * Slovenian
 * German
-

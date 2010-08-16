@@ -63,7 +63,7 @@
 	skip          &xpath(//dtb:book/dtb:frontmatter  //dtb:pagenum)
 	
 	newPageAfter  pagebreak
-	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume' or @class='titlepage']])
+	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume'] or ancestor::dtb:titlepage])
 	skip          &xpath(//dtb:pagebreak[not(preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])])])
 	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'])])])
 	
@@ -74,25 +74,25 @@
 # Transcriber's notes pages
 # Table of contents
 
-    no 					   div,class,titlepage
-    no 					   div,class,notesection
-    no 					   div,class,bibliography
-    no			 		   div,class,special-symbols-list
-    no					   div,class,tn-page
+    no 					   titlepage
+    no 					   notesection
+    no 					   bibliography
+    no			 		   special-symbols-list
+    no					   tn-page
     no                     div,class,toc
 	
-    skip 				   &xpath(//dtb:div[@class='notesection'          and not(child::dtb:note)])
-    skip 				   &xpath(//dtb:div[@class='tn-page'              and not(child::dtb:note)])
-    skip 				   &xpath(//dtb:div[@class='special-symbols-list' and not(descendant::dtb:li)])
+    skip 				   &xpath(//dtb:notesection         [not(child::dtb:note)])
+    skip 				   &xpath(//dtb:tn-page             [not(child::dtb:note)])
+    skip 				   &xpath(//dtb:special-symbols-list[not(descendant::dtb:li)])
 
-    newPageBeforeAndAfter  &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
-    newPageBefore          &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
-    newPageAfter           &xpath(//dtb:div[@class='titlepage' or @class='bibliography' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or (@class='special-symbols-list' and not(descendant::dtb:li)) or (@class='notesection' and not(child::dtb:note)) or (@class='tn-page' and not(child::dtb:note))])][1][not(self::dtb:pagebreak or self::dtb:div[@class='titlepage' or @class='bibliography' or @class='toc' or (@class='notesection' and child::dtb:note) or (@class='tn-page' and child::dtb:note) or (@class='special-symbols-list' and descendant::dtb:li)])])])     
+    newPageBeforeAndAfter  &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
+    newPageBefore          &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
+    newPageAfter           &xpath(//*[@newpage='yes'][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])     
 
 # Paragraphs
 
 	para p
-	centeredblock &xpath(//dtb:div[@class='titlepage']/dtb:p)
+	centeredblock &xpath(//dtb:titlepage/dtb:p)
 	no &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/dtb:p)
 	
 # Headings
@@ -125,7 +125,7 @@
 	dummyheading4 h10,class,dummy
 
 	contentsheader  &xpath(//dtb:div[@class='toc']/dtb:h1)
-	centeredblock   &xpath(//dtb:div[@class='titlepage']/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	centeredblock   &xpath(//dtb:titlepage/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
 
 # Captions
