@@ -1,26 +1,69 @@
-replace \x0097
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
 
+litdigit 1 1
+litdigit 2 12
+litdigit 3 14
+litdigit 4 145
+litdigit 5 15
+litdigit 6 124
+litdigit 7 1245
+litdigit 8 125
+litdigit 9 24
+litdigit 0 245
+
+# Braille indicator opcodes
+
+numsign 3456
 capsign 46
 begcaps 46-46
 
-numsign 3456
+# Greek isolated lowercase letters
+
+word \x03B1 4-1                 α                   GREEK SMALL LETTER ALPHA
+word \x03B2 4-12                β                   GREEK SMALL LETTER BETA
+word \x03B3 4-1245              γ                   GREEK SMALL LETTER GAMMA
+word \x03B4 4-145               δ                   GREEK SMALL LETTER DELTA
+word \x03B5 4-15                ε                   GREEK SMALL LETTER EPSILON
+word \x03B6 4-1356              ζ                   GREEK SMALL LETTER ZETA
+word \x03B7 4-156               η                   GREEK SMALL LETTER ETA
+word \x03B8 4-1456              θ                   GREEK SMALL LETTER THETA
+word \x03B9 4-24                ι                   GREEK SMALL LETTER IOTA
+word \x03BA 4-13                κ                   GREEK SMALL LETTER KAPPA
+word \x03BB 4-123               λ                   GREEK SMALL LETTER LAMDA
+word \x03BC 4-134               μ                   GREEK SMALL LETTER MU
+word \x03BD 4-1345              ν                   GREEK SMALL LETTER NU
+word \x03BE 4-1346              ξ                   GREEK SMALL LETTER XI
+word \x03BF 4-135               ο                   GREEK SMALL LETTER OMICRON
+word \x03C0 4-1234              π                   GREEK SMALL LETTER PI
+word \x03C1 4-1235              ρ                   GREEK SMALL LETTER RHO
+word \x03C2 4-234               ς                   GREEK SMALL LETTER FINAL SIGMA
+word \x03C3 4-234               σ                   GREEK SMALL LETTER SIGMA
+word \x03C4 4-2345              τ                   GREEK SMALL LETTER TAU
+word \x03C5 4-136               υ                   GREEK SMALL LETTER UPSILON
+word \x03C6 4-124               φ                   GREEK SMALL LETTER PHI
+word \x03C7 4-12346             χ                   GREEK SMALL LETTER CHI
+word \x03C8 4-13456             ψ                   GREEK SMALL LETTER PSI
+word \x03C9 4-2456              ω                   GREEK SMALL LETTER OMEGA
+
+# Translation opcodes
+
 midnum , 2
 midnum . 3
 midnum + 235
 midnum - 36
-midnum / 256
 midnum : 25
 midnum = 2356
 
-endnum # 56-3456
+repeated \s 0
+repeated \t 0
+repeated \x00a0 0
 
-repeated \s 0		espaces
-repeated \t 0		tabulations
-repeated \x00a0 0		espaces ins�cables
-
-repeated ... 3-3-3		points de suite
+repeated ... 3-3-3
 repeated --- 36-36-36
 repeated ___ 6-6-6
+always \s--\s 36-36
 
-always \s--\s 36-36	tiret
-
+# ----------------------------------------------------------------------------------------------

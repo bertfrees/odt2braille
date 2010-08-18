@@ -58,8 +58,9 @@ Added features:
 
 Changes:
 
-
-* Commands in File menu and Insert menu instead of new Braille menu 
+* Spanish and Danish translation tables improved.
+* Catalan translation table added.
+* Braille menu in menu bar replaced with menu items under File menu
 
 
 Fixed bugs:
