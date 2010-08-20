@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="SettingsDialog" dlg:left="214" dlg:top="73" dlg:width="189" dlg:height="114" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="105" dlg:top="94" dlg:width="55" dlg:height="12" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="26" dlg:top="94" dlg:width="55" dlg:height="12" dlg:value="Cancel" dlg:button-type="cancel"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="2" dlg:left="19" dlg:top="12" dlg:width="106" dlg:height="12" dlg:value="Label1"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox1" dlg:tab-index="3" dlg:left="20" dlg:top="26" dlg:width="147" dlg:height="12" dlg:spin="true"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="4" dlg:left="34" dlg:top="67" dlg:width="106" dlg:height="10" dlg:value="Label2"/>
+  <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="20" dlg:top="67" dlg:width="8" dlg:height="8" dlg:checked="false"/>
+  <dlg:button dlg:id="CommandButton3" dlg:tab-index="6" dlg:left="90" dlg:top="46" dlg:width="76" dlg:height="12"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="7" dlg:left="0" dlg:top="85" dlg:width="189" dlg:height="2"/>
+ </dlg:bulletinboard>
+</dlg:window>

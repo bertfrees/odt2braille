@@ -61,8 +61,6 @@ import com.sun.star.beans.XMultiPropertySet;
 import com.sun.star.container.XIndexContainer;
 import com.sun.star.lang.XSingleServiceFactory;
 import com.sun.star.awt.XItemEventBroadcaster;
-import com.sun.star.awt.XTextListener;
-import com.sun.star.awt.TextEvent;
 import com.sun.star.awt.XWindow;
 import com.sun.star.awt.XToolkit;
 import com.sun.star.lang.XMultiComponentFactory;
@@ -71,18 +69,13 @@ import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.SpecialSymbol;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
-import org_pef_text.pef2text.Paper;
-import org_pef_text.pef2text.Paper.PaperSize;
-import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
-import org_pef_text.TableFactory.TableType;
-import be.docarch.odt2braille.GenericFileMaker.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 
 
 /**
  * Show an OpenOffice.org dialog window for adjusting the braille settings.
- * The dialog has 11 tabs:
+ * The dialog has 10 tabs:
  * <ul>
  * <li>General Settings</li>
  * <li>Paragraph Settings</li>
@@ -94,25 +87,19 @@ import be.docarch.odt2braille.Settings.BrailleRules;
  * <li>Table of Contents Settings</li>
  * <li>Special Symbols Settings</li>
  * <li>Mathematics Settings</li>
- * <li>Emboss/Export Settings</li>
  * </ul>
  *
  * @see         be.docarch.odt2braille.Settings
  * @author      Bert Frees
  */
 public class SettingsDialog implements XItemListener,
-                                       XActionListener,
-                                       XTextListener {
+                                       XActionListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
     private Settings settings = null;
     private XComponentContext xContext = null;
     private Locale oooLocale = null;
-
-    public final static short SAVE_SETTINGS = 1;
-    public final static short EXPORT = 2;
-    public final static short EMBOSS = 3;
 
     private final static short GENERAL_PAGE = 1;
     private final static short LANGUAGES_PAGE = 2;
@@ -124,14 +111,12 @@ public class SettingsDialog implements XItemListener,
     private final static short TOC_PAGE = 8;
     private final static short SPECIAL_SYMBOLS_PAGE = 9;
     private final static short MATH_PAGE = 10;
-    private final static short EXPORT_EMBOSS_PAGE = 11;
 
-    private final static short NUMBER_OF_PAGES = 11;
+    private final static short NUMBER_OF_PAGES = 10;
 
-    private boolean[] pagesEnabled = {true,true,true,true,true,true,true,true,true,true,true};
-    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false};
+    private boolean[] pagesEnabled = {true,true,true,true,true,true,true,true,true,true};
+    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false};
     private int currentPage = 1;
-    private short mode;
 
     private int currentHeadingLevel;
     private int currentListLevel;
@@ -143,17 +128,7 @@ public class SettingsDialog implements XItemListener,
     private ArrayList<String> supportedTranslationTables = null;
     private ArrayList<String> languages = null;
     private ArrayList<SpecialSymbol> specialSymbols = null;
-
-    private ArrayList<EmbosserType> embosserTypes = null;
-    private ArrayList<TableType> tableTypes = null;
-    private ArrayList<PaperSize> paperSizes = null;
-    private ArrayList<BrailleFileType> genericBrailleTypes = null;
     private ArrayList<MathType> mathTypes = null;
-
-    private static final int numberOfEmbosserTypes = EmbosserType.values().length;
-    private static final int numberOfTableTypes = TableType.values().length;
-    private static final int numberOfPaperSizes = PaperSize.values().length;
-    private static final int numberOfGenericBrailleTypes = BrailleFileType.values().length;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -171,7 +146,6 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet windowProperties = null;
     private XPropertySet roadmapProperties = null;
-    private XPropertySet okButtonProperties = null;
     private XPropertySet backButtonProperties = null;
     private XPropertySet nextButtonProperties = null;
 
@@ -185,16 +159,14 @@ public class SettingsDialog implements XItemListener,
     private String L10N_roadmapTitle = null;
     private String[] L10N_roadmapLabels = new String[NUMBER_OF_PAGES];
 
-    private String L10N_okButton1 = null;
-    private String L10N_okButton2 = null;
-    private String L10N_okButton3 = null;
-    private String L10N_okButton4 = null;
+    private String L10N_okButton = null;
     private String L10N_cancelButton = null;
     private String L10N_nextButton = null;
     private String L10N_backButton = null;
 
     private String L10N_left = null;
     private String L10N_center = null;
+    private String L10N_right = null;
 
     // General Page
 
@@ -242,6 +214,9 @@ public class SettingsDialog implements XItemListener,
     private String L10N_volumeInfoLabel = null;
     private String L10N_preliminaryVolumeLabel = null;
     private String L10N_hyphenateLabel = null;
+
+    private TreeMap<Integer,String> L10N_grades = new TreeMap();
+    private TreeMap<String,String> L10N_translationTables = new TreeMap();
 
     // Paragraphs Page
 
@@ -643,101 +618,6 @@ public class SettingsDialog implements XItemListener,
     private static String _mathListBox = "ListBox10";
     private static String _mathLabel = "Label35";
     private String L10N_mathLabel = null;
-
-    // Export & Emboss Page
-
-    private XRadioButton genericRadioButton = null;
-    private XRadioButton specificRadioButton = null;
-    private XListBox embosserListBox = null;
-    private XListBox genericBrailleListBox = null;
-    private XListBox tableListBox = null;
-    private XListBox paperSizeListBox = null;
-    private XNumericField paperWidthField = null;
-    private XNumericField paperHeightField = null;
-    private XListBox paperWidthUnitListBox = null;
-    private XListBox paperHeightUnitListBox = null;
-    private XCheckBox duplexCheckBox = null;
-    private XCheckBox mirrorAlignCheckBox = null;
-    private XNumericField numberOfCellsPerLineField = null;
-    private XNumericField numberOfLinesPerPageField = null;
-    private XNumericField marginLeftField = null;
-    private XNumericField marginRightField = null;
-    private XNumericField marginTopField = null;
-    private XNumericField marginBottomField = null;
-
-    private XTextComponent paperWidthTextComponent = null;
-    private XTextComponent paperHeightTextComponent = null;
-    private XTextComponent numberOfCellsPerLineTextComponent = null;
-    private XTextComponent numberOfLinesPerPageTextComponent = null;
-    private XTextComponent marginLeftTextComponent = null;
-    private XTextComponent marginRightTextComponent = null;
-    private XTextComponent marginTopTextComponent = null;
-    private XTextComponent marginBottomTextComponent = null;
-
-    private XPropertySet embosserListBoxProperties = null;
-    private XPropertySet genericBrailleListBoxProperties = null;
-    private XPropertySet paperSizeListBoxProperties = null;
-    private XPropertySet paperWidthFieldProperties = null;
-    private XPropertySet paperHeightFieldProperties = null;
-    private XPropertySet paperWidthUnitListBoxProperties = null;
-    private XPropertySet paperHeightUnitListBoxProperties = null;
-    private XPropertySet duplexCheckBoxProperties = null;
-    private XPropertySet mirrorAlignCheckBoxProperties = null;
-    private XPropertySet marginLeftFieldProperties = null;
-    private XPropertySet marginRightFieldProperties = null;
-    private XPropertySet marginTopFieldProperties = null;
-    private XPropertySet marginBottomFieldProperties = null;
-    private XPropertySet genericRadioButtonProperties = null;
-
-    private static String _genericRadioButton = "OptionButton1";
-    private static String _specificRadioButton = "OptionButton2";
-    private static String _genericBrailleListBox = "ListBox6";
-    private static String _embosserListBox = "ListBox7";
-    private static String _tableListBox = "ListBox8";
-    private static String _paperSizeListBox = "ListBox9";
-    private static String _paperWidthField = "NumericField26";
-    private static String _paperHeightField = "NumericField29";
-    private static String _paperWidthUnitListBox = "ListBox24";
-    private static String _paperHeightUnitListBox = "ListBox23";
-    private static String _duplexCheckBox = "CheckBox9";
-    private static String _mirrorAlignCheckBox = "CheckBox10";
-    private static String _numberOfCellsPerLineField = "NumericField1";
-    private static String _numberOfLinesPerPageField = "NumericField2";
-    private static String _marginLeftField = "NumericField3";
-    private static String _marginRightField = "NumericField4";
-    private static String _marginTopField = "NumericField5";
-    private static String _marginBottomField = "NumericField6";
-
-    private static String _genericLabel = "Label14";
-    private static String _specificLabel = "Label15";
-    private static String _tableLabel = "Label16";
-    private static String _paperSizeLabel = "Label17";
-    private static String _paperWidthLabel = "Label70";
-    private static String _paperHeightLabel = "Label71";
-    private static String _duplexLabel = "Label18";
-    private static String _mirrorAlignLabel = "Label19";
-    private static String _numberOfCellsPerLineLabel = "Label20";
-    private static String _numberOfLinesPerPageLabel = "Label21";
-    private static String _marginLabel = "Label22";
-
-    private String L10N_genericLabel = null;
-    private String L10N_specificLabel = null;
-    private String L10N_tableLabel = null;
-    private String L10N_paperSizeLabel = null;
-    private String L10N_paperWidthLabel = null;
-    private String L10N_paperHeightLabel = null;
-    private String L10N_duplexLabel = null;
-    private String L10N_mirrorAlignLabel = null;
-    private String L10N_numberOfCellsPerLineLabel = null;
-    private String L10N_numberOfLinesPerPageLabel = null;
-    private String L10N_marginLabel = null;
-
-    private TreeMap<Integer,String> L10N_grades = new TreeMap();
-    private TreeMap<String,String> L10N_translationTables = new TreeMap();
-    private TreeMap<String,String> L10N_embosser = new TreeMap();
-    private TreeMap<String,String> L10N_table = new TreeMap();
-    private TreeMap<String,String> L10N_paperSize = new TreeMap();
-    private TreeMap<String,String> L10N_genericBraille = new TreeMap();
     private TreeMap<String,String> L10N_math = new TreeMap();
 
 
@@ -792,23 +672,26 @@ public class SettingsDialog implements XItemListener,
     }
 
     /**
-     * @param   settings    The braille settings.
-     * @param   mode        {@link #SAVE_SETTINGS}, {@link #EXPORT} or {@link #EMBOSS}, depending on how the dialog was called.
-     *                      Which tab is showed first and the behaviour of the OK button will slightly vary with the mode.
+     * @param   settings       The braille settings.
+     * @param   progressbar
      */
-    public void initialize(Settings settings,
-                           short mode)
+    public void initialise(Settings settings,
+                           ProgressBar progressbar)
                     throws com.sun.star.uno.Exception {
 
-        logger.entering("SettingsDialog", "initialize");
+        logger.entering("SettingsDialog", "initialise");
+
+        progressbar.setStatus("Analysing document...");
 
         this.settings = settings;
-        this.mode = mode;
 
         supportedTranslationTables = settings.getSupportedTranslationTables();
         languages = settings.getLanguages();
         mathTypes = new ArrayList(Arrays.asList(MathType.values()));
-        pagesEnabled[LANGUAGES_PAGE-1] = (languages.size()>1);
+
+        pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
+        pagesEnabled[TOC_PAGE-1] = settings.PRELIMINARY_PAGES_PRESENT;
+        pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.PRELIMINARY_PAGES_PRESENT;
 
         // Main Window
 
@@ -824,18 +707,15 @@ public class SettingsDialog implements XItemListener,
         L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsSettingsPageTitle");
         L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsSettingsPageTitle");
         L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mathSettingsPageTitle");
-        L10N_roadmapLabels[EXPORT_EMBOSS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exportEmbossSettingsPageTitle");
 
-        L10N_okButton1 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossButton");
-        L10N_okButton2 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printToFileButton");
-        L10N_okButton3 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exportButton");
-        L10N_okButton4 = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("saveButton");
+        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("saveButton");
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("cancelButton");
         L10N_backButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("backButton");
         L10N_nextButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("nextButton");
 
         L10N_left = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left");
         L10N_center = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("center");
+        L10N_right = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right");
 
         // General Page
 
@@ -943,61 +823,11 @@ public class SettingsDialog implements XItemListener,
 
         L10N_mathLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("formulasLabel") + ":";
 
-        // Export & Emboss Page
-
-        L10N_genericLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("genericLabel");
-        L10N_specificLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specificLabel");
-        L10N_tableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableLabel") + ":";
-        L10N_paperSizeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperSizeLabel") + ":";
-        L10N_paperWidthLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperWidthLabel") + ":";
-        L10N_paperHeightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperHeightLabel") + ":";
-        L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("duplexLabel");
-        L10N_mirrorAlignLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mirrorAlignLabel");
-        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_marginLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("marginLabel") + ":";
-
         L10N_grades.put(0, "Grade 0 (computer Braille)");
         L10N_grades.put(1, "Grade 1 (uncontracted)");
         L10N_grades.put(2, "Grade 2 (contracted)");
-        L10N_grades.put(3, "Grade 3");
-
-        L10N_genericBraille.put("NONE",  "-");
-        L10N_genericBraille.put("PEF",   "PEF (Portable Embosser Format)");
-        L10N_genericBraille.put("BRF",   "BRF (Braille Formatted)");
-        L10N_genericBraille.put("BRA",   "BRA");
-        
-        L10N_embosser.put("NONE",              "-");
-        L10N_embosser.put("INDEX_BASIC",       "Index Braille - 3.30 Basic V2");
-        L10N_embosser.put("INDEX_EVEREST",     "Index Braille - 9.20 Everest V2");
-        L10N_embosser.put("INDEX_EVEREST_V3",  "Index Braille - Everest V3");
-        L10N_embosser.put("INDEX_BASIC_D_V3",  "Index Braille - Basic-D V3");
-        L10N_embosser.put("BRAILLO_200",       "Braillo 200 (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_S",     "Braillo 400S (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_SR",    "Braillo 400SR (firmware 000.17 or later)");
-        L10N_embosser.put("INTERPOINT_55",     "Interpoint 55");
-
-        L10N_table.put("EN_US",                "US Computer Braille");
-        L10N_table.put("EN_GB",                "US Computer Braille (Lower Case)");
-        L10N_table.put("BRAILLO_6DOT_001_00",  "Braillo USA 6 Dot 001.00");
-        L10N_table.put("BRAILLO_6DOT_044_00",  "Braillo England 6 Dot 044.00");
-        L10N_table.put("BRAILLO_6DOT_046_01",  "Braillo Sweden 6 Dot 046.01");
-        L10N_table.put("BRAILLO_6DOT_047_01",  "Braillo Norway 6 Dot 047.01");
-        L10N_table.put("UNICODE_BRAILLE",      "PEF (Unicode Braille)");
-        L10N_table.put("BRF",                  "BRF (ASCII Braille)");
-        L10N_table.put("BRL",                  "BRL (Non-ASCII Braille)");
-        L10N_table.put("ES_OLD",               "Spanish Braille (Old)");
-        L10N_table.put("ES_NEW",               "Spanish Braille (New)");
-        L10N_table.put("UNDEFINED",            "-");
-
-        L10N_paperSize.put("A4",                "A4");
-        L10N_paperSize.put("W210MM_X_H10INCH",  "210 mm x 10 inch");
-        L10N_paperSize.put("W210MM_X_H11INCH",  "210 mm x 11 inch");
-        L10N_paperSize.put("W210MM_X_H12INCH",  "210 mm x 12 inch");
-        L10N_paperSize.put("FA44",              "FA44 Accurate");
-        L10N_paperSize.put("FA44_LEGACY",       "FA44 Legacy");
-        L10N_paperSize.put("UNDEFINED",         "-");
-        L10N_paperSize.put("CUSTOM",            "Custom");
+        L10N_grades.put(3, "Grade 3 (contracted)");
+        L10N_grades.put(4, "Grade 4 (contracted)");
 
         L10N_math.put("NEMETH",    "Nemeth");
         L10N_math.put("UKMATHS",   "UK Maths");
@@ -1279,67 +1109,10 @@ public class SettingsDialog implements XItemListener,
         mathListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_mathListBox));
 
-        // Export & Emboss Page
-
-        genericRadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
-                dialogControlContainer.getControl(_genericRadioButton));
-        specificRadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
-                dialogControlContainer.getControl(_specificRadioButton));
-        embosserListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_embosserListBox));
-        genericBrailleListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_genericBrailleListBox));
-        tableListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_tableListBox));
-        paperSizeListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_paperSizeListBox));
-        paperWidthField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_paperWidthField));
-        paperHeightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_paperHeightField));
-        paperWidthUnitListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_paperWidthUnitListBox));
-        paperHeightUnitListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_paperHeightUnitListBox));
-        duplexCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_duplexCheckBox));
-        mirrorAlignCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_mirrorAlignCheckBox));
-        numberOfCellsPerLineField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_numberOfCellsPerLineField));
-        numberOfLinesPerPageField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_numberOfLinesPerPageField));
-        marginLeftField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginLeftField));
-        marginRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginRightField));
-        marginTopField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginTopField));
-        marginBottomField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginBottomField));
-        paperWidthTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_paperWidthField));
-        paperHeightTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_paperHeightField));
-        numberOfCellsPerLineTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_numberOfCellsPerLineField));
-        numberOfLinesPerPageTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_numberOfLinesPerPageField));
-        marginLeftTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginLeftField));
-        marginRightTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginRightField));
-        marginTopTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginTopField));
-        marginBottomTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginBottomField));
-
         // PROPERTIES
 
         // Main Window
 
-        okButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, okButton)).getModel());
         backButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, backButton)).getModel());
         nextButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1507,37 +1280,6 @@ public class SettingsDialog implements XItemListener,
         
         // Mathematics Page
 
-        // Export & Emboss Page
-
-        genericRadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, genericRadioButton)).getModel());
-        embosserListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, embosserListBox)).getModel());
-        genericBrailleListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, genericBrailleListBox)).getModel());
-        paperSizeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, paperSizeListBox)).getModel());
-        paperWidthFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, paperWidthField)).getModel());
-        paperHeightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, paperHeightField)).getModel());
-        paperWidthUnitListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, paperWidthUnitListBox)).getModel());
-        paperHeightUnitListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, paperHeightUnitListBox)).getModel());
-        duplexCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, duplexCheckBox)).getModel());
-        mirrorAlignCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, mirrorAlignCheckBox)).getModel());
-        marginLeftFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginLeftField)).getModel());
-        marginRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginRightField)).getModel());
-        marginTopFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginTopField)).getModel());
-        marginBottomFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginBottomField)).getModel());
-
         // Group Boxes
 
         String groupBoxProperties[] = new String[] {"Height", "Name", "PositionX", "PositionY", "Width", "Step"};
@@ -1566,10 +1308,18 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-108, tableOfContentsPositionGroupBoxName, roadMapWidth, 108, 200, TOC_PAGE             });
         specialSymbolsGroupBoxMPSet.setPropertyValues(groupBoxProperties,          new Object[] { 1+roadMapHeight-63,  specialSymbolsGroupBoxName,          roadMapWidth, 63,  200, SPECIAL_SYMBOLS_PAGE });
 
+        progressbar.increment();
+
         dialogNameContainer.insertByName(tableSpacingGroupBoxName, tableSpacingGroupBoxModel);
         dialogNameContainer.insertByName(tablePositionGroupBoxName, tablePositionGroupBoxModel);
+
+        progressbar.increment();
+
         dialogNameContainer.insertByName(tableOfContentsSpacingGroupBoxName, tableOfContentsSpacingGroupBoxModel);
         dialogNameContainer.insertByName(tableOfContentsPositionGroupBoxName, tableOfContentsPositionGroupBoxModel);
+
+        progressbar.increment();
+
         dialogNameContainer.insertByName(specialSymbolsGroupBoxName, specialSymbolsGroupBoxModel);
 
         tableSpacingGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableSpacingGroupBoxModel);
@@ -1588,7 +1338,7 @@ public class SettingsDialog implements XItemListener,
         addListeners();
         setLabels();
 
-        logger.exiting("SettingsDialog", "initialize");
+        logger.exiting("SettingsDialog", "initialise");
 
     }
 
@@ -1638,30 +1388,12 @@ public class SettingsDialog implements XItemListener,
         specialSymbolsMode2RadioButton.addItemListener(this);
         specialSymbolsMode3RadioButton.addItemListener(this);
 
-        genericRadioButton.addItemListener(this);
-        specificRadioButton.addItemListener(this);
-        embosserListBox.addItemListener(this);
-        genericBrailleListBox.addItemListener(this);
-        paperSizeListBox.addItemListener(this);
-        paperWidthUnitListBox.addItemListener(this);
-        paperHeightUnitListBox.addItemListener(this);
-        duplexCheckBox.addItemListener(this);
-
         braillePageNumbersCheckBox.addItemListener(this);
         braillePageNumberAtListBox.addItemListener(this);
         printPageNumbersCheckBox.addItemListener(this);
         printPageNumberAtListBox.addItemListener(this);
         printPageNumberRangeCheckBox.addItemListener(this);
         pageSeparatorCheckBox.addItemListener(this);
-
-        paperWidthTextComponent.addTextListener(this);
-        paperHeightTextComponent.addTextListener(this);
-        numberOfCellsPerLineTextComponent.addTextListener(this);
-        numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
-        marginTopTextComponent.addTextListener(this);
-        marginBottomTextComponent.addTextListener(this);
 
     }
 
@@ -1678,14 +1410,20 @@ public class SettingsDialog implements XItemListener,
         short ret = dialog.execute();
 
         getDialogValues();
-        dialogComponent.dispose();
-
+        
         logger.exiting("SettingsDialog", "execute");
 
         if (ret == ((short) PushButtonType.OK_value)) {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void dispose() {
+
+        if (dialogComponent != null) {
+            dialogComponent.dispose();
         }
     }
 
@@ -1702,6 +1440,7 @@ public class SettingsDialog implements XItemListener,
         cancelButton.setLabel(L10N_cancelButton);
         backButton.setLabel(L10N_backButton);
         nextButton.setLabel(L10N_nextButton);
+        okButton.setLabel(L10N_okButton);
 
         tableColumnDelimiterButton.setLabel(L10N_tableColumnDelimiterButton);
         tableOfContentsLineFillButton.setLabel(L10N_tableOfContentsLineFillButton);
@@ -1881,31 +1620,6 @@ public class SettingsDialog implements XItemListener,
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mathLabel));
         xFixedText.setText(L10N_mathLabel);
-
-        // Export & Emboss Page
-
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_genericLabel));
-        xFixedText.setText(L10N_genericLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_specificLabel));
-        xFixedText.setText(L10N_specificLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableLabel));
-        xFixedText.setText(L10N_tableLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paperSizeLabel));
-        xFixedText.setText(L10N_paperSizeLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paperWidthLabel));
-        xFixedText.setText(L10N_paperWidthLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paperHeightLabel));
-        xFixedText.setText(L10N_paperHeightLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_duplexLabel));
-        xFixedText.setText(L10N_duplexLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mirrorAlignLabel));
-        xFixedText.setText(L10N_mirrorAlignLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfCellsPerLineLabel));
-        xFixedText.setText(L10N_numberOfCellsPerLineLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfLinesPerPageLabel));
-        xFixedText.setText(L10N_numberOfLinesPerPageLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginLabel));
-        xFixedText.setText(L10N_marginLabel);
 
     }
 
@@ -2165,60 +1879,15 @@ public class SettingsDialog implements XItemListener,
 
         }
 
-        if (pagesEnabled[EXPORT_EMBOSS_PAGE-1]) {
-
-            if (mode==EMBOSS) {
-                settings.setGenericOrSpecific(false);
-                genericRadioButtonProperties.setPropertyValue("Enabled", false);
-            }
-            genericRadioButton.setState(settings.isGenericOrSpecific());
-            specificRadioButton.setState(!settings.isGenericOrSpecific());
-            mirrorAlignCheckBox.setState((short)(settings.isMirrorAlign()?1:0));
-            duplexCheckBox.setState((short)(settings.isDuplex()?1:0));
-
-            numberOfCellsPerLineField.setDecimalDigits((short)0);
-            numberOfLinesPerPageField.setDecimalDigits((short)0);
-            marginLeftField.setDecimalDigits((short)0);
-            marginRightField.setDecimalDigits((short)0);
-            marginTopField.setDecimalDigits((short)0);
-            marginBottomField.setDecimalDigits((short)0);
-
-            numberOfCellsPerLineField.setMin((double)settings.getMinWidth());
-            numberOfLinesPerPageField.setMin((double)settings.getMinHeight());
-            marginLeftField.setMin((double)0);
-            marginRightField.setMin((double)0);
-            marginTopField.setMin((double)0);
-            marginBottomField.setMin((double)0);
-
-            paperWidthUnitListBox.addItem("mm", (short)0);
-            paperWidthUnitListBox.addItem("in", (short)1);
-            paperWidthUnitListBox.selectItemPos((short)0, true);
-            paperHeightUnitListBox.addItem("mm", (short)0);
-            paperHeightUnitListBox.addItem("in", (short)1);
-            paperHeightUnitListBox.selectItemPos((short)0, true);
-
-            updateEmbosserListBox();
-            updateGenericBrailleListBox();
-            updateDuplexCheckBox();
-            updateTableListBox();
-            updatePaperSizeListBox();
-            updatePaperDimensionFields();
-            updateDimensionFields();
-            updateMirrorAlignCheckBox();
-            updateOKButton();
-
-        }
-
         brailleRulesListBox.addItem("Custom", (short)0);
         brailleRulesListBox.addItem("BANA",   (short)1);
         brailleRulesListBox.selectItemPos((short)((settings.getBrailleRules()==BrailleRules.CUSTOM)?0:1), true);
 
-        setPage((mode==SAVE_SETTINGS)?GENERAL_PAGE:EXPORT_EMBOSS_PAGE);
+        setPage(GENERAL_PAGE);
         windowProperties.setPropertyValue("Step", 0);
         windowProperties.setPropertyValue("Step", currentPage);
         roadmapProperties.setPropertyValue("Complete", true);
         roadmapProperties.setPropertyValue("CurrentItemID", (short)currentPage);
-        updateOKButton();
 
     }
 
@@ -2296,38 +1965,6 @@ public class SettingsDialog implements XItemListener,
         if (pagesVisited[MATH_PAGE-1]) {
 
             settings.setMath(mathTypes.get(mathListBox.getSelectedItemPos()));
-
-        }
-
-        if (pagesVisited[EXPORT_EMBOSS_PAGE-1]) {
-
-            updateTable();
-            updateMirrorAlign();
-
-        }
-    }
-
-    /**
-     * Update the label and the state of the OK button (enabled or disabled).
-     * The behaviour of the OK button varies with the mode ({@link #SAVE_SETTINGS}, {@link #EXPORT} or {@link #EMBOSS}).
-     *
-     */
-    private void updateOKButton() throws com.sun.star.uno.Exception {
-
-        okButtonProperties.setPropertyValue("Enabled", ( settings.isGenericOrSpecific() && settings.getGenericBraille()!=BrailleFileType.NONE)
-                                                    || (!settings.isGenericOrSpecific() && settings.getPaperSize()!=PaperSize.UNDEFINED)
-                                                    || (mode==SAVE_SETTINGS));
-        switch (mode) {
-            case SAVE_SETTINGS:
-                okButton.setLabel(L10N_okButton4);
-                break;
-            case EXPORT:
-                okButton.setLabel(settings.isGenericOrSpecific()?L10N_okButton3:L10N_okButton2);
-                break;
-            case EMBOSS:
-                okButton.setLabel(L10N_okButton1);
-                break;
-            default:
 
         }
     }
@@ -2436,7 +2073,8 @@ public class SettingsDialog implements XItemListener,
 
         braillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
         braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
-        preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
+        preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers()
+                                                                                       && settings.PRELIMINARY_PAGES_PRESENT);
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
         printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
         printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
@@ -2717,373 +2355,6 @@ public class SettingsDialog implements XItemListener,
 
     }
 
-    /**
-     * Update the 'Generic' and 'Specific embosser' radioboxes on the 'Emboss/Export Settings' tab.
-     *
-     */
-    private void updateGenericOrSpecific() {
-
-        specificRadioButton.removeItemListener(this);
-        genericRadioButton.removeItemListener(this);
-
-        if (!settings.isGenericOrSpecific()) {
-            specificRadioButton.setState(false);
-            settings.setGenericOrSpecific(true);
-        } else {
-            genericRadioButton.setState(false);
-            settings.setGenericOrSpecific(false);
-        }
-
-        specificRadioButton.addItemListener(this);
-        genericRadioButton.addItemListener(this);
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#genericOrSpecific} setting.
-     *
-     */
-    private void updateGenericBraille() {
-        settings.setGenericBraille(genericBrailleTypes.get(genericBrailleListBox.getSelectedItemPos()));
-    }
-
-    /**
-     * Update the list of available generic braille files in the 'Generic braille' listbox
-     * on the 'Emboss/Export Settings' tab and select the correct item.
-     *
-     */
-    private void updateGenericBrailleListBox() throws com.sun.star.uno.Exception {
-
-        String key = null;
-
-        genericBrailleListBox.removeItemListener(this);
-
-            genericBrailleListBox.removeItems((short)0, (short)numberOfGenericBrailleTypes);
-            genericBrailleTypes = settings.getSupportedBrailleFileTypes();
-            for (int i=0;i<genericBrailleTypes.size();i++) {
-                key = genericBrailleTypes.get(i).name();
-                if (L10N_genericBraille.containsKey(key)) {
-                    genericBrailleListBox.addItem(L10N_genericBraille.get(key), (short)i);
-                } else {
-                    genericBrailleListBox.addItem(key, (short)i);
-                }
-            }
-            if (!genericBrailleTypes.contains(settings.getGenericBraille())) { // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setGenericBraille(genericBrailleTypes.get(0));
-            }
-            genericBrailleListBox.selectItemPos((short)genericBrailleTypes.indexOf(settings.getGenericBraille()), true);
-            genericBrailleListBoxProperties.setPropertyValue("Enabled", settings.isGenericOrSpecific());
-
-        genericBrailleListBox.addItemListener(this);
-
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#embosser} setting.
-     *
-     */
-    private void updateEmbosser() {
-        settings.setEmbosser(embosserTypes.get(embosserListBox.getSelectedItemPos()));
-    }
-
-    /**
-     * Update the list of available embosser in the 'Embosser' listbox on the 'Export/Emboss Settings' tab and select the correct item.
-     *
-     */
-    private void updateEmbosserListBox() throws com.sun.star.uno.Exception {
-
-        String key = null;
-
-        embosserListBox.removeItemListener(this);
-
-            embosserListBox.removeItems((short)0, (short)numberOfEmbosserTypes);
-            embosserTypes = settings.getSupportedEmbosserTypes();
-            for (int i=0;i<embosserTypes.size();i++) {
-                key = embosserTypes.get(i).name();
-                if (L10N_embosser.containsKey(key)) {
-                    embosserListBox.addItem(L10N_embosser.get(key), (short)i);
-                } else {
-                    embosserListBox.addItem(key, (short)i);
-                }
-            }
-            if (!embosserTypes.contains(settings.getEmbosser())) { // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setEmbosser(embosserTypes.get(0));
-            }
-            embosserListBox.selectItemPos((short)embosserTypes.indexOf(settings.getEmbosser()), true);
-            embosserListBoxProperties.setPropertyValue("Enabled", !settings.isGenericOrSpecific());
-
-        embosserListBox.addItemListener(this);
-
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#table} setting.
-     *
-     */
-    private void updateTable() {
-        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
-    }
-
-    /**
-     * Update the list of available character sets in the 'Character set' listbox on the 'Export/Emboss Settings' tab and select the correct item.
-     *
-     */
-    private void updateTableListBox() throws com.sun.star.uno.Exception {
-
-        String key;
-
-        tableListBox.removeItemListener(this);
-
-            tableListBox.removeItems((short)0, (short)numberOfTableTypes);
-            tableTypes = settings.getSupportedTableTypes();
-            for (int i=0;i<tableTypes.size();i++) {
-                key = tableTypes.get(i).name();
-                if (L10N_table.containsKey(key)) {
-                    tableListBox.addItem(L10N_table.get(key), (short)i);
-                } else {
-                    tableListBox.addItem(key, (short)i);
-                }
-            }
-            if (!tableTypes.contains(settings.getTable())) { // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setTable(tableTypes.get(0));
-            }
-
-            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-
-        tableListBox.addItemListener(this);
-
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#paperSize} setting.
-     *
-     */
-    private void updatePaperSize() {
-        settings.setPaperSize(paperSizes.get(paperSizeListBox.getSelectedItemPos()));
-    }
-
-    /**
-     * Update the list of available paper sizes in the 'Paper size' listbox on the 'Export/Emboss Settings' tab and select the correct item.
-     *
-     */
-    private void updatePaperSizeListBox() throws com.sun.star.uno.Exception {
-
-        String key;
-
-        paperSizeListBox.removeItemListener(this);
-
-            paperSizeListBox.removeItems((short)0, (short)numberOfPaperSizes);
-            paperSizes = settings.getSupportedPaperSizes();
-            for (int i=0;i<paperSizes.size();i++) {
-                key = paperSizes.get(i).name();
-                if (L10N_paperSize.containsKey(key)) {
-                    paperSizeListBox.addItem(L10N_paperSize.get(key), (short)i);
-                } else {
-                    paperSizeListBox.addItem(key, (short)i);
-                }
-            }
-            if (!paperSizes.contains(settings.getPaperSize())) { // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setPaperSize(paperSizes.get(0));
-            }
-            paperSizeListBox.selectItemPos((short)paperSizes.indexOf(settings.getPaperSize()), true);
-            paperSizeListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
-
-        paperSizeListBox.addItemListener(this);
-
-    }
-
-    private void updatePaperDimensions() {
-
-        settings.setCustomPaperSize(
-                paperWidthField.getValue()  * ((paperWidthUnitListBox.getSelectedItemPos()==(short)1)  ? Paper.INCH_IN_MM : 1d),
-                paperHeightField.getValue() * ((paperHeightUnitListBox.getSelectedItemPos()==(short)1) ? Paper.INCH_IN_MM : 1d));
-
-    }
-    
-    private void updatePaperDimensionFields() throws com.sun.star.uno.Exception {
-
-        paperWidthTextComponent.removeTextListener(this);
-        paperHeightTextComponent.removeTextListener(this);
-
-            paperWidthFieldProperties.setPropertyValue("Enabled", settings.getPaperSize() == PaperSize.CUSTOM);
-            paperHeightFieldProperties.setPropertyValue("Enabled", settings.getPaperSize() == PaperSize.CUSTOM);
-            paperWidthUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != PaperSize.UNDEFINED);
-            paperHeightUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != PaperSize.UNDEFINED);
-
-            if (settings.getPaperSize() == PaperSize.UNDEFINED) {
-                
-                paperWidthField.setDecimalDigits((short)0);
-                paperHeightField.setDecimalDigits((short)0);
-
-                paperWidthField.setMin(0d);
-                paperHeightField.setMin(0d);
-                paperWidthField.setMax(0d);
-                paperHeightField.setMax(0d);
-                paperWidthField.setValue(0d);
-                paperHeightField.setValue(0d);
-                
-            } else {
-
-                paperWidthField.setDecimalDigits((short) ((paperWidthUnitListBox.getSelectedItemPos()==(short)1)  ? 2 : 0));
-                paperHeightField.setDecimalDigits((short)((paperHeightUnitListBox.getSelectedItemPos()==(short)1) ? 2 : 0));
-
-                paperWidthField.setMin(settings.getMinPaperWidth()   / ((paperWidthUnitListBox.getSelectedItemPos()==(short)1)  ? Paper.INCH_IN_MM : 1d));
-                paperHeightField.setMin(settings.getMinPaperHeight() / ((paperHeightUnitListBox.getSelectedItemPos()==(short)1) ? Paper.INCH_IN_MM : 1d));
-                paperWidthField.setMax(settings.getMaxPaperWidth()   / ((paperWidthUnitListBox.getSelectedItemPos()==(short)1)  ? Paper.INCH_IN_MM : 1d));
-                paperHeightField.setMax(settings.getMaxPaperHeight() / ((paperHeightUnitListBox.getSelectedItemPos()==(short)1) ? Paper.INCH_IN_MM : 1d));
-                paperWidthField.setValue(settings.getPaperWidth()    / ((paperWidthUnitListBox.getSelectedItemPos()==(short)1)  ? Paper.INCH_IN_MM : 1d));
-                paperHeightField.setValue(settings.getPaperHeight()  / ((paperHeightUnitListBox.getSelectedItemPos()==(short)1) ? Paper.INCH_IN_MM : 1d));
-
-            }
-
-        paperWidthTextComponent.addTextListener(this);
-        paperHeightTextComponent.addTextListener(this);
-
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#duplex} setting.
-     *
-     */
-    private void updateDuplex() {
-        settings.setDuplex((duplexCheckBox.getState()==(short)1));
-    }
-
-    /**
-     * Update the 'Recto-verso' checkbox on the 'Export/Emboss Settings' tab.
-     *
-     */
-    private void updateDuplexCheckBox() throws com.sun.star.uno.Exception {
-
-        if (!settings.duplexIsSupported()) {
-            settings.setDuplex(false); // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-            duplexCheckBox.setState((short)0);
-            duplexCheckBoxProperties.setPropertyValue("Enabled", false);
-        } else {
-            duplexCheckBox.setState((short)(settings.isDuplex()?1:0));
-            duplexCheckBoxProperties.setPropertyValue("Enabled", true);
-        }      
-    }
-
-    /**
-     * Update the {@link be.docarch.odt2braille.Settings#mirrorAlign} setting.
-     *
-     */
-    private void updateMirrorAlign() {
-        settings.setMirrorAlign((mirrorAlignCheckBox.getState() == (short)1));
-    }
-
-    /**
-     * Update the 'Mirror margins' checkbox on the 'Export/Emboss Settings' tab.
-     *
-     */
-    private void updateMirrorAlignCheckBox() throws com.sun.star.uno.Exception {
-
-        if (!settings.mirrorAlignIsSupported()) {
-            settings.setMirrorAlign(false); // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-            mirrorAlignCheckBox.setState((short)0);
-            mirrorAlignCheckBoxProperties.setPropertyValue("Enabled", false);
-        } else {
-            mirrorAlignCheckBox.setState((short)(settings.isMirrorAlign()?1:0));
-            mirrorAlignCheckBoxProperties.setPropertyValue("Enabled", true);
-        }
-    }
-
-    /**
-     * Update the 'Cells per line', 'Lines per page' and 'Margin' field values on the 'Export/Emboss' tab.
-     * This method is called when the respective settings have possibly changed because the user changed one of these values.
-     *
-     */
-    private void updateDimensionFieldValues() {
-
-        numberOfCellsPerLineTextComponent.removeTextListener(this);
-        numberOfLinesPerPageTextComponent.removeTextListener(this);
-        marginLeftTextComponent.removeTextListener(this);
-        marginRightTextComponent.removeTextListener(this);
-        marginTopTextComponent.removeTextListener(this);
-        marginBottomTextComponent.removeTextListener(this);
-
-            numberOfCellsPerLineField.setValue((double)settings.getNumberOfCellsPerLine());
-            numberOfLinesPerPageField.setValue((double)settings.getNumberOfLinesPerPage());
-            marginLeftField.setValue((double)settings.getMarginLeft());
-            marginRightField.setValue((double)settings.getMarginRight());
-            marginTopField.setValue((double)settings.getMarginTop());
-            marginBottomField.setValue((double)settings.getMarginBottom());
-
-        numberOfCellsPerLineTextComponent.addTextListener(this);
-        numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
-        marginTopTextComponent.addTextListener(this);
-        marginBottomTextComponent.addTextListener(this);
-
-    }
-
-    /**
-     * Update the maximum, minimum and current values and the states (enabled or dissabled) of the
-     * 'Cells per line', 'Lines per page' and 'Margin' field values on the 'Export/Emboss' tab.
-     * This method is called when the respective braille settings have possibly changed because another paper size was selected.
-     *
-     */
-    private void updateDimensionFields() throws com.sun.star.uno.Exception {
-
-        numberOfCellsPerLineTextComponent.removeTextListener(this);
-        numberOfLinesPerPageTextComponent.removeTextListener(this);
-        marginLeftTextComponent.removeTextListener(this);
-        marginRightTextComponent.removeTextListener(this);
-        marginTopTextComponent.removeTextListener(this);
-        marginBottomTextComponent.removeTextListener(this);
-
-            marginLeftFieldProperties.setPropertyValue("Enabled", settings.alignmentIsSupported());
-            marginRightFieldProperties.setPropertyValue("Enabled", settings.alignmentIsSupported());
-            marginTopFieldProperties.setPropertyValue("Enabled", settings.alignmentIsSupported());
-            marginBottomFieldProperties.setPropertyValue("Enabled", settings.alignmentIsSupported());
-
-            if (settings.alignmentIsSupported()) {
-
-                settings.setMarginLeft(settings.getMarginLeft()); // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setMarginTop(settings.getMarginTop());
-
-                marginLeftField.setMax((double)(settings.getMaxWidth()-settings.getMinWidth()));
-                marginRightField.setMax((double)(settings.getMaxWidth()-settings.getMinWidth()));
-                marginTopField.setMax((double)(settings.getMaxHeight()-settings.getMinHeight()));
-                marginBottomField.setMax((double)(settings.getMaxHeight()-settings.getMinHeight()));
-
-            } else {
-
-                settings.setMarginLeft(0); // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-                settings.setMarginRight(0);
-                settings.setMarginTop(0);
-                settings.setMarginBottom(0);
-
-                marginLeftField.setMax((double)0);
-                marginRightField.setMax((double)0);
-                marginTopField.setMax((double)0);
-                marginBottomField.setMax((double)0);
-
-            }
-
-            settings.setCellsPerLine(settings.getNumberOfCellsPerLine()); // this has to be done in Settings instead !! -> Settings should be responsible for the correctness of its own members.
-            settings.setLinesPerPage(settings.getNumberOfLinesPerPage());
-
-            numberOfCellsPerLineField.setMax((double)settings.getMaxWidth());
-            numberOfLinesPerPageField.setMax((double)settings.getMaxHeight());
-
-            numberOfCellsPerLineField.setValue((double)settings.getNumberOfCellsPerLine());
-            numberOfLinesPerPageField.setValue((double)settings.getNumberOfLinesPerPage());
-            marginLeftField.setValue((double)settings.getMarginLeft());
-            marginRightField.setValue((double)settings.getMarginRight());
-            marginTopField.setValue((double)settings.getMarginTop());
-            marginBottomField.setValue((double)settings.getMarginBottom());
-
-        numberOfCellsPerLineTextComponent.addTextListener(this);
-        numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
-        marginTopTextComponent.addTextListener(this);
-        marginBottomTextComponent.addTextListener(this);
-
-    }
-
     private void setPage(int page)
                   throws com.sun.star.uno.Exception {
         
@@ -3356,64 +2627,6 @@ public class SettingsDialog implements XItemListener,
                         break;
 
                     case MATH_PAGE: break;
-
-                    case EXPORT_EMBOSS_PAGE:
-
-                        if (source.equals(genericRadioButton) ||
-                            source.equals(specificRadioButton)) {
-
-                            updateGenericOrSpecific();
-                            updateGenericBrailleListBox();
-                            updateEmbosserListBox();
-                            updateDuplexCheckBox();
-                            updateTableListBox();
-                            updatePaperSizeListBox();
-                            updateDimensionFields();
-                            updateMirrorAlignCheckBox();
-                            updateOKButton();
-
-                        } else if (source.equals(embosserListBox)) {
-
-                            updateEmbosser();
-                            updateDuplexCheckBox();
-                            updateTableListBox();
-                            updatePaperSizeListBox();
-                            updateDimensionFields();
-                            updateMirrorAlignCheckBox();
-                            updateOKButton();
-
-                        } else if (source.equals(genericBrailleListBox)) {
-
-                            updateGenericBraille();
-                            updateDuplexCheckBox();
-                            updateTableListBox();
-                            updatePaperSizeListBox();
-                            updateDimensionFields();
-                            updateMirrorAlignCheckBox();
-                            updateOKButton();
-
-                        } else if (source.equals(paperSizeListBox)) {
-
-                            updatePaperSize();
-                            updatePaperDimensionFields();
-                            updateDimensionFields();
-                            updateMirrorAlignCheckBox();
-                            updateOKButton();
-
-                        } else if (source.equals(paperWidthUnitListBox) ||
-                                   source.equals(paperHeightUnitListBox)) {
-
-                            updatePaperDimensionFields();
-
-                        } else if (source.equals(duplexCheckBox)) {
-
-                            updateDuplex();
-                            updateMirrorAlignCheckBox();
-
-                        }
-
-                        break;
-
                     default:
                 }
             }
@@ -3565,51 +2778,9 @@ public class SettingsDialog implements XItemListener,
 
                         break;
 
-                    case MATH_PAGE:
-                    case EXPORT_EMBOSS_PAGE: break;
+                    case MATH_PAGE: break;
 
                 }
-            }
-
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * Is called when a 'Cells per line', 'Lines per page' or 'Margin' field value is changed by the user.
-     * All relevant braille settings and dialog fields are updated.
-     *
-     * @param textEvent
-     */
-    public void textChanged(TextEvent textEvent) {
-
-        Object source = textEvent.Source;
-
-        try {
-
-            if (source.equals(numberOfCellsPerLineTextComponent)) {
-                settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(numberOfLinesPerPageTextComponent)) {
-                settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(marginLeftTextComponent)) {
-                settings.setMarginLeft((int)marginLeftField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(marginRightTextComponent)) {
-                settings.setMarginRight((int)marginRightField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(marginTopTextComponent)) {
-                settings.setMarginTop((int)marginTopField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(marginBottomTextComponent)) {
-                settings.setMarginBottom((int)marginBottomField.getValue());
-                updateDimensionFieldValues();
-            } else if (source.equals(paperWidthTextComponent) ||
-                       source.equals(paperHeightTextComponent)) {
-                updatePaperDimensions();
-                updateDimensionFields();
             }
 
         } catch (com.sun.star.uno.Exception ex) {

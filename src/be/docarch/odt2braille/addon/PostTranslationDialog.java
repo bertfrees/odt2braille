@@ -37,6 +37,7 @@ import com.sun.star.beans.XPropertySet;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.awt.PushButtonType;
 import com.sun.star.awt.XFixedText;
+import com.sun.star.lang.XComponent;
 
 import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XActionListener;
@@ -122,6 +123,9 @@ public class PostTranslationDialog implements XActionListener {
         logger.entering("PostTranslationDialog", "execute");
 
         short ret = dialog.execute();
+        preview.dispose();
+        XComponent dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
+        dialogComponent.dispose();
 
         logger.exiting("PostTranslationDialog", "execute");
 

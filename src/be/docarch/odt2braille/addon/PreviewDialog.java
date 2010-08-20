@@ -52,6 +52,7 @@ import com.sun.star.awt.ItemEvent;
 import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
+import com.sun.star.lang.XComponent;
 import com.sun.org.apache.xpath.internal.XPathAPI;
 
 import java.io.IOException;
@@ -213,6 +214,15 @@ public class PreviewDialog implements XItemListener,
 
     }
 
+    public void dispose() {
+
+        XComponent dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
+
+        if (dialogComponent != null) {
+            dialogComponent.dispose();
+        }
+    }
+
     private void showPage() throws TransformerException {
 
         String previewText = "";
@@ -224,7 +234,7 @@ public class PreviewDialog implements XItemListener,
         for (int i=0;i<rows.getLength();i++) {
             Node row = (Element)rows.item(i);
             line = row.getTextContent();
-            for (int j=line.length();j<settings.getNumberOfCellsPerLine();j++) {
+            for (int j=line.length();j<settings.getCellsPerLine();j++) {
                 line += "\u2800";
             }
             previewText += line;

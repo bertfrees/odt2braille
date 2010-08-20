@@ -79,7 +79,7 @@ import be.docarch.odt2braille.Settings;
  *
  * @author      Bert Frees
  */
-public class Interpoint55EmbossDialog implements XActionListener {
+public class Interpoint55PrintDialog implements XActionListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
@@ -147,12 +147,12 @@ public class Interpoint55EmbossDialog implements XActionListener {
      * @param settings  The braille settings.
      * @param xContext
      */
-    public Interpoint55EmbossDialog(XComponentContext xContext,
+    public Interpoint55PrintDialog(XComponentContext xContext,
                                     XComponent xDesktopComponent,
                                     Settings settings)
                              throws com.sun.star.uno.Exception {
 
-        logger.entering("Interpoint55EmbossDialog", "<init>");
+        logger.entering("Interpoint55PrintDialog", "<init>");
 
         this.settings = settings;
         this.xContext = xContext;
@@ -161,7 +161,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
-                                                        + "/dialogs/Interpoint55EmbossDialog.xdl";
+                                                        + "/dialogs/Interpoint55PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         XMultiComponentFactory xMCF = xContext.getServiceManager();
 
@@ -242,7 +242,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
     public boolean execute() throws com.sun.star.uno.Exception,
                                     IOException {
 
-        logger.entering("Interpoint55EmbossDialog", "execute");
+        logger.entering("Interpoint55PrintDialog", "execute");
 
         setLabels();
         loadEmbossSettings();
@@ -256,10 +256,10 @@ public class Interpoint55EmbossDialog implements XActionListener {
             if (overWriteIniFile) {
                 overWriteIniFile();
             }
-            logger.exiting("Interpoint55EmbossDialog", "execute");
+            logger.exiting("Interpoint55PrintDialog", "execute");
             return true;
         } else {
-            logger.exiting("Interpoint55EmbossDialog", "execute");
+            logger.exiting("Interpoint55PrintDialog", "execute");
             return false;
         }
 
@@ -272,7 +272,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
      */
     public boolean runWPrint55() throws IOException {
 
-        logger.entering("Interpoint55EmbossDialog", "runWPrint55");
+        logger.entering("Interpoint55PrintDialog", "runWPrint55");
 
         Runtime runtime = Runtime.getRuntime();
         String exec_cmd[] = {"\"" + wp55File.getPath() + "\"", "\"" + brfFile.getPath() + "\"", "/config:" + iniFileName};
@@ -285,7 +285,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
         runtime.exec(exec_cmd);
         
         logger.log(Level.INFO, message);
-        logger.exiting("Interpoint55EmbossDialog", "runWPrint55");
+        logger.exiting("Interpoint55PrintDialog", "runWPrint55");
 
         return true;
 
@@ -472,7 +472,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
      */
     private boolean overWriteIniFile() throws IOException {
 
-        logger.entering("Interpoint55EmbossDialog", "overWriteIniFile");
+        logger.entering("Interpoint55PrintDialog", "overWriteIniFile");
 
         String line = null;
         String content = "";
@@ -485,10 +485,10 @@ public class Interpoint55EmbossDialog implements XActionListener {
 
             if (line.startsWith("Mode=")) {
                 line = "Mode=" +
-                       (settings.isDuplex()?"3":"1");
+                       (settings.getDuplex()?"3":"1");
             } else if (line.startsWith("MirrorMargins=")) {
                 line = "MirrorMargins=" +
-                       (settings.isMirrorAlign()?"1":"0");
+                       (settings.getMirrorAlign()?"1":"0");
             } else if (line.startsWith("LeftMargin=")) {
                 line = "LeftMargin=" +
                        (settings.getMarginLeft());
@@ -500,10 +500,10 @@ public class Interpoint55EmbossDialog implements XActionListener {
                        (settings.getMarginTop());
             } else if (line.startsWith("CharactersPerLine")) {
                 line = "CharactersPerLine=" +
-                       (settings.getNumberOfCellsPerLine());
+                       (settings.getCellsPerLine());
             } else if (line.startsWith("LinesPerPage")) {
                 line = "LinesPerPage=" +
-                       (settings.getNumberOfLinesPerPage());
+                       (settings.getLinesPerPage());
             }
 
             content += line + System.getProperty("line.separator");
@@ -523,7 +523,7 @@ public class Interpoint55EmbossDialog implements XActionListener {
             bufferedWriter.close();
             }
 
-        logger.exiting("Interpoint55EmbossDialog", "overWriteIniFile");
+        logger.exiting("Interpoint55PrintDialog", "overWriteIniFile");
 
         return true;
         

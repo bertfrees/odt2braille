@@ -147,7 +147,7 @@ public final class Odt2BrailleAddOn extends WeakBase
 
                  try {
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.changeSettings(SettingsDialog.SAVE_SETTINGS);
+                     unoGui.changeSettings();
                  } finally {
                      unoGui.clean();
                  }

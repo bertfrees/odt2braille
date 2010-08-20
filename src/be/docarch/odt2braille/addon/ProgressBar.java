@@ -60,8 +60,10 @@ public class ProgressBar extends StatusIndicator {
      * The progress bar is displayed, with progress 0% and no description.
      *
      */
-    public void init() {
+    @Override
+    public void start() {
 
+        super.start();
         xStatusIndicator.start("", 100);
     
     }
@@ -117,5 +119,4 @@ public class ProgressBar extends StatusIndicator {
         return true;
 
     }
-
 }

@@ -45,7 +45,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
 
 import be.docarch.odt2braille.Settings;
-import be.docarch.odt2braille.GenericFileMaker.BrailleFileType;
+import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.SpecialSymbol;
@@ -84,6 +84,8 @@ public class SettingsIO {
 
     private final static short OPTIONAL = (short) 256;
 
+    // Braille settings
+
     private static String brailleRulesProperty =                 "[BRL]BrailleRules";
     private static String languageProperty =                     "[BRL]Language";
     private static String gradeProperty =                        "[BRL]Grade";
@@ -97,19 +99,6 @@ public class SettingsIO {
     private static String tableOfContentEnabledProperty =        "[BRL]TableOfContent";
     private static String tableOfContentTitleProperty =          "[BRL]TableOfContentTitle";
     private static String preliminaryVolumeEnabledProperty =     "[BRL]PreliminaryVolume";
-    private static String genericOrSpecificProperty =            "[BRL]ExportAsGeneric";
-    private static String genericBrailleProperty =               "[BRL]GenericFileType";
-    private static String embosserProperty =                     "[BRL]Embosser";
-    private static String tableProperty =                        "[BRL]CharacterSet";
-    private static String paperSizeProperty =                    "[BRL]PaperSize";
-    private static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
-    private static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
-    private static String duplexProperty =                       "[BRL]RectoVerso";
-    private static String mirrorAlignProperty =                  "[BRL]MirrorAlign";
-    private static String numberOfCellsPerLineProperty =         "[BRL]CellsPerLine";
-    private static String numberOfLinesPerPageProperty =         "[BRL]LinesPerPage";
-    private static String marginLeftProperty =                   "[BRL]MarginLeft";
-    private static String marginTopProperty =                    "[BRL]MarginTop";
     private static String stairstepTableProperty =               "[BRL]StairstepTable";
     private static String columnDelimiterProperty =              "[BRL]ColumnDelimiter";
     private static String lineFillSymbolProperty =               "[BRL]LineFillSymbol";
@@ -138,6 +127,29 @@ public class SettingsIO {
     private static String hyphenateProperty =                    "[BRL]Hyphenation";
     private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
     private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
+
+    // Export settings
+
+    private static String exportFileProperty =                   "[BRL]ExportFileType";
+    private static String exportTableProperty =                  "[BRL]ExportCharacterSet";
+    private static String exportNumberOfCellsPerLineProperty =   "[BRL]ExportCellsPerLine";
+    private static String exportNumberOfLinesPerPageProperty =   "[BRL]ExportLinesPerPage";
+    private static String exportDuplexProperty =                 "[BRL]ExportRectoVerso";
+
+    // Emboss settings
+
+    private static String embosserProperty =                     "[BRL]Embosser";
+    private static String paperSizeProperty =                    "[BRL]PaperSize";
+    private static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
+    private static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
+    private static String mirrorAlignProperty =                  "[BRL]MirrorAlign";
+    private static String marginLeftProperty =                   "[BRL]MarginLeft";
+    private static String marginTopProperty =                    "[BRL]MarginTop";
+    private static String embossTableProperty =                  "[BRL]EmbossCharacterSet";
+    private static String embossNumberOfCellsPerLineProperty =   "[BRL]EmbossCellsPerLine";
+    private static String embossNumberOfLinesPerPageProperty =   "[BRL]EmbossLinesPerPage";
+    private static String embossDuplexProperty =                 "[BRL]EmbossRectoVerso";
+
 
     /**
      * Creates a new <code>SettingsIO</code> instance.
@@ -227,20 +239,15 @@ public class SettingsIO {
      * Load settings from the OpenOffice.org Writer document.
      * The settings are stored in the document as user-defined meta-data.
      *
-     * @param   defaultSettings     The default settings.
-     * @return                      The settings loaded from the document.
-     *                              If a setting cannot be loaded, the default setting is chosen.
+     * @param   loadedSettings
      */
-    public Settings loadSettingsFromDocument (Settings defaultSettings)
-                                       throws com.sun.star.uno.Exception {
+    public void loadBrailleSettingsFromDocument (Settings loadedSettings)
+                                          throws com.sun.star.uno.Exception {
 
-        logger.entering("SettingsIO", "loadSettingsFromDocument");
-
-        Settings loadedSettings = new Settings(defaultSettings);
+        logger.entering("SettingsIO", "loadBrailleSettingsFromDocument");
 
         String s;
         Double d;
-        Double d2;
         Boolean b;
 
         ArrayList<String> languages = loadedSettings.getLanguages();
@@ -280,8 +287,9 @@ public class SettingsIO {
             }
         }
 
-        int defaultSpecialSymbolsCount = defaultSettings.getSpecialSymbolsList().size();
-        int loadedSpecialSymbolsCount = defaultSpecialSymbolsCount;
+        
+        int loadedSpecialSymbolsCount = loadedSettings.getSpecialSymbolsList().size();
+        int defaultSpecialSymbolsCount = loadedSpecialSymbolsCount;
 
         if (!(d = getDoubleProperty(specialSymbolsCountProperty)).isNaN()) {
             loadedSpecialSymbolsCount = d.intValue();
@@ -318,62 +326,12 @@ public class SettingsIO {
             loadedSettings.setHyphenate(b);
         }
 
-        if ((b = getBooleanProperty(genericOrSpecificProperty)) != null) {
-            loadedSettings.setGenericOrSpecific(b);
-        }
-
-        if ((s = getStringProperty(genericBrailleProperty)) != null) {
-            try {
-                loadedSettings.setGenericBraille(BrailleFileType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid generic braille type");
-            }
-        }
-
-        if ((s = getStringProperty(embosserProperty)) != null) {
-            try {
-                loadedSettings.setEmbosser(EmbosserType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid embossertype");
-            }
-        }
-
-        if ((s = getStringProperty(tableProperty)) != null) {
-            try {
-                loadedSettings.setTable(TableType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
-            }
-        }
-
-        if ((s = getStringProperty(paperSizeProperty)) != null) {
-            try {
-                loadedSettings.setPaperSize(PaperSize.valueOf(s));
-                if (s.equals("CUSTOM")) {
-                    if (!(d =  getDoubleProperty(customPaperWidthProperty)).isNaN() &&
-                        !(d2 = getDoubleProperty(customPaperHeightProperty)).isNaN()) {
-                        loadedSettings.setCustomPaperSize(d, d2);
-                    }
-                }
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid papersize");
-            }
-        }
-
         if ((s = getStringProperty(mathProperty)) != null) {
             try {
                 loadedSettings.setMath(MathType.valueOf(s));
             } catch (IllegalArgumentException ex) {
                 logger.log(Level.SEVERE, null, s + " is no valid math type");
             }
-        }
-
-        if ((b = getBooleanProperty(duplexProperty)) != null) {
-            loadedSettings.setDuplex(b);
-        }
-
-        if ((b = getBooleanProperty(mirrorAlignProperty)) != null) {
-            loadedSettings.setMirrorAlign(b);
         }
 
         if ((b = getBooleanProperty(hardPageBreaksProperty)) != null) {
@@ -408,22 +366,6 @@ public class SettingsIO {
             if ((s = getStringProperty(listPrefixProperty + "_" + Integer.toString(i+1))) != null) {
                 loadedSettings.setListPrefix(s,i+1);
             }
-        }
-
-        if (!(d = getDoubleProperty(numberOfCellsPerLineProperty)).isNaN()) {
-            loadedSettings.setCellsPerLine(d.intValue());
-        }
-
-        if (!(d = getDoubleProperty(numberOfLinesPerPageProperty)).isNaN()) {
-            loadedSettings.setLinesPerPage(d.intValue());
-        }
-
-        if (!(d = getDoubleProperty(marginLeftProperty)).isNaN()) {
-            loadedSettings.setMarginLeft(d.intValue());
-        }
-
-        if (!(d = getDoubleProperty(marginTopProperty)).isNaN()) {
-            loadedSettings.setMarginTop(d.intValue());
         }
 
         if ((b = getBooleanProperty(printPageNumbersProperty)) != null) {
@@ -514,11 +456,119 @@ public class SettingsIO {
             }
         }
 
-        logger.exiting("SettingsIO", "loadSettingsFromDocument");
-
-        return loadedSettings;
+        logger.exiting("SettingsIO", "loadBrailleSettingsFromDocument");
 
     }
+
+    public void loadExportSettingsFromDocument (Settings loadedSettings)
+                                         throws com.sun.star.uno.Exception {
+
+        logger.entering("SettingsIO", "loadExportSettingsFromDocument");
+
+        String s;
+        Boolean b;
+        Double d;
+
+        if ((s = getStringProperty(exportFileProperty)) != null) {
+            try {
+                loadedSettings.setBrailleFileType(BrailleFileType.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid braille file type");
+            }
+        }
+
+        if ((s = getStringProperty(exportTableProperty)) != null) {
+            try {
+                loadedSettings.setTable(TableType.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
+            }
+        }
+
+        if ((b = getBooleanProperty(exportDuplexProperty)) != null) {
+            loadedSettings.setDuplex(b);
+        }
+
+        if (!(d = getDoubleProperty(exportNumberOfCellsPerLineProperty)).isNaN()) {
+            loadedSettings.setCellsPerLine(d.intValue());
+        }
+
+        if (!(d = getDoubleProperty(exportNumberOfLinesPerPageProperty)).isNaN()) {
+            loadedSettings.setLinesPerPage(d.intValue());
+        }
+
+        logger.exiting("SettingsIO", "loadExportSettingsFromDocument");
+
+    }
+
+    public void loadEmbossSettingsFromDocument (Settings loadedSettings)
+                                         throws com.sun.star.uno.Exception {
+
+        logger.entering("SettingsIO", "loadEmbossSettingsFromDocument");
+
+        String s;
+        Boolean b;
+        Double d;
+        Double d2;
+
+        if ((s = getStringProperty(embosserProperty)) != null) {
+            try {
+                loadedSettings.setEmbosser(EmbosserType.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid embossertype");
+            }
+        }
+
+        if ((s = getStringProperty(embossTableProperty)) != null) {
+            try {
+                loadedSettings.setTable(TableType.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
+            }
+        }
+
+        if ((s = getStringProperty(paperSizeProperty)) != null) {
+            try {
+                loadedSettings.setPaperSize(PaperSize.valueOf(s));
+                if (s.equals("CUSTOM")) {
+                    if (!(d =  getDoubleProperty(customPaperWidthProperty)).isNaN() &&
+                        !(d2 = getDoubleProperty(customPaperHeightProperty)).isNaN()) {
+                        loadedSettings.setPaperSize(d, d2);
+                    }
+                }
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid papersize");
+            }
+        }
+
+        if ((b = getBooleanProperty(embossDuplexProperty)) != null) {
+            loadedSettings.setDuplex(b);
+        }
+
+        if ((b = getBooleanProperty(mirrorAlignProperty)) != null) {
+            loadedSettings.setMirrorAlign(b);
+        }
+
+        if (!(d = getDoubleProperty(embossNumberOfCellsPerLineProperty)).isNaN()) {
+            loadedSettings.setCellsPerLine(d.intValue());
+        }
+
+        if (!(d = getDoubleProperty(embossNumberOfLinesPerPageProperty)).isNaN()) {
+            loadedSettings.setLinesPerPage(d.intValue());
+        }
+
+        if (!(d = getDoubleProperty(marginLeftProperty)).isNaN()) {
+            loadedSettings.setMarginLeft(d.intValue());
+        }
+
+        if (!(d = getDoubleProperty(marginTopProperty)).isNaN()) {
+            loadedSettings.setMarginTop(d.intValue());
+        }
+
+        logger.exiting("SettingsIO", "loadEmbossSettingsFromDocument");
+
+    }
+
 
     /**
      * Write a <code>String</code>, <code>Double</code> or <code>Boolean</code> property to the OpenOffice document,
@@ -552,9 +602,9 @@ public class SettingsIO {
      * @param   settingsAfterChange     The new settings.
      * @param   settingsBeforeChange    The old settings.
      */
-    public void saveSettingsToDocument (Settings settingsAfterChange,
-                                        Settings settingsBeforeChange)
-                                 throws com.sun.star.uno.Exception {
+    public void saveBrailleSettingsToDocument (Settings settingsAfterChange,
+                                               Settings settingsBeforeChange)
+                                        throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "saveSettingsToDocument");
 
@@ -708,45 +758,6 @@ public class SettingsIO {
         setProperty(preliminaryVolumeEnabledProperty,
                     settingsAfterChange.preliminaryVolumeEnabled,
                     settingsBeforeChange.preliminaryVolumeEnabled);
-        setProperty(genericOrSpecificProperty,
-                    settingsAfterChange.isGenericOrSpecific(),
-                    settingsBeforeChange.isGenericOrSpecific());
-        setProperty(embosserProperty,
-                    settingsAfterChange.getEmbosser().name(),
-                    settingsBeforeChange.getEmbosser().name());
-        setProperty(genericBrailleProperty,
-                    settingsAfterChange.getGenericBraille().name(),
-                    settingsBeforeChange.getGenericBraille().name());
-        setProperty(tableProperty,
-                    settingsAfterChange.getTable().name(),
-                    settingsBeforeChange.getTable().name());
-        setProperty(paperSizeProperty,
-                    settingsAfterChange.getPaperSize().name(),
-                    settingsBeforeChange.getPaperSize().name());
-        setProperty(customPaperWidthProperty,
-                    settingsAfterChange.getPaperWidth(),
-                    settingsBeforeChange.getPaperWidth());
-        setProperty(customPaperHeightProperty,
-                    settingsAfterChange.getPaperHeight(),
-                    settingsBeforeChange.getPaperHeight());
-        setProperty(duplexProperty,
-                    settingsAfterChange.isDuplex(),
-                    settingsBeforeChange.isDuplex());
-        setProperty(mirrorAlignProperty,
-                    settingsAfterChange.isMirrorAlign(),
-                    settingsBeforeChange.isMirrorAlign());
-        setProperty(numberOfCellsPerLineProperty,
-                    settingsAfterChange.getNumberOfCellsPerLine(),
-                    settingsBeforeChange.getNumberOfCellsPerLine());
-        setProperty(numberOfLinesPerPageProperty,
-                    settingsAfterChange.getNumberOfLinesPerPage(),
-                    settingsBeforeChange.getNumberOfLinesPerPage());
-        setProperty(marginLeftProperty,
-                    settingsAfterChange.getMarginLeft(),
-                    settingsBeforeChange.getMarginLeft());
-        setProperty(marginTopProperty,
-                    settingsAfterChange.getMarginTop(),
-                    settingsBeforeChange.getMarginTop());
         setProperty(stairstepTableProperty,
                     settingsAfterChange.stairstepTableIsEnabled(),
                     settingsBeforeChange.stairstepTableIsEnabled());
@@ -763,6 +774,7 @@ public class SettingsIO {
                     settingsAfterChange.getHardPageBreaks(),
                     settingsBeforeChange.getHardPageBreaks());
 
+
         setProperty(brailleRulesProperty,
                     settingsAfterChange.getBrailleRules().name(),
                     settingsBeforeChange.getBrailleRules().name());
@@ -771,9 +783,92 @@ public class SettingsIO {
             xModifiable.setModified(true);
         }
 
-        logger.exiting("SettingsIO", "saveSettingsToDocument");
+        logger.exiting("SettingsIO", "saveBrailleSettingsToDocument");
 
     }
+
+    public void saveExportSettingsToDocument (Settings settingsAfterChange,
+                                              Settings settingsBeforeChange)
+                                       throws com.sun.star.uno.Exception {
+
+        logger.entering("SettingsIO", "saveExportToDocument");
+
+        odtModified = false;
+
+        setProperty(exportFileProperty,
+                    settingsAfterChange.getBrailleFileType().name(),
+                    settingsBeforeChange.getBrailleFileType().name());
+        setProperty(exportTableProperty,
+                    settingsAfterChange.getTable().name(),
+                    settingsBeforeChange.getTable().name());
+        setProperty(exportDuplexProperty,
+                    settingsAfterChange.getDuplex(),
+                    settingsBeforeChange.getDuplex());
+        setProperty(exportNumberOfCellsPerLineProperty,
+                    settingsAfterChange.getCellsPerLine(),
+                    settingsBeforeChange.getCellsPerLine());
+        setProperty(exportNumberOfLinesPerPageProperty,
+                    settingsAfterChange.getLinesPerPage(),
+                    settingsBeforeChange.getLinesPerPage());
+
+        if (odtModified) {
+            xModifiable.setModified(true);
+        }
+
+        logger.exiting("SettingsIO", "saveExportToDocument");
+
+    }
+
+    public void saveEmbossSettingsToDocument (Settings settingsAfterChange,
+                                              Settings settingsBeforeChange)
+                                       throws com.sun.star.uno.Exception {
+
+        logger.entering("SettingsIO", "saveEmbossSettingsToDocument");
+
+        odtModified = false;
+
+        setProperty(embosserProperty,
+                    settingsAfterChange.getEmbosser().name(),
+                    settingsBeforeChange.getEmbosser().name());
+        setProperty(embossTableProperty,
+                    settingsAfterChange.getTable().name(),
+                    settingsBeforeChange.getTable().name());
+        setProperty(paperSizeProperty,
+                    settingsAfterChange.getPaperSize().name(),
+                    settingsBeforeChange.getPaperSize().name());
+        setProperty(customPaperWidthProperty,
+                    settingsAfterChange.getPaperWidth(),
+                    settingsBeforeChange.getPaperWidth());
+        setProperty(customPaperHeightProperty,
+                    settingsAfterChange.getPaperHeight(),
+                    settingsBeforeChange.getPaperHeight());
+        setProperty(embossDuplexProperty,
+                    settingsAfterChange.getDuplex(),
+                    settingsBeforeChange.getDuplex());
+        setProperty(mirrorAlignProperty,
+                    settingsAfterChange.getMirrorAlign(),
+                    settingsBeforeChange.getMirrorAlign());
+        setProperty(embossNumberOfCellsPerLineProperty,
+                    settingsAfterChange.getCellsPerLine(),
+                    settingsBeforeChange.getCellsPerLine());
+        setProperty(embossNumberOfLinesPerPageProperty,
+                    settingsAfterChange.getLinesPerPage(),
+                    settingsBeforeChange.getLinesPerPage());
+        setProperty(marginLeftProperty,
+                    settingsAfterChange.getMarginLeft(),
+                    settingsBeforeChange.getMarginLeft());
+        setProperty(marginTopProperty,
+                    settingsAfterChange.getMarginTop(),
+                    settingsBeforeChange.getMarginTop());
+
+        if (odtModified) {
+            xModifiable.setModified(true);
+        }
+
+        logger.exiting("SettingsIO", "saveEmbossSettingsToDocument");
+
+    }
+
 
     /**
      * Load settings from OpenOffice.org.
