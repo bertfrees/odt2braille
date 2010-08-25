@@ -125,7 +125,9 @@ public class SettingsDialog implements XItemListener,
     private int selectedLanguagePos;
     private int selectedSpecialSymbolPos;
     
-    private ArrayList<String> supportedTranslationTables = null;
+    private ArrayList<String> allTranslationTables = null;
+    private ArrayList<String> mainTranslationTables = null;
+    private ArrayList<String> specialTranslationTables = null;
     private ArrayList<String> languages = null;
     private ArrayList<SpecialSymbol> specialSymbols = null;
     private ArrayList<MathType> mathTypes = null;
@@ -482,6 +484,8 @@ public class SettingsDialog implements XItemListener,
     private XListBox gradeListBox = null;
     private XListBox languagesListBox = null;
 
+    private XPropertySet gradeListBoxProperties = null;
+
     private static String _languagesListBox = "ListBox3";
     private static String _translationTableListBox = "ListBox4";
     private static String _gradeListBox = "ListBox5";
@@ -685,11 +689,18 @@ public class SettingsDialog implements XItemListener,
 
         this.settings = settings;
 
-        supportedTranslationTables = settings.getSupportedTranslationTables();
+        specialTranslationTables = settings.getSpecialTranslationTables();
+        mainTranslationTables = settings.getSupportedTranslationTables();
         languages = settings.getLanguages();
+        languages.remove(settings.getMainLanguage());
         mathTypes = new ArrayList(Arrays.asList(MathType.values()));
 
-        pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
+        pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 0);
+        pagesEnabled[PARAGRAPHS_PAGE-1] = settings.PARAGRAPHS_PRESENT;
+        pagesEnabled[HEADINGS_PAGE-1] = settings.HEADINGS_PRESENT;
+        pagesEnabled[LISTS_PAGE-1] = settings.LISTS_PRESENT;
+        pagesEnabled[TABLES_PAGE-1] = settings.TABLES_PRESENT;
+        pagesEnabled[MATH_PAGE-1] = settings.MATH_PRESENT;
         pagesEnabled[TOC_PAGE-1] = settings.PRELIMINARY_PAGES_PRESENT;
         pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.PRELIMINARY_PAGES_PRESENT;
 
@@ -834,6 +845,8 @@ public class SettingsDialog implements XItemListener,
         L10N_math.put("MARBURG",   "Marburg");
         L10N_math.put("WISKUNDE",  "Notaert");
 
+        // Languages & translation tables
+
         String key = null;
         String value = null;
 
@@ -841,22 +854,19 @@ public class SettingsDialog implements XItemListener,
 
             key = languages.get(i);
             value = (new Locale(key.substring(0,key.indexOf("-")),key.substring(key.indexOf("-")+1,key.length()))).getDisplayName(oooLocale);
-            if (key.equals(settings.getMainLanguage())) { value += " - DEFAULT"; }
             L10N_languages.put(key, value);
 
         }
 
-        for (int i=0;i<supportedTranslationTables.size();i++) {
+        for (int i=0;i<mainTranslationTables.size();i++) {
 
-            key = supportedTranslationTables.get(i);
+            key = mainTranslationTables.get(i);
             value = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("language_" + key);
             L10N_translationTables.put(key, value);
         }
 
-        // Sort languages & supportedTranslationTables
-
         languages.clear();
-        supportedTranslationTables.clear();
+        mainTranslationTables.clear();
 
         TreeSet treeSet = new TreeSet(new Comparator() {
             public int compare(Object obj, Object obj1) { return ((Comparable) ((Map.Entry) obj).getValue()).compareTo(((Map.Entry) obj1).getValue()); }});
@@ -868,7 +878,20 @@ public class SettingsDialog implements XItemListener,
         treeSet.clear();
         treeSet.addAll(L10N_translationTables.entrySet());
         for (Iterator i = treeSet.iterator(); i.hasNext();) {
-            supportedTranslationTables.add(((Map.Entry<String,String>)i.next()).getKey());
+            mainTranslationTables.add(((Map.Entry<String,String>)i.next()).getKey());
+        }
+
+        for (int i=0;i<specialTranslationTables.size();i++) {
+            key = specialTranslationTables.get(i);
+            value = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("language_" + key);
+            L10N_translationTables.put(key, value);
+        }
+
+        allTranslationTables = new ArrayList();
+        treeSet.clear();
+        treeSet.addAll(L10N_translationTables.entrySet());
+        for (Iterator i = treeSet.iterator(); i.hasNext();) {
+            allTranslationTables.add(((Map.Entry<String,String>)i.next()).getKey());
         }
 
         // Roadmap
@@ -1227,6 +1250,9 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtBottomOnSepLineCheckBox)).getModel());
 
         // Languages Page
+
+        gradeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, gradeListBox)).getModel());
 
         // Table of Contents Page
 
@@ -1644,8 +1670,8 @@ public class SettingsDialog implements XItemListener,
             preliminaryVolumeCheckBox.setState((short)(settings.preliminaryVolumeEnabled?1:0));
             hyphenateCheckBox.setState((short)(settings.getHyphenate()?1:0));
 
-            for (int i=0;i<supportedTranslationTables.size();i++) {
-                mainTranslationTableListBox.addItem(L10N_translationTables.get(supportedTranslationTables.get(i)), (short)i);
+            for (int i=0;i<mainTranslationTables.size();i++) {
+                mainTranslationTableListBox.addItem(L10N_translationTables.get(mainTranslationTables.get(i)), (short)i);
             }
 
             updateMainTranslationTableListBox();
@@ -1808,14 +1834,16 @@ public class SettingsDialog implements XItemListener,
                 languagesListBox.addItem(L10N_languages.get(languages.get(i)), (short)i);
             }
 
-            for (int i=0;i<supportedTranslationTables.size();i++) {
-                translationTableListBox.addItem(L10N_translationTables.get(supportedTranslationTables.get(i)), (short)i);
+            for (int i=0;i<allTranslationTables.size();i++) {
+                translationTableListBox.addItem(L10N_translationTables.get(allTranslationTables.get(i)), (short)i);
             }
 
-            languagesListBox.selectItemPos((short)languages.indexOf(settings.getMainLanguage()), true);
-            selectedLanguagePos = (int)languagesListBox.getSelectedItemPos();
-            updateTranslationTableListBox(settings.getMainLanguage());
-            updateGradeListBox(settings.getMainLanguage());
+            selectedLanguagePos = 0;
+            languagesListBox.selectItemPos((short) selectedLanguagePos, true);
+            updateTranslationTableListBox(languages.get(selectedLanguagePos));
+            updateGradeListBox(languages.get(selectedLanguagePos));
+
+            updateLanguagesPageFieldProperties();
 
         }
 
@@ -2075,10 +2103,13 @@ public class SettingsDialog implements XItemListener,
         braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
         preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers()
                                                                                        && settings.PRELIMINARY_PAGES_PRESENT);
-        printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
-        printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
-        printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
-        continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
+        printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.PAGE_NUMBERS_PRESENT);
+        printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.PAGE_NUMBERS_PRESENT
+                                                                             && settings.getPrintPageNumbers());
+        printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.PAGE_NUMBERS_PRESENT
+                                                                                 && settings.getPrintPageNumbers());
+        continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.PAGE_NUMBERS_PRESENT
+                                                                          && settings.getPrintPageNumbers());
         pageSeparatorCheckBoxProperties.setPropertyValue("Enabled", !bana);
         pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator());
         ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
@@ -2092,6 +2123,12 @@ public class SettingsDialog implements XItemListener,
         numbersAtBottomOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
                                                                             && ((settings.getBraillePageNumbers() && settings.getBraillePageNumberAt().equals("bottom"))
                                                                              || (settings.getPrintPageNumbers()   && settings.getPrintPageNumberAt().equals("bottom"))));
+
+    }
+
+    private void updateLanguagesPageFieldProperties() throws com.sun.star.uno.Exception {
+
+        gradeListBoxProperties.setPropertyValue("Enabled", settings.getGrade(languages.get(selectedLanguagePos)) > -1);
 
     }
 
@@ -2304,7 +2341,7 @@ public class SettingsDialog implements XItemListener,
     private void updateMainTranslationTableListBox() {
 
         mainTranslationTableListBox.removeItemListener(this);
-        mainTranslationTableListBox.selectItemPos((short)supportedTranslationTables.indexOf(settings.getTranslationTable(settings.getMainLanguage())),true);
+        mainTranslationTableListBox.selectItemPos((short)mainTranslationTables.indexOf(settings.getTranslationTable(settings.getMainLanguage())),true);
         mainTranslationTableListBox.addItemListener(this);
 
     }
@@ -2333,7 +2370,7 @@ public class SettingsDialog implements XItemListener,
     private void updateTranslationTableListBox(String language) {
 
         translationTableListBox.removeItemListener(this);
-        translationTableListBox.selectItemPos((short)supportedTranslationTables.indexOf(settings.getTranslationTable(language)),true);
+        translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(settings.getTranslationTable(language)),true);
         translationTableListBox.addItemListener(this);
 
     }
@@ -2380,16 +2417,8 @@ public class SettingsDialog implements XItemListener,
             if (source.equals(roadMapBroadcaster)) {
 
                 int newPage = itemEvent.ItemId;
-                if (newPage != currentPage){
-
-                    if (newPage==GENERAL_PAGE) {
-                        updateMainTranslationTableListBox();
-                        updateMainGradeListBox();
-                    } else if (newPage==LANGUAGES_PAGE) {
-                        updateTranslationTableListBox(settings.getMainLanguage());
-                        updateGradeListBox(settings.getMainLanguage());
-                    }
-
+                if (newPage != currentPage) {
+                    
                     windowProperties.setPropertyValue("Step", new Integer(newPage));
                     setPage(newPage);
 
@@ -2441,7 +2470,7 @@ public class SettingsDialog implements XItemListener,
                         } else if (source.equals(transcribersNotesPageCheckBox)) {
                             settings.transcribersNotesPageEnabled = (transcribersNotesPageCheckBox.getState() == (short) 1);
                         } else if (source.equals(mainTranslationTableListBox)) {
-                            settings.setTranslationTable(supportedTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
+                            settings.setTranslationTable(mainTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainGradeListBox();
                         } else if (source.equals(mainGradeListBox)) {
                             settings.setGrade(settings.getSupportedGrades(settings.getMainLanguage()).get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
@@ -2553,15 +2582,17 @@ public class SettingsDialog implements XItemListener,
                     case LANGUAGES_PAGE:
 
                         if (source.equals(translationTableListBox)) {
-                            settings.setTranslationTable(supportedTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
+                            settings.setTranslationTable(allTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
                                                          languages.get(selectedLanguagePos));
                             updateGradeListBox(languages.get(selectedLanguagePos));
+                            updateLanguagesPageFieldProperties();
                         } else if (source.equals(gradeListBox)) {
                             settings.setGrade(Integer.parseInt(gradeListBox.getSelectedItem()), languages.get(selectedLanguagePos));
                         } else if (source.equals(languagesListBox)) {
                             selectedLanguagePos = (int)languagesListBox.getSelectedItemPos();
                             updateTranslationTableListBox(languages.get(selectedLanguagePos));
                             updateGradeListBox(languages.get(selectedLanguagePos));
+                            updateLanguagesPageFieldProperties();
                         }
 
                         break;

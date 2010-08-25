@@ -1,7 +1,8 @@
-\input texinfo
+﻿\input texinfo
 @setfilename odt2braille-user-doc.info
+@documentencoding UTF-8
 @include version.texi
-@settitle odt2braille Advanced User Guide
+@settitle odt2braille User Guide
 @finalout
 
 @macro sectionref{ref,title}
@@ -21,15 +22,15 @@
 
 @macro pilcrow{}
 @ifhtml
-�
+¶
 @end ifhtml
 @ifnothtml
 pilcrow
 @end ifnothtml
 @end macro
-
 @include copying.texi
 
+@ifnothtml
 @titlepage
 @title odt2braille Advanced User Guide (draft)
 @subtitle for version @value{VERSION}, @value{UPDATED}
@@ -38,9 +39,10 @@ pilcrow
 @vskip 0pt plus 1filll
 @insertcopying
 @end titlepage
+@end ifnothtml
 
 @html
-<div id="Content">
+<div id="guide-container"><h1>User Guide</h1>
 @end html
 
 @contents
@@ -54,13 +56,15 @@ pilcrow
 
 @unnumberedsec Installation
 
-In order to install odt2braille, OpenOffice.org version 3.0 or later is required. The latest version of OpenOffice.org
-can be downloaded from @url{http://download.openoffice.org/other.html}.
+In order to install odt2braille, OpenOffice.org version 3.0 or later is required. 
+You can find the latest version of OpenOffice.org at @url{http://download.openoffice.org/@/other.html}.
 It is strongly recommended that you also download and install the @emph{SimBraille} font: 
-@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/extra/simbrl.ttf}.
-To add the odt2braille extension to OpenOffice.org, simply double click the odt2braille installation file and 
-follow the steps in the OpenOffice.org @emph{Extension Manager}. Download the latest version of odt2braille at
-@url{http://odt2braille.sourceforge.net/downloads.html}.
+@url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/extra/@/simbrl.ttf}.
+To add the odt2braille extension, launch OpenOffice.org and open [@emph{Tools > Extension Manager...}].
+First remove any older versions of odt2braille. Then choose @emph{Add...}, select the odt2braille 
+installation package and follow the steps. Finally, when the installation is finished, restart OpenOffice.org.
+
+You can download the latest version of odt2braille from @url{http://odt2braille.@/sourceforge.@/net/@/downloads.html}.
 
 @unnumberedsec OpenOffice.org accessibility
 
@@ -72,12 +76,7 @@ Mac OS users can access OpenOffice.org with VoiceOver; Linux users can access it
 
 In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille production.
 Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find a more comprehensive reference.
-You can find more help on working with Writer at @url{http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide}.
-
-Once the plugin is installed, an extra "@emph{Braille}" menu will be available in the OpenOffice.org menubar.
-
-
-
+You can find more help on working with Writer at @url{http://wiki.services.openoffice.org/@/wiki/@/Documentation/@/OOo3_User_Guides/@/Writer_Guide}.
 
 
 @menu
@@ -131,12 +130,11 @@ Quick guide
 				same document. You can set the language for the whole document, individual paragraphs, or even 
 				individual words and characters. The language tools can be found in [@emph{Tools > Languages}].
 				@item
-				Languages can be associated with @emph{braille translation tables} in [@emph{Braille > Settings}]. The 
+				Languages can be associated with @emph{Braille translation tables} in [@emph{File > Braille Settings…}]. The 
 				translation table for the whole document can be set with the main language option
-				on the @emph{General Settings} tab.
-				A contraction level can also be chosen. If the document contains 
-				multiple languages, the @emph{Language Settings} tab becomes active.
-				Here, each language can be linked to a translation table and contraction level.
+				on the @emph{General} tab. A contraction level can also be chosen. If the document contains 
+				multiple languages, each additional language can be linked to a translation table and contraction 
+				level in the @emph{Languages} tab.
 				@item
 				Translation tables are available for all West-European languages, Modern Hebrew, some Asian languages 
 				and even some minority languages like Gaelic and Esperanto.
@@ -151,7 +149,7 @@ Quick guide
 				@item
 				In OpenOffice.org, all regular text between @emph{@pilcrow{} markers} is considered a paragraph 
 				(@pilcrow{} markers can be made visible by selecting [@emph{View > Nonprinting Characters}]). 
-				Odt2braille on the other hand only treats paragraphs that are not
+				However, only those paragraphs that are not
 				
 				@itemize @minus
 					@item
@@ -168,15 +166,15 @@ Quick guide
 					or on the @sectionref{Title Page,title page}
 				@end itemize
 				
-				as @emph{actual} paragraphs.
+				will be transcribed as Braille paragraphs.
 			@end itemize
 
 		@subheading Braille
 
 			@itemize @bullet
 				@item
-				By default, paragraphs are rendered in @emph{indented paragraph style} (first line cell 3, runovers cell 1),
-				and they are not separated by blank lines. 
+				By default, paragraphs are rendered in @emph{indented paragraph style} (first line cell 3, runovers cell 1
+				and	not separated by blank lines. These settings can be altered in [@emph{File > Braille Settings > Paragraphs}].
 				Empty paragraphs are dropped.
 			@end itemize
 
@@ -187,7 +185,7 @@ Quick guide
 
 			@itemize @bullet
 				@item
-				In order for an OpenOffice.org paragraph to be interpreted by odt2braille as a @emph{heading}, 
+				In order for a paragraph to be interpreted by odt2braille as a @emph{heading}, 
 				following conditions must be true:
 				
 				@itemize @minus
@@ -221,7 +219,7 @@ Quick guide
 			
 			@itemize @bullet
 				@item
-				In braille, headings are rendered in one of four heading styles:
+				In Braille, headings are rendered in one of four heading styles:
 				
 				@itemize @minus
 					@item
@@ -234,8 +232,12 @@ Quick guide
 					Headings with an outline level greater than 3 begin in cell 1 (runovers too) and are preceded by a blank line.
 				@end itemize
 				
+				All these settings can be altered in [@emph{File > Braille Settings > Headings}].
+				
 				@item
-				Numbers of headings are completely adopted in braille, bullets are left out.
+				Numbers of headings are completely adopted in Braille.
+				@item
+				The transcription of bullets are left out.
 				@item
 				Empty headings are dropped.
 				@item
@@ -259,7 +261,7 @@ Quick guide
 
 			@itemize @bullet
 				@item
-				Each OpenOffice.org paragraph with its @emph{Numbering Style} [@emph{Format > Paragraph > Outline & Numbering}] 
+				Each paragraph with its @emph{Numbering Style} [@emph{Format > Paragraph > Outline & Numbering}] 
 				set to anything but @emph{None} and @emph{Outline Numbering}, 
 				will be interpreted by odt2braille as an item of a list.
 				@item
@@ -289,7 +291,7 @@ Quick guide
 			
 			@itemize @bullet
 				@item
-				In braille, outlining is supported upto level 4:
+				By default, lists are brailled as follows:
 				
 				@itemize @minus
 					@item
@@ -303,11 +305,14 @@ Quick guide
 					@item
 					Listitems with an outline level greater than 3 begin in cell 7, runovers in cell 11.
 				@end itemize
-				
+
+				Each entire list is preceded and following by a blank line. All these settings can be altered in
+				[@emph{File > Braille Settings > Lists}].
+
 				@item
-				Each entire list is preceded and following by a blank line.
+				Numbers of listitems are completely adopted in Braille.
 				@item
-				Numbers of listitems are completely adopted in braille, bullets are left out.
+				The user can determine how bullets are brailled.
 				@item
 				@sectionref{Textboxes,Textboxes} and @sectionref{Images,images} that are anchored to a listitem are 
 				rendered only after completion of the entire list.
@@ -327,22 +332,16 @@ Quick guide
 				Set multiple heading rows by checking @emph{Repeat headings}.
 				@item
 				To add a @sectionref{Captions,caption} to the table, place the cursor inside the table and choose 
-				[@emph{Insert > Caption}]. In order for a table caption to be correctly linked to the table by odt2braille, 
+				[@emph{Insert > Caption}]. In order for a table caption to be correctly linked to the table, 
 				it must be placed directly beneath the table and no other frame 
 				(i.e. @sectionref{Textboxes,textbox} or @sectionref{Images,image}) can be anchored to it.
-				@item
-				@@TODO: Choice between linear / stairstep format. "Table cells separated by" setting.
-				
-				@@TODO: Merged cells (rowspan / colspan): 
-				The merged cell is processed as if its whole content were in the left- and uppermost 'sub'-cell. The other (empty) 'sub'-cells are ignored.
-				Merged cells should be avoided.
 			@end itemize
 
 		@subheading Braille
 			
 			@itemize @bullet
 				@item
-				In braille, tables are rendered in @emph{stairstep format}:
+				In Braille, tables are by default rendered in @emph{stairstep format}:
 				
 				@itemize @minus
 					@item
@@ -356,17 +355,22 @@ Quick guide
 				@end itemize
 				
 				@item
-				Only regular text is retained in a table cell, all other elements are dropped or transposed.
-				If a table cell contains multiple OpenOffice.org paragraphs, these are first serialized.
+				However, is it also possible to render tables in @emph{linear format}. In this case, all cells in a table row 
+				are joined together. The user can choose the @emph{column delimiter} symbol which separates the cells.
 				@item
-				Table lines are only shown in braille if they are present in print. 
-				A table line is represented by a series of unspaced braille dots 2356 (top table line) or 1245 
-				(bottom table line), extended across the full width of the braille page. 
-				A table inside a larger textbox is enclosed by full table lines (braille dots 123456). 
+				All table settings can be accessed in [@emph{File > Braille Settings > Tables}].
+				@item
+				Only regular text is retained in a table cell, all other elements are dropped or transposed.
+				If a table cell contains multiple paragraphs, these are first serialized.
+				@item
+				Table lines are only shown in Braille if they are present in print. 
+				A table line is represented by a series of unspaced Braille dots 2356 (top table line) or 1245 
+				(bottom table line), extended across the full width of the Braille page. 
+				A table inside a larger textbox is enclosed by full table lines (Braille dots 123456). 
 				If no table lines are shown in print, the table is preceded and/or followed by a blank line.
 				@item
 				If column headings are present, these table rows are separated from the table body by a series of 
-				unspaced braille dots 25, extended across the full width of the braille page.
+				unspaced Braille dots 25, extended across the full width of the Braille page.
 				@item
 				If a @sectionref{Captions,caption} is correctly linked to the table, it is centered and placed directly 
 				below the top table line (or top blank line if the table line is absent). 
@@ -376,20 +380,20 @@ Quick guide
 				(or bottom blank line if the table line is absent). 
 				Footnotes in the table caption are placed directly below the caption.
 				@item
-				Empty table cells are indicated with an ellipsis (braille dots 5-5-5). 
+				Empty table cells are indicated with an ellipsis (Braille dots 5-5-5). 
 				This usage is explained on the @sectionref{Transcriber's Notes,transcriber's notes page}.
 				@item
 				When a table contains other tables, @sectionref{Lists,lists}, @sectionref{Textboxes,textboxes} or 
 				@sectionref{Images,images}, these elements are moved outside the table. 
-				Every transposition is indicated by a double dash (braille dots 36-36-36-36) at the element's original location. 
+				Every transposition is indicated by a double dash (Braille dots 36-36-36-36) at the element's original location. 
 				An explaining @sectionref{Transcriber's Notes,transcriber's note} is inserted before the table. 
 				Only after completion of the entire table, all previously omitted material is rendered. 
 				Each element is preceded by another transcriber's note explaining it was moved from it's original location.
 				@tip{Do not place other tables, lists, textboxes or images inside a table.}
 				@item
-				@@TODO: Difference between linear / stairstep format.
-				
-				@@TODO: rowspan / colspan
+				A merged table cell is processed as if its whole content were in the left- and uppermost 'sub'-cell. 
+				The other (empty) 'sub'-cells are not shown in Braille.
+				@tip{Try to avoid merged cells.}
 			@end itemize
 			
 	@node Textboxes
@@ -427,31 +431,31 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				If textboxes are anchored as a character or to a paragraph or character, they are rendered in braille after 
+				If textboxes are anchored as a character or to a paragraph or character, they are rendered in Braille after 
 				completion of the paragraph or heading that contains the anchor.
 				@item
 				If textboxes are anchored to another textbox, they are rendered inside this outer textbox, 
 				before any other material it contains.
 				@item
-				Textboxes are omitted in braille if they are anchored to a page.
+				Textboxes are omitted in Braille if they are anchored to a page.
 				@item
 				Textboxes that are anchored to a @sectionref{Lists,listitem} are rendered only after completion of the entire list.
 				@item
 				Textboxes that are anchored to a @sectionref{Tables,table cell} are rendered only after completion of the entire table.
 				@item
 				Textboxes that are anchored to a @sectionref{Notes,note} are replaced by a double dash 
-				(braille dots 36-36-36-36), indicating the omission.
+				(Braille dots 36-36-36-36), indicating the omission.
 				@item
-				Box lines are only shown in braille if they are present in print. 
-				A box line is represented by a series of unspaced braille dots 2356 (top table line) or 1245 
-				(bottom table line), extended across the full width of the braille page. 
+				Box lines are only shown in Braille if they are present in print. 
+				A box line is represented by a series of unspaced Braille dots 2356 (top table line) or 1245 
+				(bottom table line), extended across the full width of the Braille page. 
 				If no box lines are shown in print, the textbox is preceded and/or followed by a blank line.
 				@item
 				If a @sectionref{Captions,caption} is correctly linked to the textbox, it is centered and placed directly 
 				below the top box line (or top blank line if the box line is absent). 
 				A blank line is inserted between the caption and the actual content of the box.
 				@item
-				All material inside a textbox is retained in braille. 
+				All material inside a textbox is retained in Braille. 
 				@sectionref{Headings,Headings} are included in the @sectionref{Table of Contents,table of contents}.
 			@end itemize
 			
@@ -488,13 +492,13 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In braille, images are replaced by a @sectionref{Transcriber's Notes,transcriber's note}, which includes
+				In Braille, images are replaced by a @sectionref{Transcriber's Notes,transcriber's note}, which includes
 				
 				@enumerate
 					@item
 					The image @sectionref{Captions,caption} (if one is correctly linked to the image).
 					@item
-					A note saying that the image is not reproduced in braille.
+					A note saying that the image is not reproduced in Braille.
 					@item
 					The image title (if one is defined).
 					@item
@@ -502,21 +506,21 @@ Quick guide
 				@end enumerate
 				
 				A note is included on the @sectionref{Transcriber's Notes, transcriber's notes pages} of the relevant volumes, 
-				stating that the document contains images that are not reproduced in braille.
+				stating that the document contains images that are not reproduced in Braille.
 				@item
-				If images are anchored as a character or to a paragraph or character, they are rendered in braille after 
+				If images are anchored as a character or to a paragraph or character, they are rendered in Braille after 
 				completion of the paragraph or heading that contains the anchor.
 				@item
 				If images are anchored to a @sectionref{Textboxes,textbox}, they are rendered inside this textbox, 
 				before any other material it contains.
 				@item
-				Images are omitted in braille if they are anchored to a page.
+				Images are omitted in Braille if they are anchored to a page.
 				@item
 				Images that are anchored to a @sectionref{Lists,listitem} are rendered only after completion of the entire list.
 				@item
 				Images that are anchored to a @sectionref{Tables,table cell} are rendered only after completion of the entire table.
 				@item
-				Images that are anchored to a @sectionref{Notes,note} are replaced by a double dash (braille dots 36-36-36-36), 
+				Images that are anchored to a @sectionref{Notes,note} are replaced by a double dash (Braille dots 36-36-36-36), 
 				indicating the omission.
 
 			@end itemize
@@ -553,7 +557,7 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				A caption is only rendered in braille if odt2braille links the caption to an object. 
+				A caption is only rendered in Braille if odt2braille links the caption to an object. 
 				Captions can be linked to @sectionref{Tables,tables}, @sectionref{Textboxes,textboxes} or 
 				@sectionref{Images,images}. For more details on the linking of captions to objects, 
 				see the appropriate sections.
@@ -586,15 +590,15 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In braille, note references are preceded by the unspaced @emph{reference indicator} (braille dots 35-35), 
+				In Braille, note references are preceded by the unspaced @emph{reference indicator} (Braille dots 35-35), 
 				and are separated from surrounding text by at least one blank cell.
 				@item
 				Footnotes and endnotes are always preceded by their corresponding reference. 
 				No blank lines are left before, after or between notes.
 				@item
 				Only regular text is retained inside a note, all other elements are dropped.
-				If the note contains multiple OpenOffice.org paragraphs, these are first serialized. Every omission of an element 
-				is indicated by a double dash (braille dots 36-36-36-36) at the element's original location.
+				If the note contains multiple paragraphs, these are first serialized. Every omission of an element 
+				is indicated by a double dash (Braille dots 36-36-36-36) at the element's original location.
 				@item
 				Footnotes begin in cell 7, runovers begin in cell 5. Footnotes in @sectionref{Paragraphs,paragraphs}, 
 				@sectionref{Headings, headings}, @sectionref{Captions, captions} and @sectionref{Lists,listitems} are 
@@ -607,7 +611,7 @@ Quick guide
 				This heading is not included in the @sectionref{Table of Contents, table of contents}.
 				Then the endnotes are listed, ordered by their appearance in print. Each endnote begins in cell 1, 
 				runovers begin in cell 3. When the note section is complete, subsequent text is resumed on a new page. 
-				Note sections can appear at various places in the braille document:
+				Note sections can appear at various places in the Braille document:
 				
 				@itemize @minus
 					@item
@@ -644,21 +648,17 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In braille, a single italic word is prefixed by the unspaced @emph{italic sign} (braille dots 46). If more
+				In English Braille, a single italic word is prefixed by the unspaced @emph{italic sign} (Braille dots 46). If more
 				than three consecutive words are italicized, the first word is preceded by the @emph{double italic sign}
-				(braille dots 46-46), and the last word by the single italic sign.
+				(Braille dots 46-46), and the last word by the single italic sign.
 				@item
-				@@TODO: parts of words italized
-				@item
-				A single bold word is prefixed by the unspaced @emph{bold sign} (braille dots 456). If more
+				A single bold word is prefixed by the unspaced @emph{bold sign} (Braille dots 456). If more
 				than three consecutive words are boldfaced, the first word is preceded by the @emph{double bold sign}
-				(braille dots 456-456), and the last word by the single bold sign.
+				(Braille dots 456-456), and the last word by the single bold sign.
 				@item
-				@@TODO: parts of words boldfaced
+				Other special typefaces like @emph{underline}, @emph{small caps}, etc. are not indicated in English Braille.
 				@item
-				Other special typefaces like @emph{underline}, @emph{small caps}, etc. are not indicated in braille.
-				@item
-				All special typeface in @sectionref{Headings,headings} is ignored in braille.
+				All special typeface in @sectionref{Headings,headings} is ignored in Braille.
 				@item
 				In other @sectionref{Languages,languages}, other rules for indicating special typeface might apply.
 			@end itemize
@@ -682,31 +682,45 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In braille, a number is displayed in the top right corner of each braille page (except
-				@sectionref{Preliminary Pages,preliminary pages}), with no fewer than three blank cells left between
-				the text and the number.
-				If a new print page begins at the top of a braille page, the print page number of that page is
-				put in the top right corner.
-				If material on a print page cannot be contained on a single braille page and must be continued on one
+				All pages of text in the Braille edition carry consecutive Braille page numbers starting
+				with arabic 1 in the first volume. In subsequent @sectionref{Volume Management,volumes}, pages of text 
+				are numbered consecutively from volume to volume. 
+				Preliminary page numbers are either prefixed by the unspaced letter @emph{p}, or rendered in Roman 
+				numerals. The choice is up to the user. Each preliminary section is numbered individually, 
+				starting with @emph{p1} or @emph{i}.
+				By default, the Braille page number is displayed in the bottom right corner of the page, with no fewer 
+				than three blank cells left between the text and the number. The user can also decide to place
+				page numbers at the top, or not display them at all.
+				@item
+				If the source document contains page numbers, they can be included in the Braille version as well.				
+				By default, print page numbers are displayed in the top right corner of each Braille page (except on
+				@sectionref{Preliminary Pages,preliminary pages}), again with no fewer than three blank cells left between
+				the text and the number. The number can also be placed at the bottom. 
+				When print page numbers and Braille page numbers are both placed at the top or bottom, they are rendered 
+				next to each other, print number first, with a space in between.
+				@item
+				If material on a print page cannot be contained on a single Braille page and must be continued on one
 				or more pages, the same print page number is placed in the top right corner of each of these pages.
-				The number is prefixed by the unspaced letter @emph{a} (brailled without the letter indicator) for the 
-				first continued page, the letter @emph{b} for the second, etc. 
+				The number is prefixed by the unspaced letter @emph{a} (brailled without the letter 
+				indicator) for the first continued page, the letter @emph{b} for the second, etc. 
 				@item
-				If a new print page begins @emph{within} a braille page, the new print page number is placed at the right 
-				margin. The @emph{page change indicator}, a line of unspaced braille dots 36, is placed on the same 
-				braille line starting at the left margin, and no space is left between this indicator and the first 
-				symbol of the page number.
+				Optionally, the user can decide to display the @emph{range} of print pages contained in a Braille page
+				(instead of only the page number of the @emph{first} print page). If the first page in this range is a 
+				continued print page, it is prefixed with a letter as usual.
 				@item
-				If you don't want print page numbers or page change indicators to appear in the braille document, 
-				you can uncheck the Include print page numbers option in 
-				[@emph{Braille > Settings > General}].
+				When a new print page begins @emph{within} a Braille page, a @emph{page change indicator}, a line of 
+				unspaced Braille dots 36, can be produced, with or without the new print page number placed on the same 
+				line at the right margin. No space is left between this indicator and the first symbol of the page number.
 				@item
-				Also, a braille page number is displayed in the bottom right corner of each braille page, again with no 
-				fewer than three blank cells left between the text and the number.
-				Every @sectionref{Volume Management,volume} or @sectionref{Volume Management,supplement} is numbered 
-				individually, starting with an arabic 1. 
-				Preliminary page numbers are prefixed by the unspaced letter @emph{p}, brailled without the letter indicator.
-				Subsequent pages are again numbered starting with 1, without any prefix.				
+				By default, empty pages are completely ignored. If this setting is disabled, a @emph{combined} 
+				print page number will be displayed whenever empty pages are encountered: the number of the first empty 
+				page is combined with that of the page on which text reappears, e.g. 5-7. If lettered continuation 
+				pages are required, they carry only the number of the page on which text reappears.
+				@item
+				Another option is to treat @emph{unnumbered} print pages as if they were a part of the preceding page
+				(as if their was no page break).
+				@item
+				All page number settings can be found in [@emph{File > Braille Settings > Page Numbers}].								
 			@end itemize
 	
 	@node Preliminary Pages
@@ -729,14 +743,14 @@ Quick guide
 				@item
 				If a preliminary section has been defined, the transcriber has the option to include
 				a list of special symbols, a transcriber's note page and a table of contents.
-				These options can be found in [@emph{Braille > Settings > General}].
+				These options can be found on the @emph{General}, @emph{Table of Contents} and @emph{Special Symbols} tabs 
+				in [@emph{File > Braille Settings…}].
 				@item
-				Another option found in [@emph{Braille > Settings > General}] is to 
-				create a preliminary volume. This option should be checked if
-				more than 80-90 braille pages are required for the preliminary pages in the first volume to include 
+				Another possibility is to create a preliminary volume. This option should be checked if
+				more than 80-90 Braille pages are required for the preliminary pages in the first volume to include 
 				all items (@pxref{Volume Management}).
 				@item
-				All content before the @kbd{PreliminaryPages} section will be ignored by odt2braille.
+				All content before the @kbd{PreliminaryPages} section will be ignored.
 			@end itemize
 
 		@subheading Braille
@@ -744,30 +758,30 @@ Quick guide
 			@itemize @bullet
 				@item
 				If a preliminary section has been defined in OpenOffice.org, every 
-				@sectionref{Volume Management,braille volume} or supplement will be preceded by a number of preliminary pages.
+				@sectionref{Volume Management,Braille volume} or supplement will be preceded by a number of preliminary pages.
 				@item
 				Some pages (i.e. the @sectionref{Title Page,title page}, 
 				the @sectionref{List of Special Symbols,special symbols page}, 
 				the @sectionref{Transcriber's Notes,transcriber's notes page} and
-				the @sectionref{Table of Contents,table of contents}) are repeated in every braille volume. 
+				the @sectionref{Table of Contents,table of contents}) are repeated in every Braille volume. 
 				However, their content is different for each volume.
-				All other pages only appear in the @emph{extended} preliminary pages. These are either included in the 
+				All other pages only appear in the @emph{extended} preliminary section. This section is either included in the 
 				@emph{preliminary volume} (if present) or in volume 1.
 				@item
-				The print order of items is completely adapted in braille. The special symbols page, transcriber's
+				The print order of items is completely adapted in Braille. The special symbols page, transcriber's
 				notes page and table of contents are placed (in that order) at the very end of the preliminary pages, 
 				before any possible @sectionref{Notes,note sections}.
 				@item
 				Preliminary pages are distinguished from normal pages by a different @sectionref{Page Numbering,page numbering}.
 				@item
-				The actual volume body that follows the preliminary section always starts on a new right-hand braille page.
+				The actual volume body that follows the preliminary section always starts on a new right-hand Braille page.
 			
 			@end itemize
 	
 	@node Volume Management
 	@section Volume Management
 	
-		Often, because documents are too long to be bound in one single braille book, they are arranged in @emph{volumes}.
+		Often, because documents are too long to be bound in one single Braille book, they are arranged in @emph{volumes}.
 		@tip{Typically a volume should have around 80-90 one-sided pages (the page count includes all pages, including 
 		the preliminary pages). Ideally, the next volume starts at a logical place, such as the beginning of a new chapter.
 		As a guideline, there should not be a difference of more than 15 pages between two volumes.}
@@ -795,15 +809,15 @@ Quick guide
 				(or end of the document) is equal to volume 1.
 				@item
 				If a preliminary section is present, a preliminary volume can be created by checking the
-				Create preliminary volume option in [@emph{Braille > Settings > General}].
+				Create preliminary volume option in [@emph{File > Braille Settings > General}].
 			@end itemize
 
 		@subheading Braille
 		
 			@itemize @bullet
 				@item
-				In braille, every volume or supplement has its own preliminary section (if present in OpenOffice.org). 
-				Both the preliminary section and the volume body start on a new right-hand braille page.
+				In Braille, every volume or supplement has its own preliminary section (if enabled by the user). 
+				Both the preliminary section and the volume body start on a new right-hand Braille page.
 				If a preliminary volume is created, it contains the @sectionref{Preliminary Pages,extended preliminary pages}, 
 				but no actual volume body.
 				@item
@@ -828,23 +842,23 @@ Quick guide
 				If a title page has been defined, the transcriber has the option to include a
 				transcription information block. Furthermore, if the title page is a preliminary page, a 
 				volume information block can be included as well.
-				These options can be found in [@emph{Braille > Settings > General}]. 
-				The name of the transcriber is be set with the Transcriber field.
+				These options can be found in [@emph{File > Braille Settings > General}]. 
+				The name of the transcriber can be set with the @emph{Transcriber} field.
 				@item
-				You can add other blocks by simply inserting regular text: each 
-				@sectionref{Paragraphs,OpenOffice.org paragraph} that is not a @sectionref{Captions,caption} or a 
-				@sectionref{Notes,note} is considered a block. To insert a @emph{linebreak} without breaking a block
-				in two, use @sc{shift} + @sc{enter} (or [@emph{Insert > Manual Break > Line break}]) instead of @sc{enter}.
+				You can add other blocks by simply inserting regular text: each paragraph that is not 
+				a @sectionref{Captions,caption} or a @sectionref{Notes,note} is considered a block. To insert 
+				a @emph{linebreak} without breaking a block	in two, use @sc{shift} + @sc{enter} 
+				(or [@emph{Insert > Manual Break > Line break}]) instead of @sc{enter}.
 			@end itemize
 
 		@subheading Braille
 		
 			@itemize @bullet
 				@item
-				In braille, all title page blocks are centered and preceded and followed by a blank line. 
+				In Braille, all title page blocks are centered and preceded and followed by a blank line. 
 				Tables, lists and notes are rendered as usual.
 				@item
-				The print order of items on the title page is completely adapted in braille. The volume information block 
+				The print order of items on the title page is completely adapted in Braille. The volume information block 
 				and transcription information blocks are placed (in that order) at the very end of the title page.
 				@item
 				The volume information block contains the volume identification, the total number of volumes, the page 
@@ -854,6 +868,7 @@ Quick guide
 @emph{In 9 volumes and 2 supplements}
 @emph{Volume 2}
 @emph{Braille pages p1-p16 and 1-72}
+@emph{Print pages 46-79}
 @end example
 @example
 @emph{In 1 preliminary and 5 volumes}
@@ -861,7 +876,7 @@ Quick guide
 @emph{Braille pages p1-p81}
 @end example
 				@item
-				The transcription information block contains the transcriber's name, the year of braille transcription, 
+				The transcription information block contains the transcriber's name, the year of Braille transcription, 
 				etc.
 				@* Example:
 @example
@@ -876,11 +891,12 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				If a preliminary section has been defined, the transcriber has the option to 
-				include a list of special symbols in [@emph{Braille > Settings > General}]. 
-				The special symbols list heading can be modified in the field 
-				below. By default, it is set to "@kbd{SPECIAL SYMBOLS USED IN THIS VOLUME}".
-				@tip{The heading should be fully capitalized.}
+				If a preliminary section has been defined, the transcriber has the option to include a list of 
+				special symbols in [@emph{File > Braille Settings > Special Symbols}]. He or she can also decide 
+				which symbols will be shown, in which order, under which conditions (always, only in the first 
+				volume, or only when actually used in the current volume), and how they are described.
+				The list heading can be modified as well. By default, it is set 
+				to "@kbd{SPECIAL SYMBOLS USED IN THIS VOLUME}".
 			@end itemize
 
 		@subheading Braille
@@ -889,34 +905,33 @@ Quick guide
 				@item
 				A special symbols list is included in the @sectionref{Preliminary Pages,preliminary pages} of each 
 				@sectionref{Volume Management,volume}. The actual content varies between volumes. The special symbols 
-				list begins on a new braille page. The heading is centered at the top of the page. 
+				list begins on a new Braille page. The heading is centered at the top of the page. 
 				It is not included in the @sectionref{Table of Contents, table of contents}.
 				@item
-				After a blank line, the list follows. Each braille symbol begins in cell 1 and is followed, after one 
+				After a blank line, the list follows. Each Braille symbol begins in cell 1 and is followed, after one 
 				blank cell, by its identifying dot numbers, enclosed in parentheses, and its description.
-				Runovers begin in cell 3. Only those symbols that are actually used in the current volume are listed.
-				These are all possible symbols:
+				Runovers begin in cell 3. These are the symbols that are listed by default:
 				
 				@itemize @minus
 					@item
-					@kbd{(56) Letter indicator} ,
+					@kbd{⠰ (56) Letter indicator} ,
 					@item
-					@kbd{(3456) Number indicator} , 
+					@kbd{⠼ (3456) Number indicator} , 
 					@item
-					@kbd{(35, 35) Note reference indicator} ,
+					@kbd{⠔⠔ (35, 35) Note reference indicator} ,
 					@item
-					@kbd{(6, 3) Transcriber's note indicator} ,
+					@kbd{⠠⠄ (6, 3) Transcriber's note indicator} ,
 					@item
-					@kbd{(46) Italic indicator} ,
+					@kbd{⠨ (46) Italic indicator} ,
 					@item
-					@kbd{(456) Boldface indicator} ,
+					@kbd{⠸ (456) Boldface indicator} ,
 					@item
-					@kbd{(36, 36, 36, 36) Double dash indicating omission of a table, textbox or image} , and
+					@kbd{⠤⠤⠤⠤ (36, 36, 36, 36) Double dash indicating omission of a table, textbox or image} , and
 					@item
-					@kbd{(5, 5, 5) Ellipsis indicating empty table cell} .
+					@kbd{⠐⠐⠐ (5, 5, 5) Ellipsis indicating empty table cell} .
 				@end itemize
 				
-				The exact braille dots of some symbols can differ between @sectionref{Languages,languages}.
+				The exact Braille dots of some symbols can differ between @sectionref{Languages,languages}.
 				@item
 				If no symbols are listed, the special symbols list is not displayed.	
 			@end itemize
@@ -924,7 +939,7 @@ Quick guide
 	@node Transcriber's Notes
 	@section Transcriber's Notes
 		
-		A transcriber's note is a note that is added in the braille edition by the transcriber but not		
+		A transcriber's note is a note that is added in the Braille edition by the transcriber but not		
 		shown in the print text. Some notes are inserted between other items in the document body,
 		some notes are displayed on a separate @emph{transcriber's note page} in the preliminary section.
 		
@@ -934,10 +949,9 @@ Quick guide
 				@item
 				Transcriber's notes are automatically inserted by odt2braille. A user can only control whether or not 
 				a transcriber's note page is included in the preliminary pages, through the option 
-				Include transcriber's note page in [@emph{Braille > Settings > General}]. 
+				Include transcriber's note page in [@emph{File > Braille Settings > General}]. 
 				The transcriber's note page heading can be modified in the field 
 				below. By default, it is set to "@kbd{TRANSCRIBER'S NOTES}".
-				@tip{The heading should be fully capitalized.}
 			@end itemize
 
 		@subheading Braille
@@ -947,9 +961,9 @@ Quick guide
 				Transcriber's notes that appear throughout the document are brailled in @emph{paragraph form}. A note
 				consists of one or more @emph{note paragraphs}. Each note paragraph begins in cell 7, runovers begin in 
 				cell 5. No blank lines are left before, after or between note paragraphs.
-				The complete note is preceded and followed by the unspaced @emph{transcriber's note indicator} (braille dots 6-3).
+				The complete note is preceded and followed by the unspaced @emph{transcriber's note indicator} (Braille dots 6-3).
 				@item
-				The transcriber's note page begins on a new braille page. The heading is centered at the top of the page.
+				The transcriber's note page begins on a new Braille page. The heading is centered at the top of the page.
 				It is not included in the @sectionref{Table of Contents, table of contents}.
 				After a blank line the notes are listed. Notes are brailled as indented @sectionref{Paragraphs,paragraphs} 
 				(first line cell 3, runovers cell 1, no blank lines between notes). No @emph{transcriber's note indicators} 
@@ -965,19 +979,19 @@ Quick guide
 				@item
 				In OpenOffice, a table of contents can be added to the document by selecting
 				[@emph{Insert > Indexes and Tables > Indexes and Tables}] and choosing @emph{Table of Contents} for @emph{Type}.
-				However, these tables are not adopted in the braille version. Instead, odt2braille generates its own table of 
+				However, these tables are not adopted in the Braille version. Instead, odt2braille generates its own table of 
 				contents, and the user is given the option to include this table of contents
-				in the preliminary pages of each volume. This option is found in [@emph{Braille > Settings > General}].
-				The table of contents heading can be modified in the field below. By default, it is set to "@kbd{CONTENTS}".
-				@tip {If a table of contents is present in print, include it in braille also.}
+				in the preliminary pages of each volume. This option is found in [@emph{File > Braille Settings > Table of Contents}].
+				The table heading can be modified in the field below. By default, it is set to "@kbd{CONTENTS}".
+				@tip {If a table of contents is present in print, include it in Braille also.}
 			@end itemize
 
 		@subheading Braille
 		
 			@itemize @bullet
 				@item
-				The table of contents is rendered at the very end of the @sectionref{Preliminary Pages,preliminary pages},
-				before any possible @sectionref{Notes,note sections}. The table of content begins on a new braille page. 
+				The table of contents is rendered at the very end of the @sectionref{Preliminary Pages,preliminary section},
+				before any possible @sectionref{Notes,note sections}. The table of contents begins on a new Braille page. 
 				The heading is centered at the top of the page and followed by a blank line.
 				@item
 				The actual content varies between volumes. On the @emph{extended} preliminary pages (either included in the
@@ -986,7 +1000,7 @@ Quick guide
 				In all other regular volumes, the table of contents is limited to headings in that particular volume.
 				No table of contents is included in supplementary volumes.
 				@item
-				Each table line is composed of
+				Each table entry is composed of
 				
 				@itemize @minus
 					@item
@@ -995,16 +1009,22 @@ Quick guide
 					[the @sectionref{Page Numbering,print page number}, prefixed with the appropriate letter if the heading
 					begins on a continued page]*, and
 					@item
-					the braille page number
+					the Braille page number
 				@end itemize
 				
-				(* only if the Include print page numbers option in 
-				[@emph{Braille > Settings > General}] is set). Level 1 headings begin in cell 1, runovers in cell 5. 
-				Level 2 headings begin in cell 3, runovers in cell 7. Level 3 headings begin in cell 5, runovers in cell 9. 
-				Headings with an outline level greater than 3 begin in cell 7, runovers in cell 11. The print and braille 
-				page numbers are placed to end at the right margin of the braille line on which the heading ends. If space 
-				allows it, a sequence of unspaced @emph{guide dots} (braille dots 5), preceded and followed by a blank cell, 
-				is inserted between the heading and the page numbers.
+				(* only if the @emph{Include print page numbers} option in 
+				[@emph{File > Braille Settings > Page Numbers}] is set). 
+				
+				@item
+				By default, level 1 headings begin in cell 1, runovers in cell 5. Level 2 headings begin in cell 3, runovers 
+				in cell 7. Level 3 headings begin in cell 5, runovers in cell 9. Headings with an outline level greater than 
+				3 begin in cell 7, runovers in cell 11. All these settings can be altered
+				in [@emph{File > Braille Settings > Table of Contents}].
+				@item
+				The print and Braille page numbers are placed to end at the right margin of the Braille line on which the 
+				heading ends. If space allows it, a sequence of unspaced @emph{guide dots}, preceded and followed by a blank cell, 
+				is inserted between the heading and the page numbers. The Braille symbol for these guide dots can be specified
+				by the user, the default value is Braille dots 5.				
 			@end itemize
 	
 	@node Bibliographies
@@ -1030,9 +1050,9 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In braille, references are rendered exactly as in print (short name enclosed by square brackets).
+				In Braille, references are rendered exactly as in print (short name enclosed by square brackets).
 				@item
-				The bibliography begins on a new braille page. On the first line, the heading is centered and followed by a
+				The bibliography begins on a new Braille page. On the first line, the heading is centered and followed by a
 				blank line. It is not included in the @sectionref{Table of Contents, table of contents}. The actual 
 				bibliography entries are brailled like any other @sectionref{Lists,list}. Each item begins in cell 1, runovers 
 				in cell 3. The entries are translated literally, including @sectionref{Special Typeface,special typeface}.
@@ -1047,13 +1067,13 @@ Quick guide
 	@node Inserting literal Braille
 	@section Inserting literal Braille
 	
-	@@TODO: Howto insert braille characters in the document that will be rendered identically in the braille version and the print version.
+	@@TODO: Howto insert Braille characters in the document that will be rendered identically in the Braille version and the print version.
 	6 Key Entry Mode: does not work on all keyboards!
 	
 	@node Braille-only Material
 	@section Braille-only Material
 	
-	@@TODO: Howto format text such that it will only be rendered in the braille version of the document and not in the print version.
+	@@TODO: Howto format text such that it will only be rendered in the Braille version of the document and not in the print version.
 	
 	@node Hyphenation
 	@section Hyphenation
@@ -1069,7 +1089,7 @@ Quick guide
 	@section Preview
 	
 	@@TODO
-
+	
 @html
 </div>
 @end html

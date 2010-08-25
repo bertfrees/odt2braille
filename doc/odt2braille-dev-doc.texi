@@ -1,5 +1,6 @@
-\input texinfo
+﻿\input texinfo
 @setfilename odt2braille-dev-doc.info
+@documentencoding UTF-8
 @include version.texi
 @settitle odt2braille Developer Guide
 @finalout
@@ -16,10 +17,6 @@
 @vskip 0pt plus 1filll
 @insertcopying
 @end titlepage
-
-@html
-<div id="Content">
-@end html
 
 @contents
 
@@ -149,18 +146,9 @@ texi2dvi --pdf
 makeinfo --html
 @*@w{        }[--no-split]
 @*@w{        }[--no-headers]
-@*@w{        }[--css-include=body.css]
 @*@w{         }--output=odt2braille-user-doc.html
 @*@w{         }odt2braille-user-doc.texi}
-@item
-@code{
-makeinfo --html
-@*@w{        }[--no-split]
-@*@w{        }[--no-headers]
-@*@w{        }[--css-include=body.css]
-@*@w{         }--output=odt2braille-dev-doc.html
-@*@w{         }odt2braille-dev-doc.texi
-}
+
 @end itemize	
 			
 Javadoc:
@@ -293,7 +281,7 @@ Table Of Contents:
 @item
 Mac OS, Linux, ... !!!
 @item
-Add more "Braille formatting standards" (now: only BANA)
+Add more "Braille formatting standards" (now: only BANA) (eg. also UEBC)
 @item
 Documentation!
 @item
@@ -305,7 +293,7 @@ Tooltips in dialogs.
 @item
 Keyboard shortcut for Braille menu.
 @item
-Howto handle unknown characters? (-> now: dots 3456)
+Howto handle unknown characters? (-> now: dots 3456) (-> "undefined" opcode ?)
 @item
 Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (braille-only material). TN => settings!
 @item
@@ -315,15 +303,15 @@ Tactile graphics.
 @item
 If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
 @item
-The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog).
-@item
 OpenOffice.org accessibility for screen readers (on Windows)?
 @item
 OCR plugin for OpenOffice.org?
 @item
+http://www.thessalonica.org.ru/en/index.html ?
+@item
 Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).
 @item
-Endnotes in preliminary pages: bug.
+Endnotes in preliminary pages: fix bug.
 @item
 makePEF(): should be made more robust.
 @item
@@ -332,7 +320,7 @@ Replace DOM processing with XSL transformation where this is possible.
 This will result in better performance.
 (Vincent Spiewak is rewriting JODL in XSLT 2.0)
 @item
-When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified.
+When multi-volume feature of liblouisxml is finished: Odt2Braille code might be simplified.
 @item
 Jlouis ?
 @item
@@ -342,14 +330,24 @@ Presentations & spreadsheets.
 @item
 Commandline tool (Odt2Braille.jar).
 @item
-Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten)
+Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten: bv door special typeface / languages)
 Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
+@item
+Uitleg van WinBraille over g0,g1,g2,...
+* g0 = one to one
+* g1 = literary one to one with capital and figure prefix
+* g2,g3,g4,... = contracted braille
+@item
+Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
+	=> OOo crasht (Windows XP) bij oproepen van dialoogvenster => is dit nog steeds zo?
+@item
+Voor Ubuntu: OOo 3.2.1 nodig ?
+@item
+Settings in Tools > Options... ?
+@item
+Zoveel mogelijk originele tabellen includen en sommige default bestanden (tables) overschrijven met eigen (files)
 @item
 ...
 @end itemize
-
-@html
-</div>
-@end html
 
 @bye

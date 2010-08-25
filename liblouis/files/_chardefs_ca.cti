@@ -136,6 +136,7 @@ punctuation \x2043        36                  ⁃                   HYPHEN BULLE
 # ----------------------------------------------------------------------------------------------
 
 sign        \x2808        4                   ⠈                   BRAILLE PATTERN DOTS-4
+sign        \x2809        14                  ⠉                   BRAILLE PATTERN DOTS-14
 sign        \x2810        5                   ⠐                   BRAILLE PATTERN DOTS-5
 sign        \x2818        45                  ⠘                   BRAILLE PATTERN DOTS-45
 sign        \x2820        6                   ⠠                   BRAILLE PATTERN DOTS-6

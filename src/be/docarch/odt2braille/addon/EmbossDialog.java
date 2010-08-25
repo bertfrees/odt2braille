@@ -229,6 +229,7 @@ public class EmbossDialog implements XItemListener,
         L10N_embosser.put("INDEX_EVEREST",     "Index Braille - 9.20 Everest V2");
         L10N_embosser.put("INDEX_EVEREST_V3",  "Index Braille - Everest V3");
         L10N_embosser.put("INDEX_BASIC_D_V3",  "Index Braille - Basic-D V3");
+        L10N_embosser.put("INDEX_BASIC_D",     "Index Braille - Basic-D");
         L10N_embosser.put("BRAILLO_200",       "Braillo 200 (firmware 000.17 or later)");
         L10N_embosser.put("BRAILLO_400_S",     "Braillo 400S (firmware 000.17 or later)");
         L10N_embosser.put("BRAILLO_400_SR",    "Braillo 400SR (firmware 000.17 or later)");

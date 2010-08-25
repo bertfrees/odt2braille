@@ -52,15 +52,26 @@ Added features:
 * Hyphenation option (supported languages are: German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
 * Export to BRA file format. Choice between old and new Spanish Braille.
 * Preview Window
+* Index Basic-D support
 * Other small improvements: 
     - Print page range information on title page.
 
-
+	
 Changes:
 
-* Spanish and Danish translation tables improved.
-* Catalan translation table added.
+
 * Braille menu in menu bar replaced with menu items under File menu
+
+
+Translation tables:
+
+
+* Spanish improved.
+* Catalan added.
+* Greek within Spanish/Catalan texts.
+* Danish grade 2 added.
+* Portuguese grade 2 added.
+* A few changes to other translation tables.
 
 
 Fixed bugs:

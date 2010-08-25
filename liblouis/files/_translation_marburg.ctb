@@ -3,7 +3,6 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
-
 # grouping definitions are character-definition rules
 grouping mrow \x0001\x0002 1e,2e
 grouping mfrac \x0003\x0004 3e,4e
@@ -147,6 +146,5 @@ pass2 [@456-34-3456]%lownum1-10 ?
 pass3 @346%lownum1-10[@12456] ?
 pass3 @16[%lownum1-10]@12456 *
 pass3 {mfrac[@3456%upnum1-10%lownum1-10]}mfrac *
-
 
 # ----------------------------------------------------------------------------------------------

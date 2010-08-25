@@ -2,9 +2,9 @@
 # = en-us-g2.ctb without inclusion of chardefs.cti
 # ----------------------------------------------------------------------------------------------
 
-
 # Braille indicators specific to Grade 2
 letsign 56
+noletsignbefore .
 multind 56-6 letsign capsign
 
 # Contractions beginning with the letter a
@@ -75,6 +75,7 @@ midendword bble 12-3456
 lowword be 23
 begword be 23
 begword bea 12-2
+always beu = Beulah
 always bear 12-15-345
 begword beatif 23-1-2345-24-124
 begword beatit 23-1-2345-24-2345
@@ -185,7 +186,7 @@ syllable chand 16-12346 merchandise
 always character 5-16
 always chemo 16-15-134-135
 word child 16
-always children 16-1345
+prfword children 16-1345
 sufword clever 14-123-5-15 cleverest
 
 # the letter d
@@ -280,6 +281,7 @@ begword ero 15-1235-135
 syllable room = storeroom
 begword eru = erupt
 always evert 15-1236-12456-2345
+always nevertheless 1345-5-15-2346-46-234
 always ever 5-15
 midendword evere 15-1236-12456-15 Everest
 always evered 15-1236-12456-1246
@@ -529,7 +531,7 @@ contraction pd
 always part 5-1234
 begword parta 1234-345-2345-1 partake
 begword parthe 1234-345-2346 parthenon
-begword parth 1234-345-3456 parthian
+begword parth 1234-345-1456 parthian
 begword parto 1234-345-2345-135
 begword parthen 1234-345-2346-1345 parthenon parthenogenesis
 word people 1234
@@ -758,7 +760,8 @@ contraction yrvs
 
 # the letter z
 
-# Système International Prefixes
+# Syst`eme International Prefixes
+begword proto =
 begword yotta 13456-135-2345-2345-1 10^24
 begword zetta 1356-15-2345-2345-1 10^21
 # begword exa 15-1346-1 10^18

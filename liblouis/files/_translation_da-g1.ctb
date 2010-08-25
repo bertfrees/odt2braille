@@ -1,25 +1,2 @@
-# **** Braille Indicators
-numsign 3456 	# number sign
-letsign 56	# letter sign
-capsign 46	# capital sign
-begcaps 46-46	# double caps
-endcaps 6-3
-begital 456 	# italic sign
-begbold 456
-
-# punctuation marks
-
-postpunc % 245-356-6
-always @ 5
-always & 6-12346
-always *** 236-35-35-35-356
-always * 236-35-356
-always // 6-35
-always / 3-4
-always > 6
-always \\ 5-2
-always ^^ 456
-always ^ 46
-always _ 56
-
-
+always \s 	0	#Blank represented by a blank braille cell
+always \t	0	#Ensures tab is a blank cell

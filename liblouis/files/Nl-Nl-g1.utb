@@ -4,7 +4,7 @@
 
 locale Netherlands
 
-# include text_nabcc.dis
+include text_nabcc.dis
 
 space \t 0 tab						#  9
 space \x000A 0

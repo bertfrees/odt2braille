@@ -1,7 +1,7 @@
 <html lang="en">
 <head>
 <title>odt2braille Developer Guide</title>
-<meta http-equiv="Content-Type" content="text/html">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta name="description" content="odt2braille Developer Guide">
 <meta name="generator" content="makeinfo 4.7">
 <link title="Top" rel="top" href="#Top">
@@ -335,34 +335,43 @@ The translation tables and configuration files are kept under <code>liblouis/sha
 </ul>
 
      <li>Mac OS, Linux, ... !!! 
-<li>Add more "Braille formatting standards" (now: only BANA)
+<li>Add more "Braille formatting standards" (now: only BANA) (eg. also UEBC)
 <li>Documentation! 
 <li>Support more embossers. 
 <li>Only Interpoint55 is tested. 
 <li>Tooltips in dialogs. 
 <li>Keyboard shortcut for Braille menu. 
-<li>Howto handle unknown characters? (-&gt; now: dots 3456)
+<li>Howto handle unknown characters? (-&gt; now: dots 3456) (-&gt; "undefined" opcode ?) 
 <li>Hidden paragraphs (or paragraphs in hidden sections) =&gt; transcriber's notes (braille-only material). TN =&gt; settings! 
 <li>8 dot Braille. 
 <li>Tactile graphics. 
 <li>If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding. 
-<li>The Settings class should be responsible for the correctness of its own members (not responsibility of SettingsDialog). 
 <li>OpenOffice.org accessibility for screen readers (on Windows)? 
 <li>OCR plugin for OpenOffice.org? 
+<li>http://www.thessalonica.org.ru/en/index.html ? 
 <li>Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail). 
-<li>Endnotes in preliminary pages: bug. 
+<li>Endnotes in preliminary pages: fix bug. 
 <li>makePEF(): should be made more robust. 
 <li>Odt2Daisy.preProcessing(): should be made faster. 
 Replace DOM processing with XSL transformation where this is possible. 
 This will result in better performance. 
 (Vincent Spiewak is rewriting JODL in XSLT 2.0)
-<li>When multi-volume feature of liblouisxml is finished: odt2braille code might be simplified. 
+<li>When multi-volume feature of liblouisxml is finished: Odt2Braille code might be simplified. 
 <li>Jlouis ? 
 <li>UTD &amp; liblouisutdml? 
 <li>Presentations &amp; spreadsheets. 
 <li>Commandline tool (Odt2Braille.jar). 
-<li>Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten)
+<li>Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten: bv door special typeface / languages)
 Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg. 
+<li>Uitleg van WinBraille over g0,g1,g2,... 
+* g0 = one to one
+* g1 = literary one to one with capital and figure prefix
+* g2,g3,g4,... = contracted braille
+<li>Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
+	=&gt; OOo crasht (Windows XP) bij oproepen van dialoogvenster =&gt; is dit nog steeds zo? 
+<li>Voor Ubuntu: OOo 3.2.1 nodig ? 
+<li>Settings in Tools &gt; Options... ? 
+<li>Zoveel mogelijk originele tabellen includen en sommige default bestanden (tables) overschrijven met eigen (files)
 <li>... 
 </ul>
 
