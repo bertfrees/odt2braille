@@ -10,17 +10,17 @@
 Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 
      This program is free software: you can redistribute it and/or
-     modify it under the terms of the GNU General Public License as
-     published by the Free Software Foundation, either version 3 of the
-     License, or (at your option) any later version.
+     modify it under the terms of the GNU Lesser General Public License
+     as published by the Free Software Foundation, either version 3 of
+     the License, or (at your option) any later version.
 
      This program is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
      General Public License for more details.
 
-     You should have received a copy of the GNU General Public License
-     along with this program.  If not, see
+     You should have received a copy of the GNU Lesser General Public
+     License along with this program.  If not, see
      `http://www.gnu.org/licenses'.
 
 -->
@@ -34,32 +34,10 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
   pre.smalllisp    { font-size:smaller }
   span.sc { font-variant:small-caps }
   span.roman { font-family: serif; font-weight: normal; } 
-body {
-  margin:50px 0px; padding:0px;
-  text-align:center;
-  font:15px sans-serif;
-}
-	
-#Content {
-  width:700px;
-  margin:0px auto;
-  text-align:left;
-  padding:15px;
-  border:1px dashed #333;
-  background-color:#eee;
-}
-
-h1.settitle {
-
-  font:Myriad,Helvetica,Tahoma,Arial,clean,sans-serif; 
-  font-size:300%;
-
-}--></style>
+--></style>
 </head>
 <body>
 <h1 class="settitle">odt2braille Developer Guide</h1>
-<div id="Content">
-
    <div class="contents">
 <h2>Table of Contents</h2>
 <ul>
@@ -85,9 +63,15 @@ h1.settitle {
 <li><a href="#DaisyPipeline">DaisyPipeline</a>
 </li></ul>
 <li><a name="toc_Liblouisxml" href="#Liblouisxml">3 Liblouisxml</a>
-<li><a name="toc_Todo_0027s" href="#Todo_0027s">4 Todo's</a>
+<li><a name="toc_Tutorials" href="#Tutorials">4 Tutorials</a>
+<ul>
+<li><a href="#Tutorials">Adding an embosser</a>
+</li></ul>
+<li><a name="toc_Task-list" href="#Task-list">5 Task list</a>
 </li></ul>
 </div>
+
+
 
 <p><a name="Top"></a>
 
@@ -98,16 +82,16 @@ h1.settitle {
    <blockquote>
 
         <p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
         <p>This program is distributed in the hope that it will be useful,
 but <span class="sc">without any warranty</span>; without even the implied warranty of
 <span class="sc">merchantability</span> or <span class="sc">fitness for a particular purpose</span>.  See the
 GNU General Public License for more details.
 
-        <p>You should have received a copy of the GNU General Public License
+        <p>You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <a href="http://www.gnu.org/licenses">http://www.gnu.org/licenses</a>.
 
    </blockquote>
@@ -207,18 +191,10 @@ texi2dvi --pdf
 makeinfo --html
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--no-split]
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--no-headers]
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--css-include=body.css]
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->--output=odt2braille-user-doc.html
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->odt2braille-user-doc.texi</code>
-<li><code>
-makeinfo --html
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--no-split]
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--no-headers]
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[--css-include=body.css]
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->--output=odt2braille-dev-doc.html
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->odt2braille-dev-doc.texi
-</code>
-</ul>
+
+   </ul>
 
    <p>Javadoc:
 
@@ -312,9 +288,51 @@ The translation tables and configuration files are kept under <code>liblouis/sha
 <code><a href="http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html">liblouisxml</a></code> and
 <code><a href="http://liblouis.googlecode.com/svn/documentation/liblouis.html">libouis</a></code> manuals.
 
-<p><a name="Todo_0027s"></a>
+<p><a name="Tutorials"></a>
 
-<h2 class="chapter">4 Todo's</h2>
+<h2 class="chapter">4 Tutorials</h2>
+
+<h3 class="unnumberedsec">Adding an embosser</h3>
+
+<p>To add support for an embosser, the protocol for giving print instructions to that embosser has to be known. 
+This includes e.g.
+     <ul>
+<li>the configuration of the header which initiates the print job and gives general printing information,
+<li>the way Braille pages and Braille lines are represented,
+<li>the way each Braille character is represented (the character set),
+<li>the footer which ends the print job, etc. 
+</ul>
+
+   <p>In addition, you should know the dimensions of cell spacing and line spacing, whether the embosser
+can print interpoint (duplex), which paper sizes are supported, etc.
+
+   <p>Once the protocol is known, it can be implemented. What follows is a more or less general way of
+adapting the code in order to add an embosser. But because each embosser is different, extra
+adjustments may have to be made.
+
+     <ul>
+<li>In <code>org_pef_text.pef2text.EmbosserFactory</code>, expand the <code>EmbosserType</code> enumeration with
+a new embosser type. Add a <code>case</code> for this new embosser type to the <code>switch</code> statement
+in the <code>newEmbosser</code> function. 
+<li>Possibly, a new character set may have to be defined in <code>org_pef_text.TableFactory</code> as well. 
+Edit the <code>TableType</code> enumeration and the <code>newTable</code> function. 
+<li>Finally, in <code>be.docarch.odt2braille.Settings</code>, the functions
+<code>embosserIsSupported</code>,
+<code>changeEmbosser</code>,
+<code>tableIsSupported</code>,
+<code>paperSizeIsSupported</code>,
+<code>changePaperSize</code>,
+<code>getMaxPaperWidth</code>,
+<code>getMaxPaperHeight</code>,
+<code>getMinPaperWidth</code>,
+<code>getMinPaperHeight</code> and
+<code>duplexIsSupported</code>
+need adjustments. 
+</ul>
+
+<p><a name="Task-list"></a>
+
+<h2 class="chapter">5 Task list</h2>
 
      <ul>
 <li>More flexibility by providing more settings!
@@ -374,8 +392,6 @@ Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
 <li>Zoveel mogelijk originele tabellen includen en sommige default bestanden (tables) overschrijven met eigen (files)
 <li>... 
 </ul>
-
-   <p></div>
 
 </body></html>
 

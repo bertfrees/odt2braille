@@ -8,10 +8,12 @@
 @unnsecentry{Odt2braille Source Code}{10001.2}{}{2}
 @unnsecentry{Build}{10001.3}{}{3}
 @unnsecentry{Documentation}{10001.4}{}{3}
-@unnsecentry{Downloads}{10001.5}{}{4}
-@numchapentry{Projects}{2}{Projects}{5}
-@unnsecentry{Odt2BrailleAddOn}{10001.1}{Odt2BrailleAddOn}{5}
-@unnsecentry{Odt2Braille}{10001.2}{Odt2Braille}{5}
-@unnsecentry{DaisyPipeline}{10001.3}{DaisyPipeline}{5}
-@numchapentry{Liblouisxml}{3}{Liblouisxml}{6}
-@numchapentry{Todo's}{4}{Todo's}{7}
+@unnsecentry{Downloads}{10001.5}{}{3}
+@numchapentry{Projects}{2}{Projects}{4}
+@unnsecentry{Odt2BrailleAddOn}{10001.1}{Odt2BrailleAddOn}{4}
+@unnsecentry{Odt2Braille}{10001.2}{Odt2Braille}{4}
+@unnsecentry{DaisyPipeline}{10001.3}{DaisyPipeline}{4}
+@numchapentry{Liblouisxml}{3}{Liblouisxml}{5}
+@numchapentry{Tutorials}{4}{Tutorials}{6}
+@unnsecentry{Adding an embosser}{10001.1}{}{6}
+@numchapentry{Task list}{5}{Task list}{7}

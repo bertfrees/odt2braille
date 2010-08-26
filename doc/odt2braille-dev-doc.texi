@@ -31,7 +31,8 @@
 * Hacking::
 * Projects::
 * Liblouisxml::
-* Todo's::
+* Tutorials::
+* Task list::
 @end menu
 
 @node Hacking
@@ -250,8 +251,56 @@ For more information read the
 @code{@url{http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html, liblouisxml}} and
 @code{@url{http://liblouis.googlecode.com/svn/documentation/liblouis.html, libouis}} manuals.
 
-@node Todo's
-@chapter Todo's
+@node Tutorials
+@chapter Tutorials
+
+@unnumberedsec Adding an embosser
+
+To add support for an embosser, the protocol for giving print instructions to that embosser has to be known.
+This includes e.g.
+@itemize @bullet
+@item
+the configuration of the header which initiates the print job and gives general printing information,
+@item
+the way Braille pages and Braille lines are represented,
+@item
+the way each Braille character is represented (the character set),
+@item
+the footer which ends the print job, etc.
+@end itemize
+
+In addition, you should know the dimensions of cell spacing and line spacing, whether the embosser 
+can print interpoint (duplex), which paper sizes are supported, etc.
+
+Once the protocol is known, it can be implemented. What follows is a more or less general way of 
+adapting the code in order to add an embosser. But because each embosser is different, extra
+adjustments may have to be made.
+
+@itemize @bullet
+@item
+In @code{org_pef_text.pef2text.EmbosserFactory}, expand the @code{EmbosserType} enumeration with
+a new embosser type. Add a @code{case} for this new embosser type to the @code{switch} statement
+in the @code{newEmbosser} function.
+@item
+Possibly, a new character set may have to be defined in @code{org_pef_text.TableFactory} as well.
+Edit the @code{TableType} enumeration and the @code{newTable} function.
+@item
+Finally, in @code{be.docarch.odt2braille.Settings}, the functions 
+@code{embosserIsSupported},
+@code{changeEmbosser},
+@code{tableIsSupported},
+@code{paperSizeIsSupported},
+@code{changePaperSize},
+@code{getMaxPaperWidth},
+@code{getMaxPaperHeight},
+@code{getMinPaperWidth},
+@code{getMinPaperHeight} and 
+@code{duplexIsSupported} 
+need adjustments.
+@end itemize
+
+@node Task list
+@chapter Task list
 
 @itemize @bullet
 @item

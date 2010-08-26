@@ -109,6 +109,11 @@
         <copy todir="${build.oxt.dir}/${settings.dir}">
             <fileset dir="${settings.dir}" />
         </copy>
+		
+		<!-- add licenses folder -->
+        <copy todir="${build.oxt.dir}/${licenses.dir}">
+            <fileset dir="${licenses.dir}" />
+        </copy>
 
         <!-- zip the new extension addon -->
         <delete file="${uno.package.name}" />

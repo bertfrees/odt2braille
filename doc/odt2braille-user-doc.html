@@ -10,17 +10,17 @@
 Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 
      This program is free software: you can redistribute it and/or
-     modify it under the terms of the GNU General Public License as
-     published by the Free Software Foundation, either version 3 of the
-     License, or (at your option) any later version.
+     modify it under the terms of the GNU Lesser General Public License
+     as published by the Free Software Foundation, either version 3 of
+     the License, or (at your option) any later version.
 
      This program is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
      General Public License for more details.
 
-     You should have received a copy of the GNU General Public License
-     along with this program.  If not, see
+     You should have received a copy of the GNU Lesser General Public
+     License along with this program.  If not, see
      `http://www.gnu.org/licenses'.
 
 -->
@@ -74,7 +74,6 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 <li><a href="#Braille_002donly-Material">2.21 Braille-only Material</a>
 <li><a href="#Hyphenation">2.22 Hyphenation</a>
 <li><a href="#Templates">2.23 Templates</a>
-<li><a href="#Preview">2.24 Preview</a>
 </li></ul>
 </li></ul>
 </div>
@@ -84,16 +83,16 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
    <blockquote>
 
         <p>This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+it under the terms of the GNU Lesser General Public License as
+published by the Free Software Foundation, either version 3 of the
+License, or (at your option) any later version.
 
         <p>This program is distributed in the hope that it will be useful,
 but <span class="sc">without any warranty</span>; without even the implied warranty of
 <span class="sc">merchantability</span> or <span class="sc">fitness for a particular purpose</span>.  See the
 GNU General Public License for more details.
 
-        <p>You should have received a copy of the GNU General Public License
+        <p>You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <a href="http://www.gnu.org/licenses">http://www.gnu.org/licenses</a>.
 
    </blockquote>
@@ -122,9 +121,22 @@ Mac OS users can access OpenOffice.org with VoiceOver; Linux users can access it
 
 <h3 class="unnumberedsec">Getting started</h3>
 
-<p>In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille production. 
-Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find a more comprehensive reference. 
-You can find more help on working with Writer at <a href="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide</a>.
+<p>In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille
+production. Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find
+a more comprehensive reference. You can find more help on working with Writer at
+<a href="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide</a>.
+
+   <p>After installing odt2braille, a whole new range of user preferences will become available. 
+Because of the broad range of Braille formatting conventions in use worldwide, odt2braille provides a lot of
+flexibility. Users are able to adjust the Braille layout in detail, just like they can fully customize
+the print layout.
+
+   <p>To make sure that non-technical users will not be overwhelmed with possibilities, they have the option to choose
+from a series of <em>formal</em> Braille rules, e.g. the <em>BANA principles of print to Braille transcription</em>
+(see <a href="http://www.brl.org/formats/">http://www.brl.org/formats/</a>). This will considerably limit their freedom, but it will also greatly
+simplify the production of valid and well-formatted Braille.
+
+   <p>What follows next is a detailed overview of all possibilities odt2braille offers.
 
 <p><a name="Quick-guide"></a>
 
@@ -282,8 +294,9 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 				start with a heading, odt2braille inserts a <em>continuation heading</em>: the closest preceding heading is repeated
 				and suffixed with the string "<kbd>(Cont.)</kbd>". This continuation heading is included in the table of contents as well. 
 				<blockquote>
-<b>Tip:</b> Always start a volume with a heading. 
-</blockquote>
+<b>Tip:</b> Always start a volume with a heading.
+
+     </blockquote>
 
      <p>			</ul>
 
@@ -1187,7 +1200,30 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 
 <h3 class="section">2.19 Mathematics</h3>
 
-<p>	@TODO: Howto insert formulas
+<p>		
+
+<h4 class="subheading">OpenOffice.org</h4>
+
+<p>			
+     <ul>
+				<li>				To insert a mathematical expression in OpenOffice.org, go to [<em>Insert &gt; Object &gt; Formula</em>]. 
+				The equation editor will open at the bottom of the screen, and the floating Selection window appears. 
+				The equation editor uses a markup language to represent formulas. 
+				For more information on inserting math, read the math guide at
+				<a href="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Math_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Math_Guide</a>. 
+			</ul>
+
+   <p>		
+
+<h4 class="subheading">Braille</h4>
+
+<p>			
+     <ul>
+				<li>				Mathematical equations are conveyed to Braille through the use of specialized math Braille codes. 
+				Supported math codes are <em>Nemeth</em> (generally accepted in the United States),
+				<em>Marburg</em> (Germany), <em>UK Maths</em> (United Kingdom) and <em>Notaert</em> (Flanders, Belgium). 
+				You can select which code you want to use in [<em>File &gt; Braille Settings &gt; Mathematics</em>]. 
+			</ul>
 
    <p>	<a name="Inserting-literal-Braille"></a>
 
@@ -1195,8 +1231,29 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 
 <h3 class="section">2.20 Inserting literal Braille</h3>
 
-<p>	@TODO: Howto insert Braille characters in the document that will be rendered identically in the Braille version and the print version. 
-	6 Key Entry Mode: does not work on all keyboards!
+<p>			
+     <ul>
+				<li>				To insert Braille characters in the document that will be rendered identically in the Braille
+				edition and the print edition, the transcriber has two possibilities. 
+				
+          <ul>
+					<li>					In the <em>dot pattern entry mode</em>, Braille strings are specified by their dot
+					patterns, e.g. 12-1235-1-24-123-123-15 (<em>"braille"</em> in uncontracted English Braille). 
+					<li>					In the <em>six-key entry mode</em>, users can insert characters with the keys
+					<kbd>S</kbd> (dot 3), <kbd>D</kbd> (dot 2), <kbd>F</kbd> (dot 1), <kbd>J</kbd> (dot 4), <kbd>K</kbd> (dot 5)
+					and <kbd>L</kbd> (dot 6), as if they were using a mechanical embosser such as the
+					Perkins Brailler. So to insert <em>"braille"</em>, type
+					<kbd>D+F</kbd>, <kbd>S+D+F+K</kbd>, <kbd>F</kbd>, <kbd>D+J</kbd>, <kbd>S+D+F</kbd>, <kbd>S+D+F</kbd>, <kbd>F+K</kbd>. 
+					Spaces are entered with the spacebar as usual and the <span class="sc">enter</span> / <span class="sc">return</span> key
+					generates a hard return without starting a new paragraph. 
+					<blockquote>
+<b>Note:</b> Not all keyboards support this feature! 
+</blockquote>
+
+          <p>				</ul>
+
+     <p>				These modes can be activated in the menu [<em>Insert &gt; Braille Characters</em>]. 
+			</ul>
 
    <p>	<a name="Braille_002donly-Material"></a>
 
@@ -1204,7 +1261,19 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 
 <h3 class="section">2.21 Braille-only Material</h3>
 
-<p>	@TODO: Howto format text such that it will only be rendered in the Braille version of the document and not in the print version.
+<p>			
+     <ul>
+				<li>				Text can be formatted such that it will only be rendered in the Braille edition of the document,
+				but not in the print edition. 
+				
+          <ul>
+					<li>					To insert non-printing text, go to [<em>Insert &gt; Fields &gt; Other… &gt; Functions &gt; Hidden text</em>]. 
+					<li>					To insert a non-printing paragraph, go to [<em>Insert &gt; Fields &gt; Other… &gt; Functions &gt; Hidden Paragraph</em>]. 
+					In the <em>Condition</em> field, enter <kbd>TRUE</kbd>. 
+				</ul>
+
+     <p>				You can highlight these field by checking [<em>View &gt; Field Shadings</em>]. 
+			</ul>
 
    <p>	<a name="Hyphenation"></a>
 
@@ -1212,7 +1281,20 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 
 <h3 class="section">2.22 Hyphenation</h3>
 
-<p>	@TODO: How words are split at the end of a Braille line.
+<p>			
+     <ul>
+				<li>				The user can choose to split words at the end of Braille lines if they are too long. This will
+				improve the layout of paragraphs. To enable hyphenation, check the corresponding box in
+				[<em>File &gt; Braille Settings… &gt; General</em>]. 
+				<li>				For most languages, odt2braille has a hyphenation dictionary for automatic breaking of words. 
+				In addition, a word at the end of a Braille line is always split when it contains a <em>hard hyphen</em>,
+				i.e. a plain minus sign ( - ). This allows for manual hyphenation. 
+				A more elegant solution is to use <em>soft hyphens</em>, which are not brailled when the word
+				appears in the middle of a Braille line. To insert a soft hyphen, go to
+				[<em>Insert &gt; Formatting Mark &gt; Optional Hyphen</em>]. They are only visible in OpenOffice.org
+				when [<em>View &gt; Field Shadings</em>] is checked.
+
+     <p>			</ul>
 
    <p>	<a name="Templates"></a>
 
@@ -1220,15 +1302,16 @@ You can find more help on working with Writer at <a href="http://wiki.services.o
 
 <h3 class="section">2.23 Templates</h3>
 
-<p>	@TODO: Howto make templates, howto load predefined odt2braille templates.
-
-   <p>	<a name="Preview"></a>
-
-   <p>	
-
-<h3 class="section">2.24 Preview</h3>
-
-<p>	@TODO
+<p>			
+     <ul>
+				<li>				When you use the same Braille settings and layout frequently, it may be a good idea to store
+				these settings and layout in a <em>template</em>. Simply save your document as
+				<em>ODF Text Document Template (.ott)</em>. 
+				<li>				Odt2braille also includes some predefined, real handy Braille templates. One for a simple
+				Braille document and one for a more advanced, multi-volume Braille document. Both templates
+				contain a preliminary section with a titlepage. You can find them under
+				[<em>File &gt; New &gt; Templates and Documents &gt; Templates &gt; Braille Documents</em>]. 
+			</ul>
 
    <p></div>
 

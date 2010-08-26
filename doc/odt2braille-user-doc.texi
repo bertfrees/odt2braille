@@ -20,6 +20,12 @@
 @end quotation
 @end macro
 
+@macro note{text}
+@quotation Note
+\text\
+@end quotation
+@end macro
+
 @macro pilcrow{}
 @ifhtml
 ¶
@@ -74,10 +80,22 @@ Mac OS users can access OpenOffice.org with VoiceOver; Linux users can access it
 
 @unnumberedsec Getting started
 
-In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille production.
-Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find a more comprehensive reference.
-You can find more help on working with Writer at @url{http://wiki.services.openoffice.org/@/wiki/@/Documentation/@/OOo3_User_Guides/@/Writer_Guide}.
+In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille 
+production. Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find 
+a more comprehensive reference. You can find more help on working with Writer at 
+@url{http://wiki.services.openoffice.org/@/wiki/@/Documentation/@/OOo3_User_Guides/@/Writer_Guide}.
 
+After installing odt2braille, a whole new range of user preferences will become available.
+Because of the broad range of Braille formatting conventions in use worldwide, odt2braille provides a lot of
+flexibility. Users are able to adjust the Braille layout in detail, just like they can fully customize
+the print layout.
+
+To make sure that non-technical users will not be overwhelmed with possibilities, they have the option to choose
+from a series of @emph{formal} Braille rules, e.g. the @emph{BANA principles of print to Braille transcription}
+(see @url{http://www.brl.org/formats/}). This will considerably limit their freedom, but it will also greatly
+simplify the production of valid and well-formatted Braille.
+
+What follows next is a detailed overview of all possibilities odt2braille offers.
 
 @menu
 * Quick guide::
@@ -116,7 +134,6 @@ Quick guide
 * Braille-only Material::
 * Hyphenation::
 * Templates::
-* Preview::
 @end menu
 
 	@node Languages
@@ -1062,33 +1079,103 @@ Quick guide
 	@node Mathematics
 	@section Mathematics
 	
-	@@TODO: Howto insert formulas
+		@subheading OpenOffice.org
+		
+			@itemize @bullet
+				@item
+				To insert a mathematical expression in OpenOffice.org, go to [@emph{Insert > Object > Formula}].
+				The equation editor will open at the bottom of the screen, and the floating Selection window appears.
+				The equation editor uses a markup language to represent formulas.
+				For more information on inserting math, read the math guide at 
+				@url{http://wiki.services.openoffice.org/@/wiki/@/Documentation/@/OOo3_User_Guides/@/Math_Guide}.				
+			@end itemize
+			
+		@subheading Braille
+		
+			@itemize @bullet
+				@item
+				Mathematical equations are conveyed to Braille through the use of specialized math Braille codes.
+				Supported math codes are @emph{Nemeth} (generally accepted in the United States), 
+				@emph{Marburg} (Germany), @emph{UK Maths} (United Kingdom) and @emph{Notaert} (Flanders, Belgium).
+				You can select which code you want to use in [@emph{File > Braille Settings > Mathematics}].
+			@end itemize
 	
 	@node Inserting literal Braille
 	@section Inserting literal Braille
-	
-	@@TODO: Howto insert Braille characters in the document that will be rendered identically in the Braille version and the print version.
-	6 Key Entry Mode: does not work on all keyboards!
+		
+			@itemize @bullet
+				@item
+				To insert Braille characters in the document that will be rendered identically in the Braille 
+				edition and the print edition, the transcriber has two possibilities.
+				@itemize @minus
+					@item
+					In the @emph{dot pattern entry mode}, Braille strings are specified by their dot
+					patterns, e.g. 12-1235-1-24-123-123-15 (@emph{"braille"} in uncontracted English Braille).
+					@item
+					In the @emph{six-key entry mode}, users can insert characters with the keys 
+					@kbd{S} (dot 3), @kbd{D} (dot 2), @kbd{F} (dot 1), @kbd{J} (dot 4), @kbd{K} (dot 5) 
+					and @kbd{L} (dot 6), as if they were using a mechanical embosser such as the
+					Perkins Brailler. So to insert @emph{"braille"}, type
+					@kbd{D+F}, @kbd{S+D+F+K}, @kbd{F}, @kbd{D+J}, @kbd{S+D+F}, @kbd{S+D+F}, @kbd{F+K}.
+					Spaces are entered with the spacebar as usual and the @sc{enter} / @sc{return} key 
+					generates a hard return without starting a new paragraph.
+					@note{Not all keyboards support this feature!}
+				@end itemize
+				
+				These modes can be activated in the menu [@emph{Insert > Braille Characters}].
+			@end itemize
 	
 	@node Braille-only Material
 	@section Braille-only Material
-	
-	@@TODO: Howto format text such that it will only be rendered in the Braille version of the document and not in the print version.
+		
+			@itemize @bullet
+				@item
+				Text can be formatted such that it will only be rendered in the Braille edition of the document,
+				but not in the print edition.
+				@itemize @minus
+					@item
+					To insert non-printing text, go to [@emph{Insert > Fields > Other… > Functions > Hidden text}].
+					@item
+					To insert a non-printing paragraph, go to [@emph{Insert > Fields > Other… > Functions > Hidden Paragraph}].
+					In the @emph{Condition} field, enter @kbd{TRUE}.
+				@end itemize
+				
+				You can highlight these field by checking [@emph{View > Field Shadings}].
+			@end itemize
 	
 	@node Hyphenation
 	@section Hyphenation
-	
-	@@TODO: How words are split at the end of a Braille line.
+		
+			@itemize @bullet
+				@item
+				The user can choose to split words at the end of Braille lines if they are too long. This will
+				improve the layout of paragraphs. To enable hyphenation, check the corresponding box in
+				[@emph{File > Braille Settings… > General}].
+				@item
+				For most languages, odt2braille has a hyphenation dictionary for automatic breaking of words.
+				In addition, a word at the end of a Braille line is always split when it contains a @emph{hard hyphen},
+				i.e. a plain minus sign ( - ). This allows for manual hyphenation.
+				A more elegant solution is to use @emph{soft hyphens}, which are not brailled when the word
+				appears in the middle of a Braille line. To insert a soft hyphen, go to 
+				[@emph{Insert > Formatting Mark > Optional Hyphen}]. They are only visible in OpenOffice.org
+				when [@emph{View > Field Shadings}] is checked.
+
+			@end itemize
 	
 	@node Templates
 	@section Templates
-	
-	@@TODO: Howto make templates, howto load predefined odt2braille templates.
-	
-	@node Preview
-	@section Preview
-	
-	@@TODO
+		
+			@itemize @bullet
+				@item
+				When you use the same Braille settings and layout frequently, it may be a good idea to store
+				these settings and layout in a @emph{template}. Simply save your document as 
+				@emph{ODF Text Document Template (.ott)}.
+				@item
+				Odt2braille also includes some predefined, real handy Braille templates. One for a simple 
+				Braille document and one for a more advanced, multi-volume Braille document. Both templates
+				contain a preliminary section with a titlepage. You can find them under
+				[@emph{File > New > Templates and Documents > Templates > Braille Documents}].
+			@end itemize
 	
 @html
 </div>
