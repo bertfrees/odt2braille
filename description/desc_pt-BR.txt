@@ -1,1 +1,1 @@
-Exportar e gravar documentos em Braille.
+﻿Exportar e gravar documentos em Braille.

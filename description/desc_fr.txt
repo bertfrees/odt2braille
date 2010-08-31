@@ -1,1 +1,1 @@
-Exporter et embosser des documents en Braille.
+﻿Exporter et embosser des documents en Braille.

@@ -1,1 +1,1 @@
-Exporta i imprimeix documents en braille.
+﻿Exporta i imprimeix documents en braille.

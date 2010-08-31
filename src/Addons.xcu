@@ -23,12 +23,26 @@
                                 <value>be.docarch.odt2braille.addon.odt2brailleaddon:ExportCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
-                                <value xml:lang="en">~Export as Braille…</value>
-                                <value xml:lang="nl">~Braille Exporteren…</value>
-								<value xml:lang="es">~Exportar a braille…</value>
+							
+								<value xml:lang="en">~Export as Braille…</value>
+								
 								<value xml:lang="ca">~Exporta a braille…</value>
-								<value xml:lang="nb">~Eksporter som blindeskrift…</value>
-                            </prop>
+								<value xml:lang="de">~Exportieren als Brailledatei…</value>
+								<value xml:lang="es">~Exportar a braille…</value>
+								<value xml:lang="fr">~Exporter en fichier Braille…</value>
+								<value xml:lang="nb">~Eksporter som punktskrift…</value>
+								<value xml:lang="nl">~Braille Exporteren…</value>
+								<value xml:lang="pt">~Exportar como Braille…</value>
+								<value xml:lang="pt-BR">~Exportar como Braille…</value>
+								<value xml:lang="sl">~Izvozi kot brajico …</value>
+								
+						   <!-- <value xml:lang="cs">~</value> -->
+						   <!-- <value xml:lang="da">~</value> -->
+						   <!-- <value xml:lang="is">~</value> -->
+						   <!-- <value xml:lang="it">~</value> -->
+						   <!-- <value xml:lang="sv">~</value> -->
+
+						   </prop>
                         </node>
                     </node>
                 </node>
@@ -51,16 +65,25 @@
                                 <value>be.docarch.odt2braille.addon.odt2brailleaddon:EmbossCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
+							
                                 <value xml:lang="en">~Emboss…</value>
-                                <value xml:lang="nl">~Braille Afdrukken…</value>
-                                <value xml:lang="fr">~Embosser…</value>
-                                <value xml:lang="ca">~Imprimeix en braille…</value>
-                                <value xml:lang="es">~Imprimir en braille…</value>
-                                <value xml:lang="pt">~Gravar…</value>
-                                <value xml:lang="sl">~Izboči…</value>
-                                <value xml:lang="de">~Prägen…</value>
-                                <value xml:lang="pt-BR">~Gravar…</value>
+								
+								<value xml:lang="ca">~Imprimeix en braille…</value>
+								<value xml:lang="de">~Prägen…</value>
+								<value xml:lang="es">~Imprimir en braille…</value>
+								<value xml:lang="fr">~Embosser…</value>
 								<value xml:lang="nb">~Preg…</value>
+								<value xml:lang="nl">~Braille Afdrukken…</value>
+								<value xml:lang="pt">~Gravar…</value>
+								<value xml:lang="pt-BR">~Gravar…</value>
+								<value xml:lang="sl">~Izboči …</value>
+								
+						   <!-- <value xml:lang="cs">~</value> -->
+						   <!-- <value xml:lang="da">~</value> -->
+						   <!-- <value xml:lang="is">~</value> -->
+						   <!-- <value xml:lang="it">~</value> -->
+						   <!-- <value xml:lang="sv">~</value> -->
+								
                             </prop>
                         </node>
                     </node>
@@ -81,11 +104,25 @@
                     <node oor:name="MenuItems">
                         <node oor:name="M3" oor:op="replace">
                             <prop oor:name="Title" oor:type="xs:string">
+							
                                 <value xml:lang="en">~Braille Characters</value>
-                                <value xml:lang="nl">~Braillesymbolen</value>   
-                                <value xml:lang="ca">~Caràcters braille</value>
-                                <value xml:lang="es">~Caracteres braille</value>
-								<value xml:lang="nb">~Blindeskrifttegn</value>
+								
+								<value xml:lang="ca">~Caràcters braille</value>
+								<value xml:lang="de">~Braillezeichen</value>
+								<value xml:lang="es">~Caracteres braille</value>
+								<value xml:lang="fr">~Charactères Braille</value>
+								<value xml:lang="nb">~Punktskrifttegn</value>
+								<value xml:lang="nl">~Braillesymbolen</value>
+								<value xml:lang="pt">~Caracteres Braille</value>
+								<value xml:lang="pt-BR">~Caracteres Braille</value>
+								<value xml:lang="sl">~Znaki brajice</value>
+								
+						   <!-- <value xml:lang="cs">~</value> -->
+						   <!-- <value xml:lang="da">~</value> -->
+						   <!-- <value xml:lang="is">~</value> -->
+						   <!-- <value xml:lang="it">~</value> -->
+						   <!-- <value xml:lang="sv">~</value> -->
+								
                             </prop>
                             <node oor:name="Submenu">
                                 <node oor:name="M4" oor:op="replace">
@@ -94,13 +131,23 @@
                                     </prop>
                                     <prop oor:name="Title" oor:type="xs:string">
                                         <value xml:lang="en">~Dot Pattern Entry Mode…</value>
-                                        <value xml:lang="nl">~Voer in met puntjespatronen…</value>
-                                        <value xml:lang="fr">~Mode de saisie point-à-point…</value>
-                                        <value xml:lang="sl">~Vnosni način vzorca pik…</value>
-                                        <value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
+
+										<value xml:lang="ca">~Entrada mitjançant el patró de punts…</value>
 										<value xml:lang="de">~Punktmustereingabemodus…</value>
 										<value xml:lang="es">~Entrada mediante patrón de puntos…</value>
-										<value xml:lang="ca">~Entrada mitjançant el patró de punts…</value>
+										<value xml:lang="fr">~Mode de saisie point-à-point…</value>
+										<value xml:lang="nl">~Voer in met puntjespatronen…</value>
+										<value xml:lang="pt">~Modo de entrada por padrão de pontos…</value>
+										<value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
+										<value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
+										
+								   <!-- <value xml:lang="cs">~</value> -->
+								   <!-- <value xml:lang="da">~</value> -->
+								   <!-- <value xml:lang="is">~</value> -->
+								   <!-- <value xml:lang="it">~</value> -->
+								   <!-- <value xml:lang="nb">~</value> -->
+								   <!-- <value xml:lang="sv">~</value> -->
+										
                                     </prop>
                                 </node>
                                 <node oor:name="M5" oor:op="replace">
@@ -109,13 +156,23 @@
                                     </prop>
                                     <prop oor:name="Title" oor:type="xs:string">
                                         <value xml:lang="en">~6 Key Entry Mode…</value>
-                                        <value xml:lang="nl">~Voer in met 6 toetsen…</value>
-                                        <value xml:lang="fr">~Mode de saisie 6-touches…</value>
-                                        <value xml:lang="ca">~Mode de 6 tecles…</value>
-                                        <value xml:lang="es">~Modo 6 teclas…</value>
-                                        <value xml:lang="sl">~Vnosni način šestih tipk…</value>
-                                        <value xml:lang="pt-BR">~Modo de entrada por 6 teclas…</value>
+
+										<value xml:lang="ca">~Mode de 6 tecles…</value>
 										<value xml:lang="de">~6-Tasten Eingabemodus…</value>
+										<value xml:lang="es">~Modo 6 teclas…</value>
+										<value xml:lang="fr">~Mode de saisie 6-touches…</value>
+										<value xml:lang="nl">~Voer in met 6 toetsen…</value>
+										<value xml:lang="pt">~Modo de entrada por 6 teclas…</value>
+										<value xml:lang="pt-BR">~Modo de entrada por 6 teclas…</value>
+										<value xml:lang="sl">~Vnosni način šestih tipk …</value>
+										
+								   <!-- <value xml:lang="cs">~</value> -->
+								   <!-- <value xml:lang="da">~</value> -->
+								   <!-- <value xml:lang="is">~</value> -->
+								   <!-- <value xml:lang="it">~</value> -->
+								   <!-- <value xml:lang="nb">~</value> -->
+								   <!-- <value xml:lang="sv">~</value> -->
+										
                                     </prop>
                                 </node>
                             </node>
@@ -141,16 +198,25 @@
                                 <value>be.docarch.odt2braille.addon.odt2brailleaddon:SettingsCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
-                                <value xml:lang="en">~Braille Settings…</value>
-                                <value xml:lang="nl">~Brailleinstellingen…</value>
-                                <value xml:lang="fr">~Préférences pour le Braille…</value>
-                                <value xml:lang="ca">~Preferències per al braille…</value>
-                                <value xml:lang="es">~Preferencias para el braille…</value>
-                                <value xml:lang="pt">~Definições Braille…</value>
-                                <value xml:lang="sl">~Nastavitve brajice…</value>
-                                <value xml:lang="de">~Braille-Einstellungen…</value>
-                                <value xml:lang="pt-BR">~Configurações Braille…</value>
-								<value xml:lang="nb">~Instillinger for blindeskrift…</value>
+							
+								<value xml:lang="en">~Braille Settings…</value>
+								
+								<value xml:lang="ca">~Preferències per al braille…</value>
+								<value xml:lang="de">~Braille-Einstellungen…</value>
+								<value xml:lang="es">~Preferencias para el braille…</value>
+								<value xml:lang="fr">~Préférences pour le Braille…</value>
+								<value xml:lang="nb">~Instillinger for punktskrift…</value>
+								<value xml:lang="nl">~Brailleinstellingen…</value>
+								<value xml:lang="pt">~Configurações Braille…</value>
+								<value xml:lang="pt-BR">~Configurações Braille…</value>
+								<value xml:lang="sl">~Nastavitve brajice …</value>
+								
+						   <!-- <value xml:lang="cs">~</value> -->
+						   <!-- <value xml:lang="da">~</value> -->
+						   <!-- <value xml:lang="is">~</value> -->
+						   <!-- <value xml:lang="it">~</value> -->
+						   <!-- <value xml:lang="sv">~</value> -->
+								
                             </prop>
                         </node>
                     </node>

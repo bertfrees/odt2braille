@@ -11,7 +11,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -241,9 +241,6 @@ public class UnoGUI {
             loadedSettings = new Settings(flatOdtFile, odtLocale);
             settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
 
-            // Copy to changed settings
-            changedSettings = new Settings(loadedSettings);
-
             // Increment progress bar
             progressBar.increment();
 
@@ -286,6 +283,7 @@ public class UnoGUI {
 
             // Export document to flat XML file & load settings
             initialise();
+            changedSettings = new Settings(loadedSettings);
 
             // Initialize dialog
             settingsDialog.initialise(changedSettings, progressBar);
@@ -365,8 +363,8 @@ public class UnoGUI {
             progressBar.close();
 
             // Load export settings
-            settingsIO.loadExportSettingsFromDocument(changedSettings);
-            changedSettings.setExportOrEmboss(true);
+            settingsIO.loadExportSettingsFromDocument(loadedSettings);
+            changedSettings = new Settings(loadedSettings);
 
             // Create export dialog & execute
             ExportDialog exportDialog = new ExportDialog(m_xContext, changedSettings, progressBar);
@@ -568,8 +566,8 @@ public class UnoGUI {
             progressBar.close();
 
             // Load emboss settings
-            settingsIO.loadEmbossSettingsFromDocument(changedSettings);
-            changedSettings.setExportOrEmboss(false);
+            settingsIO.loadEmbossSettingsFromDocument(loadedSettings);
+            changedSettings = new Settings(loadedSettings);
 
             // Create emboss dialog & execute
             EmbossDialog embossDialog = new EmbossDialog(m_xContext, changedSettings, progressBar);

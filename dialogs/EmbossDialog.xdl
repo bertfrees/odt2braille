@@ -5,7 +5,7 @@
   <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="35" dlg:top="223" dlg:width="47" dlg:height="12" dlg:grab-focus="false"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="35" dlg:top="223" dlg:width="47" dlg:height="12" dlg:grab-focus="false" dlg:button-type="cancel"/>
   <dlg:button dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="101" dlg:top="223" dlg:width="47" dlg:height="12" dlg:button-type="ok"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox2" dlg:tab-index="2" dlg:left="36" dlg:top="23" dlg:width="131" dlg:height="12" dlg:spin="true" dlg:linecount="10"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox3" dlg:tab-index="3" dlg:left="73" dlg:top="38" dlg:width="94" dlg:height="12" dlg:spin="true"/>

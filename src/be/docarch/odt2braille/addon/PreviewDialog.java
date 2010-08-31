@@ -11,7 +11,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -251,15 +251,15 @@ public class PreviewDialog implements XItemListener,
 
         String vol;
         volumesListBox.removeItemListener(this);
-        volumeCount = Math.max(1,settings.NUMBER_OF_VOLUMES) + settings.NUMBER_OF_SUPPLEMENTS + (settings.preliminaryVolumeEnabled?1:0);
+        volumeCount = Math.max(1,settings.getNumberOfVolumes()) + settings.getNumberOfSupplements() + (settings.getPreliminaryVolumeEnabled()?1:0);
 
         for (int i=0;i<volumeCount;i++) {
-            if (i==0 && settings.preliminaryVolumeEnabled) {
+            if (i==0 && settings.getPreliminaryVolumeEnabled()) {
                 vol = L10N_preliminary_volume;
-            } else if (i < Math.max(1,settings.NUMBER_OF_VOLUMES) + (settings.preliminaryVolumeEnabled?1:0)) {
-                vol = L10N_volume + " " + (i + 1 - (settings.preliminaryVolumeEnabled?1:0));
+            } else if (i < Math.max(1,settings.getNumberOfVolumes()) + (settings.getPreliminaryVolumeEnabled()?1:0)) {
+                vol = L10N_volume + " " + (i + 1 - (settings.getPreliminaryVolumeEnabled()?1:0));
             } else {
-                vol = L10N_supplement + " " + (i + 1 - Math.max(1,settings.NUMBER_OF_VOLUMES) - (settings.preliminaryVolumeEnabled?1:0));
+                vol = L10N_supplement + " " + (i + 1 - Math.max(1,settings.getNumberOfVolumes()) - (settings.getPreliminaryVolumeEnabled()?1:0));
             }
             volumesListBox.addItem(vol, (short)i);
         }
@@ -275,11 +275,11 @@ public class PreviewDialog implements XItemListener,
         sectionsListBox.removeItemListener(this);
         sectionsListBox.removeItems((short)0, Short.MAX_VALUE);
 
-        if (settings.PRELIMINARY_PAGES_PRESENT) {
+        if (settings.getPreliminaryPagesPresent()) {
             sectionsListBox.addItem(L10N_preliminary_section, (short)0);
             sectionCount++;
         }
-        if (!(volume==1 && settings.preliminaryVolumeEnabled)) {
+        if (!(volume==1 && settings.getPreliminaryVolumeEnabled())) {
             sectionsListBox.addItem(L10N_main_section, (short)sectionCount);
             sectionCount++;
         }
@@ -298,12 +298,12 @@ public class PreviewDialog implements XItemListener,
         pageCount = Integer.parseInt(XPathAPI.eval(root,
                 "count(/pef/body/volume[" + volume + "]/section[" + section + "]/page)").str());
 
-        if (!(settings.PRELIMINARY_PAGES_PRESENT && section == 1)) {
+        if (!(settings.getPreliminaryPagesPresent() && section == 1)) {
             firstpage += Integer.parseInt(XPathAPI.eval(root,
                     "count(/pef/body/volume[" + volume + "]/preceding-sibling::*/section[position()=" + section + "]/page)").str());
         }
         for (int i=0; i<pageCount;i++) {
-            if (settings.PRELIMINARY_PAGES_PRESENT && section == 1) {
+            if (settings.getPreliminaryPagesPresent() && section == 1) {
                 if (settings.getPreliminaryPageFormat().equals("p")) {
                     pag = "p" + (firstpage + i);
                 } else {

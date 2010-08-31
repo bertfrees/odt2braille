@@ -11,7 +11,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -343,15 +343,15 @@ public class SettingsIO {
         }
 
         if ((s = getStringProperty(transcribersNotesPageTitleProperty)) != null) {
-            loadedSettings.transcribersNotesPageTitle = s;
+            loadedSettings.setTranscribersNotesPageTitle(s);
         }
 
         if ((s = getStringProperty(specialSymbolsListTitleProperty)) != null) {
-            loadedSettings.specialSymbolsListTitle = s;
+            loadedSettings.setSpecialSymbolsListTitle(s);
         }
 
         if ((s = getStringProperty(tableOfContentTitleProperty)) != null) {
-            loadedSettings.tableOfContentTitle = s;
+            loadedSettings.setTableOfContentTitle(s);
         }
         
         if ((s = getStringProperty(columnDelimiterProperty)) != null) {
@@ -396,14 +396,6 @@ public class SettingsIO {
             loadedSettings.setMergeUnnumberedPages(b);
         }
 
-        if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
-            loadedSettings.setPageNumberAtTopOnSeparateLine(b);
-        }
-
-        if ((b = getBooleanProperty(pageNumberAtBottomOnSepLineProperty)) != null) {
-            loadedSettings.setPageNumberAtBottomOnSeparateLine(b);
-        }
-
         if ((b = getBooleanProperty(printPageNumberRangeProperty)) != null) {
             loadedSettings.setPrintPageNumberRange(b);
         }
@@ -420,28 +412,36 @@ public class SettingsIO {
             loadedSettings.setPreliminaryPageFormat(s);
         }
 
+        if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
+            loadedSettings.setPageNumberAtTopOnSeparateLine(b);
+        }
+
+        if ((b = getBooleanProperty(pageNumberAtBottomOnSepLineProperty)) != null) {
+            loadedSettings.setPageNumberAtBottomOnSeparateLine(b);
+        }
+
         if ((b = getBooleanProperty(transcribersNotesPageEnabledProperty)) != null) {
-            loadedSettings.transcribersNotesPageEnabled = loadedSettings.PRELIMINARY_PAGES_PRESENT && b;
+            loadedSettings.setTranscribersNotesPageEnabled(b);
         }
 
         if ((b = getBooleanProperty(specialSymbolsListEnabledProperty)) != null) {
-            loadedSettings.specialSymbolsListEnabled = loadedSettings.PRELIMINARY_PAGES_PRESENT && b;
+            loadedSettings.setSpecialSymbolsListEnabled(b);
         }
 
         if ((b = getBooleanProperty(tableOfContentEnabledProperty)) != null) {
-            loadedSettings.tableOfContentEnabled = loadedSettings.PRELIMINARY_PAGES_PRESENT && b;
+            loadedSettings.setTableOfContentEnabled(b);
         }
 
         if ((b = getBooleanProperty(transcriptionInfoEnabledProperty)) != null) {
-            loadedSettings.transcriptionInfoEnabled = loadedSettings.TRANSCRIPTION_INFO_AVAILABLE && b;
+            loadedSettings.setTranscriptionInfoEnabled(b);
         }
 
         if ((b = getBooleanProperty(volumeInfoEnabledProperty)) != null) {
-            loadedSettings.volumeInfoEnabled = loadedSettings.VOLUME_INFO_AVAILABLE && b;
+            loadedSettings.setVolumeInfoEnabled(b);
         }
 
         if ((b = getBooleanProperty(preliminaryVolumeEnabledProperty)) != null) {
-            loadedSettings.preliminaryVolumeEnabled = loadedSettings.PRELIMINARY_PAGES_PRESENT && b;
+            loadedSettings.setPreliminaryVolumeEnabled(b);
         }
 
         if ((b = getBooleanProperty(stairstepTableProperty)) != null) {
@@ -468,6 +468,8 @@ public class SettingsIO {
         String s;
         Boolean b;
         Double d;
+
+        loadedSettings.setExportOrEmboss(true);
 
         if ((s = getStringProperty(exportFileProperty)) != null) {
             try {
@@ -510,6 +512,8 @@ public class SettingsIO {
         Boolean b;
         Double d;
         Double d2;
+
+        loadedSettings.setExportOrEmboss(false);
 
         if ((s = getStringProperty(embosserProperty)) != null) {
             try {
@@ -693,14 +697,14 @@ public class SettingsIO {
                     settingsAfterChange.getCreator(),
                     settingsBeforeChange.getCreator());
         setProperty(transcribersNotesPageTitleProperty,
-                    settingsAfterChange.transcribersNotesPageTitle,
-                    settingsBeforeChange.transcribersNotesPageTitle);
+                    settingsAfterChange.getTranscribersNotesPageTitle(),
+                    settingsBeforeChange.getTranscribersNotesPageTitle());
         setProperty(specialSymbolsListTitleProperty,
-                    settingsAfterChange.specialSymbolsListTitle,
-                    settingsBeforeChange.specialSymbolsListTitle);
+                    settingsAfterChange.getSpecialSymbolsListTitle(),
+                    settingsBeforeChange.getSpecialSymbolsListTitle());
         setProperty(tableOfContentTitleProperty,
-                    settingsAfterChange.tableOfContentTitle,
-                    settingsBeforeChange.tableOfContentTitle);
+                    settingsAfterChange.getTableOfContentTitle(),
+                    settingsBeforeChange.getTableOfContentTitle());
         setProperty(printPageNumbersProperty,
                     settingsAfterChange.getPrintPageNumbers(),
                     settingsBeforeChange.getPrintPageNumbers());
@@ -741,23 +745,23 @@ public class SettingsIO {
                     settingsAfterChange.getPreliminaryPageFormat(),
                     settingsBeforeChange.getPreliminaryPageFormat());
         setProperty(transcribersNotesPageEnabledProperty,
-                    settingsAfterChange.transcribersNotesPageEnabled,
-                    settingsBeforeChange.transcribersNotesPageEnabled);
+                    settingsAfterChange.getTranscribersNotesPageEnabled(),
+                    settingsBeforeChange.getTranscribersNotesPageEnabled());
         setProperty(specialSymbolsListEnabledProperty,
-                    settingsAfterChange.specialSymbolsListEnabled,
-                    settingsBeforeChange.specialSymbolsListEnabled);
+                    settingsAfterChange.getSpecialSymbolsListEnabled(),
+                    settingsBeforeChange.getSpecialSymbolsListEnabled());
         setProperty(tableOfContentEnabledProperty,
-                    settingsAfterChange.tableOfContentEnabled,
-                    settingsBeforeChange.tableOfContentEnabled);
+                    settingsAfterChange.getTableOfContentEnabled(),
+                    settingsBeforeChange.getTableOfContentEnabled());
         setProperty(transcriptionInfoEnabledProperty,
-                    settingsAfterChange.transcriptionInfoEnabled,
-                    settingsBeforeChange.transcriptionInfoEnabled);
+                    settingsAfterChange.getTranscriptionInfoEnabled(),
+                    settingsBeforeChange.getTranscriptionInfoEnabled());
         setProperty(volumeInfoEnabledProperty,
-                    settingsAfterChange.volumeInfoEnabled,
-                    settingsBeforeChange.volumeInfoEnabled);
+                    settingsAfterChange.getVolumeInfoEnabled(),
+                    settingsBeforeChange.getVolumeInfoEnabled());
         setProperty(preliminaryVolumeEnabledProperty,
-                    settingsAfterChange.preliminaryVolumeEnabled,
-                    settingsBeforeChange.preliminaryVolumeEnabled);
+                    settingsAfterChange.getPreliminaryVolumeEnabled(),
+                    settingsBeforeChange.getPreliminaryVolumeEnabled());
         setProperty(stairstepTableProperty,
                     settingsAfterChange.stairstepTableIsEnabled(),
                     settingsBeforeChange.stairstepTableIsEnabled());

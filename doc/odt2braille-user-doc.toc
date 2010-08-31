@@ -1,9 +1,6 @@
-@unnchapentry{Introduction}{10001}{Top}{1}
-@unnsecentry{Installation}{10001.1}{}{1}
-@unnsecentry{OpenOffice.org accessibility}{10001.2}{}{1}
-@unnsecentry{Getting started}{10001.3}{}{1}
-@numchapentry{Quick guide}{1}{Quick guide}{2}
-@numchapentry{Advanced guide}{2}{Advanced guide}{3}
+@unnchapentry{Getting Started}{10001}{Top}{1}
+@numchapentry{Quick Guide}{1}{Quick Guide}{2}
+@numchapentry{Advanced Guide}{2}{Advanced Guide}{3}
 @numsecentry{Languages}{2.1}{Languages}{3}
 @numsecentry{Paragraphs}{2.2}{Paragraphs}{3}
 @numsecentry{Headings}{2.3}{Headings}{3}
@@ -23,7 +20,7 @@
 @numsecentry{Table of Contents}{2.17}{Table of Contents}{16}
 @numsecentry{Bibliographies}{2.18}{Bibliographies}{17}
 @numsecentry{Mathematics}{2.19}{Mathematics}{17}
-@numsecentry{Inserting literal Braille}{2.20}{Inserting literal Braille}{18}
+@numsecentry{Inserting Literal Braille}{2.20}{Inserting Literal Braille}{18}
 @numsecentry{Braille-only Material}{2.21}{Braille-only Material}{18}
 @numsecentry{Hyphenation}{2.22}{Hyphenation}{18}
 @numsecentry{Templates}{2.23}{Templates}{18}

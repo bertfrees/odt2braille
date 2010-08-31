@@ -354,8 +354,6 @@ If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org mig
 @item
 OpenOffice.org accessibility for screen readers (on Windows)?
 @item
-OCR plugin for OpenOffice.org?
-@item
 http://www.thessalonica.org.ru/en/index.html ?
 @item
 Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).

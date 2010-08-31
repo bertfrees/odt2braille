@@ -11,7 +11,7 @@
  *  This program is distributed in the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
+ *  GNU Lesser General Public License for more details.
  *
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
@@ -475,7 +475,7 @@ public class EmbossDialog implements XItemListener,
         embosserListBox.removeItemListener(this);
 
             embosserListBox.removeItems((short)0, Short.MAX_VALUE);
-            embosserTypes = settings.getSupportedEmbosserTypes();
+            embosserTypes = settings.getSupportedEmbossers();
             for (int i=0;i<embosserTypes.size();i++) {
                 key = embosserTypes.get(i).name();
                 if (L10N_embosser.containsKey(key)) {

@@ -38,7 +38,7 @@ pilcrow
 
 @ifnothtml
 @titlepage
-@title odt2braille Advanced User Guide (draft)
+@title odt2braille User Guide
 @subtitle for version @value{VERSION}, @value{UPDATED}
 @author by Bert Frees
 @page
@@ -58,9 +58,9 @@ pilcrow
 @end ifnottex
 
 @node Top
-@top Introduction
+@top Getting Started
 
-@unnumberedsec Installation
+@heading Installation
 
 In order to install odt2braille, OpenOffice.org version 3.0 or later is required. 
 You can find the latest version of OpenOffice.org at @url{http://download.openoffice.org/@/other.html}.
@@ -72,13 +72,13 @@ installation package and follow the steps. Finally, when the installation is fin
 
 You can download the latest version of odt2braille from @url{http://odt2braille.@/sourceforge.@/net/@/downloads.html}.
 
-@unnumberedsec OpenOffice.org accessibility
+@heading OpenOffice.org Accessibility
 
 OpenOffice.org is poorly accessible with traditional screen readers on Windows. 
 Accessing OpenOffice.org with the newer screen reader NVDA (NonVisual Desktop Access) appears to work better. 
 Mac OS users can access OpenOffice.org with VoiceOver; Linux users can access it with Orca.
 
-@unnumberedsec Getting started
+@heading Introduction
 
 In this guide you will learn how to create a document in OpenOffice.org Writer and prepare it for Braille 
 production. Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find 
@@ -98,17 +98,17 @@ simplify the production of valid and well-formatted Braille.
 What follows next is a detailed overview of all possibilities odt2braille offers.
 
 @menu
-* Quick guide::
-* Advanced guide::
+* Quick Guide::
+* Advanced Guide::
 @end menu
 
-@node Quick guide
-@chapter Quick guide
+@node Quick Guide
+@chapter Quick Guide
 
 Quick guide
 
-@node Advanced guide
-@chapter Advanced guide
+@node Advanced Guide
+@chapter Advanced Guide
 
 @menu
 * Languages::
@@ -130,7 +130,7 @@ Quick guide
 * Table of Contents::
 * Bibliographies::
 * Mathematics::
-* Inserting literal Braille::
+* Inserting Literal Braille::
 * Braille-only Material::
 * Hyphenation::
 * Templates::
@@ -943,7 +943,7 @@ Quick guide
 					@item
 					@kbd{⠸ (456) Boldface indicator} ,
 					@item
-					@kbd{⠤⠤⠤⠤ (36, 36, 36, 36) Double dash indicating omission of a table, textbox or image} , and
+					@kbd{⠤⠤⠤⠤ (36, 36, 36, 36) Double dash indicating an omission} , and
 					@item
 					@kbd{⠐⠐⠐ (5, 5, 5) Ellipsis indicating empty table cell} .
 				@end itemize
@@ -1100,8 +1100,8 @@ Quick guide
 				You can select which code you want to use in [@emph{File > Braille Settings > Mathematics}].
 			@end itemize
 	
-	@node Inserting literal Braille
-	@section Inserting literal Braille
+	@node Inserting Literal Braille
+	@section Inserting Literal Braille
 		
 			@itemize @bullet
 				@item
