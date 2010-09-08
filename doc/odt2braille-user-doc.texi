@@ -312,9 +312,7 @@ Quick guide
 				
 				@itemize @minus
 					@item
-					Level 1 listitems @emph{without} subitems begin in cell 1, runovers begin in cell 3.
-					@item
-					Level 1 listitems @emph{with} subitems begin in cell 1 as well, but runovers begin in cell 5.
+					Level 1 listitems begin in cell 1, runovers begin in cell 5.
 					@item
 					Level 2 listitems begin in cell 3, runovers in cell 7.
 					@item
@@ -323,7 +321,7 @@ Quick guide
 					Listitems with an outline level greater than 3 begin in cell 7, runovers in cell 11.
 				@end itemize
 
-				Each entire list is preceded and following by a blank line. All these settings can be altered in
+				Each entire list is preceded and following by a blank line. All settings can be altered in
 				[@emph{File > Braille Settings > Lists}].
 
 				@item
@@ -521,9 +519,7 @@ Quick guide
 					@item
 					An alternative desciption (if one is defined).
 				@end enumerate
-				
-				A note is included on the @sectionref{Transcriber's Notes, transcriber's notes pages} of the relevant volumes, 
-				stating that the document contains images that are not reproduced in Braille.
+
 				@item
 				If images are anchored as a character or to a paragraph or character, they are rendered in Braille after 
 				completion of the paragraph or heading that contains the anchor.
@@ -1052,8 +1048,7 @@ Quick guide
 			@itemize @bullet
 				@item
 				In OpenOffice.org, references to source material can be added through 
-				[@emph{Insert > Indexes and Tables > Bibliography Entry}]. A reference is displayed as the source's 
-				@emph{short name}, enclosed by right square brackets. Although you can define sources within the 
+				[@emph{Insert > Indexes and Tables > Bibliography Entry}]. Although you can define sources within the 
 				document itself, creating and keeping a @emph{bibliographic database} allows reuse in other documents and 
 				saves a lot of time. Select [@emph{Tools > Bibliography Database}] to show this database.
 				@item
@@ -1067,7 +1062,8 @@ Quick guide
 		
 			@itemize @bullet
 				@item
-				In Braille, references are rendered exactly as in print (short name enclosed by square brackets).
+				In Braille, references to bibliography entries are rendered exactly as in print (the short name or a number
+				enclosed by square brackets).
 				@item
 				The bibliography begins on a new Braille page. On the first line, the heading is centered and followed by a
 				blank line. It is not included in the @sectionref{Table of Contents, table of contents}. The actual 

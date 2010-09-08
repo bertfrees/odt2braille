@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  30 AUG 2010 13:46
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  3 SEP 2010 16:32
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-user-doc.texi
@@ -507,22 +507,22 @@ leAddOn/
  /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
 
 Chapter 1 [1] Chapter 2 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-[14] l.934: Unicode char @u8:⠰ not defined for Texinfo
-l.936: Unicode char @u8:⠼ not defined for Texinfo
-l.938: Unicode char @u8:⠔ not defined for Texinfo
-l.938: Unicode char @u8:⠔ not defined for Texinfo
-l.940: Unicode char @u8:⠠ not defined for Texinfo
-l.940: Unicode char @u8:⠄ not defined for Texinfo
-l.942: Unicode char @u8:⠨ not defined for Texinfo
-l.944: Unicode char @u8:⠸ not defined for Texinfo
-l.946: Unicode char @u8:⠤ not defined for Texinfo
-l.946: Unicode char @u8:⠤ not defined for Texinfo
-l.946: Unicode char @u8:⠤ not defined for Texinfo
-l.946: Unicode char @u8:⠤ not defined for Texinfo
-l.948: Unicode char @u8:⠐ not defined for Texinfo
-l.948: Unicode char @u8:⠐ not defined for Texinfo
-l.948: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 1085--1091
+[14] l.930: Unicode char @u8:⠰ not defined for Texinfo
+l.932: Unicode char @u8:⠼ not defined for Texinfo
+l.934: Unicode char @u8:⠔ not defined for Texinfo
+l.934: Unicode char @u8:⠔ not defined for Texinfo
+l.936: Unicode char @u8:⠠ not defined for Texinfo
+l.936: Unicode char @u8:⠄ not defined for Texinfo
+l.938: Unicode char @u8:⠨ not defined for Texinfo
+l.940: Unicode char @u8:⠸ not defined for Texinfo
+l.942: Unicode char @u8:⠤ not defined for Texinfo
+l.942: Unicode char @u8:⠤ not defined for Texinfo
+l.942: Unicode char @u8:⠤ not defined for Texinfo
+l.942: Unicode char @u8:⠤ not defined for Texinfo
+l.944: Unicode char @u8:⠐ not defined for Texinfo
+l.944: Unicode char @u8:⠐ not defined for Texinfo
+l.944: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
+Underfull \hbox (badness 10000) in paragraph at lines 1081--1087
  @textrm math guide at [][]@texttt http://wiki.services.openoffice.org/wiki/Doc
 umentation/
 
@@ -538,11 +538,11 @@ umentation/
 Here is how much of TeX's memory you used:
  2266 strings out of 497541
  26135 string characters out of 3209714
- 57363 words of memory out of 3000000
+ 58961 words of memory out of 3000000
  3189 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
- 12i,6n,17p,528b,361s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 13i,6n,17p,528b,361s stack positions out of 5000i,500n,10000p,200000b,50000s
 <C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cm
 b10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx1
 2.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10
@@ -553,9 +553,9 @@ fb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 :/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
 Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Pr
 ogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-user-doc.pdf (21 pages, 241779 bytes).
+Output written on odt2braille-user-doc.pdf (21 pages, 240901 bytes).
 PDF statistics:
- 403 PDF objects out of 1000 (max. 8388607)
+ 401 PDF objects out of 1000 (max. 8388607)
  45 named destinations out of 1000 (max. 500000)
  221 words of extra memory for PDF output out of 10000 (max. 10000000)
 

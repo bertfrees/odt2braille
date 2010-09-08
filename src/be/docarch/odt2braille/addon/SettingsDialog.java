@@ -176,12 +176,14 @@ public class SettingsDialog implements XItemListener,
     private XTextComponent transcribersNotesPageField = null;
     private XListBox mainTranslationTableListBox = null;
     private XListBox mainGradeListBox = null;
+    private XCheckBox mainEightDotsCheckBox = null;
     private XCheckBox transcribersNotesPageCheckBox = null;
     private XCheckBox transcriptionInfoCheckBox = null;
     private XCheckBox volumeInfoCheckBox = null;
     private XCheckBox preliminaryVolumeCheckBox = null;
     private XCheckBox hyphenateCheckBox = null;
 
+    private XPropertySet mainEightDotsCheckBoxProperties = null;
     private XPropertySet transcribersNotesPageFieldProperties = null;    
     private XPropertySet transcriptionInfoCheckBoxProperties = null;
     private XPropertySet volumeInfoCheckBoxProperties = null;
@@ -191,6 +193,7 @@ public class SettingsDialog implements XItemListener,
 
     private static String _mainTranslationTableListBox = "ListBox1";
     private static String _mainGradeListBox = "ListBox2";
+    private static String _mainEightDotsCheckBox = "CheckBox21";
     private static String _creatorField = "TextField1";
     private static String _transcribersNotesPageField = "TextField3";
     private static String _transcriptionInfoCheckBox = "CheckBox1";
@@ -201,6 +204,7 @@ public class SettingsDialog implements XItemListener,
 
     private static String _mainTranslationTableLabel = "Label1";
     private static String _mainGradeLabel = "Label2";
+    private static String _mainEightDotsLabel = "Label74";
     private static String _transcriptionInfoLabel = "Label3";
     private static String _creatorLabel = "Label4";
     private static String _volumeInfoLabel = "Label5";
@@ -211,6 +215,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
     private String L10N_mainGradeLabel = null;
+    private String L10N_mainEightDotsLabel = null;
     private String L10N_transcribersNotesPageLabel = null;
     private String L10N_transcriptionInfoLabel = null;
     private String L10N_volumeInfoLabel = null;
@@ -483,18 +488,23 @@ public class SettingsDialog implements XItemListener,
     private XListBox translationTableListBox = null;
     private XListBox gradeListBox = null;
     private XListBox languagesListBox = null;
+    private XCheckBox eightDotsCheckBox = null;
 
     private XPropertySet gradeListBoxProperties = null;
+    private XPropertySet eightDotsCheckBoxProperties = null;
 
     private static String _languagesListBox = "ListBox3";
     private static String _translationTableListBox = "ListBox4";
     private static String _gradeListBox = "ListBox5";
+    private static String _eightDotsCheckBox = "CheckBox22";
 
     private static String _translationTableLabel = "Label12";
     private static String _gradeLabel = "Label13";
+    private static String _eightDotsLabel = "Label82";
 
     private String L10N_translationTableLabel = null;
     private String L10N_gradeLabel = null;
+    private String L10N_eightDotsLabel = null;
 
     private TreeMap<String,String> L10N_languages = new TreeMap();
 
@@ -733,6 +743,7 @@ public class SettingsDialog implements XItemListener,
         L10N_creatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("creatorLabel") + ":";
         L10N_mainTranslationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
         L10N_mainGradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
+        L10N_mainEightDotsLabel = "Use 8-dot Braille";
         L10N_transcribersNotesPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcribersNotesPageLabel");
         L10N_transcriptionInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcriptionInfoLabel");
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
@@ -805,6 +816,7 @@ public class SettingsDialog implements XItemListener,
 
         L10N_translationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
         L10N_gradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
+        L10N_eightDotsLabel = "Use 8-dot Braille";
 
         // Table of Contents Page
 
@@ -948,6 +960,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_mainTranslationTableListBox));
         mainGradeListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_mainGradeListBox));
+        mainEightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_mainEightDotsCheckBox));
         creatorField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_creatorField));
         transcribersNotesPageField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
@@ -1074,6 +1088,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_translationTableListBox));
         gradeListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_gradeListBox));
+        eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_eightDotsCheckBox));
         languagesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_languagesListBox));
 
@@ -1143,6 +1159,8 @@ public class SettingsDialog implements XItemListener,
 
         // General Page
 
+        mainEightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, mainEightDotsCheckBox)).getModel());
         creatorFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, creatorField)).getModel());
         transcribersNotesPageFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1253,6 +1271,8 @@ public class SettingsDialog implements XItemListener,
 
         gradeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, gradeListBox)).getModel());
+        eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
 
         // Table of Contents Page
 
@@ -1405,6 +1425,7 @@ public class SettingsDialog implements XItemListener,
         languagesListBox.addItemListener(this);
         translationTableListBox.addItemListener(this);
         gradeListBox.addItemListener(this);
+        eightDotsCheckBox.addItemListener(this);
         tableOfContentsCheckBox.addItemListener(this);
         tableOfContentsLevelListBox.addItemListener(this);
         specialSymbolsListCheckBox.addItemListener(this);
@@ -1485,6 +1506,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_mainTranslationTableLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mainGradeLabel));
         xFixedText.setText(L10N_mainGradeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mainEightDotsLabel));
+        xFixedText.setText(L10N_mainEightDotsLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_creatorLabel));
         xFixedText.setText(L10N_creatorLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_transcriptionInfoLabel));
@@ -1605,6 +1628,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_translationTableLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_gradeLabel));
         xFixedText.setText(L10N_gradeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
+        xFixedText.setText(L10N_eightDotsLabel);
 
         // Table of Contents Page
 
@@ -1676,6 +1701,7 @@ public class SettingsDialog implements XItemListener,
 
             updateMainTranslationTableListBox();
             updateMainGradeListBox();
+            updateMainEightDotsCheckBox();
             updateGeneralPageFieldProperties();
 
         }
@@ -1840,8 +1866,9 @@ public class SettingsDialog implements XItemListener,
 
             selectedLanguagePos = 0;
             languagesListBox.selectItemPos((short) selectedLanguagePos, true);
-            updateTranslationTableListBox(languages.get(selectedLanguagePos));
-            updateGradeListBox(languages.get(selectedLanguagePos));
+            updateTranslationTableListBox();
+            updateGradeListBox();
+            updateEightDotsCheckBox();
 
             updateLanguagesPageFieldProperties();
 
@@ -1927,6 +1954,7 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesVisited[GENERAL_PAGE-1]) {
 
+            settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, settings.getMainLanguage());
             settings.setCreator(creatorField.getText());
             settings.setTranscribersNotesPageTitle(transcribersNotesPageField.getText());
             settings.setTranscriptionInfoEnabled(transcriptionInfoCheckBox.getState() == (short) 1);
@@ -2030,6 +2058,7 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateGeneralPageFieldProperties() throws com.sun.star.uno.Exception {
 
+        mainEightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(settings.getMainLanguage()).size()>1);
         creatorFieldProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoEnabled());
         transcribersNotesPageFieldProperties.setPropertyValue("Enabled", settings.getTranscribersNotesPageEnabled());
 
@@ -2129,6 +2158,7 @@ public class SettingsDialog implements XItemListener,
     private void updateLanguagesPageFieldProperties() throws com.sun.star.uno.Exception {
 
         gradeListBoxProperties.setPropertyValue("Enabled", settings.getGrade(languages.get(selectedLanguagePos)) > -1);
+        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(languages.get(selectedLanguagePos)).size() > 1);
 
     }
 
@@ -2363,14 +2393,20 @@ public class SettingsDialog implements XItemListener,
 
     }
 
+    private void updateMainEightDotsCheckBox() {
+
+        mainEightDotsCheckBox.setState((short)((settings.getDots(settings.getMainLanguage())==8)?1:0));
+
+    }
+
     /**
      * Select the correct item in the 'Translation table' listbox on the 'Language Settings' tab.
      *
      */
-    private void updateTranslationTableListBox(String language) {
+    private void updateTranslationTableListBox() {
 
         translationTableListBox.removeItemListener(this);
-        translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(settings.getTranslationTable(language)),true);
+        translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(settings.getTranslationTable(languages.get(selectedLanguagePos))),true);
         translationTableListBox.addItemListener(this);
 
     }
@@ -2379,16 +2415,22 @@ public class SettingsDialog implements XItemListener,
      * Update the list of available grades in the 'Grade' listbox on the 'Language Settings' tab and select the correct item.
      *
      */
-    private void updateGradeListBox(String language) {
+    private void updateGradeListBox() {
 
         gradeListBox.removeItemListener(this);
         gradeListBox.removeItems((short)0, Short.MAX_VALUE);
-        ArrayList<Integer> supportedGrades = settings.getSupportedGrades(language);
+        ArrayList<Integer> supportedGrades = settings.getSupportedGrades(languages.get(selectedLanguagePos));
         for (int i=0;i<supportedGrades.size();i++) {
             gradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
-        gradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(language)), true);
+        gradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(languages.get(selectedLanguagePos))), true);
         gradeListBox.addItemListener(this);
+
+    }
+
+    private void updateEightDotsCheckBox() {
+
+        mainEightDotsCheckBox.setState((short)((settings.getDots(languages.get(selectedLanguagePos))==8)?1:0));
 
     }
 
@@ -2475,8 +2517,10 @@ public class SettingsDialog implements XItemListener,
                         } else if (source.equals(mainTranslationTableListBox)) {
                             settings.setTranslationTable(mainTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainGradeListBox();
+                            updateMainEightDotsCheckBox();
                         } else if (source.equals(mainGradeListBox)) {
                             settings.setGrade(settings.getSupportedGrades(settings.getMainLanguage()).get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
+                            updateMainEightDotsCheckBox();
                         }
 
                         updateGeneralPageFieldProperties();
@@ -2580,17 +2624,21 @@ public class SettingsDialog implements XItemListener,
                         if (source.equals(translationTableListBox)) {
                             settings.setTranslationTable(allTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
                                                          languages.get(selectedLanguagePos));
-                            updateGradeListBox(languages.get(selectedLanguagePos));
-                            updateLanguagesPageFieldProperties();
+                            updateGradeListBox();
+                            updateEightDotsCheckBox();
                         } else if (source.equals(gradeListBox)) {
                             settings.setGrade(Integer.parseInt(gradeListBox.getSelectedItem()), languages.get(selectedLanguagePos));
+                            updateEightDotsCheckBox();
+                        } else if (source.equals(eightDotsCheckBox)) {
+                            settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, languages.get(selectedLanguagePos));
                         } else if (source.equals(languagesListBox)) {
                             selectedLanguagePos = (int)languagesListBox.getSelectedItemPos();
-                            updateTranslationTableListBox(languages.get(selectedLanguagePos));
-                            updateGradeListBox(languages.get(selectedLanguagePos));
-                            updateLanguagesPageFieldProperties();
+                            updateTranslationTableListBox();
+                            updateGradeListBox();
+                            updateEightDotsCheckBox();
                         }
 
+                        updateLanguagesPageFieldProperties();
                         break;
 
                     case TOC_PAGE:
@@ -2699,14 +2747,6 @@ public class SettingsDialog implements XItemListener,
                 }
 
                 if (newPage > 0) {
-
-                    if (newPage==1) {
-                        updateMainTranslationTableListBox();
-                        updateMainGradeListBox();
-                    } else if (newPage==2) {
-                        updateTranslationTableListBox(settings.getMainLanguage());
-                        updateGradeListBox(settings.getMainLanguage());
-                    }
 
                     windowProperties.setPropertyValue("Step", new Integer(newPage));
                     roadmapProperties.setPropertyValue("CurrentItemID", (short)newPage);

@@ -304,51 +304,98 @@ need adjustments.
 
 @itemize @bullet
 @item
-More flexibility by providing more settings!
-
-@itemize @minus
+More flexibility - provide more settings!
+	@itemize @minus
+	@item
+	Footnotes, endnotes, transcriber's notes...
+	@item
+	Volume info and transcription info
+	=> tags gebruiken die worden vervangen:
+	<transcriber> = instelbaar
+	<volumenaam> = instelbaar per volume
+	<datum> <aantal volumes> <aantal supplementen> <aantal preliminaire volumes>
+	<beginbraillepagina> <eindbraillepagina> <beginprintpagina> <eindprintpagina>
+	@item
+	'Continued' suffix.
+	@item
+	Tables
+	@item
+	Textboxes
+	@item
+	Images
+	@item
+	Table Of Contents:
+		- headings tot level x weergeven ?
+		- printpagina nummers weergeven ?
+		- braillepagina nummers weergeven ?
+	@item
+	Bibliography
+	@item
+	Special symbols: knop om default waarde van special symbol in te stellen => getDefaultSpecialSymbol(SpecialSymbolType type, String language)
+	@item
+		Voor elke (paragraph) stijl: gebruiker kan formatting parameters instellen (Feature request 3058074).
+		=> geen effect op headings, captions, listitems, notes, table cells, title page ?
+		=> default = overerven, keuze aan gebruiker
+		(Voor elke (paragraph / character) stijl: gebruiker kan aangeven of special typeface moet overgenomen of genegeerd worden.)
+		(=> effect op headings ?)
+	@end itemize
 @item
-Settings for footnotes, endnotes, TNs, bibliography, ...
+Mac OS, Linux, ... !!! (wachten op Debian, Ubuntu, Fink)
 @item
-Volume info and transcription info.
-@item
-'Continued' suffix.
-@item
-Border lines of tables & textboxes ???
- => linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
-  -> Aantal karakters in string = aantal lijnen in border
-  -> n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
-@item
-Table Of Contents:
-  - headings tot level ? weergeven
-  - printpagina nummers weergeven
-  - braillepagina nummers weergeven
-@item
-...
-@end itemize
-
-@item
-Mac OS, Linux, ... !!!
-@item
-Add more "Braille formatting standards" (now: only BANA) (eg. also UEBC)
-@item
-Documentation!
+8 dot Braille.
 @item
 Support more embossers.
+@item
+Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?)
+@item
+odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog niet ondersteund worden.
+@item
+Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
+	=> OOo crasht (Windows XP) bij oproepen van dialoogvenster
+@item
+Mac OS: crasht bij laden van settings
+@item
+Voor Ubuntu: OOo 3.2.1 nodig ?
+@item
+Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen.
+@item
+Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
+	* Talen
+	* Styles (in het begin: nodig voor analyse door Settings)
+	* Lege paragrafen, ...
+	* Secties verwijderen
+	* Paginanummering
+	* Lijstnummering & bullets
+	* Kopnummering
+	* Linken van captions
+	* Omzetten naar "DAISY"
+	* Titel pagina
+	* Special typeface
+	* Splitsen in volumes (pas op einde)
+(=> gebruik maken van "odt2braille" namespace voor eigen tags)
+(=> Vincent Spiewak is rewriting JODL in XSLT 2.0)
+@item
+Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft upgedate.
+@item
+Voor elke nieuwe release: localisatie bijwerken
+@item
+Settings in Tools > Options...
+@item
+Javadoc bijwerken.
 @item
 Only Interpoint55 is tested.
 @item
 Tooltips in dialogs.
 @item
-Keyboard shortcut for Braille menu.
+Keyboard shortcuts for Braille menus.
 @item
 Howto handle unknown characters? (-> now: dots 3456) (-> "undefined" opcode ?)
 @item
 Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (braille-only material). TN => settings!
 @item
-8 dot Braille.
-@item
 Tactile graphics.
+@item
+Music Braille
 @item
 If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding.
 @item
@@ -358,18 +405,9 @@ http://www.thessalonica.org.ru/en/index.html ?
 @item
 Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).
 @item
-Endnotes in preliminary pages: fix bug.
-@item
 makePEF(): should be made more robust.
 @item
-Odt2Daisy.preProcessing(): should be made faster.
-Replace DOM processing with XSL transformation where this is possible.
-This will result in better performance.
-(Vincent Spiewak is rewriting JODL in XSLT 2.0)
-@item
-When multi-volume feature of liblouisxml is finished: Odt2Braille code might be simplified.
-@item
-Jlouis ?
+Java bindings?
 @item
 UTD & liblouisutdml?
 @item
@@ -381,20 +419,51 @@ Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten: bv door sp
 Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
 @item
 Uitleg van WinBraille over g0,g1,g2,...
-* g0 = one to one
-* g1 = literary one to one with capital and figure prefix
-* g2,g3,g4,... = contracted braille
+	* g0 = one to one
+	* g1 = literary one to one with capital and figure prefix
+	* g2,g3,g4,... = contracted braille
 @item
-Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
-	=> OOo crasht (Windows XP) bij oproepen van dialoogvenster => is dit nog steeds zo?
+Grieks in Engelstalige tekst => +/- zoals in Spaans
 @item
-Voor Ubuntu: OOo 3.2.1 nodig ?
+Automatic splitting of volumes
 @item
-Settings in Tools > Options... ?
-@item
-Zoveel mogelijk originele tabellen includen en sommige default bestanden (tables) overschrijven met eigen (files)
-@item
-...
+Varia
+	@itemize @minus
+	@item
+	text:list-item[@@text:style-override] ?
+	@item
+	Images are omitted in Braille if they are anchored to a page => alert?
+	@item
+	Special-typeface.
+	Er wordt enkel gekeken naar @@style:style-name ( + @@fo:font-style en @@fo:font-weight) en @@style:parent-style-name (in het geval van Emphasis en Strong_20_Emphasis).
+	Todo: tot aan top-stijl gaan om stijl te achterhalen => recursief.
+	@item
+	Pagenum inside notesection ?
+	@item
+	Footnotes onder tabel: ook footnotes in captions meegerekend (terwijl die al onder de caption zelf gezet zijn)
+	@item
+	als “Format – section – options – collect at end of section” niet expliciet wordt ingesteld
+	=> “notes-configuration” mogelijk niet aanwezig => notesection in Braille soms op verkeerde plaats 
+	(=> uitzoeken hoe OOo wel weet waar notes moeten staan ?)
+	@item
+	OOo: linking sections?	
+	@item
+	Volume information block: preliminary braille page numbers (p...) => p moet zonder letter indicator
+	@item
+	Special symbols list: Dot locator: http://www.iceb.org/rep9910f.html ?
+	@item
+	Underline: dots 7 & 8 ?
+	@item
+	Veranderen van typeface in midden van woord => documentatie
+	@item
+	Kan paginanummering mislopen indien pagebreak wordt bekomen door een reeks line breaks ?
+	@item
+	Supplementary volumes:
+		* pagenumber prefixed by “s” ?
+		* 1st pagenum should be 1.
+	@item
+	Endnotes in preliminary pages: fix bug.
+	@end itemize
 @end itemize
 
 @bye

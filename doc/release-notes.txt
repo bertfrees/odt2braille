@@ -1,4 +1,4 @@
-=============================
+﻿=============================
 Version 0.0.1 - 02/07/2010
 =============================
 
@@ -38,48 +38,43 @@ Localization:
 * Dutch
 
 
+=============================
+Version 0.0.2 - 31/08/2010
+=============================
 
-=============================
-Version 0.0.2
-=============================
+Changes:
+
+
+* The single "Braille" menu is replaced with items in the "File" menu and the "Insert" menu.
 
 
 Added features:
 
 
-* Document can now contain every unicode character.
-* List of special symbols can be customized.
-* Hyphenation option (supported languages are: German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
-* Export to BRA file format. Choice between old and new Spanish Braille.
-* Preview Window
-* Index Basic-D support
-* Other small improvements: 
-    - Print page range information on title page.
-
-	
-Changes:
-
-
-* Braille menu in menu bar replaced with menu items under File menu
+* The document can contain every unicode character.
+* The list of special symbols can be fully customized.
+* Hyphenation dictionaries for automatic breaking of words (supported languages are: German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
+* Export to BRA file format (.bra). Choose between old and new Spanish Braille.
+* Preview the Braille output before embossing.
+* Print page range information on the title page.
 
 
 Translation tables:
 
 
-* Spanish improved.
-* Catalan added.
-* Greek within Spanish/Catalan texts.
-* Danish grade 2 added.
-* Portuguese grade 2 added.
-* A few changes to other translation tables.
+* New: Catalan
+* New: Danish grade 2
+* New: Portuguese grade 2
+* Spanish translation tables are revised
+* Some small updates in other translation tables
 
 
 Fixed bugs:
 
 
 * Hyperlink bug fix (hyperlinks were sometimes not rendered)
-* Bug 3043068: error when trying to install the extension on Windows XP.
-* Other small fixes
+* Bug 3043068: error when trying to install the extension on Windows XP
+* Some other small bug fixes
 
 
 Localisation:
@@ -92,4 +87,26 @@ Localisation:
 * Portuguese (Brazil)
 * Slovenian
 * German
-* Norwegian (Bokm�l)
+* Norwegian (Bokmål)
+
+
+=============================
+Version ?
+=============================
+
+* Greek within Spanish/Catalan texts.
+* Index Basic-D support
+
+Fixed bugs:
+
+* Footnotes in lists were not rendered
+
+Translation tables: updated
+
+* Polish
+* Slovene
+
+Hyphenation tables: updated
+
+* Polish
+* Slovene

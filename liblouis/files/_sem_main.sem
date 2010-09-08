@@ -48,8 +48,8 @@
 # Page numbers
 # Hard page breaks
 
-    pagenum       pagenum
-	skip          &xpath(//dtb:book/dtb:frontmatter  //dtb:pagenum)
+	pagenum       pagenum
+	skip          &xpath(//dtb:book/dtb:frontmatter//dtb:pagenum)
 	
 	newPageAfter  pagebreak
 	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume'] or ancestor::dtb:titlepage])
@@ -79,18 +79,11 @@
     newPageAfter           &xpath(//*[@newpage='yes'][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])     
 
 # Paragraphs
-
-	para p
-	centeredblock &xpath(//dtb:titlepage/dtb:p)
-	no &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/dtb:p)
-	
 # Headings
 
-	heading1container  &xpath(//dtb:div[@class='heading' and child::dtb:h1])
-	heading2container  &xpath(//dtb:div[@class='heading' and child::dtb:h2])
-	heading3container  &xpath(//dtb:div[@class='heading' and child::dtb:h3])
-	heading4container  &xpath(//dtb:div[@class='heading' and (child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10)])
-
+	paragraph       p
+	paragraph-wrap  paragraph
+	
 	heading1 h1
 	heading2 h2
 	heading3 h3
@@ -112,16 +105,22 @@
 	dummyheading4 h8,class,dummy
 	dummyheading4 h9,class,dummy
 	dummyheading4 h10,class,dummy
+	
+	heading1-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h1])
+	heading2-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h2])
+	heading3-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h3])
+	heading4-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10])
 
-	contentsheader  &xpath(//dtb:div[@class='toc']/dtb:h1)
-	centeredblock   &xpath(//dtb:titlepage/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]/*[self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-
+	contentsheader  &xpath(//dtb:div[@class='toc']//dtb:h1)
+	centeredblock   &xpath(//dtb:titlepage/*[self::dtb:heading or self::dtb:paragraph])
+	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li]/*[self::dtb:heading or self::dtb:paragraph])
+	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:titlepage]//*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	
 # Captions
 
-	captionContainer div,class,caption
-	caption caption
-	generic &xpath(//dtb:div[@class='tn']//dtb:caption)
+	caption-wrap  div,class,caption
+	caption       caption
+	generic       &xpath(//dtb:div[@class='tn']//dtb:caption)
 
 # Lists
 	
@@ -159,17 +158,17 @@
 	li9        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li                 [position()<last()])
 	li10       &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li [position()<last()])
 	
-	listitem1  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/                                                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem2  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem3  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem4  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem5  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem6  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem7  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem8  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem9  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                 *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	listitem10 &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/ *[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-
+	listitem1  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/                                                                                                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem2  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem3  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem4  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem5  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem6  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem7  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem8  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem9  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/                 */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	listitem10 &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/ */*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
+	
 	
 # Tables
 	
@@ -239,13 +238,13 @@
 	no       noteref \s\x2814\x2814,\*\s
 	no       &xpath(//dtb:note/dtb:noteref) \x2814\x2814,\*\s
 
-	footnote note,class,footnote
-	endnote  note,class,endnote
-	para     &xpath(//dtb:div[@class='tn-page']/dtb:note)
-	trnote   &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
-	trnote   &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
+	footnote   note,class,footnote
+	endnote    note,class,endnote
+	paragraph  &xpath(//dtb:div[@class='tn-page']/dtb:note)
+	trnote     &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
+	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
+	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
+	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
 	
 # Footers
 # Running headers
