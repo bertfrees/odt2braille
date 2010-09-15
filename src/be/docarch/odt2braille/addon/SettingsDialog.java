@@ -136,6 +136,7 @@ public class SettingsDialog implements XItemListener,
     private ArrayList<SpecialSymbol> specialSymbols = null;
     private ArrayList<ParagraphStyle> paragraphStyles = null;
     private ArrayList<MathType> mathTypes = null;
+    private ArrayList<Alignment>alignmentOptions = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -171,9 +172,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_nextButton = null;
     private String L10N_backButton = null;
 
-    private String L10N_left = null;
-    private String L10N_center = null;
-    private String L10N_right = null;
+    private TreeMap<Alignment,String> L10N_alignment = new TreeMap();
 
     // General Page
 
@@ -726,6 +725,7 @@ public class SettingsDialog implements XItemListener,
         mainTranslationTables = settings.getSupportedTranslationTables();
         languages = settings.getLanguages();
         mathTypes = new ArrayList(Arrays.asList(MathType.values()));
+        alignmentOptions = new ArrayList(Arrays.asList(Alignment.values()));
 
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
         pagesEnabled[PARAGRAPHS_PAGE-1] = settings.getParagraphsPresent();
@@ -755,10 +755,6 @@ public class SettingsDialog implements XItemListener,
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("cancelButton");
         L10N_backButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("backButton");
         L10N_nextButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("nextButton");
-
-        L10N_left = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left");
-        L10N_center = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("center");
-        L10N_right = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right");
 
         // General Page
 
@@ -870,18 +866,22 @@ public class SettingsDialog implements XItemListener,
 
         L10N_mathLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("formulasLabel") + ":";
 
+        L10N_math.put("NEMETH",    "Nemeth");
+        L10N_math.put("UKMATHS",   "UK Maths");
+        L10N_math.put("MARBURG",   "Marburg");
+        L10N_math.put("WISKUNDE",  "Notaert");
+
+        // Languages, translation tables, grades, alignment, paragraph styles
+
         L10N_grades.put(0, "Grade 0");  /* (computer Braille) */
         L10N_grades.put(1, "Grade 1");  /* (uncontracted)     */
         L10N_grades.put(2, "Grade 2");  /* (contracted)       */
         L10N_grades.put(3, "Grade 3");
         L10N_grades.put(4, "Grade 4");
 
-        L10N_math.put("NEMETH",    "Nemeth");
-        L10N_math.put("UKMATHS",   "UK Maths");
-        L10N_math.put("MARBURG",   "Marburg");
-        L10N_math.put("WISKUNDE",  "Notaert");
-
-        // Languages, translation tables & paragraph styles
+        L10N_alignment.put(Alignment.LEFT,     ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left"));
+        L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("center"));
+        L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right"));
 
         String key = null;
         String value = null;
@@ -1796,9 +1796,10 @@ public class SettingsDialog implements XItemListener,
             selectedParagraphStylePos = 0;
             paragraphStyleListBox.selectItemPos((short) selectedParagraphStylePos, true);
 
-            paragraphAlignmentListBox.addItem(L10N_left, (short)0);
-            paragraphAlignmentListBox.addItem(L10N_center, (short)1);
-
+            for (int i=0; i<alignmentOptions.size(); i++) {
+                paragraphAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
+            }
+            
             paragraphFirstLineField.setDecimalDigits((short)0);
             paragraphFirstLineField.setMin((double)0);
             paragraphFirstLineField.setMax((double)Integer.MAX_VALUE);            
@@ -1829,8 +1830,9 @@ public class SettingsDialog implements XItemListener,
             for (int i=0;i<4;i++) { headingLevelListBox.addItem((i<3)?String.valueOf(i+1):"4-10", (short)i); }
             headingLevelListBox.selectItemPos((short)(currentHeadingLevel-1), true);
 
-            headingAlignmentListBox.addItem(L10N_left, (short)0);
-            headingAlignmentListBox.addItem(L10N_center, (short)1);
+            for (int i=0; i<alignmentOptions.size(); i++) {
+                headingAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
+            }
 
             headingFirstLineField.setDecimalDigits((short)0);
             headingFirstLineField.setMin((double)0);
@@ -1871,8 +1873,10 @@ public class SettingsDialog implements XItemListener,
 
             for (int i=0;i<10;i++) { listLevelListBox.addItem(String.valueOf(i+1), (short)i);}
             listLevelListBox.selectItemPos((short)(currentListLevel-1), true);
-            listAlignmentListBox.addItem(L10N_left, (short)0);
-            listAlignmentListBox.addItem(L10N_center, (short)1);
+
+            for (int i=0; i<alignmentOptions.size(); i++) {
+                listAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
+            }
 
             listFirstLineField.setDecimalDigits((short)0);
             listFirstLineField.setMin((double)0);
@@ -1912,8 +1916,9 @@ public class SettingsDialog implements XItemListener,
             for (int i=0;i<10;i++) { tableColumnListBox.addItem((i<9)?String.valueOf(i+1):"\u226510", (short)i); }
             tableColumnListBox.selectItemPos((short)(currentTableColumn-1), true);
 
-            tableAlignmentListBox.addItem(L10N_left, (short)0);
-            tableAlignmentListBox.addItem(L10N_center, (short)1);
+            for (int i=0; i<alignmentOptions.size(); i++) {
+                tableAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
+            }
 
             tableFirstLineField.setDecimalDigits((short)0);
             tableFirstLineField.setMin((double)0);
@@ -2133,13 +2138,13 @@ public class SettingsDialog implements XItemListener,
 
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
         
-        boolean centered = (style.getAlignment() == Alignment.CENTERED);
+        boolean left = (style.getAlignment() == Alignment.LEFT);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
         boolean inherit = style.getInherit();
 
         paragraphInheritCheckBoxProperties.setPropertyValue("Enabled", style.getParentStyle() != null && !bana);
-        paragraphFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana && !inherit);
-        paragraphRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana && !inherit);
+        paragraphFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana && !inherit);
+        paragraphRunoversFieldProperties.setPropertyValue("Enabled", left && !bana && !inherit);
         paragraphAlignmentListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesAboveProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesBelowProperties.setPropertyValue("Enabled", !bana && !inherit);
@@ -2148,11 +2153,11 @@ public class SettingsDialog implements XItemListener,
 
     private void updateHeadingsPageFieldProperties() throws com.sun.star.uno.Exception {
 
-        boolean centered = (settings.getStyle("heading_" + currentHeadingLevel).getAlignment() == Alignment.CENTERED);
+        boolean left = (settings.getStyle("heading_" + currentHeadingLevel).getAlignment() == Alignment.LEFT);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        headingFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
-        headingRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        headingFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
+        headingRunoversFieldProperties.setPropertyValue("Enabled", left && !bana);
         headingAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         headingLinesAboveProperties.setPropertyValue("Enabled", !bana);
         headingLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2161,11 +2166,11 @@ public class SettingsDialog implements XItemListener,
 
     private void updateListsPageFieldProperties() throws com.sun.star.uno.Exception {
 
-        boolean centered = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.CENTERED);
+        boolean left = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.LEFT);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        listFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
-        listRunoversFieldProperties.setPropertyValue("Enabled", !centered && !bana);
+        listFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
+        listRunoversFieldProperties.setPropertyValue("Enabled", left && !bana);
         listAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         listLinesAboveProperties.setPropertyValue("Enabled", !bana);
         listLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2180,12 +2185,12 @@ public class SettingsDialog implements XItemListener,
         tableColumnDelimiterFieldProperties.setPropertyValue("Enabled", !settings.stairstepTableIsEnabled());
         tableColumnDelimiterButtonProperties.setPropertyValue("Enabled", !settings.stairstepTableIsEnabled());
         
-        boolean centered = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
-                                .getAlignment() == Alignment.CENTERED);
+        boolean left = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
+                                .getAlignment() == Alignment.LEFT);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
-        tableFirstLineFieldProperties.setPropertyValue("Enabled", !centered && !bana);
-        tableRunoversFieldProperties.setPropertyValue("Enabled", !centered &&!bana);
+        tableFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
+        tableRunoversFieldProperties.setPropertyValue("Enabled", left &&!bana);
         tableAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         tableLinesAboveProperties.setPropertyValue("Enabled", !bana);
         tableLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2276,20 +2281,21 @@ public class SettingsDialog implements XItemListener,
     private void updateParagraphsPageFieldValues() {
 
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
+        boolean left = (style.getAlignment() == Alignment.LEFT);
 
         paragraphInheritCheckBox.removeItemListener(this);
         paragraphAlignmentListBox.removeItemListener(this);
 
-        paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));
-        paragraphAlignmentListBox.selectItemPos((short)((style.getAlignment() == Alignment.CENTERED)?1:0), true);
+        paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));        
         paragraphParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
-        paragraphFirstLineField.setValue((double)style.getFirstLine());
-        paragraphRunoversField.setValue((double)style.getRunovers());
         paragraphLinesAboveField.setValue((double)style.getLinesAbove());
         paragraphLinesBelowField.setValue((double)style.getLinesBelow());
+        paragraphAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
+        paragraphFirstLineField.setValue((double)(left?style.getFirstLine():0));
+        paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
 
-        paragraphInheritCheckBox.addItemListener(this);
         paragraphAlignmentListBox.addItemListener(this);
+        paragraphInheritCheckBox.addItemListener(this);
 
     }
 
@@ -2298,97 +2304,98 @@ public class SettingsDialog implements XItemListener,
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
 
         if (!style.getInherit()) {
-            style.setFirstLine((int)paragraphFirstLineField.getValue());
-            style.setRunovers((int)paragraphRunoversField.getValue());
             style.setLinesAbove((int)paragraphLinesAboveField.getValue());
             style.setLinesBelow((int)paragraphLinesBelowField.getValue());
+            if (style.getAlignment() == Alignment.LEFT) {
+                style.setFirstLine((int)paragraphFirstLineField.getValue());
+                style.setRunovers((int)paragraphRunoversField.getValue());
+            }
         }
     }
 
     private void updateHeadingsPageFieldValues() {
 
         Style style = settings.getStyle("heading_" + currentHeadingLevel);
+        boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        headingAlignmentListBox.removeActionListener(this);
-        headingAlignmentListBox.selectItemPos((short)((style.getAlignment() == Alignment.CENTERED)?1:0), true);
-        headingAlignmentListBox.addActionListener(this);
-        headingFirstLineField.setValue(style.getFirstLine());
-        headingRunoversField.setValue(style.getRunovers());
-        headingLinesAboveField.setValue(style.getLinesAbove());
-        headingLinesBelowField.setValue(style.getLinesBelow());
+        headingAlignmentListBox.removeItemListener(this);
+
+        headingLinesAboveField.setValue((double)style.getLinesAbove());
+        headingLinesBelowField.setValue((double)style.getLinesBelow());
+        headingAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
+        headingFirstLineField.setValue((double)(left?style.getFirstLine():0));
+        headingRunoversField.setValue((double)(left?style.getRunovers():0));
+
+        headingAlignmentListBox.addItemListener(this);
 
     }
 
     private void saveHeadingsPageFieldValues() {
 
-        Style style = settings.getStyle("heading_" + currentHeadingLevel);
+        Style style = settings.getStyle("heading_" + currentHeadingLevel);        
         
-        style.setFirstLine((int)headingFirstLineField.getValue());
-        style.setRunovers((int)headingRunoversField.getValue());
         style.setLinesAbove((int)headingLinesAboveField.getValue());
         style.setLinesBelow((int)headingLinesBelowField.getValue());
-
+        if (style.getAlignment() == Alignment.LEFT) {
+            style.setFirstLine((int)headingFirstLineField.getValue());
+            style.setRunovers((int)headingRunoversField.getValue());
+        }
     }
 
     private void updateListsPageFieldValues() {
 
         Style style = settings.getStyle("list_" + currentListLevel);
+        boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        listAlignmentListBox.removeActionListener(this);
-        listAlignmentListBox.selectItemPos((short)((style.getAlignment() == Alignment.CENTERED)?1:0), true);
-        listAlignmentListBox.addActionListener(this);
-        listFirstLineField.setValue(style.getFirstLine());
-        listRunoversField.setValue(style.getRunovers());
+        listAlignmentListBox.removeItemListener(this);
+
+        listAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
+        listFirstLineField.setValue((double)(left?style.getFirstLine():0));
+        listRunoversField.setValue((double)(left?style.getRunovers():0));
         listLinesAboveField.setValue((double)style.getLinesAbove());
         listLinesBelowField.setValue((double)style.getLinesBelow());
         listLinesBetweenField.setValue((double)style.getLinesBetween());
         listPrefixField.setText(style.getPrefix());
+
+        listAlignmentListBox.addItemListener(this);
 
     }
 
     private void saveListsPageFieldValues() {
 
         Style style = settings.getStyle("list_" + currentListLevel);
-
-        style.setFirstLine((int)listFirstLineField.getValue());
-        style.setRunovers((int)listRunoversField.getValue());
+        
         style.setLinesAbove((int)listLinesAboveField.getValue());
         style.setLinesBelow((int)listLinesBelowField.getValue());
         style.setLinesBetween((int)listLinesBetweenField.getValue());
+        if (style.getAlignment() == Alignment.LEFT) {
+            style.setFirstLine((int)listFirstLineField.getValue());
+            style.setRunovers((int)listRunoversField.getValue());
+        }
 
     }
 
     private void updateTablesPageFieldValues() {
 
-        Style style = null;
+        Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
+        boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        tableAlignmentListBox.removeActionListener(this);
-        if (currentTableColumn>0) {
-            style = settings.getStyle("table_" + currentTableColumn);
-            tableAlignmentListBox.selectItemPos((short)((style.getAlignment() == Alignment.CENTERED)?1:0), true);
-            tableFirstLineField.setValue(style.getFirstLine());
-            tableRunoversField.setValue(style.getRunovers());
-            tableColumnListBox.selectItemPos((short)(currentTableColumn-1), true);
-        } else {
-            style = settings.getStyle("table");
-            tableAlignmentListBox.selectItemPos((short)((style.getAlignment() == Alignment.CENTERED)?1:0), true);
-            tableFirstLineField.setValue(style.getFirstLine());
-            tableRunoversField.setValue(style.getRunovers());
-        }
-        tableAlignmentListBox.addActionListener(this);
+        tableAlignmentListBox.removeItemListener(this);
+
+        tableAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
+        tableFirstLineField.setValue((double)(left?style.getFirstLine():0));
+        tableRunoversField.setValue((double)(left?style.getRunovers():0));
+        tableColumnListBox.selectItemPos((short)(Math.max(0,currentTableColumn-1)), true);
+
+        tableAlignmentListBox.addItemListener(this);
 
     }
 
     private void saveTablesPageFieldValues() {
 
-        Style style = null;
+        Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
 
-        if (currentTableColumn>0) {
-            style = settings.getStyle("table_" + currentTableColumn);
-            style.setFirstLine((int)tableFirstLineField.getValue());
-            style.setRunovers((int)tableRunoversField.getValue());
-        } else {
-            style = settings.getStyle("table");
+        if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)tableFirstLineField.getValue());
             style.setRunovers((int)tableRunoversField.getValue());
         }
@@ -2626,11 +2633,13 @@ public class SettingsDialog implements XItemListener,
                         } else if (source.equals(transcribersNotesPageCheckBox)) {
                             settings.setTranscribersNotesPageEnabled(transcribersNotesPageCheckBox.getState() == (short) 1);
                         } else if (source.equals(mainTranslationTableListBox)) {
-                            settings.setTranslationTable(mainTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
+                            settings.setTranslationTable(
+                                    mainTranslationTables.get((int)mainTranslationTableListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainGradeListBox();
                             updateMainEightDotsCheckBox();
                         } else if (source.equals(mainGradeListBox)) {
-                            settings.setGrade(settings.getSupportedGrades(settings.getMainLanguage()).get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
+                            settings.setGrade(settings.getSupportedGrades(
+                                    settings.getMainLanguage()).get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainEightDotsCheckBox();
                         }
 
@@ -2639,79 +2648,78 @@ public class SettingsDialog implements XItemListener,
 
                     case PARAGRAPHS_PAGE:
 
+                        saveParagraphsPageFieldValues();
+
                         if (source.equals(paragraphStyleListBox)) {
-                            saveParagraphsPageFieldValues();
                             selectedParagraphStylePos = (int)paragraphStyleListBox.getSelectedItemPos();
-                            updateParagraphsPageFieldValues();
                         } else if (source.equals(paragraphAlignmentListBox)) {
-                            paragraphStyles.get(selectedParagraphStylePos).setAlignment(
-                                    (paragraphAlignmentListBox.getSelectedItemPos()==(short)1)?Alignment.CENTERED:Alignment.LEFT);
+                            if (!paragraphStyles.get(selectedParagraphStylePos).getInherit()) {
+                                paragraphStyles.get(selectedParagraphStylePos).setAlignment(
+                                        alignmentOptions.get(paragraphAlignmentListBox.getSelectedItemPos()));
+                            }
                         } else if (source.equals(paragraphInheritCheckBox)) {
                             paragraphStyles.get(selectedParagraphStylePos).setInherit(paragraphInheritCheckBox.getState()==(short)1);
-                            updateParagraphsPageFieldValues();
                         }
 
+                        updateParagraphsPageFieldValues();
                         updateParagraphsPageFieldProperties();
                         break;
                         
                     case HEADINGS_PAGE: 
-                        
-                        if (source.equals(headingLevelListBox)) {
-                            saveHeadingsPageFieldValues();
-                            currentHeadingLevel = (int)headingLevelListBox.getSelectedItemPos() + 1;
-                            updateHeadingsPageFieldValues();                            
+
+                        saveHeadingsPageFieldValues();
+
+                        if (source.equals(headingLevelListBox)) {                            
+                            currentHeadingLevel = (int)headingLevelListBox.getSelectedItemPos() + 1;                       
                         } else if (source.equals(headingAlignmentListBox)) {
                             settings.getStyle("heading_" + currentHeadingLevel).setAlignment(
-                                    (headingAlignmentListBox.getSelectedItemPos()==(short)1)?Alignment.CENTERED:Alignment.LEFT);
+                                    alignmentOptions.get(headingAlignmentListBox.getSelectedItemPos()));
                         }
 
+                        updateHeadingsPageFieldValues();
                         updateHeadingsPageFieldProperties();
                         break;
                         
                     case LISTS_PAGE:
 
+                        saveListsPageFieldValues();
+
                         if (source.equals(listLevelListBox)) {
-                            saveListsPageFieldValues();
-                            currentListLevel = listLevelListBox.getSelectedItemPos() + 1;
-                            updateListsPageFieldValues();
-                            updateListsPageFieldProperties();
+                            currentListLevel = listLevelListBox.getSelectedItemPos() + 1;                            
                         } else if (source.equals(listAlignmentListBox)) {
                             settings.getStyle("list_" + currentListLevel).setAlignment(
-                                    (listAlignmentListBox.getSelectedItemPos()==(short)1)?Alignment.CENTERED:Alignment.LEFT);
-                            updateListsPageFieldProperties();
+                                    alignmentOptions.get(listAlignmentListBox.getSelectedItemPos()));
                         }
 
+                        updateListsPageFieldValues();
+                        updateListsPageFieldProperties();
                         break;
 
                     case TABLES_PAGE:
 
+                        saveTablesPageFieldValues();
+                        
                         if (source.equals(tableSimpleRadioButton) ||
                             source.equals(tableStairstepRadioButton)) {
 
                             if (!settings.stairstepTableIsEnabled()) {
                                 tableSimpleRadioButton.setState(false);
                                 settings.setStairstepTable(true);
-                                saveTablesPageFieldValues();
                                 currentTableColumn = 1;
                             } else {
                                 tableStairstepRadioButton.setState(false);
                                 settings.setStairstepTable(false);
-                                saveTablesPageFieldValues();
                                 currentTableColumn = 0;
                             }
-                            updateTablesPageFieldValues();
-                            updateTablesPageFieldProperties();
                         } else if (source.equals(tableColumnListBox)) {
-                            saveTablesPageFieldValues();
                             currentTableColumn = tableColumnListBox.getSelectedItemPos() + 1;
-                            updateTablesPageFieldValues();
-                            updateTablesPageFieldProperties();
                         } else if (source.equals(tableAlignmentListBox)) {
                             settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn)).setAlignment(
-                                    (tableAlignmentListBox.getSelectedItemPos()==(short)1)?Alignment.CENTERED:Alignment.LEFT);
-                            updateTablesPageFieldProperties();
+                                    alignmentOptions.get(tableAlignmentListBox.getSelectedItemPos()));
                         }
-                        
+
+                        updateTablesPageFieldValues();
+                        updateTablesPageFieldProperties();
                         break;
 
                     case PAGENUMBERS_PAGE:
@@ -2765,14 +2773,13 @@ public class SettingsDialog implements XItemListener,
                         
                         if (source.equals(tableOfContentsCheckBox)) {
                             settings.setTableOfContentEnabled(tableOfContentsCheckBox.getState()==(short)1);
-                            updateTableOfContentsPageFieldProperties();
                         } else if (source.equals(tableOfContentsLevelListBox)) {
                             saveTableOfContentsPageFieldValues();
                             currentTableOfContentsLevel = (int)tableOfContentsLevelListBox.getSelectedItemPos() + 1;
-                            updateTableOfContentsPageFieldValues();
-                            updateTableOfContentsPageFieldProperties();
+                            updateTableOfContentsPageFieldValues();                            
                         }
-                        
+
+                        updateTableOfContentsPageFieldProperties();
                         break;
 
                     case SPECIAL_SYMBOLS_PAGE:

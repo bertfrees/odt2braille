@@ -95,7 +95,9 @@ Version ?
 =============================
 
 * Greek within Spanish/Catalan texts.
-* Index Basic-D support
+* Index Basic-D support ?
+* Paragraph styles
+* Right justify
 
 Fixed bugs:
 
