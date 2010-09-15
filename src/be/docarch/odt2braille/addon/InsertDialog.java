@@ -40,7 +40,6 @@ import com.sun.star.awt.XControl;
 import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.TextEvent;
 import com.sun.star.lang.EventObject;
-import com.sun.star.awt.XExtendedToolkit;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.text.XText;
 import com.sun.star.text.XTextCursor;
@@ -64,7 +63,6 @@ public class InsertDialog implements XTextListener,
 
     private XText xText = null;
     private XTextCursor xTextCursor = null;
-    private XExtendedToolkit myExtToolkit = null;
     private Locale oooLocale = null;
 
     private XDialog dialog = null;

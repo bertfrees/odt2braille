@@ -66,7 +66,6 @@ public final class Odt2BrailleAddOn extends WeakBase
                                                 xRegistryKey);
     }
 
-    // com.sun.star.lang.XServiceInfo:
     public String getImplementationName() {
          return m_implementationName;
     }
@@ -85,7 +84,6 @@ public final class Odt2BrailleAddOn extends WeakBase
         return m_serviceNames;
     }
 
-    // com.sun.star.frame.XDispatchProvider:
     public com.sun.star.frame.XDispatch queryDispatch( com.sun.star.util.URL aURL,
                                                        String sTargetFrameName,
                                                        int iSearchFlags )
@@ -107,7 +105,6 @@ public final class Odt2BrailleAddOn extends WeakBase
         return null;
     }
 
-    // com.sun.star.frame.XDispatchProvider:
     public com.sun.star.frame.XDispatch[] queryDispatches(
          com.sun.star.frame.DispatchDescriptor[] seqDescriptors )
     {
@@ -124,7 +121,6 @@ public final class Odt2BrailleAddOn extends WeakBase
         return seqDispatcher;
     }
 
-    // com.sun.star.lang.XInitialization:
     public void initialize( Object[] object )
         throws com.sun.star.uno.Exception
     {
@@ -135,7 +131,6 @@ public final class Odt2BrailleAddOn extends WeakBase
         }
     }
 
-    // com.sun.star.frame.XDispatch:
      public void dispatch( com.sun.star.util.URL aURL,
                            com.sun.star.beans.PropertyValue[] aArguments )
     {
@@ -215,14 +210,10 @@ public final class Odt2BrailleAddOn extends WeakBase
 
     public void addStatusListener( com.sun.star.frame.XStatusListener xControl,
                                     com.sun.star.util.URL aURL )
-    {
-        // add your own code here
-    }
+    {}
 
     public void removeStatusListener( com.sun.star.frame.XStatusListener xControl,
                                        com.sun.star.util.URL aURL )
-    {
-        // add your own code here
-    }
+    {}
 
 }

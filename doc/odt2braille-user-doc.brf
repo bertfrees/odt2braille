@@ -1,9 +1,15 @@
-    _ODT#B;BRL _,US]'S _,GUIDE        ;I
-     = V].N #J.J.A1 #H ,JULY #BJAJ
+
+        ODT#B;BRL ,US]'S ,GUIDE
+    = V].N #J.J.B1 #CJ ,AUGU/ #BJAJ
 
               0,B]T ,FREES
 
-    TRANSCRIB$ #BJAJ 0,B]T ,FREES )
+              ,9 #A VOLUME
+               ,VOLUME #A
+      ,BRL PAGES ;P#A-;P#D & #A-EB
+           ,PR9T PAGES #C-AI
+
+    ,TRANSCRIB$ #BJAJ 0,B]T ,FREES )
                ODT#B;BRL
 
 
@@ -16,29 +22,67 @@
 
 
 
-
-
-
-
-
-
-
-  ,COPY"R ^C #BJAJ 0,DOC,>*          ;II
+                                    ;P#A
+
+  ,COPY"R ^C #BJAJ 0,DOC,>*
 _+HTTP://WWW.DOCARCH.BE._:
   ,? PROGRAM IS FREE S(TW>E3 Y C
 REDISTRIBUTE X &_/OR MODIFY X "U ! T]MS
-(! ,,GNU ,G5]AL ,PUBLIC ,LIC5SE Z
+(! ,,GNU ,LESS] ,G5]AL ,PUBLIC ,LIC5SE Z
 PUBLI%$ 0! ,FREE ,S(TW>E ,F.D,N1 EI V].N
 #C (! ,LIC5SE1 OR 7AT YR OP;N7 ANY LAT]
 V].N4
   ,? PROGRAM IS 4TRIBUT$ 9 ! HOPE T X W
 2 USE;L1 B )\T ANY W>RANTY2 )\T EV5 !
 IMPLI$ W>RANTY ( M]*ANTABIL;Y OR FIT;S
-=A "PICUL> PURPOSE4 ,SEE ! ,,GNU ,G5]AL
-,PUBLIC ,LIC5SE = M DETAILS4
-  ,Y %D H RCVD A COPY (! ,,GNU ,G5]AL
-,PUBLIC ,LIC5SE AL;G ) ? PROGRAM4 ,IF N1
-SEE _+HTTP://WWW.GNU.ORG/LICENSES._:
+=A "PICUL> PURPOSE4 ,SEE ! ,,GNU ,LESS]
+,G5]AL ,PUBLIC ,LIC5SE = M DETAILS4
+  ,Y %D H RCVD A COPY (! ,,GNU ,LESS]
+,G5]AL ,PUBLIC ,LIC5SE AL;G ) ? PROGRAM4
+,IF N1 SEE
+_+HTTP://WWW.GNU.ORG/LICENSES._:
+
+
+
+
+
+
+                                    ;P#B
+
+                ,,3T5TS 
+
+,GETT+ ,/>T$  '''''''''''''''''''' #C #A
+  ,9/ALL,N  '''''''''''''''''''''' #C #A
+  _+OPENOFFICE.ORG_:
+      ,A3ESSIBIL;Y '''''''''''''' A#C #B
+   ,9TRODUC;N ''''''''''''''''''' A#C #B
+#A ,QK ,GUIDE  ''''''''''''''''''' #D #D
+#B ,ADV.ED ,GUIDE  ''''''''''''''' #E #E
+  #B.A ,LANGUAGES  ''''''''''''''' #E #E
+  #B.B ,P>AGRAPHS ''''''''''''''' A#E #F
+  #B.C ,H1D+S ''''''''''''''''''' B#E #G
+  #B.D ,LI/S ''''''''''''''''''' C#F #AJ
+  #B.E ,TA#S ''''''''''''''''''' B#G #AB
+  #B.F ,TEXTBOXES '''''''''''''' B#H #AF
+  #B.G ,IMAGES ''''''''''''''''' B#I #AI
+  #B.H ,CAP;NS '''''''''''''''' B#AJ #BB
+  #B.I ,NOTES ''''''''''''''''' C#AJ #BC
+  #B.AJ ,SPECIAL ,TYPEFACE '''' C#AA #BF
+  #B.AA ,PAGE ,NUMB]+ ''''''''' A#AB #BH
+  #B.AB ,PRELIM9>Y ,PAGES ''''' A#AC #CB
+  #B.AC ,VOLUME ,MANAGE;T ''''' C#AC #CD
+  #B.AD ,TITLE ,PAGE '''''''''' C#AD #CG
+  #B.AE ,LI/ ( ,SPECIAL             ;P#C
+
+      ,SYMBOLS '''''''''''''''' B#AE #CI
+  #B.AF ,TRANSCRIB]'S ,NOTES  '' #AF #DA
+  #B.AG ,TA# ( ,3T5TS ''''''''' B#AF #DC
+  #B.AH ,BIBLIOGRAPHIES ''''''' C#AG #DF
+  #B.AI ,MA!MATICS '''''''''''' A#AH #DH
+  #B.BJ ,9S]T+ ,LIT]AL ,BRL ''' B#AH #DI
+  #B.BA ,BRL-ONLY ,MAT]IAL  '''' #AI #EJ
+  #B.BB ,HYPH5,N '''''''''''''' A#AI #EA
+  #B.BC ,TEMPLATES '''''''''''' B#AI #EB
 
 
 
@@ -48,124 +92,152 @@ SEE _+HTTP://WWW.GNU.ORG/LICENSES._:
 
 
 
-            ,,3T5TS                 ;III
-
-  ,9TRODUC;N  '''''''''''''''''''' #C #A
-  #A ,DOCU;T ,PREP>,N  ''''''''''' #D #B
-    #A.A ,P>AGRAPHS  ''''''''''''' #D #B
-      _+OPENOFFICE.ORG_:  '''''''' #D #B
-       ,BRL ''''''''''''''''''''' A#D #C
-    #A.B ,H1D+S ''''''''''''''''' A#D #C
-       _+OPENOFFICE.ORG_: ''''''' A#D #C
-      ,BRL  '''''''''''''''''''''' #E #D
-    #A.C ,LI/S '''''''''''''''''' B#E #F
-       _+OPENOFFICE.ORG_: ''''''' B#E #F
-       ,BRL ''''''''''''''''''''' C#E #G
-    #A.D ,TA#S '''''''''''''''''' A#F #H
-       _+OPENOFFICE.ORG_: ''''''' A#F #H
-       ,BRL ''''''''''''''''''''' B#F #I
-    #A.E ,TEXTBOXES '''''''''''' A#G #AA
-       _+OPENOFFICE.ORG_: '''''' B#G #AB
-       ,BRL '''''''''''''''''''' C#G #AC
-    #A.F ,IMAGES  ''''''''''''''' #H #AD
-      _+OPENOFFICE.ORG_:  ''''''' #H #AD
-       ,BRL '''''''''''''''''''' A#H #AE
-    #A.G ,CAP;NS ''''''''''''''' C#H #AG
-      _+OPENOFFICE.ORG_:  ''''''' #I #AG
-      ,BRL  ''''''''''''''''''''' #I #AG
-    #A.H ,NOTES '''''''''' A#I #AH   ;IV
-       _+OPENOFFICE.ORG_: '''''' A#I #AH
-       ,BRL '''''''''''''''''''' B#I #AI
-    #A.I ,SPECIAL ,TYPEFACE ''' A#AJ #BA
-       _+OPENOFFICE.ORG_: ''''' A#AJ #BA
-       ,BRL ''''''''''''''''''' B#AJ #BB
-    #A.AJ ,LANGUAGES '''''''''' C#AJ #BC
-      _+OPENOFFICE.ORG_:  '''''' #AA #BC
-    #A.AA ,PAGE ,NUMB]+ ''''''' A#AA #BD
-       _+OPENOFFICE.ORG_: ''''' A#AA #BD
-       ,BRL ''''''''''''''''''' B#AA #BE
-    #A.AB ,PRELIM9>Y ,PAGES ''' C#AA #BF
-       _+OPENOFFICE.ORG_: ''''' A#AB #BG
-       ,BRL ''''''''''''''''''' B#AB #BH
-    #A.AC ,VOLUME ,MANAGE;T ''' C#AB #BI
-       _+OPENOFFICE.ORG_: ''''' D#AB #CJ
-       ,BRL ''''''''''''''''''' A#AC #CA
-    #A.AD ,TITLE ,PAGE '''''''' A#AC #CA
-       _+OPENOFFICE.ORG_: ''''' A#AC #CA
-       ,BRL ''''''''''''''''''' C#AC #CC
-    #A.AE ,LI/ ( ,SPECIAL
-        ,SYMBOLS '''''''''''''' A#AD #CD
-       _+OPENOFFICE.ORG_: ''''' A#AD #CD
-       ,BRL ''''''''''''''''''' A#AD #CD
-    #A.AF ,TRANSCRIB]'S ,NOTES
-         '''''''''''''''''' #AE #CE   ;V
-       _+OPENOFFICE.ORG_: ''''' A#AE #CF
-       ,BRL ''''''''''''''''''' A#AE #CF
-    #A.AG ,TA# ( ,3T5TS ''''''' B#AE #CG
-       _+OPENOFFICE.ORG_: ''''' B#AE #CG
-       ,BRL ''''''''''''''''''' C#AE #CH
-    #A.AH ,BIBLIOGRAPHIES ''''' B#AF #DJ
-       _+OPENOFFICE.ORG_: ''''' B#AF #DJ
-       ,BRL ''''''''''''''''''' C#AF #DA
-    #A.AI ,MA!MATICS '''''''''' C#AF #DA
-    #A.BJ ,LIT]AL ,BRL '''''''' A#AG #DB
-    #A.BA ,BRL-ONLY ,MAT]IAL '' A#AG #DB
-    #A.BB ,TEMPLATES '''''''''' A#AG #DB
-  #B ,SETT+S  '''''''''''''''''' #AH #DC
-  #C ,EXPORT+  ''''''''''''''''' #AH #DC
-  #D ,EMBOSS+  ''''''''''''''''' #AH #DC
-  #E ,9S]T+  ''''''''''''''''''' #AH #DC
 
 
 
 
 
+                                    ;P#D
+                                      #C
+              ,GETT+ ,/>T$
 
+    ,9/ALL,N
 
-
-            ,9TRODUC;N                #A
   ,9 ORD] 69/ALL ODT#B;BRL1
 _+OPENOFFICE.ORG_: V].N #C.J OR LAT] IS
-REQUIR$4 ,! LATE/ V].N (
-_+OPENOFFICE.ORG_: C 2 D[NLOAD$ F
+REQUIR$4 ,Y C F9D ! LATE/ V].N (
+_+OPENOFFICE.ORG_: AT
 _+HTTP://DOWNLOAD.OPENOFFICE.ORG/OTHER.-
-HTML._: ,6ADD ! ODT#B;BRL EXT5.N TO
-_+OPENOFFICE.ORG,_: SIMPLY D\# CLICK !
-ODT#B;BRL 9/ALL,N FILE & FOLL[ ! /EPS 9
-! _+OPENOFFICE.ORG_: .,EXT5.N .,MANAG]4
+HTML._: ,X IS /R;GLY RECOMM5D$ T Y AL
+D[NLOAD & 9/ALL ! .,SIM,BRL FONT3
+_+HTTP://ODT2BRAILLE.SVN.SOURCEFORGE.NE-
+T/VIEWVC/ODT2BRAILLE/ODT2BRAILLEADDON/E-
+XTRA/SIMBRL.TTF._: ,6ADD ! ODT#B;BRL
+EXT5.N1 LAUN* _+OPENOFFICE.ORG_: & OP5
+,7.,TOOLS .1 .,EXT5.N .,MANAG]'''7'4 ,F/
+REMOVE ANY OLD] V].NS ( ODT#B;BRL4 ,!N
+*OOSE .,ADD'''1 SELECT ! ODT#B;BRL
+9/ALL,N PACKAGE & FOLL[ ! /EPS4 ,F9,Y1
+:5 ! 9/ALL,N IS F9I%$1 RE/>T
+_+OPENOFFICE.ORG._:
+  ,Y C D[NLOAD ! LATE/ V].N ( ODT#B;BRL
+F
+_+HTTP://ODT2BRAILLE.SOURCEFORGE.N-   #A
+                                     A#C
+ET/DOWNLOADS.HTML._:
 
+    _+OPENOFFICE.ORG_: ,A3ESSIBIL;Y
 
+  _+OPENOFFICE.ORG_: IS POORLY A3ESSI# )
+TRADI;NAL SCRE5 R1D]S ON ,W9D[S4 ,A3ESS+
+_+OPENOFFICE.ORG_: )! NEW] SCRE5 R1D]
+,,NVDA 7,NON,VISUAL ,DESKTOP ,A3ESS7
+APPE>S 6"W BETT]4 ,MAC ,,OS US]S C A3ESS
+_+OPENOFFICE.ORG_: ) ,VOICE,OV]2 ,L9UX
+US]S C A3ESS X ) ,ORCA4
 
+    ,9TRODUC;N
 
-
-
-
-
-
-
-
-
-
-
-
-        #A ,DOCU;T ,PREP>,N           #B
-  ,? "P EXPLA9S H[ Y C CR1TE A DOCU;T 9
-_+OPENOFFICE.ORG_: ,WRIT] & PREP>E X =
-BRL PRODUC;N4 ,Y C F9D M HELP ON "W+ )
-,WRIT] 9 ! ONL9E GUIDE3
+  ,9 ? GUIDE Y W LE>N H[ 6CR1TE A DOCU;T
+9 _+OPENOFFICE.ORG_: ,WRIT] & PREP>E X =
+,BRL PRODUC;N4 ,*APT] #A EXPLA9S ALL Y H
+6"K 6GET />T$ R1L QKLY4 ,9 *APT] #B Y W
+F9D A M -PREH5SIVE REF];E4 ,Y C F9D M
+HELP ON "W+ ) ,WRIT] AT
 _+HTTP://WIKI.SERVICES.OPENOFFICE.ORG/W-
 IKI/DOCUMENTATION/OOO3_USER_GUIDES/WRIT-
 ER_GUIDE._:
+  ,AF 9/ALL+ ODT#B;BRL1 A :OLE NEW    #B
+                                     B#C
+RANGE ( US] PREF];ES W 2COME AVAILA#4
+,2C (! BROAD RANGE ( ,BRL =MATT+ 3V5;NS
+9 USE _WWIDE1 ODT#B;BRL PROVIDES A LOT (
+FLEXIBIL;Y4 ,US]S >E A# 6ADJU/ ! ,BRL
+LAY\T 9 DETAIL1 J L !Y C FULLY CU/OMIZE
+! PR9T LAY\T4
+  ,6MAKE SURE T NON-TE*NICAL US]S W N 2
+OV]:ELM$ ) POSSIBILITIES1 !Y H ! OP;N
+6*OOSE F A S]IES ( .=MAL ,BRL RULES1
+;E4G4 ! ..,,BANA PR9CIPLES ( PR9T 6,BRL
+.TRANSCRIP;N 7SEE
+_+HTTP://WWW.BRL.ORG/FORMATS/)._: ,? W
+3SID]ABLY LIMIT _! FREEDOM1 B X W AL
+GRTLY SIMPLIFY ! PRODUC;N ( VALID &
+WELL-=MATT$ ,BRL4
+  ,:AT FOLL[S NEXT IS A DETAIL$ OV]VIEW
+( ALL POSSIBILITIES ODT#B;BRL (F]S4
 
-    #A.A ,P>AGRAPHS
 
-_+OPENOFFICE.ORG_:
+
+
+
+
+                                      #C
+                                      #D
+             #A ,QK ,GUIDE
+
+  ,QK GUIDE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      #D
+                                      #E
+           #B ,ADV.ED ,GUIDE
+
+    #B.A ,LANGUAGES
+
+  _+OPENOFFICE.ORG_:
+
+_+OPENOFFICE.ORG_: ALL[S Y 6WRITE
+    DOCU;TS 9 V>I\S LANGUAGES OR MIX
+    MULTIPLE LANGUAGES )9 ! SAME DOCU;T4
+    ,Y C SET ! LANGUAGE =! :OLE DOCU;T1
+    9DIVIDUAL P>AGRAPHS1 OR EV5
+    9DIVIDUAL ^WS & "*S4 ,! LANGUAGE
+    TOOLS C 2 F.D 9 ,7.,TOOLS .1
+    .,LANGUAGES7'4
+,LANGUAGES C 2 ASSOCIAT$ ) .,BRL
+    .TRANSL,N .TA#S 9 ,7.,FILE .1 .,BRL
+    .,SETT+S'7'4 ,! TRANSL,N TA# =! :OLE
+    DOCU;T C 2 SET )! MA9 LANGUAGE OP;N
+    ON ! .,G5]AL TAB4 ,A 3TRAC;N LEVEL C
+    AL 2 *OS54 ,IF ! DOCU;T 3TA9S
+    MULTIPLE LANGUAGES1 EA* A4I;NAL
+    LANGUAGE C 2 L9K$ 6A TRANSL,N TA# &
+    3TRAC;N LEVEL 9 ! .,LANGUAGES TAB4
+,TRANSL,N TA#S >E AVAILA# = ALL       #E
+                                     A#E
+    ,WE/-,EUROP1N LANGUAGES1 ,MOD]N
+    ,HEBREW1 "S ,ASIAN LANGUAGES & EV5
+    "S M9OR;Y LANGUAGES L ,GAELIC &
+    ,ESP]ANTO4
+
+    #B.B ,P>AGRAPHS
+
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: ALL REGUL> TEXT
-    2T ? .M>K]S IS 3SID]$ A P>AGRAPH 7?
-    M>K]S C 2 MADE VISI# 0SELECT+
-    ,7.,VIEW .1 .,NONPR9T+ .,"*S7'74
-    ,ODT#B;BRL ON ! O!R H& ONLY TR1TS
+    2T .PILCR[ .M>K]S IS 3SID]$ A
+    P>AGRAPH 7PILCR[ M>K]S C 2 MADE
+    VISI# 0SELECT+ ,7.,VIEW .1
+    .,NONPR9T+ .,"*S7'74 ,H["E1 ONLY ^?
     P>AGRAPHS T >E N
   A H1D+1
   A CAP;N1
@@ -173,32 +245,36 @@ _+OPENOFFICE.ORG_:
   9SIDE A TA#1
   9SIDE A NOTE1
   OR ON ! TITLE PAGE
-Z .ACTUAL P>AGRAPHS4                  #C
-
-,BRL
-
-,9 BRL1 P>AGRAPHS >E R5D]$ 9 .9D5T$
+W 2 TRANSCRIB$ Z ,BRL P>AGRAPHS4
+  _,BRL
+                                      #F
+                                  B#E-#F
+,0DEFAULT1 P>AGRAPHS >E R5D]$ 9 .9D5T$
     .P>AGRAPH ./YLE 7F/ L9E CELL #C1
-    RUNOV]S CELL #A74 ,P>AGRAPHS >E N
-    SEP>AT$ 0BLANK L9ES4 ,EMPTY
-    P>AGRAPHS >E DROPP$4
+    RUNOV]S CELL #A & N SEP>AT$ 0BLANK
+    L9ES4 ,^! SETT+S C 2 ALT]$ 9
+    ,7..,FILE .1 ,BRL ,SETT+S .1
+    .,P>AGRAPHS7'4 ,EMPTY P>AGRAPHS >E
+    DROPP$4
 
-    #A.B ,H1D+S
+    #B.C ,H1D+S
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
-,9 ORD] = AN _+OPENOFFICE.ORG_: P>AGRAPH
-    6BE 9T]PRET$ 0ODT#B;BRL Z A .H1D+1
-    FOLL[+ 3DI;NS M/ 2 TRUE3
+,9 ORD] =A P>AGRAPH 6BE 9T]PRET$
+    0ODT#B;BRL Z A .H1D+1 FOLL[+ 3DI;NS
+    M/ 2 TRUE3
   ,AN .\TL9E .LEVEL HAS 6BE ASSIGN$ 6!
       TEXT4 ,? C 2 A*IEV$ 9 TWO WAYS3
+--------------------------------------#F
     ,\TL9E LEVELS C 2 P]MAN5TLY L9K$
         6P>AGRAPH /YLES 9 ,7.,TOOLS .1
         .,\TL9E .,NUMB]+7'4
     ,IF NO \TL9E LEVEL IS L9K$ 6! CURR5T
         P>AGRAPH /YLE1 A LEVEL C / 2
-        ASSIGN$ 6! TEXT 0SETT+ .,\TL9E
-        .,LEVEL 9 ,7..,=MAT .1        #D
+        ASSIGN$ 6! TEXT 0SETT+        #G
+                                     A#F
+        .,\TL9E .,LEVEL 9 ,7..,=MAT .1
         ,P>AGRAPH .1 ,\TL9E @&
         .,NUMB]+7'4
   ,! NAVIGATOR ,7.,VIEW .1 .,NAVIGATOR7'
@@ -214,24 +290,28 @@ _+OPENOFFICE.ORG_:
 ,! EXACT =MATT+ ( BULLETS & NUMB]S C 2
     DET]M9$ 9 ,7.,TOOLS .,\TL9E
     .,NUMB]+7'4 ,ALT]NATIVELY1 *OOSE
-    ,7..,=MAT .1 ,BULLETS @& .,NUMB]+7'
-    :5 A H1D+ HAS ! CURSOR4
+    ,7,FO.'RMAT .1 ,BULLETS @& ,NUMB]+7'
+    .-:5 A H1D+ HAS ! CURSOR4
 
-,BRL
+  _,BRL
 
-,9 BRL1 H1D+S >E R5D]$ 9 "O ( F\R H1D+
+,9 ,BRL1 H1D+S >E R5D]$ 9 "O ( F\R H1D+
     /YLES3
-  ,LEVEL #A H1D+S >E C5T]$ & PREC$$ &
-      FOLL[$ 0A BLANK L9E4
-  ,LEVEL #B H1D+S >E C5T]$ Z WELL B   #E
-      >E ONLY PREC$$ 0A BLANK L9E4
+  ,LEVEL #A H1D+S >E C5T]$ & PREC$$   #H
+                                     B#F
+      & FOLL[$ 0A BLANK L9E4
+  ,LEVEL #B H1D+S >E C5T]$ Z WELL B >E
+      ONLY PREC$$ 0A BLANK L9E4
   ,LEVEL #C H1D+S 2G9 9 CELL #E 7RUNOV]S
       TOO7 & >E PREC$$ 0A BLANK L9E4
   ,H1D+S ) AN \TL9E LEVEL GRT] ?AN #C
       2G9 9 CELL #A 7RUNOV]S TOO7 & >E
       PREC$$ 0A BLANK L9E4
+,ALL ^! SETT+S C 2 ALT]$ 9 ,7..,FILE .1
+    ,BRL ,SETT+S .1 .,H1D+S7'4
 ,NUMB]S ( H1D+S >E -PLETELY ADOPT$ 9
-    BRL1 BULLETS >E LEFT \4
+    ,BRL4
+,! TRANSCRIP;N ( BULLETS >E LEFT \4
 ,EMPTY H1D+S >E DROPP$4
 ,ALL SPECIAL TYPEFACE 9 A H1D+ IS
     IGNOR$4
@@ -242,38 +322,40 @@ _+OPENOFFICE.ORG_:
 ,:5 A REGUL> VOLUME 7N A PRELIM9>Y OR
     SUPPLE;T>Y VOLUME7 DOESN'T />T )A
     H1D+1 ODT#B;BRL 9S]TS A .3T9U,N
-    .H1D+3 ! CLOSE/ PREC$+ H1D+ IS
+    .H1D+3 ! CLOSE/ PREC$+ H1D+ IS    #I
+                                  C#F-#G
     REP1T$ & SU6IX$ )! /R+ 87,3T4704 ,?
     3T9U,N H1D+ IS 9CLUD$ 9 ! TA# (
     3T5TS Z WELL4
 _,TIP3 ,ALW />T A VOLUME )A H1D+4
 
-    #A.C ,LI/S                        #F
+    #B.D ,LI/S
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
-,EA* _+OPENOFFICE.ORG_: P>AGRAPH ) XS
-    .,NUMB]+ .,/YLE ,7..,=MAT .1
-    ,P>AGRAPH .1 ,\TL9E @& .,NUMB]+7'
-    SET 6ANY?+ B .,N"O & .,\TL9E
-    .,NUMB]+1 W 2 9T]PRET$ 0ODT#B;BRL Z
-    AN ITEM (A LI/4
+,EA* P>AGRAPH ) XS .,NUMB]+ .,/YLE
+    ,7..,=MAT .1 ,P>AGRAPH .1 ,\TL9E @&
+    .,NUMB]+7' SET 6ANY?+ B .,N"O &
+    .,\TL9E .,NUMB]+1 W 2 9T]PRET$
+    0ODT#B;BRL Z AN ITEM (A LI/4
 ,6PRODUCE A NUMB]$ OR BULLET$ LI/ 9
     _+OPENOFFICE.ORG,_: EI USE ! .NUMB]+
-    & .BULLETS ICONS1 OR USE .LI/
-    ./YLES4
+    &
+--------------------------------------#G
+    .BULLETS ICONS1 OR USE .LI/ ./YLES4
   ,! NUMB]+ & BULLETS ICONS C 2 F.D ON !
       .,=MATT+ TOOLB> ,7..,VIEW .1
       ,TOOLB>S .1 .,=MATT+7' OR !
       .,BULLETS .& .,NUMB]+ TOOLB>
-      ,7..,VIEW .1 ,TOOLB>S .1 ,BULLETS
-      & .,NUMB]+7'4
+      ,7..,VIEW .1 ,TOOLB>S .1       #AJ
+                                     A#G
+      ,BULLETS & .,NUMB]+7'4
   ,LI/ /YLES C 2 SELECT$ 9 ,7..,=MAT .1
       ,/YLES & ,=MATT+ .1 ,LI/
       .,/YLES7'4 ,:5 CR1T+ A NEW LI/
       /YLE1 MAKE SURE ! "N IS N (! =M
       ;,L#A _/ ;,L#B _/
-,! .LEVEL (A LI/ITEM C 2 MODIFI$ )    #G
+,! .LEVEL (A LI/ITEM C 2 MODIFI$ )
     KEYBO>D %ORTCUTS 7TAB 6MOVE D[N A
     LEVEL1 %IFT @+ TAB 6MOVE UP A LEVEL7
     OR )! .,BULLETS .& .,NUMB]+ TOOLB>4
@@ -284,35 +366,40 @@ _+OPENOFFICE.ORG_:
     ,=MATT+ .1 ,LI/ .,/YLES7'1 "R CLICK
     ON ! LI/ /YLE & *OOSE .,MODIFY4
 
-,BRL
+  _,BRL
 
-,9 BRL1 \TL9+ IS SUPPORT$ UPTO LEVEL #D3
+,0DEFAULT1 LI/S >E BRLD Z FOLL[S3
   ,LEVEL #A LI/ITEMS .)\T SUBITEMS 2G9 9
       CELL #A1 RUNOV]S 2G9 9 CELL #C4
   ,LEVEL #A LI/ITEMS .) SUBITEMS 2G9 9
-      CELL #A Z WELL1 B RUNOV]S 2G9 9
-      CELL #E4
+      CELL #A Z WELL1 B RUNOV]S      #AA
+                                     B#G
+      2G9 9 CELL #E4
   ,LEVEL #B LI/ITEMS 2G9 9 CELL #C1
       RUNOV]S 9 CELL #G4
   ,LEVEL #C LI/ITEMS 2G9 9 CELL #E1
       RUNOV]S 9 CELL #I4
   ,LI/ITEMS ) AN \TL9E LEVEL GRT] ?AN #C
       2G9 9 CELL #G1 RUNOV]S 9 CELL #AA4
-,EA* 5TIRE LI/ IS PREC$$ & FOLL[+     #H
-    0A BLANK L9E4
+,EA* 5TIRE LI/ IS PREC$$ & FOLL[+ 0A
+    BLANK L9E4 ,ALL ^! SETT+S C 2 ALT]$
+    9 ,7..,FILE .1 ,BRL ,SETT+S .1
+    .,LI/S7'4
 ,NUMB]S ( LI/ITEMS >E -PLETELY ADOPT$ 9
-    BRL1 BULLETS >E LEFT \4
+    ,BRL4
+,! US] C DET]M9E H[ BULLETS >E BRLD4
 ,TEXTBOXES & IMAGES T >E AN*OR$ 6A
     LI/ITEM >E R5D]$ ONLY AF -PLE;N (!
     5TIRE LI/4
 
-    #A.D ,TA#S
+    #B.E ,TA#S
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: TA#S >E CR1T$ )
-    ,7..,TA# .1 ,9S]T .1 .,TA#7' OR
-    ,7.,9S]T .1 .,TA#7' OR )! .,TA#
+    ,7..,TA# .1 ,9S]T .1 .,TA#7'     #AB
+                                     C#G
+    OR ,7.,9S]T .1 .,TA#7' OR )! .,TA#
     TOOLB> ,7..,VIEW .1 ,TOOLB>S .1
     .,TA#7'4
 ,! F/ R[7;S7 (A TA# C 2 DEF9$ Z .COLUMN
@@ -322,47 +409,50 @@ _+OPENOFFICE.ORG_:
 ,6ADD A CAP;N 6! TA#1 PLACE ! CURSOR
     9SIDE ! TA# & *OOSE ,7.,9S]T .1
     .,CAP;N7'4 ,9 ORD] =A TA# CAP;N 6BE
-    CORRECTLY L9K$ 6! TA# 0ODT#B;BRL1 X
-    M/ 2 PLAC$ DIRECTLY 2N ! TA# &    #I
-    NO O!R FRAME 7I4E4 TEXTBOX OR IMAGE7
-    C 2 AN*OR$ 6X4
-@A,,TODO3 ,*OICE 2T L9E> _/ /AIR/EP
-    =MAT4 8,TA# CELLS SEP>AT$ BY0 SETT+4
-@A,,TODO3 ,M]G$ CELLS 7R[SPAN _/
-    COLSPAN73 ,! M]G$ CELL IS PROCESS$ Z
-    IF XS :OLE 3T5T 7 9 ! LEFT& UPP]MO/
-    ,8SUB0'--CELL4 ,! O!R 7EMPTY7
-    ,8SUB0'--CELLS >E IGNOR$4 ,M]G$
-    CELLS %D 2 AVOID$4
+    CORRECTLY L9K$ 6! TA#1 X M/ 2 PLAC$
+    DIRECTLY 2N ! TA# & NO O!R FRAME
+    7;I4E4 TEXTBOX OR IMAGE7 C 2 AN*OR$
+    6X4
 
-,BRL
+  _,BRL
 
-,9 BRL1 TA#S >E R5D]$ 9 ./AIR/EP .=MAT3
+,9 ,BRL1 TA#S >E 0DEFAULT R5D]$ 9
+    ./AIR/EP .=MAT3
   ,COLUMN #A TA# CELLS 2G9 9 CELL #A1
       RUNOV]S TOO4
   ,COLUMN #B TA# CELLS 2G9 9 CELL #C1
       RUNOV]S TOO4
-  ,TA# CELLS 9 COLUMN #AJ & 2Y 2G9 9
-      CELL #AI4
+  ,TA# CELLS 9 COLUMN #AJ & 2Y 2G9   #AC
+                                  D#G-#H
+      9 CELL #AI4
+--------------------------------------#H
+,H["E1 IS X AL POSSI# 6R5D] TA#S 9 .L9E>
+    .=MAT4 ,9 ? CASE1 ALL CELLS 9 A TA#
+    R[ >E JO9$ TGR4 ,! US] C *OOSE !
+    .COLUMN .DELIMIT] SYMBOL : SEP>ATES
+    ! CELLS4
+,ALL TA# SETT+S C 2 A3ESS$ 9 ,7..,FILE
+    .1 ,BRL ,SETT+S .1 .,TA#S7'4
 ,ONLY REGUL> TEXT IS RETA9$ 9 A TA#
     CELL1 ALL O!R ELE;TS >E DROPP$ OR
     TRANSPOS$4 ,IF A TA# CELL 3TA9S
-    MULTIPLE _+OPENOFFICE.ORG_:
-    P>AGRAPHS1 ^! >E F/ S]IALIZ$4    #AJ
-,TA# L9ES >E ONLY %[N 9 BRL IF !Y >E
+    MULTIPLE P>AGRAPHS1 ^! >E F/
+    S]IALIZ$4
+,TA# L9ES >E ONLY %[N 9 ,BRL IF !Y >E
     PRES5T 9 PR9T4 ,A TA# L9E IS
-    REPRES5T$ 0A S]IES ( UNSPAC$ BRL
+    REPRES5T$ 0A S]IES ( UNSPAC$ ,BRL
     DOTS #BCEF 7TOP TA# L9E7 OR #ABDE
     7BOTTOM TA# L9E71 EXT5D$ ACR ! FULL
-    WID? (! BRL PAGE4 ,A TA# 9SIDE A
+    WID? (! ,BRL PAGE4 ,A TA# 9SIDE A
     L>G] TEXTBOX IS 5CLOS$ 0FULL TA#
-    L9ES 7BRL DOTS #ABCDEF74 ,IF NO TA#
+    L9ES 7,BRL DOTS #ABCDEF74 ,IF NO TA#
     L9ES >E %[N 9 PR9T1 ! TA# IS PREC$$
-    &_/OR FOLL[$ 0A BLANK L9E4
+    &_/OR FOLL[$ 0A BLANK L9E4       #AD
+                                     A#H
 ,IF COLUMN H1D+S >E PRES5T1 ^! TA# R[S
     >E SEP>AT$ F ! TA# BODY 0A S]IES (
-    UNSPAC$ BRL DOTS #BE1 EXT5D$ ACR !
-    FULL WID? (! BRL PAGE4
+    UNSPAC$ ,BRL DOTS #BE1 EXT5D$ ACR !
+    FULL WID? (! ,BRL PAGE4
 ,IF A CAP;N IS CORRECTLY L9K$ 6! TA#1 X
     IS C5T]$ & PLAC$ DIRECTLY 2L ! TOP
     TA# L9E 7OR TOP BLANK L9E IF ! TA#
@@ -370,43 +460,46 @@ _+OPENOFFICE.ORG_:
     2T ! CAP;N &! ACTUAL TA# 3T5T4
 ,ALL FOOTNOTES >E COLLECT$ 2N ! TA#
     BODY1 B ABV ! BOTTOM TA# L9E 7OR
-    BOTTOM
-    BLANK L9E IF ! TA# L9E IS ABS5T74
-    ,FOOTNOTES 9 ! TA# CAP;N >E PLAC$
-    DIRECTLY 2L ! CAP;N4             #AA
+    BOTTOM BLANK L9E IF ! TA# L9E IS
+    ABS5T74 ,FOOTNOTES 9 ! TA# CAP;N >E
+    PLAC$ DIRECTLY 2L ! CAP;N4
 ,EMPTY TA# CELLS >E 9DICAT$ ) AN
-    ELLIPSIS 7BRL DOTS #E-E-E74 ,? USAGE
-    IS EXPLA9$ ON ! TRANSCRIB]'S NOTES
-    PAGE4
+    ELLIPSIS 7,BRL DOTS #E-E-E74 ,?
+    USAGE IS EXPLA9$ ON ! TRANSCRIB]'S
+    NOTES PAGE4
 ,:5 A TA# 3TA9S O!R TA#S1 LI/S1
     TEXTBOXES OR IMAGES1 ^! ELE;TS >E
     MOV$ \TSIDE ! TA#4 ,E TRANSPOSI;N IS
-    9DICAT$ 0A D\# DA% 7BRL DOTS
+    9DICAT$ 0A D\# DA% 7,BRL DOTS
     #CF-CF-CF-CF7 AT ! ELE;T'S ORIG9AL
-    LOC,N4 ,AN EXPLA9+ TRANSCRIB]'S NOTE
-    IS 9S]T$ 2F ! TA#4 ,ONLY AF -PLE;N
-    (! 5TIRE TA#1 ALL PREVI\SLY OMITT$
-    MAT]IAL IS R5D]$4 ,EA* ELE;T IS
-    PREC$$ 0ANO!R TRANSCRIB]'S NOTE
-    EXPLA9+ X 0 MOV$ F X'S ORIG9AL
-    LOC,N4
+    LOC,N4 ,AN EXPLA9+               #AE
+                                     B#H
+    TRANSCRIB]'S NOTE IS 9S]T$ 2F ! TA#4
+    ,ONLY AF -PLE;N (! 5TIRE TA#1 ALL
+    PREVI\SLY OMITT$ MAT]IAL IS R5D]$4
+    ,EA* ELE;T IS PREC$$ 0ANO!R
+    TRANSCRIB]'S NOTE EXPLA9+ X 0 MOV$ F
+    X'S ORIG9AL LOC,N4
 _,TIP3 ,D N PLACE O!R TA#S1 LI/S1
     TEXTBOXES OR IMAGES 9SIDE A TA#4
-@A,,TODO3 ,DI6];E 2T L9E> _/ /AIR/EP
-    =MAT4
-@A,,TODO3 R[SPAN _/ COLSPAN
+,A M]G$ TA# CELL IS PROCESS$ Z IF XS
+    :OLE 3T5T 7 9 ! LEFT& UPP]MO/
+    ,8SUB0'--CELL4 ,! O!R 7EMPTY7
+    ,8SUB0'--CELLS >E N %[N 9 ,BRL4
+_,TIP3 ,TRY 6AVOID M]G$ CELLS4
 
-    #A.E ,TEXTBOXES
+    #B.F ,TEXTBOXES
 
-_+OPENOFFICE.ORG_:                   #AB
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: TEXTBOXES C 2
     PRODUC$ 0*OOS+ ,7.,9S]T .1
     .,FRAME7'4 ,OP;NS C 2 MODIFI$ LAT] 9
     ,7.,=MAT .1 .,FRAME_/.,OBJECT7'4 ,ON
     ! .,TYPE TAB1 ! AN*OR TYPE C 2
-    SELECT$4 ,! AN*OR IS ! BASIS (!
-    POSI;N & 2HAVIOR (! TEXTBOX )9 A
+    SELECT$4 ,! AN*OR IS ! BASIS     #AF
+                                  C#H-#I
+    (! POSI;N & 2HAVIOR (! TEXTBOX )9 A
     DOCU;T4 ,X MAKES ! TEXTBOX MOVE )!
     OBJECT X IS AN*OR$ TO4 ,Y C AN*OR
     FRAMES Z A "* OR 6A PAGE1 P>AGRAPH1
@@ -420,40 +513,42 @@ _,TIP3 ,D N PLACE O!R TA#S1 LI/S1
     .,CAP;N7'4 ,9 ORD] =A CAP;N 6BE
     CORRECTLY L9K$ 6! TEXTBOX
     0ODT#B;BRL1 "O (! FOLL[+ M/ 2 TRUE3
+--------------------------------------#I
   ,! TEXTBOX IS AN*OR$ 6A CAP;N4
   ,! P>AGRAPH IMMLY FOLL[+ ! OBJECT !
       TEXTBOX IS AN*OR$ 6IS A CAP;N1 &
-      NO O!R FRAME 7I4E4 TEXTBOX     #AC
-      OR IMAGE7 IS AN*OR$ 6X4
+      NO O!R FRAME 7;I4E4 TEXTBOX OR
+      IMAGE7 IS AN*OR$ 6X4
   ,! LA/ P>AGRAPH (! TEXTBOX IS A CAP;N
       & NO O!R FRAME IS AN*OR$ 6X4
-
-,BRL
-
+  _,BRL
+                                     #AG
+                                     A#I
 ,IF TEXTBOXES >E AN*OR$ Z A "* OR 6A
-    P>AGRAPH OR "*1 !Y >E R5D]$ 9 BRL AF
-    -PLE;N (! P>AGRAPH OR H1D+ T 3TA9S !
-    AN*OR4
+    P>AGRAPH OR "*1 !Y >E R5D]$ 9 ,BRL
+    AF -PLE;N (! P>AGRAPH OR H1D+ T
+    3TA9S ! AN*OR4
 ,IF TEXTBOXES >E AN*OR$ 6ANO!R TEXTBOX1
     !Y >E R5D]$ 9SIDE ? \T] TEXTBOX1 2F
     ANY O!R MAT]IAL X 3TA9S4
-,TEXTBOXES >E OMITT$ 9 BRL IF !Y >E
+,TEXTBOXES >E OMITT$ 9 ,BRL IF !Y >E
     AN*OR$ 6A PAGE4
 ,TEXTBOXES T >E AN*OR$ 6A LI/ITEM >E
     R5D]$ ONLY AF -PLE;N (! 5TIRE LI/4
 ,TEXTBOXES T >E AN*OR$ 6A TA# CELL >E
     R5D]$ ONLY AF -PLE;N (! 5TIRE TA#4
 ,TEXTBOXES T >E AN*OR$ 6A NOTE >E
-    REPLAC$ 0A D\# DA% 7BRL DOTS
+    REPLAC$ 0A D\# DA% 7,BRL DOTS
     #CF-CF-CF-CF71 9DICAT+ ! OMIS.N4
-,BOX L9ES >E ONLY %[N 9 BRL IF !Y >E
+,BOX L9ES >E ONLY %[N 9 ,BRL IF !Y >E
     PRES5T 9 PR9T4 ,A BOX L9E IS
-    REPRES5T$ 0A S]IES ( UNSPAC$     #AD
-    BRL DOTS #BCEF 7TOP TA# L9E7 OR
-    #ABDE 7BOTTOM TA# L9E71 EXT5D$
-    ACR ! FULL WID? (! BRL PAGE4 ,IF NO
-    BOX L9ES >E %[N 9 PR9T1 ! TEXTBOX IS
-    PREC$$ &_/OR FOLL[$ 0A BLANK L9E4
+    REPRES5T$ 0A S]IES ( UNSPAC$ ,BRL
+    DOTS #BCEF 7TOP TA# L9E7 OR #ABDE
+    7BOTTOM TA# L9E71 EXT5D$ ACR ! FULL
+    WID? (! ,BRL PAGE4 ,IF NO BOX L9ES
+    >E %[N 9 PR9T1 ! TEXTBOX IS PREC$$
+    &_/OR FOLL[$ 0A BLANK L9E4       #AH
+                                     B#I
 ,IF A CAP;N IS CORRECTLY L9K$ 6!
     TEXTBOX1 X IS C5T]$ & PLAC$ DIRECTLY
     2L ! TOP BOX L9E 7OR TOP BLANK L9E
@@ -461,28 +556,30 @@ _,TIP3 ,D N PLACE O!R TA#S1 LI/S1
     IS 9S]T$ 2T ! CAP;N &! ACTUAL 3T5T
     (! BOX4
 ,ALL MAT]IAL 9SIDE A TEXTBOX IS RETA9$ 9
-    BRL4 ,H1D+S >E 9CLUD$ 9 ! TA# (
+    ,BRL4 ,H1D+S >E 9CLUD$ 9 ! TA# (
     3T5TS4
 
-    #A.F ,IMAGES
+    #B.G ,IMAGES
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: IMAGES C 2 9S]T$
     0*OOS+ ,7..,9S]T .1 ,PICTURE .1 ,F
     .,FILE7'4 ,OP;NS C 2 MODIFI$ LAT] 9
     ,7.,=MAT .1 .,PICTURE7'4 ,L
     TEXTBOXES1 AN IMAGE C 2 AN*OR$ Z A
-    "* OR 6A PAGE1 P>AGRAPH1 "*1     #AE
-    OR FRAME4
+    "* OR 6A PAGE1 P>AGRAPH1 "*1 OR
+    FRAME4
 ,6ADD A CAP;N 6! IMAGE1 SELECT ! IMAGE &
     *OOSE ,7.,9S]T .1 .,CAP;N7'4 ,9 ORD]
-    =A CAP;N 6BE CORRECTLY L9K$ 6! IMAGE
-    0ODT#B;BRL1 "O (! FOLL[+ M/ 2 TRUE3
+    =A CAP;N 6BE CORRECTLY L9K$ 6!   #AI
+                                 C#I-#AJ
+    IMAGE 0ODT#B;BRL1 "O (! FOLL[+ M/ 2
+    TRUE3
   ,! IMAGE IS AN*OR$ 6A CAP;N4
   ,! P>AGRAPH IMMLY FOLL[+ ! OBJECT !
       IMAGE IS AN*OR$ 6IS A CAP;N1 & NO
-      O!R FRAME 7I4E4 TEXTBOX OR IMAGE7
+      O!R FRAME 7;I4E4 TEXTBOX OR IMAGE7
       IS AN*OR$ 6X4
 ,= EA* IMAGE1 A TITLE &_/OR DESCRIP;N C
     2 PROVID$ 9 ,7..,=MAT .1 ,OBJECT .1
@@ -493,49 +590,53 @@ _+OPENOFFICE.ORG_:
 _,TIP3 ,! IMAGE DESCRIP;N %D 2 Z BRIEF &
     3CISE Z POSSI#4
 
-,BRL
+  _,BRL
 
-,9 BRL1 IMAGES >E REPLAC$ 0A
+,9 ,BRL1 IMAGES >E REPLAC$ 0A
     TRANSCRIB]'S NOTE1 : 9CLUDES
-  #A4 ,! IMAGE CAP;N 7IF "O IS CORRECTLY
-      L9K$ 6! IMAGE74                #AF
+  #A4
+-------------------------------------#AJ
+      ,! IMAGE CAP;N 7IF "O IS CORRECTLY
+      L9K$ 6! IMAGE74                #BJ
+                                    A#AJ
   #B4 ,A NOTE SAY+ T ! IMAGE IS N
-      REPRODUC$ 9 BRL4
+      REPRODUC$ 9 ,BRL4
   #C4 ,! IMAGE TITLE 7IF "O IS DEF9$74
   #D4 ,AN ALT]NATIVE DESCIP;N 7IF "O IS
       DEF9$74
 ,A NOTE IS 9CLUD$ ON ! TRANSCRIB]'S
     NOTES PAGES (! RELEVANT VOLUMES1
     /AT+ T ! DOCU;T 3TA9S IMAGES T >E N
-    REPRODUC$ 9 BRL4
+    REPRODUC$ 9 ,BRL4
 ,IF IMAGES >E AN*OR$ Z A "* OR 6A
-    P>AGRAPH OR "*1 !Y >E R5D]$ 9 BRL AF
-    -PLE;N (! P>AGRAPH OR H1D+ T 3TA9S !
-    AN*OR4
+    P>AGRAPH OR "*1 !Y >E R5D]$ 9 ,BRL
+    AF -PLE;N (! P>AGRAPH OR H1D+ T
+    3TA9S ! AN*OR4
 ,IF IMAGES >E AN*OR$ 6A TEXTBOX1 !Y >E
     R5D]$ 9SIDE ? TEXTBOX1 2F ANY O!R
     MAT]IAL X 3TA9S4
-,IMAGES >E OMITT$ 9 BRL IF !Y >E AN*OR$
+,IMAGES >E OMITT$ 9 ,BRL IF !Y >E AN*OR$
     6A PAGE4
 ,IMAGES T >E AN*OR$ 6A LI/ITEM >E R5D]$
     ONLY AF -PLE;N (! 5TIRE LI/4
 ,IMAGES T >E AN*OR$ 6A TA# CELL >E R5D]$
     ONLY AF -PLE;N (! 5TIRE TA#4
 ,IMAGES T >E AN*OR$ 6A NOTE >E REPLAC$
-    0A D\# DA% 7BRL DOTS #CF-CF-CF-CF71
-    9DICAT+ ! OMIS.N4                #AG
+    0A D\# DA% 7,BRL DOTS            #BA
+                                    B#AJ
+    #CF-CF-CF-CF71 9DICAT+ ! OMIS.N4
 
-    #A.G ,CAP;NS
+    #B.H ,CAP;NS
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,6ADD A CAP;N 6AN OBJECT 9
     _+OPENOFFICE.ORG,_: SELECT ? OBJECT
     & *OOSE ,7.,9S]T .1 .,CAP;N7'4
     ,ODT#B;BRL TR1TS ALL TEXT ELE;TS1 )!
     EXCEP;N ( H1D+S1 T H _! P>AGRAPH
-    /YLE ,7,F.'ORMAT .1 ,/YLES & ,=MATT+
-    .1 ,P>AGRAPH ,/YLES7'.- SET TO
+    /YLE ,7..,=MAT .1 ,/YLES & ,=MATT+
+    .1 ,P>AGRAPH .,/YLES7' SET TO
   .,CAP;N1
   .,TA#1
   .,DRAW+1
@@ -545,14 +646,15 @@ Z CAP;NS4 ,Y C AL ADD YR [N CAP;N /YLE
     0"R-CLICK+ ON "O (! ABV /YLES &
     *OOS+ .,NEW4
 
-,BRL
-
-,A CAP;N IS ONLY R5D]$ 9 BRL IF
-    ODT#B;BRL L9KS ! CAP;N 6AN       #AH
-    OBJECT4 ,CAP;NS C 2 L9K$ 6TA#S1
-    TEXTBOXES OR IMAGES4 ,= M DETAILS ON
-    ! L9K+ ( CAP;NS 6OBJECTS1 SEE !
-    APPROPRIATE SEC;NS4
+  _,BRL
+                                     #BB
+                                C#AJ-#AA
+,A CAP;N IS ONLY R5D]$ 9 ,BRL IF
+    ODT#B;BRL L9KS ! CAP;N 6AN OBJECT4
+    ,CAP;NS C 2 L9K$ 6TA#S1 TEXTBOXES OR
+    IMAGES4 ,= M DETAILS ON ! L9K+ (
+    CAP;NS 6OBJECTS1 SEE ! APPROPRIATE
+    SEC;NS4
 ,TA# CAP;NS & TEXTBOX SEC;NS >E C5T]$ &
     PLAC$ DIRECTLY 2L ! TOP
     TABLE_/TEXTBOX L9E 7OR TOP BLANK L9E
@@ -563,21 +665,23 @@ Z CAP;NS4 ,Y C AL ADD YR [N CAP;N /YLE
     NOTE T REPRES5TS ! IMAGE4
 ,FOOTNOTES 9 CAP;NS3 SEE ,NOTES4
 
-    #A.H ,NOTES
+    #B.I ,NOTES
 
-_+OPENOFFICE.ORG_:
+-------------------------------------#AA
+  _+OPENOFFICE.ORG_:
 
 ,69S]T A NOTE 9 AN _+OPENOFFICE.ORG_:
     DOCU;T1 PUT ! CURSOR ": Y WANT !
-    NOTE REF];E M>K] 6APPE>1 !N SELECT
-    ,7.,9S]T .1 .,FOOTNOTE_/.,5DNOTE7'4
-    ,FOOTNOTES >E 4PLAY$ AT ! BOTTOM (!
-    PAGE 3TA9+ _! CORRESPOND+ REF];E4
-    ,0DEFAULT1 5DNOTES >E COLLECT$   #AI
-    AT ! 5D (! 5TIRE DOCU;T4 ,6COLLECT
-    5DNOTES AT ! 5D ( !
-    _+OPENOFFICE.ORG_: .SEC;N T 3TA9S !
-    NOTE REF];E1 *OOSE ,7.,=MAT .1
+    NOTE REF];E M>K] 6APPE>1 !N      #BC
+                                    A#AA
+    SELECT ,7.,9S]T .1
+    .,FOOTNOTE_/.,5DNOTE7'4 ,FOOTNOTES
+    >E 4PLAY$ AT ! BOTTOM (! PAGE 3TA9+
+    _! CORRESPOND+ REF];E4 ,0DEFAULT1
+    5DNOTES >E COLLECT$ AT ! 5D (! 5TIRE
+    DOCU;T4 ,6COLLECT 5DNOTES AT ! 5D (
+    ! _+OPENOFFICE.ORG_: .SEC;N T 3TA9S
+    ! NOTE REF];E1 *OOSE ,7.,=MAT .1
     .,SEC;NS7'1 SELECT A SEC;N1 *OOSE
     ,7.,OP;NS .1
     .,FOOTNOTES_/.,5DNOTES7' & *ECK !
@@ -585,32 +689,31 @@ _+OPENOFFICE.ORG_:
     ,SEC;NS C 2 9S]T$ 0*OOS+ ,7.,9S]T .1
     .,SEC;N7'4
 
-,BRL
+  _,BRL
 
-,9 BRL1 NOTE REF];ES >E PREC$$ 0!
-    UNSPAC$ .REF];E .9DICATOR 7BRL DOTS
+,9 ,BRL1 NOTE REF];ES >E PREC$$ 0!
+    UNSPAC$ .REF];E .9DICATOR 7,BRL DOTS
     #CE-CE71 & >E SEP>AT$ F SURR.D+ TEXT
     0AT L1/ "O BLANK CELL4
 ,FOOTNOTES & 5DNOTES >E ALW PREC$$ 0_!
     CORRESPOND+ REF];E4 ,NO BLANK L9ES
-    >E LEFT 2F1 AF OR 2T NOTES4
+    >E LEFT 2F1 AF OR 2T NOTES4      #BD
+                                    B#AA
 ,ONLY REGUL> TEXT IS RETA9$ 9SIDE A
     NOTE1 ALL O!R ELE;TS >E DROPP$4 ,IF
-    ! NOTE 3TA9S MULTIPLE
-    _+OPENOFFICE.ORG_: P>AGRAPHS1 ^! >E
-    F/ S]IALIZ$4 ,E OMIS.N ( AN      #BJ
-    ELE;T IS 9DICAT$ 0A D\# DA% 7BRL
-    DOTS #CF-CF-CF-CF7 AT ! ELE;T'S
-    ORIG9AL LOC,N4
+    ! NOTE 3TA9S MULTIPLE P>AGRAPHS1 ^!
+    >E F/ S]IALIZ$4 ,E OMIS.N ( AN ELE;T
+    IS 9DICAT$ 0A D\# DA% 7,BRL DOTS
+    #CF-CF-CF-CF7 AT ! ELE;T'S ORIG9AL
+    LOC,N4
 ,FOOTNOTES 2G9 9 CELL #G1 RUNOV]S 2G9 9
     CELL #E4 ,FOOTNOTES 9 P>AGRAPHS1
-    H1D+S1
-    CAP;NS & LI/ITEMS >E R5D]$ IMMLY 2L
-    ! P>AGRAPH1 H1D+1 CAP;N OR LI/ITEM4
-    ,FOOTNOTES 9 TA#S >E >E COLLECT$ 2N
-    ! TA# BODY1 B ABV ! BOTTOM TA# L9E
-    7OR BOTTOM BLANK L9E IF ! TA# L9E IS
-    ABS5T74
+    H1D+S1 CAP;NS & LI/ITEMS >E R5D]$
+    IMMLY 2L ! P>AGRAPH1 H1D+1 CAP;N OR
+    LI/ITEM4 ,FOOTNOTES 9 TA#S >E >E
+    COLLECT$ 2N ! TA# BODY1 B ABV !
+    BOTTOM TA# L9E 7OR BOTTOM BLANK L9E
+    IF ! TA# L9E IS ABS5T74
 ,5DNOTES >E COLLECT$ 9 .NOTE .SEC;NS4
     ,EA* NOTE SEC;N 2G9S ON A NEW PAGE4
     ,! FULLY CAPITALIZ$ H1D+ 78,,NOTES07
@@ -619,12 +722,13 @@ _+OPENOFFICE.ORG_:
     ! TA# ( 3T5TS4 ,!N ! 5DNOTES >E
     LI/$1 ORD]$ 0_! APPE>.E 9 PR9T4 ,EA*
     5DNOTE 2G9S 9 CELL #A1 RUNOV]S 2G9 9
-    CELL #C4 ,:5 ! NOTE SEC;N IS -PLETE1
-    SUBSEQU5T TEXT IS RESUM$ ON A NEW
-    PAGE4 ,NOTE SEC;NS C APPE> AT V>I\S
-    PLACES 9 ! BRL DOCU;T3
-  ,IF AN 5DNOTE REF];E IS 3TA9$ 9    #BA
-      AN _+OPENOFFICE.ORG_: SEC;N ) XS
+    CELL #C4 ,:5 ! NOTE SEC;N IS     #BE
+                                    C#AA
+    -PLETE1 SUBSEQU5T TEXT IS RESUM$ ON
+    A NEW PAGE4 ,NOTE SEC;NS C APPE> AT
+    V>I\S PLACES 9 ! ,BRL DOCU;T3
+  ,IF AN 5DNOTE REF];E IS 3TA9$ 9 AN
+      _+OPENOFFICE.ORG_: SEC;N ) XS
       ..,COLLECT AT 5D ( .SEC;N OP;N
       *ECK$1 ! NOTE IS BRLD ACLY AT ! 5D
       ( T SEC;N4
@@ -635,148 +739,155 @@ _+OPENOFFICE.ORG_:
   ,ALL REMA9+ 5DNOTES (A VOLUME >E
       COLLECT$ AT ! V 5D ( T VOLUME4
 
-    #A.I ,SPECIAL ,TYPEFACE
+    #B.AJ ,SPECIAL ,TYPEFACE
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: Y C APPLY _M
     =MATS 6"*S US+ ! BUTTONS ON !
     .,=MATT+ TOOLB> ,7..,VIEW .1
     ,TOOLB>S .1 .,=MATT+7'4 ,! RELEVANT
-    BUTTONS = ODT#B;BRL >E .,BOLD &
-    .,ITALIC4 ,TEXT C AL 2 =MATT$ 9
+    BUTTONS = ODT#B;BRL >E .,BOLD    #BF
+                                D#AA-#AB
+    & .,ITALIC4 ,TEXT C AL 2 =MATT$ 9
     ,7..,=MAT .1 ,"* .1 .,FONT7' OR
     0APPLY+ A "* /YLE ,7..,=MAT .1
     ,/YLES & ,=MATT+ .1 ,"* .,/YLES7'4
-,TEXT T HAS AN .,EMPHASIS OR         #BB
-    .,/R;G .,EMPHASIS "* /YLE1 IS .ALW
-    TR1T$ 0ODT#B;BRL Z ITALICIZ$ OR
-    BOLDFAC$1 NO MATT] H[ ! TEXT IS
-    ACTU,Y =MATT$ 9 PR9T4 ,? AL APPLIES
-    6/YLES DERIV$ F .,EMPHASIS OR .,/R;G
-    .,EMPHASIS 7Y C CR1TE YR [N "* /YLE
-    DERIV$ F ANO!R 0"R-CLICK+ ! MA9 /YLE
-    & *OOS+ .,NEW74
+,TEXT T HAS AN .,EMPHASIS OR .,/R;G
+    .,EMPHASIS "* /YLE1 IS .ALW TR1T$
+    0ODT#B;BRL Z ITALICIZ$ OR BOLDFAC$1
+    NO MATT] H[ ! TEXT IS ACTU,Y =MATT$
+    9 PR9T4 ,? AL APPLIES 6/YLES DERIV$
+    F .,EMPHASIS OR .,/R;G .,EMPHASIS 7Y
+    C CR1TE YR
+-------------------------------------#AB
+    [N "* /YLE DERIV$ F ANO!R 0"R-CLICK+
+    ! MA9 /YLE & *OOS+ .,NEW74
 
-,BRL
+  _,BRL
 
-,9 BRL1 A S+LE ITALIC ^W IS PREFIX$ 0!
-    UNSPAC$ .ITALIC .SIGN 7BRL DOTS
-    #DF74 ,IF M ?AN ?REE 3SECUTIVE ^WS
-    >E ITALICIZ$1 ! F/ ^W IS PREC$$ 0!
-    .D\# .ITALIC .SIGN 7BRL DOTS #DF-
-    DF71 &! LA/ ^W 0! S+LE ITALIC SIGN4
-@A,,TODO3 "PS ( ^WS ITALIZ$
+,9 ,5GLI% ,BRL1 A S+LE ITALIC ^W IS
+    PREFIX$ 0! UNSPAC$ .ITALIC .SIGN
+    7,BRL DOTS #DF74 ,IF M ?AN ?REE
+    3SECUTIVE ^WS >E ITALICIZ$1 ! F/ ^W
+    IS PREC$$ 0! .D\# .ITALIC .SIGN
+    7,BRL DOTS #DF-DF71 &! LA/ ^W 0!
+    S+LE ITALIC SIGN4                #BG
+                                    A#AB
 ,A S+LE BOLD ^W IS PREFIX$ 0! UNSPAC$
-    .BOLD .SIGN 7BRL DOTS #DEF74 ,IF M
+    .BOLD .SIGN 7,BRL DOTS #DEF74 ,IF M
     ?AN ?REE 3SECUTIVE ^WS >E BOLDFAC$1
     ! F/ ^W IS PREC$$ 0! .D\# .BOLD
-    .SIGN 7BRL DOTS #DEF-DEF71 &! LA/ ^W
-    0! S+LE BOLD SIGN4
-@A,,TODO3 "PS ( ^WS BOLDFAC$         #BC
+    .SIGN 7,BRL DOTS #DEF-DEF71 &! LA/
+    ^W 0! S+LE BOLD SIGN4
 ,O!R SPECIAL TYPEFACES L ."UL9E1 .SMALL
-    .CAPS1 ETC4 >E N 9DICAT$ 9 BRL4
+    .CAPS1 ETC4 >E N 9DICAT$ 9 ,5GLI%
+    ,BRL4
 ,ALL SPECIAL TYPEFACE 9 H1D+S IS IGNOR$
-    9 BRL4
+    9 ,BRL4
 ,9 O!R LANGUAGES1 O!R RULES = 9DICAT+
     SPECIAL TYPEFACE MI<T APPLY4
 
-    #A.AJ ,LANGUAGES
+    #B.AA ,PAGE ,NUMB]+
 
-_+OPENOFFICE.ORG_:
-
-_+OPENOFFICE.ORG_: ALL[S Y 6WRITE
-    DOCU;TS 9 V>I\S LANGUAGES OR MIX
-    MULTIPLE LANGUAGES )9 ! SAME DOCU;T4
-    ,Y C SET ! LANGUAGE =! :OLE DOCU;T1
-    9DIVIDUAL P>AGRAPHS1 OR EV5
-    9DIVIDUAL ^WS & "*S4 ,! LANGUAGE
-    TOOLS C 2 F.D 9 ,7.,TOOLS .1
-    .,LANGUAGES7'4
-,LANGUAGES C 2 ASSOCIAT$ ) .BRL
-    .TRANSL,N .TA#S 9 ,7.,BRL .1
-    .,SETT+S7'4 ,! TRANSL,N TA# =! :OLE
-    DOCU;T C 2 SET )! .MA9 .LANGUAGE
-    OP;N ON ! .,G5]AL .,SETT+STAB4 ,A
-    .3TRAC;N .LEVEL C AL 2 *OS54     #BD
-    ,IF ! DOCU;T 3TA9S MULTIPLE
-    LANGUAGES1 ! .,LANGUAGE .,SETT+STAB
-    2COMES ACTIVE4 ,"H1 EA* LANGUAGE C 2
-    L9K$ 6A TRANSL,N TA# & 3TRAC;N
-    LEVEL4
-,TRANSL,N TA#S >E AVAILA# = ALL ,WE/-
-    ,EUROP1N LANGUAGES1 ,MOD]N ,HEBREW1
-    "S ,ASIAN LANGUAGES & EV5 "S M9OR;Y
-    LANGUAGES L ,GAELIC & ,ESP]ANTO4
-
-    #A.AA ,PAGE ,NUMB]+
-
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,6ADD A PAGE NUMB]1 PUT ! CURSOR ": Y
     WANT ! NUMB] 6APPE>1 !N SELECT
     ,7..,9S]T .1 ,FIELDS .1 ,PAGE
     .,NUMB]7'4 ,IF Y WANT 6NUMB] ALL YR
     PAGES AUTOMATIC,Y1 9S]T A PAGE NUMB]
-    9 ! PAGE H1D] ,7..,9S]T .1 ,H1D] .1
-    .,DEFAULT7' OR PAGE FOOT] ,7..,9S]T
-    .1 ,FOOT] .1 .,DEFAULT7'4
+    9 ! PAGE H1D] ,7..,9S]T .1       #BH
+                                    B#AB
+    ,H1D] .1 .,DEFAULT7' OR PAGE FOOT]
+    ,7..,9S]T .1 ,FOOT] .1 .,DEFAULT7'4
 ,ODT#B;BRL W ONLY PROCES ! PAGE NUMB] X
     5C.T]S .F/ 9 A H1D] OR FOOT] 7IN T
-    ORD]74                           #BE
+    ORD]74
 
-,BRL
+  _,BRL
 
-,9 BRL1 A NUMB] IS 4PLAY$ 9 ! TOP "R
-    CORN] ( EA* BRL PAGE 7EXCEPT
-    PRELIM9>Y PAGES71 ) NO FEW] ?AN ?REE
+,ALL PAGES ( TEXT 9 ! ,BRL EDI;N C>RY
+    3SECUTIVE ,BRL PAGE NUMB]S />T+ )
+    >ABIC #A 9 ! F/ VOLUME4 ,9 SUBSEQU5T
+    VOLUMES1 PAGES ( TEXT >E NUMB]$
+    3SECUTIVELY F VOLUME 6VOLUME4
+    ,PRELIM9>Y PAGE NUMB]S >E EI PREFIX$
+    0! UNSPAC$ LR .;P1 OR R5D]$ 9 ,ROMAN
+    NUM]ALS4 ,! *OICE IS UP 6! US]4 ,EA*
+    PRELIM9>Y SEC;N IS NUMB]$ 9DIVIDU,Y1
+    />T+ ) .;P#A OR .;I4 ,0DEFAULT1 !
+    ,BRL PAGE NUMB] IS 4PLAY$ 9 ! BOTTOM
+    "R CORN] (! PAGE1 ) NO FEW] ?AN ?REE
     BLANK CELLS LEFT 2T ! TEXT &! NUMB]4
-    ,IF A NEW PR9T PAGE 2G9S AT ! TOP (A
-    BRL PAGE1 ! PR9T PAGE NUMB] ( T PAGE
-    IS PUT 9 ! TOP "R CORN]4 ,IF MAT]IAL
-    ON A PR9T PAGE _C 2 3TA9$ ON A S+LE
-    BRL PAGE & M/ 2 3T9U$ ON "O OR M
-    PAGES1 ! SAME PR9T PAGE NUMB] IS
-    PLAC$ 9 ! TOP "R CORN] ( EA* ( ^!
+    ,! US] C AL DECIDE 6PLACE PAGE
+    NUMB]S AT ! TOP1 OR N 4PLAY !M AT
+    ALL4                             #BI
+                                    C#AB
+,IF ! S\RCE DOCU;T 3TA9S PAGE NUMB]S1 !Y
+    C 2 9CLUD$ 9 ! ,BRL V].N Z WELL4
+    ,0DEFAULT1 PR9T PAGE NUMB]S >E
+    4PLAY$ 9 ! TOP "R CORN] ( EA* ,BRL
+    PAGE 7EXCEPT ON PRELIM9>Y PAGES71 AG
+    ) NO FEW] ?AN ?REE BLANK CELLS LEFT
+    2T ! TEXT &! NUMB]4 ,! NUMB] C AL 2
+    PLAC$ AT ! BOTTOM4 ,:5 PR9T PAGE
+    NUMB]S & ,BRL PAGE NUMB]S >E BO?
+    PLAC$ AT ! TOP OR BOTTOM1 !Y >E
+    R5D]$ NEXT 6EA* O!R1 PR9T NUMB] F/1
+    )A SPACE 9 2T4
+,IF MAT]IAL ON A PR9T PAGE _C 2 3TA9$ ON
+    A S+LE ,BRL PAGE & M/ 2 3T9U$ ON "O
+    OR M PAGES1 ! SAME PR9T PAGE NUMB]
+    IS PLAC$ 9 ! TOP "R CORN] ( EA* ( ^!
     PAGES4 ,! NUMB] IS PREFIX$ 0!
-    UNSPAC$ LR A.3 7BRLD )\T ! LR
-    9DICATOR7 =! F/ 3T9U$ PAGE1 ! LR
-    ;B.3 =! SECOND1 ETC4
-,IF A NEW PR9T PAGE 2G9S .)9 A BRL PAGE1
-    ! NEW PR9T PAGE NUMB] IS PLAC$ AT !
-    "R M>G94 ,! .PAGE .*ANGE .9DICATOR1
-    A L9E ( UNSPAC$ BRL DOTS #CF1 IS
-    PLAC$ ON ! SAME BRL L9E />T+ AT !
-    LEFT M>G91 & NO SPACE IS LEFT 2T ?
-    9DICATOR &! F/ SYMBOL (! PAGE    #BF
-    NUMB]4
-,IF Y DON'T WANT PR9T PAGE NUMB]S OR
-    PAGE *ANGE 9DICATORS 6APPE> 9 ! BRL
-    DOCU;T1 Y C UN*ECK ! ..,9CLUDE PR9T
-    PAGE .NUMB]S OP;N 9 ,7..,BRL .1
-    ,SETT+S .1 .,G5]AL7'4
-,AL1 A BRL PAGE NUMB] IS 4PLAY$ 9 !
-    BOTTOM "R CORN] ( EA* BRL PAGE1 AG )
-    NO FEW] ?AN ?REE BLANK CELLS LEFT 2T
-    ! TEXT &! NUMB]4 ,E VOLUME OR
-    SUPPLE;T IS NUMB]$ 9DIVIDU,Y1 />T+ )
-    AN >ABIC #A4 ,PRELIM9>Y PAGE NUMB]S
-    >E PREFIX$ 0! UNSPAC$ LR .;P1 BRLD
-    )\T ! LR 9DICATOR4 ,SUBSEQU5T PAGES
-    >E AG NUMB]$ />T+ ) #A1 )\T ANY
-    PREFIX4
+    UNSPAC$ LR .A 7BRLD )\T ! LR
+    9DICATOR7 =! F/ 3T9U$ PAGE1 ! LR .;B
+    =! SECOND1 ETC4
+,OP;N,Y1 ! US] C DECIDE 64PLAY ! .RANGE
+    ( PR9T PAGES 3TA9$ 9 A ,BRL PAGE
+    79/1D ( ONLY ! PAGE NUMB] (! .F/
+    PR9T PAGE74 ,IF ! F/ PAGE 9 ?    #CJ
+                                D#AB-#AC
+    RANGE IS A 3T9U$ PR9T PAGE1 X IS
+    PREFIX$ )A LR Z USUAL4
+,:5 A NEW PR9T PAGE 2G9S .)9 A ,BRL
+    PAGE1 A .PAGE .*ANGE .9DICATOR1 A
+    L9E (
+-------------------------------------#AC
+    UNSPAC$ ,BRL DOTS #CF1 C 2 PRODUC$1
+    ) OR )\T ! NEW PR9T PAGE NUMB] PLAC$
+    ON ! SAME L9E AT ! "R M>G94 ,NO
+    SPACE IS LEFT 2T ? 9DICATOR &! F/
+    SYMBOL (! PAGE NUMB]4
+,0DEFAULT1 EMPTY PAGES >E -PLETELY
+    IGNOR$4 ,IF ? SETT+ IS 4A#D1 A .-B9$
+    PR9T PAGE NUMB] W 2 4PLAY$ :5"E
+    EMPTY PAGES >E 5C.T]$3 ! NUMB] (! F/
+    EMPTY PAGE IS -B9$ ) T (! PAGE ON :
+    TEXT REAPPE>S1 ;E4G4 #E-G4 ,IF LR$
+    3T9U,N PAGES >E REQUIR$1 !Y C>RY
+    ONLY ! NUMB] (! PAGE ON : TEXT
+    REAPPE>S4
+,ANO!R OP;N IS 6TR1T .UNNUMB]$ PR9T
+    PAGES Z IF !Y 7 A "P (! PREC$+ PAGE
+    7Z IF _! 0 NO PAGE BR1K74
+,ALL PAGE NUMB] SETT+S C 2 F.D 9     #CA
+                                    A#AC
+    ,7..,FILE .1 ,BRL ,SETT+S .1 ,PAGE
+    .,NUMB]S7'4
 
-    #A.AB ,PRELIM9>Y ,PAGES
+    #B.AB ,PRELIM9>Y ,PAGES
+
   ,PRELIM9>Y PAGES >E ^? PAGES T PREC$E
 ! ACTUAL TEXT (! DOCU;T4 ,^! C 9CLUDE =
 EXAMPLE A TITLE PAGE1 A SPECIAL SYMBOLS
 PAGE1 A TRANSCRIB]'S NOTE PAGE1 COV]
-MAT]IAL1 AB ! AU?OR1 A D$IC,N1 AC"KL$-
-GE;TS1 AN AB/RACT1 A TA# ( 3T5TS1
-AU?OR'S NOTES1 A PREFACE1 A =E^W1    #BG
-AN 9TRODUC;N OR A PROLOGUE1 ETC4
-
-_+OPENOFFICE.ORG_:
+MAT]IAL1 AB ! AU?OR1 A D$IC,N1
+AC"KL$GE;TS1 AN AB/RACT1 A TA# ( 3T5TS1
+AU?OR'S NOTES1 A PREFACE1 A =E^W1 AN
+9TRODUC;N OR A PROLOGUE1 ETC4
+  _+OPENOFFICE.ORG_:
 
 ,: 3T5T IS 9CLUD$ 9 ! PRELIM9>Y SEC;N &!
     ORD] ( ITEMS IS TOT,Y UP 6!
@@ -786,55 +897,59 @@ _+OPENOFFICE.ORG_:
     ,9 _+OPENOFFICE.ORG,_: SEC;NS C 2
     9S]T$ 0*OOS+ ,7.,9S]T .1 .,SEC;N7'4
     ,AN OV]VIEW ( ALL SEC;NS ! DOCU;T
-    3TA9S & "! LEVEL IS PROVID$ 0!
+    3TA9S & "! LEVEL IS PROVID$ 0!   #CB
+                                    B#AC
     NAVIGATOR ,7.,VIEW .1 .,NAVIGATOR7'4
 ,IF A PRELIM9>Y SEC;N HAS BE5 DEF9$1 !
-    TRANSCRIB] HAS ! OP;N 69CLUDE ..A
-    LI/ ( SPECIAL .SYMBOLS1 A.'
-    TRANSCRIB]'S NOTE PAGE .-&A.' TA# (
-    3T5TS4.- ,^! OP;NS C 2 F.D 9
-    ,7,BR.'AILLE .1 ,SETT+S .1
-    ,G5]AL7'4.-
-,ANO!R OP;N F.D 9 ,7..,BRL .1 ,SETT+S .1
-    .,G5]AL7' IS 6..CR1TE A PRELIM9>Y
-    .VOLUME4 ,? OP;N %D 2 *ECK$ IF M ?AN
-    #HJ-IJ BRL PAGES >E REQUIR$ =!   #BH
+    TRANSCRIB] HAS ! OP;N 69CLUDE A LI/
+    ( SPECIAL SYMBOLS1 A TRANSCRIB]'S
+    NOTE PAGE &A TA# ( 3T5TS4 ,^! OP;NS
+    C 2 F.D ON ! .,G5]AL1 .,TA# .(
+    .,3T5TS & .,SPECIAL .,SYMBOLS TABS 9
+    ,7.,FILE .1 .,BRL .,SETT+S'7'4
+,ANO!R POSSIBIL;Y IS 6CR1TE A PRELIM9>Y
+    VOLUME4 ,? OP;N %D 2 *ECK$ IF M ?AN
+    #HJ-IJ ,BRL PAGES >E REQUIR$ =!
     PRELIM9>Y PAGES 9 ! F/ VOLUME
     69CLUDE ALL ITEMS 7SEE ,VOLUME
     ,MANAGE;T74
 ,ALL 3T5T 2F ! ,PRELIM9>Y,PAGES SEC;N W
-    2 IGNOR$ 0ODT#B;BRL4
+    2 IGNOR$4
 
-,BRL
+  _,BRL
 
 ,IF A PRELIM9>Y SEC;N HAS BE5 DEF9$ 9
-    _+OPENOFFICE.ORG,_: E BRL VOLUME OR
+    _+OPENOFFICE.ORG,_: E ,BRL VOLUME OR
     SUPPLE;T W 2 PREC$$ 0A NUMB] (
     PRELIM9>Y PAGES4
-,"S PAGES 7I4E4 ! TITLE PAGE1 ! SPECIAL
-    SYMBOLS PAGE1 ! TRANSCRIB]'S NOTES
-    PAGE &! TA# ( 3T5TS7 >E REP1T$ 9 E
-    BRL VOLUME4 ,H["E1 _! 3T5T IS DI6]5T
-    = EA* VOLUME4 ,ALL O!R PAGES ONLY
-    APPE> 9 ! EXT.'5D$ PR.-ELIM9>Y
-    PAGES4 ,^! >E EI 9CLUD$ 9 !
-    PRE.'LIM9>Y VOLUME 7IF PRES5T7 OR 9
-    VOLUME #A4
+,"S PAGES 7;I4E4 ! TITLE PAGE1 !     #CC
+                                C#AC-#AD
+    SPECIAL SYMBOLS PAGE1 ! TRANSCRIB]'S
+    NOTES PAGE &! TA# ( 3T5TS7 >E REP1T$
+    9 E ,BRL VOLUME4 ,H["E1 _! 3T5T IS
+    DI6]5T = EA* VOLUME4 ,ALL O!R PAGES
+    ONLY APPE> 9 ! E.'XT5D$ .-PRELIM9>Y
+    SEC;N4 ,? SEC;N IS EI 9CLUD$ 9 !
+    P.'RELIM9>Y VOLUME .-7IF PRES5T7 OR
+    9 VOLUME #A4
 ,! PR9T ORD] ( ITEMS IS -PLETELY ADAPT$
-    9 BRL4 ,! SPECIAL SYMBOLS PAGE1
+    9 ,BRL4 ,! SPECIAL SYMBOLS PAGE1
     TRANSCRIB]'S NOTES PAGE & TA# (
-    3T5TS >E PLAC$ 7IN T ORD]7 AT    #BI
-    ! V 5D (! PRELIM9>Y PAGES1 2F ANY
-    POSSI# NOTE SEC;NS4
+    3T5TS >E PLAC$ 7IN T ORD]7 AT ! V 5D
+    (! PRELIM9>Y PAGES1 2F ANY POSSI#
+    NOTE SEC;NS4
 ,PRELIM9>Y PAGES >E 4T+UI%$ F NORMAL
     PAGES 0A DI6]5T PAGE NUMB]+4
 ,! ACTUAL VOLUME BODY T FOLL[S !
     PRELIM9>Y SEC;N ALW />TS ON A NEW
-    "R-H& BRL PAGE4
+    "R-H& ,BRL PAGE4
 
-    #A.AC ,VOLUME ,MANAGE;T
-  ,(T51 2C DOCU;TS >E TOO L;G 6BE B.D 9
-"O S+LE BRL BOOK1 !Y >E >RANG$ 9
+    #B.AC ,VOLUME ,MANAGE;T
+
+-------------------------------------#AD
+  ,(T51 2C DOCU;TS >E TOO L;G 6BE    #CD
+                                    A#AD
+B.D 9 "O S+LE ,BRL BOOK1 !Y >E >RANG$ 9
 .VOLUMES4
   _,TIP3 ,TYPIC,Y A VOLUME %D H >.D
 #HJ-IJ "O-SID$ PAGES 7! PAGE C.T 9CLUDES
@@ -847,20 +962,20 @@ PAGES 2T TWO VOLUMES4
 BIBLIOGRAPHIES ETC4 >E (T5 M USE;L :5
 B.D 9 SEP>ATE .SUPPLE;T>Y VOLUMES
 7.SUPPLE;TS74 ,F9,Y1 ! EXT5D$ PRELIM9>Y
-PAGES 7I4E4 ) ALL PRELIM9>Y 3T5T 9CLUD$7
->E "S"TS B.D 9 A SEP>ATE             #CJ
+PAGES 7;I4E4 ) ALL PRELIM9>Y 3T5T
+9CLUD$7 >E "S"TS B.D 9 A SEP>ATE
 .PRELIM9>Y VOLUME1 :5 ! F/ VOLUME WD
 O!RWISE 2COME 6L;G4
-
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 _+OPENOFFICE.ORG,_: 0DEFAULT1 PUTS !
     5TIRE DOCU;T 9 "O S+LE VOLUME4
 ,6CR1TE A VOLUME MANU,Y1 9S]T A LEVEL #A
     SEC;N ,7.,9S]T .1 .,SEC;N7' & "N X
-    ,VOLUME#A1 ,VOLUME#B1 ETC4 ,X IS
-    IMPORTANT 6>RANGE VOLUMES 9 ? ORD]1
-    O!RWISE !Y W N 2 A3EPT$4
+    ,VOLUME#A1 ,VOLUME#B1 ETC4 ,X    #CE
+                                    B#AD
+    IS IMPORTANT 6>RANGE VOLUMES 9 ?
+    ORD]1 O!RWISE !Y W N 2 A3EPT$4
 ,A SUPPLE;T>Y VOLUME C 2 CR1T$ 09S]T+ A
     SEC;N "ND ,SUPPLEM5T#A1
     ,SUPPLEM5T#B1 ETC4 ,MAKE SURE Y PUT
@@ -873,67 +988,70 @@ _+OPENOFFICE.ORG,_: 0DEFAULT1 PUTS !
     7OR 5D (! DOCU;T7 IS EQUAL 6VOLUME
     #A4
 ,IF A PRELIM9>Y SEC;N IS PRES5T1 A
-    PRELIM9>Y VOLUME C 2 CR1T$       #CA
-    0*ECK+ ! .,CR1TE .PRELIM9>Y .VOLUME
-    OP;N 9 ,7..,BRL .1 ,SETT+S .1
+    PRELIM9>Y VOLUME C 2 CR1T$ 0*ECK+ !
+    ,CR1TE PRELIM9>Y VOLUME OP;N 9
+    ,7..,FILE .1 ,BRL ,SETT+S .1
     .,G5]AL7'4
 
-,BRL
+  _,BRL
 
-,9 BRL1 E VOLUME OR SUPPLE;T HAS XS [N
-    PRELIM9>Y SEC;N 7IF PRES5T 9
-    _+OPENOFFICE.ORG)._: ,BO? !
-    PRELIM9>Y SEC;N &! VOLUME BODY />T
-    ON A NEW "R-H& BRL PAGE4 ,IF A
-    PRELIM9>Y VOLUME IS CR1T$1 X 3TA9S !
-    EXT5D$ PRELIM9>Y PAGES1 B NO ACTUAL
-    VOLUME BODY4
+,9 ,BRL1 E VOLUME OR SUPPLE;T HAS XS [N
+    PRELIM9>Y SEC;N 7IF 5A#D 0! US]74
+    ,BO? ! PRELIM9>Y SEC;N &!        #CF
+                                C#AD-#AE
+    VOLUME BODY />T ON A NEW "R-H& ,BRL
+    PAGE4 ,IF A PRELIM9>Y VOLUME IS
+    CR1T$1 X 3TA9S ! EXT5D$ PRELIM9>Y
+    PAGES1 B NO ACTUAL VOLUME BODY4
 ,:5 A REGUL> VOLUME DOESN'T />T )A H1D+1
     ODT#B;BRL AUTOMATIC,Y 9S]TS A 3T9U,N
     H1D+ @3 ! CLOSE/ PREC$+ H1D+ IS
     REP1T$ & SU6IX$ )! /R+ 87,3T4704
 
-    #A.AD ,TITLE ,PAGE
+    #B.AD ,TITLE ,PAGE
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,6CR1TE A TITLE PAGE1 9S]T A SEC;N "ND
-    ,TITLE,PAGE ,7.,9S]T .1          #CB
-    .,SEC;N7' 7? DOES N H 6BE A LEVEL #A
-    SEC;N74 ,! TITLE PAGE C 2 PLAC$
-    ANY":1 B X IS RECOMM5D$ 6PUT X AT !
-    2G9N+ (! DOCU;T4 ,IF A PRELIM9>Y
-    SEC;N IS PRES5T1 PLACE ! TITLE PAGE
-    9SIDE ( X1 S T X IS REP1T$ 9 EA*
-    VOLUME4
+    ,TITLE,PAGE ,7.,9S]T .1 .,SEC;N7' 7?
+    DOES N H 6BE A LEVEL #A SEC;N74 ,!
+    TITLE PAGE C 2 PLAC$ ANY":1 B X IS
+    RECOMM5D$ 6PUT X AT ! 2G9N+ (!
+    DOCU;T4 ,IF A PRELIM9>Y SEC;N IS
+    PRES5T1 PLACE ! TITLE PAGE 9SIDE (
+    X1 S T X IS REP1T$ 9 EA* VOLUME4
 _,TIP3 ,! TITLE PAGE %D 2 ! V F/ PAGE4
-,IF A TITLE PAGE HAS BE5 DEF9$1 !
+-------------------------------------#AE
+,IF A TITLE PAGE HAS BE5 DEF9$1 !    #CG
+                                    A#AE
     TRANSCRIB] HAS ! OP;N 69CLUDE A
-    .TRANSCRIP;N .9=M,N .BLOCK4
-    ,FUR!RMORE1 IF ! TITLE PAGE IS A
-    PRELIM9>Y PAGE1 A V.'OLUME 9=M,N
-    BLOCK .-C 2 9CLUD$ Z WELL4 ,^! OP;NS
-    C 2 F.D 9 ,7,B.'RAILLE .1 ,SETT+S .1
-    ,G5]AL7'4 ,! "N (! TRANSCRIB] IS 2
-    SET )! ,T.'RANSCRIB] .-FIELD4
+    TRANSCRIP;N 9=M,N BLOCK4 ,FUR!RMORE1
+    IF ! TITLE PAGE IS A PRELIM9>Y PAGE1
+    A VOLUME 9=M,N BLOCK C 2 9CLUD$ Z
+    WELL4 ,^! OP;NS C 2 F.D 9 ,7..,FILE
+    .1 ,BRL ,SETT+S .1 .,G5]AL7'4 ,! "N
+    (! TRANSCRIB] C 2 SET )!
+    .,TRANSCRIB] FIELD4
 ,Y C ADD O!R BLOCKS 0SIMPLY 9S]T+ REGUL>
-    TEXT3 EA* _+OPENOFFICE.ORG_:
-    P>AGRAPH T IS N A CAP;N OR A NOTE IS
-    3SID]$ A BLOCK4 ,69S]T A .L9EBR1K
-    )\T BR1K+ A BLOCK 9 TWO1 USE %IFT @+
-    5T] 7OR ,7..,9S]T .1 ,MANUAL ,BR1K
-    .1 ,L9E .BR1K7'7 9/1D ( 5T]4
-                                     #CC
-,BRL
+    TEXT3 EA* P>AGRAPH T IS N A CAP;N OR
+    A NOTE IS 3SID]$ A BLOCK4 ,69S]T A
+    .L9EBR1K )\T BR1K+ A BLOCK 9 TWO1
+    USE %IFT @+ 5T] 7OR ,7..,9S]T .1
+    ,MANUAL ,BR1K .1 ,L9E .BR1K7'7 9/1D
+    ( 5T]4
 
-,9 BRL1 ALL TITLE PAGE BLOCKS >E C5T]$ &
-    PREC$$ & FOLL[$ 0A BLANK L9E4 ,TA#S1
-    LI/S & NOTES >E R5D]$ Z USUAL4
+  _,BRL
+
+,9 ,BRL1 ALL TITLE PAGE BLOCKS >E C5T]$
+    & PREC$$ & FOLL[$ 0A BLANK L9E4
+    ,TA#S1 LI/S & NOTES >E R5D]$ Z
+    USUAL4
 ,! PR9T ORD] ( ITEMS ON ! TITLE PAGE IS
-    -PLETELY ADAPT$ 9 BRL4 ,! VOLUME
-    9=M,N BLOCK & TRANSCRIP;N 9=M,N
-    BLOCKS >E PLAC$ 7IN T ORD]7 AT ! V
-    5D (! TITLE PAGE4
+    -PLETELY ADAPT$ 9 ,BRL4 ,!       #CH
+                                    B#AE
+    VOLUME 9=M,N BLOCK & TRANSCRIP;N
+    9=M,N BLOCKS >E PLAC$ 7IN T ORD]7 AT
+    ! V 5D (! TITLE PAGE4
 ,! VOLUME 9=M,N BLOCK 3TA9S ! VOLUME
     ID5TIFIC,N1 ! TOTAL NUMB] ( VOLUMES1
     ! PAGE RANGE1 ETC4
@@ -941,97 +1059,105 @@ _,TIP3 ,! TITLE PAGE %D 2 ! V F/ PAGE4
 ..,9 #I VOLUMES & #B .SUPPLE;TS
 .,VOLUME .#B
 ..,BRL PAGES ;P#A-;P#AF & #A-.GB
+.,PR9T .PAGES .#DF-.GI
 ..,9 #A PRELIM9>Y & #E .VOLUMES
 .,PRELIM9>Y .VOLUME
 .,BRL .PAGES .;P#A-.;P#HA
 ,! TRANSCRIP;N 9=M,N BLOCK 3TA9S !
-    TRANSCRIB]'S "N1 ! YE> ( BRL
+    TRANSCRIB]'S "N1 ! YE> ( ,BRL
     TRANSCRIP;N1 ETC4
     ,EXAMPLE3
-..,TRANSCRIB$ #BJAJ 0,B]T ,FREES )   #CD
+..,TRANSCRIB$ #BJAJ 0,B]T ,FREES )
     .ODT#B;BRL
 
-    #A.AE ,LI/ ( ,SPECIAL ,SYMBOLS
 
-_+OPENOFFICE.ORG_:
+    #B.AE ,LI/ ( ,SPECIAL ,SYMBOLS
+                                     #CI
+                                    C#AE
+  _+OPENOFFICE.ORG_:
 
 ,IF A PRELIM9>Y SEC;N HAS BE5 DEF9$1 !
-    TRANSCRIB] HAS ! OP;N 6..9CLUDE A
-    LI/ ( SPECIAL .SYMBOLS 9 ,7..,BRL .1
-    ,SETT+S .1 .,G5]AL7'4 ,! SPECIAL
-    SYMBOLS LI/ H1D+ C 2 MODIFI$ 9 !
-    FIELD 2L4 ,0DEFAULT1 X IS SET TO
-    8,,SPECIAL ,,SYMBOLS ,,US$ ,,9 ,,?
-    ,,VOLUME04
-_,TIP3 ,! H1D+ %D 2 FULLY CAPITALIZ$4
+    TRANSCRIB] HAS ! OP;N 69CLUDE A LI/
+    ( SPECIAL SYMBOLS 9 ,7..,FILE .1
+    ,BRL ,SETT+S .1 ,SPECIAL
+    .,SYMBOLS7'4 ,HE OR %E C AL DECIDE :
+    SYMBOLS W 2 %[N1 9 : ORD]1 "U :
+    3DI;NS 7ALW1 ONLY 9 ! F/ VOLUME1 OR
+    ONLY :5 ACTU,Y US$ 9 ! CURR5T
+    VOLUME71 & H[ !Y >E DESCRIB$4 ,! LI/
+    H1D+ C 2 MODIFI$ Z WELL4 ,0DEFAULT1
+    X IS SET TO 8,,SPECIAL ,,SYMBOLS
+    ,,US$ ,,9 ,,? ,,VOLUME04
 
-,BRL
+  _,BRL
 
 ,A SPECIAL SYMBOLS LI/ IS 9CLUD$ 9 !
     PRELIM9>Y PAGES ( EA* VOLUME4 ,!
     ACTUAL 3T5T V>IES 2T VOLUMES4 ,!
     SPECIAL SYMBOLS LI/ 2G9S ON A NEW
-    BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
+    ,BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
     (! PAGE4 ,X IS N 9CLUD$ 9 ! TA# (
-    3T5TS4                           #CE
-,AF A BLANK L9E1 ! LI/ FOLL[S4 ,EA* BRL
+    3T5TS4                           #DJ
+                                     #AF
+,AF A BLANK L9E1 ! LI/ FOLL[S4 ,EA* ,BRL
     SYMBOL 2G9S 9 CELL #A & IS FOLL[$1
     AF "O BLANK CELL1 0XS ID5TIFY+ DOT
     NUMB]S1 5CLOS$ 9 P>5!SES1 & XS
     DESCRIP;N4 ,RUNOV]S 2G9 9 CELL #C4
-    ,ONLY ^? SYMBOLS T >E ACTU,Y US$ 9 !
-    CURR5T VOLUME >E LI/$4 ,^! >E ALL
-    POSSI# SYMBOLS3
-  7#EF7 ,LR 9DICATOR1
-  7#CDEF7 ,NUMB] 9DICATOR1
-  7#CE1 #CE7 ,NOTE REF];E 9DICATOR1
-  7#F1 #C7 ,TRANSCRIB]'S NOTE 9DICATOR1
-  7#DF7 ,ITALIC 9DICATOR1
-  7#DEF7 ,BOLDFACE 9DICATOR1
-  7#CF1 #CF1 #CF1 #CF7 ,D\# DA% 9DICAT+
-      OMIS.N (A TA#1 TEXTBOX OR IMAGE1 &
-  7#E1 #E1 #E7 ,ELLIPSIS 9DICAT+ EMPTY
-      TA# CELL4
-,! EXACT BRL DOTS ( "S SYMBOLS C DI6] 2T
-    LANGUAGES4
+    ,^! >E ! SYMBOLS T >E LI/$ 0DEFAULT3
+  ; 7#EF7 ,LR 9DICATOR1
+  # 7#CDEF7 ,NUMB] 9DICATOR1
+  99 7#CE1 #CE7 ,NOTE REF];E 9DICATOR1
+  ,' 7#F1 #C7 ,TRANSCRIB]'S NOTE
+      9DICATOR1
+  . 7#DF7 ,ITALIC 9DICATOR1
+  _ 7#DEF7 ,BOLDFACE 9DICATOR1
+  --- 7#CF1 #CF1 #CF1 #CF7 ,D\# DA%
+      9DICAT+ OMIS.N (A TA#1 TEXTBOX OR
+      IMAGE1 &
+  """ 7#E1 #E1 #E7 ,ELLIPSIS 9DICAT+
+      EMPTY TA# CELL4
+,! EXACT ,BRL DOTS ( "S SYMBOLS C DI6]
+    2T LANGUAGES4
 ,IF NO SYMBOLS >E LI/$1 ! SPECIAL
     SYMBOLS LI/ IS N 4PLAY$4
-    #A.AF ,TRANSCRIB]'S ,NOTES
+    #B.AF ,TRANSCRIB]'S ,NOTES
+                                     #DA
+                                    A#AF
   ,A TRANSCRIB]'S NOTE IS A NOTE T IS
-A4$ 9 ! BRL EDI;N 0! TRANSCRIB] B    #CF
-N %[N 9 ! PR9T TEXT4 ,"S NOTES >E 9S]T$
-2T O!R ITEMS 9 ! DOCU;T BODY1 "S NOTES
->E 4PLAY$ ON A SEP>ATE .TRANSCRIB]'S
-.NOTE .PAGE 9 ! PRELIM9>Y SEC;N4
-
-_+OPENOFFICE.ORG_:
+A4$ 9 ! ,BRL EDI;N 0! TRANSCRIB] B N %[N
+9 ! PR9T TEXT4 ,"S NOTES >E 9S]T$ 2T O!R
+ITEMS 9 ! DOCU;T BODY1 "S NOTES >E
+4PLAY$ ON A SEP>ATE .TRANSCRIB]'S .NOTE
+.PAGE 9 ! PRELIM9>Y SEC;N4
+  _+OPENOFFICE.ORG_:
 
 ,TRANSCRIB]'S NOTES >E AUTOMATIC,Y 9S]T$
     0ODT#B;BRL4 ,A US] C ONLY 3TROL :E!R
     OR N A TRANSCRIB]'S NOTE PAGE IS
     9CLUD$ 9 ! PRELIM9>Y PAGES1 "? !
-    OP;N ..,9CLUDE TRANSCRIB]'S NOTE
-    .PAGE 9 ,7..,BRL .1 ,SETT+S .1
+    OP;N ,9CLUDE TRANSCRIB]'S NOTE PAGE
+    9 ,7..,FILE .1 ,BRL ,SETT+S .1
     .,G5]AL7'4 ,! TRANSCRIB]'S NOTE PAGE
     H1D+ C 2 MODIFI$ 9 ! FIELD 2L4
     ,0DEFAULT1 X IS SET TO
     8,,TRANSCRIB]'S ,,NOTES04
-_,TIP3 ,! H1D+ %D 2 FULLY CAPITALIZ$4
 
-,BRL
+  _,BRL
 
 ,TRANSCRIB]'S NOTES T APPE> "?\T !
     DOCU;T >E BRLD 9 .P>AGRAPH .=M4 ,A
-    NOTE 3SI/S ( "O OR M .NOTE
-    .P>AGRAPHS4 ,EA* NOTE P>AGRAPH   #CG
-    2G9S 9 CELL #G1 RUNOV]S 2G9 9 CELL
-    #E4 ,NO BLANK L9ES >E LEFT 2F1 AF OR
-    2T NOTE P>AGRAPHS4 ,! -PLETE NOTE IS
+    NOTE 3SI/S ( "O OR M .NOTE       #DB
+                                B#AF-#AG
+    .P>AGRAPHS4 ,EA* NOTE P>AGRAPH 2G9S
+    9 CELL #G1 RUNOV]S 2G9 9 CELL #E4
+    ,NO BLANK L9ES >E LEFT 2F1 AF OR 2T
+    NOTE P>AGRAPHS4 ,! -PLETE NOTE IS
     PREC$$ & FOLL[$ 0! UNSPAC$
-    .TRANSCRIB]'S .NOTE .9DICATOR 7BRL
+    .TRANSCRIB]'S .NOTE .9DICATOR 7,BRL
     DOTS #F-C74
 ,! TRANSCRIB]'S NOTE PAGE 2G9S ON A NEW
-    BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
+    ,BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
     (! PAGE4 ,X IS N 9CLUD$ 9 ! TA# (
     3T5TS4 ,AF A BLANK L9E ! NOTES >E
     LI/$4 ,NOTES >E BRLD Z 9D5T$
@@ -1043,69 +1169,77 @@ _,TIP3 ,! H1D+ %D 2 FULLY CAPITALIZ$4
     DOESN'T 3TA9 ANY NOTES1 X IS N
     4PLAY$4
 
-    #A.AG ,TA# ( ,3T5TS
+    #B.AG ,TA# ( ,3T5TS
 
-_+OPENOFFICE.ORG_:
-
+-------------------------------------#AG
+  _+OPENOFFICE.ORG_:                 #DC
+                                    A#AG
 ,9 ,OP5,(FICE1 A TA# ( 3T5TS C 2 A4$ 6!
-    DOCU;T 0SELECT+ ,7..,9S]T .1     #CH
-    ,9DEXES & ,TA#S .1 ,9DEXES &
-    .,TA#S7' & *OOS+ .,TA# .( .,3T5TS =
-    .,TYPE4 ,H["E1 ^! TA#S >E N ADOPT$ 9
-    ! BRL V].N4 ,9/1D1 ODT#B;BRL G5]ATES
-    XS [N TA# ( 3T5TS1 &! US] IS GIV5 !
-    OP;N 6..9CLUDE ? TA# ( .3T5TS
-9 ! PRELIM9>Y PAGES ( EA* VOLUME4 ,?
-    OP;N IS F.D 9 ,7..,BRL .1 ,SETT+S .1
-    .,G5]AL7'4 ,! TA# ( 3T5TS H1D+ C 2
-    MODIFI$ 9 ! FIELD 2L4 ,0DEFAULT1 X
-    IS SET TO 8,,3T5TS04
+    DOCU;T 0SELECT+ ,7..,9S]T .1 ,9DEXES
+    & ,TA#S .1 ,9DEXES & .,TA#S7' &
+    *OOS+ .,TA# .( .,3T5TS = .,TYPE4
+    ,H["E1 ^! TA#S >E N ADOPT$ 9 ! ,BRL
+    V].N4 ,9/1D1 ODT#B;BRL G5]ATES XS [N
+    TA# ( 3T5TS1 &! US] IS GIV5 ! OP;N
+    69CLUDE ? TA# ( 3T5TS 9 ! PRELIM9>Y
+    PAGES ( EA* VOLUME4 ,? OP;N IS F.D 9
+    ,7..,FILE .1 ,BRL ,SETT+S .1 ,TA# (
+    .,3T5TS7'4 ,! TA# H1D+ C 2 MODIFI$ 9
+    ! FIELD 2L4 ,0DEFAULT1 X IS SET TO
+    8,,3T5TS04
 _,TIP3 ,IF A TA# ( 3T5TS IS PRES5T 9
-    PR9T1 9CLUDE X 9 BRL AL4
+    PR9T1 9CLUDE X 9 ,BRL AL4
 
-,BRL
+  _,BRL
 
 ,! TA# ( 3T5TS IS R5D]$ AT ! V 5D (!
-    PRELIM9>Y PAGES1 2F ANY POSSI# NOTE
-    SEC;NS4 ,! TA# ( 3T5T 2G9S ON A NEW
-    BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
+    PRELIM9>Y SEC;N1 2F ANY POSSI# NOTE
+    SEC;NS4 ,! TA# ( 3T5TS 2G9S ON A NEW
+    ,BRL PAGE4 ,! H1D+ IS C5T]$ AT ! TOP
     (! PAGE & FOLL[$ 0A BLANK L9E4
-,! ACTUAL 3T5T V>IES 2T VOLUMES4 ,ON !
-    .EXT5D$ PRELIM9>Y PAGES 7EI 9CLUD$ 9
-    ! PRELIM9>Y VOLUME1 IF PRES5T1 OR 9
-    VOLUME #A71 ! TA# ( 3T5TS LI/S   #CI
-    ALL H1D+S 9 ! 5TIRE DOCU;T4 ,ONLY
-    H1D+S 9 ! B.'ODY .-(! DOCU;T >E
-    9CLUD$4 ,9 ALL O!R REGUL> VOLUMES1 !
-    TA# ( 3T5TS IS LIMIT$ 6H1D+S 9 T
-    "PICUL> VOLUME4 ,NO TA# ( 3T5TS IS
-    9CLUD$ 9 SUPPLE;T>Y VOLUMES4
-,EA* TA# L9E IS -POS$ (
+,! ACTUAL 3T5T V>IES 2T VOLUMES4     #DD
+                                    B#AG
+    ,ON ! .EXT5D$ PRELIM9>Y PAGES 7EI
+    9CLUD$ 9 ! PRELIM9>Y VOLUME1 IF
+    PRES5T1 OR 9 VOLUME #A71 ! TA# (
+    3T5TS LI/S ALL H1D+S 9 ! 5TIRE
+    DOCU;T4 ,ONLY H1D+S 9 ! .BODY (!
+    DOCU;T >E 9CLUD$4 ,9 ALL O!R REGUL>
+    VOLUMES1 ! TA# ( 3T5TS IS LIMIT$
+    6H1D+S 9 T "PICUL> VOLUME4 ,NO TA# (
+    3T5TS IS 9CLUD$ 9 SUPPLE;T>Y
+    VOLUMES4
+,EA* TA# 5TRY IS -POS$ (
   ! H1D+1
   ,7! PR9T PAGE NUMB]1 PREFIX$ )!
       APPROPRIATE LR IF ! H1D+ 2G9S ON A
       3T9U$ PAGE7'991 &
-  ! BRL PAGE NUMB]
+  ! ,BRL PAGE NUMB]
 799 ONLY IF ! ..,9CLUDE PR9T PAGE
-    .NUMB]S OP;N 9 ,7..,BRL .1 ,SETT+S
-    .1 .,G5]AL7' IS SET74 ,LEVEL #A
-    H1D+S 2G9 9 CELL #A1 RUNOV]S 9 CELL
-    #E4 ,LEVEL #B H1D+S 2G9 9 CELL #C1
-    RUNOV]S 9 CELL #G4 ,LEVEL #C H1D+S
-    2G9 9 CELL #E1 RUNOV]S 9 CELL #I4
-    ,H1D+S ) AN \TL9E LEVEL GRT] ?AN #C
-    2G9 9 CELL #G1 RUNOV]S 9 CELL #AA4
-    ,! PR9T & BRL PAGE NUMB]S >E PLAC$
-    65D AT ! "R M>G9 (! BRL L9E ON : !
-    H1D+ 5DS4 ,IF SPACE ALL[S X1 A
-    SEQU;E ( UNSPAC$ .GUIDE .DOTS    #DJ
-    7BRL DOTS #E71 PREC$$ & FOLL[$ 0A
-    BLANK CELL1 IS 9S]T$ 2T ! H1D+ &!
-    PAGE NUMB]S4
+    .NUMB]S OP;N 9 ,7..,FILE .1 ,BRL
+    ,SETT+S .1 ,PAGE .,NUMB]S7' IS SET74
+,0DEFAULT1 LEVEL #A H1D+S 2G9 9 CELL #A1
+    RUNOV]S 9 CELL #E4 ,LEVEL #B H1D+S
+    2G9 9 CELL #C1 RUNOV]S 9 CELL #G4
+    ,LEVEL #C H1D+S 2G9 9 CELL #E1
+    RUNOV]S 9 CELL #I4 ,H1D+S ) AN   #DE
+                                    C#AG
+    \TL9E LEVEL GRT] ?AN #C 2G9 9 CELL
+    #G1 RUNOV]S 9 CELL #AA4 ,ALL ^!
+    SETT+S C 2 ALT]$ 9 ,7..,FILE .1 ,BRL
+    ,SETT+S .1 ,TA# ( .,3T5TS7'4
+,! PR9T & ,BRL PAGE NUMB]S >E PLAC$ 65D
+    AT ! "R M>G9 (! ,BRL L9E ON : ! H1D+
+    5DS4 ,IF SPACE ALL[S X1 A SEQU;E (
+    UNSPAC$ .GUIDE .DOTS1 PREC$$ &
+    FOLL[$ 0A BLANK CELL1 IS 9S]T$ 2T !
+    H1D+ &! PAGE NUMB]S4 ,! ,BRL SYMBOL
+    = ^! GUIDE DOTS C 2 SPECIFI$ 0! US]1
+    ! DEFAULT VALUE IS ,BRL DOTS #E4
 
-    #A.AH ,BIBLIOGRAPHIES
+    #B.AH ,BIBLIOGRAPHIES
 
-_+OPENOFFICE.ORG_:
+  _+OPENOFFICE.ORG_:
 
 ,9 _+OPENOFFICE.ORG,_: REF];ES 6S\RCE
     MAT]IAL C 2 A4$ "? ,7..,9S]T .1
@@ -1113,89 +1247,155 @@ _+OPENOFFICE.ORG_:
     .,5TRY7'4 ,A REF];E IS 4PLAY$ Z !
     S\RCE'S .%ORT ."N1 5CLOS$ 0"R SQU>E
     BRACKETS4 ,AL? Y C DEF9E S\RCES )9 !
-    DOCU;T XF1 CR1T+ & KEEP+ A
-    .BIBLIOGRAPHIC .DATABASE ALL[S REUSE
-    9 O!R DOCU;TS & SAVES A LOT ( "T4
-    ,SELECT ,7.,TOOLS .1 .,BIBLIOGRAPHY
+    DOCU;T XF1                       #DF
+                                     #AH
+    CR1T+ & KEEP+ A .BIBLIOGRAPHIC
+    .DATABASE ALL[S REUSE 9 O!R DOCU;TS
+    & SAVES A LOT ( "T4 ,SELECT
+    ,7.,TOOLS .1 .,BIBLIOGRAPHY
     .,DATABASE7' 6%[ ? DATABASE4
 ,6G5]ATE A BIBLIOGRAPHY T LI/S ALL
     REF];ED S\RCES1 PUT ! CURSOR ": Y
     WANT ? BIBLIOGRAPHY 6APPE>1 !N
     SELECT ,7..,9S]T .1 ,9DEXES & ,TA#S
     .1 ,9DEXES & .,TA#S7' & *OOSE
-    .,BIBLIOGRAPHY = .,TYPE4 ,!      #DA
+    .,BIBLIOGRAPHY = .,TYPE4 ,!
     BIBLIOGRAPHY H1D+ C 2 MODIFI$ 9 !
     .,TITLE FIELD4
 _,TIP3 ,BIBLIOGRAPHIES >E (T5 M USE;L :5
     B.D 9 A SUPPLE;T>Y VOLUME4
 
-,BRL
+  _,BRL
 
-,9 BRL1 REF];ES >E R5D]$ EXACTLY Z 9
+,9 ,BRL1 REF];ES >E R5D]$ EXACTLY Z 9
     PR9T 7%ORT "N 5CLOS$ 0SQU>E
     BRACKETS74
-,! BIBLIOGRAPHY 2G9S ON A NEW BRL PAGE4
+,! BIBLIOGRAPHY 2G9S ON A NEW ,BRL PAGE4
     ,ON ! F/ L9E1 ! H1D+ IS C5T]$ &
-    FOLL[$ 0A BLANK L9E4 ,X IS N 9CLUD$
-    9 ! TA# ( 3T5TS4 ,! ACTUAL
+    FOLL[$ 0A BLANK L9E4 ,X IS N     #DG
+                                    A#AH
+    9CLUD$ 9 ! TA# ( 3T5TS4 ,! ACTUAL
     BIBLIOGRAPHY 5TRIES >E BRLD L ANY
     O!R LI/4 ,EA* ITEM 2G9S 9 CELL #A1
     RUNOV]S 9 CELL #C4 ,! 5TRIES >E
     TRANSLAT$ LIT],Y1 9CLUD+ SPECIAL
     TYPEFACE4 ,AF -PLE;N (!
     BIBLIOGRAPHY1 SUBSEQU5T TEXT IS
-    RESUM$ ON A NEW PAGE4
+    RESUM$ ON A NEW PAGE
 
-    #A.AI ,MA!MATICS
-  @A,,TODO3 ,H[TO 9S]T =MULAS
-    #A.BJ ,LIT]AL ,BRL               #DB
-  @A,,TODO3 ,H[TO 9S]T BRL "*S 9 !
-DOCU;T T W 2 R5D]$ ID5TIC,Y 9 ! BRL V].N
-&! PR9T V].N4
+    #B.AI ,MA!MATICS
 
-    #A.BA ,BRL-ONLY ,MAT]IAL
-  @A,,TODO3 ,H[TO =MAT TEXT S* T X W
-ONLY 2 R5D]$ 9 ! BRL V].N (! DOCU;T & N
-9 ! PR9T V].N4
+  _+OPENOFFICE.ORG_:
 
-    #A.BB ,TEMPLATES
-  @A,,TODO3 ,H[TO MAKE TEMPLATES1 H[TO
-LOAD PREDEF9$ ODT#B;BRL TEMPLATES4
+,69S]T A MA!MATICAL EXPRES.N 9
+    _+OPENOFFICE.ORG,_: G TO ,7..,9S]T
+    .1 ,OBJECT .1 .,=MULA7'4 ,! EQU,N
+    $ITOR W OP5 AT ! BOTTOM (! SCRE51 &!
+    FLOAT+ ,SELEC;N W9D[ APPE>S4 ,!
+    EQU,N $ITOR USES A M>KUP LANGUAGE
+    6REPRES5T =MULAS4 ,= M 9=M,N ON
+    9S]T+ MA?1 R1D ! MA? GUIDE AT
+    _+HTTP://WIKI.SERVICES.OPENOFFICE.O-
+    RG/WIKI/DOCUMENTATION/OOO3_USER_GUI-
+    DES/MATH_GUIDE._:                #DH
+                                    B#AH
 
+  _,BRL
 
+,MA!MATICAL EQU,NS >E 3VEY$ 6,BRL "? !
+    USE ( SPECIALIZ$ MA? ,BRL CODES4
+    ,SUPPORT$ MA? CODES >E .,NEME?
+    7G5],Y A3EPT$ 9 ! ,UNIT$ ,/ATES71
+    .,M>BURG 7,G]_M71 .,,UK .,MA?S
+    7,UNIT$ ,K+DOM7 & .,NOTAERT 7,FL&]S1
+    ,BELGIUM74 ,Y C SELECT : CODE Y WANT
+    6USE 9 ,7..,FILE .1 ,BRL ,SETT+S .1
+    .,MA!MATICS7'4
 
+    #B.BJ ,9S]T+ ,LIT]AL ,BRL
 
+,69S]T ,BRL "*S 9 ! DOCU;T T W 2 R5D]$
+    ID5TIC,Y 9 ! ,BRL EDI;N &! PR9T
+    EDI;N1 ! TRANSCRIB] HAS TWO
+    POSSIBILITIES4
+  ,9 ! ..DOT PATT]N 5TRY .MODE1 ,BRL
+      /R+S >E SPECIFI$ 0_! DOT PATT]NS1
+      ;E4G4 #AB-ABCE-A-BD-ABC-ABC-AE
+      78.BRL0 9 UNCONTRACT$ ,5GLI%
+      ,BRL74                         #DI
+                                C#AH-#AI
+  ,9 ! .SIX-.KEY .5TRY .MODE1 US]S C
+      9S]T "*S )! KEYS ;,S 7DOT #C71 ;,D
+      7DOT #B71 ;,F 7DOT #A71 ;,J 7DOT
+      #D71 ;,K 7DOT #E7 & ;,L 7DOT #F71
+      Z IF !Y 7 US+ A ME*ANICAL EMBOSS]
+      S* Z ! ,P]K9S ,BRLR4 ,S 69S]T
+      8.BRL01 TYPE ;,D@+;,F1
+      ;,S@+;,D@+;,F@+;,K1 ;,F1 ;,D@+;,J1
+      ;,S@+;,D@+;,F1 ;,S@+;,D@+;,F1
+      ;,F@+;,K4 ,SPACES >E 5T]$ )!
+      SPACEB> Z USUAL &! 5T] _/ RETURN
+      KEY G5]ATES A H>D RETURN )\T />T+
+      A NEW P>AGRAPH4
+  _,NOTE3 ,N ALL KEYBO>DS SUPPORT ?
+      F1TURE6
+-------------------------------------#AI
+,^! MODES C 2 ACTIVAT$ 9 ! M5U ,7.,9S]T
+    .1 .,BRL .,"*S7'4
 
+    #B.BA ,BRL-ONLY ,MAT]IAL
 
+,TEXT C 2 =MATT$ S* T X W ONLY 2 R5D]$ 9
+    ! ,BRL EDI;N (! DOCU;T1 B N 9 ! PR9T
+    EDI;N4                           #EJ
+                                    A#AI
+  ,69S]T NON-PR9T+ TEXT1 G TO ,7..,9S]T
+      .1 ,FIELDS .1 ,O!R' .1 ,FUNC;NS .1
+      ,HI45 .TEXT7'4
+  ,69S]T A NON-PR9T+ P>AGRAPH1 G TO
+      ,7..,9S]T .1 ,FIELDS .1 ,O!R' .1
+      ,FUNC;NS .1 ,HI45 .,P>AGRAPH7'4 ,9
+      ! .,3DI;N FIELD1 5T] ,,TRUE4
+,Y C HI<LI<T ^! FIELD 0*ECK+ ,7.,VIEW .1
+    .,FIELD .,%AD+S7'4
 
+    #B.BB ,HYPH5,N
 
+,! US] C *OOSE 6SPLIT ^WS AT ! 5D ( ,BRL
+    L9ES IF !Y >E TOO L;G4 ,? W IMPROVE
+    ! LAY\T ( P>AGRAPHS4 ,65A# HYPH5,N1
+    *ECK ! CORRESPOND+ BOX 9 ,7..,FILE
+    .1 ,BRL ,SETT+S' .1 .,G5]AL7'4
+,= MO/ LANGUAGES1 ODT#B;BRL HAS A
+    HYPH5,N DIC;N>Y = AUTOMATIC BR1K+ (
+    ^WS4 ,9 A4I;N1 A ^W AT ! 5D (A ,BRL
+    L9E IS ALW SPLIT :5 X 3TA9S A .H>D
+    .HYPH51 ;I4E4 A PLA9 M9US SIGN
+    _+()._: ,? ALL[S = MANUAL HYPH5,N4
+    ,A M ELEGANT SOLU;N IS 6USE      #EA
+                                    B#AI
+    S(.'T HYPH5S1 W.-HI* >E N BRLD :5 !
+    ^W APPE>S 9 ! MI4LE (A ,BRL L9E4
+    ,69S]T A S(T HYPH51 G TO ,7,9S.']T
+    .1 ,=MATT+ ,M>K .1 ,OP;NAL ,HYPH57'4
+    .-,!Y >E ONLY VISI# 9
+    _+OPENOFFICE.ORG_: :5 ,7,VIE.'W .1
+    ,FIELD ,%AD+S7' IS *ECK$4
 
+    #B.BC ,TEMPLATES
 
-
-
-            #B ,SETT+S               #DC
-  @A,,TODO
-
-              #C ,EXPORT+
-  @A,,TODO
-
-              #D ,EMBOSS+
-  @A,,TODO
-
-               #E ,9S]T+
-  @A,,TODO
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
+,:5 Y USE ! SAME ,BRL SETT+S & LAY\T
+    FREQU5TLY1 X MAY 2 A GD IDEA 6/ORE
+    ^! SETT+S & LAY\T 9 A .TEMPLATE4
+    ,SIMPLY SAVE YR DOCU;T Z ..,,ODF
+    ,TEXT ,DOCU;T ,TEMPLATE 7..OTT74
+,ODT#B;BRL AL 9CLUDES "S PREDEF9$1 R1L
+    H&Y ,BRL TEMPLATES4 ,"O =A SIMPLE
+    ,BRL DOCU;T & "O =A M ADV.ED1
+    MULTI-VOLUME ,BRL DOCU;T4 ,BO?
+    TEMPLATES 3TA9 A PRELIM9>Y SEC;N )A
+    TITLEPAGE4 ,Y C F9D !M "U ,7..,FILE
+    .1 ,NEW .1 ,TEMPLATES & ,DOCU;TS .1
+    ,TEMPLATES .1 ,BRL .,DOCU;TS7'4
+                                     #EB
 

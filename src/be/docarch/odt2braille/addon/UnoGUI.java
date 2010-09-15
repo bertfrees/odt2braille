@@ -41,8 +41,6 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
 import com.sun.star.frame.XDesktop;
 import com.sun.star.frame.XController;
-import com.sun.star.text.XText;
-import com.sun.star.text.XTextCursor;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.text.XTextViewCursorSupplier;
 
@@ -56,12 +54,10 @@ import javax.print.PrintException;
 
 import be.docarch.odt2braille.Odt2Braille;
 import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import be.docarch.odt2braille.XPathUtils;
 import be.docarch.odt2braille.Checker;
-import be.docarch.odt2braille.Odt2BrailleNamespaceContext;
-import com.versusoft.packages.jodl.OdtUtils;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
 import org_pef_text.pef2text.UnsupportedWidthException;
@@ -79,10 +75,6 @@ import be.docarch.odt2braille.LiblouisxmlException;
 public class UnoGUI {
 
     private static final String TMP_NAME = "odt2braille";
-    private static final String PEF_EXT = ".pef";
-    private static final String ODT_EXT = ".odt";
-    private static final String LOG_EXT = ".log";
-    private static final String FLAT_XML_EXT = ".odt.xml";
     private static final String FLAT_XML_FILTER_NAME = "writer8";
     private static final Logger logger = Logger.getLogger("odt2braille");
 
@@ -104,12 +96,8 @@ public class UnoGUI {
     private Handler fh = null;
     private File logFile = null;
 
-    private File odtFile = null;
-    private File flatOdtFile = null;
+    private OdtTransformer odtTransformer = null;
 
-    private String odtUrl = null;
-    private String odtUnoUrl = null;
-    private String flatOdtUrl = null;
     private String liblouisPath = null;
 
     private SettingsIO settingsIO = null;
@@ -151,7 +139,7 @@ public class UnoGUI {
             progressBar = new ProgressBar(m_xFrame);
 
             // Configuring logger
-            logFile = File.createTempFile(TMP_NAME, LOG_EXT);
+            logFile = File.createTempFile(TMP_NAME, ".log");
             fh = new FileHandler(logFile.getAbsolutePath());
             fh.setFormatter(new SimpleFormatter());
             Logger.getLogger("").addHandler(fh);
@@ -200,34 +188,24 @@ public class UnoGUI {
             progressBar.setStatus("Initialising, loading settings...");
 
             // Export in ODT Format
-            odtFile = File.createTempFile(TMP_NAME,ODT_EXT);
+            File odtFile = File.createTempFile(TMP_NAME, ".odt");
             odtFile.deleteOnExit();
-            odtUrl = odtFile.getAbsolutePath();
-            odtUnoUrl = UnoUtils.createUnoFileURL(odtUrl, m_xContext);
+            String odtUrl = odtFile.getAbsolutePath();
+            String odtUnoUrl = UnoUtils.createUnoFileURL(odtUrl, m_xContext);
             PropertyValue[] conversionProperties = new PropertyValue[1];
             conversionProperties[0] = new PropertyValue();
             conversionProperties[0].Name = "FilterName";
-            conversionProperties[0].Value = FLAT_XML_FILTER_NAME; //Daisy DTBook OpenDocument XML
 
+            conversionProperties[0].Value = FLAT_XML_FILTER_NAME;
             XStorable storable = (XStorable) UnoRuntime.queryInterface(
                     XStorable.class, m_xFrame.getController().getModel());
-
             storable.storeToURL(odtUnoUrl, conversionProperties);
 
-            // Convert ODT to flat XML file
-            flatOdtFile = File.createTempFile(TMP_NAME, FLAT_XML_EXT);
-            flatOdtFile.deleteOnExit();
-            flatOdtUrl = flatOdtFile.getAbsolutePath();
-            OdtUtils odtutil = new OdtUtils();
-            odtutil.open(odtUrl);
-            odtutil.saveXML(flatOdtUrl);
+            // Create odtTransformer
+            odtTransformer = new OdtTransformer(odtUrl, progressBar, oooLocale);
 
             // Locale
-            Odt2BrailleNamespaceContext namespace = new Odt2BrailleNamespaceContext();
-            odtLocale = new Locale(XPathUtils.evaluateString(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:styles/style:default-style/style:text-properties/@fo:language",namespace).toLowerCase(),
-                                   XPathUtils.evaluateString(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:styles/style:default-style/style:text-properties/@fo:country", namespace).toUpperCase());
+            odtLocale = odtTransformer.getOdtLocale();
 
             // Set liblouis directory
             liblouisPath = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
@@ -238,7 +216,7 @@ public class UnoGUI {
             settingsIO = new SettingsIO(m_xContext, xDesktopComponent);
 
             // Load settings
-            loadedSettings = new Settings(flatOdtFile, odtLocale);
+            loadedSettings = new Settings(odtTransformer, odtLocale);
             settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
 
             // Increment progress bar
@@ -252,8 +230,11 @@ public class UnoGUI {
             handleUnexpectedException(ex);
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
+        } catch (TransformerConfigurationException ex) {
+            handleUnexpectedException(ex);
+        } catch (TransformerException ex) {
+            handleUnexpectedException(ex);
         }
-
     }
 
     /**
@@ -273,9 +254,6 @@ public class UnoGUI {
 
             // Create dialog            
             settingsDialog = new SettingsDialog(m_xContext);
-
-            // Show "Please wait" window
-            // settingsDialog.startLoading(xMCF);
 
             // Start progressbar
             progressBar.start();
@@ -378,11 +356,11 @@ public class UnoGUI {
             settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings);
 
             // Checker
-            checker = new Checker(oooLocale, changedSettings);
+            checker = new Checker(oooLocale, changedSettings, odtTransformer);
             checker.checkSettings();
 
             // Show first warning
-            checker.checkFlatOdtFile(flatOdtFile);
+            checker.checkFlatOdtFile();
             if (!(warning = checker.getFirstWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
                     logger.log(Level.INFO, "User cancelled export on first warning");
@@ -406,12 +384,12 @@ public class UnoGUI {
             }
                 
             // Create temporary PEF
-            pefFile = File.createTempFile(TMP_NAME,PEF_EXT);
+            pefFile = File.createTempFile(TMP_NAME, ".pef");
             pefFile.deleteOnExit();
             pefUrl = pefFile.getAbsolutePath();
 
             // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(flatOdtFile, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
+            odt2braille = new Odt2Braille(odtTransformer, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
             // Translate into braille
             if(!odt2braille.makePEF(pefUrl)) {
@@ -581,11 +559,11 @@ public class UnoGUI {
             settingsIO.saveEmbossSettingsToDocument(changedSettings, loadedSettings);
             
             // Checker
-            checker = new Checker(oooLocale, changedSettings);
+            checker = new Checker(oooLocale, changedSettings, odtTransformer);
             checker.checkSettings();
 
             // Show first checker warning
-            checker.checkFlatOdtFile(flatOdtFile);
+            checker.checkFlatOdtFile();
             if (!(warning = checker.getFirstWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
                     logger.log(Level.INFO, "User cancelled export on first warning");
@@ -594,12 +572,12 @@ public class UnoGUI {
             }
 
             // Create temporary PEF
-            pefFile = File.createTempFile(TMP_NAME, PEF_EXT);
+            pefFile = File.createTempFile(TMP_NAME, ".pef");
             pefFile.deleteOnExit();
             pefUrl = pefFile.getAbsolutePath();
 
             // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(flatOdtFile, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
+            odt2braille = new Odt2Braille(odtTransformer, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
 
             // Translate into braille
             if(!odt2braille.makePEF(pefUrl)) {
@@ -775,8 +753,6 @@ public class UnoGUI {
             XTextViewCursorSupplier xViewCursorSupplier = (XTextViewCursorSupplier)UnoRuntime.queryInterface(
                                                            XTextViewCursorSupplier.class, xController);
             XTextViewCursor xViewCursor = xViewCursorSupplier.getViewCursor();
-            XText xText = xViewCursor.getText();
-            XTextCursor xTextCursor = xText.createTextCursorByRange(xViewCursor.getStart());
 
             // Create dialog
 

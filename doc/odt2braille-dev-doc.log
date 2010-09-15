@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  26 AUG 2010 18:25
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  3 SEP 2010 16:49
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-dev-doc.texi
@@ -533,30 +533,33 @@ x.html#findjavadoc[][][]
 .@kern-0.30418
 .etc.
 
-Chapter 2 [3] Chapter 3 [4] Chapter 4 [5] Chapter 5 [6] [7] [8] ) 
+Chapter 2 [3] Chapter 3 [4] Chapter 4 [5] Chapter 5 [6] [7]
+l.443: Unicode char @u8:“ not defined for Texinfo
+l.443: Unicode char @u8:” not defined for Texinfo
+l.444: Unicode char @u8:“ not defined for Texinfo
+l.444: Unicode char @u8:” not defined for Texinfo [8]
+l.460: Unicode char @u8:“ not defined for Texinfo
+l.460: Unicode char @u8:” not defined for Texinfo [9] ) 
 Here is how much of TeX's memory you used:
- 2149 strings out of 497541
- 24526 string characters out of 3209714
- 53329 words of memory out of 3000000
- 3097 multiletter control sequences out of 15000+200000
+ 2151 strings out of 497541
+ 24542 string characters out of 3209714
+ 53349 words of memory out of 3000000
+ 3099 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
  12i,6n,17p,354b,305s stack positions out of 5000i,500n,10000p,200000b,50000s
-pdfTeX warning
- (dest): name{Todo's} has been referenced but does not exist, replaced by a fix
-ed one
-
-<C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C
-:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:
-/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/P
-rogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Progra
-m Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program 
-Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Fi
-les (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-dev-doc.pdf (11 pages, 149399 bytes).
+<C:/Program Files (x86
+)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86)/
+MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files (x86)/M
+iKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (x86)/MiK
+TeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files (x86)/MiKTe
+X 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2
+.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.8
+/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/f
+onts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on odt2braille-dev-doc.pdf (12 pages, 152912 bytes).
 PDF statistics:
- 196 PDF objects out of 1000 (max. 8388607)
+ 199 PDF objects out of 1000 (max. 8388607)
  19 named destinations out of 1000 (max. 500000)
  165 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -17,9 +17,9 @@ uplow       \x0106\x0107  4-14,4-14           Ćć                  LATIN CAPITA
 #           \x0107                            ć                   LATIN SMALL LETTER C WITH ACUTE
 uplow       \x0108\x0109  4-14,4-14           Ĉĉ                  LATIN CAPITAL LETTER C WITH CIRCUMFLEX - LATIN SMALL LETTER C WITH CIRCUMFLEX
 #           \x0109                            ĉ                   LATIN SMALL LETTER C WITH CIRCUMFLEX
-uplow       \x010A\x010A  4-14,4-14           ĊĊ                  LATIN CAPITAL LETTER C WITH DOT ABOVE - LATIN CAPITAL LETTER C WITH DOT ABOVE
+uplow       \x010A\x010B  4-14,4-14           Ċċ                  LATIN CAPITAL LETTER C WITH DOT ABOVE - LATIN CAPITAL LETTER C WITH DOT ABOVE
 #           \x010B                            ċ                   LATIN SMALL LETTER C WITH DOT ABOVE
-uplow       \x010C\x010C  4-14,4-14           ČČ                  LATIN CAPITAL LETTER C WITH CARON - LATIN CAPITAL LETTER C WITH CARON
+uplow       \x010C\x010D  4-14,4-14           Čč                  LATIN CAPITAL LETTER C WITH CARON - LATIN CAPITAL LETTER C WITH CARON
 #           \x010D                            č                   LATIN SMALL LETTER C WITH CARON
 uplow       \x010E\x010F  4-145,4-145         Ďď                  LATIN CAPITAL LETTER D WITH CARON - LATIN SMALL LETTER D WITH CARON
 #           \x010F                            ď                   LATIN SMALL LETTER D WITH CARON

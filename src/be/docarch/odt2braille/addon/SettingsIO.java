@@ -51,6 +51,9 @@ import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.SpecialSymbol;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
+import be.docarch.odt2braille.Style;
+import be.docarch.odt2braille.Style.Alignment;
+import be.docarch.odt2braille.ParagraphStyle;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
@@ -103,13 +106,14 @@ public class SettingsIO {
     private static String columnDelimiterProperty =              "[BRL]ColumnDelimiter";
     private static String lineFillSymbolProperty =               "[BRL]LineFillSymbol";
     private static String mathProperty =                         "[BRL]Math";
-    private static String centeredProperty =                     "[BRL]Centered";
+    private static String inheritProperty =                      "[BRL]Inherit";
+    private static String alignmentProperty =                    "[BRL]Alignment";
     private static String firstLineProperty =                    "[BRL]FirstLineIndent";
     private static String runoversProperty =                     "[BRL]Runovers";
     private static String linesAboveProperty =                   "[BRL]LinesAbove";
     private static String linesBelowProperty =                   "[BRL]LinesBelow";
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
-    private static String listPrefixProperty =                   "[BRL]ListPrefix";
+    private static String prefixProperty =                       "[BRL]ListPrefix";
     private static String printPageNumbersProperty =             "[BRL]PrintPageNumbers";
     private static String braillePageNumbersProperty =           "[BRL]BraillePageNumbers";
     private static String pageSeparatorProperty =                "[BRL]PageSeparator";
@@ -127,6 +131,12 @@ public class SettingsIO {
     private static String hyphenateProperty =                    "[BRL]Hyphenation";
     private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
     private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
+    
+    private String styleNames[] = { 
+        "heading_1", "heading_2", "heading_3", "heading_4",
+        "toc", "toc_1", "toc_2", "toc_3", "toc_4",
+        "list_1", "list_2", "list_3", "list_4", "list_5", "list_6", "list_7", "list_8", "list_9", "list_10",
+        "table", "table_1", "table_2", "table_3", "table_4", "table_5", "table_6", "table_7", "table_8", "table_9", "table_10" };
 
     // Export settings
 
@@ -251,11 +261,7 @@ public class SettingsIO {
         Boolean b;
 
         ArrayList<String> languages = loadedSettings.getLanguages();
-        String elements[] = {"Paragraph",
-                             "Heading1", "Heading2", "Heading3", "Heading4",
-                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
-                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
-                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+        ArrayList<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
 
         for (int i=0;i<languages.size();i++) {
             if ((s = getStringProperty(languageProperty + "_" + languages.get(i))) != null) {
@@ -266,24 +272,60 @@ public class SettingsIO {
             }
         }
         
-        for (int i=0;i<elements.length;i++) {
-            if ((b = getBooleanProperty(centeredProperty + elements[i])) != null) {
-                loadedSettings.setCentered(elements[i].toLowerCase(), b);
+        for (int i=0;i<styleNames.length;i++) {
+
+            String styleName = styleNames[i];
+            Style style = loadedSettings.getStyle(styleName);
+            
+            if ((b = getBooleanProperty(alignmentProperty + "_" + styleName)) != null) {
+                style.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
             }
-            if (!(d = getDoubleProperty(firstLineProperty + elements[i])).isNaN()) {
-                loadedSettings.setFirstLineMargin(elements[i].toLowerCase(), d.intValue());
+            if (!(d = getDoubleProperty(firstLineProperty + "_" + styleName)).isNaN()) {
+                style.setFirstLine(d.intValue());
             }
-            if (!(d = getDoubleProperty(runoversProperty + elements[i])).isNaN()) {
-                loadedSettings.setRunoversMargin(elements[i].toLowerCase(), d.intValue());
+            if (!((d = getDoubleProperty(runoversProperty + "_" + styleName)).isNaN())) {
+                style.setRunovers(d.intValue());
             }
-            if (!(d = getDoubleProperty(linesAboveProperty + elements[i])).isNaN()) {
-                loadedSettings.setLinesAbove(elements[i].toLowerCase(), d.intValue());
+            if (!((d = getDoubleProperty(linesAboveProperty + "_" + styleName)).isNaN())) {
+                style.setLinesAbove(d.intValue());
             }
-            if (!(d = getDoubleProperty(linesBelowProperty + elements[i])).isNaN()) {
-                loadedSettings.setLinesBelow(elements[i].toLowerCase(), d.intValue());
+            if (!((d = getDoubleProperty(linesBelowProperty + "_" + styleName)).isNaN())) {
+                style.setLinesBelow(d.intValue());
             }
-            if (!(d = getDoubleProperty(linesBetweenProperty + elements[i])).isNaN()) {
-                loadedSettings.setLinesBetween(elements[i].toLowerCase(), d.intValue());
+            if (!((d = getDoubleProperty(linesBetweenProperty + "_" + styleName)).isNaN())) {
+                style.setLinesBetween(d.intValue());
+            }
+        }
+
+        for (int i=0;i<paragraphStyles.size();i++) {
+
+            ParagraphStyle style = paragraphStyles.get(i);
+            String styleName = style.getName();
+
+            if (!style.getAutomatic()) {
+
+                if ((b = getBooleanProperty(inheritProperty + "_paragraph_" + styleName)) != null) {
+                    style.setInherit(b);
+                }
+
+                if (!style.getInherit()) {
+
+                    if ((b = getBooleanProperty(alignmentProperty + "_paragraph_" + styleName)) != null) {
+                        style.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
+                    }
+                    if (!(d = getDoubleProperty(firstLineProperty + "_paragraph_" + styleName)).isNaN()) {
+                        style.setFirstLine(d.intValue());
+                    }
+                    if (!((d = getDoubleProperty(runoversProperty + "_paragraph_" + styleName)).isNaN())) {
+                        style.setRunovers(d.intValue());
+                    }
+                    if (!((d = getDoubleProperty(linesAboveProperty + "_paragraph_" + styleName)).isNaN())) {
+                        style.setLinesAbove(d.intValue());
+                    }
+                    if (!((d = getDoubleProperty(linesBelowProperty + "_paragraph_" + styleName)).isNaN())) {
+                        style.setLinesBelow(d.intValue());
+                    }
+                }
             }
         }
 
@@ -363,8 +405,8 @@ public class SettingsIO {
         }
 
         for (int i=0;i<10;i++) {
-            if ((s = getStringProperty(listPrefixProperty + "_" + Integer.toString(i+1))) != null) {
-                loadedSettings.setListPrefix(s,i+1);
+            if ((s = getStringProperty(prefixProperty + "_list_" + (i+1))) != null) {
+                loadedSettings.getStyle("list_" + (i+1)).setPrefix(s);
             }
         }
 
@@ -617,11 +659,8 @@ public class SettingsIO {
         ArrayList<String> languages = settingsAfterChange.getLanguages();
         ArrayList<SpecialSymbol> specialSymbolsAfterChange = settingsAfterChange.getSpecialSymbolsList();
         ArrayList<SpecialSymbol> specialSymbolsBeforeChange = settingsBeforeChange.getSpecialSymbolsList();
-        String elements[] = {"Paragraph",
-                             "Heading1", "Heading2", "Heading3", "Heading4",
-                             "Toc", "Toc1", "Toc2", "Toc3", "Toc4",
-                             "List", "List1", "List2", "List3", "List4", "List5", "List6", "List7", "List8", "List9", "List10",
-                             "Table", "Table1", "Table2", "Table3", "Table4", "Table5", "Table6", "Table7", "Table8", "Table9", "Table10" };
+        ArrayList<ParagraphStyle> paragraphStylesAfterChange = settingsAfterChange.getParagraphStyles();
+        ArrayList<ParagraphStyle> paragraphStylesBeforeChange = settingsBeforeChange.getParagraphStyles();
 
         for (int i=0;i<languages.size();i++) {
             setProperty(languageProperty + "_" + languages.get(i),
@@ -632,31 +671,69 @@ public class SettingsIO {
                         settingsBeforeChange.getGrade(languages.get(i)));
         }
         
-        for (int i=0;i<elements.length;i++) {
-            setProperty(centeredProperty + elements[i],
-                        settingsAfterChange.getCentered(elements[i].toLowerCase()),
-                        settingsBeforeChange.getCentered(elements[i].toLowerCase()));
-            setProperty(firstLineProperty + elements[i],
-                        settingsAfterChange.getFirstLineMargin(elements[i].toLowerCase()),
-                        settingsBeforeChange.getFirstLineMargin(elements[i].toLowerCase()));
-            setProperty(runoversProperty + elements[i],
-                        settingsAfterChange.getRunoversMargin(elements[i].toLowerCase()),
-                        settingsBeforeChange.getRunoversMargin(elements[i].toLowerCase()));
-            setProperty(linesAboveProperty + elements[i],
-                        settingsAfterChange.getLinesAbove(elements[i].toLowerCase()),
-                        settingsBeforeChange.getLinesAbove(elements[i].toLowerCase()));
-            setProperty(linesBelowProperty + elements[i],
-                        settingsAfterChange.getLinesBelow(elements[i].toLowerCase()),
-                        settingsBeforeChange.getLinesBelow(elements[i].toLowerCase()));
-            setProperty(linesBetweenProperty + elements[i],
-                        settingsAfterChange.getLinesBetween(elements[i].toLowerCase()),
-                        settingsBeforeChange.getLinesBetween(elements[i].toLowerCase()));
+        for (int i=0;i<styleNames.length;i++) {
+
+            Style styleAfterChange = settingsAfterChange.getStyle(styleNames[i]);
+            Style styleBeforeChange = settingsBeforeChange.getStyle(styleNames[i]);
+            String styleName = styleNames[i];
+
+            setProperty(alignmentProperty + "_" + styleName,
+                        (styleAfterChange.getAlignment() == Alignment.CENTERED),
+                        (styleBeforeChange.getAlignment() == Alignment.CENTERED));
+            setProperty(firstLineProperty + "_" + styleName,
+                        styleAfterChange.getFirstLine(),
+                        styleBeforeChange.getFirstLine());
+            setProperty(runoversProperty + "_" + styleName,
+                        styleAfterChange.getRunovers(),
+                        styleBeforeChange.getRunovers());
+            setProperty(linesAboveProperty + "_" + styleName,
+                        styleAfterChange.getLinesAbove(),
+                        styleBeforeChange.getLinesAbove());
+            setProperty(linesBelowProperty + "_" + styleName,
+                        styleAfterChange.getLinesBelow(),
+                        styleBeforeChange.getLinesBelow());
+            setProperty(linesBetweenProperty + "_" + styleName,
+                        styleAfterChange.getLinesBetween(),
+                        styleBeforeChange.getLinesBetween());
+        }
+
+        for (int i=0;i<paragraphStylesBeforeChange.size();i++) {
+
+            ParagraphStyle styleAfterChange = paragraphStylesAfterChange.get(i);
+            ParagraphStyle styleBeforeChange = paragraphStylesBeforeChange.get(i);
+            String styleName = styleBeforeChange.getName();
+
+            if (!styleBeforeChange.getAutomatic()) {
+
+                setProperty(inheritProperty + "_paragraph_" + styleName,
+                            (styleAfterChange.getInherit()),
+                            (styleBeforeChange.getInherit()));
+
+                if (!styleAfterChange.getInherit()) {
+
+                    setProperty(alignmentProperty + "_paragraph_" + styleName,
+                                (styleAfterChange.getAlignment() == Alignment.CENTERED),
+                                (styleBeforeChange.getAlignment() == Alignment.CENTERED));
+                    setProperty(firstLineProperty + "_paragraph_" + styleName,
+                                styleAfterChange.getFirstLine(),
+                                styleBeforeChange.getFirstLine());
+                    setProperty(runoversProperty + "_paragraph_" + styleName,
+                                styleAfterChange.getRunovers(),
+                                styleBeforeChange.getRunovers());
+                    setProperty(linesAboveProperty + "_paragraph_" + styleName,
+                                styleAfterChange.getLinesAbove(),
+                                styleBeforeChange.getLinesAbove());
+                    setProperty(linesBelowProperty + "_paragraph_" + styleName,
+                                styleAfterChange.getLinesBelow(),
+                                styleBeforeChange.getLinesBelow());
+                }
+            }
         }
         
         for (int i=0;i<10;i++) {
-            setProperty(listPrefixProperty + "_" + Integer.toString(i+1),
-                        settingsAfterChange.getListPrefix(i+1),
-                        settingsBeforeChange.getListPrefix(i+1));
+            setProperty(prefixProperty + "_list_" + (i+1),
+                    settingsAfterChange.getStyle("list_" + (i+1)).getPrefix(),
+                    settingsBeforeChange.getStyle("list_" + (i+1)).getPrefix());
         }
 
         setProperty(specialSymbolsCountProperty,

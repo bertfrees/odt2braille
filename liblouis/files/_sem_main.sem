@@ -33,8 +33,8 @@
 	boldx       strong
 	italicx     em
 	changetable span,lang
-	no 			span,class,lang-wrap
-	italicx		&xpath(//dtb:span[@lang and @special='true']/dtb:span[@class='lang-wrap'])
+	no          span,class,lang-wrap
+	italicx	    &xpath(//dtb:span[@lang and @special='true']/dtb:span[@class='lang-wrap'])
 	generic     span,class,unspaced
 	no          span,class,spaced
 	
@@ -63,16 +63,16 @@
 # Transcriber's notes pages
 # Table of contents
 
-    no 					   titlepage
-    no 					   notesection
-    no 					   bibliography
-    no			 		   special-symbols-list
-    no					   tn-page
+    no 			   titlepage
+    no 			   notesection
+    no 			   bibliography
+    no			   special-symbols-list
+    no			   tn-page
     no                     div,class,toc
 	
-    skip 				   &xpath(//dtb:notesection         [not(child::dtb:note)])
-    skip 				   &xpath(//dtb:tn-page             [not(child::dtb:note)])
-    skip 				   &xpath(//dtb:special-symbols-list[not(descendant::dtb:li)])
+    skip 		   &xpath(//dtb:notesection         [not(child::dtb:note)])
+    skip 		   &xpath(//dtb:tn-page             [not(child::dtb:note)])
+    skip 		   &xpath(//dtb:special-symbols-list[not(descendant::dtb:li)])
 
     newPageBeforeAndAfter  &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
     newPageBefore          &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
@@ -81,9 +81,6 @@
 # Paragraphs
 # Headings
 
-	paragraph       p
-	paragraph-wrap  paragraph
-	
 	heading1 h1
 	heading2 h2
 	heading3 h3
@@ -95,30 +92,40 @@
 	heading4 h9
 	heading4 h10
 
-	dummyheading1 h1,class,dummy
-	dummyheading2 h2,class,dummy
-	dummyheading3 h3,class,dummy
-	dummyheading4 h4,class,dummy
-	dummyheading4 h5,class,dummy
-	dummyheading4 h6,class,dummy
-	dummyheading4 h7,class,dummy
-	dummyheading4 h8,class,dummy
-	dummyheading4 h9,class,dummy
-	dummyheading4 h10,class,dummy
+	dummy-heading1 h1,class,dummy
+	dummy-heading2 h2,class,dummy
+	dummy-heading3 h3,class,dummy
+	dummy-heading4 h4,class,dummy
+	dummy-heading4 h5,class,dummy
+	dummy-heading4 h6,class,dummy
+	dummy-heading4 h7,class,dummy
+	dummy-heading4 h8,class,dummy
+	dummy-heading4 h9,class,dummy
+	dummy-heading4 h10,class,dummy
 	
-	heading1-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h1])
-	heading2-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h2])
-	heading3-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h3])
-	heading4-wrap  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10])
+	wrap-heading1  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h1])
+	wrap-heading2  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h2])
+	wrap-heading3  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h3])
+	wrap-heading4  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]/dtb:heading[child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10])
 
 	contentsheader  &xpath(//dtb:div[@class='toc']//dtb:h1)
 	centeredblock   &xpath(//dtb:titlepage/*[self::dtb:heading or self::dtb:paragraph])
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li]/*[self::dtb:heading or self::dtb:paragraph])
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:titlepage]//*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
-	
+
+# ----------------------------------------------------------------------------------------------
+# Paragraph styles (_paragraphs.sem)
+
+#	paragraph_Standard       &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]//dtb:paragraph[@style='Standard']/dtb:p)
+#	wrap-paragraph_Standard  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]//dtb:paragraph[@style='Standard'])
+#       paragraph_?              &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]//dtb:paragraph[@style='Standard']/dtb:p)
+#	wrap-paragraph_?         &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li or self::dtb:titlepage)]//dtb:paragraph[@style='?'])
+
+# ----------------------------------------------------------------------------------------------
+
 # Captions
 
-	caption-wrap  div,class,caption
+	wrap-caption  div,class,caption
 	caption       caption
 	generic       &xpath(//dtb:div[@class='tn']//dtb:caption)
 
@@ -240,7 +247,7 @@
 
 	footnote   note,class,footnote
 	endnote    note,class,endnote
-	paragraph  &xpath(//dtb:div[@class='tn-page']/dtb:note)
+	para       &xpath(//dtb:div[@class='tn-page']/dtb:note)
 	trnote     &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
 	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
 	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804

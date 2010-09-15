@@ -17,7 +17,7 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
      This program is distributed in the hope that it will be useful,
      but WITHOUT ANY WARRANTY; without even the implied warranty of
      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-     General Public License for more details.
+     Lesser General Public License for more details.
 
      You should have received a copy of the GNU Lesser General Public
      License along with this program.  If not, see
@@ -89,7 +89,7 @@ License, or (at your option) any later version.
         <p>This program is distributed in the hope that it will be useful,
 but <span class="sc">without any warranty</span>; without even the implied warranty of
 <span class="sc">merchantability</span> or <span class="sc">fitness for a particular purpose</span>.  See the
-GNU General Public License for more details.
+GNU Lesser General Public License for more details.
 
         <p>You should have received a copy of the GNU Lesser General Public License
 along with this program.  If not, see <a href="http://www.gnu.org/licenses">http://www.gnu.org/licenses</a>.
@@ -336,25 +336,29 @@ need adjustments.
 
      <ul>
 <li>More flexibility by providing more settings!
-
           <ul>
-<li>Settings for footnotes, endnotes, TNs, bibliography, ... 
-<li>Volume info and transcription info. 
+<li>Footnotes, endnotes, transcriber's notes... 
+<li>Volume info and transcription info
+=&gt; tags gebruiken die worden vervangen:
+&lt;transcriber&gt; = instelbaar
+&lt;volumenaam&gt; = instelbaar per volume
+&lt;datum&gt; &lt;aantal volumes&gt; &lt;aantal supplementen&gt; &lt;aantal preliminaire volumes&gt;
+&lt;beginbraillepagina&gt; &lt;eindbraillepagina&gt; &lt;beginprintpagina&gt; &lt;eindprintpagina&gt;
 <li>'Continued' suffix. 
-<li>Border lines of tables &amp; textboxes ??? 
- =&gt; linesAbove/linesBelow (integer) uitbreiden met borderAbove/borderBelow (string)
-  -&gt; Aantal karakters in string = aantal lijnen in border
-  -&gt; n-de karakter = braille symbool waarmee n-de border lijn gevuld wordt
+<li>Tables
+<li>Textboxes
+<li>Images
 <li>Table Of Contents:
-  - headings tot level ? weergeven
-  - printpagina nummers weergeven
-  - braillepagina nummers weergeven
+  - headings tot level x weergeven ? 
+  - printpagina nummers weergeven ? 
+  - braillepagina nummers weergeven ? 
+<li>Bibliography
+<li>Special symbols: knop om default waarde van special symbol in te stellen =&gt; getDefaultSpecialSymbol(SpecialSymbolType type, String language)
 <li>... 
 </ul>
-
      <li>Mac OS, Linux, ... !!! 
-<li>Add more "Braille formatting standards" (now: only BANA) (eg. also UEBC)
-<li>Documentation! 
+<li>Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?) (=&gt; zie: odt2braille_Formatting_Standards.odt)
+<li>Javadoc bijwerken. 
 <li>Support more embossers. 
 <li>Only Interpoint55 is tested. 
 <li>Tooltips in dialogs. 
@@ -365,17 +369,26 @@ need adjustments.
 <li>Tactile graphics. 
 <li>If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding. 
 <li>OpenOffice.org accessibility for screen readers (on Windows)? 
-<li>OCR plugin for OpenOffice.org? 
 <li>http://www.thessalonica.org.ru/en/index.html ? 
 <li>Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail). 
 <li>Endnotes in preliminary pages: fix bug. 
 <li>makePEF(): should be made more robust. 
-<li>Odt2Daisy.preProcessing(): should be made faster. 
-Replace DOM processing with XSL transformation where this is possible. 
-This will result in better performance. 
-(Vincent Spiewak is rewriting JODL in XSLT 2.0)
-<li>When multi-volume feature of liblouisxml is finished: Odt2Braille code might be simplified. 
-<li>Jlouis ? 
+<li>Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
+* Talen
+* Styles (in het begin: nodig voor analyse door Settings)
+* Lege paragrafen, ... 
+* Secties verwijderen
+* Paginanummering
+* Lijstnummering &amp; bullets
+* Kopnummering
+* Linken van captions
+* Omzetten naar "DAISY"
+* Titel pagina
+* Special typeface
+* Splitsen in volumes (pas op einde)
+(=&gt; gebruik maken van "odt2braille" namespace voor eigen tags)
+(=&gt; Vincent Spiewak is rewriting JODL in XSLT 2.0)
+<li>Java bindings? 
 <li>UTD &amp; liblouisutdml? 
 <li>Presentations &amp; spreadsheets. 
 <li>Commandline tool (Odt2Braille.jar). 
@@ -387,10 +400,41 @@ Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
 * g2,g3,g4,... = contracted braille
 <li>Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
 	=&gt; OOo crasht (Windows XP) bij oproepen van dialoogvenster =&gt; is dit nog steeds zo? 
+<li>Mac OS: crasht soms bij laden van settings =&gt; nog steeds zo? 
 <li>Voor Ubuntu: OOo 3.2.1 nodig ? 
-<li>Settings in Tools &gt; Options... ? 
-<li>Zoveel mogelijk originele tabellen includen en sommige default bestanden (tables) overschrijven met eigen (files)
-<li>... 
+<li>Settings in Tools &gt; Options... 
+<li>Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft upgedate. 
+<li>Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen. 
+<li>Voor elke (paragraph) stijl: gebruiker kan formatting parameters instellen (Feature request 3058074). 
+=&gt; geen effect op headings, captions, listitems, notes, table cells, title page ? 
+=&gt; default = overerven, keuze aan gebruiker
+(Voor elke (paragraph / character) stijl: gebruiker kan aangeven of special typeface moet overgenomen of genegeerd worden.) 
+(=&gt; effect op headings ?) 
+<li>odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog niet ondersteund worden. 
+<li>Automatic splitting of volumes
+<li>Varia
+          <ul>
+<li>text:list-item[@text:style-override] ? 
+<li>Images are omitted in Braille if they are anchored to a page =&gt; alert? 
+<li>Special-typeface. 
+Er wordt enkel gekeken naar @style:style-name ( + @fo:font-style en @fo:font-weight) en @style:parent-style-name (in het geval van Emphasis en Strong_20_Emphasis). 
+Todo: tot aan top-stijl gaan om stijl te achterhalen =&gt; recursief. 
+<li>Pagenum inside notesection ? 
+<li>Footnotes onder tabel: ook footnotes in captions meegerekend (terwijl die al onder de caption zelf gezet zijn)
+<li>als “Format – section – options – collect at end of section” niet expliciet wordt ingesteld
+=&gt; “notes-configuration” mogelijk niet aanwezig =&gt; notesection in Braille soms op verkeerde plaats
+(=&gt; uitzoeken hoe OOo wel weet waar notes moeten staan ?) 
+<li>OOo: linking sections? 
+<li>Volume information block: preliminary braille page numbers (p...) =&gt; p moet zonder letter indicator
+<li>Special symbols list: Dot locator: http://www.iceb.org/rep9910f.html ? 
+<li>Underline: dots 7 &amp; 8 ? 
+<li>Veranderen van typeface in midden van woord =&gt; documentatie
+<li>Kan paginanummering mislopen indien pagebreak wordt bekomen door een reeks line breaks ? 
+<li>Supplementary volumes:
+* pagenumber prefixed by “s” ? 
+* 1st pagenum should be 1. 
+</ul>
+     <li>... 
 </ul>
 
 </body></html>

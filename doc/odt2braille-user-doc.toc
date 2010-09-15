@@ -8,19 +8,19 @@
 @numsecentry{Tables}{2.5}{Tables}{5}
 @numsecentry{Textboxes}{2.6}{Textboxes}{6}
 @numsecentry{Images}{2.7}{Images}{8}
-@numsecentry{Captions}{2.8}{Captions}{9}
+@numsecentry{Captions}{2.8}{Captions}{8}
 @numsecentry{Notes}{2.9}{Notes}{9}
 @numsecentry{Special Typeface}{2.10}{Special Typeface}{10}
 @numsecentry{Page Numbering}{2.11}{Page Numbering}{11}
 @numsecentry{Preliminary Pages}{2.12}{Preliminary Pages}{12}
 @numsecentry{Volume Management}{2.13}{Volume Management}{13}
-@numsecentry{Title Page}{2.14}{Title Page}{14}
+@numsecentry{Title Page}{2.14}{Title Page}{13}
 @numsecentry{List of Special Symbols}{2.15}{List of Special Symbols}{14}
 @numsecentry{Transcriber's Notes}{2.16}{Transcriber's Notes}{15}
 @numsecentry{Table of Contents}{2.17}{Table of Contents}{16}
-@numsecentry{Bibliographies}{2.18}{Bibliographies}{17}
+@numsecentry{Bibliographies}{2.18}{Bibliographies}{16}
 @numsecentry{Mathematics}{2.19}{Mathematics}{17}
-@numsecentry{Inserting Literal Braille}{2.20}{Inserting Literal Braille}{18}
+@numsecentry{Inserting Literal Braille}{2.20}{Inserting Literal Braille}{17}
 @numsecentry{Braille-only Material}{2.21}{Braille-only Material}{18}
 @numsecentry{Hyphenation}{2.22}{Hyphenation}{18}
 @numsecentry{Templates}{2.23}{Templates}{18}

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog5" dlg:tab-index="9" dlg:left="142" dlg:top="73" dlg:width="261" dlg:height="243" dlg:page="2" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog2" dlg:tab-index="9" dlg:left="142" dlg:top="73" dlg:width="261" dlg:height="243" dlg:page="3" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0" dlg:look="simple"/>
   <dlg:style dlg:style-id="1" dlg:border="0xc0c0c0" dlg:font-name="SimBraille" dlg:font-height="15" dlg:font-stylename="Regular" dlg:font-family="modern"/>
@@ -77,18 +77,18 @@
   <dlg:textfield dlg:style-id="1" dlg:id="TextField7" dlg:tab-index="29" dlg:left="203" dlg:top="129" dlg:width="26" dlg:height="13" dlg:page="5" dlg:readonly="true"/>
   <dlg:button dlg:id="CommandButton7" dlg:tab-index="30" dlg:left="231" dlg:top="129" dlg:width="15" dlg:height="12" dlg:page="5"/>
   <dlg:text dlg:id="Label27" dlg:tab-index="102" dlg:left="142" dlg:top="130" dlg:width="58" dlg:height="10" dlg:page="5" dlg:value="Label27"/>
-  <dlg:text dlg:id="Label31" dlg:tab-index="103" dlg:left="105" dlg:top="41" dlg:width="114" dlg:height="10" dlg:page="3" dlg:value="Label31"/>
-  <dlg:text dlg:id="Label32" dlg:tab-index="104" dlg:left="105" dlg:top="56" dlg:width="114" dlg:height="10" dlg:page="3" dlg:value="Label32"/>
-  <dlg:text dlg:id="Label33" dlg:tab-index="105" dlg:left="105" dlg:top="71" dlg:width="114" dlg:height="10" dlg:page="3" dlg:value="Label33"/>
-  <dlg:text dlg:id="Label34" dlg:tab-index="106" dlg:left="105" dlg:top="86" dlg:width="114" dlg:height="10" dlg:page="3" dlg:value="Label34"/>
-  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField7" dlg:tab-index="12" dlg:left="222" dlg:top="40" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
-  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField8" dlg:tab-index="13" dlg:left="222" dlg:top="55" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
-  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField9" dlg:tab-index="14" dlg:left="222" dlg:top="70" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
-  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField10" dlg:tab-index="15" dlg:left="222" dlg:top="85" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
+  <dlg:text dlg:id="Label31" dlg:tab-index="103" dlg:left="159" dlg:top="114" dlg:width="59" dlg:height="10" dlg:page="3" dlg:value="Label31"/>
+  <dlg:text dlg:id="Label32" dlg:tab-index="104" dlg:left="159" dlg:top="129" dlg:width="59" dlg:height="10" dlg:page="3" dlg:value="Label32"/>
+  <dlg:text dlg:id="Label33" dlg:tab-index="105" dlg:left="159" dlg:top="69" dlg:width="60" dlg:height="10" dlg:page="3" dlg:value="Label33"/>
+  <dlg:text dlg:id="Label34" dlg:tab-index="106" dlg:left="159" dlg:top="84" dlg:width="60" dlg:height="10" dlg:page="3" dlg:value="Label34"/>
+  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField7" dlg:tab-index="12" dlg:left="222" dlg:top="113" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
+  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField8" dlg:tab-index="13" dlg:left="222" dlg:top="128" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
+  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField9" dlg:tab-index="14" dlg:left="222" dlg:top="68" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
+  <dlg:numericfield dlg:style-id="0" dlg:id="NumericField10" dlg:tab-index="15" dlg:left="222" dlg:top="83" dlg:width="24" dlg:height="12" dlg:page="3" dlg:spin="true"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox10" dlg:tab-index="56" dlg:left="157" dlg:top="25" dlg:width="89" dlg:height="12" dlg:page="10" dlg:spin="true"/>
   <dlg:text dlg:id="Label35" dlg:tab-index="107" dlg:left="105" dlg:top="26" dlg:width="50" dlg:height="10" dlg:page="10" dlg:value="Label35"/>
-  <dlg:text dlg:id="Label37" dlg:tab-index="108" dlg:left="105" dlg:top="26" dlg:width="93" dlg:height="10" dlg:page="3" dlg:value="Label37"/>
-  <dlg:menulist dlg:style-id="0" dlg:id="ListBox12" dlg:tab-index="11" dlg:left="200" dlg:top="25" dlg:width="46" dlg:height="12" dlg:page="3" dlg:spin="true"/>
+  <dlg:text dlg:id="Label37" dlg:tab-index="108" dlg:left="159" dlg:top="99" dlg:width="36" dlg:height="10" dlg:page="3" dlg:value="Label37"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox12" dlg:tab-index="11" dlg:left="200" dlg:top="98" dlg:width="46" dlg:height="12" dlg:page="3" dlg:spin="true"/>
   <dlg:text dlg:id="Label38" dlg:tab-index="109" dlg:left="142" dlg:top="85" dlg:width="77" dlg:height="10" dlg:page="4" dlg:value="Label38"/>
   <dlg:text dlg:id="Label39" dlg:tab-index="110" dlg:left="142" dlg:top="99" dlg:width="77" dlg:height="10" dlg:page="4" dlg:value="Label39"/>
   <dlg:text dlg:id="Label40" dlg:tab-index="111" dlg:left="142" dlg:top="41" dlg:width="77" dlg:height="10" dlg:page="4" dlg:value="Label40"/>
@@ -221,5 +221,10 @@
   <dlg:text dlg:id="Label74" dlg:tab-index="187" dlg:left="105" dlg:top="56" dlg:width="82" dlg:height="10" dlg:page="1" dlg:value="Label74"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox22" dlg:tab-index="188" dlg:left="105" dlg:top="193" dlg:width="9" dlg:height="7" dlg:page="2" dlg:checked="false"/>
   <dlg:text dlg:id="Label82" dlg:tab-index="189" dlg:left="118" dlg:top="192" dlg:width="82" dlg:height="10" dlg:page="2" dlg:value="Label82"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox26" dlg:tab-index="190" dlg:left="107" dlg:top="39" dlg:width="45" dlg:height="104" dlg:page="3"/>
+  <dlg:text dlg:id="Label83" dlg:tab-index="191" dlg:left="105" dlg:top="26" dlg:width="31" dlg:height="10" dlg:page="3" dlg:value="Label83"/>
+  <dlg:text dlg:id="Label84" dlg:tab-index="192" dlg:left="171" dlg:top="41" dlg:width="75" dlg:height="10" dlg:page="3" dlg:value="Label84"/>
+  <dlg:checkbox dlg:id="CheckBox23" dlg:tab-index="193" dlg:left="159" dlg:top="42" dlg:width="9" dlg:height="9" dlg:page="3" dlg:checked="false"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField10" dlg:tab-index="194" dlg:left="194" dlg:top="53" dlg:width="52" dlg:height="12" dlg:page="3"/>
  </dlg:bulletinboard>
 </dlg:window>
