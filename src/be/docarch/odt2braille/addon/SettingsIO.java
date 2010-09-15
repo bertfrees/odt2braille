@@ -48,6 +48,8 @@ import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
+import be.docarch.odt2braille.Settings.PageNumberFormat;
+import be.docarch.odt2braille.Settings.PageNumberPosition;
 import be.docarch.odt2braille.SpecialSymbol;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
@@ -443,15 +445,27 @@ public class SettingsIO {
         }
 
         if ((s = getStringProperty(printPageNumberAtProperty)) != null) {
-            loadedSettings.setPrintPageNumberAt(s);
+            try {
+                loadedSettings.setPrintPageNumberAt(PageNumberPosition.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid page number position");
+            }
         }
 
         if ((s = getStringProperty(braillePageNumberAtProperty)) != null) {
-            loadedSettings.setBraillePageNumberAt(s);
+            try {
+                loadedSettings.setBraillePageNumberAt(PageNumberPosition.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid page number position");
+            }
         }
 
         if ((s = getStringProperty(preliminaryPageNumberFormatProperty)) != null) {
-            loadedSettings.setPreliminaryPageFormat(s);
+            try {
+                loadedSettings.setPreliminaryPageFormat(PageNumberFormat.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid page number format");
+            }
         }
 
         if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
@@ -813,14 +827,14 @@ public class SettingsIO {
                     settingsAfterChange.getPrintPageNumberRange(),
                     settingsBeforeChange.getPrintPageNumberRange());
         setProperty(printPageNumberAtProperty,
-                    settingsAfterChange.getPrintPageNumberAt(),
-                    settingsBeforeChange.getPrintPageNumberAt());
+                    settingsAfterChange.getPrintPageNumberAt().name(),
+                    settingsBeforeChange.getPrintPageNumberAt().name());
         setProperty(braillePageNumberAtProperty,
-                    settingsAfterChange.getBraillePageNumberAt(),
-                    settingsBeforeChange.getBraillePageNumberAt());
+                    settingsAfterChange.getBraillePageNumberAt().name(),
+                    settingsBeforeChange.getBraillePageNumberAt().name());
         setProperty(preliminaryPageNumberFormatProperty,
-                    settingsAfterChange.getPreliminaryPageFormat(),
-                    settingsBeforeChange.getPreliminaryPageFormat());
+                    settingsAfterChange.getPreliminaryPageFormat().name(),
+                    settingsBeforeChange.getPreliminaryPageFormat().name());
         setProperty(transcribersNotesPageEnabledProperty,
                     settingsAfterChange.getTranscribersNotesPageEnabled(),
                     settingsBeforeChange.getTranscribersNotesPageEnabled());

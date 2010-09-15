@@ -71,6 +71,8 @@ import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
+import be.docarch.odt2braille.Settings.PageNumberFormat;
+import be.docarch.odt2braille.Settings.PageNumberPosition;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
@@ -2059,7 +2061,8 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesVisited[PAGENUMBERS_PAGE-1]) {
 
-            settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?"p":"roman"));
+            settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?
+                PageNumberFormat.P:PageNumberFormat.ROMAN));
             settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
             settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
             settings.setIgnoreEmptyPages(ignoreEmptyPagesCheckBox.getState() == (short) 1);
@@ -2219,14 +2222,18 @@ public class SettingsDialog implements XItemListener,
         ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         mergeUnnumberedPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
-                                                                            && ((settings.getBraillePageNumbers() && settings.getBraillePageNumberAt().equals("top"))
-                                                                             || (settings.getPrintPageNumbers()   && settings.getPrintPageNumberAt().equals("top")))
-                                                                            && !(settings.getPrintPageNumberAt().equals("top")
+                                                                            && ((settings.getBraillePageNumbers()
+                                                                              && settings.getBraillePageNumberAt() == PageNumberPosition.TOP_RIGHT)
+                                                                             || (settings.getPrintPageNumbers()
+                                                                              && settings.getPrintPageNumberAt() == PageNumberPosition.TOP_RIGHT))
+                                                                            && !(settings.getPrintPageNumberAt() == PageNumberPosition.TOP_RIGHT
                                                                               && settings.getPrintPageNumbers()
                                                                               && settings.getPrintPageNumberRange()));
         numbersAtBottomOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
-                                                                            && ((settings.getBraillePageNumbers() && settings.getBraillePageNumberAt().equals("bottom"))
-                                                                             || (settings.getPrintPageNumbers()   && settings.getPrintPageNumberAt().equals("bottom"))));
+                                                                            && ((settings.getBraillePageNumbers()
+                                                                              && settings.getBraillePageNumberAt() == PageNumberPosition.BOTTOM_RIGHT)
+                                                                             || (settings.getPrintPageNumbers()
+                                                                              && settings.getPrintPageNumberAt() == PageNumberPosition.BOTTOM_RIGHT)));
 
     }
 
@@ -2404,10 +2411,10 @@ public class SettingsDialog implements XItemListener,
     private void updatePageNumbersPageFieldValues() {
 
         braillePageNumbersCheckBox.setState((short)(settings.getBraillePageNumbers()?1:0));
-        braillePageNumberAtListBox.selectItemPos((short)((settings.getBraillePageNumberAt().equals("top"))?0:1), true);
-        preliminaryPageNumberFormatListBox.selectItemPos((short)((settings.getPreliminaryPageFormat().equals("p"))?0:1), true);
+        braillePageNumberAtListBox.selectItemPos((short)((settings.getBraillePageNumberAt() == PageNumberPosition.TOP_RIGHT)?0:1), true);
+        preliminaryPageNumberFormatListBox.selectItemPos((short)((settings.getPreliminaryPageFormat() == PageNumberFormat.P)?0:1), true);
         printPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbers()?1:0));
-        printPageNumberAtListBox .selectItemPos((short)((settings.getPrintPageNumberAt().equals("top"))?0:1), true);
+        printPageNumberAtListBox .selectItemPos((short)((settings.getPrintPageNumberAt() == PageNumberPosition.TOP_RIGHT)?0:1), true);
         printPageNumberRangeCheckBox.setState((short)(settings.getPrintPageNumberRange()?1:0));
         continuePagesCheckBox.setState((short)(settings.getContinuePages()?1:0));
         pageSeparatorCheckBox.setState((short)(settings.getPageSeparator()?1:0));
@@ -2488,7 +2495,8 @@ public class SettingsDialog implements XItemListener,
     private void updateMainTranslationTableListBox() {
 
         mainTranslationTableListBox.removeItemListener(this);
-        mainTranslationTableListBox.selectItemPos((short)mainTranslationTables.indexOf(settings.getTranslationTable(settings.getMainLanguage())),true);
+        mainTranslationTableListBox.selectItemPos((short)mainTranslationTables.indexOf(
+                settings.getTranslationTable(settings.getMainLanguage())),true);
         mainTranslationTableListBox.addItemListener(this);
 
     }
@@ -2523,7 +2531,8 @@ public class SettingsDialog implements XItemListener,
     private void updateTranslationTableListBox() {
 
         translationTableListBox.removeItemListener(this);
-        translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(settings.getTranslationTable(languages.get(selectedLanguagePos))),true);
+        translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(
+                settings.getTranslationTable(languages.get(selectedLanguagePos))),true);
         translationTableListBox.addItemListener(this);
 
     }
@@ -2727,7 +2736,8 @@ public class SettingsDialog implements XItemListener,
                         if (source.equals(braillePageNumbersCheckBox)) {
                             settings.setBraillePageNumbers(braillePageNumbersCheckBox.getState() == (short)1);
                         } else if (source.equals(braillePageNumberAtListBox)) {
-                            settings.setBraillePageNumberAt(((braillePageNumberAtListBox.getSelectedItemPos() == (short)0)?"top":"bottom"));
+                            settings.setBraillePageNumberAt(((braillePageNumberAtListBox.getSelectedItemPos() == (short)0)?
+                                PageNumberPosition.TOP_RIGHT:PageNumberPosition.BOTTOM_RIGHT));
                         } else if (source.equals(pageSeparatorCheckBox)) {
                             settings.setPageSeparator(pageSeparatorCheckBox.getState() == (short)1);
                             pageSeparatorNumberCheckBox.setState((short)(settings.getPageSeparatorNumber()?1:0));
@@ -2737,7 +2747,8 @@ public class SettingsDialog implements XItemListener,
                             printPageNumberRangeCheckBox.setState((short)(settings.getPrintPageNumberRange()?1:0));
                             numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeparateLine()?1:0));
                         } else if (source.equals(printPageNumberAtListBox)) {
-                            settings.setPrintPageNumberAt(((printPageNumberAtListBox.getSelectedItemPos() == (short)0)?"top":"bottom"));
+                            settings.setPrintPageNumberAt(((printPageNumberAtListBox.getSelectedItemPos() == (short)0)?
+                                PageNumberPosition.TOP_RIGHT:PageNumberPosition.BOTTOM_RIGHT));
                             numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeparateLine()?1:0));
                         } else if (source.equals(printPageNumberRangeCheckBox)) {
                             settings.setPrintPageNumberRange(printPageNumberRangeCheckBox.getState() == (short) 1);

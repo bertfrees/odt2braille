@@ -61,6 +61,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.parsers.ParserConfigurationException;
 
 import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.Settings.PageNumberFormat;
 import com.versusoft.packages.jodl.RomanNumbering;
 
 
@@ -304,7 +305,7 @@ public class PreviewDialog implements XItemListener,
         }
         for (int i=0; i<pageCount;i++) {
             if (settings.getPreliminaryPagesPresent() && section == 1) {
-                if (settings.getPreliminaryPageFormat().equals("p")) {
+                if (settings.getPreliminaryPageFormat() == PageNumberFormat.P) {
                     pag = "p" + (firstpage + i);
                 } else {
                     pag = RomanNumbering.toRoman(firstpage + i);

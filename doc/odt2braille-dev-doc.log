@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  3 SEP 2010 16:49
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  15 SEP 2010 17:19
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-dev-doc.texi
@@ -534,12 +534,12 @@ x.html#findjavadoc[][][]
 .etc.
 
 Chapter 2 [3] Chapter 3 [4] Chapter 4 [5] Chapter 5 [6] [7]
-l.443: Unicode char @u8:“ not defined for Texinfo
-l.443: Unicode char @u8:” not defined for Texinfo
-l.444: Unicode char @u8:“ not defined for Texinfo
-l.444: Unicode char @u8:” not defined for Texinfo [8]
-l.460: Unicode char @u8:“ not defined for Texinfo
-l.460: Unicode char @u8:” not defined for Texinfo [9] ) 
+l.437: Unicode char @u8:“ not defined for Texinfo
+l.437: Unicode char @u8:” not defined for Texinfo
+l.438: Unicode char @u8:“ not defined for Texinfo
+l.438: Unicode char @u8:” not defined for Texinfo [8]
+l.454: Unicode char @u8:“ not defined for Texinfo
+l.454: Unicode char @u8:” not defined for Texinfo [9] ) 
 Here is how much of TeX's memory you used:
  2151 strings out of 497541
  24542 string characters out of 3209714
@@ -557,7 +557,7 @@ X 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2
 .8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.8
 /fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/f
 onts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-dev-doc.pdf (12 pages, 152912 bytes).
+Output written on odt2braille-dev-doc.pdf (12 pages, 152559 bytes).
 PDF statistics:
  199 PDF objects out of 1000 (max. 8388607)
  19 named destinations out of 1000 (max. 500000)

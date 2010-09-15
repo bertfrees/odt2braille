@@ -342,8 +342,6 @@ More flexibility - provide more settings!
 @item
 Mac OS, Linux, ... !!! (wachten op Debian, Ubuntu, Fink)
 @item
-8 dot Braille.
-@item
 Support more embossers.
 @item
 Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?)
@@ -362,7 +360,7 @@ Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijve
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* Talen
 	* Styles (in het begin: nodig voor analyse door Settings)
-	* Lege paragrafen, ...
+	* Lege paragrafen (ook indien er lege span inzit), ...
 	* Secties verwijderen
 	* Paginanummering
 	* Lijstnummering & bullets
@@ -372,7 +370,6 @@ Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (e
 	* Titel pagina
 	* Special typeface
 	* Splitsen in volumes (pas op einde)
-(=> gebruik maken van "odt2braille" namespace voor eigen tags)
 (=> Vincent Spiewak is rewriting JODL in XSLT 2.0)
 @item
 Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft upgedate.
@@ -386,8 +383,6 @@ Javadoc bijwerken.
 Only Interpoint55 is tested.
 @item
 Tooltips in dialogs.
-@item
-Keyboard shortcuts for Braille menus.
 @item
 Howto handle unknown characters? (-> now: dots 3456) (-> "undefined" opcode ?)
 @item
@@ -414,9 +409,6 @@ UTD & liblouisutdml?
 Presentations & spreadsheets.
 @item
 Commandline tool (Odt2Braille.jar).
-@item
-Er kunnen nog lege paragrafen voorkomen (als er lege 'span's inzaten: bv door special typeface / languages)
-Door 'clear formatting' toe te passen op deze paragrafen is dit probleem weg.
 @item
 Uitleg van WinBraille over g0,g1,g2,...
 	* g0 = one to one

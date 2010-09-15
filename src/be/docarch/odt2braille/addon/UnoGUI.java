@@ -360,7 +360,7 @@ public class UnoGUI {
             checker.checkSettings();
 
             // Show first warning
-            checker.checkFlatOdtFile();
+            checker.checkOdtFile();
             if (!(warning = checker.getFirstWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
                     logger.log(Level.INFO, "User cancelled export on first warning");
@@ -396,6 +396,9 @@ public class UnoGUI {
                 progressBar.finish(false);
                 return false;
             }
+
+            // Checker
+            checker.checkPefFile(pefFile);
 
             // Show second warning
             if (!(warning = checker.getSecondWarning()).equals("")) {
@@ -563,7 +566,7 @@ public class UnoGUI {
             checker.checkSettings();
 
             // Show first checker warning
-            checker.checkFlatOdtFile();
+            checker.checkOdtFile();
             if (!(warning = checker.getFirstWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
                     logger.log(Level.INFO, "User cancelled export on first warning");
@@ -583,6 +586,9 @@ public class UnoGUI {
             if(!odt2braille.makePEF(pefUrl)) {
                 return false;
             }
+
+            // Checker
+            checker.checkPefFile(pefFile);
 
             // Show second checker warning
             if (!(warning = checker.getSecondWarning()).equals("")) {
