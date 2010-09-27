@@ -203,7 +203,7 @@ public class SettingsIO {
 
         if (xPropSetInfo.hasPropertyByName(property)) {
             s = AnyConverter.toString(xPropSet.getPropertyValue(property));
-            if (!s.isEmpty()) {
+            if (s.length() > 1) {
                 return s;
             } else {
                 return null;

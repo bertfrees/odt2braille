@@ -164,6 +164,10 @@ public class EmbossDialog implements XItemListener,
     private static String _numberOfCellsPerLineLabel = "Label6";
     private static String _numberOfLinesPerPageLabel = "Label7";
     private static String _marginLabel = "Label9";
+    private static String _marginLeftLabel = "Label1";
+    private static String _marginRightLabel = "Label13";
+    private static String _marginTopLabel = "Label12";
+    private static String _marginBottomLabel = "Label14";
 
     private String L10N_embosserLabel = null;
     private String L10N_tableLabel = null;
@@ -175,6 +179,10 @@ public class EmbossDialog implements XItemListener,
     private String L10N_numberOfCellsPerLineLabel = null;
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_marginLabel = null;
+    private String L10N_marginLeftLabel = null;
+    private String L10N_marginRightLabel = null;
+    private String L10N_marginTopLabel = null;
+    private String L10N_marginBottomLabel = null;
 
     private TreeMap<String,String> L10N_embosser = new TreeMap();
     private TreeMap<String,String> L10N_table = new TreeMap();
@@ -223,6 +231,10 @@ public class EmbossDialog implements XItemListener,
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_marginLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("marginLabel") + ":";
+        L10N_marginLeftLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left");
+        L10N_marginRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right");
+        L10N_marginTopLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
+        L10N_marginBottomLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
 
         L10N_embosser.put("NONE",              "-");
         L10N_embosser.put("INDEX_BASIC",       "Index Braille - 3.30 Basic V2");
@@ -416,6 +428,14 @@ public class EmbossDialog implements XItemListener,
         xFixedText.setText(L10N_numberOfLinesPerPageLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginLabel));
         xFixedText.setText(L10N_marginLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginLeftLabel));
+        xFixedText.setText(L10N_marginLeftLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginRightLabel));
+        xFixedText.setText(L10N_marginRightLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginTopLabel));
+        xFixedText.setText(L10N_marginTopLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginBottomLabel));
+        xFixedText.setText(L10N_marginBottomLabel);
 
     }
 
