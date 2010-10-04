@@ -16,4 +16,6 @@
 @numchapentry{Liblouisxml}{3}{Liblouisxml}{5}
 @numchapentry{Tutorials}{4}{Tutorials}{6}
 @unnsecentry{Adding an embosser}{10001.1}{}{6}
+@unnsecentry{Building xml2brl on Windows}{10001.2}{}{6}
+@unnsecentry{Adding hyphenation tables}{10001.3}{}{6}
 @numchapentry{Task list}{5}{Task list}{7}

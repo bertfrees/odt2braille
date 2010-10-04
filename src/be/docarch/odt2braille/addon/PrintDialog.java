@@ -20,32 +20,32 @@
 package be.docarch.odt2braille.addon;
 
 import com.sun.star.uno.XComponentContext;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XCheckBox;
 import com.sun.star.awt.XDialog;
 import com.sun.star.awt.XControlContainer;
 import com.sun.star.awt.PushButtonType;
-import com.sun.star.lang.XComponent;
-import com.sun.star.awt.XButton;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.awt.XDialogProvider2;
 import com.sun.star.awt.DialogProvider2;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.beans.XPropertySet;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XFixedText;
 import com.sun.star.awt.XItemListener;
 import com.sun.star.awt.ItemEvent;
-import com.sun.star.lang.EventObject;
+import com.sun.star.awt.XButton;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.deployment.XPackageInformationProvider;
+import com.sun.star.beans.XPropertySet;
 
-import java.util.logging.Logger;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -63,11 +63,13 @@ public class PrintDialog implements XItemListener {
     private XControlContainer xControlContainer = null;
     private XComponent xComponent = null;
 
-    private XListBox deviceListBox = null;
     private XCheckBox printToFileCheckBox = null;
+    private XListBox deviceListBox = null;    
     private XButton propertiesButton = null;
     private XButton okButton = null;
     private XButton cancelButton = null;
+
+    private XPropertySet deviceListBoxProperties = null;
 
     private static String _deviceListBox = "ListBox1";
     private static String _printToFileCheckBox = "CheckBox1";
@@ -78,12 +80,12 @@ public class PrintDialog implements XItemListener {
     private static String _deviceLabel = "Label1";
     private static String _printToFileLabel = "Label2";
 
-    private static String L10N_deviceLabel = null;
-    private static String L10N_printToFileLabel = null;
-    private static String L10N_propertiesButton = "Properties\u2026";
-    private static String L10N_okButton = null;
-    private static String L10N_cancelButton = null;
-    private static String L10N_windowTitle = null;
+    private String L10N_deviceLabel = null;
+    private String L10N_printToFileLabel = null;
+    private String L10N_propertiesButton = "Properties\u2026";
+    private String L10N_okButton = null;
+    private String L10N_cancelButton = null;
+    private String L10N_windowTitle = null;
 
 
     /**
@@ -134,11 +136,13 @@ public class PrintDialog implements XItemListener {
 
         XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, xDialog)).getModel());
-        XPropertySet propertiesProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+        XPropertySet propertiesButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, propertiesButton)).getModel());
+        deviceListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, deviceListBox)).getModel());
 
         windowProperties.setPropertyValue("Title", L10N_windowTitle);
-        propertiesProperties.setPropertyValue("Enabled", false);
+        propertiesButtonProperties.setPropertyValue("Enabled", false);
 
         printToFileCheckBox.addItemListener(this);
 
@@ -200,10 +204,15 @@ public class PrintDialog implements XItemListener {
 
         Object source = itemEvent.Source;
 
-        if (source.equals(printToFileCheckBox)) {
+        try {
 
-            printToFile = (printToFileCheckBox.getState() == (short) 1);
+            if (source.equals(printToFileCheckBox)) {
+                printToFile = (printToFileCheckBox.getState() == (short) 1);
+                deviceListBoxProperties.setPropertyValue("Enabled", !printToFile);
+            }
 
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 

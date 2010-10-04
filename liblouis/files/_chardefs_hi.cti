@@ -1,3 +1,5 @@
+include chardefs.cti
+
 sign \X0901 3 # davanagari chandra bindu 
 sign \X0902 56 # davanagari anuswar 
 sign \X0903 6 # davanagari visarg

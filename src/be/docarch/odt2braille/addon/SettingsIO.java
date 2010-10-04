@@ -30,7 +30,7 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-import com.sun.star.uno.XComponentContext;
+
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertyContainer;
@@ -38,9 +38,10 @@ import com.sun.star.beans.XPropertySetInfo;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.util.XModifiable;
 import com.sun.star.uno.AnyConverter;
+import com.sun.star.uno.XComponentContext;
+import com.sun.star.uno.UnoRuntime;
 import com.sun.star.document.XDocumentProperties;
 import com.sun.star.document.XDocumentPropertiesSupplier;
-import com.sun.star.uno.UnoRuntime;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
 
@@ -56,6 +57,8 @@ import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
+import be.docarch.odt2braille.CharacterStyle;
+import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 import org_pef_text.TableFactory.TableType;
@@ -116,6 +119,10 @@ public class SettingsIO {
     private static String linesBelowProperty =                   "[BRL]LinesBelow";
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
     private static String prefixProperty =                       "[BRL]ListPrefix";
+    private static String boldProperty =                         "[BRL]Boldface";
+    private static String italicProperty =                       "[BRL]Italic";
+    private static String underlineProperty =                    "[BRL]Underline";
+    private static String capsProperty =                         "[BRL]Capitals";
     private static String printPageNumbersProperty =             "[BRL]PrintPageNumbers";
     private static String braillePageNumbersProperty =           "[BRL]BraillePageNumbers";
     private static String pageSeparatorProperty =                "[BRL]PageSeparator";
@@ -147,6 +154,7 @@ public class SettingsIO {
     private static String exportNumberOfCellsPerLineProperty =   "[BRL]ExportCellsPerLine";
     private static String exportNumberOfLinesPerPageProperty =   "[BRL]ExportLinesPerPage";
     private static String exportDuplexProperty =                 "[BRL]ExportRectoVerso";
+    private static String exportEightDotsProperty =              "[BRL]ExportEightDots";
 
     // Emboss settings
 
@@ -161,6 +169,7 @@ public class SettingsIO {
     private static String embossNumberOfCellsPerLineProperty =   "[BRL]EmbossCellsPerLine";
     private static String embossNumberOfLinesPerPageProperty =   "[BRL]EmbossLinesPerPage";
     private static String embossDuplexProperty =                 "[BRL]EmbossRectoVerso";
+    private static String embossEightDotsProperty =              "[BRL]EmbossEightDots";
 
 
     /**
@@ -203,7 +212,7 @@ public class SettingsIO {
 
         if (xPropSetInfo.hasPropertyByName(property)) {
             s = AnyConverter.toString(xPropSet.getPropertyValue(property));
-            if (s.length() > 1) {
+            if (s.length() > 0) {
                 return s;
             } else {
                 return null;
@@ -264,6 +273,7 @@ public class SettingsIO {
 
         ArrayList<String> languages = loadedSettings.getLanguages();
         ArrayList<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
+        ArrayList<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
 
         for (int i=0;i<languages.size();i++) {
             if ((s = getStringProperty(languageProperty + "_" + languages.get(i))) != null) {
@@ -301,36 +311,77 @@ public class SettingsIO {
 
         for (int i=0;i<paragraphStyles.size();i++) {
 
-            ParagraphStyle style = paragraphStyles.get(i);
-            String styleName = style.getName();
+            ParagraphStyle paraStyle = paragraphStyles.get(i);
+            String styleName = paraStyle.getName();
 
-            if (!style.getAutomatic()) {
+            if (!paraStyle.getAutomatic()) {
 
                 if ((b = getBooleanProperty(inheritProperty + "_paragraph_" + styleName)) != null) {
-                    style.setInherit(b);
+                    paraStyle.setInherit(b);
                 }
 
-                if (!style.getInherit()) {
+                if (!paraStyle.getInherit()) {
 
                     if ((b = getBooleanProperty(alignmentProperty + "_paragraph_" + styleName)) != null) {
-                        style.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
+                        paraStyle.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
                     }
                     if (!(d = getDoubleProperty(firstLineProperty + "_paragraph_" + styleName)).isNaN()) {
-                        style.setFirstLine(d.intValue());
+                        paraStyle.setFirstLine(d.intValue());
                     }
                     if (!((d = getDoubleProperty(runoversProperty + "_paragraph_" + styleName)).isNaN())) {
-                        style.setRunovers(d.intValue());
+                        paraStyle.setRunovers(d.intValue());
                     }
                     if (!((d = getDoubleProperty(linesAboveProperty + "_paragraph_" + styleName)).isNaN())) {
-                        style.setLinesAbove(d.intValue());
+                        paraStyle.setLinesAbove(d.intValue());
                     }
                     if (!((d = getDoubleProperty(linesBelowProperty + "_paragraph_" + styleName)).isNaN())) {
-                        style.setLinesBelow(d.intValue());
+                        paraStyle.setLinesBelow(d.intValue());
                     }
                 }
             }
         }
 
+        for (int i=0;i<characterStyles.size();i++) {
+
+            CharacterStyle charStyle = characterStyles.get(i);
+            String styleName = charStyle.getName();
+
+            if ((b = getBooleanProperty(inheritProperty + "_text_" + styleName)) != null) {
+                charStyle.setInherit(b);
+            }
+
+            if (!charStyle.getInherit()) {
+
+                if ((s = getStringProperty(boldProperty + "_text_" + styleName)) != null) {
+                    try {
+                        charStyle.setBoldface(TypefaceOption.valueOf(s));
+                    } catch (IllegalArgumentException ex) {
+                        logger.log(Level.SEVERE, null, s + " is no valid special typeface option");
+                    }
+                }
+                if ((s = getStringProperty(italicProperty + "_text_" + styleName)) != null) {
+                    try {
+                        charStyle.setItalic(TypefaceOption.valueOf(s));
+                    } catch (IllegalArgumentException ex) {
+                        logger.log(Level.SEVERE, null, s + " is no valid special typeface option");
+                    }
+                }
+                if ((s = getStringProperty(underlineProperty + "_text_" + styleName)) != null) {
+                    try {
+                        charStyle.setUnderline(TypefaceOption.valueOf(s));
+                    } catch (IllegalArgumentException ex) {
+                        logger.log(Level.SEVERE, null, s + " is no valid special typeface option");
+                    }
+                }
+                if ((s = getStringProperty(capsProperty + "_text_" + styleName)) != null) {
+                    try {
+                        charStyle.setCapitals(TypefaceOption.valueOf(s));
+                    } catch (IllegalArgumentException ex) {
+                        logger.log(Level.SEVERE, null, s + " is no valid special typeface option");
+                    }
+                }
+            }
+        }
         
         int loadedSpecialSymbolsCount = loadedSettings.getSpecialSymbolsList().size();
         int defaultSpecialSymbolsCount = loadedSpecialSymbolsCount;
@@ -547,6 +598,10 @@ public class SettingsIO {
             loadedSettings.setDuplex(b);
         }
 
+        if ((b = getBooleanProperty(exportEightDotsProperty)) != null) {
+            loadedSettings.setEightDots(b);
+        }
+
         if (!(d = getDoubleProperty(exportNumberOfCellsPerLineProperty)).isNaN()) {
             loadedSettings.setCellsPerLine(d.intValue());
         }
@@ -603,6 +658,10 @@ public class SettingsIO {
 
         if ((b = getBooleanProperty(embossDuplexProperty)) != null) {
             loadedSettings.setDuplex(b);
+        }
+
+        if ((b = getBooleanProperty(embossEightDotsProperty)) != null) {
+            loadedSettings.setEightDots(b);
         }
 
         if ((b = getBooleanProperty(mirrorAlignProperty)) != null) {
@@ -675,6 +734,8 @@ public class SettingsIO {
         ArrayList<SpecialSymbol> specialSymbolsBeforeChange = settingsBeforeChange.getSpecialSymbolsList();
         ArrayList<ParagraphStyle> paragraphStylesAfterChange = settingsAfterChange.getParagraphStyles();
         ArrayList<ParagraphStyle> paragraphStylesBeforeChange = settingsBeforeChange.getParagraphStyles();
+        ArrayList<CharacterStyle> characterStylesAfterChange = settingsAfterChange.getCharacterStyles();
+        ArrayList<CharacterStyle> characterStylesBeforeChange = settingsBeforeChange.getCharacterStyles();
 
         for (int i=0;i<languages.size();i++) {
             setProperty(languageProperty + "_" + languages.get(i),
@@ -713,34 +774,62 @@ public class SettingsIO {
 
         for (int i=0;i<paragraphStylesBeforeChange.size();i++) {
 
-            ParagraphStyle styleAfterChange = paragraphStylesAfterChange.get(i);
-            ParagraphStyle styleBeforeChange = paragraphStylesBeforeChange.get(i);
-            String styleName = styleBeforeChange.getName();
+            ParagraphStyle paraStyleAfterChange = paragraphStylesAfterChange.get(i);
+            ParagraphStyle paraStyleBeforeChange = paragraphStylesBeforeChange.get(i);
+            String styleName = paraStyleBeforeChange.getName();
 
-            if (!styleBeforeChange.getAutomatic()) {
+            if (!paraStyleBeforeChange.getAutomatic()) {
 
                 setProperty(inheritProperty + "_paragraph_" + styleName,
-                            (styleAfterChange.getInherit()),
-                            (styleBeforeChange.getInherit()));
+                            (paraStyleAfterChange.getInherit()),
+                            (paraStyleBeforeChange.getInherit()));
 
-                if (!styleAfterChange.getInherit()) {
+                if (!paraStyleAfterChange.getInherit()) {
 
                     setProperty(alignmentProperty + "_paragraph_" + styleName,
-                                (styleAfterChange.getAlignment() == Alignment.CENTERED),
-                                (styleBeforeChange.getAlignment() == Alignment.CENTERED));
+                                (paraStyleAfterChange.getAlignment() == Alignment.CENTERED),
+                                (paraStyleBeforeChange.getAlignment() == Alignment.CENTERED));
                     setProperty(firstLineProperty + "_paragraph_" + styleName,
-                                styleAfterChange.getFirstLine(),
-                                styleBeforeChange.getFirstLine());
+                                paraStyleAfterChange.getFirstLine(),
+                                paraStyleBeforeChange.getFirstLine());
                     setProperty(runoversProperty + "_paragraph_" + styleName,
-                                styleAfterChange.getRunovers(),
-                                styleBeforeChange.getRunovers());
+                                paraStyleAfterChange.getRunovers(),
+                                paraStyleBeforeChange.getRunovers());
                     setProperty(linesAboveProperty + "_paragraph_" + styleName,
-                                styleAfterChange.getLinesAbove(),
-                                styleBeforeChange.getLinesAbove());
+                                paraStyleAfterChange.getLinesAbove(),
+                                paraStyleBeforeChange.getLinesAbove());
                     setProperty(linesBelowProperty + "_paragraph_" + styleName,
-                                styleAfterChange.getLinesBelow(),
-                                styleBeforeChange.getLinesBelow());
+                                paraStyleAfterChange.getLinesBelow(),
+                                paraStyleBeforeChange.getLinesBelow());
                 }
+            }
+        }
+
+        for (int i=0;i<characterStylesBeforeChange.size();i++) {
+
+            CharacterStyle charStyleAfterChange = characterStylesAfterChange.get(i);
+            CharacterStyle charStyleBeforeChange = characterStylesBeforeChange.get(i);
+            String styleName = charStyleBeforeChange.getName();
+
+            setProperty(inheritProperty + "_text_" + styleName,
+                        (charStyleAfterChange.getInherit()),
+                        (charStyleBeforeChange.getInherit()));
+
+            if (!charStyleAfterChange.getInherit()) {
+
+                setProperty(boldProperty + "_text_" + styleName,
+                            (charStyleAfterChange.getBoldface().name()),
+                            (charStyleBeforeChange.getBoldface().name()));
+                setProperty(italicProperty + "_text_" + styleName,
+                            (charStyleAfterChange.getItalic().name()),
+                            (charStyleBeforeChange.getItalic().name()));
+                setProperty(underlineProperty + "_text_" + styleName,
+                            (charStyleAfterChange.getUnderline().name()),
+                            (charStyleBeforeChange.getUnderline().name()));
+                setProperty(capsProperty + "_text_" + styleName,
+                            (charStyleAfterChange.getCapitals().name()),
+                            (charStyleBeforeChange.getCapitals().name()));
+
             }
         }
         
@@ -899,6 +988,9 @@ public class SettingsIO {
         setProperty(exportDuplexProperty,
                     settingsAfterChange.getDuplex(),
                     settingsBeforeChange.getDuplex());
+        setProperty(exportEightDotsProperty,
+                    settingsAfterChange.getEightDots(),
+                    settingsBeforeChange.getEightDots());
         setProperty(exportNumberOfCellsPerLineProperty,
                     settingsAfterChange.getCellsPerLine(),
                     settingsBeforeChange.getCellsPerLine());
@@ -940,6 +1032,9 @@ public class SettingsIO {
         setProperty(embossDuplexProperty,
                     settingsAfterChange.getDuplex(),
                     settingsBeforeChange.getDuplex());
+        setProperty(embossEightDotsProperty,
+                    settingsAfterChange.getEightDots(),
+                    settingsBeforeChange.getEightDots());
         setProperty(mirrorAlignProperty,
                     settingsAfterChange.getMirrorAlign(),
                     settingsBeforeChange.getMirrorAlign());

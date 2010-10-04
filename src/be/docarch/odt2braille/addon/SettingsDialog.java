@@ -76,6 +76,8 @@ import be.docarch.odt2braille.Settings.PageNumberPosition;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
+import be.docarch.odt2braille.CharacterStyle;
+import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 
 
 /**
@@ -83,12 +85,13 @@ import be.docarch.odt2braille.ParagraphStyle;
  * The dialog has 10 tabs:
  * <ul>
  * <li>General Settings</li>
+ * <li>Language Settings</li>
+ * <li>Typeface Settings</li>
  * <li>Paragraph Settings</li>
  * <li>Heading Settings</li>
  * <li>List Settings</li>
  * <li>Table Settings</li>
  * <li>Pagenumber Settings</li>
- * <li>Language Settings (only enabled if the document contains multiple languages)</li>
  * <li>Table of Contents Settings</li>
  * <li>Special Symbols Settings</li>
  * <li>Mathematics Settings</li>
@@ -108,19 +111,20 @@ public class SettingsDialog implements XItemListener,
 
     private final static short GENERAL_PAGE = 1;
     private final static short LANGUAGES_PAGE = 2;
-    private final static short PARAGRAPHS_PAGE = 3;
-    private final static short HEADINGS_PAGE = 4;
-    private final static short LISTS_PAGE = 5;
-    private final static short TABLES_PAGE = 6;
-    private final static short PAGENUMBERS_PAGE = 7;
-    private final static short TOC_PAGE = 8;
-    private final static short SPECIAL_SYMBOLS_PAGE = 9;
-    private final static short MATH_PAGE = 10;
+    private final static short TYPEFACE_PAGE = 3;
+    private final static short PARAGRAPHS_PAGE = 4;
+    private final static short HEADINGS_PAGE = 5;
+    private final static short LISTS_PAGE = 6;
+    private final static short TABLES_PAGE = 7;
+    private final static short PAGENUMBERS_PAGE = 8;
+    private final static short TOC_PAGE = 9;
+    private final static short SPECIAL_SYMBOLS_PAGE = 10;
+    private final static short MATH_PAGE = 11;
 
-    private final static short NUMBER_OF_PAGES = 10;
+    private final static short NUMBER_OF_PAGES = 11;
 
-    private boolean[] pagesEnabled = {true,true,true,true,true,true,true,true,true,true};
-    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false};
+    private boolean[] pagesEnabled = {true, true, true, true, true, true, true, true, true, true, true};
+    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false};
     private int currentPage = 1;
 
     private int currentHeadingLevel;
@@ -130,6 +134,7 @@ public class SettingsDialog implements XItemListener,
     private int selectedLanguagePos;
     private int selectedSpecialSymbolPos;
     private int selectedParagraphStylePos;
+    private int selectedCharacterStylePos;
     
     private ArrayList<String> allTranslationTables = null;
     private ArrayList<String> mainTranslationTables = null;
@@ -137,8 +142,10 @@ public class SettingsDialog implements XItemListener,
     private ArrayList<String> languages = null;
     private ArrayList<SpecialSymbol> specialSymbols = null;
     private ArrayList<ParagraphStyle> paragraphStyles = null;
+    private ArrayList<CharacterStyle> characterStyles = null;
     private ArrayList<MathType> mathTypes = null;
     private ArrayList<Alignment>alignmentOptions = null;
+    private ArrayList<TypefaceOption>typefaceOptions = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -175,6 +182,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_backButton = null;
 
     private TreeMap<Alignment,String> L10N_alignment = new TreeMap();
+    private TreeMap<TypefaceOption,String> L10N_typeface = new TreeMap();
 
     // General Page
 
@@ -255,6 +263,45 @@ public class SettingsDialog implements XItemListener,
     private String L10N_eightDotsLabel = null;
 
     private TreeMap<String,String> L10N_languages = new TreeMap();
+
+    // Typeface Page
+
+    private XListBox characterStyleListBox = null;
+    private XCheckBox characterInheritCheckBox = null;
+    private XTextComponent characterParentField = null;
+    private XListBox characterBoldfaceListBox = null;
+    private XListBox characterItalicListBox = null;
+    private XListBox characterUnderlineListBox = null;
+    private XListBox characterCapitalsListBox = null;
+
+    private XPropertySet characterInheritCheckBoxProperties = null;
+    private XPropertySet characterParentFieldProperties = null;
+    private XPropertySet characterBoldfaceListBoxProperties = null;
+    private XPropertySet characterItalicListBoxProperties = null;
+    private XPropertySet characterUnderlineListBoxProperties = null;
+    private XPropertySet characterCapitalsListBoxProperties = null;
+
+    private static String _characterStyleListBox = "ListBox28";
+    private static String _characterInheritCheckBox = "CheckBox24";
+    private static String _characterParentField = "TextField11";
+    private static String _characterBoldfaceListBox = "ListBox29";
+    private static String _characterItalicListBox = "ListBox27";
+    private static String _characterUnderlineListBox = "ListBox31";
+    private static String _characterCapitalsListBox = "ListBox30";
+
+    private static String _characterStyleLabel = "Label90";
+    private static String _characterInheritLabel = "Label91";
+    private static String _characterBoldfaceLabel = "Label85";
+    private static String _characterItalicLabel = "Label89";
+    private static String _characterUnderlineLabel = "Label87";
+    private static String _characterCapitalsLabel = "Label86";
+
+    private String L10N_characterStyleLabel = null;
+    private String L10N_characterInheritLabel = null;
+    private String L10N_characterBoldfaceLabel = null;
+    private String L10N_characterItalicLabel = null;
+    private String L10N_characterUnderlineLabel = null;
+    private String L10N_characterCapitalsLabel = null;
 
     // Paragraphs Page
 
@@ -728,6 +775,7 @@ public class SettingsDialog implements XItemListener,
         languages = settings.getLanguages();
         mathTypes = new ArrayList(Arrays.asList(MathType.values()));
         alignmentOptions = new ArrayList(Arrays.asList(Alignment.values()));
+        typefaceOptions = new ArrayList(Arrays.asList(TypefaceOption.values()));
 
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
         pagesEnabled[PARAGRAPHS_PAGE-1] = settings.getParagraphsPresent();
@@ -743,12 +791,13 @@ public class SettingsDialog implements XItemListener,
         L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("settingsDialogTitle");
         L10N_roadmapTitle = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("settingsRoadmapTitle");
         L10N_roadmapLabels[GENERAL_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("generalSettingsPageTitle");
+        L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageSettingsPageTitle");
+        L10N_roadmapLabels[TYPEFACE_PAGE-1] = "Special Typeface";
         L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paragraphSettingsPageTitle");
         L10N_roadmapLabels[HEADINGS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("headingSettingsPageTitle");
         L10N_roadmapLabels[LISTS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("listSettingsPageTitle");
         L10N_roadmapLabels[TABLES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableSettingsPageTitle");
         L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("pagenumberSettingsPageTitle");
-        L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageSettingsPageTitle");
         L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsSettingsPageTitle");
         L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsSettingsPageTitle");
         L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mathSettingsPageTitle");
@@ -769,6 +818,21 @@ public class SettingsDialog implements XItemListener,
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
         L10N_preliminaryVolumeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryVolumeLabel");
         L10N_hyphenateLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hyphenateLabel");
+
+        // Languages Page
+
+        L10N_translationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
+        L10N_gradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
+        L10N_eightDotsLabel = "Use 8-dot Braille";
+
+        // Typeface Page
+
+        L10N_characterStyleLabel = "Style";
+        L10N_characterInheritLabel = "Inherit from parent style:";
+        L10N_characterBoldfaceLabel = "Boldface";
+        L10N_characterItalicLabel = "Italic";
+        L10N_characterUnderlineLabel = "Underline";
+        L10N_characterCapitalsLabel = "Capitals";
 
         // Paragraphs Page
 
@@ -834,12 +898,6 @@ public class SettingsDialog implements XItemListener,
         L10N_top = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
         L10N_bottom = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
 
-        // Languages Page
-
-        L10N_translationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
-        L10N_gradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_eightDotsLabel = "Use 8-dot Braille";
-
         // Table of Contents Page
 
         L10N_tableOfContentsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsLabel");
@@ -884,6 +942,10 @@ public class SettingsDialog implements XItemListener,
         L10N_alignment.put(Alignment.LEFT,     ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left"));
         L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("center"));
         L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right"));
+
+        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, "Follow print");
+        L10N_typeface.put(TypefaceOption.YES,          "Yes");
+        L10N_typeface.put(TypefaceOption.NO,           "No");
 
         String key = null;
         String value = null;
@@ -936,7 +998,7 @@ public class SettingsDialog implements XItemListener,
 
         treeSet = new TreeSet(new Comparator() {
             public int compare(Object style1, Object style2) {
-                return ((ParagraphStyle) style1).compareTo(style2);
+                return ((Style) style1).compareTo(style2);
             }
         });
 
@@ -949,6 +1011,19 @@ public class SettingsDialog implements XItemListener,
                 paragraphStyles.add(0, style);
             } else if (!style.getAutomatic()) {
                 paragraphStyles.add(style);
+            }
+        }
+
+        characterStyles = new ArrayList();
+        treeSet.clear();
+        treeSet.addAll(settings.getCharacterStyles());
+        CharacterStyle style2 = null;
+        for (Iterator i = treeSet.iterator(); i.hasNext();) {
+            style2 = (CharacterStyle)i.next();
+            if (style2.getName().equals("Default")) {
+                characterStyles.add(0, style2);
+            } else {
+                characterStyles.add(style2);
             }
         }
 
@@ -1022,6 +1097,34 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_preliminaryVolumeCheckBox));
         hyphenateCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_hyphenateCheckBox));
+
+        // Languages Page
+
+        translationTableListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_translationTableListBox));
+        gradeListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_gradeListBox));
+        eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_eightDotsCheckBox));
+        languagesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_languagesListBox));
+
+        // Typeface Page
+
+        characterStyleListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_characterStyleListBox));
+        characterInheritCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_characterInheritCheckBox));
+        characterParentField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_characterParentField));
+        characterBoldfaceListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_characterBoldfaceListBox));
+        characterItalicListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_characterItalicListBox));
+        characterUnderlineListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_characterUnderlineListBox));
+        characterCapitalsListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_characterCapitalsListBox));
 
         // Paragraphs Page
 
@@ -1134,17 +1237,6 @@ public class SettingsDialog implements XItemListener,
         hardPageBreaksCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_hardPageBreaksCheckBox));
 
-        // Languages Page
-
-        translationTableListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_translationTableListBox));
-        gradeListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_gradeListBox));
-        eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_eightDotsCheckBox));
-        languagesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_languagesListBox));
-
         // Table of Contents Page
 
         tableOfContentsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
@@ -1225,6 +1317,28 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, transcriptionInfoCheckBox)).getModel());
         preliminaryVolumeCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, preliminaryVolumeCheckBox)).getModel());
+
+        // Languages Page
+
+        gradeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, gradeListBox)).getModel());
+        eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
+
+        // Typeface Page
+
+        characterInheritCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterInheritCheckBox)).getModel());
+        characterParentFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterParentField)).getModel());
+        characterBoldfaceListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterBoldfaceListBox)).getModel());
+        characterItalicListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterItalicListBox)).getModel());
+        characterUnderlineListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterUnderlineListBox)).getModel());
+        characterCapitalsListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, characterCapitalsListBox)).getModel());
 
         // Paragraphs Page
 
@@ -1322,13 +1436,6 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtTopOnSepLineCheckBox)).getModel());
         numbersAtBottomOnSepLineCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtBottomOnSepLineCheckBox)).getModel());
-
-        // Languages Page
-
-        gradeListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, gradeListBox)).getModel());
-        eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
 
         // Table of Contents Page
 
@@ -1471,6 +1578,7 @@ public class SettingsDialog implements XItemListener,
         mainGradeListBox.addItemListener(this);
         paragraphAlignmentListBox.addItemListener(this);
         paragraphStyleListBox.addItemListener(this);
+        characterStyleListBox.addItemListener(this);
         headingAlignmentListBox.addItemListener(this);
         headingLevelListBox.addItemListener(this);
         listAlignmentListBox.addItemListener(this);
@@ -1493,6 +1601,7 @@ public class SettingsDialog implements XItemListener,
         specialSymbolsMode3RadioButton.addItemListener(this);
 
         paragraphInheritCheckBox.addItemListener(this);
+        characterInheritCheckBox.addItemListener(this);
         braillePageNumbersCheckBox.addItemListener(this);
         braillePageNumberAtListBox.addItemListener(this);
         printPageNumbersCheckBox.addItemListener(this);
@@ -1579,6 +1688,30 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_preliminaryVolumeLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hyphenateLabel));
         xFixedText.setText(L10N_hyphenateLabel);
+
+        // Languages Page
+
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_translationTableLabel));
+        xFixedText.setText(L10N_translationTableLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_gradeLabel));
+        xFixedText.setText(L10N_gradeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
+        xFixedText.setText(L10N_eightDotsLabel);
+
+        // Typeface Page
+
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterStyleLabel));
+        xFixedText.setText(L10N_characterStyleLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterInheritLabel));
+        xFixedText.setText(L10N_characterInheritLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterBoldfaceLabel));
+        xFixedText.setText(L10N_characterBoldfaceLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterItalicLabel));
+        xFixedText.setText(L10N_characterItalicLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterUnderlineLabel));
+        xFixedText.setText(L10N_characterUnderlineLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_characterCapitalsLabel));
+        xFixedText.setText(L10N_characterCapitalsLabel);
 
         // Paragraphs Page
 
@@ -1685,15 +1818,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hardPageBreaksLabel));
         xFixedText.setText(L10N_hardPageBreaksLabel);
 
-        // Languages Page
-
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_translationTableLabel));
-        xFixedText.setText(L10N_translationTableLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_gradeLabel));
-        xFixedText.setText(L10N_gradeLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
-        xFixedText.setText(L10N_eightDotsLabel);
-
         // Table of Contents Page
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsLabel));
@@ -1786,6 +1910,28 @@ public class SettingsDialog implements XItemListener,
             updateEightDotsCheckBox();
 
             updateLanguagesPageFieldProperties();
+
+        }
+
+        if (pagesEnabled[TYPEFACE_PAGE-1]) {
+
+            for (int i=0; i<characterStyles.size(); i++) {
+                characterStyleListBox.addItem(characterStyles.get(i).getDisplayName(), (short)i);
+            }
+            selectedCharacterStylePos = 0;
+            characterStyleListBox.selectItemPos((short) selectedCharacterStylePos, true);
+
+            for (int i=0; i<typefaceOptions.size(); i++) {
+                characterBoldfaceListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
+                characterItalicListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
+                characterUnderlineListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
+                characterCapitalsListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
+            }
+
+            characterParentFieldProperties.setPropertyValue("Enabled", false);
+
+            updateTypefacePageFieldValues();
+            updateTypefacePageFieldProperties();
 
         }
 
@@ -2042,6 +2188,10 @@ public class SettingsDialog implements XItemListener,
 
         }
 
+        if (pagesVisited[LANGUAGES_PAGE-1]) {}
+
+        if (pagesVisited[TYPEFACE_PAGE-1]) { saveTypefacePageFieldValues(); }
+
         if (pagesVisited[PARAGRAPHS_PAGE-1]) { saveParagraphsPageFieldValues(); }
 
         if (pagesVisited[HEADINGS_PAGE-1]) { saveHeadingsPageFieldValues(); }
@@ -2072,8 +2222,6 @@ public class SettingsDialog implements XItemListener,
             settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
 
         }
-
-        if (pagesVisited[LANGUAGES_PAGE-1]) {}
 
         if (pagesVisited[TOC_PAGE-1]) {
 
@@ -2134,6 +2282,28 @@ public class SettingsDialog implements XItemListener,
         mainEightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(settings.getMainLanguage()).size()>1);
         creatorFieldProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoEnabled());
         transcribersNotesPageFieldProperties.setPropertyValue("Enabled", settings.getTranscribersNotesPageEnabled());
+
+    }
+
+    private void updateLanguagesPageFieldProperties() throws com.sun.star.uno.Exception {
+
+        gradeListBoxProperties.setPropertyValue("Enabled", settings.getGrade(languages.get(selectedLanguagePos)) > -1);
+        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(languages.get(selectedLanguagePos)).size() > 1);
+
+    }
+
+    private void updateTypefacePageFieldProperties() throws com.sun.star.uno.Exception {
+
+        CharacterStyle style = characterStyles.get(selectedCharacterStylePos);
+
+        boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
+        boolean inherit = style.getInherit();
+
+        characterInheritCheckBoxProperties.setPropertyValue("Enabled", style.getParentStyle() != null && !bana);
+        characterBoldfaceListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
+        characterItalicListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
+        characterUnderlineListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
+        characterCapitalsListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
 
     }
 
@@ -2237,13 +2407,6 @@ public class SettingsDialog implements XItemListener,
 
     }
 
-    private void updateLanguagesPageFieldProperties() throws com.sun.star.uno.Exception {
-
-        gradeListBoxProperties.setPropertyValue("Enabled", settings.getGrade(languages.get(selectedLanguagePos)) > -1);
-        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(languages.get(selectedLanguagePos)).size() > 1);
-
-    }
-
     private void updateTableOfContentsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean enabled = settings.getTableOfContentEnabled();
@@ -2285,6 +2448,35 @@ public class SettingsDialog implements XItemListener,
 
     }
 
+    private void updateTypefacePageFieldValues() {
+
+        CharacterStyle style = characterStyles.get(selectedCharacterStylePos);
+
+        characterInheritCheckBox.removeItemListener(this);
+
+        characterInheritCheckBox.setState((short)(style.getInherit()?1:0));
+        characterParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
+        characterBoldfaceListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getBoldface())), true);
+        characterItalicListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getItalic())), true);
+        characterUnderlineListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getUnderline())), true);
+        characterCapitalsListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getCapitals())), true);
+
+        characterInheritCheckBox.addItemListener(this);
+
+    }
+    
+    private void saveTypefacePageFieldValues() {
+
+        CharacterStyle style = characterStyles.get(selectedCharacterStylePos);
+
+        if (!style.getInherit()) {
+            style.setBoldface(typefaceOptions.get((int)characterBoldfaceListBox.getSelectedItemPos()));
+            style.setItalic(typefaceOptions.get((int)characterItalicListBox.getSelectedItemPos()));
+            style.setUnderline(typefaceOptions.get((int)characterUnderlineListBox.getSelectedItemPos()));
+            style.setCapitals(typefaceOptions.get((int)characterCapitalsListBox.getSelectedItemPos()));
+        }
+    }
+
     private void updateParagraphsPageFieldValues() {
 
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
@@ -2293,7 +2485,7 @@ public class SettingsDialog implements XItemListener,
         paragraphInheritCheckBox.removeItemListener(this);
         paragraphAlignmentListBox.removeItemListener(this);
 
-        paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));        
+        paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));
         paragraphParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
         paragraphLinesAboveField.setValue((double)style.getLinesAbove());
         paragraphLinesBelowField.setValue((double)style.getLinesBelow());
@@ -2623,6 +2815,7 @@ public class SettingsDialog implements XItemListener,
                     }
                 }
 
+                if (pagesEnabled[TYPEFACE_PAGE-1])    { updateTypefacePageFieldProperties();        }
                 if (pagesEnabled[PARAGRAPHS_PAGE-1])  { updateParagraphsPageFieldProperties();      }
                 if (pagesEnabled[HEADINGS_PAGE-1])    { updateHeadingsPageFieldProperties();        }
                 if (pagesEnabled[LISTS_PAGE-1])       { updateListsPageFieldProperties();           }
@@ -2653,6 +2846,42 @@ public class SettingsDialog implements XItemListener,
                         }
 
                         updateGeneralPageFieldProperties();
+                        break;
+
+                    case LANGUAGES_PAGE:
+
+                        if (source.equals(translationTableListBox)) {
+                            settings.setTranslationTable(allTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
+                                                         languages.get(selectedLanguagePos));
+                            updateGradeListBox();
+                            updateEightDotsCheckBox();
+                        } else if (source.equals(gradeListBox)) {
+                            settings.setGrade(Integer.parseInt(gradeListBox.getSelectedItem()), languages.get(selectedLanguagePos));
+                            updateEightDotsCheckBox();
+                        } else if (source.equals(eightDotsCheckBox)) {
+                            settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, languages.get(selectedLanguagePos));
+                        } else if (source.equals(languagesListBox)) {
+                            selectedLanguagePos = (int)languagesListBox.getSelectedItemPos();
+                            updateTranslationTableListBox();
+                            updateGradeListBox();
+                            updateEightDotsCheckBox();
+                        }
+
+                        updateLanguagesPageFieldProperties();
+                        break;
+
+                    case TYPEFACE_PAGE:
+
+                        saveTypefacePageFieldValues();
+
+                        if (source.equals(characterStyleListBox)) {
+                            selectedCharacterStylePos = (int)characterStyleListBox.getSelectedItemPos();
+                        } else if (source.equals(characterInheritCheckBox)) {
+                            characterStyles.get(selectedCharacterStylePos).setInherit(characterInheritCheckBox.getState()==(short)1);
+                        }
+
+                        updateTypefacePageFieldValues();
+                        updateTypefacePageFieldProperties();
                         break;
 
                     case PARAGRAPHS_PAGE:
@@ -2756,28 +2985,6 @@ public class SettingsDialog implements XItemListener,
                         }
                         
                         updatePageNumbersPageFieldProperties();
-                        break;
-
-                    case LANGUAGES_PAGE:
-
-                        if (source.equals(translationTableListBox)) {
-                            settings.setTranslationTable(allTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
-                                                         languages.get(selectedLanguagePos));
-                            updateGradeListBox();
-                            updateEightDotsCheckBox();
-                        } else if (source.equals(gradeListBox)) {
-                            settings.setGrade(Integer.parseInt(gradeListBox.getSelectedItem()), languages.get(selectedLanguagePos));
-                            updateEightDotsCheckBox();
-                        } else if (source.equals(eightDotsCheckBox)) {
-                            settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, languages.get(selectedLanguagePos));
-                        } else if (source.equals(languagesListBox)) {
-                            selectedLanguagePos = (int)languagesListBox.getSelectedItemPos();
-                            updateTranslationTableListBox();
-                            updateGradeListBox();
-                            updateEightDotsCheckBox();
-                        }
-
-                        updateLanguagesPageFieldProperties();
                         break;
 
                     case TOC_PAGE:
@@ -2897,6 +3104,8 @@ public class SettingsDialog implements XItemListener,
                 switch (currentPage) {
 
                     case GENERAL_PAGE:
+                    case LANGUAGES_PAGE:
+                    case TYPEFACE_PAGE:
                     case PARAGRAPHS_PAGE:
                     case HEADINGS_PAGE: break;
                     case LISTS_PAGE:
@@ -2926,8 +3135,7 @@ public class SettingsDialog implements XItemListener,
 
                         break;
 
-                    case PAGENUMBERS_PAGE:
-                    case LANGUAGES_PAGE: break;
+                    case PAGENUMBERS_PAGE: break;
                     case TOC_PAGE:
 
                         if (source.equals(tableOfContentsLineFillButton)) {

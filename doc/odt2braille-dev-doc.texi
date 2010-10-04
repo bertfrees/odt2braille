@@ -70,8 +70,6 @@ Now relaunch NetBeans and
 configure the plugin in [@emph{Tools > Options > Miscellaneous > OOo API Plugin}]
 by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK folder.
 
-[@@TODO] NetBeans with OpenOffice.org API plugin may be replaced by Eclipse with OOEclipse plugin.
-
 @unnumberedsec Odt2braille Source Code
 
 The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
@@ -299,6 +297,10 @@ Finally, in @code{be.docarch.odt2braille.Settings}, the functions
 need adjustments.
 @end itemize
 
+@unnumberedsec Building xml2brl on Windows
+
+@unnumberedsec Adding hyphenation tables
+
 @node Task list
 @chapter Task list
 
@@ -332,12 +334,6 @@ More flexibility - provide more settings!
 	Bibliography
 	@item
 	Special symbols: knop om default waarde van special symbol in te stellen => getDefaultSpecialSymbol(SpecialSymbolType type, String language)
-	@item
-		Voor elke (paragraph) stijl: gebruiker kan formatting parameters instellen (Feature request 3058074).
-		=> geen effect op headings, captions, listitems, notes, table cells, title page ?
-		=> default = overerven, keuze aan gebruiker
-		(Voor elke (paragraph / character) stijl: gebruiker kan aangeven of special typeface moet overgenomen of genegeerd worden.)
-		(=> effect op headings ?)
 	@end itemize
 @item
 Mac OS, Linux, ... !!! (wachten op Debian, Ubuntu, Fink)
@@ -348,11 +344,6 @@ Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?)
 @item
 odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog niet ondersteund worden.
 @item
-Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
-	=> OOo crasht (Windows XP) bij oproepen van dialoogvenster
-@item
-Mac OS: crasht bij laden van settings
-@item
 Voor Ubuntu: OOo 3.2.1 nodig ?
 @item
 Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen.
@@ -360,7 +351,7 @@ Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijve
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* Talen
 	* Styles (in het begin: nodig voor analyse door Settings)
-	* Lege paragrafen (ook indien er lege span inzit), ...
+	* Lege paragrafen en lege spans verwijderen, ...
 	* Secties verwijderen
 	* Paginanummering
 	* Lijstnummering & bullets
@@ -370,9 +361,9 @@ Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (e
 	* Titel pagina
 	* Special typeface
 	* Splitsen in volumes (pas op einde)
-(=> Vincent Spiewak is rewriting JODL in XSLT 2.0)
+(=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
 @item
-Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft upgedate.
+Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate.
 @item
 Voor elke nieuwe release: localisatie bijwerken
 @item
@@ -383,8 +374,6 @@ Javadoc bijwerken.
 Only Interpoint55 is tested.
 @item
 Tooltips in dialogs.
-@item
-Howto handle unknown characters? (-> now: dots 3456) (-> "undefined" opcode ?)
 @item
 Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (braille-only material). TN => settings!
 @item
@@ -425,10 +414,6 @@ Varia
 	text:list-item[@@text:style-override] ?
 	@item
 	Images are omitted in Braille if they are anchored to a page => alert?
-	@item
-	Special-typeface.
-	Er wordt enkel gekeken naar @@style:style-name ( + @@fo:font-style en @@fo:font-weight) en @@style:parent-style-name (in het geval van Emphasis en Strong_20_Emphasis).
-	Todo: tot aan top-stijl gaan om stijl te achterhalen => recursief.
 	@item
 	Pagenum inside notesection ?
 	@item

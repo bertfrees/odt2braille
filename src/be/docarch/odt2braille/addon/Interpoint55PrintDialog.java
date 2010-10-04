@@ -19,46 +19,43 @@
 
 package be.docarch.odt2braille.addon;
 
-import com.sun.star.uno.XComponentContext;
-import com.sun.star.awt.XListBox;
-import com.sun.star.awt.XDialog;
-import com.sun.star.awt.XControlContainer;
-import com.sun.star.awt.PushButtonType;
-import com.sun.star.lang.XComponent;
-import com.sun.star.awt.XButton;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.awt.XDialogProvider2;
-import com.sun.star.awt.DialogProvider2;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.beans.XPropertySet;
-import com.sun.star.awt.XControl;
-import com.sun.star.awt.XFixedText;
-import com.sun.star.awt.XTextComponent;
-import com.sun.star.awt.XCheckBox;
-import com.sun.star.awt.XActionListener;
-import com.sun.star.awt.ActionEvent;
-import com.sun.star.lang.EventObject;
-import com.sun.star.ui.dialogs.XFolderPicker;
-import com.sun.star.ui.dialogs.XExecutableDialog;
-import com.sun.star.lang.XMultiComponentFactory;
-//import com.sun.star.beans.XPropertyContainer;
-//import com.sun.star.beans.XPropertySetInfo;
-
-import java.io.File;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.Writer;
 import java.io.InputStreamReader;
 import java.io.FileInputStream;
 import java.io.BufferedReader;
-//import java.io.OutputStreamWriter;
-//import java.io.FileOutputStream;
-//import org.apache.commons.io.IOUtils;
+
+import com.sun.star.uno.XComponentContext;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.EventObject;
+import com.sun.star.lang.XMultiComponentFactory;
+import com.sun.star.ui.dialogs.XFolderPicker;
+import com.sun.star.ui.dialogs.XExecutableDialog;
+import com.sun.star.awt.XListBox;
+import com.sun.star.awt.XDialog;
+import com.sun.star.awt.XControlContainer;
+import com.sun.star.awt.PushButtonType;
+import com.sun.star.awt.XControl;
+import com.sun.star.awt.XFixedText;
+import com.sun.star.awt.XTextComponent;
+import com.sun.star.awt.XCheckBox;
+import com.sun.star.awt.XActionListener;
+import com.sun.star.awt.ActionEvent;
+import com.sun.star.awt.XButton;
+import com.sun.star.awt.XDialogProvider2;
+import com.sun.star.awt.DialogProvider2;
+import com.sun.star.awt.XItemListener;
+import com.sun.star.awt.ItemEvent;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.deployment.XPackageInformationProvider;
+import com.sun.star.beans.XPropertySet;
 
 import java.io.IOException;
 
@@ -79,7 +76,8 @@ import be.docarch.odt2braille.Settings;
  *
  * @author      Bert Frees
  */
-public class Interpoint55PrintDialog implements XActionListener {
+public class Interpoint55PrintDialog implements XActionListener,
+                                                XItemListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
@@ -94,51 +92,51 @@ public class Interpoint55PrintDialog implements XActionListener {
 
     private XFolderPicker xFolderPicker = null;
 
-    private XTextComponent brfField = null;
     private XTextComponent wp55Field = null;
     private XListBox iniListBox = null;
     private XCheckBox overWriteCheckBox = null;
+    private XCheckBox printToFileCheckBox = null;
     private XButton okButton = null;
     private XButton cancelButton = null;
-    private XButton searchBrfButton = null;
     private XButton searchWp55Button = null;
 
     private XPropertySet windowProperties = null;
     private XPropertySet okButtonProperties = null;
+    private XPropertySet iniListBoxProperties = null;
+    private XPropertySet wp55FieldProperties = null;
+    private XPropertySet searchWp55ButtonProperties = null;
+    private XPropertySet overWriteCheckBoxProperties = null;
 
-    private static String _brfField = "TextField1";
     private static String _wp55Field = "TextField2";
     private static String _iniListBox = "ListBox1";
     private static String _overWriteCheckBox = "CheckBox1";
+    private static String _printToFileCheckBox = "CheckBox2";
     private static String _okButton = "CommandButton1";
     private static String _cancelButton = "CommandButton2";
-    private static String _searchBrfButton = "CommandButton3";
     private static String _searchWp55Button = "CommandButton4";
-    private static String _brfLabel = "Label1";
+
     private static String _wp55Label = "Label2";
     private static String _iniLabel = "Label3";
     private static String _overWriteLabel = "Label4";
+    private static String _printToFileLabel = "Label5";
 
-    private static String L10N_brfLabel = null;
-    private static String L10N_wp55Label = null;
-    private static String L10N_iniLabel = null;
-    private static String L10N_overWriteLabel = null;
-    private static String L10N_okButton = null;
-    private static String L10N_cancelButton = null;
-    private static String L10N_searchBrfButton = "...";
-    private static String L10N_searchWp55Button = "...";
-    private static String L10N_windowTitle = null;
+    private String L10N_wp55Label = null;
+    private String L10N_iniLabel = null;
+    private String L10N_overWriteLabel = null;
+    private String L10N_printToFileLabel = null;
+    private String L10N_okButton = null;
+    private String L10N_cancelButton = null;
+    private String L10N_searchWp55Button = null;
+    private String L10N_windowTitle = null;
 
     private static String L10N_Default_BRF_Filename = null;
 
     private String wp55FolderUrl = "C:\\Program Files\\Interpoint\\wprint55";
     private File wp55File = new File(wp55FolderUrl + System.getProperty("file.separator") + "WP55.exe");
-    private File brfFile = null;
-    private String brfFileName = null;
-    private String brfUrl = null;
     private File iniFile = null;
     private String iniFileName = null;
     private boolean overWriteIniFile = false;
+    private boolean printToFile = false;
     
 
     /**
@@ -174,16 +172,14 @@ public class Interpoint55PrintDialog implements XActionListener {
             oooLocale = Locale.getDefault();
         }
 
-        L10N_brfLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("brfLabel") + ":";
         L10N_wp55Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("wp55Label") + ":";
         L10N_iniLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("iniLabel") + ":";
         L10N_overWriteLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("overWriteLabel");
-
+        L10N_printToFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printToFileLabel");
+        L10N_searchWp55Button = "...";
         L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossButton");
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("cancelButton");
         L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("interpoint55EmbossDialogTitle");
-
-        L10N_Default_BRF_Filename = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("defaultExportFilename") + ".brf";
 
         xFolderPicker = (XFolderPicker) UnoRuntime.queryInterface(XFolderPicker.class,
                 xMCF.createInstanceWithContext("com.sun.star.ui.dialogs.FolderPicker", xContext));
@@ -196,20 +192,18 @@ public class Interpoint55PrintDialog implements XActionListener {
         xControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, xDialog);
         xComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, xDialog);
 
-        brfField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                            xControlContainer.getControl(_brfField));
         wp55Field = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                             xControlContainer.getControl(_wp55Field));
         iniListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                             xControlContainer.getControl(_iniListBox));
         overWriteCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                             xControlContainer.getControl(_overWriteCheckBox));
+        printToFileCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                            xControlContainer.getControl(_printToFileCheckBox));
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                             xControlContainer.getControl(_okButton));
         cancelButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                             xControlContainer.getControl(_cancelButton));
-        searchBrfButton = (XButton) UnoRuntime.queryInterface(XButton.class,
-                            xControlContainer.getControl(_searchBrfButton));
         searchWp55Button = (XButton) UnoRuntime.queryInterface(XButton.class,
                             xControlContainer.getControl(_searchWp55Button));
 
@@ -217,6 +211,14 @@ public class Interpoint55PrintDialog implements XActionListener {
                 ((XControl)UnoRuntime.queryInterface(XControl.class, xDialog)).getModel());
         okButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, okButton)).getModel());
+        iniListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, iniListBox)).getModel());
+        wp55FieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, wp55Field)).getModel());
+        searchWp55ButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, searchWp55Button)).getModel());
+        overWriteCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, overWriteCheckBox)).getModel());
 
     }
 
@@ -226,9 +228,9 @@ public class Interpoint55PrintDialog implements XActionListener {
      */
     private void addActionListeners() {
 
-        searchBrfButton.addActionListener(this);
         searchWp55Button.addActionListener(this);
         iniListBox.addActionListener(this);
+        printToFileCheckBox.addItemListener(this);
 
     }
 
@@ -253,7 +255,7 @@ public class Interpoint55PrintDialog implements XActionListener {
         xComponent.dispose();
         if (ret == ((short) PushButtonType.OK_value)) {
             saveEmbossSettings();
-            if (overWriteIniFile) {
+            if (overWriteIniFile && !printToFile) {
                 overWriteIniFile();
             }
             logger.exiting("Interpoint55PrintDialog", "execute");
@@ -265,26 +267,38 @@ public class Interpoint55PrintDialog implements XActionListener {
 
     }
 
+    public boolean getPrintToFile() {
+        return printToFile;
+    }
+
     /**
      * Run wprint55.
      *
      * @return          <code>true</code>
      */
-    public boolean runWPrint55() throws IOException {
+    public boolean runWPrint55(File brfFile)
+                        throws IOException {
 
         logger.entering("Interpoint55PrintDialog", "runWPrint55");
 
-        Runtime runtime = Runtime.getRuntime();
-        String exec_cmd[] = {"\"" + wp55File.getPath() + "\"", "\"" + brfFile.getPath() + "\"", "/config:" + iniFileName};
+        if (checkWp55FolderUrl() && brfFile.exists()) {
 
-        String message = "wp55:";
-        for (int i=0;i<exec_cmd.length;i++) {
-            message += "\n          " + exec_cmd[i];
+            Runtime runtime = Runtime.getRuntime();
+            String exec_cmd[] = {"\"" + wp55File.getPath() + "\"", "\"" + brfFile.getPath() + "\"", "/config:" + iniFileName};
+
+            String message = "wp55:";
+            for (int i=0;i<exec_cmd.length;i++) {
+                message += "\n          " + exec_cmd[i];
+            }
+
+            runtime.exec(exec_cmd);
+
+            logger.log(Level.INFO, message);
+            
+        } else {
+            logger.log(Level.INFO, wp55File.getPath() + " is not executable");
         }
 
-        runtime.exec(exec_cmd);
-        
-        logger.log(Level.INFO, message);
         logger.exiting("Interpoint55PrintDialog", "runWPrint55");
 
         return true;
@@ -303,21 +317,17 @@ public class Interpoint55PrintDialog implements XActionListener {
 
         okButton.setLabel(L10N_okButton);
         cancelButton.setLabel(L10N_cancelButton);
-        searchBrfButton.setLabel(L10N_searchBrfButton);
         searchWp55Button.setLabel(L10N_searchWp55Button);
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
-                xControlContainer.getControl(_brfLabel));
-        xFixedText.setText(L10N_brfLabel);
-
+                        xControlContainer.getControl(_printToFileLabel));
+        xFixedText.setText(L10N_printToFileLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                 xControlContainer.getControl(_wp55Label));
         xFixedText.setText(L10N_wp55Label);
-
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                 xControlContainer.getControl(_iniLabel));
         xFixedText.setText(L10N_iniLabel);
-
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                 xControlContainer.getControl(_overWriteLabel));
         xFixedText.setText(L10N_overWriteLabel);
@@ -331,9 +341,13 @@ public class Interpoint55PrintDialog implements XActionListener {
     private void setDialogValues() throws com.sun.star.uno.Exception {
 
         okButtonProperties.setPropertyValue("Enabled", false);
-        brfField.setEditable(false);
         wp55Field.setEditable(false);
         overWriteCheckBox.setState((short)(overWriteIniFile?1:0));
+        printToFileCheckBox.setState((short)(printToFile?1:0));
+        iniListBoxProperties.setPropertyValue("Enabled", !printToFile);
+        wp55FieldProperties.setPropertyValue("Enabled", !printToFile);
+        searchWp55ButtonProperties.setPropertyValue("Enabled", !printToFile);
+        overWriteCheckBoxProperties.setPropertyValue("Enabled", !printToFile);
         updateWp55Field();
         updateIniListBox();
         updateOKButton();
@@ -390,14 +404,6 @@ public class Interpoint55PrintDialog implements XActionListener {
     }
 
     /**
-     * Update the .brf field.
-     *
-     */
-    private void updateBrfField() {
-        brfField.setText(brfFileName);
-    }
-
-    /**
      * Update the wprint55 field.
      *
      */
@@ -449,19 +455,8 @@ public class Interpoint55PrintDialog implements XActionListener {
      */
     private void updateOKButton() throws com.sun.star.uno.Exception {
 
-        if (brfUrl!=null && checkWp55FolderUrl() && iniFile!=null) {
-            okButtonProperties.setPropertyValue("Enabled", true);
-        } else {
-            okButtonProperties.setPropertyValue("Enabled", false);
-        }
-    }
+        okButtonProperties.setPropertyValue("Enabled", printToFile || (checkWp55FolderUrl() && iniFile != null));
 
-    /**
-     *
-     * @return    the location the user has precified for saving the .brf file.
-     */
-    public File getBrfFile() {
-        return brfFile;
     }
 
     /**
@@ -543,22 +538,7 @@ public class Interpoint55PrintDialog implements XActionListener {
 
             Object source = actionEvent.Source;
 
-            if (source.equals(searchBrfButton)) {
-
-                if (brfFileName==null) {brfFileName = L10N_Default_BRF_Filename;}
-                String brfUnoUrl = UnoAwtUtils.showSaveAsDialog(brfFileName, "Interpoint 55 Braille Formatted", "*.brf", xContext);
-                if (!brfUnoUrl.endsWith(".brf")) {
-                    brfUnoUrl = brfUnoUrl.concat(".brf");
-                }
-
-                brfUrl = UnoUtils.UnoURLtoURL(brfUnoUrl, xContext);
-                brfFile = new File(brfUrl);
-                brfFileName = brfFile.getName();
-
-                updateBrfField();
-                updateOKButton();
-
-            } else if (source.equals(searchWp55Button)) {
+            if (source.equals(searchWp55Button)) {
 
                 XComponent xFolderPickerComponent = (XComponent) UnoRuntime.queryInterface(XComponent.class, xFolderPicker);
                 XExecutableDialog xExecutable = (XExecutableDialog) UnoRuntime.queryInterface(XExecutableDialog.class, xFolderPicker);
@@ -582,6 +562,30 @@ public class Interpoint55PrintDialog implements XActionListener {
                 iniFileName = iniListBox.getSelectedItem();
                 iniFile = new File(wp55FolderUrl + System.getProperty("file.separator") + "Config" +
                                                    System.getProperty("file.separator") + iniFileName);
+                updateOKButton();
+
+            }
+
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void itemStateChanged(ItemEvent itemEvent) {
+
+        Object source = itemEvent.Source;
+
+        try {
+
+            if (source.equals(printToFileCheckBox)) {
+
+                printToFile = (printToFileCheckBox.getState() == (short) 1);
+
+                iniListBoxProperties.setPropertyValue("Enabled", !printToFile);
+                wp55FieldProperties.setPropertyValue("Enabled", !printToFile);
+                searchWp55ButtonProperties.setPropertyValue("Enabled", !printToFile);
+                overWriteCheckBoxProperties.setPropertyValue("Enabled", !printToFile);
+
                 updateOKButton();
 
             }

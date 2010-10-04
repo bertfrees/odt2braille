@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  15 SEP 2010 17:19
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  4 OCT 2010 10:44
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-dev-doc.texi
@@ -499,7 +499,7 @@ t2braille-dev-doc.toc) [-1]
 t2braille-dev-doc.toc)
 (C:\Users\freesb\Documents\NetBeansProjects\odt2braille\Odt2BrailleAddOn\doc\od
 t2braille-dev-doc.toc) (Introduction) Chapter 1 [1]
-Underfull \hbox (badness 10000) in paragraph at lines 96--98
+Underfull \hbox (badness 10000) in paragraph at lines 94--96
  []@texttt svn co https://odt2braille.svn.sourceforge.net/svnroot/odt2braille
 
 @hbox(7.60416+2.43333)x433.62
@@ -516,7 +516,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 96--98
 .etc.
 
 [2]
-Overfull \hbox (7.19888pt too wide) in paragraph at lines 179--181
+Overfull \hbox (7.19888pt too wide) in paragraph at lines 177--179
  []@textrm Javadoc: [][]@texttt http://java.sun.com/j2se/javadoc/downloads/inde
 x.html#findjavadoc[][][] 
 
@@ -534,15 +534,15 @@ x.html#findjavadoc[][][]
 .etc.
 
 Chapter 2 [3] Chapter 3 [4] Chapter 4 [5] Chapter 5 [6] [7]
-l.437: Unicode char @u8:“ not defined for Texinfo
-l.437: Unicode char @u8:” not defined for Texinfo
-l.438: Unicode char @u8:“ not defined for Texinfo
-l.438: Unicode char @u8:” not defined for Texinfo [8]
-l.454: Unicode char @u8:“ not defined for Texinfo
-l.454: Unicode char @u8:” not defined for Texinfo [9] ) 
+l.422: Unicode char @u8:“ not defined for Texinfo
+l.422: Unicode char @u8:” not defined for Texinfo
+l.423: Unicode char @u8:“ not defined for Texinfo
+l.423: Unicode char @u8:” not defined for Texinfo
+l.439: Unicode char @u8:“ not defined for Texinfo
+l.439: Unicode char @u8:” not defined for Texinfo [8] ) 
 Here is how much of TeX's memory you used:
- 2151 strings out of 497541
- 24542 string characters out of 3209714
+ 2150 strings out of 497541
+ 24541 string characters out of 3209714
  53349 words of memory out of 3000000
  3099 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
@@ -557,9 +557,9 @@ X 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2
 .8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.8
 /fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/f
 onts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-dev-doc.pdf (12 pages, 152559 bytes).
+Output written on odt2braille-dev-doc.pdf (11 pages, 151177 bytes).
 PDF statistics:
- 199 PDF objects out of 1000 (max. 8388607)
- 19 named destinations out of 1000 (max. 500000)
+ 194 PDF objects out of 1000 (max. 8388607)
+ 18 named destinations out of 1000 (max. 500000)
  165 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -320,7 +320,6 @@ public class UnoGUI {
         File pefFile = null;
         File brailleFile = null;
         String pefUrl = null;
-        String brailleUrl = null;
         String exportUrl = null;
         String exportUnoUrl = null;
         String fileType = null;
@@ -418,13 +417,12 @@ public class UnoGUI {
                 // Create temporary Braille file
                 brailleFile = File.createTempFile(TMP_NAME, brailleExt);
                 brailleFile.deleteOnExit();
-                brailleUrl = brailleFile.getAbsolutePath();
 
                 // Create HandlePEF entity
                 handlePef = new HandlePEF(pefUrl, changedSettings);
 
                 // Convert to Braille File
-                if(!handlePef.convertToFile(changedSettings.getBrailleFileType(), new File(brailleUrl))) {
+                if(!handlePef.convertToFile(changedSettings.getBrailleFileType(), brailleFile)) {
                     return false;
                 }
             }
@@ -617,18 +615,49 @@ public class UnoGUI {
             // Emboss Dialog
             if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
 
+                // Create temporary Braille file
+                File brailleFile = File.createTempFile(TMP_NAME, ".brf");
+                brailleFile.deleteOnExit();
+
                 Interpoint55PrintDialog interpoint55PrintDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, changedSettings);
 
                 if (!interpoint55PrintDialog.execute()) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
-
-                if(!handlePef.convertToFile(BrailleFileType.BRF_INTERPOINT, interpoint55PrintDialog.getBrfFile())) {
+                
+                if(!handlePef.convertToFile(BrailleFileType.BRF_INTERPOINT, brailleFile)) {
                     return false;
                 }
 
-                interpoint55PrintDialog.runWPrint55();
+                if (!interpoint55PrintDialog.getPrintToFile()) {
+
+                    // Launch Wprint 55
+                    interpoint55PrintDialog.runWPrint55(brailleFile);
+
+                } else {
+                    
+                    // Export brf file
+                    String brailleExt = ".brf";
+                    String fileType = "Interpoint 55 BRF";
+
+                    // Show Save As... Dialog:
+                    logger.entering("UnoAwtUtils", "showSaveAsDialog");
+                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+                    if (exportUnoUrl.length() < 1) {
+                        return false;
+                    }
+                    if (!exportUnoUrl.endsWith(brailleExt)) {
+                        exportUnoUrl = exportUnoUrl.concat(brailleExt);
+                    }
+                    String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+
+                    // Rename Braille file
+                    File newFile = new File(exportUrl);
+                    if (newFile.exists()) { newFile.delete(); }
+                    brailleFile.renameTo(newFile);
+
+                }
 
             } else {
 

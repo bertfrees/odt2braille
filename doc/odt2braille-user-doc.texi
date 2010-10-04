@@ -72,6 +72,8 @@ installation package and follow the steps. Finally, when the installation is fin
 
 You can download the latest version of odt2braille from @url{http://odt2braille.@/sourceforge.@/net/@/downloads.html}.
 
+@note{Make sure the installation package is an @emph{.oxt} file. It might happen that it is downloaded as a @emph{.zip} file instead. In this case, just rename the file.}
+
 @heading OpenOffice.org Accessibility
 
 OpenOffice.org is poorly accessible with traditional screen readers on Windows. 
@@ -1136,7 +1138,7 @@ Quick guide
 					In the @emph{Condition} field, enter @kbd{TRUE}.
 				@end itemize
 				
-				You can highlight these field by checking [@emph{View > Field Shadings}].
+				You can highlight these fields by checking [@emph{View > Field Shadings}].
 			@end itemize
 	
 	@node Hyphenation
@@ -1155,6 +1157,7 @@ Quick guide
 				appears in the middle of a Braille line. To insert a soft hyphen, go to 
 				[@emph{Insert > Formatting Mark > Optional Hyphen}]. They are only visible in OpenOffice.org
 				when [@emph{View > Field Shadings}] is checked.
+				@note{Soft hyphens can only be used in Windows.}
 
 			@end itemize
 	

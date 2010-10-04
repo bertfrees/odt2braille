@@ -91,24 +91,41 @@ Localisation:
 
 
 =============================
-Version ?
+Version ?.?.?
 =============================
 
 * Greek within Spanish/Catalan texts.
-* Index Basic-D support ?
 * Paragraph styles
-* Right justify
+* Character styles
+* Right justification
+* 8-dot Braille
+* Warning when some dots 7 or 8 were not rendered
 
 Fixed bugs:
 
 * Footnotes in lists were not rendered
+* Some other small bug fixes
 
-Translation tables: updated
+Translation tables: new
 
+* Indian languages (Assamese, Bengali, Khasi, Manipuri, Munda, Old Newari, Santali, Awadhi, Bihari, Braj Bashha, Gondi, Konkani, Kurukh, Marathi, Marwari, Nepali, Pali, Sanskrit, Sindhi, Gujarati, Panjabi, Kannada, Malayalam, Oriya, Dravidian, Tamil, Telugu)
+
+Translation tables: updated / revised
+
+* Icelandic
 * Polish
 * Slovene
+* Dutch (Belgium)
 
 Hyphenation tables: updated
 
-* Polish
-* Slovene
+* Polish ?
+* Slovene ?
+
+Localisation:
+
+* Italian
+
+New embossers ?
+
+*¨

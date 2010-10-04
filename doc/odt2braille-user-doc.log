@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  3 SEP 2010 16:32
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  4 OCT 2010 10:40
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-user-doc.texi
@@ -507,22 +507,22 @@ leAddOn/
  /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
 
 Chapter 1 [1] Chapter 2 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-[14] l.930: Unicode char @u8:⠰ not defined for Texinfo
-l.932: Unicode char @u8:⠼ not defined for Texinfo
-l.934: Unicode char @u8:⠔ not defined for Texinfo
-l.934: Unicode char @u8:⠔ not defined for Texinfo
-l.936: Unicode char @u8:⠠ not defined for Texinfo
-l.936: Unicode char @u8:⠄ not defined for Texinfo
-l.938: Unicode char @u8:⠨ not defined for Texinfo
-l.940: Unicode char @u8:⠸ not defined for Texinfo
-l.942: Unicode char @u8:⠤ not defined for Texinfo
-l.942: Unicode char @u8:⠤ not defined for Texinfo
-l.942: Unicode char @u8:⠤ not defined for Texinfo
-l.942: Unicode char @u8:⠤ not defined for Texinfo
-l.944: Unicode char @u8:⠐ not defined for Texinfo
-l.944: Unicode char @u8:⠐ not defined for Texinfo
-l.944: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 1081--1087
+[14] l.932: Unicode char @u8:⠰ not defined for Texinfo
+l.934: Unicode char @u8:⠼ not defined for Texinfo
+l.936: Unicode char @u8:⠔ not defined for Texinfo
+l.936: Unicode char @u8:⠔ not defined for Texinfo
+l.938: Unicode char @u8:⠠ not defined for Texinfo
+l.938: Unicode char @u8:⠄ not defined for Texinfo
+l.940: Unicode char @u8:⠨ not defined for Texinfo
+l.942: Unicode char @u8:⠸ not defined for Texinfo
+l.944: Unicode char @u8:⠤ not defined for Texinfo
+l.944: Unicode char @u8:⠤ not defined for Texinfo
+l.944: Unicode char @u8:⠤ not defined for Texinfo
+l.944: Unicode char @u8:⠤ not defined for Texinfo
+l.946: Unicode char @u8:⠐ not defined for Texinfo
+l.946: Unicode char @u8:⠐ not defined for Texinfo
+l.946: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
+Underfull \hbox (badness 10000) in paragraph at lines 1083--1089
  @textrm math guide at [][]@texttt http://wiki.services.openoffice.org/wiki/Doc
 umentation/
 
@@ -553,7 +553,7 @@ fb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 :/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
 Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Pr
 ogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-user-doc.pdf (21 pages, 240901 bytes).
+Output written on odt2braille-user-doc.pdf (21 pages, 241378 bytes).
 PDF statistics:
  401 PDF objects out of 1000 (max. 8388607)
  45 named destinations out of 1000 (max. 500000)

@@ -66,6 +66,8 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 <li><a name="toc_Tutorials" href="#Tutorials">4 Tutorials</a>
 <ul>
 <li><a href="#Tutorials">Adding an embosser</a>
+<li><a href="#Tutorials">Building xml2brl on Windows</a>
+<li><a href="#Tutorials">Adding hyphenation tables</a>
 </li></ul>
 <li><a name="toc_Task-list" href="#Task-list">5 Task list</a>
 </li></ul>
@@ -131,8 +133,6 @@ then select <em>OpenOffice.org API Plugin</em> in <em>Available Plugins</em> and
 Now relaunch NetBeans and
 configure the plugin in [<em>Tools &gt; Options &gt; Miscellaneous &gt; OOo API Plugin</em>]
 by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK folder.
-
-   <p>[@TODO] NetBeans with OpenOffice.org API plugin may be replaced by Eclipse with OOEclipse plugin.
 
 <h3 class="unnumberedsec">Odt2braille Source Code</h3>
 
@@ -330,6 +330,10 @@ Edit the <code>TableType</code> enumeration and the <code>newTable</code> functi
 need adjustments. 
 </ul>
 
+<h3 class="unnumberedsec">Building xml2brl on Windows</h3>
+
+<h3 class="unnumberedsec">Adding hyphenation tables</h3>
+
 <p><a name="Task-list"></a>
 
 <h2 class="chapter">5 Task list</h2>
@@ -355,25 +359,17 @@ need adjustments.
 		- braillepagina nummers weergeven ? 
 	<li>	Bibliography
 	<li>	Special symbols: knop om default waarde van special symbol in te stellen =&gt; getDefaultSpecialSymbol(SpecialSymbolType type, String language)
-	<li>		Voor elke (paragraph) stijl: gebruiker kan formatting parameters instellen (Feature request 3058074). 
-		=&gt; geen effect op headings, captions, listitems, notes, table cells, title page ? 
-		=&gt; default = overerven, keuze aan gebruiker
-		(Voor elke (paragraph / character) stijl: gebruiker kan aangeven of special typeface moet overgenomen of genegeerd worden.) 
-		(=&gt; effect op headings ?) 
 	</ul>
      <li>Mac OS, Linux, ... !!! (wachten op Debian, Ubuntu, Fink)
 <li>Support more embossers. 
 <li>Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?) 
 <li>odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog niet ondersteund worden. 
-<li>Wanneer de instelling "export/ emboss naar specifieke brailleprinter" is opgeslagen
-	=&gt; OOo crasht (Windows XP) bij oproepen van dialoogvenster
-<li>Mac OS: crasht bij laden van settings
 <li>Voor Ubuntu: OOo 3.2.1 nodig ? 
 <li>Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen. 
 <li>Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* Talen
 	* Styles (in het begin: nodig voor analyse door Settings)
-	* Lege paragrafen (ook indien er lege span inzit), ... 
+	* Lege paragrafen en lege spans verwijderen, ... 
 	* Secties verwijderen
 	* Paginanummering
 	* Lijstnummering &amp; bullets
@@ -383,14 +379,13 @@ need adjustments.
 	* Titel pagina
 	* Special typeface
 	* Splitsen in volumes (pas op einde)
-(=&gt; Vincent Spiewak is rewriting JODL in XSLT 2.0)
-<li>Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft upgedate. 
+(=&gt; Vincent Spiewak is rewriting JODL in XSLT 2.0 ?) 
+<li>Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate. 
 <li>Voor elke nieuwe release: localisatie bijwerken
 <li>Settings in Tools &gt; Options... 
 <li>Javadoc bijwerken. 
 <li>Only Interpoint55 is tested. 
 <li>Tooltips in dialogs. 
-<li>Howto handle unknown characters? (-&gt; now: dots 3456) (-&gt; "undefined" opcode ?) 
 <li>Hidden paragraphs (or paragraphs in hidden sections) =&gt; transcriber's notes (braille-only material). TN =&gt; settings! 
 <li>Tactile graphics. 
 <li>Music Braille
@@ -414,9 +409,6 @@ need adjustments.
           <ul>
 	<li>	text:list-item[@text:style-override] ? 
 	<li>	Images are omitted in Braille if they are anchored to a page =&gt; alert? 
-	<li>	Special-typeface. 
-	Er wordt enkel gekeken naar @style:style-name ( + @fo:font-style en @fo:font-weight) en @style:parent-style-name (in het geval van Emphasis en Strong_20_Emphasis). 
-	Todo: tot aan top-stijl gaan om stijl te achterhalen =&gt; recursief. 
 	<li>	Pagenum inside notesection ? 
 	<li>	Footnotes onder tabel: ook footnotes in captions meegerekend (terwijl die al onder de caption zelf gezet zijn)
 	<li>	als “Format – section – options – collect at end of section” niet expliciet wordt ingesteld

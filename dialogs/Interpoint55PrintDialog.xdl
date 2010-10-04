@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog7" dlg:left="201" dlg:top="123" dlg:width="220" dlg:height="145" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog7" dlg:left="201" dlg:top="123" dlg:width="220" dlg:height="134" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0xf2f2f2"/>
-  <dlg:style dlg:style-id="1" dlg:border="0xc0c0c0"/>
+  <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:text dlg:style-id="0" dlg:id="Label1" dlg:tab-index="0" dlg:left="18" dlg:top="13" dlg:width="135" dlg:height="10" dlg:value="Label1"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label2" dlg:tab-index="1" dlg:left="18" dlg:top="40" dlg:width="149" dlg:height="10" dlg:value="Label2"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="2" dlg:left="18" dlg:top="66" dlg:width="135" dlg:height="10" dlg:value="Label3"/>
-  <dlg:button dlg:id="CommandButton1" dlg:tab-index="3" dlg:left="46" dlg:top="119" dlg:width="55" dlg:height="12" dlg:value="CommandButton1" dlg:button-type="ok"/>
-  <dlg:button dlg:id="CommandButton2" dlg:tab-index="4" dlg:left="115" dlg:top="119" dlg:width="55" dlg:height="12" dlg:value="CommandButton2" dlg:button-type="cancel"/>
-  <dlg:textfield dlg:style-id="1" dlg:id="TextField1" dlg:tab-index="6" dlg:left="24" dlg:top="23" dlg:width="146" dlg:height="12"/>
-  <dlg:textfield dlg:style-id="1" dlg:id="TextField2" dlg:tab-index="7" dlg:left="24" dlg:top="50" dlg:width="146" dlg:height="12"/>
-  <dlg:button dlg:id="CommandButton3" dlg:tab-index="8" dlg:left="177" dlg:top="23" dlg:width="22" dlg:height="12" dlg:value="CommandButton3"/>
-  <dlg:button dlg:id="CommandButton4" dlg:tab-index="9" dlg:left="177" dlg:top="50" dlg:width="22" dlg:height="12" dlg:value="CommandButton3"/>
-  <dlg:menulist dlg:style-id="1" dlg:id="ListBox1" dlg:tab-index="5" dlg:left="24" dlg:top="77" dlg:width="146" dlg:height="12" dlg:spin="true"/>
-  <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="10" dlg:left="37" dlg:top="94" dlg:width="11" dlg:height="12" dlg:checked="false"/>
-  <dlg:text dlg:id="Label4" dlg:tab-index="11" dlg:left="50" dlg:top="94" dlg:width="149" dlg:height="8" dlg:value="Label10"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="0" dlg:left="19" dlg:top="27" dlg:width="149" dlg:height="10" dlg:value="Label2"/>
+  <dlg:text dlg:id="Label3" dlg:tab-index="1" dlg:left="19" dlg:top="54" dlg:width="135" dlg:height="10" dlg:value="Label3"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="2" dlg:left="123" dlg:top="112" dlg:width="55" dlg:height="12" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="38" dlg:top="112" dlg:width="55" dlg:height="12" dlg:value="Cancel" dlg:button-type="cancel"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField2" dlg:tab-index="5" dlg:left="25" dlg:top="38" dlg:width="146" dlg:height="12"/>
+  <dlg:button dlg:id="CommandButton4" dlg:tab-index="6" dlg:left="178" dlg:top="38" dlg:width="22" dlg:height="12" dlg:value="CommandButton3"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox1" dlg:tab-index="4" dlg:left="25" dlg:top="65" dlg:width="146" dlg:height="12" dlg:spin="true"/>
+  <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="7" dlg:left="34" dlg:top="85" dlg:width="11" dlg:height="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label4" dlg:tab-index="8" dlg:left="47" dlg:top="84" dlg:width="149" dlg:height="12" dlg:value="Label10"/>
+  <dlg:text dlg:id="Label5" dlg:tab-index="9" dlg:left="33" dlg:top="10" dlg:width="106" dlg:height="10" dlg:value="Label5"/>
+  <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="10" dlg:left="19" dlg:top="11" dlg:width="8" dlg:height="8" dlg:checked="false"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="11" dlg:left="0" dlg:top="103" dlg:width="220" dlg:height="2"/>
  </dlg:bulletinboard>
 </dlg:window>

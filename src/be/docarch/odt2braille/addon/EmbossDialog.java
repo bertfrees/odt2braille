@@ -108,6 +108,7 @@ public class EmbossDialog implements XItemListener,
     private XListBox paperWidthUnitListBox = null;
     private XListBox paperHeightUnitListBox = null;
     private XCheckBox duplexCheckBox = null;
+    private XCheckBox eightDotsCheckBox = null;
     private XCheckBox mirrorAlignCheckBox = null;
     private XNumericField numberOfCellsPerLineField = null;
     private XNumericField numberOfLinesPerPageField = null;
@@ -132,6 +133,7 @@ public class EmbossDialog implements XItemListener,
     private XPropertySet paperWidthUnitListBoxProperties = null;
     private XPropertySet paperHeightUnitListBoxProperties = null;
     private XPropertySet duplexCheckBoxProperties = null;
+    private XPropertySet eightDotsCheckBoxProperties = null;
     private XPropertySet mirrorAlignCheckBoxProperties = null;
     private XPropertySet marginLeftFieldProperties = null;
     private XPropertySet marginRightFieldProperties = null;
@@ -146,6 +148,7 @@ public class EmbossDialog implements XItemListener,
     private static String _paperWidthUnitListBox = "ListBox5";
     private static String _paperHeightUnitListBox = "ListBox6";
     private static String _duplexCheckBox = "CheckBox1";
+    private static String _eightDotsCheckBox = "CheckBox3";
     private static String _mirrorAlignCheckBox = "CheckBox2";
     private static String _numberOfCellsPerLineField = "NumericField3";
     private static String _numberOfLinesPerPageField = "NumericField4";
@@ -160,6 +163,7 @@ public class EmbossDialog implements XItemListener,
     private static String _paperWidthLabel = "Label10";
     private static String _paperHeightLabel = "Label11";
     private static String _duplexLabel = "Label8";
+    private static String _eightDotsLabel = "Label15";
     private static String _mirrorAlignLabel = "Label5";
     private static String _numberOfCellsPerLineLabel = "Label6";
     private static String _numberOfLinesPerPageLabel = "Label7";
@@ -175,6 +179,7 @@ public class EmbossDialog implements XItemListener,
     private String L10N_paperWidthLabel = null;
     private String L10N_paperHeightLabel = null;
     private String L10N_duplexLabel = null;
+    private String L10N_eightDotsLabel = null;
     private String L10N_mirrorAlignLabel = null;
     private String L10N_numberOfCellsPerLineLabel = null;
     private String L10N_numberOfLinesPerPageLabel = null;
@@ -227,6 +232,7 @@ public class EmbossDialog implements XItemListener,
         L10N_paperWidthLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperWidthLabel") + ":";
         L10N_paperHeightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperHeightLabel") + ":";
         L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("duplexLabel");
+        L10N_eightDotsLabel = "8-dot Braille";
         L10N_mirrorAlignLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mirrorAlignLabel");
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
@@ -292,6 +298,8 @@ public class EmbossDialog implements XItemListener,
                 dialogControlContainer.getControl(_paperHeightUnitListBox));
         duplexCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_duplexCheckBox));
+        eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_eightDotsCheckBox));
         mirrorAlignCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_mirrorAlignCheckBox));
         numberOfCellsPerLineField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -339,6 +347,8 @@ public class EmbossDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paperHeightUnitListBox)).getModel());
         duplexCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, duplexCheckBox)).getModel());
+        eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
         mirrorAlignCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, mirrorAlignCheckBox)).getModel());
         marginLeftFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -365,7 +375,9 @@ public class EmbossDialog implements XItemListener,
         paperSizeListBox.addItemListener(this);
         paperWidthUnitListBox.addItemListener(this);
         paperHeightUnitListBox.addItemListener(this);
+        tableListBox.addItemListener(this);
         duplexCheckBox.addItemListener(this);
+        eightDotsCheckBox.addItemListener(this);
         paperWidthTextComponent.addTextListener(this);
         paperHeightTextComponent.addTextListener(this);
         numberOfCellsPerLineTextComponent.addTextListener(this);
@@ -420,6 +432,8 @@ public class EmbossDialog implements XItemListener,
         xFixedText.setText(L10N_paperHeightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_duplexLabel));
         xFixedText.setText(L10N_duplexLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
+        xFixedText.setText(L10N_eightDotsLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mirrorAlignLabel));
         xFixedText.setText(L10N_mirrorAlignLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfCellsPerLineLabel));
@@ -441,9 +455,6 @@ public class EmbossDialog implements XItemListener,
 
     private void setDialogValues() throws com.sun.star.uno.Exception {
 
-        mirrorAlignCheckBox.setState((short)(settings.getMirrorAlign()?1:0));
-        duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-
         numberOfCellsPerLineField.setDecimalDigits((short)0);
         numberOfLinesPerPageField.setDecimalDigits((short)0);
         marginLeftField.setDecimalDigits((short)0);
@@ -459,8 +470,9 @@ public class EmbossDialog implements XItemListener,
         paperHeightUnitListBox.selectItemPos((short)0, true);
 
         updateEmbosserListBox();
-        updateDuplexCheckBox();
         updateTableListBox();
+        updateDuplexCheckBox();
+        updateEightDotsCheckBox();
         updatePaperSizeListBox();
         updatePaperDimensionFields();
         updateDimensionFields();
@@ -470,10 +482,7 @@ public class EmbossDialog implements XItemListener,
     }
 
     private void getDialogValues() {
-
-        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
         settings.setMirrorAlign((mirrorAlignCheckBox.getState() == (short)1));
-
     }
 
     /**
@@ -616,6 +625,13 @@ public class EmbossDialog implements XItemListener,
 
     }
 
+    private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
+
+        eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
+        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
+
+    }
+
     /**
      * Update the 'Mirror margins' checkbox.
      *
@@ -734,8 +750,9 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setEmbosser(embosserTypes.get(embosserListBox.getSelectedItemPos()));
 
-                updateDuplexCheckBox();
                 updateTableListBox();
+                updateDuplexCheckBox();
+                updateEightDotsCheckBox();                
                 updatePaperSizeListBox();
                 updatePaperDimensionFields();
                 updateDimensionFields();
@@ -761,6 +778,18 @@ public class EmbossDialog implements XItemListener,
                 settings.setDuplex((duplexCheckBox.getState()==(short)1));
 
                 updateMirrorAlignCheckBox();
+
+            } else if (source.equals(eightDotsCheckBox)) {
+
+                settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
+
+                updateDimensionFields();
+
+            } else if (source.equals(tableListBox)) {
+
+                settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+
+                updateEightDotsCheckBox();
 
             }
 

@@ -16,15 +16,32 @@ litdigit 0 245
 
 # Braille indicator opcodes
 
+numsign 3456
+
 capsign 46
 begcaps 45
+endcaps 6
+
+lenitalphrase 4
+lenboldphrase 4
+lenunderphrase 4
+italsign 456
+boldsign 456
+undersign 456
+begital 456
+begbold 456
+begunder 456
+endital 6
+endbold 6
+endunder 6
+firstwordital 456-456
+firstwordbold 456-456
+firstwordunder 456-456
 
 # uppercase - 36
 # uppercase . 256
 # uppercase & 12346
 # uppercase / 34
-
-numsign 3456
 
 # Translation opcodes
 

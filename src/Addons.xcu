@@ -30,6 +30,7 @@
 								<value xml:lang="de">~Exportieren als Brailledatei…</value>
 								<value xml:lang="es">~Exportar a braille…</value>
 								<value xml:lang="fr">~Exporter en fichier Braille…</value>
+								<value xml:lang="it">~Esporta in Braille…</value>
 								<value xml:lang="nb">~Eksporter som punktskrift…</value>
 								<value xml:lang="nl">~Braille Exporteren…</value>
 								<value xml:lang="pt">~Exportar como Braille…</value>
@@ -39,7 +40,6 @@
 						   <!-- <value xml:lang="cs">~</value> -->
 						   <!-- <value xml:lang="da">~</value> -->
 						   <!-- <value xml:lang="is">~</value> -->
-						   <!-- <value xml:lang="it">~</value> -->
 						   <!-- <value xml:lang="sv">~</value> -->
 
 						   </prop>
@@ -72,6 +72,7 @@
 								<value xml:lang="de">~Prägen…</value>
 								<value xml:lang="es">~Imprimir en braille…</value>
 								<value xml:lang="fr">~Embosser…</value>
+							    <value xml:lang="it">~Rilievo…</value>
 								<value xml:lang="nb">~Preg…</value>
 								<value xml:lang="nl">~Braille Afdrukken…</value>
 								<value xml:lang="pt">~Gravar…</value>
@@ -81,7 +82,6 @@
 						   <!-- <value xml:lang="cs">~</value> -->
 						   <!-- <value xml:lang="da">~</value> -->
 						   <!-- <value xml:lang="is">~</value> -->
-						   <!-- <value xml:lang="it">~</value> -->
 						   <!-- <value xml:lang="sv">~</value> -->
 								
                             </prop>
@@ -111,6 +111,7 @@
 								<value xml:lang="de">~Braillezeichen</value>
 								<value xml:lang="es">~Caracteres braille</value>
 								<value xml:lang="fr">~Charactères Braille</value>
+								<value xml:lang="it">~Caratteri Braille</value>
 								<value xml:lang="nb">~Punktskrifttegn</value>
 								<value xml:lang="nl">~Braillesymbolen</value>
 								<value xml:lang="pt">~Caracteres Braille</value>
@@ -120,7 +121,6 @@
 						   <!-- <value xml:lang="cs">~</value> -->
 						   <!-- <value xml:lang="da">~</value> -->
 						   <!-- <value xml:lang="is">~</value> -->
-						   <!-- <value xml:lang="it">~</value> -->
 						   <!-- <value xml:lang="sv">~</value> -->
 								
                             </prop>
@@ -205,6 +205,7 @@
 								<value xml:lang="de">~Braille-Einstellungen…</value>
 								<value xml:lang="es">~Preferencias para el braille…</value>
 								<value xml:lang="fr">~Préférences pour le Braille…</value>
+								<value xml:lang="it">~Impostazioni Braille…</value>
 								<value xml:lang="nb">~Instillinger for punktskrift…</value>
 								<value xml:lang="nl">~Brailleinstellingen…</value>
 								<value xml:lang="pt">~Configurações Braille…</value>
@@ -213,8 +214,7 @@
 								
 						   <!-- <value xml:lang="cs">~</value> -->
 						   <!-- <value xml:lang="da">~</value> -->
-						   <!-- <value xml:lang="is">~</value> -->
-						   <!-- <value xml:lang="it">~</value> -->
+						   <!-- <value xml:lang="is">~</value> -->						   
 						   <!-- <value xml:lang="sv">~</value> -->
 								
                             </prop>

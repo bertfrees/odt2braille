@@ -87,5 +87,13 @@ sign        \x007C        1256                |                   VERTICAL LINE
 punctuation \x007D        12456               }                   RIGHT CURLY BRACKET
 math        \x007E        45                  ~                   TILDE
 
+# ----------------------------------------------------------------------------------------------
+
+include _chardefs_unicode_LATIN_1_SUPPLEMENT.cti
+include _chardefs_unicode_LATIN_EXTENDED_A.cti
+include _chardefs_unicode_LATIN_EXTENDED_B.cti
+include _chardefs_unicode_IPA_EXTENSIONS.cti
+include _chardefs_unicode_GREEK.cti
+include _chardefs_unicode_GENERAL_PUNCTUATION.cti
 
 # ----------------------------------------------------------------------------------------------

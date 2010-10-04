@@ -43,7 +43,7 @@ uplow       \x00C1\x00E1  1,1                 Áá                  LATIN CAPITA
 uplow       \x00C2\x00E2  16,16               Ââ                  LATIN CAPITAL LETTER A WITH CIRCUMFLEX - LATIN SMALL LETTER A WITH CIRCUMFLEX
 uplow       \x00C3\x00E3  345,345             Ãã                  LATIN CAPITAL LETTER A WITH TILDE - LATIN SMALL LETTER A WITH TILDE
 uplow       \x00C4\x00E4  345,345             Ää                  LATIN CAPITAL LETTER A WITH DIAERESIS - LATIN SMALL LETTER A WITH DIAERESIS
-uplow       \x00C5\x00E5  246,246             Åå                  LATIN CAPITAL LETTER A WITH RING ABOVE - LATIN SMALL LETTER A WITH RING ABOVE
+uplow       \x00C5\x00E5  345,345             Åå                  LATIN CAPITAL LETTER A WITH RING ABOVE - LATIN SMALL LETTER A WITH RING ABOVE
 uplow       \x00C6\x00E6  345,345             Ææ                  LATIN CAPITAL LETTER AE - LATIN SMALL LETTER AE
 uplow       \x00C7\x00E7  12346,12346         Çç                  LATIN CAPITAL LETTER C WITH CEDILLA - LATIN SMALL LETTER C WITH CEDILLA
 uplow       \x00C8\x00E8  2346,2346           Èè                  LATIN CAPITAL LETTER E WITH GRAVE - LATIN SMALL LETTER E WITH GRAVE
@@ -54,16 +54,17 @@ uplow       \x00CC\x00EC  24,24               Ìì                  LATIN CAPITA
 uplow       \x00CD\x00ED  24,24               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
 uplow       \x00CE\x00EE  146,146             Îî                  LATIN CAPITAL LETTER I WITH CIRCUMFLEX - LATIN SMALL LETTER I WITH CIRCUMFLEX
 uplow       \x00CF\x00EF  12456,12456         Ïï                  LATIN CAPITAL LETTER I WITH DIAERESIS - LATIN SMALL LETTER I WITH DIAERESIS
-uplow       \x00D1\x00F1  12456,12456         Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
+uplow       \x00D1\x00F1  1345,1345           Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
 uplow       \x00D2\x00F2  135,135             Òò                  LATIN CAPITAL LETTER O WITH GRAVE - LATIN SMALL LETTER O WITH GRAVE
 uplow       \x00D3\x00F3  346,346             Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
 uplow       \x00D4\x00F4  1456,1456           Ôô                  LATIN CAPITAL LETTER O WITH CIRCUMFLEX - LATIN SMALL LETTER O WITH CIRCUMFLEX
 uplow       \x00D5\x00F5  246,246             Õõ                  LATIN CAPITAL LETTER O WITH TILDE - LATIN SMALL LETTER O WITH TILDE
 uplow       \x00D6\x00F6  246,246             Öö                  LATIN CAPITAL LETTER O WITH DIAERESIS - LATIN SMALL LETTER O WITH DIAERESIS
-uplow       \x00D9\x00F9  12356,12356         Ùù                  LATIN CAPITAL LETTER U WITH GRAVE - LATIN SMALL LETTER U WITH GRAVE
+uplow       \x00D9\x00F9  23456,23456         Ùù                  LATIN CAPITAL LETTER U WITH GRAVE - LATIN SMALL LETTER U WITH GRAVE
 uplow       \x00DA\x00FA  136,136             Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
 uplow       \x00DB\x00FB  156,156             Ûû                  LATIN CAPITAL LETTER U WITH CIRCUMFLEX - LATIN SMALL LETTER U WITH CIRCUMFLEX
 uplow       \x00DC\x00FC  1256,1256           Üü                  LATIN CAPITAL LETTER U WITH DIAERESIS - LATIN SMALL LETTER U WITH DIAERESIS
+
 
 space       \x0009        9                                       <control> HORIZONTAL TABULATION
 space       \x000A        0                                       <control> LINE FEED

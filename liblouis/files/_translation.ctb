@@ -3,7 +3,8 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
-midword \x00AD 367
+punctuation \x00AD        367                 ­                   SOFT HYPHEN
+midword \x00AD ef
 replace \x00AD
 
 
