@@ -790,6 +790,7 @@ public class EmbossDialog implements XItemListener,
                 settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
 
                 updateEightDotsCheckBox();
+                updateDimensionFields();
 
             }
 

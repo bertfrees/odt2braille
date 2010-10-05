@@ -30,7 +30,6 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
 
-
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertyContainer;
@@ -1023,12 +1022,6 @@ public class SettingsIO {
         setProperty(paperSizeProperty,
                     settingsAfterChange.getPaperSize().name(),
                     settingsBeforeChange.getPaperSize().name());
-        setProperty(customPaperWidthProperty,
-                    settingsAfterChange.getPaperWidth(),
-                    settingsBeforeChange.getPaperWidth());
-        setProperty(customPaperHeightProperty,
-                    settingsAfterChange.getPaperHeight(),
-                    settingsBeforeChange.getPaperHeight());
         setProperty(embossDuplexProperty,
                     settingsAfterChange.getDuplex(),
                     settingsBeforeChange.getDuplex());
@@ -1050,6 +1043,15 @@ public class SettingsIO {
         setProperty(marginTopProperty,
                     settingsAfterChange.getMarginTop(),
                     settingsBeforeChange.getMarginTop());
+
+        if (settingsAfterChange.getPaperSize()==PaperSize.CUSTOM) {
+            setProperty(customPaperWidthProperty,
+                        settingsAfterChange.getPaperWidth(),
+                        settingsBeforeChange.getPaperWidth());
+            setProperty(customPaperHeightProperty,
+                    settingsAfterChange.getPaperHeight(),
+                    settingsBeforeChange.getPaperHeight());
+        }
 
         if (odtModified) {
             xModifiable.setModified(true);
