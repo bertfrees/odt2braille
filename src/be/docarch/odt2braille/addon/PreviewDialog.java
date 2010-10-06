@@ -77,15 +77,15 @@ public class PreviewDialog implements XItemListener,
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
-    private static final String FONT_6_DOT = "SimBraille";
-    private static final short SIZE_6_DOT = 15;
-    private static final double CHAR_WIDTH_6_DOT = 6.84d;
-    private static final double CHAR_HEIGHT_6_DOT = 11.2d;
+    private static final String FONT_6_DOT = "odt2braille 6 dot";
+    private static final short SIZE_6_DOT = 18;
+    private static final double CHAR_WIDTH_6_DOT = 5.85d;
+    private static final double CHAR_HEIGHT_6_DOT = 10.66d;
 
-    private static final String FONT_8_DOT = "SimBraille";
-    private static final short SIZE_8_DOT = 15;
-    private static final double CHAR_WIDTH_8_DOT = 6.84d;;
-    private static final double CHAR_HEIGHT_8_DOT = 11.2d;
+    private static final String FONT_8_DOT = "odt2braille 8 dot";
+    private static final short SIZE_8_DOT = 18;
+    private static final double CHAR_WIDTH_8_DOT = 5.85d;
+    private static final double CHAR_HEIGHT_8_DOT = 13.35d;
 
     private Settings settings = null;
     private XDialog dialog = null;
@@ -216,8 +216,8 @@ public class PreviewDialog implements XItemListener,
 
         int origWidth = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Width"));
         int origHeight = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Height"));
-        int newWidth  = 1 + (int)Math.ceil(settings.getCellsPerLine()*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
-        int newHeight = 2 + (int)Math.ceil(settings.getLinesPerPage()*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
+        int newWidth  = 2 + (int)Math.ceil(settings.getCellsPerLine()*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
+        int newHeight = 1 + (int)Math.ceil(settings.getLinesPerPage()*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
 
         previewFieldProperties.setPropertyValue("Width", newWidth);
         previewFieldProperties.setPropertyValue("Height", newHeight);

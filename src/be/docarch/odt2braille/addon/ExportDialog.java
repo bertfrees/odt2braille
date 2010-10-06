@@ -379,8 +379,12 @@ public class ExportDialog implements XItemListener,
 
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
+        boolean pef = (settings.getBrailleFileType()==BrailleFileType.PEF);
+
+        if (pef) {settings.setEightDots(true);}
+
         eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
-        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
+        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported() && !pef);
 
     }
 

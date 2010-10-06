@@ -1,5 +1,5 @@
 pef {
-  font-family: "SimBraille", monospace;
+  font-family: "odt2braille 6 dot",monospace;
 }
 
 head {
@@ -44,6 +44,6 @@ row{
   clear:both;
   display: block;
   font-size: 16px;
-  height:20px;
+  height: 13px;
 }
 

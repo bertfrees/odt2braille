@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  4 OCT 2010 10:40
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  6 OCT 2010 14:53
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-user-doc.texi
@@ -497,7 +497,46 @@ t2braille-user-doc.toc) [-1]
 t2braille-user-doc.toc)
 (C:\Users\freesb\Documents\NetBeansProjects\odt2braille\Odt2BrailleAddOn\doc\od
 t2braille-user-doc.toc) (Getting Started)
-Underfull \hbox (badness 10000) in paragraph at lines 65--72
+Underfull \hbox (badness 2951) in paragraph at lines 65--74
+@texttt other.html[][][]@textrm . It is strongly rec-om-mended that you also do
+wn-load and in-stall
+
+@hbox(7.60416+2.12917)x433.62, glue set 3.09169
+.@texttt o
+.@texttt t
+.@texttt h
+.@texttt e
+.@texttt r
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--74
+@textrm the @textit odt2braille fonts@textrm : [][]@texttt http://odt2braille.s
+vn.sourceforge.net/viewvc/
+
+@hbox(7.60416+2.43333)x433.62, glue set 9.12231
+.@textrm t
+.@textrm h
+.@textrm e
+.@glue 3.65 plus 1.825 minus 1.21666
+.@textit o
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--74
+@texttt odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf[][][] @textrm for 6
+-dot Braille and
+
+@hbox(7.60416+0.91246)x433.62, glue set 5.2921
+.@texttt o
+.@texttt d
+.@texttt t
+.@texttt 2
+.@texttt b
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 65--74
 [][]@texttt http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Brail
 leAddOn/
 
@@ -507,22 +546,22 @@ leAddOn/
  /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
 
 Chapter 1 [1] Chapter 2 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-[14] l.932: Unicode char @u8:⠰ not defined for Texinfo
-l.934: Unicode char @u8:⠼ not defined for Texinfo
-l.936: Unicode char @u8:⠔ not defined for Texinfo
-l.936: Unicode char @u8:⠔ not defined for Texinfo
-l.938: Unicode char @u8:⠠ not defined for Texinfo
-l.938: Unicode char @u8:⠄ not defined for Texinfo
-l.940: Unicode char @u8:⠨ not defined for Texinfo
-l.942: Unicode char @u8:⠸ not defined for Texinfo
-l.944: Unicode char @u8:⠤ not defined for Texinfo
-l.944: Unicode char @u8:⠤ not defined for Texinfo
-l.944: Unicode char @u8:⠤ not defined for Texinfo
-l.944: Unicode char @u8:⠤ not defined for Texinfo
-l.946: Unicode char @u8:⠐ not defined for Texinfo
-l.946: Unicode char @u8:⠐ not defined for Texinfo
-l.946: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 1083--1089
+[14] l.934: Unicode char @u8:⠰ not defined for Texinfo
+l.936: Unicode char @u8:⠼ not defined for Texinfo
+l.938: Unicode char @u8:⠔ not defined for Texinfo
+l.938: Unicode char @u8:⠔ not defined for Texinfo
+l.940: Unicode char @u8:⠠ not defined for Texinfo
+l.940: Unicode char @u8:⠄ not defined for Texinfo
+l.942: Unicode char @u8:⠨ not defined for Texinfo
+l.944: Unicode char @u8:⠸ not defined for Texinfo
+l.946: Unicode char @u8:⠤ not defined for Texinfo
+l.946: Unicode char @u8:⠤ not defined for Texinfo
+l.946: Unicode char @u8:⠤ not defined for Texinfo
+l.946: Unicode char @u8:⠤ not defined for Texinfo
+l.948: Unicode char @u8:⠐ not defined for Texinfo
+l.948: Unicode char @u8:⠐ not defined for Texinfo
+l.948: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
+Underfull \hbox (badness 10000) in paragraph at lines 1085--1091
  @textrm math guide at [][]@texttt http://wiki.services.openoffice.org/wiki/Doc
 umentation/
 
@@ -538,7 +577,7 @@ umentation/
 Here is how much of TeX's memory you used:
  2266 strings out of 497541
  26135 string characters out of 3209714
- 58961 words of memory out of 3000000
+ 59038 words of memory out of 3000000
  3189 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
@@ -553,9 +592,9 @@ fb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 :/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
 Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Pr
 ogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-user-doc.pdf (21 pages, 241378 bytes).
+Output written on odt2braille-user-doc.pdf (21 pages, 242732 bytes).
 PDF statistics:
- 401 PDF objects out of 1000 (max. 8388607)
+ 404 PDF objects out of 1000 (max. 8388607)
  45 named destinations out of 1000 (max. 500000)
  221 words of extra memory for PDF output out of 10000 (max. 10000000)
 
