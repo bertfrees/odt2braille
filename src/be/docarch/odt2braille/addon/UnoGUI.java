@@ -74,7 +74,7 @@ import be.docarch.odt2braille.LiblouisxmlException;
  */
 public class UnoGUI {
 
-    private static final String TMP_NAME = "odt2braille";
+    private static final String TMP_NAME = "odt2braille.";
     private static final String FLAT_XML_FILTER_NAME = "writer8";
     private static final Logger logger = Logger.getLogger("odt2braille");
 
@@ -184,9 +184,6 @@ public class UnoGUI {
             L10N_Exception_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("exceptionMessageBoxTitle");
             L10N_Unexpected_Exception_Message = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("unexpectedExceptionMessage");
 
-            // Initialise progress bar
-            progressBar.setStatus("Initialising, loading settings...");
-
             // Export in ODT Format
             File odtFile = File.createTempFile(TMP_NAME, ".odt");
             odtFile.deleteOnExit();
@@ -200,9 +197,11 @@ public class UnoGUI {
             XStorable storable = (XStorable) UnoRuntime.queryInterface(
                     XStorable.class, m_xFrame.getController().getModel());
             storable.storeToURL(odtUnoUrl, conversionProperties);
+            progressBar.increment();
 
             // Create odtTransformer
             odtTransformer = new OdtTransformer(odtUrl, progressBar, oooLocale);
+            progressBar.increment();
 
             // Locale
             odtLocale = odtTransformer.getOdtLocale();
@@ -217,10 +216,8 @@ public class UnoGUI {
 
             // Load settings
             loadedSettings = new Settings(odtTransformer, odtLocale);
-            settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
-
-            // Increment progress bar
             progressBar.increment();
+            settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
 
             logger.exiting("UnoGUI", "initialise");
 
@@ -258,6 +255,7 @@ public class UnoGUI {
             // Start progressbar
             progressBar.start();
             progressBar.setSteps(4);
+            progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
             initialise();
@@ -330,21 +328,24 @@ public class UnoGUI {
 
             // Start progress bar
             progressBar.start();
-            progressBar.setSteps(1);
+            progressBar.setSteps(3);
+            progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
             initialise();
-
-            // Close progress bar
-            progressBar.finish(true);
-            progressBar.close();
 
             // Load export settings
             settingsIO.loadExportSettingsFromDocument(loadedSettings);
             changedSettings = new Settings(loadedSettings);
 
-            // Create export dialog & execute
+            // Create export dialog
             ExportDialog exportDialog = new ExportDialog(m_xContext, changedSettings, progressBar);
+
+            // Close progress bar
+            progressBar.finish(true);
+            progressBar.close();
+
+            // Execute export dialog
             if (!exportDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled export dialog");
                 return false;
@@ -535,21 +536,24 @@ public class UnoGUI {
 
             // Start progress bar
             progressBar.start();
-            progressBar.setSteps(1);
+            progressBar.setSteps(3);
+            progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
             initialise();
-
-            // Close progress bar
-            progressBar.finish(true);
-            progressBar.close();
 
             // Load emboss settings
             settingsIO.loadEmbossSettingsFromDocument(loadedSettings);
             changedSettings = new Settings(loadedSettings);
 
-            // Create emboss dialog & execute
+            // Create emboss dialog
             EmbossDialog embossDialog = new EmbossDialog(m_xContext, changedSettings, progressBar);
+
+            // Close progress bar
+            progressBar.finish(true);
+            progressBar.close();
+
+            // Execute emboss dialog
             if (!embossDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled emboss dialog");
                 return false;

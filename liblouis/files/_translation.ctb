@@ -3,9 +3,10 @@
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
 
+always      \x000A        a
 punctuation \x00AD        367                 ­                   SOFT HYPHEN
-midword \x00AD ef
-replace \x00AD
+midword     \x00AD        ef
+replace     \x00AD
 
 
 # ----------------------------------------------------------------------------------------------

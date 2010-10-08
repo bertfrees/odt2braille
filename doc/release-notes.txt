@@ -21,7 +21,7 @@ Features:
 * Other units are processed as well, but are not configurable: textboxes, captions, image (descriptions), 
   footnotes, endnoted, bibliographies, ... 
 * Determine how pages are numbered.
-* Translate formula's into Braille math (Nemeth, UK maths, Marburg or Notaert math).
+* Translate formula's into Braille math (Nemeth, UK maths, Marburg or Woluwe math).
 * Automatic generation of some preliminary pages: a title page, a list of special symbols, 
   a transcriber's notes page and a table of contents.
 * Split Braille documents into multiple volumes.
@@ -98,9 +98,10 @@ Version ?.?.?
 * Paragraph styles
 * Character styles
 * Right justification
-* 8-dot Braille
+* Support for 8-dot Braille
 * Warning when some dots 7 or 8 were not rendered
 * odt2braille fonts (6-dot and 8-dot)
+* Dialogs load faster
 
 Fixed bugs:
 

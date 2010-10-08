@@ -2,8 +2,16 @@
 #  odt2braille - Braille authoring in OpenOffice.org.
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
+#
+#  Spanish Braille
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#	  with the assistance of Carles Sadurní Anguita <http://www.transcriptor.net/>
+#
+# ----------------------------------------------------------------------------------------------
 
-# Literal digits
+# ---------------------------------------
+# Digits
+# ---------------------------------------
 
 litdigit 1 1
 litdigit 2 12
@@ -16,28 +24,19 @@ litdigit 8 125
 litdigit 9 24
 litdigit 0 245
 
+# ---------------------------------------
 # Braille indicator opcodes
+# ---------------------------------------
 
 numsign 3456
 capsign 46
 begcaps 46-46
 
+# ---------------------------------------
 # Translation opcodes
-
-midnum , 2
-midnum . 3
-midnum + 235
-midnum - 36
-midnum : 25
-midnum = 2356
+# ---------------------------------------
 
 repeated \s 0
 repeated \t 0
-repeated \x00a0 0
-
-repeated ... 3-3-3
-repeated --- 36-36-36
-repeated ___ 6-6-6
-always \s--\s 36-36
 
 # ----------------------------------------------------------------------------------------------

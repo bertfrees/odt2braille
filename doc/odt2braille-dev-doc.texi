@@ -287,17 +287,16 @@ Finally, in @code{be.docarch.odt2braille.Settings}, the functions
 @code{embosserIsSupported},
 @code{changeEmbosser},
 @code{tableIsSupported},
-@code{paperSizeIsSupported},
-@code{changePaperSize},
-@code{getMaxPaperWidth},
-@code{getMaxPaperHeight},
-@code{getMinPaperWidth},
-@code{getMinPaperHeight} and 
-@code{duplexIsSupported} 
+@code{paperSizeIsSupported}, 
+@code{duplexIsSupported},
+@code{eightDotsIsSupported} and
+@code{changeEightDots}
 need adjustments.
 @end itemize
 
 @unnumberedsec Building xml2brl on Windows
+
+@unnumberedsec Adding translation tables
 
 @unnumberedsec Adding hyphenation tables
 

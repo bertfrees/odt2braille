@@ -242,37 +242,38 @@ public class EmbossDialog implements XItemListener,
         L10N_marginTopLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
         L10N_marginBottomLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
 
-        L10N_embosser.put("NONE",              "-");
-        L10N_embosser.put("INDEX_BASIC",       "Index Braille - 3.30 Basic V2");
-        L10N_embosser.put("INDEX_EVEREST",     "Index Braille - 9.20 Everest V2");
-        L10N_embosser.put("INDEX_EVEREST_V3",  "Index Braille - Everest V3");
-        L10N_embosser.put("INDEX_BASIC_D_V3",  "Index Braille - Basic-D V3");
-        L10N_embosser.put("INDEX_BASIC_D",     "Index Braille - Basic-D");
-        L10N_embosser.put("BRAILLO_200",       "Braillo 200 (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_S",     "Braillo 400S (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_SR",    "Braillo 400SR (firmware 000.17 or later)");
-        L10N_embosser.put("INTERPOINT_55",     "Interpoint 55");
+        L10N_embosser.put("NONE",                  "-");
+        L10N_embosser.put("INDEX_BASIC",           "Index Braille - 3.30 Basic V2");
+        L10N_embosser.put("INDEX_EVEREST",         "Index Braille - 9.20 Everest V2");
+        L10N_embosser.put("INDEX_EVEREST_V3",      "Index Braille - Everest V3");
+        L10N_embosser.put("INDEX_BASIC_D_V3",      "Index Braille - Basic-D V3");
+        L10N_embosser.put("INDEX_BASIC_D",         "Index Braille - Basic-D");
+        L10N_embosser.put("INDEX_BASIC_BLUE_BAR",  "Index Braille - Basic Blue-Bar");
+        L10N_embosser.put("BRAILLO_200",           "Braillo 200 (firmware 000.17 or later)");
+        L10N_embosser.put("BRAILLO_400_S",         "Braillo 400S (firmware 000.17 or later)");
+        L10N_embosser.put("BRAILLO_400_SR",        "Braillo 400SR (firmware 000.17 or later)");
+        L10N_embosser.put("INTERPOINT_55",         "Interpoint 55");
+        L10N_embosser.put("IMPACTO_600",           "Impacto 600");
+        L10N_embosser.put("IMPACTO_TEXTO",         "Impacto Texto");
+        L10N_embosser.put("PORTATHIEL_BLUE",       "Portathiel Blue");
 
-        L10N_table.put("EN_US",                "US Computer Braille");
-        L10N_table.put("EN_GB",                "US Computer Braille (Lower Case)");
-        L10N_table.put("BRAILLO_6DOT_001_00",  "Braillo USA 6 Dot 001.00");
-        L10N_table.put("BRAILLO_6DOT_044_00",  "Braillo England 6 Dot 044.00");
-        L10N_table.put("BRAILLO_6DOT_046_01",  "Braillo Sweden 6 Dot 046.01");
-        L10N_table.put("BRAILLO_6DOT_047_01",  "Braillo Norway 6 Dot 047.01");
-        L10N_table.put("UNICODE_BRAILLE",      "PEF (Unicode Braille)");
-        L10N_table.put("BRF",                  "BRF (ASCII Braille)");
-        L10N_table.put("BRL",                  "BRL (Non-ASCII Braille)");
-        L10N_table.put("ES_OLD",               "Spanish Braille (Old)");
-        L10N_table.put("ES_NEW",               "Spanish Braille (New)");
-        L10N_table.put("UNDEFINED",            "-");
+        L10N_table.put("UNDEFINED",             "-");
+        L10N_table.put("EN_US",                 "US Computer Braille");
+        L10N_table.put("EN_GB",                 "US Computer Braille (Lower Case)");
+        L10N_table.put("BRAILLO_6DOT_001_00",   "Braillo USA 6 Dot 001.00");
+        L10N_table.put("BRAILLO_6DOT_044_00",   "Braillo England 6 Dot 044.00");
+        L10N_table.put("BRAILLO_6DOT_046_01",   "Braillo Sweden 6 Dot 046.01");
+        L10N_table.put("BRAILLO_6DOT_047_01",   "Braillo Norway 6 Dot 047.01");
+        L10N_table.put("IMPACTO",               "Impacto");
+        L10N_table.put("IMPACTO256",            "Impacto");
 
+        L10N_paperSize.put("UNDEFINED",         "-");
         L10N_paperSize.put("A4",                "A4");
         L10N_paperSize.put("W210MM_X_H10INCH",  "210 mm x 10 inch");
         L10N_paperSize.put("W210MM_X_H11INCH",  "210 mm x 11 inch");
         L10N_paperSize.put("W210MM_X_H12INCH",  "210 mm x 12 inch");
         L10N_paperSize.put("FA44",              "FA44 Accurate");
         L10N_paperSize.put("FA44_LEGACY",       "FA44 Legacy");
-        L10N_paperSize.put("UNDEFINED",         "-");
         L10N_paperSize.put("CUSTOM",            "Custom...");
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
@@ -375,7 +376,6 @@ public class EmbossDialog implements XItemListener,
         paperSizeListBox.addItemListener(this);
         paperWidthUnitListBox.addItemListener(this);
         paperHeightUnitListBox.addItemListener(this);
-        tableListBox.addItemListener(this);
         duplexCheckBox.addItemListener(this);
         eightDotsCheckBox.addItemListener(this);
         paperWidthTextComponent.addTextListener(this);
@@ -469,20 +469,23 @@ public class EmbossDialog implements XItemListener,
         paperHeightUnitListBox.addItem("in", (short)1);
         paperHeightUnitListBox.selectItemPos((short)0, true);
 
-        updateEmbosserListBox();
-        updateTableListBox();
+        updateEmbosserListBox();        
         updateDuplexCheckBox();
         updateEightDotsCheckBox();
         updatePaperSizeListBox();
         updatePaperDimensionFields();
         updateDimensionFields();
         updateMirrorAlignCheckBox();
+        updateTableListBox();
         updateOKButton();
 
     }
 
     private void getDialogValues() {
+
         settings.setMirrorAlign((mirrorAlignCheckBox.getState() == (short)1));
+        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+
     }
 
     /**
@@ -527,22 +530,18 @@ public class EmbossDialog implements XItemListener,
 
         String key;
 
-        tableListBox.removeItemListener(this);
-
-            tableListBox.removeItems((short)0, Short.MAX_VALUE);
-            tableTypes = settings.getSupportedTableTypes();
-            for (int i=0;i<tableTypes.size();i++) {
-                key = tableTypes.get(i).name();
-                if (L10N_table.containsKey(key)) {
-                    tableListBox.addItem(L10N_table.get(key), (short)i);
-                } else {
-                    tableListBox.addItem(key, (short)i);
-                }
+        tableListBox.removeItems((short)0, Short.MAX_VALUE);
+        tableTypes = settings.getSupportedTableTypes();
+        for (int i=0;i<tableTypes.size();i++) {
+            key = tableTypes.get(i).name();
+            if (L10N_table.containsKey(key)) {
+                tableListBox.addItem(L10N_table.get(key), (short)i);
+            } else {
+                tableListBox.addItem(key, (short)i);
             }
-            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-            tableListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
-
-        tableListBox.addItemListener(this);
+        }
+        tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
+        tableListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
 
     }
 
@@ -620,15 +619,19 @@ public class EmbossDialog implements XItemListener,
      */
     private void updateDuplexCheckBox() throws com.sun.star.uno.Exception {
 
-        duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
+        duplexCheckBox.removeItemListener(this);
+            duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
+            duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
+        duplexCheckBox.addItemListener(this);
 
     }
 
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
-        eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
-        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
+        eightDotsCheckBox.removeItemListener(this);
+            eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
+            eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
+        eightDotsCheckBox.addItemListener(this);
 
     }
 
@@ -750,13 +753,13 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setEmbosser(embosserTypes.get(embosserListBox.getSelectedItemPos()));
 
-                updateTableListBox();
                 updateDuplexCheckBox();
                 updateEightDotsCheckBox();                
                 updatePaperSizeListBox();
                 updatePaperDimensionFields();
                 updateDimensionFields();
                 updateMirrorAlignCheckBox();
+                updateTableListBox();
                 updateOKButton();
 
             } else if (source.equals(paperSizeListBox)) {
@@ -784,13 +787,7 @@ public class EmbossDialog implements XItemListener,
                 settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
 
                 updateDimensionFields();
-
-            } else if (source.equals(tableListBox)) {
-
-                settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
-
-                updateEightDotsCheckBox();
-                updateDimensionFields();
+                updateTableListBox();
 
             }
 
@@ -809,9 +806,9 @@ public class EmbossDialog implements XItemListener,
 
                 if (settingsDialog == null) {
                     settingsDialog = new SettingsDialog(xContext);
-                    //settingsDialog.startLoading(xMCF);
                     progressbar.start();
-                    progressbar.setSteps(3);
+                    progressbar.setSteps(1);
+                    progressbar.setStatus("Loading settings...");
                     settingsDialog.initialise(settings, progressbar);
                     progressbar.finish(true);
                     progressbar.close();

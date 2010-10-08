@@ -2,6 +2,24 @@
 #  odt2braille - Braille authoring in OpenOffice.org.
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
+#
+#  Flemish Braille Math Code (a.k.a. Woluwe code)
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#     See also: « Handleiding Braillesymbolen Wiskunde »
+#              (Gilbert Notaert, Marc Suij en Emmanuel Vandekerkhove, G.on Woluwe, 1984)
+#
+# ----------------------------------------------------------------------------------------------
+
+litdigit 1 1
+litdigit 2 12
+litdigit 3 14
+litdigit 4 145
+litdigit 5 15
+litdigit 6 124
+litdigit 7 1245
+litdigit 8 125
+litdigit 9 24
+litdigit 0 245
 
 numsign 3456
 capsign 46
@@ -9,13 +27,15 @@ begcaps 45
 midnum , 2
 midnum . 3
 
-repeated \s 0
+repeated \x0020 0
 repeated \x00A0 a
 
-class uppergreek    \x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9
-class lowergreek    \x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C2\x03C3\x03C4\x03C5\x03C6\x03C7\x03C8\x03C9\x03D5
-class addspaceorkey \x002B\x002D\x003D\x007E\x00B1\x00D7\x00F7\x2212\x2217\x2223\x2243\x2248\x22C5\x2261\x2192\x2194\x21D0\x21D2\x21D4
-class digitletter   abcdefghij
+class  uppergreek    \x0391\x0392\x0393\x0394\x0395\x0396\x0397\x0398\x0399\x039A\x039B\x039C\x039D\x039E\x039F\x03A0\x03A1\x03A3\x03A4\x03A5\x03A6\x03A7\x03A8\x03A9
+class  lowergreek    \x03B1\x03B2\x03B3\x03B4\x03B5\x03B6\x03B7\x03B8\x03B9\x03BA\x03BB\x03BC\x03BD\x03BE\x03BF\x03C0\x03C1\x03C2\x03C3\x03C4\x03C5\x03C6\x03C7\x03C8\x03C9\x03D5
+class  addspaceorkey \x002B\x002D\x003D\x007E\x00B1\x00D7\x00F7\x2212\x2217\x2223\x2243\x2248\x22C5\x2261\x2192\x2194\x21D0\x21D2\x21D4
+class  digitletter   abcdefghij
+swapdd upnum         245,1,12,14,145,15,124,1245,125,24  0,0,0,0,0,0,0,0,0,0
+swapdd lownum        356,2,23,25,256,26,235,2356,236,35  0,0,0,0,0,0,0,0,0,0
 
 exactdots @0
 exactdots @123456
@@ -92,8 +112,12 @@ exactdots @56
    
 # Hulpsymbolen verwijderen
 
-  pass2    [@1b-234]                 ?
-  pass2    [@1b-2345]                ?
-  pass2    [@1b-1345]                ?
+#  context  ["\es"]                   ?
+#  context  ["\et"]                   ?
+#  context  ["\en"]                   ?
+
+  pass2    @1b-234                   ?
+  pass2    @1b-2345                  ?
+  pass2    @1b-1345                  ?
 
 # ----------------------------------------------------------------------------------------------

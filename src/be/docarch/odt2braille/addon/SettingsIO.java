@@ -20,15 +20,12 @@
 package be.docarch.odt2braille.addon;
 
 import java.io.File;
-import java.io.InputStreamReader;
 import java.io.FileInputStream;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.Writer;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.logging.Level;
+import java.util.Properties;
 
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
@@ -453,7 +450,9 @@ public class SettingsIO {
         }
 
         if ((s = getStringProperty(lineFillSymbolProperty)) != null) {
-            loadedSettings.setLineFillSymbol(s);
+            if (s.length()==1) {
+                loadedSettings.setLineFillSymbol(s.charAt(0));
+            }
         }
 
         for (int i=0;i<10;i++) {
@@ -948,8 +947,8 @@ public class SettingsIO {
                     settingsAfterChange.getColumnDelimiter(),
                     settingsBeforeChange.getColumnDelimiter());
         setProperty(lineFillSymbolProperty,
-                    settingsAfterChange.getLineFillSymbol(),
-                    settingsBeforeChange.getLineFillSymbol());
+                    String.valueOf(settingsAfterChange.getLineFillSymbol()),
+                    String.valueOf(settingsBeforeChange.getLineFillSymbol()));
         setProperty(mathProperty,
                     settingsAfterChange.getMath().name(),
                     settingsBeforeChange.getMath().name());
@@ -1064,111 +1063,54 @@ public class SettingsIO {
 
     /**
      * Load settings from OpenOffice.org.
-     * The settings are stored in a .settings file in the OpenOffice.org extension (.oxt).
+     * The settings are stored in a .properties file in the OpenOffice.org extension (.oxt).
      *
-     * @param   fileName        The name of the .settings file
-     * @param   settingNames    An array of setting names.
-     * @return                  An array of the respective setting values or <code>null</code> if the setting is not found.
-     *                          This array has the same lenght as <code>settingNames</code>
+     * @param   name            The name of the .properties file
+     * @return                  The loaded settings
      */
-    public String[] loadSettingsFromOpenOffice(String fileName,
-                                               String[] settingNames)
-                                        throws IOException{
+    public Properties loadSettingsFromOpenOffice(String name)
+                                          throws IOException{
 
         logger.entering("SettingsIO", "loadSettingsFromOpenOffice");
 
-        String[] settingValues = new String[settingNames.length];
-        String line = null;
-        File settingsFile = new File(UnoUtils.UnoURLtoURL(packageLocation+ "/settings/" + fileName, xContext));
+        Properties settings = new Properties();
 
-        FileInputStream fileInputStream = new FileInputStream(settingsFile);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        FileInputStream inputStream = new FileInputStream(
+                new File(UnoUtils.UnoURLtoURL(packageLocation + "/settings/" + name + ".properties", xContext)));
+        settings.load(inputStream);
 
-        while((line=bufferedReader.readLine())!=null) {
-
-            for (int i=0;i<settingNames.length;i++) {
-
-                if (line.startsWith(settingNames[i]+"=")) {
-
-                    settingValues[i] = line.substring(line.indexOf("=")+1);
-                    break;
-
-                }
-            }
-        }
-
-        if (bufferedReader != null) {
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
+        if (inputStream != null) {
+            inputStream.close();
         }
 
         logger.exiting("SettingsIO", "loadSettingsFromOpenOffice");
 
-        return settingValues;
+        return settings;
 
     }
 
     /**
      * Save settings to OpenOffice.org.
-     * The settings are stored in a .settings file in the OpenOffice.org extension (.oxt).
+     * The settings are stored in a .properties file in the OpenOffice.org extension (.oxt).
      *
-     * @param   fileName        The name of the .settings file
-     * @param   settingNames    An array of setting names.
-     * @param   settingValues   An array of the respective setting values.
-     *                          This array must have the same lenght as <code>settingNames</code>
+     * @param   name             The name of the .properties file
+     * @param   settings         The settings
      */
-    public void saveSettingsToOpenOffice(String fileName,
-                                         String[] settingNames,
-                                         String[] settingValues)
+    public void saveSettingsToOpenOffice(String name,
+                                         Properties settings)
                                   throws IOException {
 
         logger.entering("SettingsIO", "saveSettingsToOpenOffice");
 
-        String line = null;
-        String content = "";
-        boolean concat = true;
+        FileOutputStream outputStream = new FileOutputStream(
+                new File(UnoUtils.UnoURLtoURL(packageLocation + "/settings/" + name + ".properties", xContext)));
 
-        File settingsFile = new File(UnoUtils.UnoURLtoURL(packageLocation+ "/settings/" + fileName, xContext));
-        FileInputStream fileInputStream = new FileInputStream(settingsFile);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-        while((line=bufferedReader.readLine())!=null) {
-
-            concat = true;
-
-            for (int i=0;i<settingNames.length;i++) {
-                if (line.startsWith(settingNames[i]+"=")) {
-                    concat = false;
-                    break;
-                }
-            }
-
-            if (concat) {
-                content += line + System.getProperty("line.separator");
-            }
+        if (settings != null) {
+            settings.store(outputStream, null);
         }
 
-        for (int i=0;i<settingNames.length;i++) {
-
-            line = settingNames[i] + "=" + settingValues[i];
-            content += line + System.getProperty("line.separator");
-
-        }
-
-        if (bufferedReader != null) {
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-        }
-
-        Writer bufferedWriter = new BufferedWriter(new FileWriter(settingsFile));
-        bufferedWriter.write(content);
-
-        if (bufferedWriter != null) {
-            bufferedWriter.close();
+        if (outputStream != null) {
+            outputStream.close();
         }
 
         logger.exiting("SettingsIO", "saveSettingsToOpenOffice");

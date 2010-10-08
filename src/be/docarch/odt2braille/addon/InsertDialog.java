@@ -156,7 +156,6 @@ public class InsertDialog implements XTextListener,
     public boolean setBrailleCharacters(String characters) {
     
         if (charsValid(characters)) {
-            this.chars = convertTo6dot(characters);
             this.dots = charsToDots(this.chars);
             return true;
         } else {
@@ -237,16 +236,19 @@ public class InsertDialog implements XTextListener,
     }
 
     private boolean charsValid(String chars) {
-        return chars.matches("[\\p{InBraille_Patterns}]*");
+        if (chars.length()>0) {
+            return chars.matches("[\\p{InBraille_Patterns}]*");
+        } else {
+            return true;
+        }
     }
     
     private boolean dotsValid(String dots) {
-        return dots.matches("^$|(0|12?3?4?5?6?|23?4?5?6?|34?5?6?|45?6?|56?|6)(-(0|12?3?4?5?6?|23?4?5?6?|34?5?6?|45?6?|56?|6))*");
+        return dots.matches("^$|(0|12?3?4?5?6?7?8?|23?4?5?6?7?8?|34?5?6?7?8?|45?6?7?8?|56?7?8?|67?8?|78?|8)" +
+                             "(-(0|12?3?4?5?6?7?8?|23?4?5?6?7?8?|34?5?6?7?8?|45?6?7?8?|56?7?8?|67?8?|78?|8))*");
     }
     
     private String charsToDots(String chars) {
-
-        chars = convertTo6dot(chars);
 
         StringBuffer charsBuffer = new StringBuffer(chars);
         StringBuffer dotsBuffer = new StringBuffer();
@@ -254,7 +256,7 @@ public class InsertDialog implements XTextListener,
         int singleChar;
         boolean first = true;
 
-        if (charsValid(chars) && !chars.equals("")) {
+        if (charsValid(chars) && chars.length()>0) {
 
             for (int i=0;i<charsBuffer.length();i++) {
 
@@ -262,7 +264,7 @@ public class InsertDialog implements XTextListener,
                 singleDots = "";
 
                 if (singleChar>0) {
-                    for (int j=5;j>=0;j--) {
+                    for (int j=7;j>=0;j--) {
                         if (singleChar >= (1<<j)) {
                             singleChar -= (1<<j);
                             singleDots = Integer.toString(j+1) + singleDots;
@@ -295,7 +297,7 @@ public class InsertDialog implements XTextListener,
         int index;
         boolean last = false;
 
-        if (dotsValid(dots) && !dots.equals("")) {
+        if (dotsValid(dots) && dots.length()>0) {
 
             while(!last) {
 
@@ -310,7 +312,7 @@ public class InsertDialog implements XTextListener,
                     dotsBuffer.delete(0, index+1);
                 }
 
-                for (int i=0;i<6;i++) {
+                for (int i=0;i<8;i++) {
                     if (singleDots.indexOf(Integer.toString(i+1)) >= 0) {
                         offset += 1<<i;
                     }
@@ -323,6 +325,15 @@ public class InsertDialog implements XTextListener,
 
         return charsBuffer.toString();
     
+    }
+
+    private void reset() {
+    
+        chars = "";
+        dots = "";
+        charsField.setText(chars);
+        dotsField.setText(dots);
+
     }
 
     public void textChanged(TextEvent textEvent) {
@@ -353,13 +364,11 @@ public class InsertDialog implements XTextListener,
                 dialog.endExecute();
             } else {
                 xText.insertString(xTextCursor.getEnd(), chars, false);
-                setBrailleCharacters("");
-                dotsField.setText(dots);
+                reset();
             }
         } else if (source.equals(nextButton)) {
             xText.insertString(xTextCursor.getEnd(), chars + " ", false);
-            setBrailleCharacters("");
-            dotsField.setText(dots);
+            reset();
         }
     }
 

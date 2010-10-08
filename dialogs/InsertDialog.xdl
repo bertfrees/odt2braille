@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog4" dlg:left="304" dlg:top="151" dlg:width="320" dlg:height="110" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0xe6e6e6" dlg:border="0xc0c0c0" dlg:font-name="SimBraille" dlg:font-height="25" dlg:font-stylename="Regular" dlg:font-family="modern" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xe6e6e6" dlg:border="0xc0c0c0" dlg:font-name="odt2braille 6 dot" dlg:font-height="36" dlg:font-stylename="Regular" dlg:font-family="modern" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:border="0xc0c0c0"/>
  </dlg:styles>
  <dlg:bulletinboard>

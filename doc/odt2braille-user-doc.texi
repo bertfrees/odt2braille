@@ -1096,7 +1096,7 @@ Quick guide
 				@item
 				Mathematical equations are conveyed to Braille through the use of specialized math Braille codes.
 				Supported math codes are @emph{Nemeth} (generally accepted in the United States), 
-				@emph{Marburg} (Germany), @emph{UK Maths} (United Kingdom) and @emph{Notaert} (Flanders, Belgium).
+				@emph{Marburg} (Germany), @emph{UK Maths} (United Kingdom) and @emph{Woluwe} (Flanders, Belgium).
 				You can select which code you want to use in [@emph{File > Braille Settings > Mathematics}].
 			@end itemize
 	

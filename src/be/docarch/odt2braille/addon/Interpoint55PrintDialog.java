@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Properties;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.BufferedWriter;
@@ -82,7 +83,7 @@ public class Interpoint55PrintDialog implements XActionListener,
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
     private Settings settings = null;
-    private SettingsIO embossSettings = null;
+    private SettingsIO settingsIO = null;
 
     private XComponentContext xContext = null;
 
@@ -155,7 +156,7 @@ public class Interpoint55PrintDialog implements XActionListener,
         this.settings = settings;
         this.xContext = xContext;
 
-        embossSettings = new SettingsIO(xContext, xDesktopComponent);
+        settingsIO = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn")
@@ -366,22 +367,22 @@ public class Interpoint55PrintDialog implements XActionListener,
      * Load the initial settings from the OpenOffice.org extension file (.oxt).
      *
      */
-    private void loadEmbossSettings() throws com.sun.star.uno.Exception,
-                                             IOException {
+    private void loadEmbossSettings() throws IOException {
 
-        String[] settingValues = embossSettings.loadSettingsFromOpenOffice("emboss.settings",new String[] {"wp55Folder","iniFile","overWriteIni"});
+        
+        Properties interpoint55Settings = settingsIO.loadSettingsFromOpenOffice("interpoint55");
 
-        if (settingValues[2]!=null) {
-            overWriteIniFile = (settingValues[2].equals("1"));
+        String s = null;
+
+        if ((s = interpoint55Settings.getProperty("overWriteIni")) != null) {
+            overWriteIniFile = s.equals("1");
         }
-        if (settingValues[1]!=null) {
-            iniFileName = settingValues[1];
+        if ((s = interpoint55Settings.getProperty("iniFile")) != null) {
+            iniFileName = s;
         }
-        if (settingValues[0]!=null) {
-            wp55FolderUrl = settingValues[0];
+        if ((s = interpoint55Settings.getProperty("wp55Folder")) != null) {
+            wp55FolderUrl = s;
             wp55File = new File(wp55FolderUrl + System.getProperty("file.separator") + "WP55.exe");
-        } else {
-
         }
     }
 
@@ -391,8 +392,14 @@ public class Interpoint55PrintDialog implements XActionListener,
      */
     private void saveEmbossSettings() throws IOException {
 
-        embossSettings.saveSettingsToOpenOffice("emboss.settings", new String[] {"wp55Folder", "iniFile",  "overWriteIni"},
-                                                                   new String[] { wp55FolderUrl,iniFileName,overWriteIniFile?"1":"0"});
+        Properties interpoint55Settings = new Properties();
+
+        interpoint55Settings.setProperty("wp55Folder",   wp55FolderUrl);
+        interpoint55Settings.setProperty("iniFile",      iniFileName);
+        interpoint55Settings.setProperty("overWriteIni", overWriteIniFile?"1":"0");
+
+        settingsIO.saveSettingsToOpenOffice("interpoint55", interpoint55Settings);
+
     }
 
     /**

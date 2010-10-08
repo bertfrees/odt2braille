@@ -490,8 +490,6 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableAlignmentLabel = null;
     private String L10N_tableFirstLineLabel = null;
     private String L10N_tableRunoversLabel = null;
-    private String L10N_tableSpacingLabel = null;
-    private String L10N_tablePositionLabel = null;
     private String L10N_tableColumnDelimiterLabel = null;
     private String L10N_tableColumnDelimiterButton = "...";
 
@@ -618,8 +616,6 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableOfContentsLevelLabel = null;
     private String L10N_tableOfContentsFirstLineLabel = null;
     private String L10N_tableOfContentsRunoversLabel = null;
-    private String L10N_tableOfContentsSpacingLabel = null;
-    private String L10N_tableOfContentsPositionLabel = null;
     private String L10N_tableOfContentsLineFillLabel = null;
     private String L10N_tableOfContentsLineFillButton = "...";
 
@@ -682,7 +678,6 @@ public class SettingsDialog implements XItemListener,
     
     private String L10N_specialSymbolsListLabel = null;
     private String L10N_specialSymbolsListTitleLabel = null;
-    private String L10N_specialSymbolsLabel = null;
     private String L10N_specialSymbolsSymbolLabel = null;
     private String L10N_specialSymbolsDescriptionLabel = null;
     private String L10N_specialSymbolsMode0Label = null;
@@ -765,8 +760,6 @@ public class SettingsDialog implements XItemListener,
                     throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsDialog", "initialise");
-
-        progressbar.setStatus("Analysing document...");
 
         this.settings = settings;
 
@@ -876,8 +869,6 @@ public class SettingsDialog implements XItemListener,
         L10N_tableFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("columnDelimiterLabel") + ":";
-        L10N_tableSpacingLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("spacingLabel");
-        L10N_tablePositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("positionLabel");
 
         // Pagenumbers Page
 
@@ -907,14 +898,11 @@ public class SettingsDialog implements XItemListener,
         L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
-        L10N_tableOfContentsSpacingLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("spacingLabel");
-        L10N_tableOfContentsPositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("positionLabel");
 
         // Special Symbols Page
         
         L10N_specialSymbolsListLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsListLabel");
         L10N_specialSymbolsListTitleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsListTitleLabel") + ":";
-        L10N_specialSymbolsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsLabel");
         L10N_specialSymbolsSymbolLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsSymbolLabel") + ":";
         L10N_specialSymbolsDescriptionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsDescriptionLabel") + ":";
         L10N_specialSymbolsMode0Label = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("specialSymbolsMode0Label");
@@ -929,7 +917,7 @@ public class SettingsDialog implements XItemListener,
         L10N_math.put("NEMETH",    "Nemeth");
         L10N_math.put("UKMATHS",   "UK Maths");
         L10N_math.put("MARBURG",   "Marburg");
-        L10N_math.put("WISKUNDE",  "Notaert");
+        L10N_math.put("WISKUNDE",  "Woluwe");
 
         // Languages, translation tables, grades, alignment, paragraph styles
 
@@ -1059,6 +1047,8 @@ public class SettingsDialog implements XItemListener,
             roadmapIndexContainer.insertByIndex(i, roadmapItem);
 
         }
+
+        progressbar.increment();
 
         // Dialog items
 
@@ -1486,62 +1476,6 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMoveUpButton)).getModel());
         specialSymbolsMoveDownButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, specialSymbolsMoveDownButton)).getModel());
-        
-        // Mathematics Page
-
-        // Group Boxes
-
-        String groupBoxProperties[] = new String[] {"Height", "Name", "PositionX", "PositionY", "Width", "Step"};
-
-        String tableSpacingGroupBoxName = "tableSpacingGroupBox";
-        String tablePositionGroupBoxName = "tablePositionGroupBox";
-        String tableOfContentsSpacingGroupBoxName = "tableOfContentsSpacingGroupBox";
-        String tableOfContentsPositionGroupBoxName = "tableOfContentsPositionGroupBox";
-        String specialSymbolsGroupBoxName = "specialSymbolsGroupBox";
-
-        Object tableSpacingGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
-        Object tablePositionGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
-        Object tableOfContentsSpacingGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
-        Object tableOfContentsPositionGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
-        Object specialSymbolsGroupBoxModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlGroupBoxModel");
-
-        XMultiPropertySet tableSpacingGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableSpacingGroupBoxModel);
-        XMultiPropertySet tablePositionGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tablePositionGroupBoxModel);
-        XMultiPropertySet tableOfContentsSpacingGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsSpacingGroupBoxModel);
-        XMultiPropertySet tableOfContentsPositionGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, tableOfContentsPositionGroupBoxModel);
-        XMultiPropertySet specialSymbolsGroupBoxMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, specialSymbolsGroupBoxModel);
-
-        tableSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,            new Object[] { 1+roadMapHeight-57,  tableSpacingGroupBoxName,            roadMapWidth, 57,  200, TABLES_PAGE          });
-        tablePositionGroupBoxMPSet.setPropertyValues(groupBoxProperties,           new Object[] { 1+roadMapHeight-133, tablePositionGroupBoxName,           roadMapWidth, 133, 200, TABLES_PAGE          });
-        tableOfContentsSpacingGroupBoxMPSet.setPropertyValues(groupBoxProperties,  new Object[] { 1+roadMapHeight-75,  tableOfContentsSpacingGroupBoxName,  roadMapWidth, 75,  200, TOC_PAGE             });
-        tableOfContentsPositionGroupBoxMPSet.setPropertyValues(groupBoxProperties, new Object[] { 1+roadMapHeight-108, tableOfContentsPositionGroupBoxName, roadMapWidth, 108, 200, TOC_PAGE             });
-        specialSymbolsGroupBoxMPSet.setPropertyValues(groupBoxProperties,          new Object[] { 1+roadMapHeight-63,  specialSymbolsGroupBoxName,          roadMapWidth, 63,  200, SPECIAL_SYMBOLS_PAGE });
-
-        progressbar.increment();
-
-        dialogNameContainer.insertByName(tableSpacingGroupBoxName, tableSpacingGroupBoxModel);
-        dialogNameContainer.insertByName(tablePositionGroupBoxName, tablePositionGroupBoxModel);
-
-        progressbar.increment();
-
-        dialogNameContainer.insertByName(tableOfContentsSpacingGroupBoxName, tableOfContentsSpacingGroupBoxModel);
-        dialogNameContainer.insertByName(tableOfContentsPositionGroupBoxName, tableOfContentsPositionGroupBoxModel);
-
-        progressbar.increment();
-
-        dialogNameContainer.insertByName(specialSymbolsGroupBoxName, specialSymbolsGroupBoxModel);
-
-        tableSpacingGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableSpacingGroupBoxModel);
-        tablePositionGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tablePositionGroupBoxModel);
-        tableOfContentsSpacingGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableOfContentsSpacingGroupBoxModel);
-        tableOfContentsPositionGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, tableOfContentsPositionGroupBoxModel);
-        specialSymbolsGroupBoxProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, specialSymbolsGroupBoxModel);
-
-        tableSpacingGroupBoxProperties.setPropertyValue("Step", TABLES_PAGE);
-        tablePositionGroupBoxProperties.setPropertyValue("Step", TABLES_PAGE);
-        tableOfContentsSpacingGroupBoxProperties.setPropertyValue("Step", TOC_PAGE);
-        tableOfContentsPositionGroupBoxProperties.setPropertyValue("Step", TOC_PAGE);
-        specialSymbolsGroupBoxProperties.setPropertyValue("Step", SPECIAL_SYMBOLS_PAGE);
 
         setDialogValues();
         addListeners();
@@ -1661,12 +1595,6 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsLineFillButton.setLabel(L10N_tableOfContentsLineFillButton);
         listPrefixButton.setLabel(L10N_listPrefixButton);
         specialSymbolsSymbolButton.setLabel(L10N_specialSymbolsSymbolButton);
-
-        tableSpacingGroupBoxProperties.setPropertyValue("Label", L10N_tableSpacingLabel);
-        tablePositionGroupBoxProperties.setPropertyValue("Label", L10N_tablePositionLabel);
-        tableOfContentsSpacingGroupBoxProperties.setPropertyValue("Label", L10N_tableOfContentsSpacingLabel);
-        tableOfContentsPositionGroupBoxProperties.setPropertyValue("Label", L10N_tableOfContentsPositionLabel);
-        specialSymbolsGroupBoxProperties.setPropertyValue("Label", L10N_specialSymbolsLabel);
 
         // General Page
 
@@ -2104,7 +2032,7 @@ public class SettingsDialog implements XItemListener,
             tableOfContentsCheckBox.setState((short)(settings.getTableOfContentEnabled()?1:0));
             tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
             tableOfContentsTitleField.setText(settings.getTableOfContentTitle());
-            tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
+            tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
             
             tableOfContentsLinesBetweenField.setDecimalDigits((short)0);
             tableOfContentsLinesBetweenField.setMin((double)0);
@@ -2790,6 +2718,7 @@ public class SettingsDialog implements XItemListener,
 
                 if (settings.getBrailleRules()==BrailleRules.BANA) {
 
+                    if (pagesEnabled[TYPEFACE_PAGE-1])   { updateTypefacePageFieldValues();   }
                     if (pagesEnabled[PARAGRAPHS_PAGE-1]) { updateParagraphsPageFieldValues(); }
                     if (pagesEnabled[HEADINGS_PAGE-1])   { updateHeadingsPageFieldValues();   }
                     if (pagesEnabled[LISTS_PAGE-1])      { updateListsPageFieldValues();      }
@@ -2809,7 +2738,7 @@ public class SettingsDialog implements XItemListener,
                     }
                     if (pagesEnabled[PAGENUMBERS_PAGE-1]) { updatePageNumbersPageFieldValues(); }
                     if (pagesEnabled[TOC_PAGE-1])         {
-                        tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
+                        tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
                         tableOfContentsLinesBetweenField.setValue((double)settings.getStyle("toc").getLinesBetween());
                         updateTableOfContentsPageFieldValues();
                     }
@@ -3140,10 +3069,13 @@ public class SettingsDialog implements XItemListener,
 
                         if (source.equals(tableOfContentsLineFillButton)) {
                             InsertDialog insertBrailleDialog = new InsertDialog(xContext);
-                            insertBrailleDialog.setBrailleCharacters(settings.getLineFillSymbol());
+                            insertBrailleDialog.setBrailleCharacters(String.valueOf(settings.getLineFillSymbol()));
                             if (insertBrailleDialog.execute()) {
-                                if (settings.setLineFillSymbol(insertBrailleDialog.getBrailleCharacters())) {
-                                    tableOfContentsLineFillField.setText(settings.getLineFillSymbol());
+                                String s = insertBrailleDialog.getBrailleCharacters();
+                                if (s.length()==1) {
+                                    if (settings.setLineFillSymbol(s.charAt(0))) {
+                                        tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
+                                    }
                                 }
                             }
                         }

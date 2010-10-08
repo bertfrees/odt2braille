@@ -2,6 +2,13 @@
 #  odt2braille - Braille authoring in OpenOffice.org.
 #  Copyright (c) 2010 by DocArch skip http://www.docarch.be.
 # ----------------------------------------------------------------------------------------------
+#
+#  Flemish Braille Math Code (a.k.a. Woluwe code)
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#     See also: « Handleiding Braillesymbolen Wiskunde »
+#              (Gilbert Notaert, Marc Suij en Emmanuel Vandekerkhove, G.on Woluwe, 1984)
+#
+# ----------------------------------------------------------------------------------------------
 
 math         math
 generic      semantics

@@ -87,10 +87,24 @@ public class PreviewDialog implements XItemListener,
     private static final double CHAR_WIDTH_8_DOT = 5.85d;
     private static final double CHAR_HEIGHT_8_DOT = 13.35d;
 
-    private Settings settings = null;
     private XDialog dialog = null;
 
     private Element root = null;
+
+    private int cellsPerLine;
+    private int linesPerPage;
+    private int marginLeft;
+    private int marginRight;
+    private int marginTop;
+    private int marginBottom;
+    private int numberOfVolumes;
+    private int numberOfSupplements;
+    private boolean preliminaryVolumeEnabled;
+    private boolean duplex;
+    private boolean mirrorAlign;
+    private boolean eightDots;
+    private boolean preliminaryPagesPresent;
+    private PageNumberFormat preliminaryPageFormat;
 
     private int volume;
     private int section;
@@ -136,7 +150,20 @@ public class PreviewDialog implements XItemListener,
 
         logger.entering("PreviewDialog", "<init>");
 
-        this.settings = settings;
+        this.cellsPerLine = settings.getCellsPerLine();
+        this.linesPerPage = settings.getLinesPerPage();
+        this.marginLeft = settings.getMarginLeft();
+        this.marginRight = settings.getMarginRight();
+        this.marginTop = settings.getMarginTop();
+        this.marginBottom = settings.getMarginBottom();
+        this.duplex = settings.getDuplex();
+        this.mirrorAlign = settings.getMirrorAlign();
+        this.eightDots = settings.getEightDots();
+        this.numberOfVolumes = settings.getNumberOfVolumes();
+        this.numberOfSupplements = settings.getNumberOfSupplements();
+        this.preliminaryVolumeEnabled = settings.getPreliminaryVolumeEnabled();
+        this.preliminaryPagesPresent = settings.getPreliminaryPagesPresent();
+        this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
 
         // L10N
 
@@ -207,8 +234,6 @@ public class PreviewDialog implements XItemListener,
         XPropertySet previewFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, previewField)).getModel());
 
-        boolean eightDots = settings.getEightDots();
-
         FontDescriptor font = (FontDescriptor)AnyConverter.toObject(FontDescriptor.class, previewFieldProperties.getPropertyValue("FontDescriptor"));
         font.Name   = eightDots ? FONT_8_DOT : FONT_6_DOT;
         font.Height = eightDots ? SIZE_8_DOT : SIZE_6_DOT;
@@ -216,8 +241,8 @@ public class PreviewDialog implements XItemListener,
 
         int origWidth = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Width"));
         int origHeight = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Height"));
-        int newWidth  = 2 + (int)Math.ceil(settings.getCellsPerLine()*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
-        int newHeight = 1 + (int)Math.ceil(settings.getLinesPerPage()*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
+        int newWidth  = 2 + (int)Math.ceil((cellsPerLine + marginLeft + marginRight)*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
+        int newHeight = 1 + (int)Math.ceil((linesPerPage + marginTop + marginBottom)*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
 
         previewFieldProperties.setPropertyValue("Width", newWidth);
         previewFieldProperties.setPropertyValue("Height", newHeight);
@@ -301,20 +326,55 @@ public class PreviewDialog implements XItemListener,
 
         String previewText = "";
         String line = null;
-
+        Node row = null;
         NodeList rows = XPathAPI.selectNodeList(root,
                 "/pef/body/volume[" + volume + "]/section[" + section + "]/page[" + page + "]/row");
 
-        for (int i=0;i<rows.getLength();i++) {
-            Node row = (Element)rows.item(i);
+        int width = cellsPerLine + marginLeft + marginRight;
+        int height = linesPerPage + marginTop + marginBottom;
+        int offset = ((page % 2 == 0) && duplex && mirrorAlign) ? marginRight : marginLeft;
+
+        int x,y;
+
+        y = 0;
+        while (y < marginTop) {
+            x = 0;
+            while (x < width) {
+                previewText += " ";
+                x++;
+            }
+            previewText += "\n";
+            y++;
+        }
+        for (int i=0; i<rows.getLength(); i++) {
+            x = 0;
+            while (x < offset) {
+                previewText += " ";
+                x++;
+            }
+            row = (Element)rows.item(i);
             line = row.getTextContent();
-            for (int j=line.length();j<settings.getCellsPerLine();j++) {
-                line += "\u2800";
-            }
             previewText += line;
-            if (i<rows.getLength()-1) {
-                previewText += "\n";
+            x += line.length();
+            while (x < offset + cellsPerLine) {
+                previewText += "\u2800";
+                x++;
             }
+            while (x < width) {
+                previewText += " ";
+                x++;
+            }
+            y++;
+            if (y < height) { previewText += "\n"; }
+        }
+        while (y < height) {
+            x = 0;
+            while (x < width) {
+                previewText += " ";
+                x++;
+            }
+            y++;
+            if (y < height) { previewText += "\n"; }
         }
 
         previewField.setText(previewText);
@@ -325,15 +385,15 @@ public class PreviewDialog implements XItemListener,
 
         String vol;
         volumesListBox.removeItemListener(this);
-        volumeCount = Math.max(1,settings.getNumberOfVolumes()) + settings.getNumberOfSupplements() + (settings.getPreliminaryVolumeEnabled()?1:0);
+        volumeCount = Math.max(1, numberOfVolumes) + numberOfSupplements + (preliminaryVolumeEnabled?1:0);
 
         for (int i=0;i<volumeCount;i++) {
-            if (i==0 && settings.getPreliminaryVolumeEnabled()) {
+            if (i==0 && preliminaryVolumeEnabled) {
                 vol = L10N_preliminary_volume;
-            } else if (i < Math.max(1,settings.getNumberOfVolumes()) + (settings.getPreliminaryVolumeEnabled()?1:0)) {
-                vol = L10N_volume + " " + (i + 1 - (settings.getPreliminaryVolumeEnabled()?1:0));
+            } else if (i < Math.max(1, numberOfVolumes) + (preliminaryVolumeEnabled?1:0)) {
+                vol = L10N_volume + " " + (i + 1 - (preliminaryVolumeEnabled?1:0));
             } else {
-                vol = L10N_supplement + " " + (i + 1 - Math.max(1,settings.getNumberOfVolumes()) - (settings.getPreliminaryVolumeEnabled()?1:0));
+                vol = L10N_supplement + " " + (i + 1 - Math.max(1, numberOfVolumes) - (preliminaryVolumeEnabled?1:0));
             }
             volumesListBox.addItem(vol, (short)i);
         }
@@ -349,11 +409,11 @@ public class PreviewDialog implements XItemListener,
         sectionsListBox.removeItemListener(this);
         sectionsListBox.removeItems((short)0, Short.MAX_VALUE);
 
-        if (settings.getPreliminaryPagesPresent()) {
+        if (preliminaryPagesPresent) {
             sectionsListBox.addItem(L10N_preliminary_section, (short)0);
             sectionCount++;
         }
-        if (!(volume==1 && settings.getPreliminaryVolumeEnabled())) {
+        if (!(volume==1 && preliminaryVolumeEnabled)) {
             sectionsListBox.addItem(L10N_main_section, (short)sectionCount);
             sectionCount++;
         }
@@ -372,13 +432,13 @@ public class PreviewDialog implements XItemListener,
         pageCount = Integer.parseInt(XPathAPI.eval(root,
                 "count(/pef/body/volume[" + volume + "]/section[" + section + "]/page)").str());
 
-        if (!(settings.getPreliminaryPagesPresent() && section == 1)) {
+        if (!(preliminaryPagesPresent && section == 1)) {
             firstpage += Integer.parseInt(XPathAPI.eval(root,
                     "count(/pef/body/volume[" + volume + "]/preceding-sibling::*/section[position()=" + section + "]/page)").str());
         }
         for (int i=0; i<pageCount;i++) {
-            if (settings.getPreliminaryPagesPresent() && section == 1) {
-                if (settings.getPreliminaryPageFormat() == PageNumberFormat.P) {
+            if (preliminaryPagesPresent && section == 1) {
+                if (preliminaryPageFormat == PageNumberFormat.P) {
                     pag = "p" + (firstpage + i);
                 } else {
                     pag = RomanNumbering.toRoman(firstpage + i);

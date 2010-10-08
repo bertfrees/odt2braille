@@ -168,18 +168,12 @@ public class ExportDialog implements XItemListener,
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
 
-        L10N_table.put("EN_US",                "US Computer Braille");
-        L10N_table.put("EN_GB",                "US Computer Braille (Lower Case)");
-        L10N_table.put("BRAILLO_6DOT_001_00",  "Braillo USA 6 Dot 001.00");
-        L10N_table.put("BRAILLO_6DOT_044_00",  "Braillo England 6 Dot 044.00");
-        L10N_table.put("BRAILLO_6DOT_046_01",  "Braillo Sweden 6 Dot 046.01");
-        L10N_table.put("BRAILLO_6DOT_047_01",  "Braillo Norway 6 Dot 047.01");
-        L10N_table.put("UNICODE_BRAILLE",      "PEF (Unicode Braille)");
-        L10N_table.put("BRF",                  "BRF (ASCII Braille)");
-        L10N_table.put("BRL",                  "BRL (Non-ASCII Braille)");
-        L10N_table.put("ES_OLD",               "Spanish Braille (Old)");
-        L10N_table.put("ES_NEW",               "Spanish Braille (New)");
-        L10N_table.put("UNDEFINED",            "-");
+        L10N_table.put("UNDEFINED",         "-");
+        L10N_table.put("UNICODE_BRAILLE",   "PEF (Unicode Braille)");
+        L10N_table.put("BRF",               "BRF (ASCII Braille)");
+        L10N_table.put("BRL",               "BRL (Non-ASCII Braille)");
+        L10N_table.put("ES_OLD",            "Spanish Braille (Old)");
+        L10N_table.put("ES_NEW",            "Spanish Braille (New)");        
 
         L10N_brailleFile.put("NONE",  "-");
         L10N_brailleFile.put("PEF",   "PEF (Portable Embosser Format)");
@@ -226,7 +220,7 @@ public class ExportDialog implements XItemListener,
     private void addListeners() {
         
         brailleFileListBox.addItemListener(this);
-        tableListBox.addItemListener(this);
+        eightDotsCheckBox.addItemListener(this);
         settingsButton.addActionListener(this);
 
     }
@@ -289,9 +283,9 @@ public class ExportDialog implements XItemListener,
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
 
         updateBrailleFileListBox();
-        updateTableListBox();
         updateDuplexCheckBox();
-        updateEightDotsCheckBox();        
+        updateEightDotsCheckBox();
+        updateTableListBox();
         updateOKButton();
 
     }
@@ -301,7 +295,7 @@ public class ExportDialog implements XItemListener,
         settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
         settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
         settings.setDuplex((duplexCheckBox.getState()==(short)1));
-        settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
+        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
 
     }
 
@@ -347,22 +341,18 @@ public class ExportDialog implements XItemListener,
 
         String key;
 
-        tableListBox.removeItemListener(this);
-
-            tableListBox.removeItems((short)0, Short.MAX_VALUE);
-            tableTypes = settings.getSupportedTableTypes();
-            for (int i=0;i<tableTypes.size();i++) {
-                key = tableTypes.get(i).name();
-                if (L10N_table.containsKey(key)) {
-                    tableListBox.addItem(L10N_table.get(key), (short)i);
-                } else {
-                    tableListBox.addItem(key, (short)i);
-                }
+        tableListBox.removeItems((short)0, Short.MAX_VALUE);
+        tableTypes = settings.getSupportedTableTypes();
+        for (int i=0;i<tableTypes.size();i++) {
+            key = tableTypes.get(i).name();
+            if (L10N_table.containsKey(key)) {
+                tableListBox.addItem(L10N_table.get(key), (short)i);
+            } else {
+                tableListBox.addItem(key, (short)i);
             }
-            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-            tableListBoxProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=BrailleFileType.NONE);
-
-        tableListBox.addItemListener(this);
+        }
+        tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
+        tableListBoxProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=BrailleFileType.NONE);
 
     }
 
@@ -379,12 +369,13 @@ public class ExportDialog implements XItemListener,
 
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
-        boolean pef = (settings.getBrailleFileType()==BrailleFileType.PEF);
+        boolean eightDotsSupported = settings.eightDotsIsSupported();
+        if (eightDotsSupported) {settings.setEightDots(true);}
 
-        if (pef) {settings.setEightDots(true);}
-
-        eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
-        eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported() && !pef);
+        eightDotsCheckBox.removeItemListener(this);
+            eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
+            eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported() && !eightDotsSupported);
+        eightDotsCheckBox.addItemListener(this);
 
     }
 
@@ -403,11 +394,11 @@ public class ExportDialog implements XItemListener,
                 updateEightDotsCheckBox();
                 updateOKButton();
 
-            } else if (source.equals(tableListBox)) {
+            } else if (source.equals(eightDotsCheckBox)) {
 
-                settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+                settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
 
-                updateEightDotsCheckBox();
+                updateTableListBox();
 
             }
 
@@ -427,7 +418,8 @@ public class ExportDialog implements XItemListener,
                 if (settingsDialog == null) {
                     settingsDialog = new SettingsDialog(xContext);
                     progressbar.start();
-                    progressbar.setSteps(3);
+                    progressbar.setSteps(1);
+                    progressbar.setStatus("Loading settings...");
                     settingsDialog.initialise(settings, progressbar);
                     progressbar.finish(true);
                     progressbar.close();

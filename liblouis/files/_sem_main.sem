@@ -41,9 +41,9 @@
 # Softreturns
 # Blank lines
 
-	newline	   br
 	softreturn &xpath(//dtb:span/dtb:br)
 	softreturn &xpath(//dtb:p/dtb:br)
+	newline	   &xpath(//*[not(self::dtb:span or self::dtb:p)]/dtb:br)
 	
 # Page numbers
 # Hard page breaks

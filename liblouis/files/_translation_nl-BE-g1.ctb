@@ -2,81 +2,110 @@
 #  odt2braille - Braille authoring in OpenOffice.org.
 #  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
+#
+#  Dutch Braille (for Belgium and the Netherlands)
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#     See also: « Braillestandaard voor algemeen gebruik in het Nederlandse taalgebied,
+#                Van toepassing vanaf 1 september 2005 »
+#              (Federatie Slechtzienden- en Blindenbelang en 
+#                Belgische Confederatie voor Blinden en Slechtzienden, 2005)
+#
+# ----------------------------------------------------------------------------------------------
 
-litdigit 1 1
-litdigit 2 12
-litdigit 3 14
-litdigit 4 145
-litdigit 5 15
-litdigit 6 124
-litdigit 7 1245
-litdigit 8 125
-litdigit 9 24
-litdigit 0 245
-
+# ---------------------------------------
 # Braille indicator opcodes
+# ---------------------------------------
 
 numsign 3456
-
 capsign 46
 begcaps 45
 endcaps 6
 
+# ---------------------------------------
+# Emphasis opcodes
+# ---------------------------------------
+
+# cursief
 lenitalphrase 4
-lenboldphrase 4
-lenunderphrase 4
 italsign 456
-boldsign 456
-undersign 456
 begital 456
-begbold 456
-begunder 456
 endital 6
-endbold 6
-endunder 6
 firstwordital 456-456
+
+# vet
+lenboldphrase 4
+boldsign 456
+begbold 456
+endbold 6
 firstwordbold 456-456
+
+# onderstreept
+lenunderphrase 4
+undersign 456
+begunder 456
+endunder 6
 firstwordunder 456-456
 
-# uppercase - 36
-# uppercase . 256
-# uppercase & 12346
-# uppercase / 34
+# ---------------------------------------
+# Special symbol opcodes
+# ---------------------------------------
 
+decpoint  \x002C  2
+decpoint  \x002E  256
+hyphen    \x002D  36
+
+# ---------------------------------------
 # Translation opcodes
+# ---------------------------------------
 
-midnum , 2
-midnum . 3
-midnum + 235
-midnum - 36
-midnum / 256
-midnum : 25
-midnum = 2356
-endnum # 56-3456
-endnum \x2030 0-123456-123456
-prepunc " 2356
-postpunc " 2356
-prepunc ' 3
-postpunc ' 3
-prepunc ° 4-356			born sign														x00B0
-repeated \s 0					espaces
-repeated \t 0					tabulations
-repeated \x00A0 0			espaces insécables
+# spaties
+repeated \s 0
+repeated \t 0
 
-repeated ... 256-256-256		points de suite
-repeated --- 36-36-36
-repeated ___ 456-456-456
+# ampersand
+midword \x0026 5-12346
 
-always \s--\s 36-36		tiret
+# paragraafteken
+begword \x00A7   346-0
+midword \x00A7 0-346-0
+endword \x00A7 0-346
 
-# ----------------
+# percent
+endnum  \x0025 0-123456
 
-always # 5-3456						number sign								x0023
-always $ 145							dollar sign								x0024
-always % 3456-245-356			percent sign							x0025
-always ' 3								apostrophe								x0027
-always \\ 5-16						reverse solidus						x005C
-always ~ 5-26							tilde											x007E
-always © 5-14							copyright									x00A9
+# promille
+endnum  \x2030 0-123456-123456
+
+# isgelijkteken
+begword \x003D   2356-0
+midword \x003D 0-2356
+endword \x003D 0-2356-0
+
+# plusteken
+begword \x002B   235-0
+midword \x002B 0-235-0
+endword \x002B 5-235
+endnum  \x002B 5-235
+
+# deelteken
+begword \x00F7   256-0
+midword \x00F7 0-256-0
+endword \x00F7 0-256
+
+# maalteken
+begword \x00D7   236-0
+midword \x00D7 0-236-0
+endword \x00D7 0-236
+
+# ---------------------------------------
+# Various
+# ---------------------------------------
+
+# romeinse cijfers in paginanummering
+replace \\_
+
+# herstelteken als getal gevolgd wordt door a-j
+class    digitletter       abcdefghij
+context  $d[]%digitletter  @6
 
 # ----------------------------------------------------------------------------------------------
