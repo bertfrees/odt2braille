@@ -450,8 +450,6 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet tableColumnListBoxProperties = null;
     private XPropertySet tableColumnDelimiterFieldProperties = null;
     private XPropertySet tableColumnDelimiterButtonProperties = null;
-    private XPropertySet tableSpacingGroupBoxProperties = null;
-    private XPropertySet tablePositionGroupBoxProperties = null;
     private XPropertySet tableAlignmentListBoxProperties = null;
     private XPropertySet tableLinesAboveProperties = null;
     private XPropertySet tableLinesBelowProperties = null;
@@ -590,8 +588,6 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet tableOfContentsRunoversFieldProperties = null;
     private XPropertySet tableOfContentsLineFillFieldProperties = null;
     private XPropertySet tableOfContentsLineFillButtonProperties = null;
-    private XPropertySet tableOfContentsSpacingGroupBoxProperties = null;
-    private XPropertySet tableOfContentsPositionGroupBoxProperties = null;
 
     private static String _tableOfContentsCheckBox = "CheckBox5";
     private static String _tableOfContentsTitleField = "TextField4";
@@ -636,7 +632,6 @@ public class SettingsDialog implements XItemListener,
     private XButton specialSymbolsMoveUpButton = null;
     private XButton specialSymbolsMoveDownButton = null;
 
-    private XPropertySet specialSymbolsGroupBoxProperties = null;
     private XPropertySet specialSymbolsListCheckBoxProperties = null;
     private XPropertySet specialSymbolsListFieldProperties = null;
     private XPropertySet specialSymbolsListBoxProperties = null;
@@ -771,13 +766,13 @@ public class SettingsDialog implements XItemListener,
         typefaceOptions = new ArrayList(Arrays.asList(TypefaceOption.values()));
 
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
-        pagesEnabled[PARAGRAPHS_PAGE-1] = settings.getParagraphsPresent();
-        pagesEnabled[HEADINGS_PAGE-1] = settings.getHeadingsPresent();
-        pagesEnabled[LISTS_PAGE-1] = settings.getListsPresent();
-        pagesEnabled[TABLES_PAGE-1] = settings.getTablesPresent();
-        pagesEnabled[MATH_PAGE-1] = settings.getMathPresent();
-        pagesEnabled[TOC_PAGE-1] = settings.getPreliminaryPagesPresent();
-        pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getPreliminaryPagesPresent();
+        // pagesEnabled[PARAGRAPHS_PAGE-1] = settings.getParagraphsPresent();
+        // pagesEnabled[HEADINGS_PAGE-1] = settings.getHeadingsPresent();
+        // pagesEnabled[LISTS_PAGE-1] = settings.getListsPresent();
+        // pagesEnabled[TABLES_PAGE-1] = settings.getTablesPresent();
+        // pagesEnabled[MATH_PAGE-1] = settings.getMathPresent();
+        // pagesEnabled[TOC_PAGE-1] = settings.getPreliminaryPagesPresent();
+        // pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getPreliminaryPagesPresent();
 
         // Main Window
 

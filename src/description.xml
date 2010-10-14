@@ -6,8 +6,8 @@
     <version value="0.0.2"/>
 	
     <!-- Platform Target -->
-    <platform value="windows_x86" />
-    <!-- <platform value="all" /> -->
+    <!--<platform value="windows_x86" />-->
+    <platform value="all" />
 
     <!-- Identifier -->
     <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn"/>

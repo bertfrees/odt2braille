@@ -241,8 +241,8 @@ public class PreviewDialog implements XItemListener,
 
         int origWidth = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Width"));
         int origHeight = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Height"));
-        int newWidth  = 2 + (int)Math.ceil((cellsPerLine + marginLeft + marginRight)*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
-        int newHeight = 1 + (int)Math.ceil((linesPerPage + marginTop + marginBottom)*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
+        int newWidth  = 10 + 2 + (int)Math.ceil((cellsPerLine + marginLeft + marginRight)*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
+        int newHeight = 10 + 1 + (int)Math.ceil((linesPerPage + marginTop + marginBottom)*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
 
         previewFieldProperties.setPropertyValue("Width", newWidth);
         previewFieldProperties.setPropertyValue("Height", newHeight);

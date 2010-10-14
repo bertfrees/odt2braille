@@ -348,19 +348,16 @@ Voor Ubuntu: OOo 3.2.1 nodig ?
 Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen.
 @item
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
-	* Talen
-	* Styles (in het begin: nodig voor analyse door Settings)
-	* Lege paragrafen en lege spans verwijderen, ...
-	* Secties verwijderen
-	* Paginanummering
-	* Lijstnummering & bullets
-	* Kopnummering
-	* Linken van captions
-	* Omzetten naar "DAISY"
-	* Titel pagina
-	* Special typeface
-	* Splitsen in volumes (pas op einde)
-(=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
+	* OK: Get languages
+	* OK: Get styles
+	*     Lege paragrafen en lege spans verwijderen, ...
+	*     Paginanummering (=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
+	*     Lijstnummering & bullets
+	*     Kopnummering
+	*     Linken van captions (=> accessibility checker ?)
+	* OK: Main
+	* OK: Special typeface + languages
+	*     Splitsen in volumes + titelpagina invullen
 @item
 Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate.
 @item
