@@ -298,6 +298,8 @@ need adjustments.
 
 @unnumberedsec Adding translation tables
 
+(volgorde, benaming, waarop letten, tabellen niet opslaan in UTF-8 (wel zonder BOM), ...)
+
 @unnumberedsec Adding hyphenation tables
 
 @node Task list
@@ -350,14 +352,15 @@ Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijve
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* OK: Get languages
 	* OK: Get styles
-	*     Lege paragrafen en lege spans verwijderen, ...
-	*     Paginanummering (=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
-	*     Lijstnummering & bullets
-	*     Kopnummering
-	*     Linken van captions (=> accessibility checker ?)
+	*     Delete empty paragraphs, ...
+	*     Page numbering (=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
+	*     List numbering & bullets
+	*     Heading numbering
+	*     Linking of captions (=> accessibility checker ?)
 	* OK: Main
+	*     Continued headings
 	* OK: Special typeface + languages
-	*     Splitsen in volumes + titelpagina invullen
+	*     Split volumes
 @item
 Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate.
 @item

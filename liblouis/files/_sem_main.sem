@@ -23,8 +23,8 @@
 	
 # Volumes
 
-	generic div,class,volume \*@e
-	newPageBefore &xpath(//dtb:div[@class='volume'][position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*@e
+	generic       &xpath(//dtb:div[@class='volume' or @class='supplement'][not(position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]))]) \*@e
+	newPageBefore &xpath(//dtb:div[@class='volume' or @class='supplement'][    position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]) ]) \*@e
 	
 # Special Typefaces
 # Languages
@@ -260,6 +260,6 @@
 
 	no div,class,omission
 	no div,class,transposition
-	no div,class,notInVolume
+	no div,class,not-in-volume
 
 # ----------------------------------------------------------------------------------------------
