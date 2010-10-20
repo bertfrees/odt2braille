@@ -298,7 +298,7 @@ need adjustments.
 
 @unnumberedsec Adding translation tables
 
-(volgorde, benaming, waarop letten, tabellen niet opslaan in UTF-8 (wel zonder BOM), ...)
+(volgorde, benaming, waarop letten, tabellen opslaan in ANSI, ...)
 
 @unnumberedsec Adding hyphenation tables
 
@@ -361,6 +361,8 @@ Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (e
 	*     Continued headings
 	* OK: Special typeface + languages
 	*     Split volumes
+@item
+DOM <-> STAX?
 @item
 Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate.
 @item

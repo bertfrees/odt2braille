@@ -64,17 +64,19 @@ pilcrow
 
 In order to install odt2braille, OpenOffice.org version 3.0 or later is required. 
 You can find the latest version of OpenOffice.org at @url{http://download.openoffice.org/@/other.html}.
-It is strongly recommended that you also download and install the @emph{odt2braille fonts}:
-@url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille6.ttf}
-for 6-dot Braille and @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille8.ttf}
-for 8-dot Braille.
+Make sure the installer includes the @emph{Java Runtime Environment (JRE)}.
 To add the odt2braille extension, launch OpenOffice.org and open [@emph{Tools > Extension Manager...}].
 First remove any older versions of odt2braille. Then choose @emph{Add...}, select the odt2braille 
-installation package and follow the steps. Finally, when the installation is finished, restart OpenOffice.org.
+installation package and follow the steps. You can download the latest version from 
+@url{http://odt2braille.@/sourceforge.@/net/@/downloads.html}.
 
-You can download the latest version of odt2braille from @url{http://odt2braille.@/sourceforge.@/net/@/downloads.html}.
+@note{Make sure the installation package is an @emph{.oxt} file. It might happen that Internet Explorer saves it as a 
+@emph{.zip} file. In this case, just rename the file back to @emph{.oxt}.}
 
-@note{Make sure the installation package is an @emph{.oxt} file. It might happen that it is downloaded as a @emph{.zip} file instead. In this case, just rename the file.}
+It is strongly recommended that you also download and install the @emph{odt2braille fonts}:
+@url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille6.ttf} for 6-dot
+Braille and @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille8.ttf}
+for 8-dot Braille. Finally, when everything is installed, restart OpenOffice.org and you're ready to go.
 
 @heading OpenOffice.org Accessibility
 

@@ -93,6 +93,7 @@ public class SettingsIO {
     private static String brailleRulesProperty =                 "[BRL]BrailleRules";
     private static String languageProperty =                     "[BRL]Language";
     private static String gradeProperty =                        "[BRL]Grade";
+    private static String dotsProperty =                         "[BRL]Dots";
     private static String transcriptionInfoEnabledProperty =     "[BRL]TranscriptionInfo";
     private static String creatorProperty =                      "[BRL]Creator";
     private static String volumeInfoEnabledProperty =            "[BRL]VolumeInfo";
@@ -115,6 +116,7 @@ public class SettingsIO {
     private static String linesBelowProperty =                   "[BRL]LinesBelow";
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
     private static String prefixProperty =                       "[BRL]ListPrefix";
+    private static String keepEmptyParagraphsProperty =          "[BRL]KeepEmptyParagraphs";
     private static String boldProperty =                         "[BRL]Boldface";
     private static String italicProperty =                       "[BRL]Italic";
     private static String underlineProperty =                    "[BRL]Underline";
@@ -202,15 +204,21 @@ public class SettingsIO {
      *                      <code>null</code> otherwise.
      */
     private String getStringProperty (String property)
-                               throws com.sun.star.uno.Exception {
+                               throws com.sun.star.beans.UnknownPropertyException,
+                                      com.sun.star.lang.WrappedTargetException {
 
         String s;
 
         if (xPropSetInfo.hasPropertyByName(property)) {
-            s = AnyConverter.toString(xPropSet.getPropertyValue(property));
-            if (s.length() > 0) {
-                return s;
-            } else {
+            try {
+                s = AnyConverter.toString(xPropSet.getPropertyValue(property));
+                if (s.length() > 0) {
+                    return s;
+                } else {
+                    return null;
+                }
+            } catch(com.sun.star.lang.IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, "The property " + property + "was not a string");
                 return null;
             }
         } else {
@@ -226,10 +234,16 @@ public class SettingsIO {
      *                      <code>NaN</code> otherwise.
      */
     private Double getDoubleProperty(String property)
-                              throws com.sun.star.uno.Exception {
+                              throws com.sun.star.beans.UnknownPropertyException,
+                                     com.sun.star.lang.WrappedTargetException {
 
         if (xPropSetInfo.hasPropertyByName(property)) {
-            return AnyConverter.toDouble(xPropSet.getPropertyValue(property));
+            try {
+                return AnyConverter.toDouble(xPropSet.getPropertyValue(property));
+            } catch(com.sun.star.lang.IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, "The property " + property + "was not a double");
+                return null;
+            }
         } else {
             return Double.NaN;
         }
@@ -243,10 +257,16 @@ public class SettingsIO {
      *                      <code>null</code> otherwise.
      */
     private Boolean getBooleanProperty(String property)
-                                throws com.sun.star.uno.Exception {
+                                throws com.sun.star.beans.UnknownPropertyException,
+                                       com.sun.star.lang.WrappedTargetException {
 
         if (xPropSetInfo.hasPropertyByName(property)) {
-            return AnyConverter.toBoolean(xPropSet.getPropertyValue(property));
+            try {
+                return AnyConverter.toBoolean(xPropSet.getPropertyValue(property));
+            } catch(com.sun.star.lang.IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, "The property " + property + "was not a boolean");
+                return null;
+            }
         } else {
             return null;
         }
@@ -278,6 +298,9 @@ public class SettingsIO {
             if (!(d = getDoubleProperty(gradeProperty + "_" + languages.get(i))).isNaN()) {
                 loadedSettings.setGrade(d.intValue(), languages.get(i));
             }
+            if (!(d = getDoubleProperty(dotsProperty + "_" + languages.get(i))).isNaN()) {
+                loadedSettings.setDots(d.intValue(), languages.get(i));
+            }
         }
         
         for (int i=0;i<styleNames.length;i++) {
@@ -285,9 +308,6 @@ public class SettingsIO {
             String styleName = styleNames[i];
             Style style = loadedSettings.getStyle(styleName);
             
-            if ((b = getBooleanProperty(alignmentProperty + "_" + styleName)) != null) {
-                style.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
-            }
             if (!(d = getDoubleProperty(firstLineProperty + "_" + styleName)).isNaN()) {
                 style.setFirstLine(d.intValue());
             }
@@ -302,6 +322,13 @@ public class SettingsIO {
             }
             if (!((d = getDoubleProperty(linesBetweenProperty + "_" + styleName)).isNaN())) {
                 style.setLinesBetween(d.intValue());
+            }
+            if ((s = getStringProperty(alignmentProperty + "_" + styleName)) != null) {
+                try {
+                    style.setAlignment(Alignment.valueOf(s));
+                } catch (IllegalArgumentException ex) {
+                    logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+                }
             }
         }
 
@@ -318,9 +345,6 @@ public class SettingsIO {
 
                 if (!paraStyle.getInherit()) {
 
-                    if ((b = getBooleanProperty(alignmentProperty + "_paragraph_" + styleName)) != null) {
-                        paraStyle.setAlignment(b?Alignment.CENTERED:Alignment.LEFT);
-                    }
                     if (!(d = getDoubleProperty(firstLineProperty + "_paragraph_" + styleName)).isNaN()) {
                         paraStyle.setFirstLine(d.intValue());
                     }
@@ -332,6 +356,16 @@ public class SettingsIO {
                     }
                     if (!((d = getDoubleProperty(linesBelowProperty + "_paragraph_" + styleName)).isNaN())) {
                         paraStyle.setLinesBelow(d.intValue());
+                    }
+                    if ((s = getStringProperty(alignmentProperty + "_paragraph_" + styleName)) != null) {
+                        try {
+                            paraStyle.setAlignment(Alignment.valueOf(s));
+                        } catch (IllegalArgumentException ex) {
+                            logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+                        }
+                    }
+                    if ((b = getBooleanProperty(keepEmptyParagraphsProperty + "_paragraph_" + styleName)) != null) {
+                        paraStyle.setKeepEmptyParagraphs(b);
                     }
                 }
             }
@@ -742,6 +776,9 @@ public class SettingsIO {
             setProperty(gradeProperty + "_" + languages.get(i),
                         settingsAfterChange.getGrade(languages.get(i)),
                         settingsBeforeChange.getGrade(languages.get(i)));
+            setProperty(dotsProperty + "_" + languages.get(i),
+                        settingsAfterChange.getDots(languages.get(i)),
+                        settingsBeforeChange.getDots(languages.get(i)));
         }
         
         for (int i=0;i<styleNames.length;i++) {
@@ -751,8 +788,8 @@ public class SettingsIO {
             String styleName = styleNames[i];
 
             setProperty(alignmentProperty + "_" + styleName,
-                        (styleAfterChange.getAlignment() == Alignment.CENTERED),
-                        (styleBeforeChange.getAlignment() == Alignment.CENTERED));
+                        styleAfterChange.getAlignment().name(),
+                        styleBeforeChange.getAlignment().name());
             setProperty(firstLineProperty + "_" + styleName,
                         styleAfterChange.getFirstLine(),
                         styleBeforeChange.getFirstLine());
@@ -779,14 +816,14 @@ public class SettingsIO {
             if (!paraStyleBeforeChange.getAutomatic()) {
 
                 setProperty(inheritProperty + "_paragraph_" + styleName,
-                            (paraStyleAfterChange.getInherit()),
-                            (paraStyleBeforeChange.getInherit()));
+                            paraStyleAfterChange.getInherit(),
+                            paraStyleBeforeChange.getInherit());
 
                 if (!paraStyleAfterChange.getInherit()) {
 
                     setProperty(alignmentProperty + "_paragraph_" + styleName,
-                                (paraStyleAfterChange.getAlignment() == Alignment.CENTERED),
-                                (paraStyleBeforeChange.getAlignment() == Alignment.CENTERED));
+                                paraStyleAfterChange.getAlignment().name(),
+                                paraStyleBeforeChange.getAlignment().name());
                     setProperty(firstLineProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getFirstLine(),
                                 paraStyleBeforeChange.getFirstLine());
@@ -799,6 +836,9 @@ public class SettingsIO {
                     setProperty(linesBelowProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getLinesBelow(),
                                 paraStyleBeforeChange.getLinesBelow());
+                    setProperty(keepEmptyParagraphsProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getKeepEmptyParagraphs(),
+                                paraStyleBeforeChange.getKeepEmptyParagraphs());
                 }
             }
         }

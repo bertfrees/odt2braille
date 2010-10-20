@@ -313,6 +313,7 @@ public class SettingsDialog implements XItemListener,
     private XListBox paragraphAlignmentListBox = null;
     private XNumericField paragraphFirstLineField = null;
     private XNumericField paragraphRunoversField = null;
+    private XCheckBox paragraphKeepEmptyCheckBox = null;
 
     private XPropertySet paragraphInheritCheckBoxProperties = null;
     private XPropertySet paragraphParentFieldProperties = null;
@@ -321,6 +322,7 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet paragraphAlignmentListBoxProperties = null;
     private XPropertySet paragraphLinesAboveProperties = null;
     private XPropertySet paragraphLinesBelowProperties = null;
+    private XPropertySet paragraphKeepEmptyCheckBoxProperties = null;
 
     private static String _paragraphStyleListBox = "ListBox26";
     private static String _paragraphInheritCheckBox = "CheckBox23";
@@ -330,6 +332,7 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphRunoversField = "NumericField8";
     private static String _paragraphLinesAboveField = "NumericField9";
     private static String _paragraphLinesBelowField = "NumericField10";
+    private static String _paragraphKeepEmptyCheckBox = "CheckBox9";
 
     private static String _paragraphStyleLabel = "Label83";
     private static String _paragraphInheritLabel = "Label84";
@@ -338,6 +341,7 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphRunoversLabel = "Label32";
     private static String _paragraphLinesAboveLabel = "Label33";
     private static String _paragraphLinesBelowLabel = "Label34";
+    private static String _paragraphKeepEmptyLabel = "Label14";
 
     private String L10N_paragraphStyleLabel = null;
     private String L10N_paragraphInheritLabel = null;
@@ -346,6 +350,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_paragraphRunoversLabel = null;
     private String L10N_paragraphLinesAboveLabel = null;
     private String L10N_paragraphLinesBelowLabel = null;
+    private String L10N_paragraphKeepEmptyLabel = null;
 
     // Headings Page
 
@@ -831,6 +836,7 @@ public class SettingsDialog implements XItemListener,
         L10N_paragraphRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
+        L10N_paragraphKeepEmptyLabel = "Keep empty paragraphs";
 
         // Headings Page
 
@@ -1129,6 +1135,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_paragraphLinesAboveField));
         paragraphLinesBelowField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_paragraphLinesBelowField));
+        paragraphKeepEmptyCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_paragraphKeepEmptyCheckBox));
 
         // Headings page
 
@@ -1341,6 +1349,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphLinesAboveField)).getModel());
         paragraphLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphLinesBelowField)).getModel());
+        paragraphKeepEmptyCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphKeepEmptyCheckBox)).getModel());
 
         // Headings Page
 
@@ -1652,6 +1662,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_paragraphLinesAboveLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphLinesBelowLabel));
         xFixedText.setText(L10N_paragraphLinesBelowLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphKeepEmptyLabel));
+        xFixedText.setText(L10N_paragraphKeepEmptyLabel);
 
         // Headings page
 
@@ -1881,11 +1893,11 @@ public class SettingsDialog implements XItemListener,
 
             paragraphLinesAboveField.setDecimalDigits((short)0);
             paragraphLinesAboveField.setMin((double)0);
-            paragraphLinesAboveField.setMax((double)1);
+            paragraphLinesAboveField.setMax((double)Integer.MAX_VALUE);
 
             paragraphLinesBelowField.setDecimalDigits((short)0);
             paragraphLinesBelowField.setMin((double)0);
-            paragraphLinesBelowField.setMax((double)1);
+            paragraphLinesBelowField.setMax((double)Integer.MAX_VALUE);
 
             paragraphParentFieldProperties.setPropertyValue("Enabled", false);
 
@@ -1915,11 +1927,11 @@ public class SettingsDialog implements XItemListener,
 
             headingLinesAboveField.setDecimalDigits((short)0);
             headingLinesAboveField.setMin((double)0);
-            headingLinesAboveField.setMax((double)1);
+            headingLinesAboveField.setMax((double)Integer.MAX_VALUE);
 
             headingLinesBelowField.setDecimalDigits((short)0);
             headingLinesBelowField.setMin((double)0);
-            headingLinesBelowField.setMax((double)1);
+            headingLinesBelowField.setMax((double)Integer.MAX_VALUE);
             
             updateHeadingsPageFieldValues();
             updateHeadingsPageFieldProperties();
@@ -1932,15 +1944,15 @@ public class SettingsDialog implements XItemListener,
 
             listLinesAboveField.setDecimalDigits((short)0);
             listLinesAboveField.setMin((double)0);
-            listLinesAboveField.setMax((double)1);
+            listLinesAboveField.setMax((double)Integer.MAX_VALUE);
             
             listLinesBelowField.setDecimalDigits((short)0);
             listLinesBelowField.setMin((double)0);
-            listLinesBelowField.setMax((double)1);
+            listLinesBelowField.setMax((double)Integer.MAX_VALUE);
 
             listLinesBetweenField.setDecimalDigits((short)0);
             listLinesBetweenField.setMin((double)0);
-            listLinesBetweenField.setMax((double)1);
+            listLinesBetweenField.setMax((double)Integer.MAX_VALUE);
 
             for (int i=0;i<10;i++) { listLevelListBox.addItem(String.valueOf(i+1), (short)i);}
             listLevelListBox.selectItemPos((short)(currentListLevel-1), true);
@@ -1971,20 +1983,21 @@ public class SettingsDialog implements XItemListener,
 
             tableLinesAboveField.setDecimalDigits((short)0);
             tableLinesAboveField.setMin((double)0);
-            tableLinesAboveField.setMax((double)1);
+            tableLinesAboveField.setMax((double)Integer.MAX_VALUE);
             tableLinesAboveField.setValue((double)settings.getStyle("table").getLinesAbove());
 
             tableLinesBelowField.setDecimalDigits((short)0);
             tableLinesBelowField.setMin((double)0);
-            tableLinesBelowField.setMax((double)1);
+            tableLinesBelowField.setMax((double)Integer.MAX_VALUE);
             tableLinesBelowField.setValue((double)settings.getStyle("table").getLinesBelow());
 
             tableLinesBetweenField.setDecimalDigits((short)0);
             tableLinesBetweenField.setMin((double)0);
-            tableLinesBetweenField.setMax((double)1);
+            tableLinesBetweenField.setMax((double)Integer.MAX_VALUE);
             tableLinesBetweenField.setValue((double)settings.getStyle("table").getLinesBetween());
 
-            for (int i=0;i<10;i++) { tableColumnListBox.addItem((i<9)?String.valueOf(i+1):"\u226510", (short)i); }
+            for (int i=0;i<9;i++) { tableColumnListBox.addItem(String.valueOf(i+1), (short)i); }
+            tableColumnListBox.addItem("\u226510", (short)9);
             tableColumnListBox.selectItemPos((short)(currentTableColumn-1), true);
 
             for (int i=0; i<alignmentOptions.size(); i++) {
@@ -2031,7 +2044,7 @@ public class SettingsDialog implements XItemListener,
             
             tableOfContentsLinesBetweenField.setDecimalDigits((short)0);
             tableOfContentsLinesBetweenField.setMin((double)0);
-            tableOfContentsLinesBetweenField.setMax((double)1);
+            tableOfContentsLinesBetweenField.setMax((double)Integer.MAX_VALUE);
             tableOfContentsLinesBetweenField.setValue((double)settings.getStyle("toc").getLinesBetween());
 
             for (int i=0;i<4;i++) { tableOfContentsLevelListBox.addItem((i<3)?String.valueOf(i+1):"4-10", (short)i); }
@@ -2100,7 +2113,7 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesVisited[GENERAL_PAGE-1]) {
 
-            settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, settings.getMainLanguage());
+            settings.setDots((mainEightDotsCheckBox.getState()==(short)1)?8:6, settings.getMainLanguage());
             settings.setCreator(creatorField.getText());
             settings.setTranscribersNotesPageTitle(transcribersNotesPageField.getText());
             settings.setTranscriptionInfoEnabled(transcriptionInfoCheckBox.getState() == (short) 1);
@@ -2244,6 +2257,7 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesAboveProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesBelowProperties.setPropertyValue("Enabled", !bana && !inherit);
+        paragraphKeepEmptyCheckBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
 
     }
 
@@ -2415,6 +2429,7 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         paragraphFirstLineField.setValue((double)(left?style.getFirstLine():0));
         paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
+        paragraphKeepEmptyCheckBox.setState((short)(style.getKeepEmptyParagraphs()?1:0));
 
         paragraphAlignmentListBox.addItemListener(this);
         paragraphInheritCheckBox.addItemListener(this);
@@ -2428,6 +2443,7 @@ public class SettingsDialog implements XItemListener,
         if (!style.getInherit()) {
             style.setLinesAbove((int)paragraphLinesAboveField.getValue());
             style.setLinesBelow((int)paragraphLinesBelowField.getValue());
+            style.setKeepEmptyParagraphs(paragraphKeepEmptyCheckBox.getState()==(short)1);
             if (style.getAlignment() == Alignment.LEFT) {
                 style.setFirstLine((int)paragraphFirstLineField.getValue());
                 style.setRunovers((int)paragraphRunoversField.getValue());
@@ -2780,7 +2796,8 @@ public class SettingsDialog implements XItemListener,
                             updateGradeListBox();
                             updateEightDotsCheckBox();
                         } else if (source.equals(gradeListBox)) {
-                            settings.setGrade(Integer.parseInt(gradeListBox.getSelectedItem()), languages.get(selectedLanguagePos));
+                            settings.setGrade(settings.getSupportedGrades(
+                                    languages.get(selectedLanguagePos)).get((int)gradeListBox.getSelectedItemPos()),languages.get(selectedLanguagePos));
                             updateEightDotsCheckBox();
                         } else if (source.equals(eightDotsCheckBox)) {
                             settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, languages.get(selectedLanguagePos));
