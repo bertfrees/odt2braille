@@ -20,6 +20,7 @@
 package be.docarch.odt2braille.addon;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -28,41 +29,47 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 
-import com.sun.star.beans.PropertyValue;
-import com.sun.star.frame.XStorable;
 import com.sun.star.uno.UnoRuntime;
-import com.sun.star.frame.XFrame;
 import com.sun.star.uno.XComponentContext;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.awt.XWindowPeer;
-import com.sun.star.frame.XModel;
-import com.sun.star.awt.XWindow;
+import com.sun.star.beans.PropertyValue;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
+import com.sun.star.frame.XStorable;
 import com.sun.star.frame.XDesktop;
 import com.sun.star.frame.XController;
+import com.sun.star.frame.XModel;
+import com.sun.star.frame.XFrame;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.awt.XWindowPeer;
+import com.sun.star.awt.XWindow;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.text.XTextViewCursorSupplier;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import javax.xml.parsers.ParserConfigurationException;
 import org.xml.sax.SAXException;
+import org.daisy.util.xml.validation.ValidationException;
+import java.io.IOException;
+import java.io.FileNotFoundException;
+import java.net.MalformedURLException;
+import javax.print.PrintException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
-import javax.print.PrintException;
 
-import be.docarch.odt2braille.Odt2Braille;
+import be.docarch.odt2braille.PEF;
+import be.docarch.odt2braille.LiblouisXML;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
+import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.Volume.VolumeType;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Checker;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
 import org_pef_text.pef2text.UnsupportedWidthException;
 import org_pef_text.pef2text.EmbosserFactoryException;
-import be.docarch.odt2braille.LiblouisxmlException;
+import be.docarch.odt2braille.LiblouisXMLException;
 
 
 /**
@@ -313,14 +320,8 @@ public class UnoGUI {
 
         logger.entering("UnoGUI", "exportBraille");
 
-        Odt2Braille odt2braille = null;
-        HandlePEF handlePef = null;
-        File pefFile = null;
-        File brailleFile = null;
-        String pefUrl = null;
-        String exportUrl = null;
-        String exportUnoUrl = null;
-        String fileType = null;
+        PEF pef = null;
+        File[] brailleFiles = null;
         String warning = null;
         Checker checker = null;
 
@@ -368,7 +369,66 @@ public class UnoGUI {
                 }
             }
 
+            // Create LiblouisXML
+            LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
+
+            // Create PEF
+            pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
+
+            // Translate into braille
+            if(!pef.makePEF()) {
+                progressBar.finish(false);
+                return false;
+            }
+
+            // Checker
+            checker.checkPefFile(pef.getSinglePEF());
+
+            // Show second warning
+            if (!(warning = checker.getSecondWarning()).equals("")) {
+                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
+                    logger.log(Level.INFO, "User cancelled export on second warning");
+                    return false;
+                }
+            }
+
+            // Convert to Braille file(s)
+            if (changedSettings.getBrailleFileType() == BrailleFileType.PEF)  {
+
+                if (changedSettings.getMultipleFiles()) {
+                    brailleFiles = pef.getPEFs();
+                } else {
+                    brailleFiles = new File[] { pef.getSinglePEF() };
+                }
+
+            } else {
+
+                // Create HandlePEF entity
+                HandlePEF handlePef = new HandlePEF(pef, changedSettings);
+
+                // Convert to Braille File
+                if((brailleFiles = handlePef.convertToFiles(changedSettings.getBrailleFileType())) == null) {
+                    return false;
+                }
+            }
+
+            // Close progressbar
+            progressBar.finish(true);
+            progressBar.close();
+
+            // Show post translation dialog
+            PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
+            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
+
+            if (!postTranslationDialog.execute()) {
+                logger.log(Level.INFO, "User cancelled post translation dialog");
+                return false;
+            }
+
+            // Show Save As... Dialog:
+
             String brailleExt = "." + changedSettings.getBrailleFileType().name().toLowerCase();
+            String fileType;
             switch (changedSettings.getBrailleFileType()) {
                 case PEF:
                     fileType = "Portable Embosser Format";
@@ -382,80 +442,64 @@ public class UnoGUI {
                 default:
                     fileType = "";
             }
-                
-            // Create temporary PEF
-            pefFile = File.createTempFile(TMP_NAME, ".pef");
-            pefFile.deleteOnExit();
-            pefUrl = pefFile.getAbsolutePath();
 
-            // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(odtTransformer, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
-
-            // Translate into braille
-            if(!odt2braille.makePEF(pefUrl)) {
-                progressBar.finish(false);
-                return false;
-            }
-
-            // Checker
-            checker.checkPefFile(pefFile);
-
-            // Show second warning
-            if (!(warning = checker.getSecondWarning()).equals("")) {
-                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on second warning");
-                    return false;
-                }
-            }
-
-            // Convert to Braille file
-            if (changedSettings.getBrailleFileType() == BrailleFileType.PEF)  {
-
-                brailleFile = pefFile;
-
-            } else {
-
-                // Create temporary Braille file
-                brailleFile = File.createTempFile(TMP_NAME, brailleExt);
-                brailleFile.deleteOnExit();
-
-                // Create HandlePEF entity
-                handlePef = new HandlePEF(pefUrl, changedSettings);
-
-                // Convert to Braille File
-                if(!handlePef.convertToFile(changedSettings.getBrailleFileType(), brailleFile)) {
-                    return false;
-                }
-            }
-
-            // Close progressbar
-            progressBar.finish(true);
-            progressBar.close();
-
-            // Show post translation dialog
-            PreviewDialog preview = new PreviewDialog(m_xContext, pefFile, changedSettings);
-            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
-
-            if (!postTranslationDialog.execute()) {
-                logger.log(Level.INFO, "User cancelled post translation dialog");
-                return false;
-            }
-
-            // Show Save As... Dialog:
-            logger.entering("UnoAwtUtils", "showSaveAsDialog");
-            exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+            String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
             if (exportUnoUrl.length() < 1) {
                 return false;
             }
-            if (!exportUnoUrl.endsWith(brailleExt)) {
-                exportUnoUrl = exportUnoUrl.concat(brailleExt);
-            }
-            exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+            String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
 
-            // Rename Braille file
-            File newFile = new File(exportUrl);
-            if (newFile.exists()) { newFile.delete(); }
-            brailleFile.renameTo(newFile);
+            // Rename Braille file(s)
+
+            if (brailleFiles == null) {
+                return false;
+            }
+
+            if (brailleFiles.length > 1) {
+
+                File newFile;
+                File newFolder = new File(exportUrl);
+                newFolder.mkdir();
+
+                String fileSeparator = System.getProperty("file.separator");
+                String folderName = newFolder.getName();
+                String fileName = folderName;
+
+                if (folderName.lastIndexOf(brailleExt) > -1) {
+                    fileName = folderName.substring(0, folderName.lastIndexOf(brailleExt));
+                }
+                
+                ArrayList<Volume> volumes = pef.getVolumes();
+                Volume volume;
+                String suffix;
+
+                if (brailleFiles.length != volumes.size()) {
+                    logger.log(Level.INFO, "The number of brailleFiles is not equals to the number of volumes");
+                    return false;
+                }
+
+                for (int i=0; i<brailleFiles.length; i++) {
+
+                    volume = volumes.get(i);
+                    if      (volume.getType() == VolumeType.NORMAL)      { suffix = ".volume"; }
+                    else if (volume.getType() == VolumeType.PRELIMINARY) { suffix = ".preliminary"; }
+                    else                                                 { suffix = ".supplement"; }
+                    suffix += volume.getNumber();
+
+                    newFile = new File(newFolder.getAbsolutePath() + fileSeparator + fileName + "." + i + suffix + brailleExt);
+
+                    if (newFile.exists()) { newFile.delete(); }
+                    brailleFiles[i].renameTo(newFile);
+
+                }
+
+            } else {
+
+                File newFile = new File(exportUrl);
+                if (newFile.exists()) { newFile.delete(); }
+                brailleFiles[0].renameTo(newFile);
+
+            }
 
             logger.exiting("UnoGUI", "exportBraille");
 
@@ -465,6 +509,9 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         } catch (MalformedURLException ex) {
+            handleUnexpectedException(ex);
+            return false;
+        } catch (FileNotFoundException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (IOException ex) {
@@ -488,7 +535,13 @@ public class UnoGUI {
         } catch (UnsupportedWidthException ex) {
             handleUnexpectedException(ex);
             return false;
-        } catch (LiblouisxmlException ex) {
+        } catch (LiblouisXMLException ex) {
+            handleUnexpectedException(ex);
+            return false;
+        } catch (XMLStreamException ex) {
+            handleUnexpectedException(ex);
+            return false;
+        } catch (ValidationException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (RuntimeException ex) {
@@ -499,7 +552,6 @@ public class UnoGUI {
                 progressBar.close();
             }
         }
-
     }
 
     /**
@@ -524,10 +576,8 @@ public class UnoGUI {
 
         logger.entering("UnoGUI", "embossBraille");
 
+        PEF pef = null;
         HandlePEF handlePef = null;
-        Odt2Braille odt2braille = null;
-        File pefFile = null;
-        String pefUrl = null;
         String deviceName = null;
         String warning = null;
         Checker checker = null;
@@ -576,21 +626,20 @@ public class UnoGUI {
                 }
             }
 
-            // Create temporary PEF
-            pefFile = File.createTempFile(TMP_NAME, ".pef");
-            pefFile.deleteOnExit();
-            pefUrl = pefFile.getAbsolutePath();
+            // Create LiblouisXML
+            LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
 
-            // Create odt2braille with settings from export dialog
-            odt2braille = new Odt2Braille(odtTransformer, liblouisPath, changedSettings, progressBar, checker, odtLocale, oooLocale);
+            // Create PEF
+            pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
 
             // Translate into braille
-            if(!odt2braille.makePEF(pefUrl)) {
+            if(!pef.makePEF()) {
+                progressBar.finish(false);
                 return false;
             }
 
             // Checker
-            checker.checkPefFile(pefFile);
+            checker.checkPefFile(pef.getSinglePEF());
 
             // Show second checker warning
             if (!(warning = checker.getSecondWarning()).equals("")) {
@@ -605,7 +654,7 @@ public class UnoGUI {
             progressBar.close();
 
             // Show post translation dialog
-            PreviewDialog preview = new PreviewDialog(m_xContext, pefFile, changedSettings);
+            PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
             PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
 
             if (!postTranslationDialog.execute()) {
@@ -614,7 +663,7 @@ public class UnoGUI {
             }
 
             // Create EmbossPEF entity
-            handlePef = new HandlePEF(pefUrl, changedSettings);
+            handlePef = new HandlePEF(pef, changedSettings);
 
             // Emboss Dialog
             if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
@@ -630,7 +679,7 @@ public class UnoGUI {
                     return false;
                 }
                 
-                if(!handlePef.convertToFile(BrailleFileType.BRF_INTERPOINT, brailleFile)) {
+                if((brailleFile = handlePef.convertToSingleFile(BrailleFileType.BRF_INTERPOINT)) == null) {
                     return false;
                 }
 
@@ -650,9 +699,6 @@ public class UnoGUI {
                     String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
                     if (exportUnoUrl.length() < 1) {
                         return false;
-                    }
-                    if (!exportUnoUrl.endsWith(brailleExt)) {
-                        exportUnoUrl = exportUnoUrl.concat(brailleExt);
                     }
                     String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
 
@@ -738,7 +784,10 @@ public class UnoGUI {
         } catch (UnsupportedWidthException ex) {
             handleUnexpectedException(ex);
             return false;
-        } catch (LiblouisxmlException ex) {
+        } catch (LiblouisXMLException ex) {
+            handleUnexpectedException(ex);
+            return false;
+        } catch (ValidationException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (RuntimeException ex) {

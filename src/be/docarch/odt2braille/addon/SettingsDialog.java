@@ -76,6 +76,7 @@ import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
+import be.docarch.odt2braille.HeadingStyle;
 import be.docarch.odt2braille.CharacterStyle;
 import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 
@@ -127,7 +128,6 @@ public class SettingsDialog implements XItemListener,
     private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false};
     private int currentPage = 1;
 
-    private int currentHeadingLevel;
     private int currentListLevel;
     private int currentTableColumn;
     private int currentTableOfContentsLevel;
@@ -135,6 +135,7 @@ public class SettingsDialog implements XItemListener,
     private int selectedSpecialSymbolPos;
     private int selectedParagraphStylePos;
     private int selectedCharacterStylePos;
+    private int selectedHeadingStylePos;
     
     private ArrayList<String> allTranslationTables = null;
     private ArrayList<String> mainTranslationTables = null;
@@ -143,6 +144,7 @@ public class SettingsDialog implements XItemListener,
     private ArrayList<SpecialSymbol> specialSymbols = null;
     private ArrayList<ParagraphStyle> paragraphStyles = null;
     private ArrayList<CharacterStyle> characterStyles = null;
+    private ArrayList<HeadingStyle> headingStyles = null;
     private ArrayList<MathType> mathTypes = null;
     private ArrayList<Alignment>alignmentOptions = null;
     private ArrayList<TypefaceOption>typefaceOptions = null;
@@ -360,6 +362,7 @@ public class SettingsDialog implements XItemListener,
     private XNumericField headingRunoversField = null;
     private XNumericField headingLinesAboveField = null;
     private XNumericField headingLinesBelowField = null;
+    private XCheckBox headingNewBraillePageCheckBox = null;
 
     private XPropertySet headingFirstLineFieldProperties = null;
     private XPropertySet headingRunoversFieldProperties = null;
@@ -373,6 +376,7 @@ public class SettingsDialog implements XItemListener,
     private static String _headingRunoversField = "NumericField12";
     private static String _headingLinesAboveField = "NumericField13";
     private static String _headingLinesBelowField = "NumericField14";
+    private static String _headingNewBraillePageCheckBox = "CheckBox10";
 
     private static String _headingLevelLabel = "Label42";
     private static String _headingAlignmentLabel = "Label43";
@@ -380,6 +384,7 @@ public class SettingsDialog implements XItemListener,
     private static String _headingRunoversLabel = "Label39";
     private static String _headingLinesAboveLabel = "Label40";
     private static String _headingLinesBelowLabel = "Label41";
+    private static String _headingNewBraillePageLabel = "Label15";
 
     private String L10N_headingLevelLabel = null;
     private String L10N_headingAlignmentLabel = null;
@@ -387,6 +392,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_headingRunoversLabel = null;
     private String L10N_headingLinesAboveLabel = null;
     private String L10N_headingLinesBelowLabel = null;
+    private String L10N_headingNewBraillePageLabel = null;
 
     // Lists Page
 
@@ -846,6 +852,7 @@ public class SettingsDialog implements XItemListener,
         L10N_headingRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_headingLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_headingLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
+        L10N_headingNewBraillePageLabel = "Start on new Braille page";
 
         // Lists Page
 
@@ -1016,6 +1023,8 @@ public class SettingsDialog implements XItemListener,
             }
         }
 
+        headingStyles = settings.getHeadingStyles();
+
         // Roadmap
 
         int roadMapWidth = 85;
@@ -1152,6 +1161,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_headingLinesAboveField));
         headingLinesBelowField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_headingLinesBelowField));
+        headingNewBraillePageCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_headingNewBraillePageCheckBox));
 
         // Lists Page
 
@@ -1679,6 +1690,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_headingLinesAboveLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingLinesBelowLabel));
         xFixedText.setText(L10N_headingLinesBelowLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingNewBraillePageLabel));
+        xFixedText.setText(L10N_headingNewBraillePageLabel);
 
         // Lists Page
 
@@ -1908,10 +1921,10 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[HEADINGS_PAGE-1]) {
 
-            currentHeadingLevel = 1;
+            selectedHeadingStylePos = 0;
 
             for (int i=0;i<4;i++) { headingLevelListBox.addItem((i<3)?String.valueOf(i+1):"4-10", (short)i); }
-            headingLevelListBox.selectItemPos((short)(currentHeadingLevel-1), true);
+            headingLevelListBox.selectItemPos((short)selectedHeadingStylePos, true);
 
             for (int i=0; i<alignmentOptions.size(); i++) {
                 headingAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
@@ -2263,7 +2276,9 @@ public class SettingsDialog implements XItemListener,
 
     private void updateHeadingsPageFieldProperties() throws com.sun.star.uno.Exception {
 
-        boolean left = (settings.getStyle("heading_" + currentHeadingLevel).getAlignment() == Alignment.LEFT);
+        HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
+
+        boolean left = (style.getAlignment() == Alignment.LEFT);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         headingFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
@@ -2453,7 +2468,7 @@ public class SettingsDialog implements XItemListener,
 
     private void updateHeadingsPageFieldValues() {
 
-        Style style = settings.getStyle("heading_" + currentHeadingLevel);
+        HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
         boolean left = (style.getAlignment() == Alignment.LEFT);
 
         headingAlignmentListBox.removeItemListener(this);
@@ -2463,6 +2478,7 @@ public class SettingsDialog implements XItemListener,
         headingAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         headingFirstLineField.setValue((double)(left?style.getFirstLine():0));
         headingRunoversField.setValue((double)(left?style.getRunovers():0));
+        headingNewBraillePageCheckBox.setState((short)(style.getNewBraillePage()?1:0));
 
         headingAlignmentListBox.addItemListener(this);
 
@@ -2470,10 +2486,11 @@ public class SettingsDialog implements XItemListener,
 
     private void saveHeadingsPageFieldValues() {
 
-        Style style = settings.getStyle("heading_" + currentHeadingLevel);        
+        HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
         
         style.setLinesAbove((int)headingLinesAboveField.getValue());
         style.setLinesBelow((int)headingLinesBelowField.getValue());
+        style.setNewBraillePage(headingNewBraillePageCheckBox.getState()==(short)1);
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)headingFirstLineField.getValue());
             style.setRunovers((int)headingRunoversField.getValue());
@@ -2849,9 +2866,9 @@ public class SettingsDialog implements XItemListener,
                         saveHeadingsPageFieldValues();
 
                         if (source.equals(headingLevelListBox)) {                            
-                            currentHeadingLevel = (int)headingLevelListBox.getSelectedItemPos() + 1;                       
+                            selectedHeadingStylePos = (int)headingLevelListBox.getSelectedItemPos();
                         } else if (source.equals(headingAlignmentListBox)) {
-                            settings.getStyle("heading_" + currentHeadingLevel).setAlignment(
+                            headingStyles.get(selectedHeadingStylePos).setAlignment(
                                     alignmentOptions.get(headingAlignmentListBox.getSelectedItemPos()));
                         }
 

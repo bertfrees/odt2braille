@@ -23,7 +23,6 @@ import java.util.Locale;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.ResourceBundle;
-import java.io.File;
 import java.io.ByteArrayInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -63,6 +62,7 @@ import org.xml.sax.SAXException;
 import javax.xml.transform.TransformerException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import com.versusoft.packages.jodl.RomanNumbering;
@@ -140,7 +140,7 @@ public class PreviewDialog implements XItemListener,
 
 
     public PreviewDialog(XComponentContext xContext,
-                         File pefFile,
+                         PEF pef,
                          Settings settings)
                   throws ParserConfigurationException,
                          SAXException,
@@ -197,7 +197,7 @@ public class PreviewDialog implements XItemListener,
                 return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
             }
         });
-        Document contentDoc = docBuilder.parse(pefFile.getAbsolutePath());
+        Document contentDoc = docBuilder.parse(pef.getSinglePEF().getAbsolutePath());
 
         // Make dialog
 

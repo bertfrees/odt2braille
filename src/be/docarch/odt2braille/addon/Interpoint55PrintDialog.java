@@ -130,8 +130,6 @@ public class Interpoint55PrintDialog implements XActionListener,
     private String L10N_searchWp55Button = null;
     private String L10N_windowTitle = null;
 
-    private static String L10N_Default_BRF_Filename = null;
-
     private String wp55FolderUrl = "C:\\Program Files\\Interpoint\\wprint55";
     private File wp55File = new File(wp55FolderUrl + System.getProperty("file.separator") + "WP55.exe");
     private File iniFile = null;
@@ -392,14 +390,17 @@ public class Interpoint55PrintDialog implements XActionListener,
      */
     private void saveEmbossSettings() throws IOException {
 
-        Properties interpoint55Settings = new Properties();
+        if (!printToFile) {
 
-        interpoint55Settings.setProperty("wp55Folder",   wp55FolderUrl);
-        interpoint55Settings.setProperty("iniFile",      iniFileName);
-        interpoint55Settings.setProperty("overWriteIni", overWriteIniFile?"1":"0");
+            Properties interpoint55Settings = new Properties();
 
-        settingsIO.saveSettingsToOpenOffice("interpoint55", interpoint55Settings);
+            interpoint55Settings.setProperty("wp55Folder",   wp55FolderUrl);
+            interpoint55Settings.setProperty("iniFile",      iniFileName);
+            interpoint55Settings.setProperty("overWriteIni", overWriteIniFile?"1":"0");
 
+            settingsIO.saveSettingsToOpenOffice("interpoint55", interpoint55Settings);
+
+        }
     }
 
     /**

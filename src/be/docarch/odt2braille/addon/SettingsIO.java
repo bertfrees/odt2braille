@@ -53,6 +53,7 @@ import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
+import be.docarch.odt2braille.HeadingStyle;
 import be.docarch.odt2braille.CharacterStyle;
 import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 import org_pef_text.pef2text.Paper.PaperSize;
@@ -117,6 +118,7 @@ public class SettingsIO {
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
     private static String prefixProperty =                       "[BRL]ListPrefix";
     private static String keepEmptyParagraphsProperty =          "[BRL]KeepEmptyParagraphs";
+    private static String newBraillePage =                       "[BRL]NewBraillePage";
     private static String boldProperty =                         "[BRL]Boldface";
     private static String italicProperty =                       "[BRL]Italic";
     private static String underlineProperty =                    "[BRL]Underline";
@@ -140,7 +142,6 @@ public class SettingsIO {
     private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
     
     private String styleNames[] = { 
-        "heading_1", "heading_2", "heading_3", "heading_4",
         "toc", "toc_1", "toc_2", "toc_3", "toc_4",
         "list_1", "list_2", "list_3", "list_4", "list_5", "list_6", "list_7", "list_8", "list_9", "list_10",
         "table", "table_1", "table_2", "table_3", "table_4", "table_5", "table_6", "table_7", "table_8", "table_9", "table_10" };
@@ -153,6 +154,7 @@ public class SettingsIO {
     private static String exportNumberOfLinesPerPageProperty =   "[BRL]ExportLinesPerPage";
     private static String exportDuplexProperty =                 "[BRL]ExportRectoVerso";
     private static String exportEightDotsProperty =              "[BRL]ExportEightDots";
+    private static String exportMultipleFilesProperty =          "[BRL]ExportMultipleFiles";
 
     // Emboss settings
 
@@ -290,6 +292,7 @@ public class SettingsIO {
         ArrayList<String> languages = loadedSettings.getLanguages();
         ArrayList<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
         ArrayList<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
+        ArrayList<HeadingStyle> headingStyles = loadedSettings.getHeadingStyles();
 
         for (int i=0;i<languages.size();i++) {
             if ((s = getStringProperty(languageProperty + "_" + languages.get(i))) != null) {
@@ -410,6 +413,38 @@ public class SettingsIO {
                         logger.log(Level.SEVERE, null, s + " is no valid special typeface option");
                     }
                 }
+            }
+        }
+
+        for (int i=0;i<headingStyles.size();i++) {
+
+            HeadingStyle headStyle = headingStyles.get(i);
+            int level = headStyle.getLevel();
+
+            if (!(d = getDoubleProperty(firstLineProperty + "_heading_" + level)).isNaN()) {
+                headStyle.setFirstLine(d.intValue());
+            }
+            if (!((d = getDoubleProperty(runoversProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setRunovers(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesAboveProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setLinesAbove(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesBelowProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setLinesBelow(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesBetweenProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setLinesBetween(d.intValue());
+            }
+            if ((s = getStringProperty(alignmentProperty + "_heading_" + level)) != null) {
+                try {
+                    headStyle.setAlignment(Alignment.valueOf(s));
+                } catch (IllegalArgumentException ex) {
+                    logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+                }
+            }
+            if ((b = getBooleanProperty(newBraillePage + "_heading_" + level)) != null) {
+                headStyle.setNewBraillePage(b);
             }
         }
         
@@ -642,6 +677,10 @@ public class SettingsIO {
             loadedSettings.setLinesPerPage(d.intValue());
         }
 
+        if ((b = getBooleanProperty(exportMultipleFilesProperty)) != null) {
+            loadedSettings.setMultipleFiles(b);
+        }
+
         logger.exiting("SettingsIO", "loadExportSettingsFromDocument");
 
     }
@@ -768,6 +807,8 @@ public class SettingsIO {
         ArrayList<ParagraphStyle> paragraphStylesBeforeChange = settingsBeforeChange.getParagraphStyles();
         ArrayList<CharacterStyle> characterStylesAfterChange = settingsAfterChange.getCharacterStyles();
         ArrayList<CharacterStyle> characterStylesBeforeChange = settingsBeforeChange.getCharacterStyles();
+        ArrayList<HeadingStyle> headingStylesAfterChange = settingsAfterChange.getHeadingStyles();
+        ArrayList<HeadingStyle> headingStylesBeforeChange = settingsBeforeChange.getHeadingStyles();
 
         for (int i=0;i<languages.size();i++) {
             setProperty(languageProperty + "_" + languages.get(i),
@@ -869,6 +910,36 @@ public class SettingsIO {
                             (charStyleBeforeChange.getCapitals().name()));
 
             }
+        }
+
+        for (int i=0;i<headingStylesBeforeChange.size();i++) {
+
+            HeadingStyle headStyleAfterChange = headingStylesAfterChange.get(i);
+            HeadingStyle headStyleBeforeChange = headingStylesBeforeChange.get(i);
+            int level = headStyleBeforeChange.getLevel();
+
+            setProperty(alignmentProperty + "_heading_" + level,
+                        headStyleAfterChange.getAlignment().name(),
+                        headStyleBeforeChange.getAlignment().name());
+            setProperty(firstLineProperty + "_heading_" + level,
+                        headStyleAfterChange.getFirstLine(),
+                        headStyleBeforeChange.getFirstLine());
+            setProperty(runoversProperty + "_heading_" + level,
+                        headStyleAfterChange.getRunovers(),
+                        headStyleBeforeChange.getRunovers());
+            setProperty(linesAboveProperty + "_heading_" + level,
+                        headStyleAfterChange.getLinesAbove(),
+                        headStyleBeforeChange.getLinesAbove());
+            setProperty(linesBelowProperty + "_heading_" + level,
+                        headStyleAfterChange.getLinesBelow(),
+                        headStyleBeforeChange.getLinesBelow());
+            setProperty(linesBetweenProperty + "_heading_" + level,
+                        headStyleAfterChange.getLinesBetween(),
+                        headStyleBeforeChange.getLinesBetween());
+            setProperty(newBraillePage + "_heading_" + level,
+                        headStyleAfterChange.getNewBraillePage(),
+                        headStyleBeforeChange.getNewBraillePage());
+
         }
         
         for (int i=0;i<10;i++) {
@@ -1035,6 +1106,9 @@ public class SettingsIO {
         setProperty(exportNumberOfLinesPerPageProperty,
                     settingsAfterChange.getLinesPerPage(),
                     settingsBeforeChange.getLinesPerPage());
+        setProperty(exportMultipleFilesProperty,
+                    settingsAfterChange.getMultipleFiles(),
+                    settingsBeforeChange.getMultipleFiles());
 
         if (odtModified) {
             xModifiable.setModified(true);

@@ -99,6 +99,7 @@ public class ExportDialog implements XItemListener,
     private XCheckBox eightDotsCheckBox = null;
     private XNumericField numberOfCellsPerLineField = null;
     private XNumericField numberOfLinesPerPageField = null;
+    private XCheckBox multipleFilesCheckBox = null;
 
     private XPropertySet tableListBoxProperties = null;
     private XPropertySet duplexCheckBoxProperties = null;
@@ -110,6 +111,7 @@ public class ExportDialog implements XItemListener,
     private static String _eightDotsCheckBox = "CheckBox2";
     private static String _numberOfCellsPerLineField = "NumericField3";
     private static String _numberOfLinesPerPageField = "NumericField4";
+    private static String _multipleFilesCheckBox = "CheckBox3";
 
     private static String _brailleFileLabel = "Label2";
     private static String _tableLabel = "Label3";
@@ -117,6 +119,7 @@ public class ExportDialog implements XItemListener,
     private static String _eightDotsLabel = "Label1";
     private static String _numberOfCellsPerLineLabel = "Label6";
     private static String _numberOfLinesPerPageLabel = "Label7";
+    private static String _multipleFilesLabel = "Label4";
 
     private String L10N_brailleFileLabel = null;
     private String L10N_tableLabel = null;
@@ -124,6 +127,7 @@ public class ExportDialog implements XItemListener,
     private String L10N_eightDotsLabel = null;
     private String L10N_numberOfCellsPerLineLabel = null;
     private String L10N_numberOfLinesPerPageLabel = null;
+    private String L10N_multipleFilesLabel = null;
 
     private TreeMap<String,String> L10N_brailleFile = new TreeMap();
     private TreeMap<String,String> L10N_table = new TreeMap();
@@ -167,6 +171,7 @@ public class ExportDialog implements XItemListener,
         L10N_eightDotsLabel = "8-dot Braille";
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
+        L10N_multipleFilesLabel = "Export to multiple files";
 
         L10N_table.put("UNDEFINED",         "-");
         L10N_table.put("UNICODE_BRAILLE",   "PEF (Unicode Braille)");
@@ -199,6 +204,8 @@ public class ExportDialog implements XItemListener,
                 dialogControlContainer.getControl(_numberOfCellsPerLineField));
         numberOfLinesPerPageField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_numberOfLinesPerPageField));
+        multipleFilesCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_multipleFilesCheckBox));
 
         okButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, okButton)).getModel());
@@ -268,6 +275,8 @@ public class ExportDialog implements XItemListener,
         xFixedText.setText(L10N_numberOfCellsPerLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfLinesPerPageLabel));
         xFixedText.setText(L10N_numberOfLinesPerPageLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_multipleFilesLabel));
+        xFixedText.setText(L10N_multipleFilesLabel);
 
     }
 
@@ -281,6 +290,7 @@ public class ExportDialog implements XItemListener,
         numberOfLinesPerPageField.setMax((double)settings.getMaxLinesPerPage());
         numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
+        multipleFilesCheckBox.setState((short)(settings.getMultipleFiles()?1:0));
 
         updateBrailleFileListBox();
         updateDuplexCheckBox();
@@ -296,6 +306,7 @@ public class ExportDialog implements XItemListener,
         settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
         settings.setDuplex((duplexCheckBox.getState()==(short)1));
         settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        settings.setMultipleFiles(multipleFilesCheckBox.getState()==(short)1);
 
     }
 

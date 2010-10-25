@@ -18,8 +18,8 @@ generic      mn \es
 generic      mo \es
 generic      mtext \et,\et
 generic      mrow
-generic      mfrac @5@23,@1256,\ex
-generic      &xpath(//math:mfrac[descendant::math:mfrac]) @5@23,@1256@1256,\ex
+generic      mfrac \ef,\ed,\ex
+generic      &xpath(//math:mfrac[descendant::math:mfrac]) \ef,\ed\ed,\ex
 
 generic      &xpath(//math:mfenced[@open='' and @close=''][not(child::math:mtable)])  (,\*)
 generic      &xpath(//math:mfenced[@open='' and @close=']'][not(child::math:mtable)])  (,\*]
@@ -64,7 +64,7 @@ generic      &xpath(//math:mmultiscripts[   (child::math:mprescripts) and (count
 
 generic      msqrt                                    \ev,\*\ex
 generic      mroot                                    \ev,\*\ex
-generic      &xpath(//math:mroot[count(child::*)=2])  \e^l,\ex\ev,\ex
+reverse      &xpath(//math:mroot[count(child::*)=2])  \e^l,\ex\ev,\ex
 
 # ----------------------------------------------------------------------------------------------
 
