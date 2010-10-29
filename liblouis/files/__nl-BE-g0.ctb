@@ -7,8 +7,8 @@ include _display.dis
 include _chardefs_nl-BE.cti
 include _chardefs.cti
 include _chardefs_nl-BE.cti
-include _hyphenation_nl-BE.dic
 include _translation.ctb
+include _hyphenation_nl-BE.dic
 include _exactdots.ctb
 include _correct.ctb
 

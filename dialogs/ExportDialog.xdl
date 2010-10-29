@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog6" dlg:left="297" dlg:top="103" dlg:width="185" dlg:height="171" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog6" dlg:left="297" dlg:top="103" dlg:width="185" dlg:height="186" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="35" dlg:top="151" dlg:width="47" dlg:height="12" dlg:button-type="cancel" dlg:grab-focus="false"/>
-  <dlg:button dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="101" dlg:top="151" dlg:width="47" dlg:height="12" dlg:button-type="ok"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="35" dlg:top="163" dlg:width="47" dlg:height="12" dlg:button-type="cancel" dlg:grab-focus="false"/>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="101" dlg:top="163" dlg:width="47" dlg:height="12" dlg:button-type="ok"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox2" dlg:tab-index="2" dlg:left="36" dlg:top="23" dlg:width="131" dlg:height="12" dlg:spin="true" dlg:linecount="10"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox3" dlg:tab-index="3" dlg:left="73" dlg:top="38" dlg:width="94" dlg:height="12" dlg:spin="true"/>
   <dlg:checkbox dlg:id="CheckBox1" dlg:tab-index="4" dlg:left="14" dlg:top="55" dlg:width="11" dlg:height="12" dlg:checked="false"/>
@@ -17,9 +17,11 @@
   <dlg:text dlg:id="Label6" dlg:tab-index="9" dlg:left="25" dlg:top="69" dlg:width="74" dlg:height="10" dlg:value="Label6"/>
   <dlg:text dlg:id="Label7" dlg:tab-index="10" dlg:left="25" dlg:top="84" dlg:width="74" dlg:height="10" dlg:value="Label7"/>
   <dlg:text dlg:id="Label8" dlg:tab-index="11" dlg:left="25" dlg:top="54" dlg:width="144" dlg:height="11" dlg:value="Label8"/>
-  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="12" dlg:left="0" dlg:top="142" dlg:width="185" dlg:height="1"/>
-  <dlg:button dlg:id="CommandButton3" dlg:tab-index="13" dlg:left="54" dlg:top="119" dlg:width="78" dlg:height="12" dlg:grab-focus="false"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="12" dlg:left="0" dlg:top="154" dlg:width="185" dlg:height="1"/>
+  <dlg:button dlg:id="CommandButton3" dlg:tab-index="13" dlg:left="54" dlg:top="131" dlg:width="78" dlg:height="12" dlg:grab-focus="false"/>
   <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="14" dlg:left="14" dlg:top="100" dlg:width="11" dlg:height="12" dlg:checked="false"/>
   <dlg:text dlg:id="Label1" dlg:tab-index="15" dlg:left="25" dlg:top="99" dlg:width="144" dlg:height="11" dlg:value="Label1"/>
+  <dlg:checkbox dlg:id="CheckBox3" dlg:tab-index="16" dlg:left="14" dlg:top="115" dlg:width="11" dlg:height="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label4" dlg:tab-index="17" dlg:left="25" dlg:top="114" dlg:width="144" dlg:height="11" dlg:value="Label4"/>
  </dlg:bulletinboard>
 </dlg:window>

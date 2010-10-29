@@ -136,6 +136,9 @@ public class SettingsIO {
     private static String printPageNumberAtProperty =            "[BRL]PrintPageNumberAt";
     private static String braillePageNumberAtProperty =          "[BRL]BraillePageNumberAt";
     private static String preliminaryPageNumberFormatProperty =  "[BRL]PreliminaryPageNumberFormat";
+    private static String beginningBraillePageNumberProperty =   "[BRL]BeginningBraillePageNumber";
+    private static String printPageNumbersInTocProperty =        "[BRL]PrintpageNumbersInToc";
+    private static String braillePageNumbersInTocProperty =      "[BRL]BrintpageNumbersInToc";
     private static String hardPageBreaksProperty =               "[BRL]HardPageBreaks";
     private static String hyphenateProperty =                    "[BRL]Hyphenation";
     private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
@@ -586,6 +589,18 @@ public class SettingsIO {
             }
         }
 
+        if (!(d = getDoubleProperty(beginningBraillePageNumberProperty)).isNaN()) {
+            loadedSettings.setBeginningBraillePageNumber(d.intValue());
+        }
+
+        if ((b = getBooleanProperty(printPageNumbersInTocProperty)) != null) {
+            loadedSettings.setPrintPageNumbersInToc(b);
+        }
+
+        if ((b = getBooleanProperty(braillePageNumbersInTocProperty)) != null) {
+            loadedSettings.setBraillePageNumbersInToc(b);
+        }
+
         if ((b = getBooleanProperty(pageNumberAtTopOnSepLineProperty)) != null) {
             loadedSettings.setPageNumberAtTopOnSeparateLine(b);
         }
@@ -1033,6 +1048,15 @@ public class SettingsIO {
         setProperty(preliminaryPageNumberFormatProperty,
                     settingsAfterChange.getPreliminaryPageFormat().name(),
                     settingsBeforeChange.getPreliminaryPageFormat().name());
+        setProperty(beginningBraillePageNumberProperty,
+                    settingsAfterChange.getBeginningBraillePageNumber(),
+                    settingsBeforeChange.getBeginningBraillePageNumber());
+        setProperty(printPageNumbersInTocProperty,
+                    settingsAfterChange.getPrintPageNumbersInToc(),
+                    settingsBeforeChange.getPrintPageNumbersInToc());
+        setProperty(braillePageNumbersInTocProperty,
+                    settingsAfterChange.getBraillePageNumbersInToc(),
+                    settingsBeforeChange.getBraillePageNumbersInToc());
         setProperty(transcribersNotesPageEnabledProperty,
                     settingsAfterChange.getTranscribersNotesPageEnabled(),
                     settingsBeforeChange.getTranscribersNotesPageEnabled());

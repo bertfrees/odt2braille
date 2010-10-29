@@ -198,6 +198,7 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox volumeInfoCheckBox = null;
     private XCheckBox preliminaryVolumeCheckBox = null;
     private XCheckBox hyphenateCheckBox = null;
+    private XCheckBox hardPageBreaksCheckBox = null;
 
     private XPropertySet mainEightDotsCheckBoxProperties = null;
     private XPropertySet transcribersNotesPageFieldProperties = null;    
@@ -217,6 +218,7 @@ public class SettingsDialog implements XItemListener,
     private static String _transcribersNotesPageCheckBox = "CheckBox4";
     private static String _preliminaryVolumeCheckBox = "CheckBox8";
     private static String _hyphenateCheckBox = "CheckBox20";
+    private static String _hardPageBreaksCheckBox = "CheckBox19";
 
     private static String _mainTranslationTableLabel = "Label1";
     private static String _mainGradeLabel = "Label2";
@@ -227,6 +229,7 @@ public class SettingsDialog implements XItemListener,
     private static String _transcribersNotesPageLabel = "Label7";
     private static String _preliminaryVolumeLabel = "Label11";
     private static String _hyphenateLabel = "Label77";
+    private static String _hardPageBreaksLabel = "Label72";
 
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
@@ -237,6 +240,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_volumeInfoLabel = null;
     private String L10N_preliminaryVolumeLabel = null;
     private String L10N_hyphenateLabel = null;
+    private String L10N_hardPageBreaksLabel = null;
 
     private TreeMap<Integer,String> L10N_grades = new TreeMap();
     private TreeMap<String,String> L10N_translationTables = new TreeMap();
@@ -507,6 +511,7 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox braillePageNumbersCheckBox = null;
     private XListBox braillePageNumberAtListBox = null;
     private XListBox preliminaryPageNumberFormatListBox = null;
+    private XNumericField beginningBraillePageNumberField = null;
     private XCheckBox printPageNumbersCheckBox = null;
     private XListBox printPageNumberAtListBox = null;
     private XCheckBox printPageNumberRangeCheckBox = null;
@@ -517,11 +522,11 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox mergeUnnumberedPagesCheckBox = null;
     private XCheckBox numbersAtTopOnSepLineCheckBox = null;
     private XCheckBox numbersAtBottomOnSepLineCheckBox = null;
-    private XCheckBox hardPageBreaksCheckBox = null;
-    
+
     private XPropertySet braillePageNumbersCheckBoxProperties = null;
     private XPropertySet braillePageNumberAtListBoxProperties = null;
     private XPropertySet preliminaryPageNumberFormatListBoxProperties = null;
+    private XPropertySet beginningBraillePageNumberFieldProperties = null;
     private XPropertySet printPageNumbersCheckBoxProperties = null;
     private XPropertySet printPageNumberAtListBoxProperties = null;
     private XPropertySet printPageNumberRangeCheckBoxProperties = null;
@@ -536,6 +541,7 @@ public class SettingsDialog implements XItemListener,
     private static String _braillePageNumbersCheckBox = "CheckBox7";
     private static String _braillePageNumberAtListBox = "ListBox21";
     private static String _preliminaryPageNumberFormatListBox = "ListBox20";
+    private static String _beginningBraillePageNumberField = "NumericField1";
     private static String _printPageNumbersCheckBox = "CheckBox6";
     private static String _printPageNumberAtListBox = "ListBox22";
     private static String _printPageNumberRangeCheckBox = "CheckBox11";
@@ -545,12 +551,12 @@ public class SettingsDialog implements XItemListener,
     private static String _ignoreEmptyPagesCheckBox = "CheckBox15";
     private static String _mergeUnnumberedPagesCheckBox = "CheckBox16";
     private static String _numbersAtTopOnSepLineCheckBox = "CheckBox17";
-    private static String _numbersAtBottomOnSepLineCheckBox = "CheckBox18";
-    private static String _hardPageBreaksCheckBox = "CheckBox19";
+    private static String _numbersAtBottomOnSepLineCheckBox = "CheckBox18";    
 
     private static String _braillePageNumbersLabel = "Label10";
     private static String _braillePageNumberAtLabel = "Label57";
     private static String _preliminaryPageNumberFormatLabel = "Label55";
+    private static String _beginningBraillePageNumberLabel = "Label16";
     private static String _printPageNumbersLabel = "Label9";
     private static String _printPageNumberAtLabel = "Label62";
     private static String _printPageNumberRangeLabel = "Label61";
@@ -560,12 +566,12 @@ public class SettingsDialog implements XItemListener,
     private static String _ignoreEmptyPagesLabel = "Label66";
     private static String _mergeUnnumberedPagesLabel = "Label67";
     private static String _numbersAtTopOnSepLineLabel = "Label68";
-    private static String _numbersAtBottomOnSepLineLabel = "Label69";
-    private static String _hardPageBreaksLabel = "Label72";
+    private static String _numbersAtBottomOnSepLineLabel = "Label69";    
 
     private String L10N_braillePageNumbersLabel = null;
     private String L10N_braillePageNumberAtLabel = null;
     private String L10N_preliminaryPageNumberFormatLabel = null;
+    private String L10N_beginningBraillePageNumberLabel = null;
     private String L10N_printPageNumbersLabel = null;
     private String L10N_printPageNumberAtLabel = null;
     private String L10N_printPageNumberRangeLabel = null;
@@ -576,7 +582,6 @@ public class SettingsDialog implements XItemListener,
     private String L10N_mergeUnnumberedPagesLabel = null;
     private String L10N_numbersAtTopOnSepLineLabel = null;
     private String L10N_numbersAtBottomOnSepLineLabel = null;
-    private String L10N_hardPageBreaksLabel = null;
     private String L10N_top = null;
     private String L10N_bottom = null;
 
@@ -590,6 +595,8 @@ public class SettingsDialog implements XItemListener,
     private XNumericField tableOfContentsRunoversField = null;
     private XTextComponent tableOfContentsLineFillField = null;
     private XButton tableOfContentsLineFillButton = null;
+    private XCheckBox tableOfContentsPrintPageNumbersCheckBox = null;
+    private XCheckBox tableOfContentsBraillePageNumbersCheckBox = null;
 
     private XPropertySet tableOfContentsCheckBoxProperties = null;
     private XPropertySet tableOfContentsTitleFieldProperties = null;
@@ -599,6 +606,8 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet tableOfContentsRunoversFieldProperties = null;
     private XPropertySet tableOfContentsLineFillFieldProperties = null;
     private XPropertySet tableOfContentsLineFillButtonProperties = null;
+    private XPropertySet tableOfContentsPrintPageNumbersCheckBoxProperties = null;
+    private XPropertySet tableOfContentsBraillePageNumbersCheckBoxProperties = null;
 
     private static String _tableOfContentsCheckBox = "CheckBox5";
     private static String _tableOfContentsTitleField = "TextField4";
@@ -608,6 +617,8 @@ public class SettingsDialog implements XItemListener,
     private static String _tableOfContentsRunoversField = "NumericField24";
     private static String _tableOfContentsLineFillField = "TextField6";
     private static String _tableOfContentsLineFillButton = "CommandButton6";
+    private static String _tableOfContentsPrintPageNumbersCheckBox = "CheckBox25";
+    private static String _tableOfContentsBraillePageNumbersCheckBox = "CheckBox26";
 
     private static String _tableOfContentsLabel = "Label8";
     private static String _tableOfContentsTitleLabel = "Label58";
@@ -616,6 +627,8 @@ public class SettingsDialog implements XItemListener,
     private static String _tableOfContentsFirstLineLabel = "Label52";
     private static String _tableOfContentsRunoversLabel = "Label53";
     private static String _tableOfContentsLineFillLabel = "Label26";
+    private static String _tableOfContentsPrintPageNumbersLabel = "Label17";
+    private static String _tableOfContentsBraillePageNumbersLabel = "Label18";
 
     private String L10N_tableOfContentsLabel = null;
     private String L10N_tableOfContentsTitleLabel = null;
@@ -625,6 +638,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableOfContentsRunoversLabel = null;
     private String L10N_tableOfContentsLineFillLabel = null;
     private String L10N_tableOfContentsLineFillButton = "...";
+    private String L10N_tableOfContentsPrintPageNumbersLabel = null;
+    private String L10N_tableOfContentsBraillePageNumbersLabel = null;
 
     // Special Symbols Page
     
@@ -817,6 +832,7 @@ public class SettingsDialog implements XItemListener,
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
         L10N_preliminaryVolumeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryVolumeLabel");
         L10N_hyphenateLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hyphenateLabel");
+        L10N_hardPageBreaksLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hardPageBreaksLabel");
 
         // Languages Page
 
@@ -883,6 +899,7 @@ public class SettingsDialog implements XItemListener,
         L10N_braillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumbersLabel");
         L10N_braillePageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumberAtLabel") + ":";
         L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
+        L10N_beginningBraillePageNumberLabel = "Start numbering at:";
         L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
         L10N_printPageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberAtLabel") + ":";
         L10N_printPageNumberRangeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberRangeLabel");
@@ -893,7 +910,6 @@ public class SettingsDialog implements XItemListener,
         L10N_mergeUnnumberedPagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mergeUnnumberedPagesLabel");
         L10N_numbersAtTopOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numbersAtTopOnSepLineLabel");
         L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numbersAtBottomOnSepLineLabel");
-        L10N_hardPageBreaksLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hardPageBreaksLabel");
         L10N_top = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
         L10N_bottom = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
 
@@ -906,6 +922,8 @@ public class SettingsDialog implements XItemListener,
         L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
+        L10N_tableOfContentsPrintPageNumbersLabel = "Display print page numbers";
+        L10N_tableOfContentsBraillePageNumbersLabel = "Display Braille page numbers";
 
         // Special Symbols Page
         
@@ -1097,6 +1115,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_preliminaryVolumeCheckBox));
         hyphenateCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_hyphenateCheckBox));
+        hardPageBreaksCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_hardPageBreaksCheckBox));
 
         // Languages Page
 
@@ -1218,6 +1238,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_braillePageNumberAtListBox));
         preliminaryPageNumberFormatListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_preliminaryPageNumberFormatListBox));
+        beginningBraillePageNumberField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_beginningBraillePageNumberField));
         printPageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_printPageNumbersCheckBox));
         printPageNumberAtListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
@@ -1238,8 +1260,6 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_numbersAtTopOnSepLineCheckBox));
         numbersAtBottomOnSepLineCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_numbersAtBottomOnSepLineCheckBox));
-        hardPageBreaksCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_hardPageBreaksCheckBox));
 
         // Table of Contents Page
 
@@ -1259,6 +1279,10 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_tableOfContentsLineFillField));
         tableOfContentsLineFillButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_tableOfContentsLineFillButton));
+        tableOfContentsPrintPageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_tableOfContentsPrintPageNumbersCheckBox));
+        tableOfContentsBraillePageNumbersCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_tableOfContentsBraillePageNumbersCheckBox));
 
         // Special Symbols Page
 
@@ -1422,6 +1446,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, braillePageNumberAtListBox)).getModel());
         preliminaryPageNumberFormatListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, preliminaryPageNumberFormatListBox)).getModel());
+        beginningBraillePageNumberFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, beginningBraillePageNumberField)).getModel());
         printPageNumbersCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, printPageNumbersCheckBox)).getModel());
         printPageNumberAtListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1461,6 +1487,10 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsLineFillField)).getModel());
         tableOfContentsLineFillButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsLineFillButton)).getModel());
+        tableOfContentsPrintPageNumbersCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsPrintPageNumbersCheckBox)).getModel());
+        tableOfContentsBraillePageNumbersCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsBraillePageNumbersCheckBox)).getModel());
 
         // Special Symbols Page
         
@@ -1632,6 +1662,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_preliminaryVolumeLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hyphenateLabel));
         xFixedText.setText(L10N_hyphenateLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hardPageBreaksLabel));
+        xFixedText.setText(L10N_hardPageBreaksLabel);
 
         // Languages Page
 
@@ -1743,6 +1775,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_braillePageNumberAtLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preliminaryPageNumberFormatLabel));
         xFixedText.setText(L10N_preliminaryPageNumberFormatLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_beginningBraillePageNumberLabel));
+        xFixedText.setText(L10N_beginningBraillePageNumberLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumbersLabel));
         xFixedText.setText(L10N_printPageNumbersLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumberAtLabel));
@@ -1763,8 +1797,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_numbersAtTopOnSepLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numbersAtBottomOnSepLineLabel));
         xFixedText.setText(L10N_numbersAtBottomOnSepLineLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hardPageBreaksLabel));
-        xFixedText.setText(L10N_hardPageBreaksLabel);
 
         // Table of Contents Page
 
@@ -1782,6 +1814,10 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_tableOfContentsRunoversLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsLineFillLabel));
         xFixedText.setText(L10N_tableOfContentsLineFillLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsPrintPageNumbersLabel));
+        xFixedText.setText(L10N_tableOfContentsPrintPageNumbersLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsBraillePageNumbersLabel));
+        xFixedText.setText(L10N_tableOfContentsBraillePageNumbersLabel);
 
         // Special Symbols Page
 
@@ -1829,6 +1865,7 @@ public class SettingsDialog implements XItemListener,
             transcribersNotesPageCheckBox.setState((short)(settings.getTranscribersNotesPageEnabled()?1:0));
             preliminaryVolumeCheckBox.setState((short)(settings.getPreliminaryVolumeEnabled()?1:0));
             hyphenateCheckBox.setState((short)(settings.getHyphenate()?1:0));
+            hardPageBreaksCheckBox.setState((short)(settings.getHardPageBreaks()?1:0));
 
             for (int i=0;i<mainTranslationTables.size();i++) {
                 mainTranslationTableListBox.addItem(L10N_translationTables.get(mainTranslationTables.get(i)), (short)i);
@@ -2038,6 +2075,10 @@ public class SettingsDialog implements XItemListener,
             braillePageNumberAtListBox.addItem(L10N_bottom, (short)1);
             preliminaryPageNumberFormatListBox.addItem("p1,p2,p3,...", (short)0);
             preliminaryPageNumberFormatListBox.addItem("i,ii,iii,...", (short)1);
+            beginningBraillePageNumberField.setDecimalDigits((short)0);
+            beginningBraillePageNumberField.setMin((double)1);
+            beginningBraillePageNumberField.setMax((double)Integer.MAX_VALUE);
+            beginningBraillePageNumberField.setValue((double)settings.getBeginningBraillePageNumber());
             printPageNumberAtListBox.addItem(L10N_top, (short)0);
             printPageNumberAtListBox.addItem(L10N_bottom, (short)1);
 
@@ -2054,7 +2095,8 @@ public class SettingsDialog implements XItemListener,
             tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
             tableOfContentsTitleField.setText(settings.getTableOfContentTitle());
             tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
-            
+            tableOfContentsPrintPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbersInToc()?1:0));
+
             tableOfContentsLinesBetweenField.setDecimalDigits((short)0);
             tableOfContentsLinesBetweenField.setMin((double)0);
             tableOfContentsLinesBetweenField.setMax((double)Integer.MAX_VALUE);
@@ -2134,6 +2176,7 @@ public class SettingsDialog implements XItemListener,
             settings.setTranscribersNotesPageEnabled(transcribersNotesPageCheckBox.getState() == (short) 1);
             settings.setPreliminaryVolumeEnabled(preliminaryVolumeCheckBox.getState() == (short) 1);
             settings.setHyphenate(hyphenateCheckBox.getState() == (short) 1);
+            settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
 
         }
 
@@ -2162,20 +2205,22 @@ public class SettingsDialog implements XItemListener,
 
             settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?
                 PageNumberFormat.P:PageNumberFormat.ROMAN));
+            settings.setBeginningBraillePageNumber((int)beginningBraillePageNumberField.getValue());
             settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
             settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
             settings.setIgnoreEmptyPages(ignoreEmptyPagesCheckBox.getState() == (short) 1);
             settings.setMergeUnnumberedPages(mergeUnnumberedPagesCheckBox.getState() == (short) 1);
             settings.setPageNumberAtTopOnSeparateLine(numbersAtTopOnSepLineCheckBox.getState() == (short) 1);
             settings.setPageNumberAtBottomOnSeparateLine(numbersAtBottomOnSepLineCheckBox.getState() == (short) 1);
-            settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
 
         }
 
         if (pagesVisited[TOC_PAGE-1]) {
 
             settings.setTableOfContentTitle(tableOfContentsTitleField.getText());
-            settings.getStyle("toc").setLinesBetween((int)tableOfContentsLinesBetweenField.getValue());
+            settings.setPrintPageNumbersInToc(tableOfContentsPrintPageNumbersCheckBox.getState()==(short)1);
+            settings.setBraillePageNumbersInToc(tableOfContentsBraillePageNumbersCheckBox.getState()==(short)1);
+            settings.getStyle("toc").setLinesBetween((int)tableOfContentsLinesBetweenField.getValue());            
             saveTableOfContentsPageFieldValues();
 
         }
@@ -2332,6 +2377,7 @@ public class SettingsDialog implements XItemListener,
         braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
         preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers()
                                                                                        && settings.getPreliminaryPagesPresent());
+        beginningBraillePageNumberFieldProperties.setPropertyValue("Enabled", settings.getBraillePageNumbers());
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent());
         printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
                                                                              && settings.getPrintPageNumbers());
@@ -2340,7 +2386,8 @@ public class SettingsDialog implements XItemListener,
         continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
                                                                           && settings.getPrintPageNumbers());
         pageSeparatorCheckBoxProperties.setPropertyValue("Enabled", !bana);
-        pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator());
+        pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator()
+                                                                                && settings.getPageNumbersPresent());
         ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         mergeUnnumberedPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
@@ -2371,6 +2418,8 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsLinesBetweenFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsFirstLineFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled && !bana);
+        tableOfContentsBraillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getBraillePageNumbers());
+        tableOfContentsPrintPageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getPageNumbersPresent());
 
     }
 
@@ -2571,12 +2620,12 @@ public class SettingsDialog implements XItemListener,
         mergeUnnumberedPagesCheckBox.setState((short)(settings.getMergeUnnumberedPages()?1:0));
         numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeparateLine()?1:0));
         numbersAtBottomOnSepLineCheckBox.setState((short)(settings.getPageNumberAtBottomOnSeparateLine()?1:0));
-        hardPageBreaksCheckBox.setState((short)(settings.getHardPageBreaks()?1:0));
 
     }
 
     private void updateTableOfContentsPageFieldValues() {
 
+        tableOfContentsBraillePageNumbersCheckBox.setState((short)(settings.getBraillePageNumbersInToc()?1:0));
         Style style = settings.getStyle("toc_" + currentTableOfContentsLevel);
         tableOfContentsFirstLineField.setValue(style.getFirstLine());
         tableOfContentsRunoversField.setValue(style.getRunovers());
@@ -2922,6 +2971,10 @@ public class SettingsDialog implements XItemListener,
 
                         if (source.equals(braillePageNumbersCheckBox)) {
                             settings.setBraillePageNumbers(braillePageNumbersCheckBox.getState() == (short)1);
+                            if (pagesEnabled[TOC_PAGE-1]) {
+                                updateTableOfContentsPageFieldValues();
+                                updateTableOfContentsPageFieldProperties();
+                            }
                         } else if (source.equals(braillePageNumberAtListBox)) {
                             settings.setBraillePageNumberAt(((braillePageNumberAtListBox.getSelectedItemPos() == (short)0)?
                                 PageNumberPosition.TOP_RIGHT:PageNumberPosition.BOTTOM_RIGHT));

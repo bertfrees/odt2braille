@@ -91,7 +91,7 @@ Localisation:
 
 
 =============================
-Version ?.?.?
+Version 0.0.3
 =============================
 
 * Greek within Spanish/Catalan texts.
@@ -102,11 +102,19 @@ Version ?.?.?
 * Warning when some dots 7 or 8 were not rendered
 * odt2braille fonts (6-dot and 8-dot)
 * Dialogs load faster
+* Headings: begin on new Braille page option
+* Paragraphs: keep empty paragraphs option
+* Exporting to multiple BRF files (each for every volume)
+* PEF validation
+* Woluwe math improved
+* More table of contents settings
 
 Fixed bugs:
 
 * Footnotes in lists were not rendered
 * Some other small bug fixes
+* PEF was not valid
+* Table of contents bug fixes
 
 Translation tables: new
 
@@ -118,6 +126,7 @@ Translation tables: updated / revised
 * Polish
 * Slovene
 * Dutch
+* French (FR + CA => BFU, Braille Francais Unifie)
 
 Hyphenation tables: updated
 
@@ -127,7 +136,3 @@ Hyphenation tables: updated
 Localisation:
 
 * Italian
-
-New embossers ?
-
-* 

@@ -21,16 +21,18 @@ include _chardefs.cti
 # repeat language-specific character definitions
 include _chardefs_en-US.cti
 
-# hyphenation tables
-include _hyphenation_en-US.dic
+# _translation.ctb, 
+include _translation.ctb
 
 # translation tables
 # all other opcodes
 include _translation_en-US-g1.ctb
 include _translation_en-US-g2.ctb
 
-# _translation.ctb, _exactdots.ctb & _correct.ctb
-include _translation.ctb
+# hyphenation tables
+include _hyphenation_en-US.dic
+
+#_exactdots.ctb & _correct.ctb
 include _exactdots.ctb
 include _correct.ctb
 

@@ -12,6 +12,7 @@
 
 math         math
 generic      semantics
+generic      mstyle
 
 generic      mi \es
 generic      mn \es
@@ -175,7 +176,6 @@ skip mpadded
 skip mphantom
 skip ms
 skip mspace
-skip mstyle
 skip naturalnumbers
 skip neq
 skip not
@@ -207,7 +207,6 @@ skip sdev
 skip sec
 skip sech
 skip selector
-skip semantics
 skip sep
 skip set
 skip setdiff

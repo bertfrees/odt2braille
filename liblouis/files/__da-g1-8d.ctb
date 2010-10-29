@@ -7,8 +7,8 @@ include _display.dis
 include _chardefs_da.cti
 include _chardefs.cti
 include _chardefs_da.cti
-include _translation_da-g1.ctb
 include _translation.ctb
+include _translation_da-g1.ctb
 include _exactdots.ctb
 include _correct.ctb
 

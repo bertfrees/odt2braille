@@ -156,7 +156,8 @@ public class InsertDialog implements XTextListener,
     public boolean setBrailleCharacters(String characters) {
     
         if (charsValid(characters)) {
-            this.dots = charsToDots(this.chars);
+            this.chars = characters;
+            this.dots = charsToDots(characters);
             return true;
         } else {
             return false;
