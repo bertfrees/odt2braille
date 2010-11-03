@@ -1,0 +1,39 @@
+ **************************************
+   xml2brl Build Instructions Mac OS X
+ **************************************
+
+* Download en installeer libxml2 in /usr
+
+* Download liblouis broncode:
+** Laatste stabiele versie (2.1.1)
+** ofwel: svn checkout http://liblouis.googlecode.com/svn/trunk/ liblouis_source
+* Voer de extra veranderingen uit die odt2braille nodig heeft (zie broncode op SVN: https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/liblouis/src/)
+* Compileer & installeer:
+** ./autogen.sh
+** ./configure
+** make
+** sudo make install
+
+* Download liblouisxml broncode:
+** Laatste stabiele versie (2.1.0)
+** ofwel: svn checkout http://liblouisxml.googlecode.com/svn/trunk/ liblouisxml_source
+* Voer de extra veranderingen uit die odt2braille nodig heeft (zie broncode op SVN: https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/liblouis/src/)
+* Compileer & installeer:
+** ./autogen.sh
+** ./configure
+** make
+** sudo make install
+
+* Kopieer volgende bestanden naar de map Odt2BrailleAddOn/liblouis/bin
+** /usr/local/bin/xml2brl
+** /usr/local/lib/liblouis.2.dylib
+** /usr/local/lib/liblouisxml.1.dylib
+** /usr/lib/libxml2.2.dylib
+
+* Voer install_name_tool.sh uit:
+** sh install_name_tool.sh
+* Controleer met otool of de libraries juist worden gelinkt
+** otool -L xml2brl
+** otool -L liblouis.2.dylib
+** otool -L liblouisxml.1.dylib
+** otool -L libxml2.2.dylib

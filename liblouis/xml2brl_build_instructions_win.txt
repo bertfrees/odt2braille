@@ -1,0 +1,49 @@
+ *************************************
+   xml2brl Build Instructions Windows
+ *************************************
+
+* Start Code::Blocks
+* Controleer volgende settings in Settings > Compiler and Debugger:
+** Compiler = mingw32-gcc.exe
+** Search directories = C:\msys\1.0\mingw\include
+* Maak een nieuw C-project aan
+* Verwijder main.c
+
+*********
+ STAP 1
+*********
+
+ (bestanden zijn beschikbaar op SVN: https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/liblouis/)
+
+* Download liblouis-2.1.1 (of nieuwere versie)
+* Kopieer alle .c en .h (geen .in.h) bestanden uit de map liblouis naar Odt2BrailleAddOn\liblouis\src\liblouis
+* Genereer config.h mbv ./configure (op een Unix-machine)
+* Kopieer dit bestand naar Odt2BrailleAddOn\liblouis\src\liblouis
+
+* Download liblouisxml-2.1.0 (of nieuwere versie)
+* Kopieer alle .c en .h (geen .in.h) bestanden uit de map liblouisxml behalve make_sem_names.c naar Odt2BrailleAddOn\liblouis\src\liblouisxml
+* Kopieer alle .c en .h (geen .in.h) bestanden uit de map gnulib behalve getopt.c en getopt1.c naar Odt2BrailleAddOn\liblouis\src\liblouisxml\gnulib
+* Genereer config.h mbv ./configure (op een Unix-machine)
+* Kopieer dit bestand naar Odt2BrailleAddOn\liblouis\src\liblouisxml
+* Kopieer xml2brl.c in de map tools naar Odt2BrailleAddOn\liblouis\src
+* Verander de regel #include "config.h" naar #include "liblouisxml/config.h"
+
+* Download liblouisxml-2.0.0-win32.zip
+* Kopieer alle .h bestanden uit de map include\libxml2\libxml naar Odt2BrailleAddOn\liblouis\src\libxml2\libxml
+* Kopieer libxml2.dll.a uit de map lib naar Odt2BrailleAddOn\liblouis\src\libxml2
+* Kopieer libxml2-2.dll en zlib1.dll uit de map bin naar Odt2BrailleAddOn\liblouis\bin
+
+* Veranderingen aan liblouis en liblouisxml: zie "versions.txt"
+
+********
+ STAP 2
+********
+
+* In Code::Blocks, voeg alle .c en .h bestanden toe aan het project dmv "Add files recursively"
+* Controleer dat Build target op Debug staat
+* Ga naar Build Options > Debug en voeg toe:
+** Bij Linker settings: libxml2.dll.a
+** Bij Search directories (Compiler): liblouis; liblouisxml; liblouisxml\gnulib; libxml2; libxml2\libxml
+* Build
+* Na compilatie staat xml2brl.exe in de map $project_folder\bin\Debug
+* Plaats xml2brl.exe in Odt2BrailleAddOn\liblouis\bin

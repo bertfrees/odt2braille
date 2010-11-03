@@ -329,8 +329,6 @@ More flexibility - provide more settings!
 	@item
 	Table Of Contents:
 		- headings tot level x weergeven ?
-		- printpagina nummers weergeven ?
-		- braillepagina nummers weergeven ?
 	@item
 	Bibliography
 	@item
@@ -360,7 +358,7 @@ Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (e
 	* OK: Main
 	*     Continued headings
 	* OK: Special typeface + languages
-	*     Split volumes
+	* OK: Split volumes
 @item
 DOM <-> STAX?
 @item
@@ -389,8 +387,6 @@ OpenOffice.org accessibility for screen readers (on Windows)?
 http://www.thessalonica.org.ru/en/index.html ?
 @item
 Check if the number of cells per line (and the number of lines per page) is sufficient (if too small, this might cause liblouisxml to fail).
-@item
-makePEF(): should be made more robust.
 @item
 Java bindings?
 @item

@@ -1,0 +1,30 @@
+ **********
+  liblouis
+ **********
+
+ = versie 2.1.1
+ + veranderingen die aangebracht zijn tussen r408 en r409
+ 
+ * lou_backTranslateString.c
+ * compileTranslationTable.c
+ 
+
+ *************
+  liblouisxml
+ *************
+  
+ = versie 2.1.0
+ + eigen veranderingen
+  
+   (* zie patch)
+   (* sommige veranderingen zijn overgenomen in liblouisxml versie 2.3.0)
+
+ * liblouisxml.c
+ * louisxml.h (nog niet alles overgenomen)
+ * readconfig.c (nog niet alles overgenomen)
+ * makeContents.c (nog niet alles overgenomen)
+ * semantics.c (nog niet alles overgenomen)
+ * transcriber.c (nog niet alles overgenomen)
+ * sem_enum.h (nog niet alles overgenomen)
+ * sem_names.h (nog niet alles overgenomen)
+ 
