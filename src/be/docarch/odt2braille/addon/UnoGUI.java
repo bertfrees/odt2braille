@@ -445,6 +445,7 @@ public class UnoGUI {
 
             String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
             if (exportUnoUrl.length() < 1) {
+                logger.log(Level.INFO, "User cancelled save as dialog");
                 return false;
             }
             String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
@@ -698,6 +699,7 @@ public class UnoGUI {
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
                     String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
                     if (exportUnoUrl.length() < 1) {
+                        logger.log(Level.INFO, "User cancelled save as dialog");
                         return false;
                     }
                     String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
@@ -734,6 +736,7 @@ public class UnoGUI {
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
                     String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
                     if (exportUnoUrl.length() < 1) {
+                        logger.log(Level.INFO, "User cancelled save as dialog");
                         return false;
                     }
                     if (!exportUnoUrl.endsWith(brailleExt)) {

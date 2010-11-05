@@ -32,7 +32,7 @@
 								<value xml:lang="fr">~Exporter en fichier Braille…</value>
 								<value xml:lang="it">~Esporta in Braille…</value>
 								<value xml:lang="nb">~Eksporter som punktskrift…</value>
-								<value xml:lang="nl">~Braille Exporteren…</value>
+								<value xml:lang="nl">~Exporteren als Braille…</value>
 								<value xml:lang="pt">~Exportar como Braille…</value>
 								<value xml:lang="pt-BR">~Exportar como Braille…</value>
 								<value xml:lang="sl">~Izvozi kot brajico …</value>
@@ -74,7 +74,7 @@
 								<value xml:lang="fr">~Embosser…</value>
 							    <value xml:lang="it">~Rilievo…</value>
 								<value xml:lang="nb">~Preg…</value>
-								<value xml:lang="nl">~Braille Afdrukken…</value>
+								<value xml:lang="nl">~Afdrukken in Braille…</value>
 								<value xml:lang="pt">~Gravar…</value>
 								<value xml:lang="pt-BR">~Gravar…</value>
 								<value xml:lang="sl">~Izboči …</value>
@@ -113,7 +113,7 @@
 								<value xml:lang="fr">~Charactères Braille</value>
 								<value xml:lang="it">~Caratteri Braille</value>
 								<value xml:lang="nb">~Punktskrifttegn</value>
-								<value xml:lang="nl">~Braillesymbolen</value>
+								<value xml:lang="nl">~Brailletekens</value>
 								<value xml:lang="pt">~Caracteres Braille</value>
 								<value xml:lang="pt-BR">~Caracteres Braille</value>
 								<value xml:lang="sl">~Znaki brajice</value>
@@ -136,7 +136,7 @@
 										<value xml:lang="de">~Punktmustereingabemodus…</value>
 										<value xml:lang="es">~Entrada mediante patrón de puntos…</value>
 										<value xml:lang="fr">~Mode de saisie point-à-point…</value>
-										<value xml:lang="nl">~Voer in met puntjespatronen…</value>
+										<value xml:lang="nl">~Invoeren met puntjespatronen…</value>
 										<value xml:lang="pt">~Modo de entrada por padrão de pontos…</value>
 										<value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
 										<value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
@@ -161,7 +161,7 @@
 										<value xml:lang="de">~6-Tasten Eingabemodus…</value>
 										<value xml:lang="es">~Modo 6 teclas…</value>
 										<value xml:lang="fr">~Mode de saisie 6-touches…</value>
-										<value xml:lang="nl">~Voer in met 6 toetsen…</value>
+										<value xml:lang="nl">~Invoeren met 6 toetsen…</value>
 										<value xml:lang="pt">~Modo de entrada por 6 teclas…</value>
 										<value xml:lang="pt-BR">~Modo de entrada por 6 teclas…</value>
 										<value xml:lang="sl">~Vnosni način šestih tipk …</value>

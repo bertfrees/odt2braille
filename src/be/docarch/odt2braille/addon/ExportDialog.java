@@ -168,10 +168,10 @@ public class ExportDialog implements XItemListener,
         L10N_brailleFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("brailleFileLabel") + ":";
         L10N_tableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableLabel") + ":";
         L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("duplexLabel");
-        L10N_eightDotsLabel = "8-dot Braille";
+        L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("eightDotsLabel");
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_multipleFilesLabel = "Export to multiple files";
+        L10N_multipleFilesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("multipleFilesLabel");
 
         L10N_table.put("UNDEFINED",         "-");
         L10N_table.put("UNICODE_BRAILLE",   "PEF (Unicode Braille)");

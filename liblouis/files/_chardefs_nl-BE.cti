@@ -48,7 +48,7 @@ uplow       \x0059\x0079  13456,13456         Yy                  LATIN CAPITAL 
 uplow       \x005A\x007A  1356,1356           Zz                  LATIN CAPITAL LETTER Z - LATIN SMALL LETTER Z
 
 uplow       \x00C0\x00E0  12356,12356         Àà                  LATIN CAPITAL LETTER A WITH GRAVE - LATIN SMALL LETTER A WITH GRAVE
-uplow       \x00C1\x00E1  1,1                 Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
+uplow       \x00C1\x00E1  12356,12356         Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
 uplow       \x00C2\x00E2  16,16               Ââ                  LATIN CAPITAL LETTER A WITH CIRCUMFLEX - LATIN SMALL LETTER A WITH CIRCUMFLEX
 uplow       \x00C3\x00E3  345,345             Ãã                  LATIN CAPITAL LETTER A WITH TILDE - LATIN SMALL LETTER A WITH TILDE
 uplow       \x00C4\x00E4  345,345             Ää                  LATIN CAPITAL LETTER A WITH DIAERESIS - LATIN SMALL LETTER A WITH DIAERESIS
@@ -59,20 +59,21 @@ uplow       \x00C8\x00E8  2346,2346           Èè                  LATIN CAPITA
 uplow       \x00C9\x00E9  123456,123456       Éé                  LATIN CAPITAL LETTER E WITH ACUTE - LATIN SMALL LETTER E WITH ACUTE
 uplow       \x00CA\x00EA  126,126             Êê                  LATIN CAPITAL LETTER E WITH CIRCUMFLEX - LATIN SMALL LETTER E WITH CIRCUMFLEX
 uplow       \x00CB\x00EB  1246,1246           Ëë                  LATIN CAPITAL LETTER E WITH DIAERESIS - LATIN SMALL LETTER E WITH DIAERESIS
-uplow       \x00CC\x00EC  24,24               Ìì                  LATIN CAPITAL LETTER I WITH GRAVE - LATIN SMALL LETTER I WITH GRAVE
-uplow       \x00CD\x00ED  24,24               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
+uplow       \x00CC\x00EC  34,34               Ìì                  LATIN CAPITAL LETTER I WITH GRAVE - LATIN SMALL LETTER I WITH GRAVE
+uplow       \x00CD\x00ED  34,34               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
 uplow       \x00CE\x00EE  146,146             Îî                  LATIN CAPITAL LETTER I WITH CIRCUMFLEX - LATIN SMALL LETTER I WITH CIRCUMFLEX
 uplow       \x00CF\x00EF  12456,12456         Ïï                  LATIN CAPITAL LETTER I WITH DIAERESIS - LATIN SMALL LETTER I WITH DIAERESIS
-uplow       \x00D1\x00F1  1345,1345           Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
-uplow       \x00D2\x00F2  135,135             Òò                  LATIN CAPITAL LETTER O WITH GRAVE - LATIN SMALL LETTER O WITH GRAVE
+uplow       \x00D1\x00F1  12456,12456         Ññ                  LATIN CAPITAL LETTER N WITH TILDE - LATIN SMALL LETTER N WITH TILDE
+uplow       \x00D2\x00F2  346,346             Òò                  LATIN CAPITAL LETTER O WITH GRAVE - LATIN SMALL LETTER O WITH GRAVE
 uplow       \x00D3\x00F3  346,346             Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
 uplow       \x00D4\x00F4  1456,1456           Ôô                  LATIN CAPITAL LETTER O WITH CIRCUMFLEX - LATIN SMALL LETTER O WITH CIRCUMFLEX
 uplow       \x00D5\x00F5  246,246             Õõ                  LATIN CAPITAL LETTER O WITH TILDE - LATIN SMALL LETTER O WITH TILDE
 uplow       \x00D6\x00F6  246,246             Öö                  LATIN CAPITAL LETTER O WITH DIAERESIS - LATIN SMALL LETTER O WITH DIAERESIS
 uplow       \x00D9\x00F9  23456,23456         Ùù                  LATIN CAPITAL LETTER U WITH GRAVE - LATIN SMALL LETTER U WITH GRAVE
-uplow       \x00DA\x00FA  136,136             Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
+uplow       \x00DA\x00FA  23456,23456         Úú                  LATIN CAPITAL LETTER U WITH ACUTE - LATIN SMALL LETTER U WITH ACUTE
 uplow       \x00DB\x00FB  156,156             Ûû                  LATIN CAPITAL LETTER U WITH CIRCUMFLEX - LATIN SMALL LETTER U WITH CIRCUMFLEX
 uplow       \x00DC\x00FC  1256,1256           Üü                  LATIN CAPITAL LETTER U WITH DIAERESIS - LATIN SMALL LETTER U WITH DIAERESIS
+lowercase   \x00DF        2346                ß                   LATIN SMALL LETTER SHARP S
 
 
 space       \x0009        9                                       <control> HORIZONTAL TABULATION
@@ -227,9 +228,9 @@ sign        \x00B5        56-134              µ                   MICRO SIGN
 math        \x00B7        5-256               ·                   MIDDLE DOT
 sign        \x00B9        34-3456-1           ¹                   SUPERSCRIPT ONE
 sign        \x00BA        4-356               º                   MASCULINE ORDINAL INDICATOR
-math        \x00BC        34-3456-1-256       ¼                   VULGAR FRACTION ONE QUARTER
-math        \x00BD        34-3456-1-23        ½                   VULGAR FRACTION ONE HALF
-math        \x00BE        34-3456-14-256      ¾                   VULGAR FRACTION THREE QUARTERS
+math        \x00BC        3456-1-34-3456-145  ¼                   VULGAR FRACTION ONE QUARTER
+math        \x00BD        3456-1-34-3456-12   ½                   VULGAR FRACTION ONE HALF
+math        \x00BE        3456-14-34-3456-145 ¾                   VULGAR FRACTION THREE QUARTERS
 
 
 # ----------------------------------------------------------------------------------------------
@@ -294,6 +295,34 @@ lowercase   \x03D5        56-124              ϕ                   GREEK PHI SYM
 
 punctuation \x2026        256-256-256         …                   HORIZONTAL ELLIPSIS
 sign        \x2030        123456-123456       ‰                   PER MILLE SIGN
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2070..209F  Superscripts and Subscripts
+# ----------------------------------------------------------------------------------------------
+
+math        \x2070        34-3456-245         ⁰                   SUPERSCRIPT ZERO
+math        \x2074        34-3456-145         ⁴                   SUPERSCRIPT FOUR
+math        \x2075        34-3456-15          ⁵                   SUPERSCRIPT FIVE
+math        \x2076        34-3456-124         ⁶                   SUPERSCRIPT SIX
+math        \x2077        34-3456-1245        ⁷                   SUPERSCRIPT SEVEN
+math        \x2078        34-3456-125         ⁸                   SUPERSCRIPT EIGHT
+math        \x2079        34-3456-24          ⁹                   SUPERSCRIPT NINE
+math        \x207F        34-1345             ⁿ                   SUPERSCRIPT LATIN SMALL LETTER N
+math        \x2080        16-356              ₀                   SUBSCRIPT ZERO
+math        \x2081        16-2                ₁                   SUBSCRIPT ONE
+math        \x2082        16-23               ₂                   SUBSCRIPT TWO
+math        \x2083        16-25               ₃                   SUBSCRIPT THREE
+math        \x2084        16-256              ₄                   SUBSCRIPT FOUR
+math        \x2085        16-26               ₅                   SUBSCRIPT FIVE
+math        \x2086        16-235              ₆                   SUBSCRIPT SIX
+math        \x2087        16-2356             ₇                   SUBSCRIPT SEVEN
+math        \x2088        16-236              ₈                   SUBSCRIPT EIGHT
+math        \x2089        16-35               ₉                   SUBSCRIPT NINE
+math        \x2090        16-1                ₐ                   LATIN SUBSCRIPT SMALL LETTER A
+math        \x2091        16-15               ₑ                   LATIN SUBSCRIPT SMALL LETTER E
+math        \x2092        16-135              ₒ                   LATIN SUBSCRIPT SMALL LETTER O
+math        \x2093        16-1346             ₓ                   LATIN SUBSCRIPT SMALL LETTER X
 
 
 # ----------------------------------------------------------------------------------------------

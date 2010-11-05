@@ -38,21 +38,31 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.AnyConverter;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.EventObject;
+import com.sun.star.frame.XFrame;
+import com.sun.star.lang.XMultiComponentFactory;
+import com.sun.star.frame.XDesktop;
+import com.sun.star.frame.XController;
+import com.sun.star.frame.XModel;
+import com.sun.star.awt.XToolkit;
+import com.sun.star.awt.XWindowPeer;
+import com.sun.star.awt.XControlModel;
+import com.sun.star.awt.Rectangle;
+import com.sun.star.awt.WindowDescriptor;
+import com.sun.star.awt.WindowClass;
+import com.sun.star.awt.WindowAttribute;
+import com.sun.star.awt.PosSize;
 import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XButton;
 import com.sun.star.awt.XTextComponent;
-import com.sun.star.awt.XDialog;
-import com.sun.star.awt.XDialogProvider2;
-import com.sun.star.awt.DialogProvider2;
-import com.sun.star.awt.XControlContainer;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XItemListener;
 import com.sun.star.awt.ItemEvent;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
+import com.sun.star.awt.XWindow;
+import com.sun.star.awt.XWindowListener;
+import com.sun.star.awt.WindowEvent;
 import com.sun.star.awt.FontDescriptor;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.beans.XMultiPropertySet;
 import com.sun.org.apache.xpath.internal.XPathAPI;
@@ -73,24 +83,34 @@ import com.versusoft.packages.jodl.RomanNumbering;
  * @author Bert Frees
  */
 public class PreviewDialog implements XItemListener,
-                                      XActionListener {
+                                      XActionListener,
+                                      XWindowListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
     private static final String FONT_6_DOT = "odt2braille 6 dot";
-    private static final short SIZE_6_DOT = 18;
-    private static final double CHAR_WIDTH_6_DOT = 5.85d;
-    private static final double CHAR_HEIGHT_6_DOT = 10.66d;
-
     private static final String FONT_8_DOT = "odt2braille 8 dot";
-    private static final short SIZE_8_DOT = 18;
-    private static final double CHAR_WIDTH_8_DOT = 5.85d;
-    private static final double CHAR_HEIGHT_8_DOT = 13.35d;
 
-    private XDialog dialog = null;
+    private static final short DEFAULT_FONT_SIZE = 18;
+    private static final short MIN_FONTSIZE = 15;
+    private static final short MAX_FONTSIZE = 30;
 
+    private static final int X_BACK_BUTTON = 2*7;
+    private static final int X_VOLUMES_LISTBOX = 2*38;
+    private static final int X_SECTIONS_LISTBOX = 2*112;
+    private static final int X_PAGES_LISTBOX = 2*186;
+    private static final int X_NEXT_BUTTON = 2*239;
+    private static final int Y_PREVIEW_FIELD = 2*45;
+    private static final int MIN_WIDTH = 2*270;
+    private static final int MIN_HEIGHT = 2*200;
+
+    private XComponentContext xContext = null;
+    private XFrame frame = null;
+    private XWindow window = null;
     private Element root = null;
+    private FontDescriptor font = null;
 
+    private short fontSize;
     private int cellsPerLine;
     private int linesPerPage;
     private int marginLeft;
@@ -114,6 +134,8 @@ public class PreviewDialog implements XItemListener,
     private int sectionCount;
     private int pageCount;
 
+    private XButton increaseFontSizeButton = null;
+    private XButton decreaseFontSizeButton = null;
     private XButton backButton = null;
     private XButton nextButton = null;
     private XListBox volumesListBox = null;
@@ -123,13 +145,16 @@ public class PreviewDialog implements XItemListener,
 
     private XPropertySet backButtonProperties = null;
     private XPropertySet nextButtonProperties = null;
+    private XPropertySet previewFieldProperties = null;
+    private XPropertySet increaseFontSizeButtonProperties = null;
+    private XPropertySet decreaseFontSizeButtonProperties = null;
 
-    private static String _backButton = "CommandButton1";
-    private static String _nextButton = "CommandButton2";
-    private static String _volumesListBox = "ListBox1";
-    private static String _sectionsListBox = "ListBox2";
-    private static String _pagesListBox = "ListBox3";
-    private static String _previewField = "TextField1";
+    private XWindow nextButtonWindow = null;
+    private XWindow backButtonWindow = null;
+    private XWindow volumesListBoxWindow = null;
+    private XWindow sectionsListBoxWindow = null;
+    private XWindow pagesListBoxWindow = null;
+    private XWindow previewFieldWindow = null;
 
     private String L10N_windowTitle = null;
     private String L10N_volume = null;
@@ -144,12 +169,12 @@ public class PreviewDialog implements XItemListener,
                          Settings settings)
                   throws ParserConfigurationException,
                          SAXException,
-                         IOException,
-                         TransformerException,
-                         com.sun.star.uno.Exception {
+                         IOException {
 
         logger.entering("PreviewDialog", "<init>");
 
+        this.xContext = xContext;
+        this.fontSize = DEFAULT_FONT_SIZE;
         this.cellsPerLine = settings.getCellsPerLine();
         this.linesPerPage = settings.getLinesPerPage();
         this.marginLeft = settings.getMarginLeft();
@@ -198,92 +223,160 @@ public class PreviewDialog implements XItemListener,
             }
         });
         Document contentDoc = docBuilder.parse(pef.getSinglePEF().getAbsolutePath());
+        root = contentDoc.getDocumentElement();
 
-        // Make dialog
+        logger.exiting("PreviewDialog", "<init>");
 
-        XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.addon.Odt2BrailleAddOn") + "/dialogs/PreviewDialog.xdl";
-        XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
-        dialog = xDialogProvider.createDialog(dialogUrl);
-        XControlContainer dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
-        XControl dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
+    }
 
-        // Dialog items
+    private void buildDialog() throws com.sun.star.uno.Exception {
 
-        backButton = (XButton) UnoRuntime.queryInterface(XButton.class, dialogControlContainer.getControl(_backButton));
-        nextButton = (XButton) UnoRuntime.queryInterface(XButton.class, dialogControlContainer.getControl(_nextButton));
-        volumesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class, dialogControlContainer.getControl(_volumesListBox));
-        sectionsListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class, dialogControlContainer.getControl(_sectionsListBox));
-        pagesListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class, dialogControlContainer.getControl(_pagesListBox));
-        previewField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class, dialogControlContainer.getControl(_previewField));
+        logger.entering("PreviewDialog", "buildDialog");
 
-        backButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, backButton)).getModel());
-        nextButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, nextButton)).getModel());
+        XMultiComponentFactory xMCF = (XMultiComponentFactory) UnoRuntime.queryInterface(
+                                       XMultiComponentFactory.class, xContext.getServiceManager());
+        Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", xContext);
+        XDesktop xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
+        XComponent xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
+        XModel xModel = (XModel)UnoRuntime.queryInterface(XModel.class, xDesktopComponent);
+        XController xController = xModel.getCurrentController();
+        XFrame parentFrame = xController.getFrame();
+        XWindow parentWindow = parentFrame.getContainerWindow();
+        XWindowPeer parentWindowPeer = (XWindowPeer) UnoRuntime.queryInterface (
+                                        XWindowPeer.class, parentWindow);
+        XToolkit toolkit = parentWindowPeer.getToolkit();
 
-        XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
-        windowProperties.setPropertyValue("Title", L10N_windowTitle);
+        XWindowPeer windowPeer = createWindow(toolkit, parentWindowPeer, WindowClass.SIMPLE, "dialog",
+                       WindowAttribute.CLOSEABLE + WindowAttribute.BORDER + WindowAttribute.SIZEABLE + WindowAttribute.MOVEABLE + WindowAttribute.SHOW,
+                       2*100, 2*100, MIN_WIDTH, MIN_HEIGHT);
 
-        XPropertySet volumesListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, volumesListBox)).getModel());
-        XPropertySet sectionsListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, sectionsListBox)).getModel());
-        XPropertySet pagesListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, pagesListBox)).getModel());
-        XPropertySet previewFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, previewField)).getModel());
+        window = (XWindow)UnoRuntime.queryInterface(XWindow.class, windowPeer);
+        frame = (XFrame)UnoRuntime.queryInterface(XFrame.class, xMCF.createInstanceWithContext("com.sun.star.frame.Frame", xContext));
+        frame.initialize(window);
+        window.addWindowListener(this);
 
-        FontDescriptor font = (FontDescriptor)AnyConverter.toObject(FontDescriptor.class, previewFieldProperties.getPropertyValue("FontDescriptor"));
+        XControl nextButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", X_NEXT_BUTTON, 2*7, 2*24, 2*14);
+        XControl backButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", X_BACK_BUTTON, 2*7, 2*24, 2*14);
+        XControl increaseFontSizeButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", 2*1, 2*30, 2*16, 2*14);
+        XControl decreaseFontSizeButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", 2*17, 2*30, 2*16, 2*14);
+        XControl volumesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_VOLUMES_LISTBOX, 2*8, 2*69, 2*12);
+        XControl sectionsListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_SECTIONS_LISTBOX, 2*8, 2*68, 2*12);
+        XControl pagesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_PAGES_LISTBOX, 2*8, 2*46, 2*12);
+        XControl previewFieldControl = createControl(xMCF, xContext, toolkit, windowPeer, "Edit", 0, Y_PREVIEW_FIELD, MIN_WIDTH, MIN_HEIGHT - Y_PREVIEW_FIELD);
+
+        nextButton = (XButton)UnoRuntime.queryInterface(XButton.class, nextButtonControl);
+        backButton = (XButton)UnoRuntime.queryInterface(XButton.class, backButtonControl);
+        increaseFontSizeButton = (XButton)UnoRuntime.queryInterface(XButton.class, increaseFontSizeButtonControl);
+        decreaseFontSizeButton = (XButton)UnoRuntime.queryInterface(XButton.class, decreaseFontSizeButtonControl);
+        volumesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, volumesListBoxControl);
+        sectionsListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, sectionsListBoxControl);
+        pagesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, pagesListBoxControl);
+        previewField = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, previewFieldControl);
+
+        nextButtonWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, nextButtonControl);
+        backButtonWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, backButtonControl);
+        volumesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, volumesListBoxControl);
+        sectionsListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, sectionsListBoxControl);
+        pagesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, pagesListBoxControl);
+        previewFieldWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, previewFieldControl);
+
+        nextButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, nextButtonControl.getModel());
+        backButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, backButtonControl.getModel());
+        increaseFontSizeButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, increaseFontSizeButtonControl.getModel());
+        decreaseFontSizeButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, decreaseFontSizeButtonControl.getModel());
+        previewFieldProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, previewFieldControl.getModel());
+
+        nextButtonProperties.setPropertyValue("Label", "\u003E");
+        backButtonProperties.setPropertyValue("Label", "\u003C");
+        increaseFontSizeButtonProperties.setPropertyValue("Label", "+");
+        decreaseFontSizeButtonProperties.setPropertyValue("Label", "-");
+        
+        font = (FontDescriptor)AnyConverter.toObject(FontDescriptor.class, previewFieldProperties.getPropertyValue("FontDescriptor"));
         font.Name   = eightDots ? FONT_8_DOT : FONT_6_DOT;
-        font.Height = eightDots ? SIZE_8_DOT : SIZE_6_DOT;
+        font.Height = fontSize;
         previewFieldProperties.setPropertyValue("FontDescriptor", font);
 
-        int origWidth = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Width"));
-        int origHeight = (int)AnyConverter.toLong(previewFieldProperties.getPropertyValue("Height"));
-        int newWidth  = 10 + 2 + (int)Math.ceil((cellsPerLine + marginLeft + marginRight)*(eightDots ? CHAR_WIDTH_8_DOT  : CHAR_WIDTH_6_DOT));
-        int newHeight = 10 + 1 + (int)Math.ceil((linesPerPage + marginTop + marginBottom)*(eightDots ? CHAR_HEIGHT_8_DOT : CHAR_HEIGHT_6_DOT));
+        logger.exiting("PreviewDialog", "buildDialog");
 
-        previewFieldProperties.setPropertyValue("Width", newWidth);
-        previewFieldProperties.setPropertyValue("Height", newHeight);
+    }
 
-        if (newWidth > origWidth) {
+    private XWindowPeer createWindow(XToolkit toolkit,
+                                     XWindowPeer parent,
+                                     WindowClass type,
+                                     String service,
+                                     int attrs,
+                                     int x,
+                                     int y,
+                                     int width,
+                                     int height) {
 
-            volumesListBoxProperties.setPropertyValue("PositionX", (int)Math.floor((newWidth - origWidth)/2)
-                    + (int)AnyConverter.toLong(volumesListBoxProperties.getPropertyValue("PositionX")));
-            sectionsListBoxProperties.setPropertyValue("PositionX", (int)Math.floor((newWidth - origWidth)/2)
-                    + (int)AnyConverter.toLong(sectionsListBoxProperties.getPropertyValue("PositionX")));
-            pagesListBoxProperties.setPropertyValue("PositionX", (int)Math.floor((newWidth - origWidth)/2)
-                    + (int)AnyConverter.toLong(pagesListBoxProperties.getPropertyValue("PositionX")));
-            backButtonProperties.setPropertyValue("PositionX", (int)Math.floor((newWidth - origWidth)/2)
-                    + (int)AnyConverter.toLong(backButtonProperties.getPropertyValue("PositionX")));
-            nextButtonProperties.setPropertyValue("PositionX", (int)Math.floor((newWidth - origWidth)/2)
-                    + (int)AnyConverter.toLong(nextButtonProperties.getPropertyValue("PositionX")));
+        try {
 
-            try{
+            Rectangle rectangle = new Rectangle();
+            rectangle.X = x;
+            rectangle.Y = y;
+            rectangle.Width = width;
+            rectangle.Height = height;
 
-                XMultiPropertySet xMultiPropertySet = (XMultiPropertySet) UnoRuntime.queryInterface(
-                                                       XMultiPropertySet.class, dialogControl.getModel());
-                xMultiPropertySet.setPropertyValues(
-                    new String[] { "Height", "Width" },
-                    new Object[] {
-                        new Integer(newHeight - origHeight + (int)AnyConverter.toLong(windowProperties.getPropertyValue("Height"))),
-                        new Integer(newWidth - origWidth + (int)AnyConverter.toLong(windowProperties.getPropertyValue("Width")))
-                    }
-                );
+            WindowDescriptor aWindowDescriptor = new WindowDescriptor();
+            aWindowDescriptor.Type = type;
+            aWindowDescriptor.WindowServiceName = service;
+            aWindowDescriptor.ParentIndex = -1;
+            aWindowDescriptor.Bounds = rectangle;
+            aWindowDescriptor.Parent = parent;
+            aWindowDescriptor.WindowAttributes = attrs;
 
-            } catch (com.sun.star.uno.Exception ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            return toolkit.createWindow(aWindowDescriptor);
 
-        } else {
-
-            previewFieldProperties.setPropertyValue("PositionX", (int)Math.floor((origWidth - newWidth)/2));
-            windowProperties.setPropertyValue("Height", newHeight - origHeight + (int)AnyConverter.toLong(windowProperties.getPropertyValue("Height")));
-
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            return null;
         }
+    }
+    
+    private XControl createControl(XMultiComponentFactory xMCF,
+                                   XComponentContext xContext,
+                                   XToolkit toolkit,
+                                   XWindowPeer windowPeer,
+                                   String type,
+                                   int x,
+                                   int y,
+                                   int height,
+                                   int width) {
 
-        root = contentDoc.getDocumentElement();
+        try {
+
+            XControl control = (XControl)UnoRuntime.queryInterface(
+                                XControl.class, xMCF.createInstanceWithContext("com.sun.star.awt.UnoControl" + type, xContext));
+            XControlModel controlModel = (XControlModel)UnoRuntime.queryInterface(
+                                          XControlModel.class, xMCF.createInstanceWithContext("com.sun.star.awt.UnoControl" + type + "Model", xContext));
+            control.setModel(controlModel);
+            XMultiPropertySet properties = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, control.getModel());
+            if (type.equals("ListBox")) {                
+                properties.setPropertyValues(new String[] { "Dropdown",        "LineCount" },
+                                             new Object[] { new Boolean(true), new Short((short)20)});
+            } else if (type.equals("Edit")){
+                properties.setPropertyValues(new String[] { "AutoHScroll",     "AutoVScroll",     "HScroll",         "MultiLine",       "ReadOnly",        "VScroll"},
+                                             new Object[] { new Boolean(true), new Boolean(true), new Boolean(true), new Boolean(true), new Boolean(true), new Boolean(true)});
+            }
+            control.createPeer(toolkit, windowPeer);
+            XWindow controlWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, control);
+            controlWindow.setPosSize(x, y, height, width, PosSize.POSSIZE);
+
+            return control;
+
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+            return null;
+        }
+    }
+
+    public void execute() throws com.sun.star.uno.Exception,
+                                 TransformerException {
+
+        logger.entering("PreviewDialog", "execute");
+
+        buildDialog();
 
         volume = 1;
         section = 1;
@@ -298,29 +391,16 @@ public class PreviewDialog implements XItemListener,
         pagesListBox.addItemListener(this);
         backButton.addActionListener(this);
         nextButton.addActionListener(this);
+        increaseFontSizeButton.addActionListener(this);
+        decreaseFontSizeButton.addActionListener(this);
 
         showPage();
 
-        logger.exiting("PreviewDialog", "<init>");
-
-    }
-
-    public void execute() {
-
-        logger.entering("PreviewDialog", "execute");
-        dialog.execute();
         logger.exiting("PreviewDialog", "execute");
 
     }
 
-    public void dispose() {
-
-        XComponent dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
-
-        if (dialogComponent != null) {
-            dialogComponent.dispose();
-        }
-    }
+    public void dispose() {}
 
     private void showPage() throws TransformerException {
 
@@ -461,6 +541,8 @@ public class PreviewDialog implements XItemListener,
                 "/pef/body/volume[" + volume + "]/section[" + section + "]/page[" + page + "]/preceding::page").bool());
         nextButtonProperties.setPropertyValue("Enabled", XPathAPI.eval(root,
                 "/pef/body/volume[" + volume + "]/section[" + section + "]/page[" + page + "]/following::page").bool());
+        decreaseFontSizeButtonProperties.setPropertyValue("Enabled", fontSize > MIN_FONTSIZE);
+        increaseFontSizeButtonProperties.setPropertyValue("Enabled", fontSize < MAX_FONTSIZE);
 
     }
 
@@ -525,8 +607,25 @@ public class PreviewDialog implements XItemListener,
                     updateButtons();
                     showPage();
                 }
-            }
 
+            } else if (source.equals(increaseFontSizeButton)) {
+
+                if (fontSize < MAX_FONTSIZE) {
+                    fontSize ++;
+                    font.Height = fontSize;
+                    previewFieldProperties.setPropertyValue("FontDescriptor", font);
+                    updateButtons();
+                }
+
+            } else if (source.equals(decreaseFontSizeButton)) {
+
+                if (fontSize > MIN_FONTSIZE) {
+                    fontSize --;
+                    font.Height = fontSize;
+                    previewFieldProperties.setPropertyValue("FontDescriptor", font);
+                    updateButtons();
+                }
+            }
         } catch (TransformerException ex) {
             logger.log(Level.SEVERE, null, ex);
         } catch (com.sun.star.uno.Exception ex) {
@@ -567,6 +666,33 @@ public class PreviewDialog implements XItemListener,
         }
     }
 
-    public void disposing(EventObject event) {}
+    public void disposing(EventObject event) { // frame.dispose() veroorzaakt RuntimeException
 
+//        if (frame != null) {
+//            frame.dispose();
+//        }
+    }
+
+    public void windowResized(WindowEvent event) {
+
+        Rectangle windowRectangle = window.getPosSize();
+        
+        int newWidth = Math.max(windowRectangle.Width, MIN_WIDTH);
+        int newHeight = Math.max(windowRectangle.Height, MIN_HEIGHT);
+        int xOffset = (newWidth - MIN_WIDTH) / 2;
+
+        backButtonWindow.setPosSize(X_BACK_BUTTON + xOffset, 0, 0, 0, PosSize.X);
+        volumesListBoxWindow.setPosSize(X_VOLUMES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
+        sectionsListBoxWindow.setPosSize(X_SECTIONS_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
+        pagesListBoxWindow.setPosSize(X_PAGES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
+        nextButtonWindow.setPosSize(X_NEXT_BUTTON + xOffset, 0, 0, 0, PosSize.X);
+        previewFieldWindow.setPosSize(0, 0, newWidth, newHeight - Y_PREVIEW_FIELD, PosSize.SIZE);
+        window.setPosSize(0, 0, newWidth, newHeight, PosSize.SIZE);
+
+    }
+
+    public void windowMoved(WindowEvent event) {}
+    public void windowShown(EventObject event) {}
+    public void windowHidden(EventObject event) {}
+    
 }

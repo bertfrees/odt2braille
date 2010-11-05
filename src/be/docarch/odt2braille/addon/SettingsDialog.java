@@ -806,7 +806,7 @@ public class SettingsDialog implements XItemListener,
         L10N_roadmapTitle = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("settingsRoadmapTitle");
         L10N_roadmapLabels[GENERAL_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("generalSettingsPageTitle");
         L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageSettingsPageTitle");
-        L10N_roadmapLabels[TYPEFACE_PAGE-1] = "Special Typeface";
+        L10N_roadmapLabels[TYPEFACE_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("typefaceSettingsPageTitle");
         L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paragraphSettingsPageTitle");
         L10N_roadmapLabels[HEADINGS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("headingSettingsPageTitle");
         L10N_roadmapLabels[LISTS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("listSettingsPageTitle");
@@ -826,7 +826,7 @@ public class SettingsDialog implements XItemListener,
         L10N_creatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("creatorLabel") + ":";
         L10N_mainTranslationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
         L10N_mainGradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_mainEightDotsLabel = "Use 8-dot Braille";
+        L10N_mainEightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("useEightDotsLabel");
         L10N_transcribersNotesPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcribersNotesPageLabel");
         L10N_transcriptionInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("transcriptionInfoLabel");
         L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
@@ -838,27 +838,27 @@ public class SettingsDialog implements XItemListener,
 
         L10N_translationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
         L10N_gradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_eightDotsLabel = "Use 8-dot Braille";
+        L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("useEightDotsLabel");
 
         // Typeface Page
 
-        L10N_characterStyleLabel = "Style";
-        L10N_characterInheritLabel = "Inherit from parent style:";
-        L10N_characterBoldfaceLabel = "Boldface";
-        L10N_characterItalicLabel = "Italic";
-        L10N_characterUnderlineLabel = "Underline";
-        L10N_characterCapitalsLabel = "Capitals";
+        L10N_characterStyleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("styleLabel");
+        L10N_characterInheritLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("inheritLabel") + ":";
+        L10N_characterBoldfaceLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("characterBoldfaceLabel");
+        L10N_characterItalicLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("characterItalicLabel");
+        L10N_characterUnderlineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("characterUnderlineLabel");
+        L10N_characterCapitalsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("characterCapitalsLabel");
 
         // Paragraphs Page
 
-        L10N_paragraphStyleLabel = "Style";
-        L10N_paragraphInheritLabel = "Inherit from parent style:";
+        L10N_paragraphStyleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("styleLabel");
+        L10N_paragraphInheritLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("inheritLabel") + ":";
         L10N_paragraphAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
         L10N_paragraphFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_paragraphRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
-        L10N_paragraphKeepEmptyLabel = "Keep empty paragraphs";
+        L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paragraphKeepEmptyLabel");
 
         // Headings Page
 
@@ -868,7 +868,7 @@ public class SettingsDialog implements XItemListener,
         L10N_headingRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_headingLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_headingLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
-        L10N_headingNewBraillePageLabel = "Start on new Braille page";
+        L10N_headingNewBraillePageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("headingNewBraillePageLabel");
 
         // Lists Page
 
@@ -899,7 +899,7 @@ public class SettingsDialog implements XItemListener,
         L10N_braillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumbersLabel");
         L10N_braillePageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("braillePageNumberAtLabel") + ":";
         L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
-        L10N_beginningBraillePageNumberLabel = "Start numbering at:";
+        L10N_beginningBraillePageNumberLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("beginningBraillePageNumberLabel") + ":";
         L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
         L10N_printPageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberAtLabel") + ":";
         L10N_printPageNumberRangeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printPageNumberRangeLabel");
@@ -922,8 +922,8 @@ public class SettingsDialog implements XItemListener,
         L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
-        L10N_tableOfContentsPrintPageNumbersLabel = "Display print page numbers";
-        L10N_tableOfContentsBraillePageNumbersLabel = "Display Braille page numbers";
+        L10N_tableOfContentsPrintPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsPrintPageNumbersLabel");
+        L10N_tableOfContentsBraillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsBraillePageNumbersLabel");
 
         // Special Symbols Page
         
@@ -957,9 +957,9 @@ public class SettingsDialog implements XItemListener,
         L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("center"));
         L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right"));
 
-        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, "Follow print");
-        L10N_typeface.put(TypefaceOption.YES,          "Yes");
-        L10N_typeface.put(TypefaceOption.NO,           "No");
+        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("followPrint"));
+        L10N_typeface.put(TypefaceOption.YES,          ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("yes"));
+        L10N_typeface.put(TypefaceOption.NO,           ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("no"));
 
         String key = null;
         String value = null;
@@ -1551,28 +1551,95 @@ public class SettingsDialog implements XItemListener,
         specialSymbolsMoveUpButton.addActionListener(this);
         specialSymbolsMoveDownButton.addActionListener(this);
 
+        addGeneralPageListeners();
+        addLanguagesPageListeners();
+        addTypefacePageListeners();
+        addParagraphsPageListeners();
+        addHeadingsPageListeners();
+        addListsPageListeners();
+        addTablesPageListeners();
+        addPageNumbersPageListeners();
+        addTableOfContentsPageListeners();
+        addSpecialSymbolsPageListeners();
+
+    }
+
+    private void addGeneralPageListeners() {
+
         transcriptionInfoCheckBox.addItemListener(this);
         volumeInfoCheckBox.addItemListener(this);
         transcribersNotesPageCheckBox.addItemListener(this);
         mainTranslationTableListBox.addItemListener(this);
         mainGradeListBox.addItemListener(this);
-        paragraphAlignmentListBox.addItemListener(this);
-        paragraphStyleListBox.addItemListener(this);
-        characterStyleListBox.addItemListener(this);
-        headingAlignmentListBox.addItemListener(this);
-        headingLevelListBox.addItemListener(this);
-        listAlignmentListBox.addItemListener(this);
-        listLevelListBox.addItemListener(this);
-        tableSimpleRadioButton.addItemListener(this);
-        tableStairstepRadioButton.addItemListener(this);
-        tableColumnListBox.addItemListener(this);
-        tableAlignmentListBox.addItemListener(this);
+
+    }
+
+    private void addLanguagesPageListeners() {
+
         languagesListBox.addItemListener(this);
         translationTableListBox.addItemListener(this);
         gradeListBox.addItemListener(this);
         eightDotsCheckBox.addItemListener(this);
+
+    }
+
+    private void addTypefacePageListeners() {
+
+        characterStyleListBox.addItemListener(this);
+        characterInheritCheckBox.addItemListener(this);
+
+    }
+
+    private void addParagraphsPageListeners() {
+
+        paragraphAlignmentListBox.addItemListener(this);
+        paragraphStyleListBox.addItemListener(this);
+        paragraphInheritCheckBox.addItemListener(this);
+
+    }
+
+    private void addHeadingsPageListeners() {
+
+        headingAlignmentListBox.addItemListener(this);
+        headingLevelListBox.addItemListener(this);
+
+    }
+    private void addListsPageListeners() {
+
+        listAlignmentListBox.addItemListener(this);
+        listLevelListBox.addItemListener(this);
+
+    }
+
+    private void addTablesPageListeners() {
+
+        tableSimpleRadioButton.addItemListener(this);
+        tableStairstepRadioButton.addItemListener(this);
+        tableColumnListBox.addItemListener(this);
+        tableAlignmentListBox.addItemListener(this);
+
+    }
+
+    private void addPageNumbersPageListeners() {
+
+        braillePageNumbersCheckBox.addItemListener(this);
+        braillePageNumberAtListBox.addItemListener(this);
+        printPageNumbersCheckBox.addItemListener(this);
+        printPageNumberAtListBox.addItemListener(this);
+        printPageNumberRangeCheckBox.addItemListener(this);
+        pageSeparatorCheckBox.addItemListener(this);
+
+    }
+
+    private void addTableOfContentsPageListeners() {
+
         tableOfContentsCheckBox.addItemListener(this);
         tableOfContentsLevelListBox.addItemListener(this);
+
+    }
+
+    private void addSpecialSymbolsPageListeners() {
+
         specialSymbolsListCheckBox.addItemListener(this);
         specialSymbolsListBox.addItemListener(this);
         specialSymbolsMode0RadioButton.addItemListener(this);
@@ -1580,14 +1647,90 @@ public class SettingsDialog implements XItemListener,
         specialSymbolsMode2RadioButton.addItemListener(this);
         specialSymbolsMode3RadioButton.addItemListener(this);
 
-        paragraphInheritCheckBox.addItemListener(this);
-        characterInheritCheckBox.addItemListener(this);
-        braillePageNumbersCheckBox.addItemListener(this);
-        braillePageNumberAtListBox.addItemListener(this);
-        printPageNumbersCheckBox.addItemListener(this);
-        printPageNumberAtListBox.addItemListener(this);
-        printPageNumberRangeCheckBox.addItemListener(this);
-        pageSeparatorCheckBox.addItemListener(this);
+    }
+
+    private void removeGeneralPageListeners() {
+
+        transcriptionInfoCheckBox.removeItemListener(this);
+        volumeInfoCheckBox.removeItemListener(this);
+        transcribersNotesPageCheckBox.removeItemListener(this);
+        mainTranslationTableListBox.removeItemListener(this);
+        mainGradeListBox.removeItemListener(this);
+
+    }
+
+    private void removeLanguagesPageListeners() {
+
+        languagesListBox.removeItemListener(this);
+        translationTableListBox.removeItemListener(this);
+        gradeListBox.removeItemListener(this);
+        eightDotsCheckBox.removeItemListener(this);
+
+    }
+
+    private void removeTypefacePageListeners() {
+
+        characterStyleListBox.removeItemListener(this);
+        characterInheritCheckBox.removeItemListener(this);
+
+    }
+
+    private void removeParagraphsPageListeners() {
+
+        paragraphAlignmentListBox.removeItemListener(this);
+        paragraphStyleListBox.removeItemListener(this);
+        paragraphInheritCheckBox.removeItemListener(this);
+
+    }
+
+    private void removeHeadingsPageListeners() {
+
+        headingAlignmentListBox.removeItemListener(this);
+        headingLevelListBox.removeItemListener(this);
+
+    }
+    private void removeListsPageListeners() {
+
+        listAlignmentListBox.removeItemListener(this);
+        listLevelListBox.removeItemListener(this);
+
+    }
+
+    private void removeTablesPageListeners() {
+
+        tableSimpleRadioButton.removeItemListener(this);
+        tableStairstepRadioButton.removeItemListener(this);
+        tableColumnListBox.removeItemListener(this);
+        tableAlignmentListBox.removeItemListener(this);
+
+    }
+
+    private void removePageNumbersPageListeners() {
+
+        braillePageNumbersCheckBox.removeItemListener(this);
+        braillePageNumberAtListBox.removeItemListener(this);
+        printPageNumbersCheckBox.removeItemListener(this);
+        printPageNumberAtListBox.removeItemListener(this);
+        printPageNumberRangeCheckBox.removeItemListener(this);
+        pageSeparatorCheckBox.removeItemListener(this);
+
+    }
+
+    private void removeTableOfContentsPageListeners() {
+
+        tableOfContentsCheckBox.removeItemListener(this);
+        tableOfContentsLevelListBox.removeItemListener(this);
+
+    }
+
+    private void removeSpecialSymbolsPageListeners() {
+
+        specialSymbolsListCheckBox.removeItemListener(this);
+        specialSymbolsListBox.removeItemListener(this);
+        specialSymbolsMode0RadioButton.removeItemListener(this);
+        specialSymbolsMode1RadioButton.removeItemListener(this);
+        specialSymbolsMode2RadioButton.removeItemListener(this);
+        specialSymbolsMode3RadioButton.removeItemListener(this);
 
     }
 
@@ -2346,7 +2489,6 @@ public class SettingsDialog implements XItemListener,
         listLinesBelowProperties.setPropertyValue("Enabled", !bana);
         listLinesBetweenProperties.setPropertyValue("Enabled", !bana);
 
-
     }
 
     private void updateTablesPageFieldProperties() throws com.sun.star.uno.Exception {
@@ -2381,13 +2523,11 @@ public class SettingsDialog implements XItemListener,
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent());
         printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
                                                                              && settings.getPrintPageNumbers());
-        printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
-                                                                                 && settings.getPrintPageNumbers());
-        continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
-                                                                          && settings.getPrintPageNumbers());
+        printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
+        continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
         pageSeparatorCheckBoxProperties.setPropertyValue("Enabled", !bana);
         pageSeparatorNumberCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageSeparator()
-                                                                                && settings.getPageNumbersPresent());
+                                                                                && settings.getPrintPageNumbers());
         ignoreEmptyPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         mergeUnnumberedPagesCheckBoxProperties.setPropertyValue("Enabled", !bana);
         numbersAtTopOnSepLineCheckBoxProperties.setPropertyValue("Enabled", !bana
@@ -2419,7 +2559,7 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsFirstLineFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsBraillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getBraillePageNumbers());
-        tableOfContentsPrintPageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getPageNumbersPresent());
+        tableOfContentsPrintPageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getPrintPageNumbers());
 
     }
 
@@ -2453,16 +2593,12 @@ public class SettingsDialog implements XItemListener,
 
         CharacterStyle style = characterStyles.get(selectedCharacterStylePos);
 
-        characterInheritCheckBox.removeItemListener(this);
-
         characterInheritCheckBox.setState((short)(style.getInherit()?1:0));
         characterParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
         characterBoldfaceListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getBoldface())), true);
         characterItalicListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getItalic())), true);
         characterUnderlineListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getUnderline())), true);
         characterCapitalsListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getCapitals())), true);
-
-        characterInheritCheckBox.addItemListener(this);
 
     }
     
@@ -2483,9 +2619,6 @@ public class SettingsDialog implements XItemListener,
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
         boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        paragraphInheritCheckBox.removeItemListener(this);
-        paragraphAlignmentListBox.removeItemListener(this);
-
         paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));
         paragraphParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
         paragraphLinesAboveField.setValue((double)style.getLinesAbove());
@@ -2494,9 +2627,6 @@ public class SettingsDialog implements XItemListener,
         paragraphFirstLineField.setValue((double)(left?style.getFirstLine():0));
         paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
         paragraphKeepEmptyCheckBox.setState((short)(style.getKeepEmptyParagraphs()?1:0));
-
-        paragraphAlignmentListBox.addItemListener(this);
-        paragraphInheritCheckBox.addItemListener(this);
 
     }
 
@@ -2520,16 +2650,12 @@ public class SettingsDialog implements XItemListener,
         HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
         boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        headingAlignmentListBox.removeItemListener(this);
-
         headingLinesAboveField.setValue((double)style.getLinesAbove());
         headingLinesBelowField.setValue((double)style.getLinesBelow());
         headingAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         headingFirstLineField.setValue((double)(left?style.getFirstLine():0));
         headingRunoversField.setValue((double)(left?style.getRunovers():0));
         headingNewBraillePageCheckBox.setState((short)(style.getNewBraillePage()?1:0));
-
-        headingAlignmentListBox.addItemListener(this);
 
     }
 
@@ -2551,8 +2677,6 @@ public class SettingsDialog implements XItemListener,
         Style style = settings.getStyle("list_" + currentListLevel);
         boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        listAlignmentListBox.removeItemListener(this);
-
         listAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         listFirstLineField.setValue((double)(left?style.getFirstLine():0));
         listRunoversField.setValue((double)(left?style.getRunovers():0));
@@ -2560,8 +2684,6 @@ public class SettingsDialog implements XItemListener,
         listLinesBelowField.setValue((double)style.getLinesBelow());
         listLinesBetweenField.setValue((double)style.getLinesBetween());
         listPrefixField.setText(style.getPrefix());
-
-        listAlignmentListBox.addItemListener(this);
 
     }
 
@@ -2584,14 +2706,10 @@ public class SettingsDialog implements XItemListener,
         Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
         boolean left = (style.getAlignment() == Alignment.LEFT);
 
-        tableAlignmentListBox.removeItemListener(this);
-
         tableAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         tableFirstLineField.setValue((double)(left?style.getFirstLine():0));
         tableRunoversField.setValue((double)(left?style.getRunovers():0));
         tableColumnListBox.selectItemPos((short)(Math.max(0,currentTableColumn-1)), true);
-
-        tableAlignmentListBox.addItemListener(this);
 
     }
 
@@ -2642,16 +2760,12 @@ public class SettingsDialog implements XItemListener,
 
     private void updateSpecialSymbolsListBox() {
 
-        specialSymbolsListBox.removeItemListener(this);
-
         specialSymbols = settings.getSpecialSymbolsList();
         specialSymbolsListBox.removeItems((short)0, Short.MAX_VALUE);
         for (int i=0;i<specialSymbols.size();i++) {
             specialSymbolsListBox.addItem(specialSymbols.get(i).getSymbol(), (short)i);
         }
         specialSymbolsListBox.selectItemPos((short)(selectedSpecialSymbolPos), true);
-
-        specialSymbolsListBox.addItemListener(this);
 
     }
 
@@ -2662,20 +2776,10 @@ public class SettingsDialog implements XItemListener,
         specialSymbolsSymbolField.setText(selectedSpecialSymbol.getSymbol());
         specialSymbolsDescriptionField.setText(selectedSpecialSymbol.getDescription());
 
-        specialSymbolsMode0RadioButton.removeItemListener(this);
-        specialSymbolsMode1RadioButton.removeItemListener(this);
-        specialSymbolsMode2RadioButton.removeItemListener(this);
-        specialSymbolsMode3RadioButton.removeItemListener(this);
-
         specialSymbolsMode0RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.NEVER);
         specialSymbolsMode1RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.IF_PRESENT_IN_VOLUME);
         specialSymbolsMode2RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.FIRST_VOLUME);
         specialSymbolsMode3RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.ALWAYS);
-
-        specialSymbolsMode0RadioButton.addItemListener(this);
-        specialSymbolsMode1RadioButton.addItemListener(this);
-        specialSymbolsMode2RadioButton.addItemListener(this);
-        specialSymbolsMode3RadioButton.addItemListener(this);
 
     }
 
@@ -2691,10 +2795,8 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateMainTranslationTableListBox() {
 
-        mainTranslationTableListBox.removeItemListener(this);
         mainTranslationTableListBox.selectItemPos((short)mainTranslationTables.indexOf(
                 settings.getTranslationTable(settings.getMainLanguage())),true);
-        mainTranslationTableListBox.addItemListener(this);
 
     }
 
@@ -2704,14 +2806,12 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateMainGradeListBox() {
 
-        mainGradeListBox.removeItemListener(this);
         mainGradeListBox.removeItems((short)0, Short.MAX_VALUE);
         ArrayList<Integer> supportedGrades = settings.getSupportedGrades(settings.getMainLanguage());
         for (int i=0;i<supportedGrades.size();i++) {
             mainGradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
         mainGradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(settings.getMainLanguage())), true);
-        mainGradeListBox.addItemListener(this);
 
     }
 
@@ -2727,10 +2827,8 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateTranslationTableListBox() {
 
-        translationTableListBox.removeItemListener(this);
         translationTableListBox.selectItemPos((short)allTranslationTables.indexOf(
                 settings.getTranslationTable(languages.get(selectedLanguagePos))),true);
-        translationTableListBox.addItemListener(this);
 
     }
 
@@ -2740,14 +2838,12 @@ public class SettingsDialog implements XItemListener,
      */
     private void updateGradeListBox() {
 
-        gradeListBox.removeItemListener(this);
         gradeListBox.removeItems((short)0, Short.MAX_VALUE);
         ArrayList<Integer> supportedGrades = settings.getSupportedGrades(languages.get(selectedLanguagePos));
         for (int i=0;i<supportedGrades.size();i++) {
             gradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
         gradeListBox.selectItemPos((short)supportedGrades.indexOf(settings.getGrade(languages.get(selectedLanguagePos))), true);
-        gradeListBox.addItemListener(this);
 
     }
 
@@ -2793,6 +2889,17 @@ public class SettingsDialog implements XItemListener,
 
                 settings.setBrailleRules(BrailleRules.values()[brailleRulesListBox.getSelectedItemPos()]);
 
+                removeGeneralPageListeners();
+                removeLanguagesPageListeners();
+                removeTypefacePageListeners();
+                removeParagraphsPageListeners();
+                removeHeadingsPageListeners();
+                removeListsPageListeners();
+                removeTablesPageListeners();
+                removePageNumbersPageListeners();
+                removeTableOfContentsPageListeners();
+                removeSpecialSymbolsPageListeners();
+
                 if (settings.getBrailleRules()==BrailleRules.BANA) {
 
                     if (pagesEnabled[TYPEFACE_PAGE-1])   { updateTypefacePageFieldValues();   }
@@ -2829,10 +2936,23 @@ public class SettingsDialog implements XItemListener,
                 if (pagesEnabled[PAGENUMBERS_PAGE-1]) { updatePageNumbersPageFieldProperties();     }
                 if (pagesEnabled[TOC_PAGE-1])         { updateTableOfContentsPageFieldProperties(); }
 
+                addGeneralPageListeners();
+                addLanguagesPageListeners();
+                addTypefacePageListeners();
+                addParagraphsPageListeners();
+                addHeadingsPageListeners();
+                addListsPageListeners();
+                addTablesPageListeners();
+                addPageNumbersPageListeners();
+                addTableOfContentsPageListeners();
+                addSpecialSymbolsPageListeners();
+
             } else {
                 switch (currentPage) {
 
                     case GENERAL_PAGE:
+
+                        removeGeneralPageListeners();
 
                         if (source.equals(transcriptionInfoCheckBox)) {
                             settings.setTranscriptionInfoEnabled(transcriptionInfoCheckBox.getState() == (short) 1);
@@ -2852,9 +2972,12 @@ public class SettingsDialog implements XItemListener,
                         }
 
                         updateGeneralPageFieldProperties();
+                        addGeneralPageListeners();
                         break;
 
                     case LANGUAGES_PAGE:
+
+                        removeLanguagesPageListeners();
 
                         if (source.equals(translationTableListBox)) {
                             settings.setTranslationTable(allTranslationTables.get((int)translationTableListBox.getSelectedItemPos()),
@@ -2875,10 +2998,12 @@ public class SettingsDialog implements XItemListener,
                         }
 
                         updateLanguagesPageFieldProperties();
+                        addLanguagesPageListeners();
                         break;
 
                     case TYPEFACE_PAGE:
 
+                        removeTypefacePageListeners();
                         saveTypefacePageFieldValues();
 
                         if (source.equals(characterStyleListBox)) {
@@ -2889,10 +3014,12 @@ public class SettingsDialog implements XItemListener,
 
                         updateTypefacePageFieldValues();
                         updateTypefacePageFieldProperties();
+                        addTypefacePageListeners();
                         break;
 
                     case PARAGRAPHS_PAGE:
 
+                        removeParagraphsPageListeners();
                         saveParagraphsPageFieldValues();
 
                         if (source.equals(paragraphStyleListBox)) {
@@ -2908,10 +3035,12 @@ public class SettingsDialog implements XItemListener,
 
                         updateParagraphsPageFieldValues();
                         updateParagraphsPageFieldProperties();
+                        addParagraphsPageListeners();
                         break;
                         
                     case HEADINGS_PAGE: 
 
+                        removeHeadingsPageListeners();
                         saveHeadingsPageFieldValues();
 
                         if (source.equals(headingLevelListBox)) {                            
@@ -2923,10 +3052,12 @@ public class SettingsDialog implements XItemListener,
 
                         updateHeadingsPageFieldValues();
                         updateHeadingsPageFieldProperties();
+                        addHeadingsPageListeners();
                         break;
                         
                     case LISTS_PAGE:
 
+                        removeListsPageListeners();
                         saveListsPageFieldValues();
 
                         if (source.equals(listLevelListBox)) {
@@ -2938,10 +3069,12 @@ public class SettingsDialog implements XItemListener,
 
                         updateListsPageFieldValues();
                         updateListsPageFieldProperties();
+                        addListsPageListeners();
                         break;
 
                     case TABLES_PAGE:
 
+                        removeTablesPageListeners();
                         saveTablesPageFieldValues();
                         
                         if (source.equals(tableSimpleRadioButton) ||
@@ -2965,9 +3098,13 @@ public class SettingsDialog implements XItemListener,
 
                         updateTablesPageFieldValues();
                         updateTablesPageFieldProperties();
+                        addTablesPageListeners();
                         break;
 
                     case PAGENUMBERS_PAGE:
+
+                        removePageNumbersPageListeners();
+                        removeTableOfContentsPageListeners();
 
                         if (source.equals(braillePageNumbersCheckBox)) {
                             settings.setBraillePageNumbers(braillePageNumbersCheckBox.getState() == (short)1);
@@ -2986,6 +3123,10 @@ public class SettingsDialog implements XItemListener,
                             continuePagesCheckBox.setState((short)(settings.getContinuePages()?1:0));
                             printPageNumberRangeCheckBox.setState((short)(settings.getPrintPageNumberRange()?1:0));
                             numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeparateLine()?1:0));
+                            pageSeparatorNumberCheckBox.setState((short)(settings.getPageSeparatorNumber()?1:0));
+                            tableOfContentsPrintPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbersInToc()?1:0));
+                            tableOfContentsPrintPageNumbersCheckBoxProperties.setPropertyValue("Enabled",
+                                    settings.getTableOfContentEnabled() && settings.getPrintPageNumbers());
                         } else if (source.equals(printPageNumberAtListBox)) {
                             settings.setPrintPageNumberAt(((printPageNumberAtListBox.getSelectedItemPos() == (short)0)?
                                 PageNumberPosition.TOP_RIGHT:PageNumberPosition.BOTTOM_RIGHT));
@@ -2996,10 +3137,14 @@ public class SettingsDialog implements XItemListener,
                         }
                         
                         updatePageNumbersPageFieldProperties();
+                        addPageNumbersPageListeners();
+                        addTableOfContentsPageListeners();
                         break;
 
                     case TOC_PAGE:
-                        
+
+                        removeTableOfContentsPageListeners();
+
                         if (source.equals(tableOfContentsCheckBox)) {
                             settings.setTableOfContentEnabled(tableOfContentsCheckBox.getState()==(short)1);
                         } else if (source.equals(tableOfContentsLevelListBox)) {
@@ -3009,10 +3154,13 @@ public class SettingsDialog implements XItemListener,
                         }
 
                         updateTableOfContentsPageFieldProperties();
+                        addTableOfContentsPageListeners();
                         break;
 
                     case SPECIAL_SYMBOLS_PAGE:
-                        
+
+                        removeSpecialSymbolsPageListeners();
+
                         if (source.equals(specialSymbolsListCheckBox)) {
                             settings.setSpecialSymbolsListEnabled(specialSymbolsListCheckBox.getState() == (short) 1);
                             updateSpecialSymbolsPageFieldProperties();
@@ -3038,23 +3186,14 @@ public class SettingsDialog implements XItemListener,
                                 selectedSpecialSymbol.setMode(SpecialSymbolMode.ALWAYS);
                             }
 
-                            specialSymbolsMode0RadioButton.removeItemListener(this);
-                            specialSymbolsMode1RadioButton.removeItemListener(this);
-                            specialSymbolsMode2RadioButton.removeItemListener(this);
-                            specialSymbolsMode3RadioButton.removeItemListener(this);
-
                             specialSymbolsMode0RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.NEVER);
                             specialSymbolsMode1RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.IF_PRESENT_IN_VOLUME);
                             specialSymbolsMode2RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.FIRST_VOLUME);
                             specialSymbolsMode3RadioButton.setState(selectedSpecialSymbol.getMode()==SpecialSymbolMode.ALWAYS);
 
-                            specialSymbolsMode0RadioButton.addItemListener(this);
-                            specialSymbolsMode1RadioButton.addItemListener(this);
-                            specialSymbolsMode2RadioButton.addItemListener(this);
-                            specialSymbolsMode3RadioButton.addItemListener(this);
-
                         }
 
+                        addSpecialSymbolsPageListeners();
                         break;
 
                     case MATH_PAGE: break;
@@ -3166,6 +3305,8 @@ public class SettingsDialog implements XItemListener,
 
                     case SPECIAL_SYMBOLS_PAGE:
 
+                        removeSpecialSymbolsPageListeners();
+
                         if (source.equals(specialSymbolsSymbolButton)) {
                             InsertDialog insertBrailleDialog = new InsertDialog(xContext);
                             SpecialSymbol selectedSpecialSymbol = specialSymbols.get(selectedSpecialSymbolPos);
@@ -3205,6 +3346,7 @@ public class SettingsDialog implements XItemListener,
                             updateSpecialSymbolsListBox();
                         }
 
+                        addSpecialSymbolsPageListeners();
                         break;
 
                     case MATH_PAGE: break;

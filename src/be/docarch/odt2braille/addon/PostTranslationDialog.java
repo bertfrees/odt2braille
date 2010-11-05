@@ -43,7 +43,6 @@ import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
 
-
 /**
  *
  * @author freesb
@@ -140,8 +139,14 @@ public class PostTranslationDialog implements XActionListener {
 
         Object source = actionEvent.Source;
 
-        if (source.equals(previewButton)) {
-            preview.execute();
+        try {
+            if (source.equals(previewButton)) {
+                preview.execute();
+            }
+        } catch (com.sun.star.uno.Exception ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (javax.xml.transform.TransformerException ex) {
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 

@@ -69,35 +69,43 @@
 
     -->
 	
-	<!-- copy necessary .jar files to Odt2BrailleAddOn/dist/lib -->
-	<target name="-post-jar">
-	
-		<echo message="post jar building" />
-		
-		<copy file="${reference.DaisyPipeline.jar}"        tofile="${dist.dir}/${external.jar.dir}/DaisyPipeline.jar"    overwrite="true" />
-		<copy file="${reference.Odt2Braille.jar}"          tofile="${dist.dir}/${external.jar.dir}/Odt2Braille.jar"      overwrite="true" />
-		<copy file="${file.reference.JODL.jar}"            tofile="${dist.dir}/${external.jar.dir}/JODL.jar"             overwrite="true" />
-		<copy file="${file.reference.commons-cli-1.1.jar}" tofile="${dist.dir}/${external.jar.dir}/commons-cli-1.1.jar"  overwrite="true" />
-		<copy file="${file.reference.commons-io-1.4.jar}"  tofile="${dist.dir}/${external.jar.dir}/commons-io-1.4.jar"   overwrite="true" />
-		<copy file="${file.reference.jna.jar}"             tofile="${dist.dir}/${external.jar.dir}/jna.jar"              overwrite="true" />
-		<copy file="${file.reference.saxon9he.jar}"        tofile="${dist.dir}/${external.jar.dir}/saxon9he.jar"         overwrite="true" />
-		<copy file="${file.reference.juh-2.1.0.jar}"       tofile="${dist.dir}/${external.jar.dir}/juh-2.1.0.jar"        overwrite="true" />
-		
-	</target>
+        <!-- copy necessary .jar files to Odt2BrailleAddOn/dist/lib -->
+        <target name="-post-jar">
 
-	<!-- ask target.os as an input -->
-    <target name="init-target-os">
-        <input message="Choose extension target platform:"
-               validargs="${list.target.os}"
-               addproperty="target.os" />
-		
-		<condition property="windows_x86">
-			<equals arg1="${target.os}" arg2="windows_x86"/>
-		</condition>
-		<condition property="macosx_x86">
-			<equals arg1="${target.os}" arg2="macosx_x86"/>
-		</condition>		
-    </target>
+                <echo message="post jar building" />
+
+                <copy file="${reference.DaisyPipeline.jar}"        tofile="${dist.dir}/${external.jar.dir}/DaisyPipeline.jar"    overwrite="true" />
+                <copy file="${reference.Odt2Braille.jar}"          tofile="${dist.dir}/${external.jar.dir}/Odt2Braille.jar"      overwrite="true" />
+                <copy file="${reference.JODL.jar}"                 tofile="${dist.dir}/${external.jar.dir}/JODL.jar"             overwrite="true" />
+                <copy file="${file.reference.commons-cli-1.1.jar}" tofile="${dist.dir}/${external.jar.dir}/commons-cli-1.1.jar"  overwrite="true" />
+                <copy file="${file.reference.commons-io-1.4.jar}"  tofile="${dist.dir}/${external.jar.dir}/commons-io-1.4.jar"   overwrite="true" />
+                <copy file="${file.reference.jna.jar}"             tofile="${dist.dir}/${external.jar.dir}/jna.jar"              overwrite="true" />
+                <copy file="${file.reference.saxon9he.jar}"        tofile="${dist.dir}/${external.jar.dir}/saxon9he.jar"         overwrite="true" />
+                <copy file="${file.reference.juh-2.1.0.jar}"       tofile="${dist.dir}/${external.jar.dir}/juh-2.1.0.jar"        overwrite="true" />
+                <copy file="${file.reference.isorelax.jar}"        tofile="${dist.dir}/${external.jar.dir}/isorelax.jar"         overwrite="true" />
+                <copy file="${file.reference.msv.jar}"             tofile="${dist.dir}/${external.jar.dir}/msv.jar"              overwrite="true" />
+                <copy file="${file.reference.org.daisy.util.jar}"  tofile="${dist.dir}/${external.jar.dir}/org.daisy.util.jar"   overwrite="true" />
+                <copy file="${file.reference.relames.jar}"         tofile="${dist.dir}/${external.jar.dir}/relames.jar"          overwrite="true" />
+                <copy file="${file.reference.relaxngDatatype.jar}" tofile="${dist.dir}/${external.jar.dir}/relaxngDatatype.jar"  overwrite="true" />
+                <copy file="${file.reference.xalan.jar}"           tofile="${dist.dir}/${external.jar.dir}/xalan.jar"            overwrite="true" />
+                <copy file="${file.reference.xsdlib.jar}"          tofile="${dist.dir}/${external.jar.dir}/xsdlib.jar"           overwrite="true" />
+                <copy file="${file.reference.stax-api-1.0.1.jar}"  toFile="${dist.dir}/${external.jar.dir}/stax-api-1.0.1.jar"   overwrite="true" />
+
+        </target>
+
+        <!-- ask target.os as an input -->
+        <target name="init-target-os">
+                <input message="Choose extension target platform:"
+                       validargs="${list.target.os}"
+                       addproperty="target.os" />
+
+                <condition property="windows_x86">
+                        <equals arg1="${target.os}" arg2="windows_x86"/>
+                </condition>
+                <condition property="macosx_x86">
+                        <equals arg1="${target.os}" arg2="macosx_x86"/>
+                </condition>
+        </target>
 	
 	<!-- copy windows binaries -->
 	<target name="copy-binaries-win" if="windows_x86">	
