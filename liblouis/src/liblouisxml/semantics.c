@@ -44,13 +44,9 @@ typedef struct
   int unedited;
 
 /**** Removed by Bert Frees ***************************************
-
   char line[2 * MAXNAMELEN];
-
 /**** Added by Bert Frees *****************************************/
-
   char line[5 * MAXNAMELEN];
-
 /******************************************************************/
 
 }
@@ -800,12 +796,10 @@ sem_compileFile (const char *fileName)
       fclose (nested.in);
 
 /**** Removed by Bert Frees ***************************************
-
       if (nested.unedited)
 	semanticError (NULL,
 		       "File %s needs editing to produce good results.",
 		       nested.fileName);
-
 /******************************************************************/
 
     }

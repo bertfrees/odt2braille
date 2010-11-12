@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  25 OCT 2010 10:37
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  5 NOV 2010 14:09
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-user-doc.texi
@@ -497,7 +497,7 @@ t2braille-user-doc.toc) [-1]
 t2braille-user-doc.toc)
 (C:\Users\freesb\Documents\NetBeansProjects\odt2braille\Odt2BrailleAddOn\doc\od
 t2braille-user-doc.toc) (Getting Started)
-Underfull \hbox (badness 4940) in paragraph at lines 76--82
+Underfull \hbox (badness 4940) in paragraph at lines 80--86
 []@textrm It is strongly rec-om-mended that you also down-load and in-stall the
  Sim-
 
@@ -510,7 +510,7 @@ Underfull \hbox (badness 4940) in paragraph at lines 76--82
 .etc.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--82
+Underfull \hbox (badness 10000) in paragraph at lines 80--86
 @textrm Braille font from Duxbury Sys-tems at [][]@texttt http://www.duxburysys
 tems.com/
 
@@ -523,7 +523,7 @@ tems.com/
 .etc.
 
 
-Overfull \hbox (6.32195pt too wide) in paragraph at lines 76--82
+Overfull \hbox (6.32195pt too wide) in paragraph at lines 80--86
 @texttt product2.asp?product=The%20Braille%20TrueType%20Fonts&level=free&action
 =pur"[][][]@textrm .
 
@@ -536,7 +536,7 @@ Overfull \hbox (6.32195pt too wide) in paragraph at lines 76--82
 .etc.
 
 
-Overfull \hbox (87.37672pt too wide) in paragraph at lines 76--82
+Overfull \hbox (87.37672pt too wide) in paragraph at lines 80--86
 @textrm As of ver-sion 0.0.3, odt-braille will use his own @textit odt2braille 
 fonts@textrm : [][]@texttt http://odt2braille.svn.sourceforge.net/
 
@@ -549,7 +549,7 @@ fonts@textrm : [][]@texttt http://odt2braille.svn.sourceforge.net/
 .etc.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--82
+Underfull \hbox (badness 10000) in paragraph at lines 80--86
 [][]@texttt http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Brail
 leAddOn/
 
@@ -558,23 +558,23 @@ leAddOn/
 .@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
  /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
 
-Chapter 1 [1] Chapter 2 [2] [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
-[14] l.938: Unicode char @u8:⠰ not defined for Texinfo
-l.940: Unicode char @u8:⠼ not defined for Texinfo
-l.942: Unicode char @u8:⠔ not defined for Texinfo
-l.942: Unicode char @u8:⠔ not defined for Texinfo
-l.944: Unicode char @u8:⠠ not defined for Texinfo
-l.944: Unicode char @u8:⠄ not defined for Texinfo
-l.946: Unicode char @u8:⠨ not defined for Texinfo
-l.948: Unicode char @u8:⠸ not defined for Texinfo
-l.950: Unicode char @u8:⠤ not defined for Texinfo
-l.950: Unicode char @u8:⠤ not defined for Texinfo
-l.950: Unicode char @u8:⠤ not defined for Texinfo
-l.950: Unicode char @u8:⠤ not defined for Texinfo
-l.952: Unicode char @u8:⠐ not defined for Texinfo
-l.952: Unicode char @u8:⠐ not defined for Texinfo
-l.952: Unicode char @u8:⠐ not defined for Texinfo [15] [16]
-Underfull \hbox (badness 10000) in paragraph at lines 1089--1095
+[1] Chapter 1 [2] Chapter 2 [3] [4] [5] [6] [7] [8] [9] [10] [11] [12] [13]
+[14] [15] l.942: Unicode char @u8:⠰ not defined for Texinfo
+l.944: Unicode char @u8:⠼ not defined for Texinfo
+l.946: Unicode char @u8:⠔ not defined for Texinfo
+l.946: Unicode char @u8:⠔ not defined for Texinfo
+l.948: Unicode char @u8:⠠ not defined for Texinfo
+l.948: Unicode char @u8:⠄ not defined for Texinfo
+l.950: Unicode char @u8:⠨ not defined for Texinfo
+l.952: Unicode char @u8:⠸ not defined for Texinfo
+l.954: Unicode char @u8:⠤ not defined for Texinfo
+l.954: Unicode char @u8:⠤ not defined for Texinfo
+l.954: Unicode char @u8:⠤ not defined for Texinfo
+l.954: Unicode char @u8:⠤ not defined for Texinfo
+l.956: Unicode char @u8:⠐ not defined for Texinfo
+l.956: Unicode char @u8:⠐ not defined for Texinfo
+l.956: Unicode char @u8:⠐ not defined for Texinfo [16] [17]
+Underfull \hbox (badness 10000) in paragraph at lines 1093--1099
  @textrm math guide at [][]@texttt http://wiki.services.openoffice.org/wiki/Doc
 umentation/
 
@@ -586,11 +586,11 @@ umentation/
 .@textrm h
 .etc.
 
-[17] [18] ) 
+[18] [19] ) 
 Here is how much of TeX's memory you used:
- 2266 strings out of 497541
- 26135 string characters out of 3209714
- 59011 words of memory out of 3000000
+ 2267 strings out of 497541
+ 26137 string characters out of 3209714
+ 59044 words of memory out of 3000000
  3189 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
@@ -605,9 +605,9 @@ fb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb
 :/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
 Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Pr
 ogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-user-doc.pdf (21 pages, 245308 bytes).
+Output written on odt2braille-user-doc.pdf (22 pages, 247431 bytes).
 PDF statistics:
- 404 PDF objects out of 1000 (max. 8388607)
- 45 named destinations out of 1000 (max. 500000)
+ 412 PDF objects out of 1000 (max. 8388607)
+ 46 named destinations out of 1000 (max. 500000)
  221 words of extra memory for PDF output out of 10000 (max. 10000000)
 

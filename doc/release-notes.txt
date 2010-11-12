@@ -108,6 +108,8 @@ Version 0.0.3
 * PEF validation
 * Woluwe math improved
 * More table of contents settings
+* Preview window improved
+* New heading option: margin left/right for centered headings
 
 Fixed bugs:
 
@@ -115,6 +117,7 @@ Fixed bugs:
 * Some other small bug fixes
 * PEF was not valid
 * Table of contents bug fixes
+* A paragraph that was split over a print page was split in braille, even if no separator line is rendered
 
 Translation tables: new
 

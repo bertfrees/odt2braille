@@ -6,8 +6,6 @@
 * Controleer volgende settings in Settings > Compiler and Debugger:
 ** Compiler = mingw32-gcc.exe
 ** Search directories = C:\msys\1.0\mingw\include
-* Maak een nieuw C-project aan
-* Verwijder main.c
 
 *********
  STAP 1
@@ -39,11 +37,42 @@
  STAP 2
 ********
 
-* In Code::Blocks, voeg alle .c en .h bestanden toe aan het project dmv "Add files recursively"
-* Controleer dat Build target op Debug staat
+* In Code::Blocks, maak een nieuw project aan (dynamic linked library): "liblouis"
+* Verwijder main.cpp en main.h
+* Voeg alle .c en .h bestanden uit de map Odt2BrailleAddOn\liblouis\src\liblouis toe aan het project dmv "Add files recursively"
 * Ga naar Build Options > Debug en voeg toe:
-** Bij Linker settings: libxml2.dll.a
-** Bij Search directories (Compiler): liblouis; liblouisxml; liblouisxml\gnulib; libxml2; libxml2\libxml
+** Bij Search directories (Compiler): liblouis
+* Controleer dat Build target op Debug staat
 * Build
-* Na compilatie staat xml2brl.exe in de map $project_folder\bin\Debug
-* Plaats xml2brl.exe in Odt2BrailleAddOn\liblouis\bin
+* Kopieer liblouis.dll uit $project_folder\bin\Debug naar Odt2BrailleAddOn\liblouis\bin
+* Kopieer liblouis.a uit $project_folder\bin\Debug naar Odt2BrailleAddOn\liblouis\src\liblouis
+
+********
+ STAP 3
+********
+
+* Maak een nieuw project aan (dynamic linked library): "liblouisxml"
+* Verwijder main.cpp en main.h
+* Voeg alle .c en .h bestanden uit de map Odt2BrailleAddOn\liblouis\src\liblouisxml toe aan het project dmv "Add files recursively"
+* Ga naar Build Options > Debug en voeg toe:
+** Bij Linker settings: libxml2.dll.a; liblouis.a
+** Bij Search directories (Compiler): liblouis; liblouisxml; liblouisxml\gnulib; libxml2; libxml2\libxml
+* Controleer dat Build target op Debug staat
+* Build
+* Kopieer liblouisxml.dll uit $project_folder\bin\Debug naar Odt2BrailleAddOn\liblouis\bin
+* Kopieer liblouisxml.a uit $project_folder\bin\Debug naar Odt2BrailleAddOn\liblouis\src\liblouisxml
+
+********
+ STAP 4
+********
+
+* Maak een nieuw project aan (application): "xml2brl"
+* Verwijder main.cpp en main.h
+* voeg xml2brl.c uit de map Odt2BrailleAddOn\liblouis\src toe aan het project dmv "Add files recursively"
+* Ga naar Build Options > Debug en voeg toe:
+** Bij Linker settings: libxml2.dll.a; liblouis.a; liblouisxml.a
+** Bij Search directories (Compiler): liblouis; liblouisxml; liblouisxml\gnulib; libxml2; libxml2\libxml
+* Controleer dat Build target op Debug staat
+* Build
+* Kopieer xml2brl.exe uit $project_folder\bin\Debug naar Odt2BrailleAddOn\liblouis\bin
+

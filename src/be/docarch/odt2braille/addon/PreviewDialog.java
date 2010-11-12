@@ -76,6 +76,9 @@ import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import com.versusoft.packages.jodl.RomanNumbering;
+import org_pef_text.AbstractTable;
+import org_pef_text.TableFactory;
+import org_pef_text.TableFactory.TableType;
 
 
 /**
@@ -90,6 +93,8 @@ public class PreviewDialog implements XItemListener,
 
     private static final String FONT_6_DOT = "odt2braille 6 dot";
     private static final String FONT_8_DOT = "odt2braille 8 dot";
+    private static String FONT_DOTS;
+    private static final String FONT_TEXT = "Courier New";
 
     private static final short DEFAULT_FONT_SIZE = 18;
     private static final short MIN_FONTSIZE = 15;
@@ -100,6 +105,7 @@ public class PreviewDialog implements XItemListener,
     private static final int X_SECTIONS_LISTBOX = 2*112;
     private static final int X_PAGES_LISTBOX = 2*186;
     private static final int X_NEXT_BUTTON = 2*239;
+    private static final int X_CHARSET_LISTBOX = 2*230;
     private static final int Y_PREVIEW_FIELD = 2*45;
     private static final int MIN_WIDTH = 2*270;
     private static final int MIN_HEIGHT = 2*200;
@@ -125,6 +131,8 @@ public class PreviewDialog implements XItemListener,
     private boolean eightDots;
     private boolean preliminaryPagesPresent;
     private PageNumberFormat preliminaryPageFormat;
+    private AbstractTable table;
+    private short charset;
 
     private int volume;
     private int section;
@@ -141,6 +149,7 @@ public class PreviewDialog implements XItemListener,
     private XListBox volumesListBox = null;
     private XListBox sectionsListBox = null;
     private XListBox pagesListBox = null;
+    private XListBox charsetListBox = null;
     private XTextComponent previewField = null;
 
     private XPropertySet backButtonProperties = null;
@@ -154,6 +163,7 @@ public class PreviewDialog implements XItemListener,
     private XWindow volumesListBoxWindow = null;
     private XWindow sectionsListBoxWindow = null;
     private XWindow pagesListBoxWindow = null;
+    private XWindow charsetListBoxWindow = null;
     private XWindow previewFieldWindow = null;
 
     private String L10N_windowTitle = null;
@@ -183,12 +193,19 @@ public class PreviewDialog implements XItemListener,
         this.marginBottom = settings.getMarginBottom();
         this.duplex = settings.getDuplex();
         this.mirrorAlign = settings.getMirrorAlign();
-        this.eightDots = settings.getEightDots();
         this.numberOfVolumes = settings.getNumberOfVolumes();
         this.numberOfSupplements = settings.getNumberOfSupplements();
         this.preliminaryVolumeEnabled = settings.getPreliminaryVolumeEnabled();
         this.preliminaryPagesPresent = settings.getPreliminaryPagesPresent();
         this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
+
+        if (settings.getTable() == TableType.BRF ||
+            settings.getTable() == TableType.ES_NEW ||
+            settings.getTable() == TableType.ES_OLD) {
+            this.table = new TableFactory().newTable(settings.getTable());
+        }
+
+        FONT_DOTS = settings.getEightDots() ? FONT_8_DOT : FONT_6_DOT;
 
         // L10N
 
@@ -262,6 +279,7 @@ public class PreviewDialog implements XItemListener,
         XControl volumesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_VOLUMES_LISTBOX, 2*8, 2*69, 2*12);
         XControl sectionsListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_SECTIONS_LISTBOX, 2*8, 2*68, 2*12);
         XControl pagesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_PAGES_LISTBOX, 2*8, 2*46, 2*12);
+        XControl charsetListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_CHARSET_LISTBOX, 2*30, 2*38, 2*12);
         XControl previewFieldControl = createControl(xMCF, xContext, toolkit, windowPeer, "Edit", 0, Y_PREVIEW_FIELD, MIN_WIDTH, MIN_HEIGHT - Y_PREVIEW_FIELD);
 
         nextButton = (XButton)UnoRuntime.queryInterface(XButton.class, nextButtonControl);
@@ -271,6 +289,7 @@ public class PreviewDialog implements XItemListener,
         volumesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, volumesListBoxControl);
         sectionsListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, sectionsListBoxControl);
         pagesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, pagesListBoxControl);
+        charsetListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, charsetListBoxControl);
         previewField = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, previewFieldControl);
 
         nextButtonWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, nextButtonControl);
@@ -278,6 +297,7 @@ public class PreviewDialog implements XItemListener,
         volumesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, volumesListBoxControl);
         sectionsListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, sectionsListBoxControl);
         pagesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, pagesListBoxControl);
+        charsetListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, charsetListBoxControl);
         previewFieldWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, previewFieldControl);
 
         nextButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, nextButtonControl.getModel());
@@ -292,7 +312,7 @@ public class PreviewDialog implements XItemListener,
         decreaseFontSizeButtonProperties.setPropertyValue("Label", "-");
         
         font = (FontDescriptor)AnyConverter.toObject(FontDescriptor.class, previewFieldProperties.getPropertyValue("FontDescriptor"));
-        font.Name   = eightDots ? FONT_8_DOT : FONT_6_DOT;
+        font.Name   = FONT_DOTS;
         font.Height = fontSize;
         previewFieldProperties.setPropertyValue("FontDescriptor", font);
 
@@ -381,6 +401,13 @@ public class PreviewDialog implements XItemListener,
         volume = 1;
         section = 1;
         page = 1;
+        charset = (short)0;
+
+        charsetListBox.addItem("Dots", (short)0);
+        if (table != null) {
+            charsetListBox.addItem("Text", (short)1);
+        }
+        charsetListBox.selectItemPos(charset, true);
 
         updateVolumesListBox();
         updateSectionsListBox();
@@ -389,6 +416,7 @@ public class PreviewDialog implements XItemListener,
 
         sectionsListBox.addItemListener(this);
         pagesListBox.addItemListener(this);
+        charsetListBox.addItemListener(this);
         backButton.addActionListener(this);
         nextButton.addActionListener(this);
         increaseFontSizeButton.addActionListener(this);
@@ -434,10 +462,17 @@ public class PreviewDialog implements XItemListener,
             }
             row = (Element)rows.item(i);
             line = row.getTextContent();
+            if (charset == (short)1) {
+                line = table.toText(line);
+            }
             previewText += line;
             x += line.length();
             while (x < offset + cellsPerLine) {
-                previewText += "\u2800";
+                if (charset == (short)1) {
+                    previewText += " ";
+                } else {
+                    previewText += "\u2800";
+                }
                 x++;
             }
             while (x < width) {
@@ -612,7 +647,7 @@ public class PreviewDialog implements XItemListener,
 
                 if (fontSize < MAX_FONTSIZE) {
                     fontSize ++;
-                    font.Height = fontSize;
+                    font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
                     previewFieldProperties.setPropertyValue("FontDescriptor", font);
                     updateButtons();
                 }
@@ -621,7 +656,7 @@ public class PreviewDialog implements XItemListener,
 
                 if (fontSize > MIN_FONTSIZE) {
                     fontSize --;
-                    font.Height = fontSize;
+                    font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
                     previewFieldProperties.setPropertyValue("FontDescriptor", font);
                     updateButtons();
                 }
@@ -657,6 +692,12 @@ public class PreviewDialog implements XItemListener,
                 page = pagesListBox.getSelectedItemPos() + 1;
                 updateButtons();
                 showPage();
+            } else if (source.equals(charsetListBox)) {
+                charset = charsetListBox.getSelectedItemPos();
+                font.Name = (charset == (short)1)?FONT_TEXT:FONT_DOTS;
+                font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
+                previewFieldProperties.setPropertyValue("FontDescriptor", font);
+                showPage();
             }
 
         } catch (TransformerException ex) {
@@ -685,6 +726,7 @@ public class PreviewDialog implements XItemListener,
         volumesListBoxWindow.setPosSize(X_VOLUMES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
         sectionsListBoxWindow.setPosSize(X_SECTIONS_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
         pagesListBoxWindow.setPosSize(X_PAGES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
+        charsetListBoxWindow.setPosSize(X_CHARSET_LISTBOX + 2*xOffset, 0, 0, 0, PosSize.X);
         nextButtonWindow.setPosSize(X_NEXT_BUTTON + xOffset, 0, 0, 0, PosSize.X);
         previewFieldWindow.setPosSize(0, 0, newWidth, newHeight - Y_PREVIEW_FIELD, PosSize.SIZE);
         window.setPosSize(0, 0, newWidth, newHeight, PosSize.SIZE);

@@ -342,6 +342,14 @@ public class Interpoint55PrintDialog implements XActionListener,
         okButtonProperties.setPropertyValue("Enabled", false);
         wp55Field.setEditable(false);
         overWriteCheckBox.setState((short)(overWriteIniFile?1:0));
+
+        if (System.getProperty("os.name").toLowerCase().contains("mac os")) {
+            printToFile = true;
+            XPropertySet printToFileCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, printToFileCheckBox)).getModel());
+            printToFileCheckBoxProperties.setPropertyValue("Enabled", false);
+        }
+
         printToFileCheckBox.setState((short)(printToFile?1:0));
         iniListBoxProperties.setPropertyValue("Enabled", !printToFile);
         wp55FieldProperties.setPropertyValue("Enabled", !printToFile);

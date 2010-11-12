@@ -34,6 +34,11 @@
 
 enum { COPYRIGHT_YEAR = 2009 };
 
+/**** Added by Bert Frees *****************************************/
+const char version_etc_copyright[] =
+  "Copyright %s %d ViewPlus Technologies, Inc. and JJB Software, Inc.";
+/*****************************************************************/
+
 /* The three functions below display the --version information the
    standard way.
 

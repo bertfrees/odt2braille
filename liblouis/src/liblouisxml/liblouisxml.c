@@ -198,11 +198,12 @@ int
   ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
 
 /**** Added by Bert Frees *****************************************/
-
-    widechar pagebuf[2 * BUFSIZE];
-    ud->pagebuf = pagebuf;
-    ud->pagelen = (sizeof (pagebuf) / CHARSIZE) - 4;
-
+    widechar buffer2[2 * BUFSIZE];
+    widechar buffer3[2 * BUFSIZE];
+    ud->buffer2 = buffer2;
+    ud->buffer3 = buffer3;
+    ud->buffer2_len = (sizeof (buffer2) / CHARSIZE) - 4;
+    ud->buffer3_len = (sizeof (buffer3) / CHARSIZE) - 4;
 /******************************************************************/
 
   if (strcmp (outFileName, "stdout"))

@@ -113,6 +113,7 @@ public class SettingsIO {
     private static String alignmentProperty =                    "[BRL]Alignment";
     private static String firstLineProperty =                    "[BRL]FirstLineIndent";
     private static String runoversProperty =                     "[BRL]Runovers";
+    private static String marginLeftRightProperty =              "[BRL]MarginLeftRight";
     private static String linesAboveProperty =                   "[BRL]LinesAbove";
     private static String linesBelowProperty =                   "[BRL]LinesBelow";
     private static String linesBetweenProperty =                 "[BRL]LinesBetween";
@@ -320,6 +321,9 @@ public class SettingsIO {
             if (!((d = getDoubleProperty(runoversProperty + "_" + styleName)).isNaN())) {
                 style.setRunovers(d.intValue());
             }
+            if (!((d = getDoubleProperty(marginLeftRightProperty + "_" + styleName)).isNaN())) {
+                style.setMarginLeftRight(d.intValue());
+            }
             if (!((d = getDoubleProperty(linesAboveProperty + "_" + styleName)).isNaN())) {
                 style.setLinesAbove(d.intValue());
             }
@@ -356,6 +360,9 @@ public class SettingsIO {
                     }
                     if (!((d = getDoubleProperty(runoversProperty + "_paragraph_" + styleName)).isNaN())) {
                         paraStyle.setRunovers(d.intValue());
+                    }
+                    if (!((d = getDoubleProperty(marginLeftRightProperty + "_paragraph_" + styleName)).isNaN())) {
+                        paraStyle.setMarginLeftRight(d.intValue());
                     }
                     if (!((d = getDoubleProperty(linesAboveProperty + "_paragraph_" + styleName)).isNaN())) {
                         paraStyle.setLinesAbove(d.intValue());
@@ -429,6 +436,9 @@ public class SettingsIO {
             }
             if (!((d = getDoubleProperty(runoversProperty + "_heading_" + level)).isNaN())) {
                 headStyle.setRunovers(d.intValue());
+            }
+            if (!((d = getDoubleProperty(marginLeftRightProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setMarginLeftRight(d.intValue());
             }
             if (!((d = getDoubleProperty(linesAboveProperty + "_heading_" + level)).isNaN())) {
                 headStyle.setLinesAbove(d.intValue());
@@ -852,6 +862,9 @@ public class SettingsIO {
             setProperty(runoversProperty + "_" + styleName,
                         styleAfterChange.getRunovers(),
                         styleBeforeChange.getRunovers());
+            setProperty(marginLeftRightProperty + "_" + styleName,
+                        styleAfterChange.getMarginLeftRight(),
+                        styleBeforeChange.getMarginLeftRight());
             setProperty(linesAboveProperty + "_" + styleName,
                         styleAfterChange.getLinesAbove(),
                         styleBeforeChange.getLinesAbove());
@@ -886,6 +899,9 @@ public class SettingsIO {
                     setProperty(runoversProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getRunovers(),
                                 paraStyleBeforeChange.getRunovers());
+                    setProperty(marginLeftRightProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getMarginLeftRight(),
+                                paraStyleBeforeChange.getMarginLeftRight());
                     setProperty(linesAboveProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getLinesAbove(),
                                 paraStyleBeforeChange.getLinesAbove());
@@ -942,6 +958,9 @@ public class SettingsIO {
             setProperty(runoversProperty + "_heading_" + level,
                         headStyleAfterChange.getRunovers(),
                         headStyleBeforeChange.getRunovers());
+            setProperty(marginLeftRightProperty + "_heading_" + level,
+                        headStyleAfterChange.getMarginLeftRight(),
+                        headStyleBeforeChange.getMarginLeftRight());
             setProperty(linesAboveProperty + "_heading_" + level,
                         headStyleAfterChange.getLinesAbove(),
                         headStyleBeforeChange.getLinesAbove());

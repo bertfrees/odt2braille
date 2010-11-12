@@ -290,6 +290,14 @@ public class ExportDialog implements XItemListener,
         numberOfLinesPerPageField.setMax((double)settings.getMaxLinesPerPage());
         numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
+
+        if (System.getProperty("os.name").toLowerCase().contains("mac os")) {
+            settings.setMultipleFiles(false);
+            XPropertySet multipleFilesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, multipleFilesCheckBox)).getModel());
+            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
+        }
+
         multipleFilesCheckBox.setState((short)(settings.getMultipleFiles()?1:0));
 
         updateBrailleFileListBox();

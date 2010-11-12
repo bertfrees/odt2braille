@@ -319,12 +319,14 @@ public class SettingsDialog implements XItemListener,
     private XListBox paragraphAlignmentListBox = null;
     private XNumericField paragraphFirstLineField = null;
     private XNumericField paragraphRunoversField = null;
+    private XNumericField paragraphMarginLeftRightField = null;
     private XCheckBox paragraphKeepEmptyCheckBox = null;
 
     private XPropertySet paragraphInheritCheckBoxProperties = null;
     private XPropertySet paragraphParentFieldProperties = null;
     private XPropertySet paragraphFirstLineFieldProperties = null;
     private XPropertySet paragraphRunoversFieldProperties = null;
+    private XPropertySet paragraphMarginLeftRightFieldProperties = null;
     private XPropertySet paragraphAlignmentListBoxProperties = null;
     private XPropertySet paragraphLinesAboveProperties = null;
     private XPropertySet paragraphLinesBelowProperties = null;
@@ -336,6 +338,7 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphAlignmentListBox = "ListBox12";
     private static String _paragraphFirstLineField = "NumericField7";
     private static String _paragraphRunoversField = "NumericField8";
+    private static String _paragraphMarginLeftRightField = "NumericField2";
     private static String _paragraphLinesAboveField = "NumericField9";
     private static String _paragraphLinesBelowField = "NumericField10";
     private static String _paragraphKeepEmptyCheckBox = "CheckBox9";
@@ -345,6 +348,7 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphAlignmentLabel = "Label37";
     private static String _paragraphFirstLineLabel = "Label31";
     private static String _paragraphRunoversLabel = "Label32";
+    private static String _paragraphMarginLeftRightLabel = "Label19";
     private static String _paragraphLinesAboveLabel = "Label33";
     private static String _paragraphLinesBelowLabel = "Label34";
     private static String _paragraphKeepEmptyLabel = "Label14";
@@ -354,6 +358,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_paragraphAlignmentLabel = null;
     private String L10N_paragraphFirstLineLabel = null;
     private String L10N_paragraphRunoversLabel = null;
+    private String L10N_paragraphMarginLeftRightLabel = null;
     private String L10N_paragraphLinesAboveLabel = null;
     private String L10N_paragraphLinesBelowLabel = null;
     private String L10N_paragraphKeepEmptyLabel = null;
@@ -364,12 +369,14 @@ public class SettingsDialog implements XItemListener,
     private XListBox headingAlignmentListBox = null;
     private XNumericField headingFirstLineField = null;
     private XNumericField headingRunoversField = null;
+    private XNumericField headingMarginLeftRightField = null;
     private XNumericField headingLinesAboveField = null;
     private XNumericField headingLinesBelowField = null;
     private XCheckBox headingNewBraillePageCheckBox = null;
 
     private XPropertySet headingFirstLineFieldProperties = null;
     private XPropertySet headingRunoversFieldProperties = null;
+    private XPropertySet headingMarginLeftRightFieldProperties = null;
     private XPropertySet headingAlignmentListBoxProperties = null;
     private XPropertySet headingLinesAboveProperties = null;
     private XPropertySet headingLinesBelowProperties = null;
@@ -378,6 +385,7 @@ public class SettingsDialog implements XItemListener,
     private static String _headingAlignmentListBox = "ListBox14";
     private static String _headingFirstLineField = "NumericField11";
     private static String _headingRunoversField = "NumericField12";
+    private static String _headingMarginLeftRightField = "NumericField3";
     private static String _headingLinesAboveField = "NumericField13";
     private static String _headingLinesBelowField = "NumericField14";
     private static String _headingNewBraillePageCheckBox = "CheckBox10";
@@ -386,6 +394,7 @@ public class SettingsDialog implements XItemListener,
     private static String _headingAlignmentLabel = "Label43";
     private static String _headingFirstLineLabel = "Label38";
     private static String _headingRunoversLabel = "Label39";
+    private static String _headingMarginLeftRightLabel = "Label20";
     private static String _headingLinesAboveLabel = "Label40";
     private static String _headingLinesBelowLabel = "Label41";
     private static String _headingNewBraillePageLabel = "Label15";
@@ -394,6 +403,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_headingAlignmentLabel = null;
     private String L10N_headingFirstLineLabel = null;
     private String L10N_headingRunoversLabel = null;
+    private String L10N_headingMarginLeftRightLabel = null;
     private String L10N_headingLinesAboveLabel = null;
     private String L10N_headingLinesBelowLabel = null;
     private String L10N_headingNewBraillePageLabel = null;
@@ -407,11 +417,13 @@ public class SettingsDialog implements XItemListener,
     private XListBox listAlignmentListBox = null;
     private XNumericField listFirstLineField = null;
     private XNumericField listRunoversField = null;
+    private XNumericField listMarginLeftRightField = null;
     private XTextComponent listPrefixField = null;
     private XButton listPrefixButton = null;
 
     private XPropertySet listFirstLineFieldProperties = null;
     private XPropertySet listRunoversFieldProperties = null;
+    private XPropertySet listMarginLeftRightFieldProperties = null;
     private XPropertySet listAlignmentListBoxProperties = null;
     private XPropertySet listLinesAboveProperties = null;
     private XPropertySet listLinesBelowProperties = null;
@@ -423,7 +435,8 @@ public class SettingsDialog implements XItemListener,
     private static String _listLevelListBox = "ListBox11";
     private static String _listAlignmentListBox = "ListBox15";
     private static String _listFirstLineField = "NumericField15";
-    private static String _listRunoversField = "NumericField16";
+    private static String _listRunoversField = "NumericField4";
+    private static String _listMarginLeftRightField = "NumericField5";
     private static String _listPrefixField = "TextField7";
     private static String _listPrefixButton = "CommandButton7";
 
@@ -433,7 +446,8 @@ public class SettingsDialog implements XItemListener,
     private static String _listLevelLabel = "Label44";
     private static String _listAlignmentLabel = "Label45";
     private static String _listFirstLineLabel = "Label28";
-    private static String _listRunoversLabel = "Label29";
+    private static String _listRunoversLabel = "Label21";
+    private static String _listMarginLeftRightLabel = "Label22";
     private static String _listPrefixLabel = "Label27";
 
     private String L10N_listLinesAboveLabel = null;
@@ -443,6 +457,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_listAlignmentLabel = null;
     private String L10N_listFirstLineLabel = null;
     private String L10N_listRunoversLabel = null;
+    private String L10N_listMarginLeftRightLabel = null;
     private String L10N_listPrefixLabel = null;
     private String L10N_listPrefixButton = "...";
 
@@ -457,11 +472,13 @@ public class SettingsDialog implements XItemListener,
     private XListBox tableAlignmentListBox = null;
     private XNumericField tableFirstLineField = null;
     private XNumericField tableRunoversField = null;
+    private XNumericField tableMarginLeftRightField = null;
     private XTextComponent tableColumnDelimiterField = null;
     private XButton tableColumnDelimiterButton = null;
 
     private XPropertySet tableFirstLineFieldProperties = null;
     private XPropertySet tableRunoversFieldProperties = null;
+    private XPropertySet tableMarginLeftRightFieldProperties = null;
     private XPropertySet tableColumnListBoxProperties = null;
     private XPropertySet tableColumnDelimiterFieldProperties = null;
     private XPropertySet tableColumnDelimiterButtonProperties = null;
@@ -480,6 +497,7 @@ public class SettingsDialog implements XItemListener,
     private static String _tableAlignmentListBox = "ListBox17";
     private static String _tableFirstLineField = "NumericField19";
     private static String _tableRunoversField = "NumericField20";
+    private static String _tableMarginLeftRightField = "NumericField6";
     private static String _tableColumnDelimiterField = "TextField5";
     private static String _tableColumnDelimiterButton = "CommandButton5";
 
@@ -492,6 +510,7 @@ public class SettingsDialog implements XItemListener,
     private static String _tableAlignmentLabel = "Label51";
     private static String _tableFirstLineLabel = "Label46";
     private static String _tableRunoversLabel = "Label47";
+    private static String _tableMarginLeftRightLabel = "Label29";
     private static String _tableColumnDelimiterLabel = "Label24";
 
     private String L10N_tableSimpleLabel = null;
@@ -503,6 +522,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableAlignmentLabel = null;
     private String L10N_tableFirstLineLabel = null;
     private String L10N_tableRunoversLabel = null;
+    private String L10N_tableMarginLeftRightLabel = null;
     private String L10N_tableColumnDelimiterLabel = null;
     private String L10N_tableColumnDelimiterButton = "...";
 
@@ -856,6 +876,7 @@ public class SettingsDialog implements XItemListener,
         L10N_paragraphAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
         L10N_paragraphFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_paragraphRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
+        L10N_paragraphMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
         L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paragraphKeepEmptyLabel");
@@ -866,6 +887,7 @@ public class SettingsDialog implements XItemListener,
         L10N_headingAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
         L10N_headingFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_headingRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
+        L10N_headingMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_headingLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_headingLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
         L10N_headingNewBraillePageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("headingNewBraillePageLabel");
@@ -879,6 +901,7 @@ public class SettingsDialog implements XItemListener,
         L10N_listAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
         L10N_listFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_listRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
+        L10N_listMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_listPrefixLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("listPrefixLabel") + ":";
 
         // Tables Page
@@ -892,6 +915,7 @@ public class SettingsDialog implements XItemListener,
         L10N_tableAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
         L10N_tableFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
+        L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("columnDelimiterLabel") + ":";
 
         // Pagenumbers Page
@@ -1160,6 +1184,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_paragraphFirstLineField));
         paragraphRunoversField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_paragraphRunoversField));
+        paragraphMarginLeftRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_paragraphMarginLeftRightField));
         paragraphLinesAboveField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_paragraphLinesAboveField));
         paragraphLinesBelowField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -1177,6 +1203,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_headingFirstLineField));
         headingRunoversField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_headingRunoversField));
+        headingMarginLeftRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_headingMarginLeftRightField));
         headingLinesAboveField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_headingLinesAboveField));
         headingLinesBelowField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -1200,6 +1228,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_listFirstLineField));
         listRunoversField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_listRunoversField));
+        listMarginLeftRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_listMarginLeftRightField));
         listPrefixField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_listPrefixField));
         listPrefixButton = (XButton) UnoRuntime.queryInterface(XButton.class,
@@ -1225,6 +1255,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_tableFirstLineField));
         tableRunoversField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_tableRunoversField));
+        tableMarginLeftRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_tableMarginLeftRightField));
         tableColumnDelimiterField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_tableColumnDelimiterField));
         tableColumnDelimiterButton = (XButton) UnoRuntime.queryInterface(XButton.class,
@@ -1378,6 +1410,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphFirstLineField)).getModel());
         paragraphRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphRunoversField)).getModel());
+        paragraphMarginLeftRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphMarginLeftRightField)).getModel());
         paragraphAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphAlignmentListBox)).getModel());
         paragraphLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1393,6 +1427,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingFirstLineField)).getModel());
         headingRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingRunoversField)).getModel());
+        headingMarginLeftRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingMarginLeftRightField)).getModel());
         headingAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingAlignmentListBox)).getModel());
         headingLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1406,6 +1442,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listFirstLineField)).getModel());
         listRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listRunoversField)).getModel());
+        listMarginLeftRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listMarginLeftRightField)).getModel());
         listAlignmentListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listAlignmentListBox)).getModel());
         listLinesAboveProperties =(XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1421,6 +1459,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableFirstLineField)).getModel());
         tableRunoversFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableRunoversField)).getModel());
+        tableMarginLeftRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, tableMarginLeftRightField)).getModel());
         tableColumnListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableColumnListBox)).getModel());
         tableColumnDelimiterFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1844,6 +1884,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_paragraphFirstLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphRunoversLabel));
         xFixedText.setText(L10N_paragraphRunoversLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphMarginLeftRightLabel));
+        xFixedText.setText(L10N_paragraphMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphLinesAboveLabel));
         xFixedText.setText(L10N_paragraphLinesAboveLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphLinesBelowLabel));
@@ -1861,6 +1903,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_headingFirstLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingRunoversLabel));
         xFixedText.setText(L10N_headingRunoversLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingMarginLeftRightLabel));
+        xFixedText.setText(L10N_headingMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingLinesAboveLabel));
         xFixedText.setText(L10N_headingLinesAboveLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingLinesBelowLabel));
@@ -1884,6 +1928,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_listFirstLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listRunoversLabel));
         xFixedText.setText(L10N_listRunoversLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listMarginLeftRightLabel));
+        xFixedText.setText(L10N_listMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listPrefixLabel));
         xFixedText.setText(L10N_listPrefixLabel);
 
@@ -1907,6 +1953,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_tableFirstLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableRunoversLabel));
         xFixedText.setText(L10N_tableRunoversLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableMarginLeftRightLabel));
+        xFixedText.setText(L10N_tableMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableColumnDelimiterLabel));
         xFixedText.setText(L10N_tableColumnDelimiterLabel);
 
@@ -2084,6 +2132,10 @@ public class SettingsDialog implements XItemListener,
             paragraphRunoversField.setMin((double)0);
             paragraphRunoversField.setMax((double)Integer.MAX_VALUE);
 
+            paragraphMarginLeftRightField.setDecimalDigits((short)0);
+            paragraphMarginLeftRightField.setMin((double)0);
+            paragraphMarginLeftRightField.setMax((double)Integer.MAX_VALUE);
+
             paragraphLinesAboveField.setDecimalDigits((short)0);
             paragraphLinesAboveField.setMin((double)0);
             paragraphLinesAboveField.setMax((double)Integer.MAX_VALUE);
@@ -2117,6 +2169,10 @@ public class SettingsDialog implements XItemListener,
             headingRunoversField.setDecimalDigits((short)0);
             headingRunoversField.setMin((double)0);
             headingRunoversField.setMax((double)Integer.MAX_VALUE);
+
+            headingMarginLeftRightField.setDecimalDigits((short)0);
+            headingMarginLeftRightField.setMin((double)0);
+            headingMarginLeftRightField.setMax((double)Integer.MAX_VALUE);
 
             headingLinesAboveField.setDecimalDigits((short)0);
             headingLinesAboveField.setMin((double)0);
@@ -2162,6 +2218,10 @@ public class SettingsDialog implements XItemListener,
             listRunoversField.setMin((double)0);
             listRunoversField.setMax((double)Integer.MAX_VALUE);
 
+            listMarginLeftRightField.setDecimalDigits((short)0);
+            listMarginLeftRightField.setMin((double)0);
+            listMarginLeftRightField.setMax((double)Integer.MAX_VALUE);
+
             updateListsPageFieldValues();
             updateListsPageFieldProperties();
 
@@ -2204,6 +2264,10 @@ public class SettingsDialog implements XItemListener,
             tableRunoversField.setDecimalDigits((short)0);
             tableRunoversField.setMin((double)0);
             tableRunoversField.setMax((double)Integer.MAX_VALUE);
+
+            tableMarginLeftRightField.setDecimalDigits((short)0);
+            tableMarginLeftRightField.setMin((double)0);
+            tableMarginLeftRightField.setMax((double)Integer.MAX_VALUE);
 
             tableColumnDelimiterField.setText(settings.getColumnDelimiter());
 
@@ -2449,12 +2513,14 @@ public class SettingsDialog implements XItemListener,
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
         
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
         boolean inherit = style.getInherit();
 
         paragraphInheritCheckBoxProperties.setPropertyValue("Enabled", style.getParentStyle() != null && !bana);
         paragraphFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana && !inherit);
         paragraphRunoversFieldProperties.setPropertyValue("Enabled", left && !bana && !inherit);
+        paragraphMarginLeftRightFieldProperties.setPropertyValue("Enabled", centered && !bana && !inherit);
         paragraphAlignmentListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesAboveProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesBelowProperties.setPropertyValue("Enabled", !bana && !inherit);
@@ -2467,10 +2533,12 @@ public class SettingsDialog implements XItemListener,
         HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
 
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         headingFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
         headingRunoversFieldProperties.setPropertyValue("Enabled", left && !bana);
+        headingMarginLeftRightFieldProperties.setPropertyValue("Enabled", centered && !bana);
         headingAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         headingLinesAboveProperties.setPropertyValue("Enabled", !bana);
         headingLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2480,10 +2548,12 @@ public class SettingsDialog implements XItemListener,
     private void updateListsPageFieldProperties() throws com.sun.star.uno.Exception {
 
         boolean left = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.LEFT);
+        boolean centered = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         listFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
         listRunoversFieldProperties.setPropertyValue("Enabled", left && !bana);
+        listMarginLeftRightFieldProperties.setPropertyValue("Enabled", centered && !bana);
         listAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         listLinesAboveProperties.setPropertyValue("Enabled", !bana);
         listLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2499,10 +2569,13 @@ public class SettingsDialog implements XItemListener,
         
         boolean left = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
                                 .getAlignment() == Alignment.LEFT);
+        boolean centered = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
+                                .getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         tableFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
         tableRunoversFieldProperties.setPropertyValue("Enabled", left &&!bana);
+        tableMarginLeftRightFieldProperties.setPropertyValue("Enabled", centered && !bana);
         tableAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         tableLinesAboveProperties.setPropertyValue("Enabled", !bana);
         tableLinesBelowProperties.setPropertyValue("Enabled", !bana);
@@ -2618,6 +2691,7 @@ public class SettingsDialog implements XItemListener,
 
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));
         paragraphParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
@@ -2626,6 +2700,7 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         paragraphFirstLineField.setValue((double)(left?style.getFirstLine():0));
         paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
+        paragraphMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         paragraphKeepEmptyCheckBox.setState((short)(style.getKeepEmptyParagraphs()?1:0));
 
     }
@@ -2641,6 +2716,8 @@ public class SettingsDialog implements XItemListener,
             if (style.getAlignment() == Alignment.LEFT) {
                 style.setFirstLine((int)paragraphFirstLineField.getValue());
                 style.setRunovers((int)paragraphRunoversField.getValue());
+            } else if (style.getAlignment() == Alignment.CENTERED) {
+                style.setMarginLeftRight((int)paragraphMarginLeftRightField.getValue());
             }
         }
     }
@@ -2649,12 +2726,14 @@ public class SettingsDialog implements XItemListener,
 
         HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         headingLinesAboveField.setValue((double)style.getLinesAbove());
         headingLinesBelowField.setValue((double)style.getLinesBelow());
         headingAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         headingFirstLineField.setValue((double)(left?style.getFirstLine():0));
         headingRunoversField.setValue((double)(left?style.getRunovers():0));
+        headingMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         headingNewBraillePageCheckBox.setState((short)(style.getNewBraillePage()?1:0));
 
     }
@@ -2669,6 +2748,8 @@ public class SettingsDialog implements XItemListener,
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)headingFirstLineField.getValue());
             style.setRunovers((int)headingRunoversField.getValue());
+        } else if (style.getAlignment() == Alignment.CENTERED) {
+            style.setMarginLeftRight((int)headingMarginLeftRightField.getValue());
         }
     }
 
@@ -2676,10 +2757,12 @@ public class SettingsDialog implements XItemListener,
 
         Style style = settings.getStyle("list_" + currentListLevel);
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         listAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         listFirstLineField.setValue((double)(left?style.getFirstLine():0));
         listRunoversField.setValue((double)(left?style.getRunovers():0));
+        listMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         listLinesAboveField.setValue((double)style.getLinesAbove());
         listLinesBelowField.setValue((double)style.getLinesBelow());
         listLinesBetweenField.setValue((double)style.getLinesBetween());
@@ -2697,6 +2780,8 @@ public class SettingsDialog implements XItemListener,
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)listFirstLineField.getValue());
             style.setRunovers((int)listRunoversField.getValue());
+        } else if (style.getAlignment() == Alignment.CENTERED) {
+            style.setMarginLeftRight((int)listMarginLeftRightField.getValue());
         }
 
     }
@@ -2705,10 +2790,12 @@ public class SettingsDialog implements XItemListener,
 
         Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
         boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         tableAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
         tableFirstLineField.setValue((double)(left?style.getFirstLine():0));
         tableRunoversField.setValue((double)(left?style.getRunovers():0));
+        tableMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         tableColumnListBox.selectItemPos((short)(Math.max(0,currentTableColumn-1)), true);
 
     }
@@ -2720,6 +2807,8 @@ public class SettingsDialog implements XItemListener,
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)tableFirstLineField.getValue());
             style.setRunovers((int)tableRunoversField.getValue());
+        } else if (style.getAlignment() == Alignment.CENTERED) {
+            style.setMarginLeftRight((int)tableMarginLeftRightField.getValue());
         }
     }
 
@@ -2907,17 +2996,16 @@ public class SettingsDialog implements XItemListener,
                     if (pagesEnabled[HEADINGS_PAGE-1])   { updateHeadingsPageFieldValues();   }
                     if (pagesEnabled[LISTS_PAGE-1])      { updateListsPageFieldValues();      }
                     if (pagesEnabled[TABLES_PAGE-1]) {
-                        Style style = settings.getStyle("table");
                         if (currentTableColumn==0) {
-                            style.setFirstLine((int)tableFirstLineField.getValue());
-                            style.setRunovers((int)tableRunoversField.getValue());
+                            saveTablesPageFieldValues();
                             currentTableColumn = 1;
                         }
-                        tableSimpleRadioButton.setState(!settings.stairstepTableIsEnabled());
-                        tableStairstepRadioButton.setState(settings.stairstepTableIsEnabled());
+                        Style style = settings.getStyle("table");
                         tableLinesAboveField.setValue((double)style.getLinesAbove());
                         tableLinesBelowField.setValue((double)style.getLinesBelow());
                         tableLinesBetweenField.setValue((double)style.getLinesBetween());
+                        tableSimpleRadioButton.setState(!settings.stairstepTableIsEnabled());
+                        tableStairstepRadioButton.setState(settings.stairstepTableIsEnabled());
                         updateTablesPageFieldValues();
                     }
                     if (pagesEnabled[PAGENUMBERS_PAGE-1]) { updatePageNumbersPageFieldValues(); }

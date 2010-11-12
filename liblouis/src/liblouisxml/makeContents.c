@@ -66,25 +66,11 @@ initialize_contents (void)
 {
 
 /**** Added by Bert Frees *****************************************/
-
-    int k;
-    saved_braillePageNumberFormat = ud->brl_page_num_format;
-
-    for (k = 0; ud->print_page_number[k]; k++) {
-        saved_printPageNumber[k] = ud->print_page_number[k];
-    }
-    saved_printPageNumber[k] = 0;
-    for (k = 0; ud->print_page_number_first[k]; k++) {
-        saved_printPageNumberFirst[k] = ud->print_page_number_first[k];
-    }
-    saved_printPageNumberFirst[k] = 0;
-    for (k = 0; ud->print_page_number_last[k]; k++) {
-        saved_printPageNumberLast[k] = ud->print_page_number_last[k];
-    }
-    saved_printPageNumberLast[k] = 0;
-
-    ud->after_contents = 1;
-
+  saved_braillePageNumberFormat = ud->brl_page_num_format;
+  widestrcpy(saved_printPageNumber, ud->print_page_number, -1);
+  widestrcpy(saved_printPageNumberFirst, ud->print_page_number_first, -1);
+  widestrcpy(saved_printPageNumberLast, ud->print_page_number_last, -1);
+  ud->after_contents = 1;
 /******************************************************************/
 
   saved_udContents = ud->contents;
@@ -160,7 +146,7 @@ finish_heading (sem_act action)
 
 /**** Added by Bert Frees *****************************************/
 
-    if (ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
+    if (ud->print_pages && ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
       heading.headingChars[heading.headingLength++] = ' ';
       if (ud->print_page_number[0] != '+' &&
           ud->print_page_number[0] != ' ') {
@@ -171,11 +157,10 @@ finish_heading (sem_act action)
 	    heading.headingChars[heading.headingLength++] = ud->print_page_number[k++];
 	  }
     }
-    if (ud->braille_page_numbers_in_contents &&  *ud->braille_page_string) {
-	  if (ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
+    if (ud->braille_pages && ud->braille_pages && ud->braille_page_numbers_in_contents &&  *ud->braille_page_string) {
+	  if (ud->print_pages && ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
 	    heading.headingChars[heading.headingLength++] = 0xa0;
 	  }
-
 /*****************************************************************/
 
 	  else
@@ -218,26 +203,12 @@ make_contents (void)
       ud->braille_page_number = saved_braillePageNumber;
 
 /**** Added by Bert Frees *****************************************/
-
-        int k;
-
-        styleSpec = &ud->style_stack[ud->style_top];
-        styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
-        ud->brl_page_num_format = saved_braillePageNumberFormat;
-
-        for (k = 0; saved_printPageNumber[k]; k++) {
-            ud->print_page_number[k] = saved_printPageNumber[k];
-        }
-        ud->print_page_number[k] = 0;
-        for (k = 0; saved_printPageNumberFirst[k]; k++) {
-            ud->print_page_number_first[k] = saved_printPageNumberFirst[k];
-        }
-        ud->print_page_number_first[k] = 0;
-        for (k = 0; saved_printPageNumberLast[k]; k++) {
-            ud->print_page_number_last[k] = saved_printPageNumberLast[k];
-        }
-        ud->print_page_number_last[k] = 0;
-
+      styleSpec = &ud->style_stack[ud->style_top];
+      styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
+      ud->brl_page_num_format = saved_braillePageNumberFormat;
+      widestrcpy(ud->print_page_number, saved_printPageNumber, -1);
+      widestrcpy(ud->print_page_number_first, saved_printPageNumberFirst, -1);
+      widestrcpy(ud->print_page_number_last, saved_printPageNumberLast, -1);
 /******************************************************************/
 
       do_newpage ();

@@ -20,11 +20,11 @@
    (* sommige veranderingen zijn overgenomen in liblouisxml versie 2.3.0)
 
  * liblouisxml.c
- * louisxml.h (nog niet alles overgenomen)
- * readconfig.c (nog niet alles overgenomen)
- * makeContents.c (nog niet alles overgenomen)
- * semantics.c (nog niet alles overgenomen)
- * transcriber.c (nog niet alles overgenomen)
- * sem_enum.h (nog niet alles overgenomen)
- * sem_names.h (nog niet alles overgenomen)
- 
+ * readconfig.c
+ * makeContents.c
+ * semantics.c
+ * transcriber.c
+ * transcribe_paragraph.c
+ * sem_enum.h
+ * sem_names.h
+ * louisxml.h

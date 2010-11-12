@@ -61,9 +61,19 @@ typedef struct
   int lines_before;
   int lines_after;
   int left_margin;
+
+/**** Added by Bert Frees *****************************************/
+  int centered_margin;
+  int keep_with_next;
+  int dont_split;
+  int orphan_control;
+  int widow_control;
+  int lines_from_top;
+/******************************************************************/
+
   int first_line_indent;	/* At true margin if negative */
   sem_act translate;
-  int skip_number_lines;	/*Don't write on lines with page numbers */
+  int skip_number_lines;	/* Don't write on lines with page numbers */
   StyleFormat format;
   BrlPageNumFormat brlNumFormat;
   int newpage_before;
@@ -160,6 +170,50 @@ typedef struct
   widechar *outbuf;
   int outlen;
   int outlen_so_far;
+
+/**** Added by Bert Frees *****************************************/
+
+  widechar *buffer2;
+  widechar *buffer3;
+  int buffer2_len;
+  int buffer3_len;
+  int buffer2_len_so_far;
+  int buffer3_len_so_far;
+  int buffer2_enabled;
+  int buffer3_enabled;
+
+  widechar page_separator_number_first[MAXNUMLEN];
+  widechar page_separator_number_last[MAXNUMLEN];
+  widechar print_page_number_first[MAXNUMLEN];
+  widechar print_page_number_last[MAXNUMLEN];
+
+  int page_separator;
+  int page_separator_number;
+  int ignore_empty_pages;
+  int continue_pages;
+  int merge_unnumbered_pages;
+  int print_page_number_range;
+  int page_number_top_separate_line;
+  int page_number_bottom_separate_line;
+  int print_page_numbers_in_contents;
+  int braille_page_numbers_in_contents;
+
+  int after_contents;
+  int fill_pages;
+  int fill_page_skipped;
+  int blank_lines;
+
+  int check_dont_split;
+  int check_keep_with_next;
+  int check_widow_control;
+  int check_orphan_control;
+  int orphan_lines;
+
+  char soft_hyphens[2 * BUFSIZE];
+  BrlPageNumFormat cur_brl_page_num_format;
+
+/******************************************************************/
+
   int lines_on_page;
   int braille_page_number;
   int prelim_pages;
@@ -186,33 +240,6 @@ typedef struct
   char interline_back_table_name[MAXNAMELEN];
   char semantic_files[MAXNAMELEN];
   widechar print_page_number[MAXNUMLEN];
-
-/**** Added by Bert Frees *****************************************/
-
-  widechar page_separator_number_first[MAXNUMLEN];
-  widechar page_separator_number_last[MAXNUMLEN];
-  widechar print_page_number_first[MAXNUMLEN];
-  widechar print_page_number_last[MAXNUMLEN];
-
-  int page_separator;
-  int page_separator_number;
-  int ignore_empty_pages;
-  int continue_pages;
-  int merge_unnumbered_pages;
-  int print_page_number_range;
-  int page_number_top_separate_line;
-  int page_number_bottom_separate_line;
-  int print_page_numbers_in_contents;
-  int braille_page_numbers_in_contents;
-
-  int fill_pages;
-  int after_contents;
-  widechar *pagebuf;
-  int pagelen;
-  int pagelen_so_far;
-
-/******************************************************************/
-
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
   char pageEnd[8];

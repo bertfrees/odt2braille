@@ -64,7 +64,11 @@ pilcrow
 
 In order to install odt2braille, OpenOffice.org version 3.0 or later is required. 
 You can find the latest version of OpenOffice.org at @url{http://download.openoffice.org/@/other.html}.
-Make sure the installer includes the @emph{Java Runtime Environment (JRE)}.
+If you don't have @emph{Java} installed on your system (verify your Java version at
+@url{http://www.java.com/@/en/@/download/@/installed.jsp}), make sure you include the
+@emph{Java Runtime Environment (JRE)} to the download. Java 6 is required. If you choose not to download OpenOffice.org with Java
+you can easily install Java afterwards. You can get the latest version from @url{http://java.com/@/en/}.
+
 To add the odt2braille extension, launch OpenOffice.org and open [@emph{Tools > Extension Manager...}].
 First remove any older versions of odt2braille. Then choose @emph{Add...}, select the odt2braille 
 installation package and follow the steps. You can download the latest version from 
