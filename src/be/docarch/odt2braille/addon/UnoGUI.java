@@ -178,7 +178,7 @@ public class UnoGUI {
     /**
      * The OpenOffice.org Writer document is exported as an .odt file and converted to a "flat XML" .odt file
      * (a single file that is the concatenation of all XML files in a normal .odt file).
-     * 
+     *
      */
     private void initialise () {
 
@@ -256,7 +256,7 @@ public class UnoGUI {
 
         try {
 
-            // Create dialog            
+            // Create dialog
             settingsDialog = new SettingsDialog(m_xContext);
 
             // Start progressbar
@@ -469,7 +469,7 @@ public class UnoGUI {
                 if (folderName.lastIndexOf(brailleExt) > -1) {
                     fileName = folderName.substring(0, folderName.lastIndexOf(brailleExt));
                 }
-                
+
                 ArrayList<Volume> volumes = pef.getVolumes();
                 Volume volume;
                 String suffix;
@@ -613,7 +613,7 @@ public class UnoGUI {
             // Save settings
             settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
             settingsIO.saveEmbossSettingsToDocument(changedSettings, loadedSettings);
-            
+
             // Checker
             checker = new Checker(oooLocale, changedSettings, odtTransformer);
             checker.checkSettings();
@@ -679,7 +679,7 @@ public class UnoGUI {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
-                
+
                 if((brailleFile = handlePef.convertToSingleFile(BrailleFileType.BRF_INTERPOINT)) == null) {
                     return false;
                 }
@@ -690,7 +690,7 @@ public class UnoGUI {
                     interpoint55PrintDialog.runWPrint55(brailleFile);
 
                 } else {
-                    
+
                     // Export brf file
                     String brailleExt = ".brf";
                     String fileType = "Interpoint 55 BRF";
@@ -719,19 +719,19 @@ public class UnoGUI {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
-                
+
                 if (!printDialog.getPrintToFile()) {
-                
-                    // Print to device                    
+
+                    // Print to device
                     if(!handlePef.embossToDevice(deviceName)) {
                         return false;
                     }
-                
+
                 } else {
-                    
+
                     String brailleExt = ".prn";
                     String fileType = "Print File";
-                    
+
                     // Show Save As... Dialog:
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
                     String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
@@ -805,7 +805,7 @@ public class UnoGUI {
     }
 
     public boolean sixKeyEntryMode (){
-    
+
         logger.entering("UnoGUI", "sixKeyEntryMode");
 
         try {
@@ -830,11 +830,11 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         }
-    
+
     }
 
     public boolean insertBraille () {
-        
+
         logger.entering("UnoGUI", "insertBraille");
 
         try {

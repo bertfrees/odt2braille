@@ -2,29 +2,25 @@
   liblouis
  **********
 
- = versie 2.1.1
- + veranderingen die aangebracht zijn tussen r408 en r409
- 
- * lou_backTranslateString.c
- * compileTranslationTable.c
+ = version 2.1.1
+ + changes that fix a bug with multipass opcodes
+    (see http://code.google.com/p/liblouis/source/detail?r=409)
  
 
  *************
   liblouisxml
  *************
-  
- = versie 2.1.0
- + eigen veranderingen
-  
-   (* zie patch)
-   (* sommige veranderingen zijn overgenomen in liblouisxml versie 2.3.0)
 
- * liblouisxml.c
- * readconfig.c
- * makeContents.c
- * semantics.c
- * transcriber.c
- * transcribe_paragraph.c
- * sem_enum.h
- * sem_names.h
- * louisxml.h
+ = modified version of revision 215
+ 
+   changes (some changes are adopted in liblouisxml v2.3.0):
+   
+    * improved handling of pagenum action
+    * additional page numbering options
+    * additional table of contents options
+    * fixed table of contents bugs
+    * handling of soft hyphens
+    * improved handling of linesBefore, linesAfter
+    * new style attributes: centeredMargin, dontSplit, keepWithNext, widowControl, orphanControl, linesFromTop
+    
+  => TODO: merge this modified version with latest liblouisxml version

@@ -94,7 +94,6 @@ public class PreviewDialog implements XItemListener,
     private static final String FONT_6_DOT = "odt2braille 6 dot";
     private static final String FONT_8_DOT = "odt2braille 8 dot";
     private static String FONT_DOTS;
-    private static final String FONT_TEXT = "Courier New";
 
     private static final short DEFAULT_FONT_SIZE = 18;
     private static final short MIN_FONTSIZE = 15;
@@ -647,7 +646,7 @@ public class PreviewDialog implements XItemListener,
 
                 if (fontSize < MAX_FONTSIZE) {
                     fontSize ++;
-                    font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
+                    font.Height = (short)fontSize;
                     previewFieldProperties.setPropertyValue("FontDescriptor", font);
                     updateButtons();
                 }
@@ -656,7 +655,7 @@ public class PreviewDialog implements XItemListener,
 
                 if (fontSize > MIN_FONTSIZE) {
                     fontSize --;
-                    font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
+                    font.Height = (short)fontSize;
                     previewFieldProperties.setPropertyValue("FontDescriptor", font);
                     updateButtons();
                 }
@@ -694,8 +693,6 @@ public class PreviewDialog implements XItemListener,
                 showPage();
             } else if (source.equals(charsetListBox)) {
                 charset = charsetListBox.getSelectedItemPos();
-                font.Name = (charset == (short)1)?FONT_TEXT:FONT_DOTS;
-                font.Height = (short)(fontSize*((charset == (short)0)?1:0.75));
                 previewFieldProperties.setPropertyValue("FontDescriptor", font);
                 showPage();
             }
