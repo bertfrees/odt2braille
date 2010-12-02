@@ -194,8 +194,7 @@ public class UnoGUI {
             // Export in ODT Format
             File odtFile = File.createTempFile(TMP_NAME, ".odt");
             odtFile.deleteOnExit();
-            String odtUrl = odtFile.getAbsolutePath();
-            String odtUnoUrl = UnoUtils.createUnoFileURL(odtUrl, m_xContext);
+            String odtUnoUrl = UnoUtils.createUnoFileURL(odtFile.getAbsolutePath(), m_xContext);
             PropertyValue[] conversionProperties = new PropertyValue[1];
             conversionProperties[0] = new PropertyValue();
             conversionProperties[0].Name = "FilterName";
@@ -207,7 +206,7 @@ public class UnoGUI {
             progressBar.increment();
 
             // Create odtTransformer
-            odtTransformer = new OdtTransformer(odtUrl, progressBar, oooLocale);
+            odtTransformer = new OdtTransformer(odtFile, progressBar, oooLocale);
             progressBar.increment();
 
             // Locale

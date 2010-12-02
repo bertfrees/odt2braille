@@ -79,10 +79,15 @@ installation package and follow the steps. You can download the latest version f
 
 It is strongly recommended that you also download and install the SimBraille font from Duxbury Systems at
 @url{http://www.duxburysystems.com/@/product2.asp?product=The%20Braille%20TrueType%20Fonts&level=free&action=pur"}. As
-of version 0.0.3, odtbraille will use his own @emph{odt2braille fonts}:
+of version 0.0.3, odtbraille will use his own @emph{odt2braille fonts} instead:
 @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille6.ttf} for 6-dot
 Braille and @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille8.ttf}
-for 8-dot Braille. Finally, when everything is installed, restart OpenOffice.org and you're ready to go.
+for 8-dot Braille.
+
+@note{Make sure you install the fonts @emph{after} the plugin has been installed. Doing it the other way around may cause
+the Braille preview window to show a bunch of meaningless squares or periods instead of Braille symbols.}
+
+Finally, when everything is installed, restart OpenOffice.org and you're ready to go.
 
 @heading OpenOffice.org Accessibility
 

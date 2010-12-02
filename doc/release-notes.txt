@@ -94,48 +94,66 @@ Localisation:
 Version 0.0.3
 =============================
 
-* Greek within Spanish/Catalan texts.
-* Paragraph styles
-* Character styles
-* Right justification
+Changes:
+
+
+* The Braille preview window has been improved. You can now switch view between dots and text.
+
+
+New features:
+
+
 * Support for 8-dot Braille
-* Warning when some dots 7 or 8 were not rendered
-* odt2braille fonts (6-dot and 8-dot)
-* Dialogs load faster
-* Headings: begin on new Braille page option
-* Paragraphs: keep empty paragraphs option
-* Exporting to multiple BRF files (each for every volume)
-* PEF validation
-* Woluwe math improved
-* More table of contents settings
-* Preview window improved
-* New heading option: margin left/right for centered headings
+* Dedicated odt2braille fonts (6-dot and 8-dot)
+* Split exported Braille (BRF/PEF/BRA) into multiple files (one for each volume)
+* New embosser: Index Basic "Blue-Bar"
+* Speed optimalisations
+* New user preferences:
+** Paragraph styles
+** Character styles
+** Right justification
+** More table of contents settings
+** Begin headings on a new Braille page
+** Left/right margin for centered headings
+** Keep empty paragraphs
+
+
+Translation tables:
+
+
+* New: Indian languages (Assamese, Bengali, Khasi, Manipuri, Munda, Old Newari, Santali, Awadhi, Bihari, Braj Bashha, Gondi, Konkani, Kurukh, Marathi, Marwari, Nepali, Pali, Sanskrit, Sindhi, Gujarati, Panjabi, Kannada, Malayalam, Oriya, Dravidian, Tamil, Telugu)
+* New: Greek within Spanish/Catalan text
+* Icelandic,
+* Polish,
+* Slovene,
+* Dutch and
+* French tables have been revised
+* Woluwe math has been improved
+
 
 Fixed bugs:
 
+
 * Footnotes in lists were not rendered
-* Some other small bug fixes
-* PEF was not valid
+* A paragraph that was split over a print page was split in braille, even if no separator line was rendered
+* PEF output is now validated after export
 * Table of contents bug fixes
-* A paragraph that was split over a print page was split in braille, even if no separator line is rendered
+* Some other small bug fixes
 
-Translation tables: new
 
-* Indian languages (Assamese, Bengali, Khasi, Manipuri, Munda, Old Newari, Santali, Awadhi, Bihari, Braj Bashha, Gondi, Konkani, Kurukh, Marathi, Marwari, Nepali, Pali, Sanskrit, Sindhi, Gujarati, Panjabi, Kannada, Malayalam, Oriya, Dravidian, Tamil, Telugu)
+Localisation:
 
-Translation tables: updated / revised
 
-* Icelandic
-* Polish
-* Slovene
-* Dutch
-* French (FR + CA => BFU, Braille Francais Unifie)
+* Italian
+
+
+
+=============================
+Version ?
+=============================
 
 Hyphenation tables: updated
 
 * Polish ?
 * Slovene ?
 
-Localisation:
-
-* Italian

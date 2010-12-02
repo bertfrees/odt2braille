@@ -27,27 +27,27 @@ import java.util.TreeMap;
 import java.util.ArrayList;
 
 import com.sun.star.uno.XComponentContext;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.EventObject;
+import com.sun.star.awt.XItemListener;
+import com.sun.star.awt.ItemEvent;
 import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XDialog;
 import com.sun.star.awt.XControlContainer;
 import com.sun.star.awt.PushButtonType;
-import com.sun.star.lang.XComponent;
-import com.sun.star.awt.XButton;
-import com.sun.star.awt.XNumericField;
-import com.sun.star.awt.XCheckBox;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.awt.XDialogProvider2;
-import com.sun.star.awt.DialogProvider2;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.beans.XPropertySet;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XFixedText;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
-import com.sun.star.lang.EventObject;
-import com.sun.star.awt.XItemListener;
-import com.sun.star.awt.ItemEvent;
+import com.sun.star.awt.XButton;
+import com.sun.star.awt.XNumericField;
+import com.sun.star.awt.XCheckBox;
+import com.sun.star.awt.XDialogProvider2;
+import com.sun.star.awt.DialogProvider2;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.deployment.XPackageInformationProvider;
+import com.sun.star.beans.XPropertySet;
 
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
@@ -59,7 +59,7 @@ import org_pef_text.TableFactory.TableType;
  * @author   Bert Frees
  */
 public class ExportDialog implements XItemListener,
-                                     XActionListener{
+                                     XActionListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
@@ -456,6 +456,5 @@ public class ExportDialog implements XItemListener,
      * @param event
      */
     public void disposing(EventObject event) {}
-
 
 }

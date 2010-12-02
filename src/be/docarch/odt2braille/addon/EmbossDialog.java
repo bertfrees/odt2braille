@@ -266,6 +266,7 @@ public class EmbossDialog implements XItemListener,
         L10N_table.put("BRAILLO_6DOT_047_01",   "Braillo Norway 6 Dot 047.01");
         L10N_table.put("IMPACTO",               "Impacto");
         L10N_table.put("IMPACTO256",            "Impacto");
+        L10N_table.put("INDEX_BASIC",           "Index Basic");
 
         L10N_paperSize.put("UNDEFINED",         "-");
         L10N_paperSize.put("A4",                "A4");

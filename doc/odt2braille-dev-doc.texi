@@ -350,7 +350,7 @@ Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijve
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* OK: Get languages
 	* OK: Get styles
-	*     Delete empty paragraphs, ...
+	*     Delete empty paragraphs, ... (don't delete paragraphs with a <pagenum> tag)
 	*     Page numbering (=> Vincent Spiewak is rewriting JODL in XSLT 2.0 ?)
 	*     List numbering & bullets
 	*     Heading numbering

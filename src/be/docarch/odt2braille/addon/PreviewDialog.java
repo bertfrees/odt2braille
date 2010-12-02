@@ -127,11 +127,11 @@ public class PreviewDialog implements XItemListener,
     private boolean preliminaryVolumeEnabled;
     private boolean duplex;
     private boolean mirrorAlign;
-    private boolean eightDots;
     private boolean preliminaryPagesPresent;
     private PageNumberFormat preliminaryPageFormat;
     private AbstractTable table;
     private short charset;
+    private int beginningBraillePageNumber;
 
     private int volume;
     private int section;
@@ -197,6 +197,7 @@ public class PreviewDialog implements XItemListener,
         this.preliminaryVolumeEnabled = settings.getPreliminaryVolumeEnabled();
         this.preliminaryPagesPresent = settings.getPreliminaryPagesPresent();
         this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
+        this.beginningBraillePageNumber = settings.getBeginningBraillePageNumber();
 
         if (settings.getTable() == TableType.BRF ||
             settings.getTable() == TableType.ES_NEW ||
@@ -547,8 +548,9 @@ public class PreviewDialog implements XItemListener,
                 "count(/pef/body/volume[" + volume + "]/section[" + section + "]/page)").str());
 
         if (!(preliminaryPagesPresent && section == 1)) {
-            firstpage += Integer.parseInt(XPathAPI.eval(root,
-                    "count(/pef/body/volume[" + volume + "]/preceding-sibling::*/section[position()=" + section + "]/page)").str());
+            firstpage = beginningBraillePageNumber +
+                    Integer.parseInt(XPathAPI.eval(root,
+                        "count(/pef/body/volume[" + volume + "]/preceding-sibling::*/section[position()=" + section + "]/page)").str());
         }
         for (int i=0; i<pageCount;i++) {
             if (preliminaryPagesPresent && section == 1) {
