@@ -56,8 +56,8 @@
 	
     <!-- Extension Dialog Icon -->
     <icon>
-        <default xlink:href="images/aegis-logo-1275x1275.png" />
-        <high-contrast xlink:href="images/aegis-logo-1275x1275.png" />
+        <default xlink:href="images/odt2braille-logo.png" />
+        <high-contrast xlink:href="images/odt2braille-logo.png" />
     </icon>
 	
 </description>

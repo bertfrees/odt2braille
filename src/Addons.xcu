@@ -232,9 +232,6 @@
                     <prop oor:name="ImageSmallURL">
                         <value>%origin%/images/braille-16px.gif</value>
                     </prop>
-                    <prop oor:name="ImageBigURL">
-                        <value>%origin%/images/braille-100px.gif</value>
-                    </prop>
                 </node>
             </node>
             <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.embosscommand.images" oor:op="replace">
@@ -244,9 +241,6 @@
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
                         <value>%origin%/images/braille-16px.gif</value>
-                    </prop>
-                    <prop oor:name="ImageBigURL">
-                        <value>%origin%/images/braille-100px.gif</value>
                     </prop>
                 </node>
             </node>
@@ -258,9 +252,6 @@
                     <prop oor:name="ImageSmallURL">
                         <value>%origin%/images/braille-16px.gif</value>
                     </prop>
-                    <prop oor:name="ImageBigURL">
-                        <value>%origin%/images/braille-100px.gif</value>
-                    </prop>
                 </node>
             </node>
             <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.insertdotpatterncommand.images" oor:op="replace">
@@ -271,9 +262,6 @@
                     <prop oor:name="ImageSmallURL">
                         <value>%origin%/images/braille-16px.gif</value>
                     </prop>
-                    <prop oor:name="ImageBigURL">
-                        <value>%origin%/images/braille-100px.gif</value>
-                    </prop>
                 </node>
             </node>
             <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.insertsixkeyscommand.images" oor:op="replace">
@@ -283,9 +271,6 @@
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
                         <value>%origin%/images/braille-16px.gif</value>
-                    </prop>
-                    <prop oor:name="ImageBigURL">
-                        <value>%origin%/images/braille-100px.gif</value>
                     </prop>
                 </node>
             </node>
