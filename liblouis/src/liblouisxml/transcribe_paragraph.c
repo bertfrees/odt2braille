@@ -35,6 +35,14 @@
 
 /**** Added by Bert Frees *****************************************/
 
+static int           dont_split = 0;
+static int           keep_with_next = 0;
+static int           keep_with_previous = 0;
+static int           widow_control = 0;
+static int           orphan_control = 0;
+static int           dont_split_status = 0;
+static int           keep_with_previous_status = 0;
+
 static int           saved_text_length;
 static int           saved_translated_length;
 static int           saved_outlen_so_far;
@@ -64,7 +72,7 @@ static widechar      saved_running_head[MAXNAMELEN / 2];
 static widechar      saved_footer[MAXNAMELEN / 2];
 static unsigned char saved_typeform[2 * BUFSIZE];
 
-static int saveData(void) {
+static int saveState(void) {
 
     saved_text_length             = ud->text_length;
     saved_translated_length       = ud->translated_length;
@@ -81,26 +89,27 @@ static int saveData(void) {
     saved_fill_pages              = ud->fill_pages;
     saved_fill_page_skipped       = ud->fill_page_skipped;
 
-    /*text_buffer
-    translated_buffer
-    outbuf
-    buffer2
-    page_separator_number_first
-    page_separator_number_last
-    print_page_number_first
-    print_page_number_last
-    print_page_number
-    braille_page_string
-    running_head
-    footer
-    typeform
-    soft_hyphens
+    widecharcpy(saved_text_buffer,                 ud->text_buffer,         saved_text_length);
+    widecharcpy(saved_translated_buffer,           ud->translated_buffer,   saved_translated_length);
+    widecharcpy(saved_outbuf,                      ud->outbuf,              saved_outlen_so_far);
+    widecharcpy(saved_buffer2,                     ud->buffer2,             saved_buffer2_len_so_far);
+    widecharcpy(saved_running_head,                ud->running_head,        saved_running_head_length);
+    widecharcpy(saved_footer,                      ud->footer,              saved_footer_length);
+    unsignedcharcpy(saved_typeform,                ud->typeform,            saved_text_length);
+    charcpy(saved_soft_hyphens,                    ud->soft_hyphens,        saved_translated_length);
 
-    savePointers();*/
+    widestrcpy(saved_page_separator_number_first,  ud->page_separator_number_first);
+    widestrcpy(saved_page_separator_number_last,   ud->page_separator_number_last);
+    widestrcpy(saved_print_page_number_first,      ud->print_page_number_first);
+    widestrcpy(saved_print_page_number_last,       ud->print_page_number_last);
+    widestrcpy(saved_print_page_number,            ud->print_page_number);
+    widestrcpy(saved_braille_page_string,          ud->braille_page_string);
+
+    savePointers();
 
 }
 
-static int restoreData(void) {
+static int restoreState(void) {
 
     ud->text_length             = saved_text_length;
     ud->translated_length       = saved_translated_length;
@@ -117,22 +126,23 @@ static int restoreData(void) {
     ud->fill_pages              = saved_fill_pages;
     ud->fill_page_skipped       = saved_fill_page_skipped;
 
-    /*text_buffer
-    translated_buffer
-    outbuf
-    buffer2
-    page_separator_number_first
-    page_separator_number_last
-    print_page_number_first
-    print_page_number_last
-    print_page_number
-    braille_page_string
-    running_head
-    footer
-    typeform
-    soft_hyphens
+    widecharcpy(ud->text_buffer,                saved_text_buffer,         saved_text_length);
+    widecharcpy(ud->translated_buffer,          saved_translated_buffer,   saved_translated_length);
+    widecharcpy(ud->outbuf,                     saved_outbuf,              saved_outlen_so_far);
+    widecharcpy(ud->buffer2,                    saved_buffer2,             saved_buffer2_len_so_far);
+    widecharcpy(ud->running_head,               saved_running_head,        saved_running_head_length);
+    widecharcpy(ud->footer,                     saved_footer,              saved_footer_length);
+    unsignedcharcpy(ud->typeform,               saved_typeform,            saved_text_length);
+    charcpy(ud->soft_hyphens,                   saved_soft_hyphens,        saved_translated_length);
 
-    restorePointers();*/
+    widestrcpy(ud->page_separator_number_first, saved_page_separator_number_first);
+    widestrcpy(ud->page_separator_number_last,  saved_page_separator_number_last);
+    widestrcpy(ud->print_page_number_first,     saved_print_page_number_first);
+    widestrcpy(ud->print_page_number_last,      saved_print_page_number_last);
+    widestrcpy(ud->print_page_number,           saved_print_page_number);
+    widestrcpy(ud->braille_page_string,         saved_braille_page_string);
+
+    restorePointers();
 
 }
 /******************************************************************/
@@ -140,6 +150,20 @@ static int restoreData(void) {
 int
 transcribe_paragraph (xmlNode * node, int action)
 {
+/**** Added by Bert Frees *****************************************/
+
+  xmlNode* saved_child;
+  int saved_branchCount = 0;
+  int state_saved = 0;
+  StyleType* style_this;
+  int dont_split_this = 0;
+  int keep_with_next_this = 0;
+  int keep_with_previous_this = 0;
+  int widow_control_this = 0;
+  int orphan_control_this = 0;
+
+/******************************************************************/
+
   StyleType *style;
   xmlNode *child;
   int branchCount = 0;
@@ -240,30 +264,11 @@ transcribe_paragraph (xmlNode * node, int action)
     default:
       break;
     }
-
-/**** Removed by Bert Frees ***************************************
   if ((style = is_style (node)) != NULL)
     start_style (style);
-/**** Added by Bert Frees *****************************************/
-
-  int done = 0;
-  style = is_style(node);
-  while (!done) {
-    if (style) {
-      if (ud->braille_pages && ud->lines_on_page > 0 && !ud->buffer3_enabled) {
-        if (ud->check_dont_split < 0) {
-          if (style->dont_split) {
-            saveData();
-            ud->buffer3_enabled = 1;
-            ud->check_dont_split = 1;
-          }
-        }
-      }
-      start_style (style);
-    }
-/******************************************************************/
-
   child = node->children;
+
+/**** Removed by Bert Frees ***************************************
   while (child)
     {
       insert_code (node, branchCount);
@@ -284,72 +289,143 @@ transcribe_paragraph (xmlNode * node, int action)
 	}
       child = child->next;
     }
-  insert_code (node, branchCount);
-  insert_code (node, -1);
-
-/**** Removed by Bert Frees ***************************************
-  if (style)
-    end_style (style);
 /**** Added by Bert Frees *****************************************/
 
-  done = 1;
-  if (style) {
-    end_style (style);
-    if (ud->braille_pages && ud->buffer3_enabled) {
+  while (child) {
+    insert_code (node, branchCount);
+    branchCount++;
 
-      if (ud->check_dont_split < 0) {
-      } else if (ud->check_dont_split == 0) {
-        done = 0;
-        restoreData();
-        ud->buffer3_len_so_far = 0;
-        ud->buffer3_enabled = 0;
-        do_newpage();
-      } else {
-        writeBuffer(3, 0);
-        ud->buffer3_enabled = 0;
+    dont_split_this = 0;
+    widow_control_this = 0;
+    orphan_control_this = 0;
+    keep_with_previous_this = 0;
+
+    switch (child->type) {
+	case XML_ELEMENT_NODE:
+
+	  style_this = is_style(child);
+	  if (style_this && ud->braille_pages) {
+
+        if (keep_with_next_this) {
+          keep_with_previous_this = ud->lines_length;
+        }
+        keep_with_next_this = 0;
+        if (!(dont_split || widow_control || orphan_control)) {
+          if (ud->lines_on_page > 0 && !((keep_with_previous || keep_with_previous_this) && !ud->buffer3_enabled)) {
+            dont_split_this = style_this->dont_split | style_this->keep_with_next;
+            widow_control_this = 0;
+            orphan_control_this = 0;
+          }
+          keep_with_next_this = style_this->keep_with_next;
+        }
+        if (dont_split_this) {
+          if (!ud->buffer3_enabled) {
+            saved_child = child;
+            saved_branchCount = branchCount-1;
+            saveState();
+            state_saved = 1;
+            ud->buffer3_enabled = 1;
+            ud->lines_length = 0;
+          }
+        }
+        if (dont_split_this)         { dont_split = dont_split_this; }
+        if (keep_with_next_this)     { keep_with_next = keep_with_next_this; }
+        if (keep_with_previous_this) { keep_with_previous = keep_with_previous_this; }
       }
 
-    /*switch(ud->check_keep_with_next) {
-      case 0:
+      transcribe_paragraph (child, 1);
 
-        break;
-      case 1:
+	  break;
+	case XML_TEXT_NODE:
+	  insert_text (child);
+	  break;
+	case XML_CDATA_SECTION_NODE:
+	  transcribe_cdataSection (child);
+	  break;
+	default:
+	  break;
+	}
 
-       break;
-      case -1:
-      default:
+    child = child->next;
+
+    if (ud->buffer3_enabled) {
+
+      if (dont_split_status >= 0 && keep_with_previous_status >= 0) {
+
+        if (keep_with_previous) {
+          if (keep_with_previous_this) {
+            keep_with_previous_status = 1;
+          } else if (keep_with_previous < ud->lines_length) {
+            keep_with_previous_status = 1;
+          } else {
+            keep_with_previous_status = 0;
+          }
+          if (keep_with_previous < ud->lines_length &&
+              ud->lines_pagenum[keep_with_previous] > ud->lines_pagenum[keep_with_previous-1] &&
+              !ud->lines_newpage[keep_with_previous]) {
+            keep_with_previous_status = -1;
+          }
+        }
+        if (dont_split_this) {
+          dont_split_status = 1;
+          int i;
+          for (i=1; i<ud->lines_length; i++) {
+            if (ud->lines_pagenum[i] > ud->lines_pagenum[i-1]) {
+              if (!ud->lines_newpage[i]) {
+                dont_split_status = -1;
+              }
+              break;
+            }
+          }
+        }
+      }
+      if (dont_split_status < 0 || keep_with_previous_status < 0) {
+
+        if (state_saved) {
+          dont_split = 0;
+          keep_with_next = 0;
+          keep_with_previous = 0;
+          dont_split_status = 0;
+          keep_with_previous_status = 0;
+          restoreState();
+          child = saved_child;
+          branchCount = saved_branchCount;
+          state_saved = 0;
+          ud->buffer3_len_so_far = 0;
+          ud->buffer3_enabled = 0;
+          do_newpage();
+        } else {
+          break;
+        }
+      }
+      if (dont_split_status > 0) {
+        dont_split = 0;
+        dont_split_status = 0;
+      }
+
+      if (keep_with_previous_status > 0) {
+        keep_with_previous = 0;
+        keep_with_previous_status = 0;
+      }
+
+      if ((!dont_split && !keep_with_previous && !keep_with_next) ||
+          (!child && state_saved)) {
+        writeBuffer(3, 0);
+        ud->buffer3_enabled = 0;
+        state_saved = 0;
+      }
     }
+    if (dont_split_this)         { dont_split = 0; }
+    if (keep_with_next_this)     { keep_with_next = 0; }
+    if (keep_with_previous_this) { keep_with_previous = 0; }
 
-    switch(ud->check_widow_control) {
-      case 0:
-
-        break;
-      case 1:
-
-       break;
-      case -1:
-      default:
-    }
-
-    switch(ud->check_orphan_control) {
-      case 0:
-
-        break;
-      case 1:
-
-       break;
-      case -1:
-      default:
-    }*/
-
-      ud->check_dont_split = -1;
-      ud->check_keep_with_next = -1;
-      ud->check_widow_control = -1;
-      ud->check_orphan_control = -1;
-   }
- }
+  }
 /******************************************************************/
 
+  insert_code (node, branchCount);
+  insert_code (node, -1);
+  if (style)
+    end_style (style);
   else
     switch (ud->stack[ud->top])
       {
@@ -374,11 +450,6 @@ transcribe_paragraph (xmlNode * node, int action)
       default:
 	break;
       }
-
-/**** Added by Bert Frees *****************************************/
-  }
-/******************************************************************/
-
   if (action != 0)
     pop_sem_stack ();
   else

@@ -203,11 +203,9 @@ typedef struct
   int fill_page_skipped;
   int blank_lines;
 
-  int check_dont_split;
-  int check_keep_with_next;
-  int check_widow_control;
-  int check_orphan_control;
-  int orphan_lines;
+  int lines_pagenum[501];
+  int lines_newpage[501];
+  int lines_length;
 
   char soft_hyphens[2 * BUFSIZE];
   BrlPageNumFormat cur_brl_page_num_format;

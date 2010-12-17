@@ -152,8 +152,18 @@ Localisation:
 Version ?
 =============================
 
-Hyphenation tables: updated
+* New embossers:
+** Index 4x4 Pro V3
+** ...
 
-* Polish ?
-* Slovene ?
+* odt2braille fonts: updated (v1.2)
+
+* New user preferences:
+** Paragraphs & heading:
+	- keep with next
+	- don't split
+
+*Hyphenation tables: updated
+** Polish ?
+** Slovene ?
 

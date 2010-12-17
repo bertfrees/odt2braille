@@ -23,4 +23,4 @@
     * improved handling of linesBefore, linesAfter
     * new style attributes: centeredMargin, dontSplit, keepWithNext, widowControl, orphanControl, linesFromTop
     
-  => TODO: merge this modified version with latest liblouisxml version
+  => TODO: merge this modified version with latest liblouisxml (or liblouisutdml) version

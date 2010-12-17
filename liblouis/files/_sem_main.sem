@@ -43,7 +43,7 @@
 
 	softreturn &xpath(//dtb:span/dtb:br)
 	softreturn &xpath(//dtb:p/dtb:br)
-	newline	   &xpath(//*[not(self::dtb:span or self::dtb:p)]/dtb:br)
+	blankline  &xpath(//*[not(self::dtb:span or self::dtb:p)]/dtb:br)
 	
 # Page numbers
 # Hard page breaks
@@ -136,25 +136,15 @@
 	skip       list,class,toc
 
 	list1      &xpath(//*[not(self::dtb:li)]/dtb:list)
-	list2      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list                                                                                                                                 [position()<last()])
-	list3      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                                 [position()<last()])
-	list4      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                 [position()<last()])
-	list5      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                 [position()<last()])
-	list6      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                 [position()<last()])
-	list7      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                 [position()<last()])
-	list8      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                 [position()<last()])
-	list9      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                 [position()<last()])
-	list10     &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list [position()<last()])
-	
-	lastlist2  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list                                                                                                                                 [position()=last()])
-	lastlist3  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                                 [position()=last()])
-	lastlist4  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                                 [position()=last()])
-	lastlist5  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                                 [position()=last()])
-	lastlist6  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                                 [position()=last()])
-	lastlist7  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                                 [position()=last()])
-	lastlist8  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                                 [position()=last()])
-	lastlist9  &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list                 [position()=last()])
-	lastlist10 &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list [position()=last()])
+	list2      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list)
+	list3      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list4      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list5      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list6      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list7      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list8      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list9      &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
+	list10     &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list/dtb:li/dtb:list)
 	
 	li1        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li                                                                                                                                                 [position()<last()])
 	li2        &xpath(//*[not(self::dtb:li)]/dtb:list/dtb:li/dtb:list/dtb:li                                                                                                                                 [position()<last()])

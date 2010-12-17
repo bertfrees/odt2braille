@@ -118,15 +118,14 @@ public class PreviewDialog implements XItemListener,
     private short fontSize;
     private int cellsPerLine;
     private int linesPerPage;
-    private int marginLeft;
-    private int marginRight;
+    private int marginInner;
+    private int marginOuter;
     private int marginTop;
     private int marginBottom;
     private int numberOfVolumes;
     private int numberOfSupplements;
     private boolean preliminaryVolumeEnabled;
     private boolean duplex;
-    private boolean mirrorAlign;
     private boolean preliminaryPagesPresent;
     private PageNumberFormat preliminaryPageFormat;
     private AbstractTable table;
@@ -186,12 +185,11 @@ public class PreviewDialog implements XItemListener,
         this.fontSize = DEFAULT_FONT_SIZE;
         this.cellsPerLine = settings.getCellsPerLine();
         this.linesPerPage = settings.getLinesPerPage();
-        this.marginLeft = settings.getMarginLeft();
-        this.marginRight = settings.getMarginRight();
+        this.marginInner = settings.getMarginInner();
+        this.marginOuter = settings.getMarginInner();
         this.marginTop = settings.getMarginTop();
         this.marginBottom = settings.getMarginBottom();
         this.duplex = settings.getDuplex();
-        this.mirrorAlign = settings.getMirrorAlign();
         this.numberOfVolumes = settings.getNumberOfVolumes();
         this.numberOfSupplements = settings.getNumberOfSupplements();
         this.preliminaryVolumeEnabled = settings.getPreliminaryVolumeEnabled();
@@ -438,9 +436,9 @@ public class PreviewDialog implements XItemListener,
         NodeList rows = XPathAPI.selectNodeList(root,
                 "/pef/body/volume[" + volume + "]/section[" + section + "]/page[" + page + "]/row");
 
-        int width = cellsPerLine + marginLeft + marginRight;
+        int width = cellsPerLine + marginInner + marginOuter;
         int height = linesPerPage + marginTop + marginBottom;
-        int offset = ((page % 2 == 0) && duplex && mirrorAlign) ? marginRight : marginLeft;
+        int offset = ((page % 2 == 0) && duplex) ? marginOuter : marginInner;
 
         int x,y;
 

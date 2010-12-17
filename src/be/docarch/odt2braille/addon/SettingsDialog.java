@@ -321,6 +321,12 @@ public class SettingsDialog implements XItemListener,
     private XNumericField paragraphRunoversField = null;
     private XNumericField paragraphMarginLeftRightField = null;
     private XCheckBox paragraphKeepEmptyCheckBox = null;
+    private XCheckBox paragraphKeepWithNextCheckBox = null;
+    private XCheckBox paragraphDontSplitCheckBox = null;
+    private XCheckBox paragraphWidowControlCheckBox = null;
+    private XCheckBox paragraphOrphanControlCheckBox = null;
+    private XNumericField paragraphWidowControlField = null;
+    private XNumericField paragraphOrphanControlField = null;
 
     private XPropertySet paragraphInheritCheckBoxProperties = null;
     private XPropertySet paragraphParentFieldProperties = null;
@@ -331,6 +337,12 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet paragraphLinesAboveProperties = null;
     private XPropertySet paragraphLinesBelowProperties = null;
     private XPropertySet paragraphKeepEmptyCheckBoxProperties = null;
+    private XPropertySet paragraphKeepWithNextCheckBoxProperties = null;
+    private XPropertySet paragraphDontSplitCheckBoxProperties = null;
+    private XPropertySet paragraphWidowControlCheckBoxProperties = null;
+    private XPropertySet paragraphOrphanControlCheckBoxProperties = null;
+    private XPropertySet paragraphWidowControlFieldProperties = null;
+    private XPropertySet paragraphOrphanControlFieldProperties  = null;
 
     private static String _paragraphStyleListBox = "ListBox26";
     private static String _paragraphInheritCheckBox = "CheckBox23";
@@ -342,6 +354,12 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphLinesAboveField = "NumericField9";
     private static String _paragraphLinesBelowField = "NumericField10";
     private static String _paragraphKeepEmptyCheckBox = "CheckBox9";
+    private static String _paragraphKeepWithNextCheckBox = "CheckBox27";
+    private static String _paragraphDontSplitCheckBox = "CheckBox28";
+    private static String _paragraphWidowControlCheckBox = "CheckBox31";
+    private static String _paragraphOrphanControlCheckBox = "CheckBox32";
+    private static String _paragraphWidowControlField = "NumericField16";
+    private static String _paragraphOrphanControlField  = "NumericField26";
 
     private static String _paragraphStyleLabel = "Label83";
     private static String _paragraphInheritLabel = "Label84";
@@ -352,6 +370,10 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphLinesAboveLabel = "Label33";
     private static String _paragraphLinesBelowLabel = "Label34";
     private static String _paragraphKeepEmptyLabel = "Label14";
+    private static String _paragraphKeepWithNextLabel = "Label70";
+    private static String _paragraphDontSplitLabel = "Label71";
+    private static String _paragraphWidowControlLabel = "Label88";
+    private static String _paragraphOrphanControlLabel = "Label92";
 
     private String L10N_paragraphStyleLabel = null;
     private String L10N_paragraphInheritLabel = null;
@@ -362,6 +384,10 @@ public class SettingsDialog implements XItemListener,
     private String L10N_paragraphLinesAboveLabel = null;
     private String L10N_paragraphLinesBelowLabel = null;
     private String L10N_paragraphKeepEmptyLabel = null;
+    private String L10N_paragraphKeepWithNextLabel = null;
+    private String L10N_paragraphDontSplitLabel = null;
+    private String L10N_paragraphWidowControlLabel = null;
+    private String L10N_paragraphOrphanControlLabel = null;
 
     // Headings Page
 
@@ -373,6 +399,8 @@ public class SettingsDialog implements XItemListener,
     private XNumericField headingLinesAboveField = null;
     private XNumericField headingLinesBelowField = null;
     private XCheckBox headingNewBraillePageCheckBox = null;
+    private XCheckBox headingKeepWithNextCheckBox = null;
+    private XCheckBox headingDontSplitCheckBox = null;
 
     private XPropertySet headingFirstLineFieldProperties = null;
     private XPropertySet headingRunoversFieldProperties = null;
@@ -380,6 +408,7 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet headingAlignmentListBoxProperties = null;
     private XPropertySet headingLinesAboveProperties = null;
     private XPropertySet headingLinesBelowProperties = null;
+    private XPropertySet headingDontSplitCheckBoxProperties = null;
 
     private static String _headingLevelListBox = "ListBox13";
     private static String _headingAlignmentListBox = "ListBox14";
@@ -389,6 +418,8 @@ public class SettingsDialog implements XItemListener,
     private static String _headingLinesAboveField = "NumericField13";
     private static String _headingLinesBelowField = "NumericField14";
     private static String _headingNewBraillePageCheckBox = "CheckBox10";
+    private static String _headingKeepWithNextCheckBox = "CheckBox29";
+    private static String _headingDontSplitCheckBox = "CheckBox30";
 
     private static String _headingLevelLabel = "Label42";
     private static String _headingAlignmentLabel = "Label43";
@@ -398,6 +429,8 @@ public class SettingsDialog implements XItemListener,
     private static String _headingLinesAboveLabel = "Label40";
     private static String _headingLinesBelowLabel = "Label41";
     private static String _headingNewBraillePageLabel = "Label15";
+    private static String _headingKeepWithNextLabel = "Label93";
+    private static String _headingDontSplitLabel = "Label94";
 
     private String L10N_headingLevelLabel = null;
     private String L10N_headingAlignmentLabel = null;
@@ -407,6 +440,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_headingLinesAboveLabel = null;
     private String L10N_headingLinesBelowLabel = null;
     private String L10N_headingNewBraillePageLabel = null;
+    private String L10N_headingKeepWithNextLabel = null;
+    private String L10N_headingDontSplitLabel = null;
 
     // Lists Page
 
@@ -880,6 +915,10 @@ public class SettingsDialog implements XItemListener,
         L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
         L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paragraphKeepEmptyLabel");
+        L10N_paragraphKeepWithNextLabel = "Keep with next";
+        L10N_paragraphDontSplitLabel = "Don't split";
+        L10N_paragraphWidowControlLabel = "Widow control:";
+        L10N_paragraphOrphanControlLabel = "Orphan control:";
 
         // Headings Page
 
@@ -891,6 +930,8 @@ public class SettingsDialog implements XItemListener,
         L10N_headingLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
         L10N_headingLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
         L10N_headingNewBraillePageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("headingNewBraillePageLabel");
+        L10N_headingKeepWithNextLabel = "Keep with next";
+        L10N_headingDontSplitLabel = "Don't split";
 
         // Lists Page
 
@@ -1070,7 +1111,7 @@ public class SettingsDialog implements XItemListener,
         // Roadmap
 
         int roadMapWidth = 85;
-        int roadMapHeight = 215;
+        int roadMapHeight = 227;
 
         XMultiServiceFactory xMSFDialog = (XMultiServiceFactory)UnoRuntime.queryInterface(XMultiServiceFactory.class, dialogControl.getModel());
         XNameContainer dialogNameContainer = (XNameContainer)UnoRuntime.queryInterface(XNameContainer.class, dialogControl.getModel());
@@ -1192,6 +1233,18 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_paragraphLinesBelowField));
         paragraphKeepEmptyCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_paragraphKeepEmptyCheckBox));
+        paragraphKeepWithNextCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_paragraphKeepWithNextCheckBox));
+        paragraphDontSplitCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_paragraphDontSplitCheckBox));
+        paragraphWidowControlCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_paragraphWidowControlCheckBox));
+        paragraphOrphanControlCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_paragraphOrphanControlCheckBox));
+        paragraphWidowControlField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_paragraphWidowControlField));
+        paragraphOrphanControlField  = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_paragraphOrphanControlField));
 
         // Headings page
 
@@ -1211,6 +1264,10 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_headingLinesBelowField));
         headingNewBraillePageCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_headingNewBraillePageCheckBox));
+        headingKeepWithNextCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_headingKeepWithNextCheckBox));
+        headingDontSplitCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_headingDontSplitCheckBox));
 
         // Lists Page
 
@@ -1420,6 +1477,18 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphLinesBelowField)).getModel());
         paragraphKeepEmptyCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphKeepEmptyCheckBox)).getModel());
+        paragraphKeepWithNextCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphKeepWithNextCheckBox)).getModel());
+        paragraphDontSplitCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphDontSplitCheckBox)).getModel());
+        paragraphWidowControlCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphWidowControlCheckBox)).getModel());
+        paragraphOrphanControlCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphOrphanControlCheckBox)).getModel());
+        paragraphWidowControlFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphWidowControlField)).getModel());
+        paragraphOrphanControlFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, paragraphOrphanControlField)).getModel());
 
         // Headings Page
 
@@ -1435,6 +1504,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingLinesAboveField)).getModel());
         headingLinesBelowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingLinesBelowField)).getModel());
+        headingDontSplitCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingDontSplitCheckBox)).getModel());
 
         // Lists Page
 
@@ -1635,6 +1706,8 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBox.addItemListener(this);
         paragraphStyleListBox.addItemListener(this);
         paragraphInheritCheckBox.addItemListener(this);
+        paragraphKeepWithNextCheckBox.addItemListener(this);
+        paragraphDontSplitCheckBox.addItemListener(this);
 
     }
 
@@ -1642,8 +1715,10 @@ public class SettingsDialog implements XItemListener,
 
         headingAlignmentListBox.addItemListener(this);
         headingLevelListBox.addItemListener(this);
+        headingKeepWithNextCheckBox.addItemListener(this);
 
     }
+
     private void addListsPageListeners() {
 
         listAlignmentListBox.addItemListener(this);
@@ -1720,6 +1795,8 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBox.removeItemListener(this);
         paragraphStyleListBox.removeItemListener(this);
         paragraphInheritCheckBox.removeItemListener(this);
+        paragraphKeepWithNextCheckBox.removeItemListener(this);
+        paragraphDontSplitCheckBox.removeItemListener(this);
 
     }
 
@@ -1727,8 +1804,10 @@ public class SettingsDialog implements XItemListener,
 
         headingAlignmentListBox.removeItemListener(this);
         headingLevelListBox.removeItemListener(this);
+        headingKeepWithNextCheckBox.removeItemListener(this);
 
     }
+
     private void removeListsPageListeners() {
 
         listAlignmentListBox.removeItemListener(this);
@@ -1892,6 +1971,14 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_paragraphLinesBelowLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphKeepEmptyLabel));
         xFixedText.setText(L10N_paragraphKeepEmptyLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphKeepWithNextLabel));
+        xFixedText.setText(L10N_paragraphKeepWithNextLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphDontSplitLabel));
+        xFixedText.setText(L10N_paragraphDontSplitLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphWidowControlLabel));
+        xFixedText.setText(L10N_paragraphWidowControlLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_paragraphOrphanControlLabel));
+        xFixedText.setText(L10N_paragraphOrphanControlLabel);
 
         // Headings page
 
@@ -1911,6 +1998,10 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_headingLinesBelowLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingNewBraillePageLabel));
         xFixedText.setText(L10N_headingNewBraillePageLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingKeepWithNextLabel));
+        xFixedText.setText(L10N_headingKeepWithNextLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_headingDontSplitLabel));
+        xFixedText.setText(L10N_headingDontSplitLabel);
 
         // Lists Page
 
@@ -2143,6 +2234,14 @@ public class SettingsDialog implements XItemListener,
             paragraphLinesBelowField.setDecimalDigits((short)0);
             paragraphLinesBelowField.setMin((double)0);
             paragraphLinesBelowField.setMax((double)Integer.MAX_VALUE);
+
+            paragraphWidowControlField.setDecimalDigits((short)0);
+            paragraphWidowControlField.setMin((double)2);
+            paragraphWidowControlField.setMax((double)Integer.MAX_VALUE);
+
+            paragraphOrphanControlField.setDecimalDigits((short)0);
+            paragraphOrphanControlField.setMin((double)2);
+            paragraphOrphanControlField.setMax((double)Integer.MAX_VALUE);
 
             paragraphParentFieldProperties.setPropertyValue("Enabled", false);
 
@@ -2524,7 +2623,13 @@ public class SettingsDialog implements XItemListener,
         paragraphAlignmentListBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesAboveProperties.setPropertyValue("Enabled", !bana && !inherit);
         paragraphLinesBelowProperties.setPropertyValue("Enabled", !bana && !inherit);
-        paragraphKeepEmptyCheckBoxProperties.setPropertyValue("Enabled", !bana && !inherit);
+        paragraphKeepEmptyCheckBoxProperties.setPropertyValue("Enabled", !inherit);
+        paragraphKeepWithNextCheckBoxProperties.setPropertyValue("Enabled", !inherit);
+        paragraphDontSplitCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getKeepWithNext());
+        paragraphWidowControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
+        paragraphOrphanControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
+        paragraphWidowControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit() && style.getWidowControl() > 1);
+        paragraphOrphanControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit()&& style.getOrphanControl() > 1);
 
     }
 
@@ -2542,6 +2647,7 @@ public class SettingsDialog implements XItemListener,
         headingAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         headingLinesAboveProperties.setPropertyValue("Enabled", !bana);
         headingLinesBelowProperties.setPropertyValue("Enabled", !bana);
+        headingDontSplitCheckBoxProperties.setPropertyValue("Enabled", !style.getKeepWithNext());
 
     }
 
@@ -2702,6 +2808,12 @@ public class SettingsDialog implements XItemListener,
         paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
         paragraphMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         paragraphKeepEmptyCheckBox.setState((short)(style.getKeepEmptyParagraphs()?1:0));
+        paragraphKeepWithNextCheckBox.setState((short)(style.getKeepWithNext()?1:0));
+        paragraphDontSplitCheckBox.setState((short)(style.getDontSplit()?1:0));
+        paragraphWidowControlCheckBox.setState((short)(style.getWidowControl()>1?1:0));
+        paragraphOrphanControlCheckBox.setState((short)(style.getOrphanControl()>1?1:0));
+        paragraphWidowControlField.setValue((double)Math.max(2,style.getWidowControl()));
+        paragraphOrphanControlField.setValue((double)Math.max(2,style.getOrphanControl()));
 
     }
 
@@ -2735,6 +2847,8 @@ public class SettingsDialog implements XItemListener,
         headingRunoversField.setValue((double)(left?style.getRunovers():0));
         headingMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
         headingNewBraillePageCheckBox.setState((short)(style.getNewBraillePage()?1:0));
+        headingKeepWithNextCheckBox.setState((short)(style.getKeepWithNext()?1:0));
+        headingDontSplitCheckBox.setState((short)(style.getDontSplit()?1:0));
 
     }
 
@@ -2745,6 +2859,7 @@ public class SettingsDialog implements XItemListener,
         style.setLinesAbove((int)headingLinesAboveField.getValue());
         style.setLinesBelow((int)headingLinesBelowField.getValue());
         style.setNewBraillePage(headingNewBraillePageCheckBox.getState()==(short)1);
+        style.setDontSplit(headingDontSplitCheckBox.getState()==(short)1);
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)headingFirstLineField.getValue());
             style.setRunovers((int)headingRunoversField.getValue());
@@ -3119,6 +3234,10 @@ public class SettingsDialog implements XItemListener,
                             }
                         } else if (source.equals(paragraphInheritCheckBox)) {
                             paragraphStyles.get(selectedParagraphStylePos).setInherit(paragraphInheritCheckBox.getState()==(short)1);
+                        } else if (source.equals(paragraphDontSplitCheckBox)) {
+                            paragraphStyles.get(selectedParagraphStylePos).setDontSplit(paragraphDontSplitCheckBox.getState()==(short)1);
+                        } else if (source.equals(paragraphKeepWithNextCheckBox)) {
+                            paragraphStyles.get(selectedParagraphStylePos).setKeepWithNext(paragraphKeepWithNextCheckBox.getState()==(short)1);
                         }
 
                         updateParagraphsPageFieldValues();
@@ -3136,6 +3255,8 @@ public class SettingsDialog implements XItemListener,
                         } else if (source.equals(headingAlignmentListBox)) {
                             headingStyles.get(selectedHeadingStylePos).setAlignment(
                                     alignmentOptions.get(headingAlignmentListBox.getSelectedItemPos()));
+                        } else if (source.equals(headingKeepWithNextCheckBox)) {
+                            headingStyles.get(selectedHeadingStylePos).setKeepWithNext(headingKeepWithNextCheckBox.getState()==(short)1);
                         }
 
                         updateHeadingsPageFieldValues();

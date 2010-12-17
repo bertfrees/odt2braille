@@ -86,12 +86,12 @@ punctuation \x0021        235                 !                   EXCLAMATION MA
 punctuation \x0022        2356                "                   QUOTATION MARK
 sign        \x0024        145                 $                   DOLLAR SIGN
 sign        \x0025        123456              %                   PERCENT SIGN
-sign        \x0026        12346               &                   AMPERSAND
+sign        \x0026        12346a              &                   AMPERSAND
 punctuation \x0027        3                   '                   APOSTROPHE
 punctuation \x0028        236                 (                   LEFT PARENTHESIS
 punctuation \x0029        356                 )                   RIGHT PARENTHESIS
 sign        \x002A        35                  *                   ASTERISK
-math        \x002B        235                 +                   PLUS SIGN
+math        \x002B        235a                +                   PLUS SIGN
 punctuation \x002C        2                   ,                   COMMA
 punctuation \x002D        36                  -                   HYPHEN-MINUS
 punctuation \x002E        256                 .                   FULL STOP
@@ -194,6 +194,15 @@ sign        \x20AC        15                  €                   EURO SIGN
 math        \x2212        36                  −                   MINUS SIGN
 math        \x2215        34                  ∕                   DIVISION SLASH
 math        \x2217        35                  ∗                   ASTERISK OPERATOR
+
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2800..28FF  Braille Patterns
+# ----------------------------------------------------------------------------------------------
+
+sign        \x2828        46                  ⠨                   BRAILLE PATTERN DOTS-46
+sign        \x2818        45                  ⠘                   BRAILLE PATTERN DOTS-45
+sign        \x2820        6                   ⠠                   BRAILLE PATTERN DOTS-6
 
 
 # ==============================================================================================

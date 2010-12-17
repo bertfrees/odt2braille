@@ -496,16 +496,16 @@ public class Interpoint55PrintDialog implements XActionListener,
 
             if (line.startsWith("Mode=")) {
                 line = "Mode=" +
-                       (settings.getDuplex()?"3":"1");
+                       (settings.getSaddleStitch()?"4":
+                       settings.getDuplex()?"3":"1");
             } else if (line.startsWith("MirrorMargins=")) {
-                line = "MirrorMargins=" +
-                       (settings.getMirrorAlign()?"1":"0");
+                line = "MirrorMargins=1";
             } else if (line.startsWith("LeftMargin=")) {
                 line = "LeftMargin=" +
-                       (settings.getMarginLeft());
+                       (settings.getMarginInner());
             } else if (line.startsWith("RightMargin=")) {
                 line = "RightMargin=" +
-                       (settings.getMarginRight());
+                       (settings.getMarginOuter());
             } else if (line.startsWith("TopMargin=")) {
                 line = "TopMargin=" +
                        (settings.getMarginTop());
@@ -515,6 +515,9 @@ public class Interpoint55PrintDialog implements XActionListener,
             } else if (line.startsWith("LinesPerPage")) {
                 line = "LinesPerPage=" +
                        (settings.getLinesPerPage());
+            } else if (line.startsWith("MaxPagesInQuire")) {
+                line = "MaxPagesInQuire=" +
+                       (settings.getSheetsPerQuire());
             }
 
             content += line + System.getProperty("line.separator");

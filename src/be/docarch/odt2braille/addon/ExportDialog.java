@@ -382,7 +382,8 @@ public class ExportDialog implements XItemListener,
     private void updateDuplexCheckBox() throws com.sun.star.uno.Exception {
 
         duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
+        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported(true) &&
+                                                             settings.duplexIsSupported(false));
 
     }
 

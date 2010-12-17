@@ -1041,12 +1041,7 @@ read_configuration_file (const char *configFileList, const char
       ud->fill_pages = 0;
       ud->fill_page_skipped = 0;
       ud->blank_lines = 0;
-
-      ud->check_dont_split = -1;
-      ud->check_keep_with_next = -1;
-      ud->check_widow_control = -1;
-      ud->check_orphan_control = -1;
-      ud->orphan_lines = 0;
+      ud->lines_length = 0;
 
 /******************************************************************/
 

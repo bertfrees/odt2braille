@@ -79,13 +79,17 @@ static int insertCharacters (char *chars, int length);
 
 /**** Added by Bert Frees *****************************************/
 
-static int currentPage;
 static int nextBraillePage (void);
 static char* letterK = "k";
 static widechar softHyphen = 0xE00F;
 
 void
-widestrcpy(widechar* to, widechar* from, int length) {
+widestrcpy(widechar* to, const widechar* from) {
+    widecharcpy(to, from, -1);
+}
+
+void
+widecharcpy(widechar* to, const widechar* from, int length) {
     int k;
     if (length < 0) {
         for (k = 0; from[k]; k++) {
@@ -95,6 +99,24 @@ widestrcpy(widechar* to, widechar* from, int length) {
         for (k = 0; k<length; k++) {
             to[k] = from[k];
         }
+    }
+    to[k] = 0;
+}
+
+void
+unsignedcharcpy(char* to, const char* from, int length) {
+    int k;
+    for (k = 0; k<length; k++) {
+        to[k] = from[k];
+    }
+    to[k] = 0;
+}
+
+void
+charcpy(char* to, const char* from, int length) {
+    int k;
+    for (k = 0; k<length; k++) {
+        to[k] = from[k];
     }
     to[k] = 0;
 }
@@ -710,13 +732,16 @@ fillPage (void)
   if (!makeBlankLines (ud->lines_per_page - ud->lines_on_page, 2))
     return 0;
 /**** Added by Bert Frees *****************************************/
-    if (ud->lines_on_page == 0 &&
-       !ud->fill_page_skipped) {
-      ud->fill_page_skipped = 1;
-    } else {
-      ud->fill_pages++;
-      startLine();
-    }
+  if (ud->buffer3_enabled && ud->lines_length <= 500) {
+    ud->lines_newpage[ud->lines_length] = 1;
+  }
+  if (ud->lines_on_page == 0 &&
+     !ud->fill_page_skipped) {
+    ud->fill_page_skipped = 1;
+  } else {
+    ud->fill_pages++;
+    startLine();
+  }
 /******************************************************************/
 
   writeOutbuf ();
@@ -804,15 +829,15 @@ handlePagenum (xmlChar * printPageNumber, int length) {
         return 0;
     }
 
-    widestrcpy(ud->print_page_number, translatedBuffer, translatedLength);
+    widecharcpy(ud->print_page_number, translatedBuffer, translatedLength);
     ud->print_page_number[0] = ' ';
 
     if (!ud->page_separator_number_first[0] ||
          ud->page_separator_number_first[0] == '_' ||
          ud->ignore_empty_pages) {
-        widestrcpy(ud->page_separator_number_first, ud->print_page_number, -1);
+        widestrcpy(ud->page_separator_number_first, ud->print_page_number);
     } else {
-        widestrcpy(ud->page_separator_number_last, ud->print_page_number, -1);
+        widestrcpy(ud->page_separator_number_last, ud->print_page_number);
     }
 
     return 1;
@@ -950,7 +975,7 @@ getBraillePageString (void)
 			    &translationLength, ud->braille_page_string,
 			    &translatedLength, NULL, NULL, 0)) { return 0; }
     ud->braille_page_string[translatedLength] = 0;
-    widestrcpy(&(pageNumberString[pageNumberLength]), ud->braille_page_string, translatedLength);
+    widecharcpy(&(pageNumberString[pageNumberLength]), ud->braille_page_string, translatedLength);
     pageNumberLength += translatedLength;
 
     return 1;
@@ -1129,14 +1154,14 @@ addPagesToPrintPageNumber () {
                     && ( ud->ignore_empty_pages || ud->print_page_number_first[0] != ' ' ))
          || (ud->lines_on_page == ud->lines_per_page                                  )
          || (ud->print_page_number_range && ud->print_page_number_first[0] == '_'     )) {
-            widestrcpy(ud->print_page_number_first, ud->page_separator_number_first, -1);
+            widestrcpy(ud->print_page_number_first, ud->page_separator_number_first);
         } else if (ud->page_separator_number_first[0] != '_'
                     && (ud->print_page_number_range || (ud->lines_on_page == 0 && !ud->ignore_empty_pages))){
-            widestrcpy(ud->print_page_number_last, ud->page_separator_number_first, -1);
+            widestrcpy(ud->print_page_number_last, ud->page_separator_number_first);
         }
         if (ud->page_separator_number_last[0]
                 && (ud->print_page_number_range || ud->lines_on_page == 0)) {
-            widestrcpy(ud->print_page_number_last, ud->page_separator_number_last, -1);
+            widestrcpy(ud->print_page_number_last, ud->page_separator_number_last);
         }
     }
 
@@ -1241,7 +1266,7 @@ continuePrintPageNumber (void) {
                                                 ud->print_page_number[1] = 0;   }
     else                                      { ud->print_page_number[0]++;     }
 
-    widestrcpy(ud->print_page_number_first, ud->print_page_number, -1);
+    widestrcpy(ud->print_page_number_first, ud->print_page_number);
     ud->print_page_number_last[0] = 0;
 
 }
@@ -1360,12 +1385,10 @@ startLine (void)
         availableCells = 0;
       } else {
         ud->blank_lines = 0;
-        if (ud->check_dont_split < 1) {
-        } else if (ud->check_dont_split == 1) {
-          currentPage = ud->braille_page_number;
-          ud->check_dont_split ++;
-        } else if (ud->braille_page_number != currentPage) {
-          ud->check_dont_split = 0;
+        if (ud->buffer3_enabled && ud->lines_length < 500) {
+            ud->lines_pagenum[ud->lines_length] = ud->braille_page_number;
+            ud->lines_newpage[ud->lines_length] = 0;
+            ud->lines_length++;
         }
       }
 
@@ -1680,7 +1703,6 @@ writeBuffer(int from, int skip) {
   return 1;
 
 }
-
 /******************************************************************/
 
 static widechar *translatedBuffer;
@@ -2814,10 +2836,6 @@ styleBody (void)
       fillPage();
       writeBuffer(3, 0);
       ud->buffer3_enabled = 0;
-      ud->check_dont_split = -1;
-      ud->check_keep_with_next = -1;
-      ud->check_widow_control = -1;
-      ud->check_orphan_control = -1;
 /******************************************************************/
 
       initialize_contents ();
@@ -3388,7 +3406,7 @@ do_pagenum (void) {
         ud->print_page_number[1] = 0;
         if (!ud->page_separator_number_first[0] ||
              ud->ignore_empty_pages) {
-            widestrcpy(ud->page_separator_number_first, ud->print_page_number, -1);
+            widestrcpy(ud->page_separator_number_first, ud->print_page_number);
         }
     }
     return 1;

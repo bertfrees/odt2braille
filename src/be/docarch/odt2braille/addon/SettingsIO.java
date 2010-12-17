@@ -120,6 +120,8 @@ public class SettingsIO {
     private static String prefixProperty =                       "[BRL]ListPrefix";
     private static String keepEmptyParagraphsProperty =          "[BRL]KeepEmptyParagraphs";
     private static String newBraillePage =                       "[BRL]NewBraillePage";
+    private static String dontSplitProperty =                    "[BRL]DontSplit";
+    private static String keepWithNextProperty =                 "[BRL]KeepWithNext";
     private static String boldProperty =                         "[BRL]Boldface";
     private static String italicProperty =                       "[BRL]Italic";
     private static String underlineProperty =                    "[BRL]Underline";
@@ -380,6 +382,12 @@ public class SettingsIO {
                     if ((b = getBooleanProperty(keepEmptyParagraphsProperty + "_paragraph_" + styleName)) != null) {
                         paraStyle.setKeepEmptyParagraphs(b);
                     }
+                    if ((b = getBooleanProperty(dontSplitProperty + "_paragraph_" + styleName)) != null) {
+                        paraStyle.setDontSplit(b);
+                    }
+                    if ((b = getBooleanProperty(keepWithNextProperty + "_paragraph_" + styleName)) != null) {
+                        paraStyle.setKeepWithNext(b);
+                    }
                 }
             }
         }
@@ -458,6 +466,12 @@ public class SettingsIO {
             }
             if ((b = getBooleanProperty(newBraillePage + "_heading_" + level)) != null) {
                 headStyle.setNewBraillePage(b);
+            }
+            if ((b = getBooleanProperty(dontSplitProperty + "_heading_" + level)) != null) {
+                headStyle.setDontSplit(b);
+            }
+            if ((b = getBooleanProperty(keepWithNextProperty + "_heading_" + level)) != null) {
+                headStyle.setKeepWithNext(b);
             }
         }
         
@@ -760,10 +774,6 @@ public class SettingsIO {
             loadedSettings.setEightDots(b);
         }
 
-        if ((b = getBooleanProperty(mirrorAlignProperty)) != null) {
-            loadedSettings.setMirrorAlign(b);
-        }
-
         if (!(d = getDoubleProperty(embossNumberOfCellsPerLineProperty)).isNaN()) {
             loadedSettings.setCellsPerLine(d.intValue());
         }
@@ -773,7 +783,7 @@ public class SettingsIO {
         }
 
         if (!(d = getDoubleProperty(marginLeftProperty)).isNaN()) {
-            loadedSettings.setMarginLeft(d.intValue());
+            loadedSettings.setMarginInner(d.intValue());
         }
 
         if (!(d = getDoubleProperty(marginTopProperty)).isNaN()) {
@@ -911,6 +921,12 @@ public class SettingsIO {
                     setProperty(keepEmptyParagraphsProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getKeepEmptyParagraphs(),
                                 paraStyleBeforeChange.getKeepEmptyParagraphs());
+                    setProperty(dontSplitProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getDontSplit(),
+                                paraStyleBeforeChange.getDontSplit());
+                    setProperty(keepWithNextProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getKeepWithNext(),
+                                paraStyleBeforeChange.getKeepWithNext());
                 }
             }
         }
@@ -973,6 +989,12 @@ public class SettingsIO {
             setProperty(newBraillePage + "_heading_" + level,
                         headStyleAfterChange.getNewBraillePage(),
                         headStyleBeforeChange.getNewBraillePage());
+            setProperty(dontSplitProperty + "_heading_" + level,
+                        headStyleAfterChange.getDontSplit(),
+                        headStyleBeforeChange.getDontSplit());
+            setProperty(keepWithNextProperty + "_heading_" + level,
+                        headStyleAfterChange.getKeepWithNext(),
+                        headStyleBeforeChange.getKeepWithNext());
 
         }
         
@@ -1184,9 +1206,6 @@ public class SettingsIO {
         setProperty(embossEightDotsProperty,
                     settingsAfterChange.getEightDots(),
                     settingsBeforeChange.getEightDots());
-        setProperty(mirrorAlignProperty,
-                    settingsAfterChange.getMirrorAlign(),
-                    settingsBeforeChange.getMirrorAlign());
         setProperty(embossNumberOfCellsPerLineProperty,
                     settingsAfterChange.getCellsPerLine(),
                     settingsBeforeChange.getCellsPerLine());
@@ -1194,8 +1213,8 @@ public class SettingsIO {
                     settingsAfterChange.getLinesPerPage(),
                     settingsBeforeChange.getLinesPerPage());
         setProperty(marginLeftProperty,
-                    settingsAfterChange.getMarginLeft(),
-                    settingsBeforeChange.getMarginLeft());
+                    settingsAfterChange.getMarginInner(),
+                    settingsBeforeChange.getMarginInner());
         setProperty(marginTopProperty,
                     settingsAfterChange.getMarginTop(),
                     settingsBeforeChange.getMarginTop());

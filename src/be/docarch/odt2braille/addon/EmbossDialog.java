@@ -108,21 +108,23 @@ public class EmbossDialog implements XItemListener,
     private XListBox paperWidthUnitListBox = null;
     private XListBox paperHeightUnitListBox = null;
     private XCheckBox duplexCheckBox = null;
+    private XCheckBox zFoldingCheckBox = null;
+    private XCheckBox saddleStitchCheckBox = null;
     private XCheckBox eightDotsCheckBox = null;
-    private XCheckBox mirrorAlignCheckBox = null;
     private XNumericField numberOfCellsPerLineField = null;
     private XNumericField numberOfLinesPerPageField = null;
-    private XNumericField marginLeftField = null;
-    private XNumericField marginRightField = null;
+    private XNumericField marginInnerField = null;
+    private XNumericField marginOuterField = null;
     private XNumericField marginTopField = null;
     private XNumericField marginBottomField = null;
+    private XNumericField sheetsPerQuireField = null;
 
     private XTextComponent paperWidthTextComponent = null;
     private XTextComponent paperHeightTextComponent = null;
     private XTextComponent numberOfCellsPerLineTextComponent = null;
     private XTextComponent numberOfLinesPerPageTextComponent = null;
-    private XTextComponent marginLeftTextComponent = null;
-    private XTextComponent marginRightTextComponent = null;
+    private XTextComponent marginInnerTextComponent = null;
+    private XTextComponent marginOuterTextComponent = null;
     private XTextComponent marginTopTextComponent = null;
     private XTextComponent marginBottomTextComponent = null;
 
@@ -134,11 +136,13 @@ public class EmbossDialog implements XItemListener,
     private XPropertySet paperHeightUnitListBoxProperties = null;
     private XPropertySet duplexCheckBoxProperties = null;
     private XPropertySet eightDotsCheckBoxProperties = null;
-    private XPropertySet mirrorAlignCheckBoxProperties = null;
-    private XPropertySet marginLeftFieldProperties = null;
-    private XPropertySet marginRightFieldProperties = null;
+    private XPropertySet marginInnerFieldProperties = null;
+    private XPropertySet marginOuterFieldProperties = null;
     private XPropertySet marginTopFieldProperties = null;
     private XPropertySet marginBottomFieldProperties = null;
+    private XPropertySet zFoldingCheckBoxProperties = null;
+    private XPropertySet saddleStitchCheckBoxProperties = null;
+    private XPropertySet sheetsPerQuireFieldProperties = null;
 
     private static String _embosserListBox = "ListBox2";
     private static String _tableListBox = "ListBox3";
@@ -149,13 +153,15 @@ public class EmbossDialog implements XItemListener,
     private static String _paperHeightUnitListBox = "ListBox6";
     private static String _duplexCheckBox = "CheckBox1";
     private static String _eightDotsCheckBox = "CheckBox3";
-    private static String _mirrorAlignCheckBox = "CheckBox2";
     private static String _numberOfCellsPerLineField = "NumericField3";
     private static String _numberOfLinesPerPageField = "NumericField4";
-    private static String _marginLeftField = "NumericField5";
-    private static String _marginRightField = "NumericField6";
+    private static String _marginInnerField = "NumericField5";
+    private static String _marginOuterField = "NumericField6";
     private static String _marginTopField = "NumericField7";
     private static String _marginBottomField = "NumericField8";
+    private static String _zFoldingCheckBox = "CheckBox2";
+    private static String _saddleStitchCheckBox = "CheckBox4";
+    private static String _sheetsPerQuireField = "NumericField9";
 
     private static String _embosserLabel = "Label2";
     private static String _tableLabel = "Label3";
@@ -164,14 +170,16 @@ public class EmbossDialog implements XItemListener,
     private static String _paperHeightLabel = "Label11";
     private static String _duplexLabel = "Label8";
     private static String _eightDotsLabel = "Label15";
-    private static String _mirrorAlignLabel = "Label5";
     private static String _numberOfCellsPerLineLabel = "Label6";
     private static String _numberOfLinesPerPageLabel = "Label7";
     private static String _marginLabel = "Label9";
-    private static String _marginLeftLabel = "Label1";
-    private static String _marginRightLabel = "Label13";
+    private static String _marginInnerLabel = "Label1";
+    private static String _marginOuterLabel = "Label13";
     private static String _marginTopLabel = "Label12";
     private static String _marginBottomLabel = "Label14";
+    private static String _zFoldingLabel = "Label5";
+    private static String _saddleStitchLabel = "Label16";
+    private static String _sheetsPerQuireLabel = "Label17";
 
     private String L10N_embosserLabel = null;
     private String L10N_tableLabel = null;
@@ -180,18 +188,20 @@ public class EmbossDialog implements XItemListener,
     private String L10N_paperHeightLabel = null;
     private String L10N_duplexLabel = null;
     private String L10N_eightDotsLabel = null;
-    private String L10N_mirrorAlignLabel = null;
     private String L10N_numberOfCellsPerLineLabel = null;
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_marginLabel = null;
-    private String L10N_marginLeftLabel = null;
-    private String L10N_marginRightLabel = null;
+    private String L10N_marginInnerLabel = null;
+    private String L10N_marginOuterLabel = null;
     private String L10N_marginTopLabel = null;
     private String L10N_marginBottomLabel = null;
+    private String L10N_zFoldingLabel = null;
+    private String L10N_saddleStitchLabel = null;
+    private String L10N_sheetsPerQuireLabel = null;
 
-    private TreeMap<String,String> L10N_embosser = new TreeMap();
-    private TreeMap<String,String> L10N_table = new TreeMap();
-    private TreeMap<String,String> L10N_paperSize = new TreeMap();
+    private TreeMap<EmbosserType,String> L10N_embosser = new TreeMap<EmbosserType,String>();
+    private TreeMap<TableType,String> L10N_table = new TreeMap<TableType,String>();
+    private TreeMap<PaperSize,String> L10N_paperSize = new TreeMap<PaperSize,String>();
 
 
     public EmbossDialog(XComponentContext xContext,
@@ -233,49 +243,54 @@ public class EmbossDialog implements XItemListener,
         L10N_paperHeightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("paperHeightLabel") + ":";
         L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("duplexLabel");
         L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("eightDotsLabel");
-        L10N_mirrorAlignLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("mirrorAlignLabel");
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_marginLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("marginLabel") + ":";
-        L10N_marginLeftLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("left");
-        L10N_marginRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("right");
+        L10N_marginInnerLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("inner");
+        L10N_marginOuterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("outer");
         L10N_marginTopLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("top");
         L10N_marginBottomLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("bottom");
+        L10N_zFoldingLabel = "Z-folding";
+        L10N_saddleStitchLabel = "Saddle stitch (magazine style)";
+        L10N_sheetsPerQuireLabel = "Number of sheets per quire:";
 
-        L10N_embosser.put("NONE",                  "-");
-        L10N_embosser.put("INDEX_BASIC",           "Index Braille - 3.30 Basic V2");
-        L10N_embosser.put("INDEX_EVEREST",         "Index Braille - 9.20 Everest V2");
-        L10N_embosser.put("INDEX_EVEREST_V3",      "Index Braille - Everest V3");
-        L10N_embosser.put("INDEX_BASIC_D_V3",      "Index Braille - Basic-D V3");
-        L10N_embosser.put("INDEX_BASIC_D",         "Index Braille - Basic-D");
-        L10N_embosser.put("INDEX_BASIC_BLUE_BAR",  "Index Braille - Basic Blue-Bar");
-        L10N_embosser.put("BRAILLO_200",           "Braillo 200 (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_S",         "Braillo 400S (firmware 000.17 or later)");
-        L10N_embosser.put("BRAILLO_400_SR",        "Braillo 400SR (firmware 000.17 or later)");
-        L10N_embosser.put("INTERPOINT_55",         "Interpoint 55");
-        L10N_embosser.put("IMPACTO_600",           "Impacto 600");
-        L10N_embosser.put("IMPACTO_TEXTO",         "Impacto Texto");
-        L10N_embosser.put("PORTATHIEL_BLUE",       "Portathiel Blue");
+        L10N_embosser.put(EmbosserType.NONE,                  "-");
+        L10N_embosser.put(EmbosserType.INDEX_BASIC,           "Index Braille - 3.30 Basic V2");
+        L10N_embosser.put(EmbosserType.INDEX_EVEREST,         "Index Braille - 9.20 Everest V2");
+        L10N_embosser.put(EmbosserType.INDEX_EVEREST_V3,      "Index Braille - Everest V3");
+        L10N_embosser.put(EmbosserType.INDEX_BASIC_D_V3,      "Index Braille - Basic-D V3");
+        L10N_embosser.put(EmbosserType.INDEX_4X4_PRO_V3,      "Index Braille - 4x4 Pro V3");
+        L10N_embosser.put(EmbosserType.INDEX_4WAVES_PRO_V3,   "Index Braille - 4Waves Pro V3");
+        L10N_embosser.put(EmbosserType.INDEX_BASIC_BLUE_BAR,  "Index Braille - Basic Blue-Bar");
+        L10N_embosser.put(EmbosserType.BRAILLO_200,           "Braillo 200 (firmware 000.17 or later)");
+        L10N_embosser.put(EmbosserType.BRAILLO_400_S,         "Braillo 400S (firmware 000.17 or later)");
+        L10N_embosser.put(EmbosserType.BRAILLO_400_SR,        "Braillo 400SR (firmware 000.17 or later)");
+        L10N_embosser.put(EmbosserType.INTERPOINT_55,         "Interpoint 55");
+        L10N_embosser.put(EmbosserType.IMPACTO_600,           "Impacto 600");
+        L10N_embosser.put(EmbosserType.IMPACTO_TEXTO,         "Impacto Texto");
+        L10N_embosser.put(EmbosserType.PORTATHIEL_BLUE,       "Portathiel Blue");
 
-        L10N_table.put("UNDEFINED",             "-");
-        L10N_table.put("EN_US",                 "US Computer Braille");
-        L10N_table.put("EN_GB",                 "US Computer Braille (Lower Case)");
-        L10N_table.put("BRAILLO_6DOT_001_00",   "Braillo USA 6 Dot 001.00");
-        L10N_table.put("BRAILLO_6DOT_044_00",   "Braillo England 6 Dot 044.00");
-        L10N_table.put("BRAILLO_6DOT_046_01",   "Braillo Sweden 6 Dot 046.01");
-        L10N_table.put("BRAILLO_6DOT_047_01",   "Braillo Norway 6 Dot 047.01");
-        L10N_table.put("IMPACTO",               "Impacto");
-        L10N_table.put("IMPACTO256",            "Impacto");
-        L10N_table.put("INDEX_BASIC",           "Index Basic");
+        L10N_table.put(TableType.UNDEFINED,             "-");
+        L10N_table.put(TableType.EN_US,                 "US Computer Braille");
+        L10N_table.put(TableType.EN_GB,                 "US Computer Braille (Lower Case)");
+        L10N_table.put(TableType.BRAILLO_6DOT_001_00,   "Braillo USA 6 Dot 001.00");
+        L10N_table.put(TableType.BRAILLO_6DOT_044_00,   "Braillo England 6 Dot 044.00");
+        L10N_table.put(TableType.BRAILLO_6DOT_046_01,   "Braillo Sweden 6 Dot 046.01");
+        L10N_table.put(TableType.BRAILLO_6DOT_047_01,   "Braillo Norway 6 Dot 047.01");
+        L10N_table.put(TableType.IMPACTO,               "Impacto");
+        L10N_table.put(TableType.IMPACTO256,            "Impacto");
+        L10N_table.put(TableType.INDEX_TRANSPARENT,     "Index");
 
-        L10N_paperSize.put("UNDEFINED",         "-");
-        L10N_paperSize.put("A4",                "A4");
-        L10N_paperSize.put("W210MM_X_H10INCH",  "210 mm x 10 inch");
-        L10N_paperSize.put("W210MM_X_H11INCH",  "210 mm x 11 inch");
-        L10N_paperSize.put("W210MM_X_H12INCH",  "210 mm x 12 inch");
-        L10N_paperSize.put("FA44",              "FA44 Accurate");
-        L10N_paperSize.put("FA44_LEGACY",       "FA44 Legacy");
-        L10N_paperSize.put("CUSTOM",            "Custom...");
+        L10N_paperSize.put(PaperSize.UNDEFINED,         "-");
+        L10N_paperSize.put(PaperSize.A4_LANDSCAPE,      "A4 (Landscape)");
+        L10N_paperSize.put(PaperSize.A3_LANDSCAPE,                "A3 (Landscape)");
+        L10N_paperSize.put(PaperSize.W210MM_X_H10INCH,  "210 mm x 10 inch");
+        L10N_paperSize.put(PaperSize.W210MM_X_H11INCH,  "210 mm x 11 inch");
+        L10N_paperSize.put(PaperSize.W210MM_X_H12INCH,  "210 mm x 12 inch");
+        L10N_paperSize.put(PaperSize.W280MM_X_H12INCH,  "280 mm x 12 inch");
+        L10N_paperSize.put(PaperSize.FA44,              "FA44 Accurate");
+        L10N_paperSize.put(PaperSize.FA44_LEGACY,       "FA44 Legacy");
+        L10N_paperSize.put(PaperSize.CUSTOM,            "Custom...");
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_okButton));
@@ -300,18 +315,22 @@ public class EmbossDialog implements XItemListener,
                 dialogControlContainer.getControl(_paperHeightUnitListBox));
         duplexCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_duplexCheckBox));
+        zFoldingCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_zFoldingCheckBox));
+        saddleStitchCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_saddleStitchCheckBox));
+        sheetsPerQuireField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_sheetsPerQuireField));
         eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_eightDotsCheckBox));
-        mirrorAlignCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_mirrorAlignCheckBox));
         numberOfCellsPerLineField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_numberOfCellsPerLineField));
         numberOfLinesPerPageField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_numberOfLinesPerPageField));
-        marginLeftField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginLeftField));
-        marginRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_marginRightField));
+        marginInnerField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_marginInnerField));
+        marginOuterField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_marginOuterField));
         marginTopField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_marginTopField));
         marginBottomField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -324,10 +343,10 @@ public class EmbossDialog implements XItemListener,
                 dialogControlContainer.getControl(_numberOfCellsPerLineField));
         numberOfLinesPerPageTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_numberOfLinesPerPageField));
-        marginLeftTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginLeftField));
-        marginRightTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
-                dialogControlContainer.getControl(_marginRightField));
+        marginInnerTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_marginInnerField));
+        marginOuterTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_marginOuterField));
         marginTopTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_marginTopField));
         marginBottomTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
@@ -351,16 +370,20 @@ public class EmbossDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, duplexCheckBox)).getModel());
         eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
-        mirrorAlignCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, mirrorAlignCheckBox)).getModel());
-        marginLeftFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginLeftField)).getModel());
-        marginRightFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, marginRightField)).getModel());
+        marginInnerFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, marginInnerField)).getModel());
+        marginOuterFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, marginOuterField)).getModel());
         marginTopFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, marginTopField)).getModel());
         marginBottomFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, marginBottomField)).getModel());
+        zFoldingCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, zFoldingCheckBox)).getModel());
+        saddleStitchCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, saddleStitchCheckBox)).getModel());
+        sheetsPerQuireFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, sheetsPerQuireField)).getModel());
 
         setDialogValues();
         addListeners();
@@ -378,13 +401,14 @@ public class EmbossDialog implements XItemListener,
         paperWidthUnitListBox.addItemListener(this);
         paperHeightUnitListBox.addItemListener(this);
         duplexCheckBox.addItemListener(this);
+        saddleStitchCheckBox.addItemListener(this);
         eightDotsCheckBox.addItemListener(this);
         paperWidthTextComponent.addTextListener(this);
         paperHeightTextComponent.addTextListener(this);
         numberOfCellsPerLineTextComponent.addTextListener(this);
         numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
+        marginInnerTextComponent.addTextListener(this);
+        marginOuterTextComponent.addTextListener(this);
         marginTopTextComponent.addTextListener(this);
         marginBottomTextComponent.addTextListener(this);
 
@@ -435,22 +459,26 @@ public class EmbossDialog implements XItemListener,
         xFixedText.setText(L10N_duplexLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
         xFixedText.setText(L10N_eightDotsLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mirrorAlignLabel));
-        xFixedText.setText(L10N_mirrorAlignLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfCellsPerLineLabel));
         xFixedText.setText(L10N_numberOfCellsPerLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfLinesPerPageLabel));
         xFixedText.setText(L10N_numberOfLinesPerPageLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginLabel));
         xFixedText.setText(L10N_marginLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginLeftLabel));
-        xFixedText.setText(L10N_marginLeftLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginRightLabel));
-        xFixedText.setText(L10N_marginRightLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginInnerLabel));
+        xFixedText.setText(L10N_marginInnerLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginOuterLabel));
+        xFixedText.setText(L10N_marginOuterLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginTopLabel));
         xFixedText.setText(L10N_marginTopLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_marginBottomLabel));
         xFixedText.setText(L10N_marginBottomLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_zFoldingLabel));
+        xFixedText.setText(L10N_zFoldingLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_saddleStitchLabel));
+        xFixedText.setText(L10N_saddleStitchLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_sheetsPerQuireLabel));
+        xFixedText.setText(L10N_sheetsPerQuireLabel);
 
     }
 
@@ -458,10 +486,12 @@ public class EmbossDialog implements XItemListener,
 
         numberOfCellsPerLineField.setDecimalDigits((short)0);
         numberOfLinesPerPageField.setDecimalDigits((short)0);
-        marginLeftField.setDecimalDigits((short)0);
-        marginRightField.setDecimalDigits((short)0);
+        marginInnerField.setDecimalDigits((short)0);
+        marginOuterField.setDecimalDigits((short)0);
         marginTopField.setDecimalDigits((short)0);
         marginBottomField.setDecimalDigits((short)0);
+        sheetsPerQuireField.setDecimalDigits((short)0);
+        sheetsPerQuireField.setMin((short)1);
 
         paperWidthUnitListBox.addItem("mm", (short)0);
         paperWidthUnitListBox.addItem("in", (short)1);
@@ -470,13 +500,17 @@ public class EmbossDialog implements XItemListener,
         paperHeightUnitListBox.addItem("in", (short)1);
         paperHeightUnitListBox.selectItemPos((short)0, true);
 
-        updateEmbosserListBox();        
+        zFoldingCheckBox.setState((short)(settings.getZFolding()?1:0));
+        zFoldingCheckBoxProperties.setPropertyValue("Enabled", settings.zFoldingIsSupported());
+        sheetsPerQuireField.setValue((double)settings.getSheetsPerQuire());
+
+        updateEmbosserListBox();
+        updateSaddleStitchCheckBox();
         updateDuplexCheckBox();
         updateEightDotsCheckBox();
         updatePaperSizeListBox();
         updatePaperDimensionFields();
         updateDimensionFields();
-        updateMirrorAlignCheckBox();
         updateTableListBox();
         updateOKButton();
 
@@ -484,8 +518,9 @@ public class EmbossDialog implements XItemListener,
 
     private void getDialogValues() {
 
-        settings.setMirrorAlign((mirrorAlignCheckBox.getState() == (short)1));
         settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        settings.setZFolding(zFoldingCheckBox.getState()==(short)1);
+        settings.setSheetsPerQuire((int)sheetsPerQuireField.getValue());
 
     }
 
@@ -503,18 +538,18 @@ public class EmbossDialog implements XItemListener,
      */
     private void updateEmbosserListBox() throws com.sun.star.uno.Exception {
 
-        String key = null;
+        EmbosserType key = null;
 
         embosserListBox.removeItemListener(this);
 
             embosserListBox.removeItems((short)0, Short.MAX_VALUE);
             embosserTypes = settings.getSupportedEmbossers();
             for (int i=0;i<embosserTypes.size();i++) {
-                key = embosserTypes.get(i).name();
+                key = embosserTypes.get(i);
                 if (L10N_embosser.containsKey(key)) {
                     embosserListBox.addItem(L10N_embosser.get(key), (short)i);
                 } else {
-                    embosserListBox.addItem(key, (short)i);
+                    embosserListBox.addItem(key.name(), (short)i);
                 }
             }
             embosserListBox.selectItemPos((short)embosserTypes.indexOf(settings.getEmbosser()), true);
@@ -529,16 +564,16 @@ public class EmbossDialog implements XItemListener,
      */
     private void updateTableListBox() throws com.sun.star.uno.Exception {
 
-        String key;
+        TableType key;
 
         tableListBox.removeItems((short)0, Short.MAX_VALUE);
         tableTypes = settings.getSupportedTableTypes();
         for (int i=0;i<tableTypes.size();i++) {
-            key = tableTypes.get(i).name();
+            key = tableTypes.get(i);
             if (L10N_table.containsKey(key)) {
                 tableListBox.addItem(L10N_table.get(key), (short)i);
             } else {
-                tableListBox.addItem(key, (short)i);
+                tableListBox.addItem(key.name(), (short)i);
             }
         }
         tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
@@ -552,18 +587,18 @@ public class EmbossDialog implements XItemListener,
      */
     private void updatePaperSizeListBox() throws com.sun.star.uno.Exception {
 
-        String key;
+        PaperSize key;
 
         paperSizeListBox.removeItemListener(this);
 
             paperSizeListBox.removeItems((short)0, Short.MAX_VALUE);
             paperSizes = settings.getSupportedPaperSizes();
             for (int i=0;i<paperSizes.size();i++) {
-                key = paperSizes.get(i).name();
+                key = paperSizes.get(i);
                 if (L10N_paperSize.containsKey(key)) {
                     paperSizeListBox.addItem(L10N_paperSize.get(key), (short)i);
                 } else {
-                    paperSizeListBox.addItem(key, (short)i);
+                    paperSizeListBox.addItem(key.name(), (short)i);
                 }
             }
             paperSizeListBox.selectItemPos((short)paperSizes.indexOf(settings.getPaperSize()), true);
@@ -613,6 +648,17 @@ public class EmbossDialog implements XItemListener,
         paperHeightTextComponent.addTextListener(this);
 
     }
+    
+    private void updateSaddleStitchCheckBox() throws com.sun.star.uno.Exception {
+
+        saddleStitchCheckBox.removeItemListener(this);
+            saddleStitchCheckBox.setState((short)(settings.getSaddleStitch()?1:0));
+            saddleStitchCheckBoxProperties.setPropertyValue("Enabled", settings.saddleStitchIsSupported());
+            sheetsPerQuireFieldProperties.setPropertyValue("Enabled", settings.getSaddleStitch() &&
+                                                                      settings.sheetsPerQuireIsSupported());
+        saddleStitchCheckBox.addItemListener(this);
+
+    }
 
     /**
      * Update the 'Recto-verso' checkbox.
@@ -622,7 +668,8 @@ public class EmbossDialog implements XItemListener,
 
         duplexCheckBox.removeItemListener(this);
             duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-            duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
+            duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported(true) &&
+                                                                 settings.duplexIsSupported(false));
         duplexCheckBox.addItemListener(this);
 
     }
@@ -637,17 +684,6 @@ public class EmbossDialog implements XItemListener,
     }
 
     /**
-     * Update the 'Mirror margins' checkbox.
-     *
-     */
-    private void updateMirrorAlignCheckBox() throws com.sun.star.uno.Exception {
-
-        mirrorAlignCheckBox.setState((short)(settings.getMirrorAlign()?1:0));
-        mirrorAlignCheckBoxProperties.setPropertyValue("Enabled", settings.mirrorAlignIsSupported());
-
-    }
-
-    /**
      * Update the 'Cells per line', 'Lines per page' and 'Margin' field values.
      * This method is called when the respective settings have possibly changed because the user changed one of these values.
      *
@@ -656,22 +692,22 @@ public class EmbossDialog implements XItemListener,
 
         numberOfCellsPerLineTextComponent.removeTextListener(this);
         numberOfLinesPerPageTextComponent.removeTextListener(this);
-        marginLeftTextComponent.removeTextListener(this);
-        marginRightTextComponent.removeTextListener(this);
+        marginInnerTextComponent.removeTextListener(this);
+        marginOuterTextComponent.removeTextListener(this);
         marginTopTextComponent.removeTextListener(this);
         marginBottomTextComponent.removeTextListener(this);
 
             numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
             numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
-            marginLeftField.setValue((double)settings.getMarginLeft());
-            marginRightField.setValue((double)settings.getMarginRight());
+            marginInnerField.setValue((double)settings.getMarginInner());
+            marginOuterField.setValue((double)settings.getMarginOuter());
             marginTopField.setValue((double)settings.getMarginTop());
             marginBottomField.setValue((double)settings.getMarginBottom());
 
         numberOfCellsPerLineTextComponent.addTextListener(this);
         numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
+        marginInnerTextComponent.addTextListener(this);
+        marginOuterTextComponent.addTextListener(this);
         marginTopTextComponent.addTextListener(this);
         marginBottomTextComponent.addTextListener(this);
 
@@ -687,37 +723,37 @@ public class EmbossDialog implements XItemListener,
 
         numberOfCellsPerLineTextComponent.removeTextListener(this);
         numberOfLinesPerPageTextComponent.removeTextListener(this);
-        marginLeftTextComponent.removeTextListener(this);
-        marginRightTextComponent.removeTextListener(this);
+        marginInnerTextComponent.removeTextListener(this);
+        marginOuterTextComponent.removeTextListener(this);
         marginTopTextComponent.removeTextListener(this);
         marginBottomTextComponent.removeTextListener(this);
 
-            marginLeftFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
-            marginRightFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
+            marginInnerFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
+            marginOuterFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
             marginTopFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
             marginBottomFieldProperties.setPropertyValue("Enabled", settings.marginsSupported());
 
             if (settings.marginsSupported()) {
 
-                marginLeftField.setMin((double)settings.getMinMarginLeft());
-                marginRightField.setMin((double)settings.getMinMarginRight());
+                marginInnerField.setMin((double)settings.getMinMarginInner());
+                marginOuterField.setMin((double)settings.getMinMarginOuter());
                 marginTopField.setMin((double)settings.getMinMarginTop());
                 marginBottomField.setMin((double)settings.getMinMarginBottom());
 
-                marginLeftField.setMax((double)settings.getMaxMarginLeft());
-                marginRightField.setMax((double)settings.getMaxMarginRight());
+                marginInnerField.setMax((double)settings.getMaxMarginInner());
+                marginOuterField.setMax((double)settings.getMaxMarginOuter());
                 marginTopField.setMax((double)settings.getMaxMarginTop());
                 marginBottomField.setMax((double)settings.getMaxMarginBottom());
 
             } else {
 
-                marginLeftField.setMin((double)0);
-                marginRightField.setMin((double)0);
+                marginInnerField.setMin((double)0);
+                marginOuterField.setMin((double)0);
                 marginTopField.setMin((double)0);
                 marginBottomField.setMin((double)0);
 
-                marginLeftField.setMax((double)0);
-                marginRightField.setMax((double)0);
+                marginInnerField.setMax((double)0);
+                marginOuterField.setMax((double)0);
                 marginTopField.setMax((double)0);
                 marginBottomField.setMax((double)0);
 
@@ -730,15 +766,15 @@ public class EmbossDialog implements XItemListener,
 
             numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
             numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
-            marginLeftField.setValue((double)settings.getMarginLeft());
-            marginRightField.setValue((double)settings.getMarginRight());
+            marginInnerField.setValue((double)settings.getMarginInner());
+            marginOuterField.setValue((double)settings.getMarginOuter());
             marginTopField.setValue((double)settings.getMarginTop());
             marginBottomField.setValue((double)settings.getMarginBottom());
 
         numberOfCellsPerLineTextComponent.addTextListener(this);
         numberOfLinesPerPageTextComponent.addTextListener(this);
-        marginLeftTextComponent.addTextListener(this);
-        marginRightTextComponent.addTextListener(this);
+        marginInnerTextComponent.addTextListener(this);
+        marginOuterTextComponent.addTextListener(this);
         marginTopTextComponent.addTextListener(this);
         marginBottomTextComponent.addTextListener(this);
 
@@ -754,12 +790,15 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setEmbosser(embosserTypes.get(embosserListBox.getSelectedItemPos()));
 
+                zFoldingCheckBox.setState((short)(settings.getZFolding()?1:0));
+                zFoldingCheckBoxProperties.setPropertyValue("Enabled", settings.zFoldingIsSupported());
+
+                updateSaddleStitchCheckBox();
                 updateDuplexCheckBox();
                 updateEightDotsCheckBox();                
                 updatePaperSizeListBox();
                 updatePaperDimensionFields();
                 updateDimensionFields();
-                updateMirrorAlignCheckBox();
                 updateTableListBox();
                 updateOKButton();
 
@@ -769,7 +808,6 @@ public class EmbossDialog implements XItemListener,
 
                 updatePaperDimensionFields();
                 updateDimensionFields();
-                updateMirrorAlignCheckBox();
                 updateOKButton();
 
             } else if (source.equals(paperWidthUnitListBox) ||
@@ -781,14 +819,23 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setDuplex((duplexCheckBox.getState()==(short)1));
 
-                updateMirrorAlignCheckBox();
-
             } else if (source.equals(eightDotsCheckBox)) {
 
                 settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
 
                 updateDimensionFields();
                 updateTableListBox();
+
+            } else if (source.equals(saddleStitchCheckBox)) {
+
+                settings.setSaddleStitch((saddleStitchCheckBox.getState()==(short)1));
+
+                updateSaddleStitchCheckBox();
+                updateDuplexCheckBox();
+                updatePaperSizeListBox();
+                updatePaperDimensionFields();
+                updateDimensionFields();
+                updateOKButton();
 
             }
 
@@ -841,11 +888,11 @@ public class EmbossDialog implements XItemListener,
             } else if (source.equals(numberOfLinesPerPageTextComponent)) {
                 settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
                 updateDimensionFieldValues();
-            } else if (source.equals(marginLeftTextComponent)) {
-                settings.setMarginLeft((int)marginLeftField.getValue());
+            } else if (source.equals(marginInnerTextComponent)) {
+                settings.setMarginInner((int)marginInnerField.getValue());
                 updateDimensionFieldValues();
-            } else if (source.equals(marginRightTextComponent)) {
-                settings.setMarginRight((int)marginRightField.getValue());
+            } else if (source.equals(marginOuterTextComponent)) {
+                settings.setMarginOuter((int)marginOuterField.getValue());
                 updateDimensionFieldValues();
             } else if (source.equals(marginTopTextComponent)) {
                 settings.setMarginTop((int)marginTopField.getValue());
