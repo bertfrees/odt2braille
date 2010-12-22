@@ -104,6 +104,7 @@ public class ExportDialog implements XItemListener,
     private XPropertySet tableListBoxProperties = null;
     private XPropertySet duplexCheckBoxProperties = null;
     private XPropertySet eightDotsCheckBoxProperties = null;
+    private XPropertySet multipleFilesCheckBoxProperties = null;
 
     private static String _brailleFileListBox = "ListBox2";
     private static String _tableListBox = "ListBox3";
@@ -129,8 +130,8 @@ public class ExportDialog implements XItemListener,
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_multipleFilesLabel = null;
 
-    private TreeMap<String,String> L10N_brailleFile = new TreeMap();
-    private TreeMap<String,String> L10N_table = new TreeMap();
+    private TreeMap<BrailleFileType,String> L10N_brailleFile = new TreeMap();
+    private TreeMap<TableType,String> L10N_table = new TreeMap();
 
 
     public ExportDialog(XComponentContext xContext,
@@ -173,17 +174,25 @@ public class ExportDialog implements XItemListener,
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_multipleFilesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("multipleFilesLabel");
 
-        L10N_table.put("UNDEFINED",         "-");
-        L10N_table.put("UNICODE_BRAILLE",   "PEF (Unicode Braille)");
-        L10N_table.put("BRF",               "BRF (ASCII Braille)");
-        L10N_table.put("BRL",               "BRL (Non-ASCII Braille)");
-        L10N_table.put("ES_OLD",            "Spanish Braille (Old)");
-        L10N_table.put("ES_NEW",            "Spanish Braille (New)");        
+        L10N_table.put(TableType.UNDEFINED,         "-");
+        L10N_table.put(TableType.UNICODE_BRAILLE,   "PEF (Unicode Braille)");
+        L10N_table.put(TableType.EN_US,             "US English (Uppercase)");
+        L10N_table.put(TableType.EN_GB,             "UK English (Lowercase)");
+        L10N_table.put(TableType.NL,                "Dutch");
+        L10N_table.put(TableType.DA_DK,             "Danish");
+        L10N_table.put(TableType.DE_DE,             "German");
+        L10N_table.put(TableType.IT_IT_FIRENZE,     "Italian");
+        L10N_table.put(TableType.SV_SE_CX,          "Swedish");
+        L10N_table.put(TableType.SV_SE_MIXED,       "Swedish (2)");
 
-        L10N_brailleFile.put("NONE",  "-");
-        L10N_brailleFile.put("PEF",   "PEF (Portable Embosser Format)");
-        L10N_brailleFile.put("BRF",   "BRF (Braille Formatted)");
-        L10N_brailleFile.put("BRA",   "BRA");
+        L10N_table.put(TableType.BRL,               "BRL (Non-ASCII Braille)");
+        L10N_table.put(TableType.ES_OLD,            "Spanish (Old)");
+        L10N_table.put(TableType.ES_NEW,            "Spanish (New)");
+
+        L10N_brailleFile.put(BrailleFileType.NONE,  "-");
+        L10N_brailleFile.put(BrailleFileType.PEF,   "PEF (Portable Embosser Format)");
+        L10N_brailleFile.put(BrailleFileType.BRF,   "BRF (Braille Formatted)");
+        L10N_brailleFile.put(BrailleFileType.BRA,   "BRA");
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_okButton));
@@ -215,6 +224,8 @@ public class ExportDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, duplexCheckBox)).getModel());
         eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
+        multipleFilesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, multipleFilesCheckBox)).getModel());
 
         setDialogValues();
         addListeners();
@@ -291,10 +302,11 @@ public class ExportDialog implements XItemListener,
         numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
 
-        if (System.getProperty("os.name").toLowerCase().contains("mac os")) {
+        if (System.getProperty("os.name").toLowerCase().contains("mac os") ||
+                (Math.min(1, settings.getNumberOfVolumes()) +
+                 settings.getNumberOfSupplements() +
+                (settings.getPreliminaryVolumeEnabled()?1:0)) < 2) {
             settings.setMultipleFiles(false);
-            XPropertySet multipleFilesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, multipleFilesCheckBox)).getModel());
             multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
         }
 
@@ -332,18 +344,18 @@ public class ExportDialog implements XItemListener,
      */
     private void updateBrailleFileListBox() throws com.sun.star.uno.Exception {
 
-        String key = null;
+        BrailleFileType key = null;
 
         brailleFileListBox.removeItemListener(this);
 
             brailleFileListBox.removeItems((short)0, Short.MAX_VALUE);
             brailleFileTypes = settings.getSupportedBrailleFileTypes();
             for (int i=0;i<brailleFileTypes.size();i++) {
-                key = brailleFileTypes.get(i).name();
+                key = brailleFileTypes.get(i);
                 if (L10N_brailleFile.containsKey(key)) {
                     brailleFileListBox.addItem(L10N_brailleFile.get(key), (short)i);
                 } else {
-                    brailleFileListBox.addItem(key, (short)i);
+                    brailleFileListBox.addItem(key.name(), (short)i);
                 }
             }
             brailleFileListBox.selectItemPos((short)brailleFileTypes.indexOf(settings.getBrailleFileType()), true);
@@ -358,16 +370,16 @@ public class ExportDialog implements XItemListener,
      */
     private void updateTableListBox() throws com.sun.star.uno.Exception {
 
-        String key;
+        TableType key;
 
         tableListBox.removeItems((short)0, Short.MAX_VALUE);
         tableTypes = settings.getSupportedTableTypes();
         for (int i=0;i<tableTypes.size();i++) {
-            key = tableTypes.get(i).name();
+            key = tableTypes.get(i);
             if (L10N_table.containsKey(key)) {
                 tableListBox.addItem(L10N_table.get(key), (short)i);
             } else {
-                tableListBox.addItem(key, (short)i);
+                tableListBox.addItem(key.name(), (short)i);
             }
         }
         tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);

@@ -159,11 +159,22 @@ Version ?
 * odt2braille fonts: updated (v1.2)
 
 * New user preferences:
-** Paragraphs & heading:
+** Volume info / transcription info:
+	- use paragraph style
+** Paragraphs / headings:
 	- keep with next
 	- don't split
+	- widow control
+** Lists:
+	- don't split list
+	- don't splits items
+** Tables:
+	- don't split rows
 
-*Hyphenation tables: updated
+* Bug fixes:
+** Some list numbering bugs
+	
+* Hyphenation tables: updated
 ** Polish ?
 ** Slovene ?
 

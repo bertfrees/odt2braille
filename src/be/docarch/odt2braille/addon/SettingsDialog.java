@@ -77,6 +77,8 @@ import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
 import be.docarch.odt2braille.HeadingStyle;
+import be.docarch.odt2braille.ListStyle;
+import be.docarch.odt2braille.TableStyle;
 import be.docarch.odt2braille.CharacterStyle;
 import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 
@@ -145,6 +147,7 @@ public class SettingsDialog implements XItemListener,
     private ArrayList<ParagraphStyle> paragraphStyles = null;
     private ArrayList<CharacterStyle> characterStyles = null;
     private ArrayList<HeadingStyle> headingStyles = null;
+    private ArrayList<ListStyle> listStyles = null;
     private ArrayList<MathType> mathTypes = null;
     private ArrayList<Alignment>alignmentOptions = null;
     private ArrayList<TypefaceOption>typefaceOptions = null;
@@ -199,6 +202,8 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox preliminaryVolumeCheckBox = null;
     private XCheckBox hyphenateCheckBox = null;
     private XCheckBox hardPageBreaksCheckBox = null;
+    private XListBox transcriptionInfoStyleListBox = null;
+    private XListBox volumeInfoStyleListBox = null;
 
     private XPropertySet mainEightDotsCheckBoxProperties = null;
     private XPropertySet transcribersNotesPageFieldProperties = null;    
@@ -207,6 +212,8 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet transcribersNotesPageCheckBoxProperties = null;
     private XPropertySet creatorFieldProperties = null;
     private XPropertySet preliminaryVolumeCheckBoxProperties = null;
+    private XPropertySet transcriptionInfoStyleListBoxProperties = null;
+    private XPropertySet volumeInfoStyleListBoxProperties = null;
 
     private static String _mainTranslationTableListBox = "ListBox1";
     private static String _mainGradeListBox = "ListBox2";
@@ -219,6 +226,8 @@ public class SettingsDialog implements XItemListener,
     private static String _preliminaryVolumeCheckBox = "CheckBox8";
     private static String _hyphenateCheckBox = "CheckBox20";
     private static String _hardPageBreaksCheckBox = "CheckBox19";
+    private static String _transcriptionInfoStyleListBox = "ListBox6";
+    private static String _volumeInfoStyleListBox = "ListBox7";
 
     private static String _mainTranslationTableLabel = "Label1";
     private static String _mainGradeLabel = "Label2";
@@ -230,6 +239,8 @@ public class SettingsDialog implements XItemListener,
     private static String _preliminaryVolumeLabel = "Label11";
     private static String _hyphenateLabel = "Label77";
     private static String _hardPageBreaksLabel = "Label72";
+    private static String _transcriptionInfoStyleLabel = "Label98";
+    private static String _volumeInfoStyleLabel = "Label99";
 
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
@@ -241,6 +252,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_preliminaryVolumeLabel = null;
     private String L10N_hyphenateLabel = null;
     private String L10N_hardPageBreaksLabel = null;
+    private String L10N_transcriptionInfoStyleLabel = null;
+    private String L10N_volumeInfoStyleLabel = null;
 
     private TreeMap<Integer,String> L10N_grades = new TreeMap();
     private TreeMap<String,String> L10N_translationTables = new TreeMap();
@@ -409,6 +422,7 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet headingLinesAboveProperties = null;
     private XPropertySet headingLinesBelowProperties = null;
     private XPropertySet headingDontSplitCheckBoxProperties = null;
+    private XPropertySet headingKeepWithNextCheckBoxProperties = null;
 
     private static String _headingLevelListBox = "ListBox13";
     private static String _headingAlignmentListBox = "ListBox14";
@@ -455,6 +469,8 @@ public class SettingsDialog implements XItemListener,
     private XNumericField listMarginLeftRightField = null;
     private XTextComponent listPrefixField = null;
     private XButton listPrefixButton = null;
+    private XCheckBox listDontSplitCheckBox = null;
+    private XCheckBox listDontSplitItemsCheckBox = null;
 
     private XPropertySet listFirstLineFieldProperties = null;
     private XPropertySet listRunoversFieldProperties = null;
@@ -463,6 +479,8 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet listLinesAboveProperties = null;
     private XPropertySet listLinesBelowProperties = null;
     private XPropertySet listLinesBetweenProperties = null;
+    private XPropertySet listDontSplitCheckBoxProperties = null;
+    private XPropertySet listDontSplitItemsCheckBoxProperties = null;
 
     private static String _listLinesAboveField = "NumericField17";
     private static String _listLinesBelowField = "NumericField18";
@@ -474,6 +492,8 @@ public class SettingsDialog implements XItemListener,
     private static String _listMarginLeftRightField = "NumericField5";
     private static String _listPrefixField = "TextField7";
     private static String _listPrefixButton = "CommandButton7";
+    private static String _listDontSplitCheckBox = "CheckBox34";
+    private static String _listDontSplitItemsCheckBox = "CheckBox35";
 
     private static String _listLinesAboveLabel = "Label30";
     private static String _listLinesBelowLabel = "Label36";
@@ -484,6 +504,8 @@ public class SettingsDialog implements XItemListener,
     private static String _listRunoversLabel = "Label21";
     private static String _listMarginLeftRightLabel = "Label22";
     private static String _listPrefixLabel = "Label27";
+    private static String _listDontSplitLabel = "Label96";
+    private static String _listDontSplitItemsLabel = "Label97";
 
     private String L10N_listLinesAboveLabel = null;
     private String L10N_listLinesBelowLabel = null;
@@ -494,7 +516,9 @@ public class SettingsDialog implements XItemListener,
     private String L10N_listRunoversLabel = null;
     private String L10N_listMarginLeftRightLabel = null;
     private String L10N_listPrefixLabel = null;
-    private String L10N_listPrefixButton = "...";
+    private String L10N_listDontSplitLabel = null;
+    private String L10N_listDontSplitItemsLabel = null;
+    private String L10N_listPrefixButton = null;
 
     // Tables Page
 
@@ -510,6 +534,7 @@ public class SettingsDialog implements XItemListener,
     private XNumericField tableMarginLeftRightField = null;
     private XTextComponent tableColumnDelimiterField = null;
     private XButton tableColumnDelimiterButton = null;
+    private XCheckBox tableDontSplitRowsCheckBox = null;
 
     private XPropertySet tableFirstLineFieldProperties = null;
     private XPropertySet tableRunoversFieldProperties = null;
@@ -535,6 +560,7 @@ public class SettingsDialog implements XItemListener,
     private static String _tableMarginLeftRightField = "NumericField6";
     private static String _tableColumnDelimiterField = "TextField5";
     private static String _tableColumnDelimiterButton = "CommandButton5";
+    private static String _tableDontSplitRowsCheckBox = "CheckBox33";
 
     private static String _tableSimpleLabel = "Label23";
     private static String _tableStairstepLabel = "Label25";
@@ -547,6 +573,7 @@ public class SettingsDialog implements XItemListener,
     private static String _tableRunoversLabel = "Label47";
     private static String _tableMarginLeftRightLabel = "Label29";
     private static String _tableColumnDelimiterLabel = "Label24";
+    private static String _tableDontSplitRowsLabel = "Label95";
 
     private String L10N_tableSimpleLabel = null;
     private String L10N_tableStairstepLabel = null;
@@ -559,7 +586,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableRunoversLabel = null;
     private String L10N_tableMarginLeftRightLabel = null;
     private String L10N_tableColumnDelimiterLabel = null;
-    private String L10N_tableColumnDelimiterButton = "...";
+    private String L10N_tableDontSplitRowsLabel = null;
+    private String L10N_tableColumnDelimiterButton = null;
 
     // Pagenumbers Page
 
@@ -644,7 +672,6 @@ public class SettingsDialog implements XItemListener,
 
     private XCheckBox tableOfContentsCheckBox = null;
     private XTextComponent tableOfContentsTitleField = null;
-    private XNumericField tableOfContentsLinesBetweenField = null;
     private XListBox tableOfContentsLevelListBox = null;
     private XNumericField tableOfContentsFirstLineField = null;
     private XNumericField tableOfContentsRunoversField = null;
@@ -655,7 +682,6 @@ public class SettingsDialog implements XItemListener,
 
     private XPropertySet tableOfContentsCheckBoxProperties = null;
     private XPropertySet tableOfContentsTitleFieldProperties = null;
-    private XPropertySet tableOfContentsLinesBetweenFieldProperties = null;
     private XPropertySet tableOfContentsLevelListBoxProperties = null;
     private XPropertySet tableOfContentsFirstLineFieldProperties = null;
     private XPropertySet tableOfContentsRunoversFieldProperties = null;
@@ -666,7 +692,6 @@ public class SettingsDialog implements XItemListener,
 
     private static String _tableOfContentsCheckBox = "CheckBox5";
     private static String _tableOfContentsTitleField = "TextField4";
-    private static String _tableOfContentsLinesBetweenField = "NumericField25";
     private static String _tableOfContentsLevelListBox = "ListBox18";
     private static String _tableOfContentsFirstLineField = "NumericField23";
     private static String _tableOfContentsRunoversField = "NumericField24";
@@ -677,7 +702,6 @@ public class SettingsDialog implements XItemListener,
 
     private static String _tableOfContentsLabel = "Label8";
     private static String _tableOfContentsTitleLabel = "Label58";
-    private static String _tableOfContentsLinesBetweenLabel = "Label54";
     private static String _tableOfContentsLevelLabel = "Label56";
     private static String _tableOfContentsFirstLineLabel = "Label52";
     private static String _tableOfContentsRunoversLabel = "Label53";
@@ -687,7 +711,6 @@ public class SettingsDialog implements XItemListener,
 
     private String L10N_tableOfContentsLabel = null;
     private String L10N_tableOfContentsTitleLabel = null;
-    private String L10N_tableOfContentsLinesBetweenLabel = null;
     private String L10N_tableOfContentsLevelLabel = null;
     private String L10N_tableOfContentsFirstLineLabel = null;
     private String L10N_tableOfContentsRunoversLabel = null;
@@ -768,7 +791,7 @@ public class SettingsDialog implements XItemListener,
     private static String _mathListBox = "ListBox10";
     private static String _mathLabel = "Label35";
     private String L10N_mathLabel = null;
-    private TreeMap<String,String> L10N_math = new TreeMap();
+    private TreeMap<MathType,String> L10N_math = new TreeMap();
 
 
     /**
@@ -888,6 +911,8 @@ public class SettingsDialog implements XItemListener,
         L10N_preliminaryVolumeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("preliminaryVolumeLabel");
         L10N_hyphenateLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hyphenateLabel");
         L10N_hardPageBreaksLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("hardPageBreaksLabel");
+        L10N_transcriptionInfoStyleLabel = "Paragraph style:";
+        L10N_volumeInfoStyleLabel = "Paragraph style:";
 
         // Languages Page
 
@@ -944,6 +969,9 @@ public class SettingsDialog implements XItemListener,
         L10N_listRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_listMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_listPrefixLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("listPrefixLabel") + ":";
+        L10N_listDontSplitLabel = "Don't split list";
+        L10N_listDontSplitItemsLabel = "Don't split items";
+        L10N_listPrefixButton = "...";
 
         // Tables Page
 
@@ -958,6 +986,8 @@ public class SettingsDialog implements XItemListener,
         L10N_tableRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("columnDelimiterLabel") + ":";
+        L10N_tableDontSplitRowsLabel = "Don't split rows";
+        L10N_tableColumnDelimiterButton = "...";
 
         // Pagenumbers Page
 
@@ -982,7 +1012,6 @@ public class SettingsDialog implements XItemListener,
 
         L10N_tableOfContentsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsLabel");
         L10N_tableOfContentsTitleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsTitleLabel") + ":";
-        L10N_tableOfContentsLinesBetweenLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("tableOfContentsLinesBetweenLabel") + ":";
         L10N_tableOfContentsLevelLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("levelLabel");
         L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
         L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
@@ -1005,10 +1034,10 @@ public class SettingsDialog implements XItemListener,
 
         L10N_mathLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("formulasLabel") + ":";
 
-        L10N_math.put("NEMETH",    "Nemeth");
-        L10N_math.put("UKMATHS",   "UK Maths");
-        L10N_math.put("MARBURG",   "Marburg");
-        L10N_math.put("WISKUNDE",  "Woluwe");
+        L10N_math.put(MathType.NEMETH,    "Nemeth");
+        L10N_math.put(MathType.UKMATHS,   "UK Maths");
+        L10N_math.put(MathType.MARBURG,   "Marburg");
+        L10N_math.put(MathType.WISKUNDE,  "Woluwe");
 
         // Languages, translation tables, grades, alignment, paragraph styles
 
@@ -1107,6 +1136,7 @@ public class SettingsDialog implements XItemListener,
         }
 
         headingStyles = settings.getHeadingStyles();
+        listStyles = settings.getListStyles();
 
         // Roadmap
 
@@ -1182,6 +1212,10 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_hyphenateCheckBox));
         hardPageBreaksCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_hardPageBreaksCheckBox));
+        transcriptionInfoStyleListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_transcriptionInfoStyleListBox));
+        volumeInfoStyleListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                dialogControlContainer.getControl(_volumeInfoStyleListBox));
 
         // Languages Page
 
@@ -1291,6 +1325,10 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_listPrefixField));
         listPrefixButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_listPrefixButton));
+        listDontSplitCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_listDontSplitCheckBox));
+        listDontSplitItemsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_listDontSplitItemsCheckBox));
 
         // Tables Page
 
@@ -1318,6 +1356,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_tableColumnDelimiterField));
         tableColumnDelimiterButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_tableColumnDelimiterButton));
+        tableDontSplitRowsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_tableDontSplitRowsCheckBox));
 
         // Pagenumbers Page
 
@@ -1356,8 +1396,6 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_tableOfContentsCheckBox));
         tableOfContentsTitleField = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
                 dialogControlContainer.getControl(_tableOfContentsTitleField));
-        tableOfContentsLinesBetweenField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_tableOfContentsLinesBetweenField));
         tableOfContentsLevelListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_tableOfContentsLevelListBox));
         tableOfContentsFirstLineField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -1434,6 +1472,10 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, transcriptionInfoCheckBox)).getModel());
         preliminaryVolumeCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, preliminaryVolumeCheckBox)).getModel());
+        transcriptionInfoStyleListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, transcriptionInfoStyleListBox)).getModel());
+        volumeInfoStyleListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, volumeInfoStyleListBox)).getModel());
 
         // Languages Page
 
@@ -1506,6 +1548,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingLinesBelowField)).getModel());
         headingDontSplitCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, headingDontSplitCheckBox)).getModel());
+        headingKeepWithNextCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, headingKeepWithNextCheckBox)).getModel());
 
         // Lists Page
 
@@ -1523,6 +1567,10 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listLinesBelowField)).getModel());
         listLinesBetweenProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, listLinesBetweenField)).getModel());
+        listDontSplitCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listDontSplitCheckBox)).getModel());
+        listDontSplitItemsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, listDontSplitItemsCheckBox)).getModel());
 
         // Tables Page
 
@@ -1586,8 +1634,6 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsCheckBox)).getModel());
         tableOfContentsTitleFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsTitleField)).getModel());
-        tableOfContentsLinesBetweenFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsLinesBetweenField)).getModel());
         tableOfContentsLevelListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, tableOfContentsLevelListBox)).getModel());
         tableOfContentsFirstLineFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1708,6 +1754,8 @@ public class SettingsDialog implements XItemListener,
         paragraphInheritCheckBox.addItemListener(this);
         paragraphKeepWithNextCheckBox.addItemListener(this);
         paragraphDontSplitCheckBox.addItemListener(this);
+        paragraphWidowControlCheckBox.addItemListener(this);
+        paragraphOrphanControlCheckBox.addItemListener(this);
 
     }
 
@@ -1716,6 +1764,7 @@ public class SettingsDialog implements XItemListener,
         headingAlignmentListBox.addItemListener(this);
         headingLevelListBox.addItemListener(this);
         headingKeepWithNextCheckBox.addItemListener(this);
+        headingNewBraillePageCheckBox.addItemListener(this);
 
     }
 
@@ -1723,6 +1772,8 @@ public class SettingsDialog implements XItemListener,
 
         listAlignmentListBox.addItemListener(this);
         listLevelListBox.addItemListener(this);
+        listDontSplitCheckBox.addItemListener(this);
+        listDontSplitItemsCheckBox.addItemListener(this);
 
     }
 
@@ -1797,6 +1848,8 @@ public class SettingsDialog implements XItemListener,
         paragraphInheritCheckBox.removeItemListener(this);
         paragraphKeepWithNextCheckBox.removeItemListener(this);
         paragraphDontSplitCheckBox.removeItemListener(this);
+        paragraphWidowControlCheckBox.removeItemListener(this);
+        paragraphOrphanControlCheckBox.removeItemListener(this);
 
     }
 
@@ -1805,6 +1858,7 @@ public class SettingsDialog implements XItemListener,
         headingAlignmentListBox.removeItemListener(this);
         headingLevelListBox.removeItemListener(this);
         headingKeepWithNextCheckBox.removeItemListener(this);
+        headingNewBraillePageCheckBox.removeItemListener(this);
 
     }
 
@@ -1812,6 +1866,8 @@ public class SettingsDialog implements XItemListener,
 
         listAlignmentListBox.removeItemListener(this);
         listLevelListBox.removeItemListener(this);
+        listDontSplitCheckBox.removeItemListener(this);
+        listDontSplitItemsCheckBox.removeItemListener(this);
 
     }
 
@@ -1926,6 +1982,10 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_hyphenateLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_hardPageBreaksLabel));
         xFixedText.setText(L10N_hardPageBreaksLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_transcriptionInfoStyleLabel));
+        xFixedText.setText(L10N_transcriptionInfoStyleLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_volumeInfoStyleLabel));
+        xFixedText.setText(L10N_volumeInfoStyleLabel);
 
         // Languages Page
 
@@ -2023,6 +2083,10 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_listMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listPrefixLabel));
         xFixedText.setText(L10N_listPrefixLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listDontSplitLabel));
+        xFixedText.setText(L10N_listDontSplitLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_listDontSplitItemsLabel));
+        xFixedText.setText(L10N_listDontSplitItemsLabel);
 
         // Tables Page
 
@@ -2048,6 +2112,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_tableMarginLeftRightLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableColumnDelimiterLabel));
         xFixedText.setText(L10N_tableColumnDelimiterLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableDontSplitRowsLabel));
+        xFixedText.setText(L10N_tableDontSplitRowsLabel);
 
         // Pagenumbers Page
 
@@ -2086,8 +2152,6 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_tableOfContentsLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsTitleLabel));
         xFixedText.setText(L10N_tableOfContentsTitleLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsLinesBetweenLabel));
-        xFixedText.setText(L10N_tableOfContentsLinesBetweenLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsLevelLabel));
         xFixedText.setText(L10N_tableOfContentsLevelLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableOfContentsFirstLineLabel));
@@ -2133,6 +2197,8 @@ public class SettingsDialog implements XItemListener,
      */
     private void setDialogValues() throws com.sun.star.uno.Exception {
 
+        logger.entering("SettingsDialog", "setDialogValues");
+
         if (pagesEnabled[GENERAL_PAGE-1]) {
 
             transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
@@ -2148,6 +2214,13 @@ public class SettingsDialog implements XItemListener,
             preliminaryVolumeCheckBox.setState((short)(settings.getPreliminaryVolumeEnabled()?1:0));
             hyphenateCheckBox.setState((short)(settings.getHyphenate()?1:0));
             hardPageBreaksCheckBox.setState((short)(settings.getHardPageBreaks()?1:0));
+
+            for (int i=0; i<paragraphStyles.size(); i++) {
+                transcriptionInfoStyleListBox.addItem(paragraphStyles.get(i).getDisplayName(), (short)i);
+                volumeInfoStyleListBox.addItem(paragraphStyles.get(i).getDisplayName(), (short)i);
+            }
+            transcriptionInfoStyleListBox.selectItemPos((short)(paragraphStyles.indexOf(settings.getTranscriptionInfoStyle())), true);
+            volumeInfoStyleListBox.selectItemPos((short)(paragraphStyles.indexOf(settings.getVolumeInfoStyle())), true);
 
             for (int i=0;i<mainTranslationTables.size();i++) {
                 mainTranslationTableListBox.addItem(L10N_translationTables.get(mainTranslationTables.get(i)), (short)i);
@@ -2328,25 +2401,24 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[TABLES_PAGE-1]) {
 
-            currentTableColumn = settings.stairstepTableIsEnabled()?1:0;
-
+            currentTableColumn = 1;
             tableSimpleRadioButton.setState(!settings.stairstepTableIsEnabled());
             tableStairstepRadioButton.setState(settings.stairstepTableIsEnabled());
 
             tableLinesAboveField.setDecimalDigits((short)0);
             tableLinesAboveField.setMin((double)0);
             tableLinesAboveField.setMax((double)Integer.MAX_VALUE);
-            tableLinesAboveField.setValue((double)settings.getStyle("table").getLinesAbove());
+            tableLinesAboveField.setValue((double)settings.getTableStyle().getLinesAbove());
 
             tableLinesBelowField.setDecimalDigits((short)0);
             tableLinesBelowField.setMin((double)0);
             tableLinesBelowField.setMax((double)Integer.MAX_VALUE);
-            tableLinesBelowField.setValue((double)settings.getStyle("table").getLinesBelow());
+            tableLinesBelowField.setValue((double)settings.getTableStyle().getLinesBelow());
 
             tableLinesBetweenField.setDecimalDigits((short)0);
             tableLinesBetweenField.setMin((double)0);
             tableLinesBetweenField.setMax((double)Integer.MAX_VALUE);
-            tableLinesBetweenField.setValue((double)settings.getStyle("table").getLinesBetween());
+            tableLinesBetweenField.setValue((double)settings.getTableStyle().getLinesBetween());
 
             for (int i=0;i<9;i++) { tableColumnListBox.addItem(String.valueOf(i+1), (short)i); }
             tableColumnListBox.addItem("\u226510", (short)9);
@@ -2369,6 +2441,7 @@ public class SettingsDialog implements XItemListener,
             tableMarginLeftRightField.setMax((double)Integer.MAX_VALUE);
 
             tableColumnDelimiterField.setText(settings.getColumnDelimiter());
+            tableDontSplitRowsCheckBox.setState((short)(settings.getTableStyle().getDontSplitRows()?1:0));
 
             updateTablesPageFieldValues();
             updateTablesPageFieldProperties();
@@ -2403,11 +2476,6 @@ public class SettingsDialog implements XItemListener,
             tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
             tableOfContentsPrintPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbersInToc()?1:0));
 
-            tableOfContentsLinesBetweenField.setDecimalDigits((short)0);
-            tableOfContentsLinesBetweenField.setMin((double)0);
-            tableOfContentsLinesBetweenField.setMax((double)Integer.MAX_VALUE);
-            tableOfContentsLinesBetweenField.setValue((double)settings.getStyle("toc").getLinesBetween());
-
             for (int i=0;i<4;i++) { tableOfContentsLevelListBox.addItem((i<3)?String.valueOf(i+1):"4-10", (short)i); }
             tableOfContentsLevelListBox.selectItemPos((short)(currentTableOfContentsLevel-1), true);
 
@@ -2440,14 +2508,14 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[MATH_PAGE-1]) {
 
-            String key = null;
+            MathType key = null;
 
             for (int i=0;i<mathTypes.size();i++) {
-                key = mathTypes.get(i).name();
+                key = mathTypes.get(i);
                 if (L10N_math.containsKey(key)) {
                     mathListBox.addItem(L10N_math.get(key), (short)i);
                 } else {
-                    mathListBox.addItem(key, (short)i);
+                    mathListBox.addItem(key.name(), (short)i);
                 }
             }
             mathListBox.selectItemPos((short)mathTypes.indexOf(settings.getMath()), true);
@@ -2464,6 +2532,8 @@ public class SettingsDialog implements XItemListener,
         roadmapProperties.setPropertyValue("Complete", true);
         roadmapProperties.setPropertyValue("CurrentItemID", (short)currentPage);
 
+        logger.exiting("SettingsDialog", "setDialogValues");
+
     }
 
     /**
@@ -2472,19 +2542,9 @@ public class SettingsDialog implements XItemListener,
      */
     private void getDialogValues() {
 
-        if (pagesVisited[GENERAL_PAGE-1]) {
+        logger.entering("SettingsDialog", "getDialogValues");
 
-            settings.setDots((mainEightDotsCheckBox.getState()==(short)1)?8:6, settings.getMainLanguage());
-            settings.setCreator(creatorField.getText());
-            settings.setTranscribersNotesPageTitle(transcribersNotesPageField.getText());
-            settings.setTranscriptionInfoEnabled(transcriptionInfoCheckBox.getState() == (short) 1);
-            settings.setVolumeInfoEnabled(volumeInfoCheckBox.getState() == (short) 1);
-            settings.setTranscribersNotesPageEnabled(transcribersNotesPageCheckBox.getState() == (short) 1);
-            settings.setPreliminaryVolumeEnabled(preliminaryVolumeCheckBox.getState() == (short) 1);
-            settings.setHyphenate(hyphenateCheckBox.getState() == (short) 1);
-            settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
-
-        }
+        if (pagesVisited[GENERAL_PAGE-1]) { saveGeneralPageFieldValues(); }
 
         if (pagesVisited[LANGUAGES_PAGE-1]) {}
 
@@ -2498,52 +2558,40 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesVisited[TABLES_PAGE-1]) {
 
-            Style style = settings.getStyle("table");
-
+            TableStyle style = settings.getTableStyle();
             style.setLinesAbove((int)tableLinesAboveField.getValue());
             style.setLinesBelow((int)tableLinesBelowField.getValue());
             style.setLinesBetween((int)tableLinesBetweenField.getValue());
+            style.setDontSplitRows(tableDontSplitRowsCheckBox.getState() == (short)1);
+
             saveTablesPageFieldValues();
-
         }
 
-        if (pagesVisited[PAGENUMBERS_PAGE-1]) {
-
-            settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?
-                PageNumberFormat.P:PageNumberFormat.ROMAN));
-            settings.setBeginningBraillePageNumber((int)beginningBraillePageNumberField.getValue());
-            settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
-            settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
-            settings.setIgnoreEmptyPages(ignoreEmptyPagesCheckBox.getState() == (short) 1);
-            settings.setMergeUnnumberedPages(mergeUnnumberedPagesCheckBox.getState() == (short) 1);
-            settings.setPageNumberAtTopOnSeparateLine(numbersAtTopOnSepLineCheckBox.getState() == (short) 1);
-            settings.setPageNumberAtBottomOnSeparateLine(numbersAtBottomOnSepLineCheckBox.getState() == (short) 1);
-
-        }
+        if (pagesVisited[PAGENUMBERS_PAGE-1]) { savePageNumbersPageFieldValues(); }
 
         if (pagesVisited[TOC_PAGE-1]) {
 
             settings.setTableOfContentTitle(tableOfContentsTitleField.getText());
             settings.setPrintPageNumbersInToc(tableOfContentsPrintPageNumbersCheckBox.getState()==(short)1);
             settings.setBraillePageNumbersInToc(tableOfContentsBraillePageNumbersCheckBox.getState()==(short)1);
-            settings.getStyle("toc").setLinesBetween((int)tableOfContentsLinesBetweenField.getValue());            
-            saveTableOfContentsPageFieldValues();
 
+            saveTableOfContentsPageFieldValues();
         }
 
         if (pagesVisited[SPECIAL_SYMBOLS_PAGE-1]){
 
             settings.setSpecialSymbolsListTitle(specialSymbolsListField.getText());
             settings.setSpecialSymbolsListEnabled(specialSymbolsListCheckBox.getState() == (short) 1);
-            saveSpecialSymbolsPageFieldValues();
 
+            saveSpecialSymbolsPageFieldValues();
         }
 
         if (pagesVisited[MATH_PAGE-1]) {
 
             settings.setMath(mathTypes.get(mathListBox.getSelectedItemPos()));
-
         }
+
+        logger.exiting("SettingsDialog", "getDialogValues");
     }
 
     /**
@@ -2581,6 +2629,8 @@ public class SettingsDialog implements XItemListener,
 
         mainEightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.getSupportedDots(settings.getMainLanguage()).size()>1);
         creatorFieldProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoEnabled());
+        transcriptionInfoStyleListBoxProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoEnabled());
+        volumeInfoStyleListBoxProperties.setPropertyValue("Enabled", settings.getVolumeInfoEnabled());
         transcribersNotesPageFieldProperties.setPropertyValue("Enabled", settings.getTranscribersNotesPageEnabled());
 
     }
@@ -2627,9 +2677,9 @@ public class SettingsDialog implements XItemListener,
         paragraphKeepWithNextCheckBoxProperties.setPropertyValue("Enabled", !inherit);
         paragraphDontSplitCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getKeepWithNext());
         paragraphWidowControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
-        paragraphOrphanControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
-        paragraphWidowControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit() && style.getWidowControl() > 1);
-        paragraphOrphanControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit()&& style.getOrphanControl() > 1);
+        paragraphOrphanControlCheckBoxProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit());
+        paragraphWidowControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit() && style.getWidowControlEnabled());
+        paragraphOrphanControlFieldProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit()&& style.getOrphanControlEnabled());
 
     }
 
@@ -2647,15 +2697,23 @@ public class SettingsDialog implements XItemListener,
         headingAlignmentListBoxProperties.setPropertyValue("Enabled", !bana);
         headingLinesAboveProperties.setPropertyValue("Enabled", !bana);
         headingLinesBelowProperties.setPropertyValue("Enabled", !bana);
-        headingDontSplitCheckBoxProperties.setPropertyValue("Enabled", !style.getKeepWithNext());
-
+        headingKeepWithNextCheckBoxProperties.setPropertyValue("Enabled", !style.getNewBraillePage());
+        headingDontSplitCheckBoxProperties.setPropertyValue("Enabled", !style.getNewBraillePage() &&
+                                                                       !style.getKeepWithNext());
+        
     }
 
     private void updateListsPageFieldProperties() throws com.sun.star.uno.Exception {
 
-        boolean left = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.LEFT);
-        boolean centered = (settings.getStyle("list_" + currentListLevel).getAlignment() == Alignment.CENTERED);
+        ListStyle style = listStyles.get(currentListLevel-1);
+
+        boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
+        boolean dontSplitEnabled = true;
+        if (style.getParentLevel() != null) {
+            dontSplitEnabled = !style.getParentLevel().getDontSplitItems();
+        }
 
         listFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
         listRunoversFieldProperties.setPropertyValue("Enabled", left && !bana);
@@ -2664,6 +2722,8 @@ public class SettingsDialog implements XItemListener,
         listLinesAboveProperties.setPropertyValue("Enabled", !bana);
         listLinesBelowProperties.setPropertyValue("Enabled", !bana);
         listLinesBetweenProperties.setPropertyValue("Enabled", !bana);
+        listDontSplitCheckBoxProperties.setPropertyValue("Enabled", dontSplitEnabled);
+        listDontSplitItemsCheckBoxProperties.setPropertyValue("Enabled", !style.getDontSplit());
 
     }
 
@@ -2672,11 +2732,13 @@ public class SettingsDialog implements XItemListener,
         tableColumnListBoxProperties.setPropertyValue("Enabled", settings.stairstepTableIsEnabled());
         tableColumnDelimiterFieldProperties.setPropertyValue("Enabled", !settings.stairstepTableIsEnabled());
         tableColumnDelimiterButtonProperties.setPropertyValue("Enabled", !settings.stairstepTableIsEnabled());
-        
-        boolean left = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
-                                .getAlignment() == Alignment.LEFT);
-        boolean centered = (settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn))
-                                .getAlignment() == Alignment.CENTERED);
+
+        Style style = settings.stairstepTableIsEnabled()?
+                            settings.getTableStyle().getColumn(currentTableColumn):
+                            settings.getTableStyle();
+
+        boolean left = (style.getAlignment() == Alignment.LEFT);
+        boolean centered = (style.getAlignment() == Alignment.CENTERED);
         boolean bana = (settings.getBrailleRules()==BrailleRules.BANA);
 
         tableFirstLineFieldProperties.setPropertyValue("Enabled", left && !bana);
@@ -2734,7 +2796,6 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsLevelListBoxProperties.setPropertyValue("Enabled", enabled);
         tableOfContentsLineFillFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsLineFillButtonProperties.setPropertyValue("Enabled", enabled && !bana);
-        tableOfContentsLinesBetweenFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsFirstLineFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", enabled && !bana);
         tableOfContentsBraillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", enabled && settings.getBraillePageNumbers());
@@ -2780,6 +2841,22 @@ public class SettingsDialog implements XItemListener,
         characterCapitalsListBox.selectItemPos((short)(typefaceOptions.indexOf(style.getCapitals())), true);
 
     }
+
+    private void saveGeneralPageFieldValues() {
+
+        settings.setDots((mainEightDotsCheckBox.getState()==(short)1)?8:6, settings.getMainLanguage());
+        settings.setCreator(creatorField.getText());
+        settings.setTranscribersNotesPageTitle(transcribersNotesPageField.getText());
+        settings.setTranscriptionInfoEnabled(transcriptionInfoCheckBox.getState() == (short) 1);
+        settings.setVolumeInfoEnabled(volumeInfoCheckBox.getState() == (short) 1);
+        settings.setTranscribersNotesPageEnabled(transcribersNotesPageCheckBox.getState() == (short) 1);
+        settings.setPreliminaryVolumeEnabled(preliminaryVolumeCheckBox.getState() == (short) 1);
+        settings.setHyphenate(hyphenateCheckBox.getState() == (short) 1);
+        settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
+        settings.setTranscriptionInfoStyle(paragraphStyles.get(transcriptionInfoStyleListBox.getSelectedItemPos()));
+        settings.setVolumeInfoStyle(paragraphStyles.get(volumeInfoStyleListBox.getSelectedItemPos()));
+
+    }
     
     private void saveTypefacePageFieldValues() {
 
@@ -2796,22 +2873,20 @@ public class SettingsDialog implements XItemListener,
     private void updateParagraphsPageFieldValues() {
 
         ParagraphStyle style = paragraphStyles.get(selectedParagraphStylePos);
-        boolean left = (style.getAlignment() == Alignment.LEFT);
-        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         paragraphInheritCheckBox.setState((short)(style.getInherit()?1:0));
         paragraphParentField.setText((style.getParentStyle() != null)?style.getParentStyle().getDisplayName():"");
         paragraphLinesAboveField.setValue((double)style.getLinesAbove());
         paragraphLinesBelowField.setValue((double)style.getLinesBelow());
         paragraphAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
-        paragraphFirstLineField.setValue((double)(left?style.getFirstLine():0));
-        paragraphRunoversField.setValue((double)(left?style.getRunovers():0));
-        paragraphMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
+        paragraphFirstLineField.setValue((double)style.getFirstLine());
+        paragraphRunoversField.setValue((double)style.getRunovers());
+        paragraphMarginLeftRightField.setValue((double)style.getMarginLeftRight());
         paragraphKeepEmptyCheckBox.setState((short)(style.getKeepEmptyParagraphs()?1:0));
         paragraphKeepWithNextCheckBox.setState((short)(style.getKeepWithNext()?1:0));
         paragraphDontSplitCheckBox.setState((short)(style.getDontSplit()?1:0));
-        paragraphWidowControlCheckBox.setState((short)(style.getWidowControl()>1?1:0));
-        paragraphOrphanControlCheckBox.setState((short)(style.getOrphanControl()>1?1:0));
+        paragraphWidowControlCheckBox.setState((short)(style.getWidowControlEnabled()?1:0));
+        paragraphOrphanControlCheckBox.setState((short)(style.getOrphanControlEnabled()?1:0));
         paragraphWidowControlField.setValue((double)Math.max(2,style.getWidowControl()));
         paragraphOrphanControlField.setValue((double)Math.max(2,style.getOrphanControl()));
 
@@ -2825,6 +2900,12 @@ public class SettingsDialog implements XItemListener,
             style.setLinesAbove((int)paragraphLinesAboveField.getValue());
             style.setLinesBelow((int)paragraphLinesBelowField.getValue());
             style.setKeepEmptyParagraphs(paragraphKeepEmptyCheckBox.getState()==(short)1);
+            if (style.getWidowControlEnabled()) {
+                style.setWidowControl((int)paragraphWidowControlField.getValue());
+            }
+            if (style.getOrphanControlEnabled()) {
+                style.setOrphanControl((int)paragraphOrphanControlField.getValue());
+            }
             if (style.getAlignment() == Alignment.LEFT) {
                 style.setFirstLine((int)paragraphFirstLineField.getValue());
                 style.setRunovers((int)paragraphRunoversField.getValue());
@@ -2837,15 +2918,13 @@ public class SettingsDialog implements XItemListener,
     private void updateHeadingsPageFieldValues() {
 
         HeadingStyle style = headingStyles.get(selectedHeadingStylePos);
-        boolean left = (style.getAlignment() == Alignment.LEFT);
-        boolean centered = (style.getAlignment() == Alignment.CENTERED);
 
         headingLinesAboveField.setValue((double)style.getLinesAbove());
         headingLinesBelowField.setValue((double)style.getLinesBelow());
         headingAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
-        headingFirstLineField.setValue((double)(left?style.getFirstLine():0));
-        headingRunoversField.setValue((double)(left?style.getRunovers():0));
-        headingMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
+        headingFirstLineField.setValue((double)style.getFirstLine());
+        headingRunoversField.setValue((double)style.getRunovers());
+        headingMarginLeftRightField.setValue((double)style.getMarginLeftRight());
         headingNewBraillePageCheckBox.setState((short)(style.getNewBraillePage()?1:0));
         headingKeepWithNextCheckBox.setState((short)(style.getKeepWithNext()?1:0));
         headingDontSplitCheckBox.setState((short)(style.getDontSplit()?1:0));
@@ -2858,7 +2937,6 @@ public class SettingsDialog implements XItemListener,
         
         style.setLinesAbove((int)headingLinesAboveField.getValue());
         style.setLinesBelow((int)headingLinesBelowField.getValue());
-        style.setNewBraillePage(headingNewBraillePageCheckBox.getState()==(short)1);
         style.setDontSplit(headingDontSplitCheckBox.getState()==(short)1);
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)headingFirstLineField.getValue());
@@ -2870,54 +2948,57 @@ public class SettingsDialog implements XItemListener,
 
     private void updateListsPageFieldValues() {
 
-        Style style = settings.getStyle("list_" + currentListLevel);
-        boolean left = (style.getAlignment() == Alignment.LEFT);
-        boolean centered = (style.getAlignment() == Alignment.CENTERED);
+        ListStyle style = listStyles.get(currentListLevel-1);
 
         listAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
-        listFirstLineField.setValue((double)(left?style.getFirstLine():0));
-        listRunoversField.setValue((double)(left?style.getRunovers():0));
-        listMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
+        listFirstLineField.setValue((double)style.getFirstLine());
+        listRunoversField.setValue((double)style.getRunovers());
+        listMarginLeftRightField.setValue((double)style.getMarginLeftRight());
         listLinesAboveField.setValue((double)style.getLinesAbove());
         listLinesBelowField.setValue((double)style.getLinesBelow());
         listLinesBetweenField.setValue((double)style.getLinesBetween());
+        listDontSplitCheckBox.setState((short)(style.getDontSplit()?1:0));
+        listDontSplitItemsCheckBox.setState((short)(style.getDontSplitItems()?1:0));
         listPrefixField.setText(style.getPrefix());
 
     }
 
     private void saveListsPageFieldValues() {
 
-        Style style = settings.getStyle("list_" + currentListLevel);
+        ListStyle style = listStyles.get(currentListLevel-1);
         
         style.setLinesAbove((int)listLinesAboveField.getValue());
         style.setLinesBelow((int)listLinesBelowField.getValue());
         style.setLinesBetween((int)listLinesBetweenField.getValue());
+        style.setDontSplit(listDontSplitCheckBox.getState() == (short)1);
+        style.setDontSplitItems(listDontSplitItemsCheckBox.getState() == (short)1);
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)listFirstLineField.getValue());
             style.setRunovers((int)listRunoversField.getValue());
         } else if (style.getAlignment() == Alignment.CENTERED) {
             style.setMarginLeftRight((int)listMarginLeftRightField.getValue());
         }
-
     }
 
     private void updateTablesPageFieldValues() {
 
-        Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
-        boolean left = (style.getAlignment() == Alignment.LEFT);
-        boolean centered = (style.getAlignment() == Alignment.CENTERED);
+        Style style = settings.stairstepTableIsEnabled()?
+                            settings.getTableStyle().getColumn(currentTableColumn):
+                            settings.getTableStyle();
 
         tableAlignmentListBox.selectItemPos((short)(alignmentOptions.indexOf(style.getAlignment())), true);
-        tableFirstLineField.setValue((double)(left?style.getFirstLine():0));
-        tableRunoversField.setValue((double)(left?style.getRunovers():0));
-        tableMarginLeftRightField.setValue((double)(centered?style.getMarginLeftRight():0));
-        tableColumnListBox.selectItemPos((short)(Math.max(0,currentTableColumn-1)), true);
+        tableFirstLineField.setValue((double)style.getFirstLine());
+        tableRunoversField.setValue((double)style.getRunovers());
+        tableMarginLeftRightField.setValue((double)style.getMarginLeftRight());
+        tableColumnListBox.selectItemPos((short)(currentTableColumn-1), true);
 
     }
 
     private void saveTablesPageFieldValues() {
 
-        Style style = settings.getStyle("table" + ((currentTableColumn>0)?"_" + currentTableColumn:""));
+        Style style = settings.stairstepTableIsEnabled()?
+                            settings.getTableStyle().getColumn(currentTableColumn):
+                            settings.getTableStyle();
 
         if (style.getAlignment() == Alignment.LEFT) {
             style.setFirstLine((int)tableFirstLineField.getValue());
@@ -2945,10 +3026,24 @@ public class SettingsDialog implements XItemListener,
 
     }
 
+    private void savePageNumbersPageFieldValues() {
+
+        settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?
+            PageNumberFormat.P:PageNumberFormat.ROMAN));
+        settings.setBeginningBraillePageNumber((int)beginningBraillePageNumberField.getValue());
+        settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
+        settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
+        settings.setIgnoreEmptyPages(ignoreEmptyPagesCheckBox.getState() == (short) 1);
+        settings.setMergeUnnumberedPages(mergeUnnumberedPagesCheckBox.getState() == (short) 1);
+        settings.setPageNumberAtTopOnSeparateLine(numbersAtTopOnSepLineCheckBox.getState() == (short) 1);
+        settings.setPageNumberAtBottomOnSeparateLine(numbersAtBottomOnSepLineCheckBox.getState() == (short) 1);
+
+    }
+
     private void updateTableOfContentsPageFieldValues() {
 
         tableOfContentsBraillePageNumbersCheckBox.setState((short)(settings.getBraillePageNumbersInToc()?1:0));
-        Style style = settings.getStyle("toc_" + currentTableOfContentsLevel);
+        Style style = settings.getTocStyle().getLevel(currentTableOfContentsLevel);
         tableOfContentsFirstLineField.setValue(style.getFirstLine());
         tableOfContentsRunoversField.setValue(style.getRunovers());
 
@@ -2956,7 +3051,7 @@ public class SettingsDialog implements XItemListener,
 
     private void saveTableOfContentsPageFieldValues() {
 
-        Style style = settings.getStyle("toc_" + currentTableOfContentsLevel);
+        Style style = settings.getTocStyle().getLevel(currentTableOfContentsLevel);
         style.setFirstLine((int)tableOfContentsFirstLineField.getValue());
         style.setRunovers((int)tableOfContentsRunoversField.getValue());
 
@@ -3111,11 +3206,10 @@ public class SettingsDialog implements XItemListener,
                     if (pagesEnabled[HEADINGS_PAGE-1])   { updateHeadingsPageFieldValues();   }
                     if (pagesEnabled[LISTS_PAGE-1])      { updateListsPageFieldValues();      }
                     if (pagesEnabled[TABLES_PAGE-1]) {
-                        if (currentTableColumn==0) {
+                        if (!settings.stairstepTableIsEnabled()) {
                             saveTablesPageFieldValues();
-                            currentTableColumn = 1;
                         }
-                        Style style = settings.getStyle("table");
+                        TableStyle style = settings.getTableStyle();
                         tableLinesAboveField.setValue((double)style.getLinesAbove());
                         tableLinesBelowField.setValue((double)style.getLinesBelow());
                         tableLinesBetweenField.setValue((double)style.getLinesBetween());
@@ -3126,7 +3220,6 @@ public class SettingsDialog implements XItemListener,
                     if (pagesEnabled[PAGENUMBERS_PAGE-1]) { updatePageNumbersPageFieldValues(); }
                     if (pagesEnabled[TOC_PAGE-1])         {
                         tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
-                        tableOfContentsLinesBetweenField.setValue((double)settings.getStyle("toc").getLinesBetween());
                         updateTableOfContentsPageFieldValues();
                     }
                 }
@@ -3238,6 +3331,10 @@ public class SettingsDialog implements XItemListener,
                             paragraphStyles.get(selectedParagraphStylePos).setDontSplit(paragraphDontSplitCheckBox.getState()==(short)1);
                         } else if (source.equals(paragraphKeepWithNextCheckBox)) {
                             paragraphStyles.get(selectedParagraphStylePos).setKeepWithNext(paragraphKeepWithNextCheckBox.getState()==(short)1);
+                        } else if (source.equals(paragraphWidowControlCheckBox)) {
+                            paragraphStyles.get(selectedParagraphStylePos).setWidowControlEnabled(paragraphWidowControlCheckBox.getState()==(short)1);
+                        } else if (source.equals(paragraphOrphanControlCheckBox)) {
+                            paragraphStyles.get(selectedParagraphStylePos).setOrphanControlEnabled(paragraphOrphanControlCheckBox.getState()==(short)1);
                         }
 
                         updateParagraphsPageFieldValues();
@@ -3257,6 +3354,8 @@ public class SettingsDialog implements XItemListener,
                                     alignmentOptions.get(headingAlignmentListBox.getSelectedItemPos()));
                         } else if (source.equals(headingKeepWithNextCheckBox)) {
                             headingStyles.get(selectedHeadingStylePos).setKeepWithNext(headingKeepWithNextCheckBox.getState()==(short)1);
+                        } else if (source.equals(headingNewBraillePageCheckBox)) {
+                            headingStyles.get(selectedHeadingStylePos).setNewBraillePage(headingNewBraillePageCheckBox.getState()==(short)1);
                         }
 
                         updateHeadingsPageFieldValues();
@@ -3272,8 +3371,12 @@ public class SettingsDialog implements XItemListener,
                         if (source.equals(listLevelListBox)) {
                             currentListLevel = listLevelListBox.getSelectedItemPos() + 1;                            
                         } else if (source.equals(listAlignmentListBox)) {
-                            settings.getStyle("list_" + currentListLevel).setAlignment(
+                            listStyles.get(currentListLevel-1).setAlignment(
                                     alignmentOptions.get(listAlignmentListBox.getSelectedItemPos()));
+                        } else if (source.equals(listDontSplitCheckBox)) {
+                            listDontSplitCheckBox.setState((short)(listStyles.get(currentListLevel-1).getDontSplit()?1:0));
+                        } else if (source.equals(listDontSplitItemsCheckBox)) {
+                            listDontSplitItemsCheckBox.setState((short)(listStyles.get(currentListLevel-1).getDontSplitItems()?1:0));
                         }
 
                         updateListsPageFieldValues();
@@ -3292,17 +3395,17 @@ public class SettingsDialog implements XItemListener,
                             if (!settings.stairstepTableIsEnabled()) {
                                 tableSimpleRadioButton.setState(false);
                                 settings.setStairstepTable(true);
-                                currentTableColumn = 1;
                             } else {
                                 tableStairstepRadioButton.setState(false);
                                 settings.setStairstepTable(false);
-                                currentTableColumn = 0;
                             }
                         } else if (source.equals(tableColumnListBox)) {
                             currentTableColumn = tableColumnListBox.getSelectedItemPos() + 1;
                         } else if (source.equals(tableAlignmentListBox)) {
-                            settings.getStyle("table" + ((currentTableColumn==0)?"":"_" + currentTableColumn)).setAlignment(
-                                    alignmentOptions.get(tableAlignmentListBox.getSelectedItemPos()));
+                            Style style = settings.stairstepTableIsEnabled()?
+                                          settings.getTableStyle().getColumn(currentTableColumn):
+                                          settings.getTableStyle();
+                            style.setAlignment(alignmentOptions.get(tableAlignmentListBox.getSelectedItemPos()));
                         }
 
                         updateTablesPageFieldValues();
@@ -3466,11 +3569,13 @@ public class SettingsDialog implements XItemListener,
                     case LANGUAGES_PAGE:
                     case TYPEFACE_PAGE:
                     case PARAGRAPHS_PAGE:
-                    case HEADINGS_PAGE: break;
+                    case HEADINGS_PAGE:
+                        break;
+
                     case LISTS_PAGE:
 
                         if (source.equals(listPrefixButton)) {
-                            Style style = settings.getStyle("list_" + currentListLevel);
+                            ListStyle style = listStyles.get(currentListLevel-1);
                             InsertDialog insertBrailleDialog = new InsertDialog(xContext);
                             insertBrailleDialog.setBrailleCharacters(style.getPrefix());
                             if (insertBrailleDialog.execute()) {

@@ -75,10 +75,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
+import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import com.versusoft.packages.jodl.RomanNumbering;
 import org_pef_text.AbstractTable;
 import org_pef_text.TableFactory;
-import org_pef_text.TableFactory.TableType;
 
 
 /**
@@ -95,9 +95,9 @@ public class PreviewDialog implements XItemListener,
     private static final String FONT_8_DOT = "odt2braille 8 dot";
     private static String FONT_DOTS;
 
-    private static final short DEFAULT_FONT_SIZE = 18;
-    private static final short MIN_FONTSIZE = 15;
-    private static final short MAX_FONTSIZE = 30;
+    private static final short DEFAULT_FONT_SIZE = 20;
+    private static final short MIN_FONTSIZE = 20;
+    private static final short MAX_FONTSIZE = 50;
 
     private static final int X_BACK_BUTTON = 2*7;
     private static final int X_VOLUMES_LISTBOX = 2*38;
@@ -197,9 +197,8 @@ public class PreviewDialog implements XItemListener,
         this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
         this.beginningBraillePageNumber = settings.getBeginningBraillePageNumber();
 
-        if (settings.getTable() == TableType.BRF ||
-            settings.getTable() == TableType.ES_NEW ||
-            settings.getTable() == TableType.ES_OLD) {
+        if (settings.getBrailleFileType() == BrailleFileType.BRF ||
+            settings.getBrailleFileType() == BrailleFileType.BRA) {
             this.table = new TableFactory().newTable(settings.getTable());
         }
 

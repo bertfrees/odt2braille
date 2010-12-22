@@ -109,9 +109,9 @@
 	
 	<!-- copy windows binaries -->
 	<target name="copy-binaries-win" if="windows_x86">	
-		<copy file="${liblouis.bin.dir}${file.separator}xml2brl.exe" todir="${build.oxt.dir}${file.separator}${liblouis.bin.dir}" />
-		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.dir}">
-			<fileset dir="${liblouis.bin.dir}">
+		<copy file="${liblouis.bin.win.dir}${file.separator}xml2brl.exe" todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}" />
+		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}">
+			<fileset dir="${liblouis.bin.win.dir}">
 				<filename name="*.dll"/>
 			</fileset>
         </copy>
@@ -119,9 +119,9 @@
 	
 	<!-- copy mac os binaries -->	
 	<target name="copy-binaries-mac" if="macosx_x86">	
-		<copy file="${liblouis.bin.dir}${file.separator}xml2brl" todir="${build.oxt.dir}${file.separator}${liblouis.bin.dir}" />
-		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.dir}">
-			<fileset dir="${liblouis.bin.dir}">
+		<copy file="${liblouis.bin.mac.dir}${file.separator}xml2brl" todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}" />
+		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}">
+			<fileset dir="${liblouis.bin.mac.dir}">
 				<filename name="*.dylib"/>
 			</fileset>
         </copy>

@@ -54,6 +54,9 @@ import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
 import be.docarch.odt2braille.HeadingStyle;
+import be.docarch.odt2braille.ListStyle;
+import be.docarch.odt2braille.TableStyle;
+import be.docarch.odt2braille.TocStyle;
 import be.docarch.odt2braille.CharacterStyle;
 import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 import org_pef_text.pef2text.Paper.PaperSize;
@@ -98,6 +101,8 @@ public class SettingsIO {
     private static String transcriptionInfoEnabledProperty =     "[BRL]TranscriptionInfo";
     private static String creatorProperty =                      "[BRL]Creator";
     private static String volumeInfoEnabledProperty =            "[BRL]VolumeInfo";
+    private static String transcriptionInfoStyleProperty =       "[BRL]TranscriptionInfoStyle";
+    private static String volumeInfoStyleProperty =              "[BRL]VolumeInfoStyle";
     private static String specialSymbolsListEnabledProperty =    "[BRL]ListOfSpecialSymbols";
     private static String specialSymbolsListTitleProperty =      "[BRL]ListOfSpecialSymbolsTitle";
     private static String transcribersNotesPageEnabledProperty = "[BRL]TNPage";
@@ -121,7 +126,13 @@ public class SettingsIO {
     private static String keepEmptyParagraphsProperty =          "[BRL]KeepEmptyParagraphs";
     private static String newBraillePage =                       "[BRL]NewBraillePage";
     private static String dontSplitProperty =                    "[BRL]DontSplit";
+    private static String dontSplitTableRowsProperty =           "[BRL]DontSplitTableRows";
+    private static String dontSplitItemsProperty =               "[BRL]DontSplitItems";
     private static String keepWithNextProperty =                 "[BRL]KeepWithNext";
+    private static String orphanControlEnabledProperty =         "[BRL]OrphanControlEnabled";
+    private static String widowControlEnabledProperty =          "[BRL]WidowControlEnabled";
+    private static String orphanControlProperty =                "[BRL]OrphanControl";
+    private static String widowControlProperty =                 "[BRL]WidowControl";
     private static String boldProperty =                         "[BRL]Boldface";
     private static String italicProperty =                       "[BRL]Italic";
     private static String underlineProperty =                    "[BRL]Underline";
@@ -146,11 +157,6 @@ public class SettingsIO {
     private static String hyphenateProperty =                    "[BRL]Hyphenation";
     private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
     private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
-    
-    private String styleNames[] = { 
-        "toc", "toc_1", "toc_2", "toc_3", "toc_4",
-        "list_1", "list_2", "list_3", "list_4", "list_5", "list_6", "list_7", "list_8", "list_9", "list_10",
-        "table", "table_1", "table_2", "table_3", "table_4", "table_5", "table_6", "table_7", "table_8", "table_9", "table_10" };
 
     // Export settings
 
@@ -165,10 +171,12 @@ public class SettingsIO {
     // Emboss settings
 
     private static String embosserProperty =                     "[BRL]Embosser";
+    private static String saddleStitchProperty =                 "[BRL]SaddleStitch";
+    private static String sheetsPerQuireProperty =               "[BRL]SheetsPerQuire";
+    private static String zFoldingProperty =                     "[BRL]ZFolding";
     private static String paperSizeProperty =                    "[BRL]PaperSize";
     private static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
     private static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
-    private static String mirrorAlignProperty =                  "[BRL]MirrorAlign";
     private static String marginLeftProperty =                   "[BRL]MarginLeft";
     private static String marginTopProperty =                    "[BRL]MarginTop";
     private static String embossTableProperty =                  "[BRL]EmbossCharacterSet";
@@ -299,6 +307,16 @@ public class SettingsIO {
         ArrayList<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
         ArrayList<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
         ArrayList<HeadingStyle> headingStyles = loadedSettings.getHeadingStyles();
+        ArrayList<ListStyle> listStyles = loadedSettings.getListStyles();
+        TableStyle tableStyle = loadedSettings.getTableStyle();
+        TocStyle tocStyle = loadedSettings.getTocStyle();
+        ParagraphStyle paraStyle = null;
+        CharacterStyle charStyle = null;
+        HeadingStyle headStyle = null;
+        ListStyle listStyle = null;
+        Style style = null;
+        String styleName = null;
+        int level = 0;
 
         for (int i=0;i<languages.size();i++) {
             if ((s = getStringProperty(languageProperty + "_" + languages.get(i))) != null) {
@@ -311,43 +329,11 @@ public class SettingsIO {
                 loadedSettings.setDots(d.intValue(), languages.get(i));
             }
         }
-        
-        for (int i=0;i<styleNames.length;i++) {
-
-            String styleName = styleNames[i];
-            Style style = loadedSettings.getStyle(styleName);
-            
-            if (!(d = getDoubleProperty(firstLineProperty + "_" + styleName)).isNaN()) {
-                style.setFirstLine(d.intValue());
-            }
-            if (!((d = getDoubleProperty(runoversProperty + "_" + styleName)).isNaN())) {
-                style.setRunovers(d.intValue());
-            }
-            if (!((d = getDoubleProperty(marginLeftRightProperty + "_" + styleName)).isNaN())) {
-                style.setMarginLeftRight(d.intValue());
-            }
-            if (!((d = getDoubleProperty(linesAboveProperty + "_" + styleName)).isNaN())) {
-                style.setLinesAbove(d.intValue());
-            }
-            if (!((d = getDoubleProperty(linesBelowProperty + "_" + styleName)).isNaN())) {
-                style.setLinesBelow(d.intValue());
-            }
-            if (!((d = getDoubleProperty(linesBetweenProperty + "_" + styleName)).isNaN())) {
-                style.setLinesBetween(d.intValue());
-            }
-            if ((s = getStringProperty(alignmentProperty + "_" + styleName)) != null) {
-                try {
-                    style.setAlignment(Alignment.valueOf(s));
-                } catch (IllegalArgumentException ex) {
-                    logger.log(Level.SEVERE, null, s + " is no valid alignment option");
-                }
-            }
-        }
 
         for (int i=0;i<paragraphStyles.size();i++) {
 
-            ParagraphStyle paraStyle = paragraphStyles.get(i);
-            String styleName = paraStyle.getName();
+            paraStyle = paragraphStyles.get(i);
+            styleName = paraStyle.getName();
 
             if (!paraStyle.getAutomatic()) {
 
@@ -382,6 +368,18 @@ public class SettingsIO {
                     if ((b = getBooleanProperty(keepEmptyParagraphsProperty + "_paragraph_" + styleName)) != null) {
                         paraStyle.setKeepEmptyParagraphs(b);
                     }
+                    if ((b = getBooleanProperty(widowControlEnabledProperty + "_paragraph_" + styleName)) != null) {
+                        paraStyle.setWidowControlEnabled(b);
+                    }
+                    if ((b = getBooleanProperty(orphanControlEnabledProperty + "_paragraph_" + styleName)) != null) {
+                        paraStyle.setOrphanControlEnabled(b);
+                    }
+                    if (!((d = getDoubleProperty(widowControlProperty + "_paragraph_" + styleName)).isNaN())) {
+                        paraStyle.setWidowControl(d.intValue());
+                    }
+                    if (!((d = getDoubleProperty(orphanControlProperty + "_paragraph_" + styleName)).isNaN())) {
+                        paraStyle.setOrphanControl(d.intValue());
+                    }
                     if ((b = getBooleanProperty(dontSplitProperty + "_paragraph_" + styleName)) != null) {
                         paraStyle.setDontSplit(b);
                     }
@@ -394,8 +392,8 @@ public class SettingsIO {
 
         for (int i=0;i<characterStyles.size();i++) {
 
-            CharacterStyle charStyle = characterStyles.get(i);
-            String styleName = charStyle.getName();
+            charStyle = characterStyles.get(i);
+            styleName = charStyle.getName();
 
             if ((b = getBooleanProperty(inheritProperty + "_text_" + styleName)) != null) {
                 charStyle.setInherit(b);
@@ -436,8 +434,8 @@ public class SettingsIO {
 
         for (int i=0;i<headingStyles.size();i++) {
 
-            HeadingStyle headStyle = headingStyles.get(i);
-            int level = headStyle.getLevel();
+            headStyle = headingStyles.get(i);
+            level = headStyle.getLevel();
 
             if (!(d = getDoubleProperty(firstLineProperty + "_heading_" + level)).isNaN()) {
                 headStyle.setFirstLine(d.intValue());
@@ -454,9 +452,6 @@ public class SettingsIO {
             if (!((d = getDoubleProperty(linesBelowProperty + "_heading_" + level)).isNaN())) {
                 headStyle.setLinesBelow(d.intValue());
             }
-            if (!((d = getDoubleProperty(linesBetweenProperty + "_heading_" + level)).isNaN())) {
-                headStyle.setLinesBetween(d.intValue());
-            }
             if ((s = getStringProperty(alignmentProperty + "_heading_" + level)) != null) {
                 try {
                     headStyle.setAlignment(Alignment.valueOf(s));
@@ -464,17 +459,147 @@ public class SettingsIO {
                     logger.log(Level.SEVERE, null, s + " is no valid alignment option");
                 }
             }
-            if ((b = getBooleanProperty(newBraillePage + "_heading_" + level)) != null) {
-                headStyle.setNewBraillePage(b);
-            }
             if ((b = getBooleanProperty(dontSplitProperty + "_heading_" + level)) != null) {
                 headStyle.setDontSplit(b);
             }
             if ((b = getBooleanProperty(keepWithNextProperty + "_heading_" + level)) != null) {
                 headStyle.setKeepWithNext(b);
             }
+            if ((b = getBooleanProperty(newBraillePage + "_heading_" + level)) != null) {
+                headStyle.setNewBraillePage(b);
+            }
         }
-        
+
+        for (int i=0;i<listStyles.size();i++) {
+
+            listStyle = listStyles.get(i);
+            level = listStyle.getLevel();
+
+            if (!(d = getDoubleProperty(firstLineProperty + "_list_" + level)).isNaN()) {
+                listStyle.setFirstLine(d.intValue());
+            }
+            if (!((d = getDoubleProperty(runoversProperty + "_list_" + level)).isNaN())) {
+                listStyle.setRunovers(d.intValue());
+            }
+            if (!((d = getDoubleProperty(marginLeftRightProperty + "_list_" + level)).isNaN())) {
+                listStyle.setMarginLeftRight(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesAboveProperty + "_list_" + level)).isNaN())) {
+                listStyle.setLinesAbove(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesBelowProperty + "_list_" + level)).isNaN())) {
+                listStyle.setLinesBelow(d.intValue());
+            }
+            if (!((d = getDoubleProperty(linesBetweenProperty + "_list_" + level)).isNaN())) {
+                listStyle.setLinesBetween(d.intValue());
+            }
+            if ((s = getStringProperty(alignmentProperty + "_list_" + level)) != null) {
+                try {
+                    listStyle.setAlignment(Alignment.valueOf(s));
+                } catch (IllegalArgumentException ex) {
+                    logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+                }
+            }
+            if ((s = getStringProperty(prefixProperty + "_list_" + level)) != null) {
+                listStyle.setPrefix(s);
+            }
+            if ((b = getBooleanProperty(dontSplitItemsProperty + "_list_" + level)) != null) {
+                listStyle.setDontSplitItems(b);
+            }
+            if ((b = getBooleanProperty(dontSplitProperty + "_list_" + level)) != null) {
+                listStyle.setDontSplit(b);
+            }
+        }
+
+        if ((b = getBooleanProperty(stairstepTableProperty)) != null) {
+            loadedSettings.setStairstepTable(b);
+        }
+        if ((s = getStringProperty(columnDelimiterProperty)) != null) {
+            loadedSettings.setColumnDelimiter(s);
+        }
+        if ((b = getBooleanProperty(dontSplitTableRowsProperty)) != null) {
+            tableStyle.setDontSplitRows(b);
+        }
+        if (!((d = getDoubleProperty(linesBetweenProperty + "_table")).isNaN())) {
+            tableStyle.setLinesBetween(d.intValue());
+        }
+        if (!(d = getDoubleProperty(firstLineProperty + "_table")).isNaN()) {
+            listStyle.setFirstLine(d.intValue());
+        }
+        if (!((d = getDoubleProperty(runoversProperty + "_table")).isNaN())) {
+            listStyle.setRunovers(d.intValue());
+        }
+        if (!((d = getDoubleProperty(marginLeftRightProperty + "_table")).isNaN())) {
+            listStyle.setMarginLeftRight(d.intValue());
+        }
+        if (!((d = getDoubleProperty(linesAboveProperty + "_table")).isNaN())) {
+            listStyle.setLinesAbove(d.intValue());
+        }
+        if (!((d = getDoubleProperty(linesBelowProperty + "_table")).isNaN())) {
+            listStyle.setLinesBelow(d.intValue());
+        }
+        if ((s = getStringProperty(alignmentProperty + "_table")) != null) {
+            try {
+                listStyle.setAlignment(Alignment.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+            }
+        }
+
+        for (int column=1;column<=10;column++) {
+
+            style = tableStyle.getColumn(column);
+
+            if (style!= null) {
+
+                if (!(d = getDoubleProperty(firstLineProperty + "_table_" + column)).isNaN()) {
+                    style.setFirstLine(d.intValue());
+                }
+                if (!((d = getDoubleProperty(runoversProperty + "_table_" + column)).isNaN())) {
+                    style.setRunovers(d.intValue());
+                }
+                if (!((d = getDoubleProperty(marginLeftRightProperty + "_table_" + column)).isNaN())) {
+                    style.setMarginLeftRight(d.intValue());
+                }
+                if (!((d = getDoubleProperty(linesAboveProperty + "_table_" + column)).isNaN())) {
+                    style.setLinesAbove(d.intValue());
+                }
+                if (!((d = getDoubleProperty(linesBelowProperty + "_table_" + column)).isNaN())) {
+                    style.setLinesBelow(d.intValue());
+                }
+                if ((s = getStringProperty(alignmentProperty + "_table_" + column)) != null) {
+                    try {
+                        style.setAlignment(Alignment.valueOf(s));
+                    } catch (IllegalArgumentException ex) {
+                        logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+                    }
+                }
+            }
+        }
+
+        if ((s = getStringProperty(tableOfContentTitleProperty)) != null) {
+            loadedSettings.setTableOfContentTitle(s);
+        }
+        if ((s = getStringProperty(lineFillSymbolProperty)) != null) {
+            if (s.length()==1) {
+                loadedSettings.setLineFillSymbol(s.charAt(0));
+            }
+        }
+
+        for (level=1;level<=4;level++) {
+
+            style = tocStyle.getLevel(level);
+
+            if (style!=null) {
+                if (!(d = getDoubleProperty(firstLineProperty + "_toc_" + level)).isNaN()) {
+                    style.setFirstLine(d.intValue());
+                }
+                if (!((d = getDoubleProperty(runoversProperty + "_toc_" + level)).isNaN())) {
+                    style.setRunovers(d.intValue());
+                }
+            }
+        }
+
         int loadedSpecialSymbolsCount = loadedSettings.getSpecialSymbolsList().size();
         int defaultSpecialSymbolsCount = loadedSpecialSymbolsCount;
 
@@ -535,26 +660,6 @@ public class SettingsIO {
 
         if ((s = getStringProperty(specialSymbolsListTitleProperty)) != null) {
             loadedSettings.setSpecialSymbolsListTitle(s);
-        }
-
-        if ((s = getStringProperty(tableOfContentTitleProperty)) != null) {
-            loadedSettings.setTableOfContentTitle(s);
-        }
-        
-        if ((s = getStringProperty(columnDelimiterProperty)) != null) {
-            loadedSettings.setColumnDelimiter(s);
-        }
-
-        if ((s = getStringProperty(lineFillSymbolProperty)) != null) {
-            if (s.length()==1) {
-                loadedSettings.setLineFillSymbol(s.charAt(0));
-            }
-        }
-
-        for (int i=0;i<10;i++) {
-            if ((s = getStringProperty(prefixProperty + "_list_" + (i+1))) != null) {
-                loadedSettings.getStyle("list_" + (i+1)).setPrefix(s);
-            }
         }
 
         if ((b = getBooleanProperty(printPageNumbersProperty)) != null) {
@@ -653,12 +758,20 @@ public class SettingsIO {
             loadedSettings.setVolumeInfoEnabled(b);
         }
 
-        if ((b = getBooleanProperty(preliminaryVolumeEnabledProperty)) != null) {
-            loadedSettings.setPreliminaryVolumeEnabled(b);
+        if ((s = getStringProperty(transcriptionInfoStyleProperty)) != null) {
+            if (!loadedSettings.setTranscriptionInfoStyle(s)) {
+                logger.log(Level.SEVERE, null, s + " is no valid paragraph style");
+            }
         }
 
-        if ((b = getBooleanProperty(stairstepTableProperty)) != null) {
-            loadedSettings.setStairstepTable(b);
+        if ((s = getStringProperty(volumeInfoStyleProperty)) != null) {
+            if (!loadedSettings.setVolumeInfoStyle(s)) {
+                logger.log(Level.SEVERE, null, s + " is no valid paragraph style");
+            }
+        }
+
+        if ((b = getBooleanProperty(preliminaryVolumeEnabledProperty)) != null) {
+            loadedSettings.setPreliminaryVolumeEnabled(b);
         }
 
         if ((s = getStringProperty(brailleRulesProperty)) != null) {
@@ -743,13 +856,25 @@ public class SettingsIO {
                 logger.log(Level.SEVERE, null, s + " is no valid embossertype");
             }
         }
+        
+        if ((b = getBooleanProperty(saddleStitchProperty)) != null) {
+            loadedSettings.setSaddleStitch(b);
+        }
 
-        if ((s = getStringProperty(embossTableProperty)) != null) {
-            try {
-                loadedSettings.setTable(TableType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
-            }
+        if (!(d = getDoubleProperty(sheetsPerQuireProperty)).isNaN()) {
+            loadedSettings.setSheetsPerQuire(d.intValue());
+        }
+
+        if ((b = getBooleanProperty(zFoldingProperty)) != null) {
+            loadedSettings.setZFolding(b);
+        }
+
+        if ((b = getBooleanProperty(embossDuplexProperty)) != null) {
+            loadedSettings.setDuplex(b);
+        }
+
+        if ((b = getBooleanProperty(embossEightDotsProperty)) != null) {
+            loadedSettings.setEightDots(b);
         }
 
         if ((s = getStringProperty(paperSizeProperty)) != null) {
@@ -766,14 +891,6 @@ public class SettingsIO {
             }
         }
 
-        if ((b = getBooleanProperty(embossDuplexProperty)) != null) {
-            loadedSettings.setDuplex(b);
-        }
-
-        if ((b = getBooleanProperty(embossEightDotsProperty)) != null) {
-            loadedSettings.setEightDots(b);
-        }
-
         if (!(d = getDoubleProperty(embossNumberOfCellsPerLineProperty)).isNaN()) {
             loadedSettings.setCellsPerLine(d.intValue());
         }
@@ -788,6 +905,14 @@ public class SettingsIO {
 
         if (!(d = getDoubleProperty(marginTopProperty)).isNaN()) {
             loadedSettings.setMarginTop(d.intValue());
+        }
+
+        if ((s = getStringProperty(embossTableProperty)) != null) {
+            try {
+                loadedSettings.setTable(TableType.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
+            }
         }
 
         logger.exiting("SettingsIO", "loadEmbossSettingsFromDocument");
@@ -844,6 +969,24 @@ public class SettingsIO {
         ArrayList<CharacterStyle> characterStylesBeforeChange = settingsBeforeChange.getCharacterStyles();
         ArrayList<HeadingStyle> headingStylesAfterChange = settingsAfterChange.getHeadingStyles();
         ArrayList<HeadingStyle> headingStylesBeforeChange = settingsBeforeChange.getHeadingStyles();
+        ArrayList<ListStyle> listStylesBeforeChange = settingsBeforeChange.getListStyles();
+        ArrayList<ListStyle> listStylesAfterChange = settingsAfterChange.getListStyles();
+        TableStyle tableStyleBeforeChange = settingsBeforeChange.getTableStyle();
+        TableStyle tableStyleAfterChange = settingsAfterChange.getTableStyle();
+        TocStyle tocStyleBeforeChange = settingsBeforeChange.getTocStyle();
+        TocStyle tocStyleAfterChange = settingsAfterChange.getTocStyle();
+        ParagraphStyle paraStyleAfterChange = null;
+        ParagraphStyle paraStyleBeforeChange = null;
+        CharacterStyle charStyleAfterChange = null;
+        CharacterStyle charStyleBeforeChange = null;
+        HeadingStyle headStyleAfterChange = null;
+        HeadingStyle headStyleBeforeChange = null;
+        ListStyle listStyleAfterChange = null;
+        ListStyle listStyleBeforeChange = null;
+        Style styleAfterChange = null;
+        Style styleBeforeChange = null;
+        String styleName = null;
+        int level = 0;
 
         for (int i=0;i<languages.size();i++) {
             setProperty(languageProperty + "_" + languages.get(i),
@@ -856,41 +999,12 @@ public class SettingsIO {
                         settingsAfterChange.getDots(languages.get(i)),
                         settingsBeforeChange.getDots(languages.get(i)));
         }
-        
-        for (int i=0;i<styleNames.length;i++) {
-
-            Style styleAfterChange = settingsAfterChange.getStyle(styleNames[i]);
-            Style styleBeforeChange = settingsBeforeChange.getStyle(styleNames[i]);
-            String styleName = styleNames[i];
-
-            setProperty(alignmentProperty + "_" + styleName,
-                        styleAfterChange.getAlignment().name(),
-                        styleBeforeChange.getAlignment().name());
-            setProperty(firstLineProperty + "_" + styleName,
-                        styleAfterChange.getFirstLine(),
-                        styleBeforeChange.getFirstLine());
-            setProperty(runoversProperty + "_" + styleName,
-                        styleAfterChange.getRunovers(),
-                        styleBeforeChange.getRunovers());
-            setProperty(marginLeftRightProperty + "_" + styleName,
-                        styleAfterChange.getMarginLeftRight(),
-                        styleBeforeChange.getMarginLeftRight());
-            setProperty(linesAboveProperty + "_" + styleName,
-                        styleAfterChange.getLinesAbove(),
-                        styleBeforeChange.getLinesAbove());
-            setProperty(linesBelowProperty + "_" + styleName,
-                        styleAfterChange.getLinesBelow(),
-                        styleBeforeChange.getLinesBelow());
-            setProperty(linesBetweenProperty + "_" + styleName,
-                        styleAfterChange.getLinesBetween(),
-                        styleBeforeChange.getLinesBetween());
-        }
 
         for (int i=0;i<paragraphStylesBeforeChange.size();i++) {
 
-            ParagraphStyle paraStyleAfterChange = paragraphStylesAfterChange.get(i);
-            ParagraphStyle paraStyleBeforeChange = paragraphStylesBeforeChange.get(i);
-            String styleName = paraStyleBeforeChange.getName();
+            paraStyleAfterChange = paragraphStylesAfterChange.get(i);
+            paraStyleBeforeChange = paragraphStylesBeforeChange.get(i);
+            styleName = paraStyleBeforeChange.getName();
 
             if (!paraStyleBeforeChange.getAutomatic()) {
 
@@ -927,15 +1041,27 @@ public class SettingsIO {
                     setProperty(keepWithNextProperty + "_paragraph_" + styleName,
                                 paraStyleAfterChange.getKeepWithNext(),
                                 paraStyleBeforeChange.getKeepWithNext());
+                    setProperty(widowControlEnabledProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getWidowControlEnabled(),
+                                paraStyleBeforeChange.getWidowControlEnabled());
+                    setProperty(orphanControlEnabledProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getOrphanControlEnabled(),
+                                paraStyleBeforeChange.getOrphanControlEnabled());
+                    setProperty(widowControlProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getWidowControl(),
+                                paraStyleBeforeChange.getWidowControl());
+                    setProperty(orphanControlProperty + "_paragraph_" + styleName,
+                                paraStyleAfterChange.getOrphanControl(),
+                                paraStyleBeforeChange.getOrphanControl());
                 }
             }
         }
 
         for (int i=0;i<characterStylesBeforeChange.size();i++) {
 
-            CharacterStyle charStyleAfterChange = characterStylesAfterChange.get(i);
-            CharacterStyle charStyleBeforeChange = characterStylesBeforeChange.get(i);
-            String styleName = charStyleBeforeChange.getName();
+            charStyleAfterChange = characterStylesAfterChange.get(i);
+            charStyleBeforeChange = characterStylesBeforeChange.get(i);
+            styleName = charStyleBeforeChange.getName();
 
             setProperty(inheritProperty + "_text_" + styleName,
                         (charStyleAfterChange.getInherit()),
@@ -961,9 +1087,9 @@ public class SettingsIO {
 
         for (int i=0;i<headingStylesBeforeChange.size();i++) {
 
-            HeadingStyle headStyleAfterChange = headingStylesAfterChange.get(i);
-            HeadingStyle headStyleBeforeChange = headingStylesBeforeChange.get(i);
-            int level = headStyleBeforeChange.getLevel();
+            headStyleAfterChange = headingStylesAfterChange.get(i);
+            headStyleBeforeChange = headingStylesBeforeChange.get(i);
+            level = headStyleBeforeChange.getLevel();
 
             setProperty(alignmentProperty + "_heading_" + level,
                         headStyleAfterChange.getAlignment().name(),
@@ -983,9 +1109,6 @@ public class SettingsIO {
             setProperty(linesBelowProperty + "_heading_" + level,
                         headStyleAfterChange.getLinesBelow(),
                         headStyleBeforeChange.getLinesBelow());
-            setProperty(linesBetweenProperty + "_heading_" + level,
-                        headStyleAfterChange.getLinesBetween(),
-                        headStyleBeforeChange.getLinesBetween());
             setProperty(newBraillePage + "_heading_" + level,
                         headStyleAfterChange.getNewBraillePage(),
                         headStyleBeforeChange.getNewBraillePage());
@@ -997,11 +1120,125 @@ public class SettingsIO {
                         headStyleBeforeChange.getKeepWithNext());
 
         }
-        
-        for (int i=0;i<10;i++) {
-            setProperty(prefixProperty + "_list_" + (i+1),
-                    settingsAfterChange.getStyle("list_" + (i+1)).getPrefix(),
-                    settingsBeforeChange.getStyle("list_" + (i+1)).getPrefix());
+
+        for (int i=0;i<listStylesBeforeChange.size();i++) {
+
+            listStyleAfterChange = listStylesAfterChange.get(i);
+            listStyleBeforeChange = listStylesBeforeChange.get(i);
+            level = listStyleBeforeChange.getLevel();
+
+            setProperty(alignmentProperty + "_list_" + level,
+                        listStyleAfterChange.getAlignment().name(),
+                        listStyleBeforeChange.getAlignment().name());
+            setProperty(firstLineProperty + "_list_" + level,
+                        listStyleAfterChange.getFirstLine(),
+                        listStyleBeforeChange.getFirstLine());
+            setProperty(runoversProperty + "_list_" + level,
+                        listStyleAfterChange.getRunovers(),
+                        listStyleBeforeChange.getRunovers());
+            setProperty(marginLeftRightProperty + "_list_" + level,
+                        listStyleAfterChange.getMarginLeftRight(),
+                        listStyleBeforeChange.getMarginLeftRight());
+            setProperty(linesAboveProperty + "_list_" + level,
+                        listStyleAfterChange.getLinesAbove(),
+                        listStyleBeforeChange.getLinesAbove());
+            setProperty(linesBelowProperty + "_list_" + level,
+                        listStyleAfterChange.getLinesBelow(),
+                        listStyleBeforeChange.getLinesBelow());
+            setProperty(linesBetweenProperty + "_list_" + level,
+                        listStyleAfterChange.getLinesBetween(),
+                        listStyleBeforeChange.getLinesBetween());
+            setProperty(prefixProperty + "_list_" + level,
+                        listStyleAfterChange.getPrefix(),
+                        listStyleBeforeChange.getPrefix());
+            setProperty(dontSplitItemsProperty + "_list_" + level,
+                        listStyleAfterChange.getDontSplitItems(),
+                        listStyleBeforeChange.getDontSplitItems());
+            setProperty(dontSplitProperty + "_list_" + level,
+                        listStyleAfterChange.getDontSplit(),
+                        listStyleBeforeChange.getDontSplit());
+        }
+
+        setProperty(stairstepTableProperty,
+                    settingsAfterChange.stairstepTableIsEnabled(),
+                    settingsBeforeChange.stairstepTableIsEnabled());
+        setProperty(columnDelimiterProperty,
+                    settingsAfterChange.getColumnDelimiter(),
+                    settingsBeforeChange.getColumnDelimiter());
+        setProperty(dontSplitTableRowsProperty,
+                    tableStyleAfterChange.getDontSplitRows(),
+                    tableStyleBeforeChange.getDontSplitRows());
+        setProperty(alignmentProperty + "_table",
+                    tableStyleAfterChange.getAlignment().name(),
+                    tableStyleBeforeChange.getAlignment().name());
+        setProperty(firstLineProperty + "_table",
+                    tableStyleAfterChange.getFirstLine(),
+                    tableStyleBeforeChange.getFirstLine());
+        setProperty(runoversProperty + "_table",
+                    tableStyleAfterChange.getRunovers(),
+                    tableStyleBeforeChange.getRunovers());
+        setProperty(marginLeftRightProperty + "_table",
+                    tableStyleAfterChange.getMarginLeftRight(),
+                    tableStyleBeforeChange.getMarginLeftRight());
+        setProperty(linesAboveProperty + "_table",
+                    tableStyleAfterChange.getLinesAbove(),
+                    tableStyleBeforeChange.getLinesAbove());
+        setProperty(linesBelowProperty + "_table",
+                    tableStyleAfterChange.getLinesBelow(),
+                    tableStyleBeforeChange.getLinesBelow());
+        setProperty(linesBetweenProperty + "_table",
+                    tableStyleAfterChange.getLinesBetween(),
+                    tableStyleBeforeChange.getLinesBetween());
+
+        for (int column=1;column<=10;column++) {
+
+            styleAfterChange = tableStyleAfterChange.getColumn(column);
+            styleBeforeChange = tableStyleBeforeChange.getColumn(column);
+
+            if (styleAfterChange!= null && styleBeforeChange!=null) {
+
+                setProperty(alignmentProperty + "_table_" + column,
+                            styleAfterChange.getAlignment().name(),
+                            styleBeforeChange.getAlignment().name());
+                setProperty(firstLineProperty + "_table_" + column,
+                            styleAfterChange.getFirstLine(),
+                            styleBeforeChange.getFirstLine());
+                setProperty(runoversProperty + "_table_" + column,
+                            styleAfterChange.getRunovers(),
+                            styleBeforeChange.getRunovers());
+                setProperty(marginLeftRightProperty + "_table_" + column,
+                            styleAfterChange.getMarginLeftRight(),
+                            styleBeforeChange.getMarginLeftRight());
+                setProperty(linesAboveProperty + "_table_" + column,
+                            styleAfterChange.getLinesAbove(),
+                            styleBeforeChange.getLinesAbove());
+                setProperty(linesBelowProperty + "_table_" + column,
+                            styleAfterChange.getLinesBelow(),
+                            styleBeforeChange.getLinesBelow());
+            }
+        }
+
+        setProperty(tableOfContentTitleProperty,
+                    settingsAfterChange.getTableOfContentTitle(),
+                    settingsBeforeChange.getTableOfContentTitle());
+        setProperty(lineFillSymbolProperty,
+                    String.valueOf(settingsAfterChange.getLineFillSymbol()),
+                    String.valueOf(settingsBeforeChange.getLineFillSymbol()));
+
+        for (level=1;level<=4;level++) {
+
+            styleAfterChange = tocStyleAfterChange.getLevel(level);
+            styleBeforeChange = tocStyleBeforeChange.getLevel(level);
+
+            if (styleAfterChange!= null && styleBeforeChange!=null) {
+
+                setProperty(firstLineProperty + "_toc_" + level,
+                            styleAfterChange.getFirstLine(),
+                            styleBeforeChange.getFirstLine());
+                setProperty(runoversProperty + "_toc_" + level,
+                            styleAfterChange.getRunovers(),
+                            styleBeforeChange.getRunovers());
+            }
         }
 
         setProperty(specialSymbolsCountProperty,
@@ -1047,9 +1284,6 @@ public class SettingsIO {
         setProperty(specialSymbolsListTitleProperty,
                     settingsAfterChange.getSpecialSymbolsListTitle(),
                     settingsBeforeChange.getSpecialSymbolsListTitle());
-        setProperty(tableOfContentTitleProperty,
-                    settingsAfterChange.getTableOfContentTitle(),
-                    settingsBeforeChange.getTableOfContentTitle());
         setProperty(printPageNumbersProperty,
                     settingsAfterChange.getPrintPageNumbers(),
                     settingsBeforeChange.getPrintPageNumbers());
@@ -1113,18 +1347,15 @@ public class SettingsIO {
         setProperty(volumeInfoEnabledProperty,
                     settingsAfterChange.getVolumeInfoEnabled(),
                     settingsBeforeChange.getVolumeInfoEnabled());
+        setProperty(transcriptionInfoStyleProperty,
+                    settingsAfterChange.getTranscriptionInfoStyle().getName(),
+                    settingsBeforeChange.getTranscriptionInfoStyle().getName());
+        setProperty(volumeInfoStyleProperty,
+                    settingsAfterChange.getVolumeInfoStyle().getName(),
+                    settingsBeforeChange.getVolumeInfoStyle().getName());
         setProperty(preliminaryVolumeEnabledProperty,
                     settingsAfterChange.getPreliminaryVolumeEnabled(),
                     settingsBeforeChange.getPreliminaryVolumeEnabled());
-        setProperty(stairstepTableProperty,
-                    settingsAfterChange.stairstepTableIsEnabled(),
-                    settingsBeforeChange.stairstepTableIsEnabled());
-        setProperty(columnDelimiterProperty,
-                    settingsAfterChange.getColumnDelimiter(),
-                    settingsBeforeChange.getColumnDelimiter());
-        setProperty(lineFillSymbolProperty,
-                    String.valueOf(settingsAfterChange.getLineFillSymbol()),
-                    String.valueOf(settingsBeforeChange.getLineFillSymbol()));
         setProperty(mathProperty,
                     settingsAfterChange.getMath().name(),
                     settingsBeforeChange.getMath().name());
@@ -1194,6 +1425,15 @@ public class SettingsIO {
         setProperty(embosserProperty,
                     settingsAfterChange.getEmbosser().name(),
                     settingsBeforeChange.getEmbosser().name());
+        setProperty(saddleStitchProperty,
+                    settingsAfterChange.getSaddleStitch(),
+                    settingsBeforeChange.getSaddleStitch());
+        setProperty(sheetsPerQuireProperty,
+                    settingsAfterChange.getSheetsPerQuire(),
+                    settingsBeforeChange.getSheetsPerQuire());
+        setProperty(zFoldingProperty,
+                    settingsAfterChange.getZFolding(),
+                    settingsBeforeChange.getZFolding());
         setProperty(embossTableProperty,
                     settingsAfterChange.getTable().name(),
                     settingsBeforeChange.getTable().name());
