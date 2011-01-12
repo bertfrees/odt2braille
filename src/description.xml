@@ -34,30 +34,30 @@
     <!-- Description -->
     <extension-description>
 	
-		<src xlink:href="description/desc_en.txt"    lang="en" />
-	
-		<src xlink:href="description/desc_ca.txt"    lang="ca" />
-		<src xlink:href="description/desc_de.txt"    lang="de" />
-		<src xlink:href="description/desc_es.txt"    lang="es" />
-		<src xlink:href="description/desc_fr.txt"    lang="fr" />
-		<src xlink:href="description/desc_nb.txt"    lang="nb" />
-		<src xlink:href="description/desc_nl.txt"    lang="nl" />
-		<src xlink:href="description/desc_pt.txt"    lang="pt" />
+        <src xlink:href="description/desc_en.txt"    lang="en" />
+
+        <src xlink:href="description/desc_ca.txt"    lang="ca" />
+        <src xlink:href="description/desc_de.txt"    lang="de" />
+        <src xlink:href="description/desc_es.txt"    lang="es" />
+        <src xlink:href="description/desc_fr.txt"    lang="fr" />
+        <src xlink:href="description/desc_it.txt"    lang="it" />
+        <src xlink:href="description/desc_nb.txt"    lang="nb" />
+        <src xlink:href="description/desc_nl.txt"    lang="nl" />
+        <src xlink:href="description/desc_pt.txt"    lang="pt" />
         <src xlink:href="description/desc_pt-BR.txt" lang="pt-BR" />
-		<src xlink:href="description/desc_sl.txt"    lang="sl" />
+        <src xlink:href="description/desc_sl.txt"    lang="sl" />
 		
    <!-- <src xlink:href="description/desc_cs.txt"    lang="cs" /> -->
    <!-- <src xlink:href="description/desc_da.txt"    lang="da" /> -->
    <!-- <src xlink:href="description/desc_is.txt"    lang="is" /> -->
-   <!-- <src xlink:href="description/desc_it.txt"    lang="it" /> -->
    <!-- <src xlink:href="description/desc_sv.txt"    lang="sv" /> -->
 		
     </extension-description>
 	
     <!-- Extension Dialog Icon -->
     <icon>
-        <default xlink:href="images/odt2braille-logo.png" />
-        <high-contrast xlink:href="images/odt2braille-logo.png" />
+        <default xlink:href="images/odt2braille-logo-185x185.png" />
+        <high-contrast xlink:href="images/odt2braille-logo-185x185.png" />
     </icon>
 	
 </description>

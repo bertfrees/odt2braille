@@ -29,8 +29,8 @@
 
 @menu
 * Hacking::
-* Projects::
-* Liblouisxml::
+* Project Overview::
+* Libraries::
 * Tutorials::
 * Task list::
 @end menu
@@ -58,7 +58,7 @@ The version of OpenOffice.org SDK should be equal or lower than the version of O
 
 @unnumberedsubsec NetBeans
 
-Odt2braille was developed in NetBeans, an integrated development environment.
+odt2braille was developed in NetBeans, an integrated development environment.
 The latest version of @url{http://netbeans.org/downloads/, NetBeans} can be downloaded here.
 Make sure the Java SE pack is included.
 
@@ -70,104 +70,7 @@ Now relaunch NetBeans and
 configure the plugin in [@emph{Tools > Options > Miscellaneous > OOo API Plugin}]
 by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK folder.
 
-@unnumberedsec Odt2braille Source Code
-
-The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
-@itemize @minus
-@item
-[@emph{Team - Subversion - Checkout}]
-@item
-@emph{Repository URL}: "https://odt2braille.svn.sourceforge.net/svnroot/odt2braille".
-Leave @emph{"User"} and @emph{"Password"} fields blank.
-@item
-@emph{Next >}
-@item
-@emph{Repository Folders}: "DaisyPipeline, Odt2Braille, Odt2BrailleAddOn"
-@item
-Check @emph{"Scan for NetBeans Projects after checkout"}.
-@item
-@emph{Finish}
-@end itemize
-
-The source code can also be downloaded without NetBeans:
-@itemize @minus
-@item
-@code{svn co https://odt2braille.svn.sourceforge.net/svnroot/odt2braille path/to/odt2braille/folder/}
-@end itemize
-
-@unnumberedsec Build
-
-Build projects with NetBeans:
-@itemize @minus
-@item
-Open @emph{"Projects"} window, than right click a project and choose menu item @emph{"Build"}.
-@end itemize
-
-Build projects with Apache ANT:
-@itemize @minus
-@item
-@code{cd} to project directory
-@item
-@code{ant}
-@end itemize
-
-Create .oxt file with NetBeans:
-@itemize @minus
-@item
-Open @emph{"Projects"} window, than right click @emph{"Odt2BrailleAddOn"} 
-and choose menu item @emph{"Create OXT"} or @emph{"Deploy and Run Extension in OpenOffice.org"}.
-@item
-The .oxt file will be created in Odt2BrailleAddOn/dist.
-@end itemize
-
-Create .oxt file with Apache ANT:
-@itemize @minus
-@item
-@code{cd} to Odt2BrailleAddOn directory
-@item
-@code{ant uno-package}
-@item
-The .oxt file will be created in Odt2BrailleAddOn/dist.
-@end itemize
-
-@unnumberedsec Documentation
-
-Texinfo:
-@itemize @minus
-@item
-@code{cd} to Odt2BrailleAddOn/doc
-@item
-@code{
-texi2dvi --pdf
-@*@w{         }odt2braille-user-doc.texi}
-@item
-@code{
-makeinfo --html
-@*@w{        }[--no-split]
-@*@w{        }[--no-headers]
-@*@w{         }--output=odt2braille-user-doc.html
-@*@w{         }odt2braille-user-doc.texi}
-
-@end itemize	
-			
-Javadoc:
-
-@itemize @minus
-@item
-@code{cd} to directory containing all projects
-@item
-@code{
-javadoc [-private]
-@*@w{        }[-author]
-@*@w{        }[-version]
-@*@w{        }[-breakiterator]
-@*@w{         }-d Odt2BrailleAddOn\doc\javadoc
-@*@w{         }-subpackages be.docarch:org_pef_text
-@*@w{         }-sourcepath Odt2BrailleAddOn\src;Odt2Braille\src;DaisyPipeline\src
-}
-@end itemize
-
-@unnumberedsec Downloads
+@unnumberedsubsec Other Downloads
 
 @itemize @minus
 @item
@@ -180,15 +83,82 @@ Javadoc: @url{http://java.sun.com/j2se/javadoc/downloads/index.html#findjavadoc}
 Texinfo: @url{http://www.gnu.org/software/texinfo/}
 @end itemize
 
-@node Projects
-@chapter Projects
+@unnumberedsec Source Code
+
+The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:
+@itemize @minus
+@item
+[@emph{Team - Subversion - Checkout}]
+@item
+@emph{Repository URL}: "https://odt2braille.svn.sourceforge.net/svnroot/odt2braille".
+Leave @emph{"User"} and @emph{"Password"} fields blank.
+@item
+@emph{Next >}
+@item
+@emph{Repository Folders}: "Odt2Braille, Odt2BrailleAddOn"
+@item
+Check @emph{"Scan for NetBeans Projects after checkout"}.
+@item
+@emph{Finish}
+@end itemize
+
+The code can also be downloaded without NetBeans:
+@itemize @minus
+@item
+@code{svn checkout https://odt2braille.svn.sourceforge.net/svnroot/odt2braille path/to/odt2braille/folder/}
+@end itemize
+
+@unnumberedsec Building
+
+Build Odt2Braille and Odt2BrailleAddOn with NetBeans:
+@itemize @minus
+@item
+Open @emph{"Projects"} window
+@item
+Right click the Odt2Braille project and choose menu item @emph{"Build"}.
+@item
+Right click the Odt2BrailleAddOn project and choose menu item @emph{"Build"}.
+@end itemize
+
+Build Odt2Braille and Odt2BrailleAddOn with Apache ANT:
+@itemize @minus
+@item
+@code{cd path/to/odt2braille/folder/Odt2Braille}
+@item
+@code{ant}
+@item
+@code{cd path/to/odt2braille/folder/Odt2BrailleAddOn}
+@item
+@code{ant}
+@end itemize
+
+Create OpenOffice.org extension file (.oxt) with NetBeans:
+@itemize @minus
+@item
+Open @emph{"Projects"} window, than right click @emph{"Odt2BrailleAddOn"} 
+and choose menu item @emph{"Create OXT"} or @emph{"Deploy and Run Extension in OpenOffice.org"}.
+@item
+The .oxt file will be created in @code{path/to/odt2braille/folder/Odt2BrailleAddOn/dist}.
+@end itemize
+
+Create OpenOffice.org extension file (.oxt) with Apache ANT:
+@itemize @minus
+@item
+@code{cd path/to/odt2braille/folder/Odt2BrailleAddOn}
+@item
+@code{ant uno-package}
+@item
+The .oxt file will be created in @code{path/to/odt2braille/folder/Odt2BrailleAddOn/dist}.
+@end itemize
+
+@node Project Overview
+@chapter Project Overview
 
 This is an overview of the projects that are created in NetBeans after odt2braille has been succesfully checked out.
 
 @menu
 * Odt2BrailleAddOn::
 * Odt2Braille::
-* DaisyPipeline::
 @end menu
 
 @node Odt2BrailleAddOn
@@ -199,9 +169,18 @@ It takes care of the graphical user interface (menu's, dialogs, progress bars, e
 allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document.
 For the actual document processing, Odt2BrailleAddOn relies on the Odt2Braille library.
 
-Packages in Odt2BrailleAddOn:
+@unnumberedsubsec Documentation
 
 @code{@url{javadoc/be/docarch/odt2braille/addon/package-summary.html, be.docarch.odt2braille.addon}}
+
+@unnumberedsubsec View code
+
+@itemize @minus
+@item
+@url{http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/}
+@item
+@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/}
+@end itemize
 
 @node Odt2Braille
 @unnumberedsec Odt2Braille
@@ -212,42 +191,120 @@ flat xml odt file to a @url{http://www.daisy.org/projects/braille/braille_workar
 generic braille formats, or it can be converted to an embosser-specific braille file
 (and optionally sent to an embosser device).
 The braille transcription is powered by liblouisxml, and for the pef processing, Odt2Braille uses
-the DaisyPipeline library. The Java OpenDocument Library (JODL) is used for creating and cleaning 
+the BrailleUtils library. The Java OpenDocument Library (JODL) is used for creating and cleaning 
 the flat .odt file (see @url{http://odt2daisy.sourceforge.net/downloads/}).
 
-Packages in Odt2Braille:
+@unnumberedsubsec Documentation
 
 @code{@url{javadoc/be/docarch/odt2braille/package-summary.html, be.docarch.odt2braille}}
 
-@node DaisyPipeline
-@unnumberedsec DaisyPipeline
+@unnumberedsubsec View code
 
-The DaisyPipeline project contains the @code{org_pef_text} and @code{org_pef_text.pef2text} packages. 
-These packages have been adopted from the @url{http://www.daisy.org/project/pipeline,DAISY Pipeline} and 
-have been slightly modified. 
-Their purpose is to convert a PEF 2008-1 document into a plain text braille file (see also the 
-@code{@url{http://data.daisy.org/projects/pipeline/doc/transformers/org_pef_pef2text.html, pef2text}} documentation).
+@itemize @minus
+@item
+@url{https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2Braille/src/be/docarch/odt2braille/}
+@item
+@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Braille/src/be/docarch/odt2braille/}
+@end itemize
 
-Packages in DaisyPipeline:
+@node Libraries
+@chapter Libraries
 
-@code{@url{javadoc/org_pef_text/package-tree.html, org_pef_text}} and
-@code{@url{javadoc/org_pef_text/pef2text/package-tree.html, org_pef_text.pef2text}}
+@menu
+* liblouisxml::
+* brailleutils::
+@end menu
 
-@node Liblouisxml
-@chapter Liblouisxml
+@node liblouisxml
+@unnumberedsec liblouisxml
 
-@url{http://liblouisxml.googlecode.com, Liblouisxml} is the heart of the braille transcription. 
+@url{http://liblouisxml.googlecode.com, liblouisxml} is the heart of the braille transcription. 
 It is an open-source library intended to provide complete Braille transcription services for XML documents.
 Liblouisxml is built on top of @url{http://liblouis.googlecode.com, liblouis}, its translation engine.
 The translation is driven through text based translation tables which define the translation rules.
 The formatting of braille is defined in semantic mappings that define how a specific XML input tag is
-to be rendered in the Braille output. Liblouisxml is embedded in odt2braille as an executable.
+to be rendered in the Braille output. liblouisxml is embedded in odt2braille as an executable.
 It can be found in the Odt2BrailleAddOn project under @code{liblouis/bin}.
 The translation tables and configuration files are kept under @code{liblouis/share}.
+
+@unnumberedsubsec Source Code
+
+@itemize @minus
+@item
+@code{svn checkout http://liblouis.googlecode.com/svn/trunk/ path/to/liblouis/folder/}
+@item
+@code{svn checkout http://liblouisxml.googlecode.com/svn/trunk/ path/to/liblouisxml/folder/}
+@end itemize
+
+@unnumberedsubsec Documentation
 
 For more information read the
 @code{@url{http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html, liblouisxml}} and
 @code{@url{http://liblouis.googlecode.com/svn/documentation/liblouis.html, libouis}} manuals.
+
+@node brailleutils
+@unnumberedsec brailleutils
+
+See the @url{http://code.google.com/p/brailleutils/, brailleutils} website.
+
+@unnumberedsubsec Source Code
+
+@itemize @minus
+@item
+@code{svn checkout http://brailleutils.googlecode.com/svn/trunk/braille/ path/to/brailleutils/folder/}
+@end itemize
+
+@unnumberedsubsec Building
+
+@itemize @minus
+@item
+@code{cd path/to/brailleutils/folder}
+@item
+@code{ant}
+@item
+The files @code{brailleUtils.jar} and @code{catalog.jar} will be created in @code{path/to/brailleutils/folder/ant-build/output/dist}.
+@end itemize
+
+@unnumberedsubsec Documentation
+
+@itemize @minus
+@item
+@code{@url{javadoc/org/daisy/braille/package-summary.html,   org.daisy.braille}}
+@itemize @minus
+@item
+@code{@url{javadoc/org/daisy/braille/embosser/package-summary.html,  org.daisy.braille.embosser}}
+@item
+@code{@url{javadoc/org/daisy/braille/facade/package-summary.html,    org.daisy.braille.facade}}
+@item
+@code{@url{javadoc/org/daisy/braille/pef/package-summary.html,       org.daisy.braille.pef}}
+@item
+@code{@url{javadoc/org/daisy/braille/table/package-summary.html,     org.daisy.braille.table}}
+@item
+@code{@url{javadoc/org/daisy/braille/tools/package-summary.html,     org.daisy.braille.tools}}
+@item
+@code{@url{javadoc/org/daisy/braille/ui/package-summary.html,        org.daisy.braille.ui}}
+@end itemize
+@item
+@code{@url{javadoc/org/daisy/factory/package-summary.html,   org.daisy.factory}}
+@item
+@code{@url{javadoc/org/daisy/paper/package-summary.html,     org.daisy.paper}}
+@item
+@code{@url{javadoc/org/daisy/printing/package-summary.html,  org.daisy.printing}}
+@item
+@code{@url{javadoc/org/daisy/validator/package-summary.html, org.daisy.validator}}
+@item
+@code{@url{javadoc/com_braillo/package-summary.html,         com_braillo}}
+@item
+@code{@url{javadoc/com_indexbraille/package-summary.html,    com_indexbraille}}
+@item
+@code{@url{javadoc/com_yourdolphin/package-summary.html,     com_yourdolphin}}
+@item
+@code{@url{javadoc/de_brailletec/package-summary.html,       de_brailletec}}
+@item
+@code{@url{javadoc/org_daisy/package-summary.html,           org_daisy}}
+@item
+@code{@url{javadoc/se_tpb/package-summary.html,              se_tpb}}
+@end itemize
 
 @node Tutorials
 @chapter Tutorials
@@ -295,6 +352,40 @@ need adjustments.
 @end itemize
 
 @unnumberedsec Building xml2brl on Windows
+
+@unnumberedsec Texinfo & Javadoc
+
+Texinfo:
+@itemize @minus
+@item
+@code{cd path/to/odt2braille/folder/Odt2BrailleAddOn/doc}
+@item
+@code{
+texi2dvi --pdf
+@*@w{         }odt2braille-user-doc.texi}
+@item
+@code{
+makeinfo --html
+@*@w{        }[--no-split]
+@*@w{        }[--no-headers]
+@*@w{         }--output=odt2braille-user-doc.html
+@*@w{         }odt2braille-user-doc.texi}
+
+@end itemize	
+			
+Javadoc:
+@itemize @minus
+@item
+@code{
+javadoc [-private]
+@*@w{        }[-author]
+@*@w{        }[-version]
+@*@w{        }[-breakiterator]
+@*@w{         }-d path\to\odt2braille\folder\Odt2BrailleAddOn\doc\javadoc
+@*@w{         }-subpackages be.docarch:org.daisy:com_braillo:com_indexbraille:com_yourdolphin:de_brailletec:org_daisy:se_tpb
+@*@w{         }-sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\to\odt2braille\folder\Odt2Braille\src;path\to\brailleutils\folder\src;path\to\brailleutils\folder\catalog
+}
+@end itemize
 
 @unnumberedsec Adding translation tables
 
@@ -345,8 +436,6 @@ odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog n
 @item
 Voor Ubuntu: OOo 3.2.1 nodig ?
 @item
-Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen.
-@item
 Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* OK: Get languages
 	* OK: Get styles
@@ -366,17 +455,19 @@ Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate.
 @item
 Voor elke nieuwe release: localisatie bijwerken
 @item
+AccessibilityChecker integration
+@item
 Settings in Tools > Options...
 @item
 Javadoc bijwerken.
 @item
-Only Interpoint55 is tested.
+Test embossers.
 @item
 Tooltips in dialogs.
 @item
 Hidden paragraphs (or paragraphs in hidden sections) => transcriber's notes (braille-only material). TN => settings!
 @item
-Tactile graphics.
+Tactile graphics
 @item
 Music Braille
 @item
@@ -422,15 +513,11 @@ Varia
 	@item
 	OOo: linking sections?	
 	@item
-	Volume information block: preliminary braille page numbers (p...) => p moet zonder letter indicator
-	@item
-	Special symbols list: Dot locator: http://www.iceb.org/rep9910f.html ?
+	Volume information block: preliminary braille page numbers (p...) => p moet zonder letter indicator ?
 	@item
 	Underline: dots 7 & 8 ?
 	@item
 	Veranderen van typeface in midden van woord => documentatie
-	@item
-	Kan paginanummering mislopen indien pagebreak wordt bekomen door een reeks line breaks ?
 	@item
 	Supplementary volumes:
 		* pagenumber prefixed by “s” ?

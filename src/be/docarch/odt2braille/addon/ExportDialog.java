@@ -402,7 +402,13 @@ public class ExportDialog implements XItemListener,
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
         boolean eightDotsSupported = settings.eightDotsIsSupported();
-        if (eightDotsSupported) {settings.setEightDots(true);}
+        if (eightDotsSupported) {
+            try {
+                settings.setEightDots(true);
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            } 
+        }
 
         eightDotsCheckBox.removeItemListener(this);
             eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
@@ -434,6 +440,8 @@ public class ExportDialog implements XItemListener,
 
             }
 
+        } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+            logger.log(Level.SEVERE, null, ex);
         } catch (com.sun.star.uno.Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }

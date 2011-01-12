@@ -5,17 +5,28 @@
 @unnsubsecentry{OpenOffice.org Software Development Kit}{10001.1.2}{}{2}
 @unnsubsecentry{NetBeans}{10001.1.3}{}{2}
 @unnsubsecentry{OpenOffice.org API Plugin for NetBeans}{10001.1.4}{}{2}
-@unnsecentry{Odt2braille Source Code}{10001.2}{}{2}
-@unnsecentry{Build}{10001.3}{}{3}
-@unnsecentry{Documentation}{10001.4}{}{3}
-@unnsecentry{Downloads}{10001.5}{}{3}
-@numchapentry{Projects}{2}{Projects}{4}
+@unnsubsecentry{Other Downloads}{10001.1.5}{}{2}
+@unnsecentry{Source Code}{10001.2}{}{2}
+@unnsecentry{Building}{10001.3}{}{3}
+@numchapentry{Project Overview}{2}{Project Overview}{4}
 @unnsecentry{Odt2BrailleAddOn}{10001.1}{Odt2BrailleAddOn}{4}
+@unnsubsecentry{Documentation}{10001.1.1}{}{4}
+@unnsubsecentry{View code}{10001.1.2}{}{4}
 @unnsecentry{Odt2Braille}{10001.2}{Odt2Braille}{4}
-@unnsecentry{DaisyPipeline}{10001.3}{DaisyPipeline}{4}
-@numchapentry{Liblouisxml}{3}{Liblouisxml}{5}
-@numchapentry{Tutorials}{4}{Tutorials}{6}
-@unnsecentry{Adding an embosser}{10001.1}{}{6}
-@unnsecentry{Building xml2brl on Windows}{10001.2}{}{6}
-@unnsecentry{Adding hyphenation tables}{10001.3}{}{6}
-@numchapentry{Task list}{5}{Task list}{7}
+@unnsubsecentry{Documentation}{10001.2.1}{}{4}
+@unnsubsecentry{View code}{10001.2.2}{}{4}
+@numchapentry{Libraries}{3}{Libraries}{5}
+@unnsecentry{liblouisxml}{10001.1}{liblouisxml}{5}
+@unnsubsecentry{Source Code}{10001.1.1}{}{5}
+@unnsubsecentry{Documentation}{10001.1.2}{}{5}
+@unnsecentry{brailleutils}{10001.2}{brailleutils}{5}
+@unnsubsecentry{Source Code}{10001.2.1}{}{5}
+@unnsubsecentry{Building}{10001.2.2}{}{5}
+@unnsubsecentry{Documentation}{10001.2.3}{}{5}
+@numchapentry{Tutorials}{4}{Tutorials}{7}
+@unnsecentry{Adding an embosser}{10001.1}{}{7}
+@unnsecentry{Building xml2brl on Windows}{10001.2}{}{7}
+@unnsecentry{Texinfo & Javadoc}{10001.3}{}{7}
+@unnsecentry{Adding translation tables}{10001.4}{}{8}
+@unnsecentry{Adding hyphenation tables}{10001.5}{}{8}
+@numchapentry{Task list}{5}{Task list}{9}

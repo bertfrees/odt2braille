@@ -25,6 +25,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XCheckBox;
+import com.sun.star.awt.XNumericField;
 import com.sun.star.awt.XDialog;
 import com.sun.star.awt.XControlContainer;
 import com.sun.star.awt.PushButtonType;
@@ -58,31 +59,35 @@ public class PrintDialog implements XItemListener {
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille.addon");
 
     private boolean printToFile = false;
+    private int numberOfCopies = 1;
+    private int maxNumberOfCopies = 1;
 
     private XDialog xDialog = null;
     private XControlContainer xControlContainer = null;
     private XComponent xComponent = null;
 
     private XCheckBox printToFileCheckBox = null;
-    private XListBox deviceListBox = null;    
-    private XButton propertiesButton = null;
+    private XListBox deviceListBox = null;
+    private XNumericField numberOfCopiesField = null;
     private XButton okButton = null;
     private XButton cancelButton = null;
 
     private XPropertySet deviceListBoxProperties = null;
+    private XPropertySet numberOfCopiesFieldProperties = null;
 
     private static String _deviceListBox = "ListBox1";
     private static String _printToFileCheckBox = "CheckBox1";
-    private static String _propertiesButton = "CommandButton3";
+    private static String _numberOfCopiesField = "NumericField1";
     private static String _okButton = "CommandButton1";
     private static String _cancelButton = "CommandButton2";
 
     private static String _deviceLabel = "Label1";
     private static String _printToFileLabel = "Label2";
+    private static String _numberOfCopiesLabel = "Label3";
 
     private String L10N_deviceLabel = null;
     private String L10N_printToFileLabel = null;
-    private String L10N_propertiesButton = "Properties\u2026";
+    private String L10N_numberOfCopiesLabel = null;
     private String L10N_okButton = null;
     private String L10N_cancelButton = null;
     private String L10N_windowTitle = null;
@@ -114,6 +119,7 @@ public class PrintDialog implements XItemListener {
 
         L10N_deviceLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("deviceLabel") + ":";
         L10N_printToFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("printToFileLabel");
+        L10N_numberOfCopiesLabel = "Number of copies:";
         L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossButton");
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("cancelButton");
         L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/addon/l10n/Bundle", oooLocale).getString("embossDialogTitle");
@@ -127,8 +133,8 @@ public class PrintDialog implements XItemListener {
                             xControlContainer.getControl(_deviceListBox));
         printToFileCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                             xControlContainer.getControl(_printToFileCheckBox));
-        propertiesButton = (XButton) UnoRuntime.queryInterface(XButton.class,
-                            xControlContainer.getControl(_propertiesButton));
+        numberOfCopiesField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                            xControlContainer.getControl(_numberOfCopiesField));
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                             xControlContainer.getControl(_okButton));
         cancelButton = (XButton) UnoRuntime.queryInterface(XButton.class,
@@ -136,13 +142,12 @@ public class PrintDialog implements XItemListener {
 
         XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, xDialog)).getModel());
-        XPropertySet propertiesButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, propertiesButton)).getModel());
         deviceListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, deviceListBox)).getModel());
+        numberOfCopiesFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, numberOfCopiesField)).getModel());
 
         windowProperties.setPropertyValue("Title", L10N_windowTitle);
-        propertiesButtonProperties.setPropertyValue("Enabled", false);
 
         printToFileCheckBox.addItemListener(this);
 
@@ -163,7 +168,6 @@ public class PrintDialog implements XItemListener {
 
         okButton.setLabel(L10N_okButton);
         cancelButton.setLabel(L10N_cancelButton);
-        propertiesButton.setLabel(L10N_propertiesButton);
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                         xControlContainer.getControl(_deviceLabel));
@@ -171,6 +175,9 @@ public class PrintDialog implements XItemListener {
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                         xControlContainer.getControl(_printToFileLabel));
         xFixedText.setText(L10N_printToFileLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
+                        xControlContainer.getControl(_numberOfCopiesLabel));
+        xFixedText.setText(L10N_numberOfCopiesLabel);
 
         PrintService[] printers = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);
 
@@ -181,9 +188,17 @@ public class PrintDialog implements XItemListener {
         }
         deviceListBox.selectItemPos((short)0, true);
 
+        numberOfCopiesField.setDecimalDigits((short)0);
+        numberOfCopiesField.setMin((double)1);
+        numberOfCopiesField.setMax((double)maxNumberOfCopies);
+        numberOfCopiesField.setValue((double)numberOfCopies);
+
+        updateProperties();
+
         short ret = xDialog.execute();
 
         String deviceName = deviceListBox.getSelectedItem();
+        numberOfCopies = (int)numberOfCopiesField.getValue();
 
         xComponent.dispose();
 
@@ -196,8 +211,26 @@ public class PrintDialog implements XItemListener {
         }
     }
 
+    public void updateProperties() throws com.sun.star.uno.Exception {
+
+        printToFile = (printToFileCheckBox.getState() == (short) 1);
+        deviceListBoxProperties.setPropertyValue("Enabled", !printToFile);
+        numberOfCopiesFieldProperties.setPropertyValue("Enabled", maxNumberOfCopies > 1);
+    }
+
     public boolean getPrintToFile() {
         return printToFile;
+    }
+
+    public int getNumberOfCopies() {
+        return numberOfCopies;
+    }
+
+    public void setMaxNumberOfCopies(int maxNumberOfCopies) {
+
+        this.maxNumberOfCopies = (int)Math.max(1, maxNumberOfCopies);
+        numberOfCopiesField.setMax((double)this.maxNumberOfCopies);
+        numberOfCopies = (int)Math.min(this.maxNumberOfCopies, numberOfCopies);
     }
 
     public void itemStateChanged(ItemEvent itemEvent) {
@@ -207,8 +240,7 @@ public class PrintDialog implements XItemListener {
         try {
 
             if (source.equals(printToFileCheckBox)) {
-                printToFile = (printToFileCheckBox.getState() == (short) 1);
-                deviceListBoxProperties.setPropertyValue("Enabled", !printToFile);
+                updateProperties();
             }
 
         } catch (com.sun.star.uno.Exception ex) {

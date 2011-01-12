@@ -202,6 +202,7 @@ typedef struct
   int fill_pages;
   int fill_page_skipped;
   int blank_lines;
+  int new_print_page;
 
   int lines_pagenum[501];
   int lines_newpage[501];

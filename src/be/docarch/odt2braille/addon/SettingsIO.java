@@ -818,7 +818,11 @@ public class SettingsIO {
         }
 
         if ((b = getBooleanProperty(exportEightDotsProperty)) != null) {
-            loadedSettings.setEightDots(b);
+            try {
+                loadedSettings.setEightDots(b);
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         }
 
         if (!(d = getDoubleProperty(exportNumberOfCellsPerLineProperty)).isNaN()) {
@@ -851,14 +855,22 @@ public class SettingsIO {
 
         if ((s = getStringProperty(embosserProperty)) != null) {
             try {
-                loadedSettings.setEmbosser(EmbosserType.valueOf(s));
+                try {
+                    loadedSettings.setEmbosser(EmbosserType.valueOf(s));
+                } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
             } catch (IllegalArgumentException ex) {
                 logger.log(Level.SEVERE, null, s + " is no valid embossertype");
             }
         }
         
         if ((b = getBooleanProperty(saddleStitchProperty)) != null) {
-            loadedSettings.setSaddleStitch(b);
+            try {
+                loadedSettings.setSaddleStitch(b);
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         }
 
         if (!(d = getDoubleProperty(sheetsPerQuireProperty)).isNaN()) {
@@ -874,7 +886,11 @@ public class SettingsIO {
         }
 
         if ((b = getBooleanProperty(embossEightDotsProperty)) != null) {
-            loadedSettings.setEightDots(b);
+            try {
+                loadedSettings.setEightDots(b);
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         }
 
         if ((s = getStringProperty(paperSizeProperty)) != null) {
@@ -888,6 +904,8 @@ public class SettingsIO {
                 }
             } catch (IllegalArgumentException ex) {
                 logger.log(Level.SEVERE, null, s + " is no valid papersize");
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
             }
         }
 

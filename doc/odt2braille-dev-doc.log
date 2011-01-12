@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.5.7)  4 OCT 2010 10:44
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.12.16)  22 DEC 2010 16:15
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-dev-doc.texi
@@ -499,24 +499,7 @@ t2braille-dev-doc.toc) [-1]
 t2braille-dev-doc.toc)
 (C:\Users\freesb\Documents\NetBeansProjects\odt2braille\Odt2BrailleAddOn\doc\od
 t2braille-dev-doc.toc) (Introduction) Chapter 1 [1]
-Underfull \hbox (badness 10000) in paragraph at lines 94--96
- []@texttt svn co https://odt2braille.svn.sourceforge.net/svnroot/odt2braille
-
-@hbox(7.60416+2.43333)x433.62
-.@glue(@leftskip) 21.68121
-.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
-..@glue 0.0 plus 1.0fil minus 1.0fil
-..@mathon
-..@textsy  
-..@mathoff
-..@kern 7.22743
-.@texttt s
-.@texttt v
-.@texttt n
-.etc.
-
-[2]
-Overfull \hbox (7.19888pt too wide) in paragraph at lines 177--179
+Overfull \hbox (7.19888pt too wide) in paragraph at lines 80--82
  []@textrm Javadoc: [][]@texttt http://java.sun.com/j2se/javadoc/downloads/inde
 x.html#findjavadoc[][][] 
 
@@ -533,33 +516,254 @@ x.html#findjavadoc[][][]
 .@kern-0.30418
 .etc.
 
-Chapter 2 [3] Chapter 3 [4] Chapter 4 [5] Chapter 5 [6] [7]
-l.422: Unicode char @u8:“ not defined for Texinfo
-l.422: Unicode char @u8:” not defined for Texinfo
-l.423: Unicode char @u8:“ not defined for Texinfo
-l.423: Unicode char @u8:” not defined for Texinfo
-l.439: Unicode char @u8:“ not defined for Texinfo
-l.439: Unicode char @u8:” not defined for Texinfo [8] ) 
+
+Underfull \hbox (badness 10000) in paragraph at lines 107--109
+ []@texttt svn checkout https://odt2braille.svn.sourceforge.net/svnroot/odt2bra
+ille
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@texttt s
+.@texttt v
+.@texttt n
+.etc.
+
+[2]
+Overfull \hbox (7.29132pt too wide) in paragraph at lines 140--142
+ []@textrm The .oxt file will be cre-ated in @texttt path/to/odt2braille/folder
+/Odt2BrailleAddOn/dist[]@textrm . 
+
+@hbox(7.60416+2.43333)x433.62, glue set - 1.0
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@textrm T
+.@textrm h
+.@textrm e
+.etc.
+
+
+Overfull \hbox (7.29132pt too wide) in paragraph at lines 150--152
+ []@textrm The .oxt file will be cre-ated in @texttt path/to/odt2braille/folder
+/Odt2BrailleAddOn/dist[]@textrm . 
+
+@hbox(7.60416+2.43333)x433.62, glue set - 1.0
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@textrm T
+.@textrm h
+.@textrm e
+.etc.
+
+Chapter 2 [3]
+Overfull \hbox (214.66818pt too wide) in paragraph at lines 179--181
+ [][][]@texttt http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2B
+railleAddOn/src/be/docarch/odt2braille/addon/[][][] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@pdfliteral{0 0.89 0.94 0.28 k}
+.@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
+ /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
+
+
+Overfull \hbox (208.9195pt too wide) in paragraph at lines 181--183
+ [][][]@texttt http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Br
+ailleAddOn/src/be/docarch/odt2braille/addon/[][][] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@pdfliteral{0 0.89 0.94 0.28 k}
+.@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
+ /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
+
+
+Overfull \hbox (157.1813pt too wide) in paragraph at lines 204--206
+ [][][]@texttt https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2
+Braille/src/be/docarch/odt2braille/[][][] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@pdfliteral{0 0.89 0.94 0.28 k}
+.@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
+ /URI /URI (https://odt2braille.svn.sourceforg@ETC.}
+
+
+Overfull \hbox (145.68393pt too wide) in paragraph at lines 206--208
+ [][][]@texttt http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Br
+aille/src/be/docarch/odt2braille/[][][] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@pdfliteral{0 0.89 0.94 0.28 k}
+.@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
+ /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
+
+Chapter 3 [4]
+Overfull \hbox (35.91147pt too wide) in paragraph at lines 233--235
+ []@texttt svn checkout http://liblouis.googlecode.com/svn/trunk/ path/to/liblo
+uis/folder/[] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@texttt s
+.@texttt v
+.@texttt n
+.etc.
+
+
+Overfull \hbox (70.4036pt too wide) in paragraph at lines 235--237
+ []@texttt svn checkout http://liblouisxml.googlecode.com/svn/trunk/ path/to/li
+blouisxml/folder/[] 
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@texttt s
+.@texttt v
+.@texttt n
+.etc.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 253--255
+ []@texttt svn checkout http://brailleutils.googlecode.com/svn/trunk/braille/
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@texttt s
+.@texttt v
+.@texttt n
+.etc.
+
+
+Overfull \hbox (76.06271pt too wide) in paragraph at lines 264--266
+ []@textrm The files @texttt brailleUtils.jar[] @textrm and @texttt catalog.jar
+[] @textrm will be cre-ated in @texttt path/to/brailleutils/folder/ant-
+
+@hbox(7.60416+2.43333)x433.62, glue set - 1.0
+.@glue(@leftskip) 21.68121
+.@hbox(6.3875+0.9125)x0.0, glue set - 15.74413fil
+..@glue 0.0 plus 1.0fil minus 1.0fil
+..@mathon
+..@textsy  
+..@mathoff
+..@kern 7.22743
+.@textrm T
+.@textrm h
+.@textrm e
+.etc.
+
+[5] Chapter 4 [6]
+Underfull \hbox (badness 10000) in paragraph at lines 378--388
+ [][]@texttt -subpackages be.docarch:org.daisy:com_braillo:com_indexbraille:com
+_
+
+@hbox(6.69167+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(0.0+0.0)x0.0
+.@hbox(0.0+0.0)x3.65
+..@glue(@spaceskip) 3.65
+.@texttt -
+.@discretionary
+.etc.
+
+
+Overfull \hbox (566.88943pt too wide) in paragraph at lines 378--388
+ [][]@texttt -sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\t
+o\odt2braille\folder\Odt2Braille\src;path\to\brailleutils\folder\src;path\to\br
+ailleutils\folder\catalog
+
+@hbox(7.60416+2.43333)x433.62
+.@glue(@leftskip) 21.68121
+.@hbox(0.0+0.0)x0.0
+.@hbox(0.0+0.0)x3.65
+..@glue(@spaceskip) 3.65
+.@texttt -
+.@discretionary
+.etc.
+
+[7] Chapter 5 [8] [9] l.510: Unicode char @u8:“ not defined for Texinfo
+l.510: Unicode char @u8:” not defined for Texinfo
+l.511: Unicode char @u8:“ not defined for Texinfo
+l.511: Unicode char @u8:” not defined for Texinfo
+l.527: Unicode char @u8:“ not defined for Texinfo
+l.527: Unicode char @u8:” not defined for Texinfo [10] ) 
 Here is how much of TeX's memory you used:
- 2150 strings out of 497541
- 24541 string characters out of 3209714
- 53349 words of memory out of 3000000
- 3099 multiletter control sequences out of 15000+200000
+ 2160 strings out of 497541
+ 24687 string characters out of 3209712
+ 54340 words of memory out of 3000000
+ 3106 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
- 12i,6n,17p,354b,305s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files (x86
-)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86)/
-MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files (x86)/M
-iKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (x86)/MiK
-TeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files (x86)/MiKTe
-X 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2
-.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.8
-/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/f
-onts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-dev-doc.pdf (11 pages, 151177 bytes).
+ 12i,6n,17p,354b,309s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x8
+6)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86)
+/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files (x86)/
+MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (x86)/Mi
+KTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files (x86)/MiKT
+eX 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 
+2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.
+8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/
+fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on odt2braille-dev-doc.pdf (13 pages, 163446 bytes).
 PDF statistics:
- 194 PDF objects out of 1000 (max. 8388607)
- 18 named destinations out of 1000 (max. 500000)
- 165 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 275 PDF objects out of 1000 (max. 8388607)
+ 21 named destinations out of 1000 (max. 500000)
+ 269 words of extra memory for PDF output out of 10000 (max. 10000000)
 

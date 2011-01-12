@@ -1042,6 +1042,7 @@ read_configuration_file (const char *configFileList, const char
       ud->fill_page_skipped = 0;
       ud->blank_lines = 0;
       ud->lines_length = 0;
+      ud->new_print_page = 0;
 
 /******************************************************************/
 

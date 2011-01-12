@@ -153,12 +153,15 @@ Version ?
 =============================
 
 * New embossers:
-** Index 4x4 Pro V3
-** ...
 
-* odt2braille fonts: updated (v1.2)
+** Index Basic-S V2
+** Index 4X4 Pro V2
+** Index 4X4 Pro V3
+** Index 4Waves Pro V3
+
 
 * New user preferences:
+
 ** Volume info / transcription info:
 	- use paragraph style
 ** Paragraphs / headings:
@@ -170,11 +173,20 @@ Version ?
 	- don't splits items
 ** Tables:
 	- don't split rows
+	
+	
+* New embossing options:
+
+** Number of copies
+** Magazine style
+** Z-Folding
+
 
 * Bug fixes:
-** Some list numbering bugs
-	
-* Hyphenation tables: updated
-** Polish ?
-** Slovene ?
 
+** Some list numbering bugs
+** Page numbering bug
+** Custom paper
+
+
+* odt2braille fonts: updated (version 1.2)

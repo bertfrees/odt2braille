@@ -96,7 +96,7 @@ public class PreviewDialog implements XItemListener,
     private static String FONT_DOTS;
 
     private static final short DEFAULT_FONT_SIZE = 20;
-    private static final short MIN_FONTSIZE = 20;
+    private static final short MIN_FONTSIZE = 16;
     private static final short MAX_FONTSIZE = 50;
 
     private static final int X_BACK_BUTTON = 2*7;

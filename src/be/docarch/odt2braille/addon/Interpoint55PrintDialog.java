@@ -145,9 +145,9 @@ public class Interpoint55PrintDialog implements XActionListener,
      * @param xContext
      */
     public Interpoint55PrintDialog(XComponentContext xContext,
-                                    XComponent xDesktopComponent,
-                                    Settings settings)
-                             throws com.sun.star.uno.Exception {
+                                   XComponent xDesktopComponent,
+                                   Settings settings)
+                            throws com.sun.star.uno.Exception {
 
         logger.entering("Interpoint55PrintDialog", "<init>");
 

@@ -597,7 +597,7 @@ public class UnoGUI {
             changedSettings = new Settings(loadedSettings);
 
             // Create emboss dialog
-            EmbossDialog embossDialog = new EmbossDialog(m_xContext, changedSettings, progressBar);
+            EmbossDialog embossDialog = new EmbossDialog(m_xContext, parentWindowPeer, changedSettings, progressBar);
 
             // Close progress bar
             progressBar.finish(true);
@@ -714,6 +714,24 @@ public class UnoGUI {
 
                 PrintDialog printDialog = new PrintDialog(m_xContext);
 
+                switch (changedSettings.getEmbosser()) {
+
+                    case INDEX_BASIC_D_V3:
+                    case INDEX_EVEREST_D_V3:
+                    case INDEX_4X4_PRO_V3:
+                    case INDEX_4WAVES_PRO_V3:
+                        printDialog.setMaxNumberOfCopies(10000);
+                        break;
+                    case INDEX_BASIC_S_V2:
+                    case INDEX_BASIC_D_V2:
+                    case INDEX_EVEREST_D_V2:
+                    case INDEX_4X4_PRO_V2:
+                        printDialog.setMaxNumberOfCopies(999);
+                        break;
+                    default:
+
+                }
+
                 if ((deviceName=printDialog.execute()).equals("")) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
@@ -722,7 +740,7 @@ public class UnoGUI {
                 if (!printDialog.getPrintToFile()) {
 
                     // Print to device
-                    if(!handlePef.embossToDevice(deviceName)) {
+                    if(!handlePef.embossToDevice(deviceName, printDialog.getNumberOfCopies())) {
                         return false;
                     }
 
@@ -744,7 +762,7 @@ public class UnoGUI {
                     String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
 
                     // Print to File
-                    if(!handlePef.embossToFile(new File(exportUrl))) {
+                    if(!handlePef.embossToFile(new File(exportUrl), printDialog.getNumberOfCopies())) {
                         logger.log(Level.INFO, "Emboss to file failed");
                         return false;
                     }
