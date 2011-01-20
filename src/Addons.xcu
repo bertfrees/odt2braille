@@ -3,7 +3,7 @@
 <oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
     <node oor:name="AddonUI">
         <node oor:name="OfficeMenuBarMerging">
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon" oor:op="replace">
                 <node oor:name="S1" oor:op="replace">
                     <prop oor:name="MergePoint">
                         <value>.uno:PickList\.uno:ExportToPDF</value>
@@ -20,29 +20,29 @@
                     <node oor:name="MenuItems">
                         <node oor:name="M1" oor:op="replace">
                             <prop oor:name="URL">
-                                <value>be.docarch.odt2braille.addon.odt2brailleaddon:ExportCommand</value>
+                                <value>be.docarch.odt2braille.ooo.odt2brailleaddon:ExportCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
 							
-								<value xml:lang="en">~Export as Braille…</value>
-								
-								<value xml:lang="ca">~Exporta a braille…</value>
-								<value xml:lang="de">~Exportieren als Brailledatei…</value>
-								<value xml:lang="es">~Exportar a braille…</value>
-								<value xml:lang="fr">~Exporter en fichier Braille…</value>
-								<value xml:lang="it">~Esporta in Braille…</value>
-								<value xml:lang="nb">~Eksporter som punktskrift…</value>
-								<value xml:lang="nl">~Exporteren als Braille…</value>
-								<value xml:lang="pt">~Exportar como Braille…</value>
-								<value xml:lang="pt-BR">~Exportar como Braille…</value>
-								<value xml:lang="sl">~Izvozi kot brajico …</value>
-								
-						   <!-- <value xml:lang="cs">~</value> -->
-						   <!-- <value xml:lang="da">~</value> -->
-						   <!-- <value xml:lang="is">~</value> -->
-						   <!-- <value xml:lang="sv">~</value> -->
+                                <value xml:lang="en">~Export as Braille…</value>
 
-						   </prop>
+                                <value xml:lang="ca">~Exporta a braille…</value>
+                                <value xml:lang="de">~Exportieren als Brailledatei…</value>
+                                <value xml:lang="es">~Exportar a braille…</value>
+                                <value xml:lang="fr">~Exporter en fichier Braille…</value>
+                                <value xml:lang="it">~Esporta in Braille…</value>
+                                <value xml:lang="nb">~Eksporter som punktskrift…</value>
+                                <value xml:lang="nl">~Exporteren als Braille…</value>
+                                <value xml:lang="pt">~Exportar como Braille…</value>
+                                <value xml:lang="pt-BR">~Exportar como Braille…</value>
+                                <value xml:lang="sl">~Izvozi kot brajico …</value>
+								
+                                <!-- <value xml:lang="cs">~</value> -->
+                                <!-- <value xml:lang="da">~</value> -->
+                                <!-- <value xml:lang="is">~</value> -->
+                                <!-- <value xml:lang="sv">~</value> -->
+
+                            </prop>
                         </node>
                     </node>
                 </node>
@@ -62,7 +62,7 @@
                     <node oor:name="MenuItems">
                         <node oor:name="M2" oor:op="replace">
                             <prop oor:name="URL" oor:type="xs:string">
-                                <value>be.docarch.odt2braille.addon.odt2brailleaddon:EmbossCommand</value>
+                                <value>be.docarch.odt2braille.ooo.odt2brailleaddon:EmbossCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
 							
@@ -127,32 +127,32 @@
                             <node oor:name="Submenu">
                                 <node oor:name="M4" oor:op="replace">
                                     <prop oor:name="URL" oor:type="xs:string">
-                                        <value>be.docarch.odt2braille.addon.odt2brailleaddon:InsertDotPatternCommand</value>
+                                        <value>be.docarch.odt2braille.ooo.odt2brailleaddon:InsertDotPatternCommand</value>
                                     </prop>
                                     <prop oor:name="Title" oor:type="xs:string">
                                         <value xml:lang="en">~Dot Pattern Entry Mode…</value>
 
-										<value xml:lang="ca">~Entrada mitjançant el patró de punts…</value>
-										<value xml:lang="de">~Punktmustereingabemodus…</value>
-										<value xml:lang="es">~Entrada mediante patrón de puntos…</value>
-										<value xml:lang="fr">~Mode de saisie point-à-point…</value>
-										<value xml:lang="nl">~Invoeren met puntjespatronen…</value>
-										<value xml:lang="pt">~Modo de entrada por padrão de pontos…</value>
-										<value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
-										<value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
+                                        <value xml:lang="ca">~Entrada mitjançant el patró de punts…</value>
+                                        <value xml:lang="de">~Punktmustereingabemodus…</value>
+                                        <value xml:lang="es">~Entrada mediante patrón de puntos…</value>
+                                        <value xml:lang="fr">~Mode de saisie point-à-point…</value>
+                                        <value xml:lang="nl">~Invoeren met puntjespatronen…</value>
+                                        <value xml:lang="pt">~Modo de entrada por padrão de pontos…</value>
+                                        <value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
+                                        <value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
 										
-								   <!-- <value xml:lang="cs">~</value> -->
-								   <!-- <value xml:lang="da">~</value> -->
-								   <!-- <value xml:lang="is">~</value> -->
-								   <!-- <value xml:lang="it">~</value> -->
-								   <!-- <value xml:lang="nb">~</value> -->
-								   <!-- <value xml:lang="sv">~</value> -->
+                                       <!-- <value xml:lang="cs">~</value> -->
+                                       <!-- <value xml:lang="da">~</value> -->
+                                       <!-- <value xml:lang="is">~</value> -->
+                                       <!-- <value xml:lang="it">~</value> -->
+                                       <!-- <value xml:lang="nb">~</value> -->
+                                       <!-- <value xml:lang="sv">~</value> -->
 										
                                     </prop>
                                 </node>
                                 <node oor:name="M5" oor:op="replace">
                                     <prop oor:name="URL" oor:type="xs:string">
-                                        <value>be.docarch.odt2braille.addon.odt2brailleaddon:InsertSixKeysCommand</value>
+                                        <value>be.docarch.odt2braille.ooo.odt2brailleaddon:InsertSixKeysCommand</value>
                                     </prop>
                                     <prop oor:name="Title" oor:type="xs:string">
                                         <value xml:lang="en">~6 Key Entry Mode…</value>
@@ -195,7 +195,7 @@
                     <node oor:name="MenuItems">
                         <node oor:name="M6" oor:op="replace">
                             <prop oor:name="URL" oor:type="xs:string">
-                                <value>be.docarch.odt2braille.addon.odt2brailleaddon:SettingsCommand</value>
+                                <value>be.docarch.odt2braille.ooo.odt2brailleaddon:SettingsCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
 							
@@ -224,9 +224,9 @@
             </node>
         </node>
         <node oor:name="Images">
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.exportcommand.images" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.exportcommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>be.docarch.odt2braille.addon.odt2brailleaddon:ExportCommand</value>
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:ExportCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
@@ -234,9 +234,9 @@
                     </prop>
                 </node>
             </node>
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.embosscommand.images" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.embosscommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>be.docarch.odt2braille.addon.odt2brailleaddon:EmbossCommand</value>
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:EmbossCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
@@ -244,9 +244,9 @@
                     </prop>
                 </node>
             </node>
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.settingscommand.images" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.settingscommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>be.docarch.odt2braille.addon.odt2brailleaddon:SettingsCommand</value>
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:SettingsCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
@@ -254,9 +254,9 @@
                     </prop>
                 </node>
             </node>
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.insertdotpatterncommand.images" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.insertdotpatterncommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>be.docarch.odt2braille.addon.odt2brailleaddon:InsertDotPatternCommand</value>
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:InsertDotPatternCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">
@@ -264,9 +264,9 @@
                     </prop>
                 </node>
             </node>
-            <node oor:name="be.docarch.odt2braille.addon.odt2brailleaddon.insertsixkeyscommand.images" oor:op="replace">
+            <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.insertsixkeyscommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
-                    <value>be.docarch.odt2braille.addon.odt2brailleaddon:InsertSixKeysCommand</value>
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:InsertSixKeysCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">

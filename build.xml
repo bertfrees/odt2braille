@@ -68,15 +68,6 @@
     nbproject/build-impl.xml file. 
 
     -->
-	
-        <!-- copy necessary .jar files to Odt2BrailleAddOn/dist/lib -->
-        <target name="-post-jar">
-
-                <echo message="post jar building" />
-
-                <copy file="${reference.Odt2Braille.jar}"    tofile="${dist.dir}/${external.jar.dir}/Odt2Braille.jar"    overwrite="true" />
-
-        </target>
 
         <!-- ask target.os as an input -->
         <target name="init-target-os">

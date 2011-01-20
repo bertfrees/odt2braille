@@ -9,7 +9,7 @@
     <platform value="@platform-oxt@" />
 	
     <!-- Identifier -->
-    <identifier value="be.docarch.odt2braille.addon.Odt2BrailleAddOn"/>
+    <identifier value="be.docarch.odt2braille.ooo.Odt2BrailleAddOn"/>
 	
     <!-- OpenOffice.org Minimal Version -->
     <dependencies>
