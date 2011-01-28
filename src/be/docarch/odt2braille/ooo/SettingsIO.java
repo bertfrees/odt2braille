@@ -882,7 +882,11 @@ public class SettingsIO {
         }
 
         if ((b = getBooleanProperty(zFoldingProperty)) != null) {
-            loadedSettings.setZFolding(b);
+            try {
+                loadedSettings.setZFolding(b);
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
         }
 
         if ((b = getBooleanProperty(embossDuplexProperty)) != null) {

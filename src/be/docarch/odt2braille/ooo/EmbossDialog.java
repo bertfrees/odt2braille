@@ -428,6 +428,7 @@ public class EmbossDialog implements XItemListener,
         paperHeightUnitListBox.addItemListener(this);
         duplexCheckBox.addItemListener(this);
         saddleStitchCheckBox.addItemListener(this);
+        zFoldingCheckBox.addItemListener(this);
         eightDotsCheckBox.addItemListener(this);
         paperWidthTextComponent.addTextListener(this);
         paperHeightTextComponent.addTextListener(this);
@@ -526,12 +527,11 @@ public class EmbossDialog implements XItemListener,
         paperHeightUnitListBox.addItem("in", (short)1);
         paperHeightUnitListBox.selectItemPos((short)0, true);
 
-        zFoldingCheckBox.setState((short)(settings.getZFolding()?1:0));
-        zFoldingCheckBoxProperties.setPropertyValue("Enabled", settings.zFoldingIsSupported());
         sheetsPerQuireField.setValue((double)settings.getSheetsPerQuire());
 
         updateEmbosserListBox();
         updateSaddleStitchCheckBox();
+        updateZFoldingCheckBox();
         updateDuplexCheckBox();
         updateEightDotsCheckBox();
         updatePaperSizeListBox();
@@ -545,7 +545,6 @@ public class EmbossDialog implements XItemListener,
     private void getDialogValues() {
 
         settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
-        settings.setZFolding(zFoldingCheckBox.getState()==(short)1);
         settings.setSheetsPerQuire((int)sheetsPerQuireField.getValue());
 
     }
@@ -686,6 +685,14 @@ public class EmbossDialog implements XItemListener,
 
     }
 
+    private void updateZFoldingCheckBox() throws com.sun.star.uno.Exception {
+
+        zFoldingCheckBox.removeItemListener(this);
+                zFoldingCheckBox.setState((short)(settings.getZFolding()?1:0));
+                zFoldingCheckBoxProperties.setPropertyValue("Enabled", settings.zFoldingIsSupported());
+        zFoldingCheckBox.addItemListener(this);
+    }
+
     /**
      * Update the 'Recto-verso' checkbox.
      *
@@ -821,6 +828,7 @@ public class EmbossDialog implements XItemListener,
 
         try {
             cellsPerLineFieldProperties.setPropertyValue("Enabled", false);
+            linesPerPageFieldProperties.setPropertyValue("Enabled", false);
             marginInnerFieldProperties.setPropertyValue("Enabled", false);
             marginOuterFieldProperties.setPropertyValue("Enabled", false);
             marginTopFieldProperties.setPropertyValue("Enabled", false);
@@ -841,10 +849,8 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setEmbosser(embosserTypes.get(embosserListBox.getSelectedItemPos()));
 
-                zFoldingCheckBox.setState((short)(settings.getZFolding()?1:0));
-                zFoldingCheckBoxProperties.setPropertyValue("Enabled", settings.zFoldingIsSupported());
-
                 updateSaddleStitchCheckBox();
+                updateZFoldingCheckBox();
                 updateDuplexCheckBox();
                 updateEightDotsCheckBox();                
                 updatePaperSizeListBox();
@@ -886,6 +892,12 @@ public class EmbossDialog implements XItemListener,
                 updatePaperDimensionFields();
                 updateDimensionFields();
                 updateOKButton();
+
+            } else if (source.equals(zFoldingCheckBox)) {
+
+                settings.setZFolding(zFoldingCheckBox.getState()==(short)1);
+                updateDuplexCheckBox();
+                updateDimensionFields();
 
             }
 

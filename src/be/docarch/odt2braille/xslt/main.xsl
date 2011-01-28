@@ -1697,6 +1697,25 @@ BLOCK ELEMENTS
         </xsl:attribute>
     </xsl:template>
 
+    <xsl:template match="mmultiscripts | math:mmultiscripts"
+                  mode="math">
+        <xsl:choose>
+            <xsl:when test="count(child::*) = 6 and local-name(child::*[4]) = 'mprescripts'">
+                <xsl:element name="math:mmultiscripts">
+                    <xsl:apply-templates select="@*" mode="math"/>
+                    <xsl:element name="math:msubsup">
+                        <xsl:apply-templates select="child::*[position() &lt;= 3]" mode="math"/>
+                    </xsl:element>
+                    <xsl:apply-templates select="child::*[position() > 3]" mode="math"/>
+                </xsl:element>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:element name="math:mmultiscripts">
+                    <xsl:apply-templates select="@*|node()" mode="math"/>
+                </xsl:element>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
     
     <!-- FRAME LINKS -->
 

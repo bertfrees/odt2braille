@@ -220,7 +220,7 @@ public class HandlePEF {
 
         switch (settings.getEmbosser()) {
 
-            /* Margins not in header / configuration file */
+            /* Margins not in header (or configuration file) */
             case INDEX_BASIC_BLUE_BAR:
             case INDEX_BASIC_S_V2:
             case INDEX_BASIC_D_V2:
@@ -233,7 +233,7 @@ public class HandlePEF {
                 topOffset = settings.getMarginTop();
                 break;
 
-            /* Margins in header / configuration file */
+            /* Margins in header (or configuration file) */
             case INDEX_BASIC_D_V3:
             case INDEX_EVEREST_D_V3:
             case INDEX_4X4_PRO_V3:

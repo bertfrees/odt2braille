@@ -9,10 +9,10 @@
 @unnsecentry{Source Code}{10001.2}{}{2}
 @unnsecentry{Building}{10001.3}{}{3}
 @numchapentry{Project Overview}{2}{Project Overview}{4}
-@unnsecentry{Odt2BrailleAddOn}{10001.1}{Odt2BrailleAddOn}{4}
+@unnsecentry{be.docarch.odt2braille.ooo}{10001.1}{be.docarch.odt2braille.ooo}{4}
 @unnsubsecentry{Documentation}{10001.1.1}{}{4}
 @unnsubsecentry{View code}{10001.1.2}{}{4}
-@unnsecentry{Odt2Braille}{10001.2}{Odt2Braille}{4}
+@unnsecentry{be.docarch.odt2braille}{10001.2}{be.docarch.odt2braille}{4}
 @unnsubsecentry{Documentation}{10001.2.1}{}{4}
 @unnsubsecentry{View code}{10001.2.2}{}{4}
 @numchapentry{Libraries}{3}{Libraries}{5}

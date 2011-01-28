@@ -95,7 +95,7 @@ Leave @emph{"User"} and @emph{"Password"} fields blank.
 @item
 @emph{Next >}
 @item
-@emph{Repository Folders}: "Odt2Braille, Odt2BrailleAddOn"
+@emph{Repository Folders}: "Odt2BrailleAddOn"
 @item
 Check @emph{"Scan for NetBeans Projects after checkout"}.
 @item
@@ -110,22 +110,16 @@ The code can also be downloaded without NetBeans:
 
 @unnumberedsec Building
 
-Build Odt2Braille and Odt2BrailleAddOn with NetBeans:
+Build with NetBeans:
 @itemize @minus
 @item
 Open @emph{"Projects"} window
 @item
-Right click the Odt2Braille project and choose menu item @emph{"Build"}.
-@item
 Right click the Odt2BrailleAddOn project and choose menu item @emph{"Build"}.
 @end itemize
 
-Build Odt2Braille and Odt2BrailleAddOn with Apache ANT:
+Build with Apache ANT:
 @itemize @minus
-@item
-@code{cd path/to/odt2braille/folder/Odt2Braille}
-@item
-@code{ant}
 @item
 @code{cd path/to/odt2braille/folder/Odt2BrailleAddOn}
 @item
@@ -154,43 +148,40 @@ The .oxt file will be created in @code{path/to/odt2braille/folder/Odt2BrailleAdd
 @node Project Overview
 @chapter Project Overview
 
-This is an overview of the projects that are created in NetBeans after odt2braille has been succesfully checked out.
-
 @menu
-* Odt2BrailleAddOn::
-* Odt2Braille::
+* be.docarch.odt2braille.ooo::
+* be.docarch.odt2braille::
 @end menu
 
-@node Odt2BrailleAddOn
-@unnumberedsec Odt2BrailleAddOn
+@node be.docarch.odt2braille.ooo
+@unnumberedsec be.docarch.odt2braille.ooo
 
-Odt2BrailleAddOn is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API.
+be.docarch.odt2braille.ooo is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API.
 It takes care of the graphical user interface (menu's, dialogs, progress bars, etc.) and
 allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document.
-For the actual document processing, Odt2BrailleAddOn relies on the Odt2Braille library.
 
 @unnumberedsubsec Documentation
 
-@code{@url{javadoc/be/docarch/odt2braille/addon/package-summary.html, be.docarch.odt2braille.addon}}
+@code{@url{javadoc/be/docarch/odt2braille/ooo/package-summary.html, be.docarch.odt2braille.ooo}}
 
 @unnumberedsubsec View code
 
 @itemize @minus
 @item
-@url{http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/}
+@url{http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/}
 @item
-@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/}
+@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/}
 @end itemize
 
-@node Odt2Braille
-@unnumberedsec Odt2Braille
+@node be.docarch.odt2braille
+@unnumberedsec be.docarch.odt2braille
 
-The Odt2Braille library takes care of the actual document processing. It enables the conversion of a 
+The be.docarch.odt2braille subpackage takes care of the actual document processing. It enables the conversion of a 
 flat xml odt file to a @url{http://www.daisy.org/projects/braille/braille_workarea/pef.html, pef}
 (Portable Embosser Format) file. Furthermore, this pef file can be converted to a variety of other
 generic braille formats, or it can be converted to an embosser-specific braille file
 (and optionally sent to an embosser device).
-The braille transcription is powered by liblouisxml, and for the pef processing, Odt2Braille uses
+The braille transcription is powered by liblouisxml, and for the pef processing, odt2braille uses
 the BrailleUtils library. The Java OpenDocument Library (JODL) is used for creating and cleaning 
 the flat .odt file (see @url{http://odt2daisy.sourceforge.net/downloads/}).
 
@@ -202,9 +193,9 @@ the flat .odt file (see @url{http://odt2daisy.sourceforge.net/downloads/}).
 
 @itemize @minus
 @item
-@url{https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2Braille/src/be/docarch/odt2braille/}
+@url{https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/}
 @item
-@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Braille/src/be/docarch/odt2braille/}
+@url{http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/}
 @end itemize
 
 @node Libraries
@@ -383,7 +374,7 @@ javadoc [-private]
 @*@w{        }[-breakiterator]
 @*@w{         }-d path\to\odt2braille\folder\Odt2BrailleAddOn\doc\javadoc
 @*@w{         }-subpackages be.docarch:org.daisy:com_braillo:com_indexbraille:com_yourdolphin:de_brailletec:org_daisy:se_tpb
-@*@w{         }-sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\to\odt2braille\folder\Odt2Braille\src;path\to\brailleutils\folder\src;path\to\brailleutils\folder\catalog
+@*@w{         }-sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\to\brailleutils\folder\src;path\to\brailleutils\folder\catalog
 }
 @end itemize
 

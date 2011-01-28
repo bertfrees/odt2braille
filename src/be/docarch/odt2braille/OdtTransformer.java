@@ -78,7 +78,7 @@ import com.versusoft.packages.jodl.RomanNumbering;
  * @see <a href="http://www.daisy.org/z3986/2005/Z3986-2005.html">DAISY xml specification</a>
  * @author Bert Frees
  */
-public class OdtTransformer /* implements AbstractChecker */ {
+public class OdtTransformer /* implements ExternalChecker */ {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
 
@@ -97,7 +97,7 @@ public class OdtTransformer /* implements AbstractChecker */ {
     private File daisyFile2 = null;
     private File usedStylesFile = null;
     private File usedLanguagesFile = null;
-    private File earlReport = null;
+    //private File earlReport = null;
     private Locale odtLocale = null;
     private Locale oooLocale = null;
 
@@ -167,11 +167,9 @@ public class OdtTransformer /* implements AbstractChecker */ {
         ZipFile zip = new ZipFile(odtFile.getAbsolutePath());
         //getFileFromZip(zip, "content.xml", origContentFile);
         getFileFromZip(zip, "styles.xml",  stylesFile);
-        //zip.close();
+        zip.close();
 
         //makeControlFlow(origContentFile);
-
-        //addFilesToZip(odtFile, new File[] { contentFile }, new String[] {"content.xml"});
 
         // Locale
 
@@ -247,7 +245,7 @@ public class OdtTransformer /* implements AbstractChecker */ {
     }
 
     public void makeEarlReport() throws IOException,
-                                        TransformerException {
+                                       TransformerException {
 
         logger.entering("OdtTransformer","makeEarlReport");
 
@@ -1808,19 +1806,19 @@ public class OdtTransformer /* implements AbstractChecker */ {
         return flatOdtFile;
     }
 
-    public File getAccessibilityData() {
-
-        /* if (earlReport == null) {
-            try {
-                makeEarlReport();
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } catch (TransformerException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        } */
-        return earlReport;
-    }
+//    public File getAccessibilityReport() {
+//
+//        if (earlReport == null) {
+//            try {
+//                makeEarlReport();
+//            } catch (IOException ex) {
+//                logger.log(Level.SEVERE, null, ex);
+//            } catch (TransformerException ex) {
+//                logger.log(Level.SEVERE, null, ex);
+//            }
+//        }
+//        return earlReport;
+//    }
 
     public Locale getOdtLocale() {
         return odtLocale;

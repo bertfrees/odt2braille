@@ -57,15 +57,15 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 </li></ul>
 <li><a name="toc_Project-Overview" href="#Project-Overview">2 Project Overview</a>
 <ul>
-<li><a href="#Odt2BrailleAddOn">Odt2BrailleAddOn</a>
+<li><a href="#be_002edocarch_002eodt2braille_002eooo">be.docarch.odt2braille.ooo</a>
 <ul>
-<li><a href="#Odt2BrailleAddOn">Documentation</a>
-<li><a href="#Odt2BrailleAddOn">View code</a>
+<li><a href="#be_002edocarch_002eodt2braille_002eooo">Documentation</a>
+<li><a href="#be_002edocarch_002eodt2braille_002eooo">View code</a>
 </li></ul>
-<li><a href="#Odt2Braille">Odt2Braille</a>
+<li><a href="#be_002edocarch_002eodt2braille">be.docarch.odt2braille</a>
 <ul>
-<li><a href="#Odt2Braille">Documentation</a>
-<li><a href="#Odt2Braille">View code</a>
+<li><a href="#be_002edocarch_002eodt2braille">Documentation</a>
+<li><a href="#be_002edocarch_002eodt2braille">View code</a>
 </li></ul>
 </li></ul>
 <li><a name="toc_Libraries" href="#Libraries">3 Libraries</a>
@@ -172,7 +172,7 @@ by selecting the appropriate OpenOffice.org installation and OpenOffice.org SDK 
 <li><em>Repository URL</em>: "https://odt2braille.svn.sourceforge.net/svnroot/odt2braille". 
 Leave <em>"User"</em> and <em>"Password"</em> fields blank. 
 <li><em>Next &gt;</em>
-<li><em>Repository Folders</em>: "Odt2Braille, Odt2BrailleAddOn"
+<li><em>Repository Folders</em>: "Odt2BrailleAddOn"
 <li>Check <em>"Scan for NetBeans Projects after checkout"</em>. 
 <li><em>Finish</em>
 </ul>
@@ -184,17 +184,14 @@ Leave <em>"User"</em> and <em>"Password"</em> fields blank.
 
 <h3 class="unnumberedsec">Building</h3>
 
-<p>Build Odt2Braille and Odt2BrailleAddOn with NetBeans:
+<p>Build with NetBeans:
      <ul>
 <li>Open <em>"Projects"</em> window
-<li>Right click the Odt2Braille project and choose menu item <em>"Build"</em>. 
 <li>Right click the Odt2BrailleAddOn project and choose menu item <em>"Build"</em>. 
 </ul>
 
-   <p>Build Odt2Braille and Odt2BrailleAddOn with Apache ANT:
+   <p>Build with Apache ANT:
      <ul>
-<li><code>cd path/to/odt2braille/folder/Odt2Braille</code>
-<li><code>ant</code>
 <li><code>cd path/to/odt2braille/folder/Odt2BrailleAddOn</code>
 <li><code>ant</code>
 </ul>
@@ -217,39 +214,36 @@ and choose menu item <em>"Create OXT"</em> or <em>"Deploy and Run Extension in O
 
 <h2 class="chapter">2 Project Overview</h2>
 
-<p>This is an overview of the projects that are created in NetBeans after odt2braille has been succesfully checked out.
+<p><a name="be_002edocarch_002eodt2braille_002eooo"></a>
 
-<p><a name="Odt2BrailleAddOn"></a>
+<h3 class="unnumberedsec">be.docarch.odt2braille.ooo</h3>
 
-<h3 class="unnumberedsec">Odt2BrailleAddOn</h3>
-
-<p>Odt2BrailleAddOn is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API. 
+<p>be.docarch.odt2braille.ooo is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API. 
 It takes care of the graphical user interface (menu's, dialogs, progress bars, etc.) and
-allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document. 
-For the actual document processing, Odt2BrailleAddOn relies on the Odt2Braille library.
+allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document.
 
 <h4 class="unnumberedsubsec">Documentation</h4>
 
-<p><code><a href="javadoc/be/docarch/odt2braille/addon/package-summary.html">be.docarch.odt2braille.addon</a></code>
+<p><code><a href="javadoc/be/docarch/odt2braille/ooo/package-summary.html">be.docarch.odt2braille.ooo</a></code>
 
 <h4 class="unnumberedsubsec">View code</h4>
 
      <ul>
-<li><a href="http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/">http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/</a>
-<li><a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/addon/</a>
+<li><a href="http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/">http://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/</a>
+<li><a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/ooo/</a>
 </ul>
 
-<p><a name="Odt2Braille"></a>
+<p><a name="be_002edocarch_002eodt2braille"></a>
 
-<h3 class="unnumberedsec">Odt2Braille</h3>
+<h3 class="unnumberedsec">be.docarch.odt2braille</h3>
 
-<p>The Odt2Braille library takes care of the actual document processing. It enables the conversion of a
+<p>The be.docarch.odt2braille subpackage takes care of the actual document processing. It enables the conversion of a
 flat xml odt file to a <a href="http://www.daisy.org/projects/braille/braille_workarea/pef.html">pef</a>
 (Portable Embosser Format) file. Furthermore, this pef file can be converted to a variety of other
 generic braille formats, or it can be converted to an embosser-specific braille file
 (and optionally sent to an embosser device). 
-The braille transcription is powered by liblouisxml, and for the pef processing, Odt2Braille uses
-the DaisyPipeline library. The Java OpenDocument Library (JODL) is used for creating and cleaning
+The braille transcription is powered by liblouisxml, and for the pef processing, odt2braille uses
+the BrailleUtils library. The Java OpenDocument Library (JODL) is used for creating and cleaning
 the flat .odt file (see <a href="http://odt2daisy.sourceforge.net/downloads/">http://odt2daisy.sourceforge.net/downloads/</a>).
 
 <h4 class="unnumberedsubsec">Documentation</h4>
@@ -259,8 +253,8 @@ the flat .odt file (see <a href="http://odt2daisy.sourceforge.net/downloads/">ht
 <h4 class="unnumberedsubsec">View code</h4>
 
      <ul>
-<li><a href="https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2Braille/src/be/docarch/odt2braille/">https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2Braille/src/be/docarch/odt2braille/</a>
-<li><a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Braille/src/be/docarch/odt2braille/">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Braille/src/be/docarch/odt2braille/</a>
+<li><a href="https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/">https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/</a>
+<li><a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/src/be/docarch/odt2braille/</a>
 </ul>
 
 <p><a name="Libraries"></a>
@@ -404,7 +398,7 @@ javadoc [-private]
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->[-breakiterator]
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->-d path\to\odt2braille\folder\Odt2BrailleAddOn\doc\javadoc
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->-subpackages be.docarch:org.daisy:com_braillo:com_indexbraille:com_yourdolphin:de_brailletec:org_daisy:se_tpb
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->-sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\to\odt2braille\folder\Odt2Braille\src;path\to\brailleutils\folder\src;path\to\brailleutils\folder\catalog
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<!-- /@w -->-sourcepath path\to\odt2braille\folder\Odt2BrailleAddOn\src;path\to\brailleutils\folder\src;path\to\brailleutils\folder\catalog
 </code>
 </ul>
 
@@ -443,7 +437,6 @@ javadoc [-private]
 <li>Add more "Braille formatting standards" (UK, Zwitserland, België, Nederland ?) 
 <li>odt2braille_Formatting_Standards.odt: roodgekleurde regels zijn degene die nog niet ondersteund worden. 
 <li>Voor Ubuntu: OOo 3.2.1 nodig ? 
-<li>Zoveel mogelijk originele tabellen includen en indien nodig (deels) overschrijven met eigen tabellen. 
 <li>Volledige conversie (DOM + XSLT) vervangen door een reeks van kleinere XSLT's (eenvoudiger, sneller)
 	* OK: Get languages
 	* OK: Get styles
@@ -459,12 +452,13 @@ javadoc [-private]
 <li>DOM &lt;-&gt; STAX? 
 <li>Voor elke nieuwe release: kijken of liblouis zijn tabellen heeft geupdate. 
 <li>Voor elke nieuwe release: localisatie bijwerken
+<li>AccessibilityChecker integration
 <li>Settings in Tools &gt; Options... 
 <li>Javadoc bijwerken. 
-<li>Only Interpoint55 is tested. 
+<li>Test embossers. 
 <li>Tooltips in dialogs. 
 <li>Hidden paragraphs (or paragraphs in hidden sections) =&gt; transcriber's notes (braille-only material). TN =&gt; settings! 
-<li>Tactile graphics. 
+<li>Tactile graphics
 <li>Music Braille
 <li>If the liblouisxml process takes to long (e.g. with Chinese), OpenOffice.org might think the program is not responding. 
 <li>OpenOffice.org accessibility for screen readers (on Windows)? 
@@ -491,11 +485,9 @@ javadoc [-private]
 	=&gt; “notes-configuration” mogelijk niet aanwezig =&gt; notesection in Braille soms op verkeerde plaats
 	(=&gt; uitzoeken hoe OOo wel weet waar notes moeten staan ?) 
 	<li>	OOo: linking sections? 
-	<li>	Volume information block: preliminary braille page numbers (p...) =&gt; p moet zonder letter indicator
-	<li>	Special symbols list: Dot locator: http://www.iceb.org/rep9910f.html ? 
+	<li>	Volume information block: preliminary braille page numbers (p...) =&gt; p moet zonder letter indicator ? 
 	<li>	Underline: dots 7 &amp; 8 ? 
 	<li>	Veranderen van typeface in midden van woord =&gt; documentatie
-	<li>	Kan paginanummering mislopen indien pagebreak wordt bekomen door een reeks line breaks ? 
 	<li>	Supplementary volumes:
 		* pagenumber prefixed by “s” ? 
 		* 1st pagenum should be 1. 

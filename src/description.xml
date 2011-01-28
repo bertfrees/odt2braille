@@ -1,63 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
-
     <!-- Release Number -->
     <version value="0.0.3"/>
-	
     <!-- Platform Target (set with ANT) -->
-    <platform value="@platform-oxt@" />
-	
+    <platform value="@platform-oxt@"/>
     <!-- Identifier -->
     <identifier value="be.docarch.odt2braille.ooo.Odt2BrailleAddOn"/>
-	
     <!-- OpenOffice.org Minimal Version -->
-    <dependencies>
-        <OpenOffice.org-minimal-version name="OpenOffice.org 3.0" value="3.0"/>
-    </dependencies>
-	
     <!-- Auto Update Link -->
     <update-information>
         <src xlink:href="http://odt2braille.sf.net/atom/update.feed.xml"/>
     </update-information>
-	
     <!-- Extension Dialog Displayed Name -->
     <display-name>
-       <name lang="en">odt2braille</name>
+        <name lang="en">odt2braille</name>
     </display-name>
-	
     <!-- Publisher Name -->
     <publisher>
         <name lang="en" xlink:href="http://www.aegis-project.eu/">ÆGIS</name>
     </publisher>
-	
     <!-- Description -->
     <extension-description>
-	
-        <src xlink:href="description/desc_en.txt"    lang="en" />
-
-        <src xlink:href="description/desc_ca.txt"    lang="ca" />
-        <src xlink:href="description/desc_de.txt"    lang="de" />
-        <src xlink:href="description/desc_es.txt"    lang="es" />
-        <src xlink:href="description/desc_fr.txt"    lang="fr" />
-        <src xlink:href="description/desc_it.txt"    lang="it" />
-        <src xlink:href="description/desc_nb.txt"    lang="nb" />
-        <src xlink:href="description/desc_nl.txt"    lang="nl" />
-        <src xlink:href="description/desc_pt.txt"    lang="pt" />
-        <src xlink:href="description/desc_pt-BR.txt" lang="pt-BR" />
-        <src xlink:href="description/desc_sl.txt"    lang="sl" />
-		
-   <!-- <src xlink:href="description/desc_cs.txt"    lang="cs" /> -->
-   <!-- <src xlink:href="description/desc_da.txt"    lang="da" /> -->
-   <!-- <src xlink:href="description/desc_is.txt"    lang="is" /> -->
-   <!-- <src xlink:href="description/desc_sv.txt"    lang="sv" /> -->
-		
+        <!-- <src xlink:href="description/desc_cs.txt"    lang="cs" /> -->
+        <!-- <src xlink:href="description/desc_da.txt"    lang="da" /> -->
+        <!-- <src xlink:href="description/desc_is.txt"    lang="is" /> -->
+        <!-- <src xlink:href="description/desc_sv.txt"    lang="sv" /> -->
+        <src lang="en" xlink:href="description/desc_en.txt"/>
+        <src lang="ca" xlink:href="description/desc_ca.txt"/>
+        <src lang="de" xlink:href="description/desc_de.txt"/>
+        <src lang="es" xlink:href="description/desc_es.txt"/>
+        <src lang="fr" xlink:href="description/desc_fr.txt"/>
+        <src lang="it" xlink:href="description/desc_it.txt"/>
+        <src lang="" xlink:href="description/desc_nb.txt"/>
+        <src lang="nl" xlink:href="description/desc_nl.txt"/>
+        <src lang="pt" xlink:href="description/desc_pt.txt"/>
+        <src lang="pt-BR" xlink:href="description/desc_pt-BR.txt"/>
+        <src lang="sl" xlink:href="description/desc_sl.txt"/>
     </extension-description>
-	
     <!-- Extension Dialog Icon -->
     <icon>
-        <default xlink:href="images/odt2braille-logo-185x185.png" />
-        <high-contrast xlink:href="images/odt2braille-logo-185x185.png" />
+        <default xlink:href="images/odt2braille-logo-185x185.png"/>
+        <high-contrast xlink:href="images/odt2braille-logo-185x185.png"/>
     </icon>
-	
 </description>
+<!--Created with OpenOffice.org API plug-in for NetBeans Version 2.0.6-->

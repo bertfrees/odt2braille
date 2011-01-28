@@ -561,6 +561,8 @@ public class SettingsDialog implements XItemListener,
     private static String _tableColumnDelimiterField = "TextField5";
     private static String _tableColumnDelimiterButton = "CommandButton5";
     private static String _tableDontSplitRowsCheckBox = "CheckBox33";
+    private static String _tableSpacingLine = "FixedLine4";
+    private static String _tablePositionLine = "FixedLine5";
 
     private static String _tableSimpleLabel = "Label23";
     private static String _tableStairstepLabel = "Label25";
@@ -588,6 +590,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableColumnDelimiterLabel = null;
     private String L10N_tableDontSplitRowsLabel = null;
     private String L10N_tableColumnDelimiterButton = null;
+    private String L10N_tablePositionLabel = null;
+    private String L10N_tableSpacingLabel = null;
 
     // Pagenumbers Page
 
@@ -699,6 +703,7 @@ public class SettingsDialog implements XItemListener,
     private static String _tableOfContentsLineFillButton = "CommandButton6";
     private static String _tableOfContentsPrintPageNumbersCheckBox = "CheckBox25";
     private static String _tableOfContentsBraillePageNumbersCheckBox = "CheckBox26";
+    private static String _tableOfContentsPositionLine = "FixedLine6";
 
     private static String _tableOfContentsLabel = "Label8";
     private static String _tableOfContentsTitleLabel = "Label58";
@@ -718,6 +723,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_tableOfContentsLineFillButton = "...";
     private String L10N_tableOfContentsPrintPageNumbersLabel = null;
     private String L10N_tableOfContentsBraillePageNumbersLabel = null;
+    private String L10N_tableOfContentsPositionLabel = null;
 
     // Special Symbols Page
     
@@ -765,6 +771,7 @@ public class SettingsDialog implements XItemListener,
     private static String _specialSymbolsRemoveButton = "CommandButton9";
     private static String _specialSymbolsMoveUpButton = "CommandButton10";
     private static String _specialSymbolsMoveDownButton = "CommandButton12";
+    private static String _specialSymbolsLine = "FixedLine7";
     
     private static String _specialSymbolsListLabel = "Label6";
     private static String _specialSymbolsListTitleLabel = "Label73";
@@ -783,6 +790,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_specialSymbolsMode1Label = null;
     private String L10N_specialSymbolsMode2Label = null;
     private String L10N_specialSymbolsMode3Label = null;
+    private String L10N_specialSymbolsLabel = null;
     private String L10N_specialSymbolsSymbolButton = "...";
 
     // Mathematics Page
@@ -986,6 +994,8 @@ public class SettingsDialog implements XItemListener,
         L10N_tableRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
         L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
         L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("columnDelimiterLabel") + ":";
+        L10N_tablePositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("positionLabel");
+        L10N_tableSpacingLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("spacingLabel");
         L10N_tableDontSplitRowsLabel = "Don't split rows";
         L10N_tableColumnDelimiterButton = "...";
 
@@ -1018,6 +1028,7 @@ public class SettingsDialog implements XItemListener,
         L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
         L10N_tableOfContentsPrintPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsPrintPageNumbersLabel");
         L10N_tableOfContentsBraillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsBraillePageNumbersLabel");
+        L10N_tableOfContentsPositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("positionLabel");
 
         // Special Symbols Page
         
@@ -1029,6 +1040,7 @@ public class SettingsDialog implements XItemListener,
         L10N_specialSymbolsMode1Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode1Label");
         L10N_specialSymbolsMode2Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode2Label");
         L10N_specialSymbolsMode3Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode3Label");
+        L10N_specialSymbolsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsLabel");
 
         // Mathematics Page
 
@@ -2188,6 +2200,21 @@ public class SettingsDialog implements XItemListener,
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_mathLabel));
         xFixedText.setText(L10N_mathLabel);
+
+        // Fixed lines
+
+        ((XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+        ((XControl)UnoRuntime.queryInterface(XControl.class, dialogControlContainer.getControl(_tableSpacingLine))).getModel()))
+                .setPropertyValue("Label", L10N_tableSpacingLabel);
+        ((XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+        ((XControl)UnoRuntime.queryInterface(XControl.class, dialogControlContainer.getControl(_tablePositionLine))).getModel()))
+                .setPropertyValue("Label", L10N_tablePositionLabel);
+        ((XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+        ((XControl)UnoRuntime.queryInterface(XControl.class, dialogControlContainer.getControl(_tableOfContentsPositionLine))).getModel()))
+                .setPropertyValue("Label", L10N_tableOfContentsPositionLabel);
+        ((XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+        ((XControl)UnoRuntime.queryInterface(XControl.class, dialogControlContainer.getControl(_specialSymbolsLine))).getModel()))
+                .setPropertyValue("Label", L10N_specialSymbolsLabel);
 
     }
 

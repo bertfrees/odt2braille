@@ -78,6 +78,9 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
                             if (numberOfCopies > 999 || numberOfCopies < 1) {
                                 throw new EmbosserFactoryException("Invalid number of copies: " + numberOfCopies + " is not in [1, 999]");
                             }
+                            if (settings.getSaddleStitch() && pageCount > 200) {
+                                throw new EmbosserFactoryException("Number of pages = " + pageCount +  "; cannot exceed 200 when in magazine style mode");
+                            }
                             b = new ConfigurableEmbosser.Builder(os, btb.newTable())
                                 .breaks(LineBreaks.Type.DOS)
 				.padNewline(ConfigurableEmbosser.Padding.NONE)
@@ -159,11 +162,13 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
 	}
 
         private static byte[] getIndexV2Header(Settings settings,
-                                               int numberOfCopies) {
+                                               int numberOfCopies)
+                                        throws EmbosserFactoryException {
 
             boolean eightDots = settings.getEightDots();
             boolean duplex = settings.getDuplex();
             boolean saddleStitch = settings.getSaddleStitch();
+            boolean zFolding = settings.getZFolding();
             int cellsInWidth = settings.getCellsInWidth();
 
             StringBuffer header = new StringBuffer();
@@ -185,14 +190,15 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             header.append((char)w[1]);                      // 9: Characters per line
             header.append(",");
             header.append("0,");                            // 10: Left margin              = 0 characters
-            header.append("0,");                            // 11: B-margin                 = 0 characters
+            header.append("0,");                            // 11: Binding margin           = 0 characters
             header.append("0,");                            // 12: Top margin               = 0 lines
             header.append("0,");                            // 13: Bottom margin            = 0 lines
             header.append(eightDots?'4':'0');               // 14: Line spacing             = 2.5 mm (6 dot) or 5 mm (8 dot)
-            header.append(",");
+            header.append(",");            
             if (saddleStitch) { header.append('4'); } else
+            if (zFolding)     { header.append('3'); } else
             if (duplex)       { header.append('2'); } else
-                              { header.append('1'); }       // 15: Page mode                = 1,2 or 4 pages per sheet
+                              { header.append('1'); }       // 15: Page mode                = 1,2 or 4 pages per sheet or z-folding (3)
             header.append(",");
             header.append("0,");                            // 16: Print mode               = normal
             header.append("0,");                            // 17: Page number              = off
@@ -234,8 +240,8 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             boolean duplex = settings.getDuplex();
             boolean saddleStitch = settings.getSaddleStitch();
             boolean zFolding = settings.getZFolding();
-            double paperWidth = settings.getPaperWidth(); // was: settings.getPageWidth();
-            double paperLenght = settings.getPaperHeight(); // was: settings.getPageHeight();
+            double paperWidth = settings.getPaperWidth();
+            double paperLenght = settings.getPaperHeight();
             int cellsInWidth = settings.getCellsInWidth();
             int marginInner = settings.getMarginInner();
             int marginOuter = settings.getMarginOuter();

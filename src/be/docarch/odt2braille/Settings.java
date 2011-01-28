@@ -580,7 +580,7 @@ public class Settings {
                                                                  "sd-g0",
                                                               /* "sk-g0",     */  "sk-g1",
                                                               /* "sl-g0",     */  "sl-g1",
-                                                              /* "sv-g0",     */  "sv-g1",
+                                                              /* "sv-g0",     */  "sv-g1",      "sv-g2",
                                                                  "ta-g0",
                                                                  "te-g0",
                                                                  "tr-g0",
@@ -1389,7 +1389,8 @@ public class Settings {
         return table;
     }
 
-    private boolean paperSizeIsSupported (double paperWidth, double paperHeight) {
+    private boolean paperSizeIsSupported (double paperWidth,
+                                          double paperHeight) {
 
         return (paperWidth  <= maxPaperWidth)  &&
                (paperWidth  >= minPaperWidth)  &&
@@ -1451,7 +1452,8 @@ public class Settings {
         return supportedPaperSizes;
     }
 
-    private void changePaperSize(double paperWidth, double paperHeight) {
+    private void changePaperSize(double paperWidth,
+                                 double paperHeight) {
         
         this.paperWidth = paperWidth;
         this.paperHeight = paperHeight;
@@ -1481,20 +1483,16 @@ public class Settings {
         unprintableBottom = 0;
 
         switch (embosser) {
-            case INDEX_4X4_PRO_V3:
-                break;
             case INDEX_4X4_PRO_V2:
+                printablePageHeight = Math.min(paperWidth, 248.5);
+                break;
             case INDEX_EVEREST_D_V2:
             case INDEX_EVEREST_D_V3:
             case INDEX_BASIC_S_V2:
             case INDEX_BASIC_D_V2:
             case INDEX_BASIC_D_V3:
             case INDEX_4WAVES_PRO_V3:
-                if (getSaddleStitch()) {
-                    printablePageHeight = Math.min(paperWidth, 248.5);
-                } else {
-                    printablePageWidth = Math.min(paperWidth, 248.5);
-                }
+                printablePageWidth = Math.min(paperWidth, 248.5);
                 break;
         }
 
@@ -1502,14 +1500,8 @@ public class Settings {
             case INDEX_BASIC_D_V3:
                 unprintableInner = Math.max(0, paperWidth - 276.4);
                 break;
-            case INDEX_4X4_PRO_V3:
-                break;
             case INDEX_EVEREST_D_V3:
-                if (getSaddleStitch()) {
-                    unprintableTop = Math.max(0, paperWidth - 272.75);
-                } else {
-                    unprintableInner = Math.max(0, paperWidth - 272.75);
-                }
+                unprintableInner = Math.max(0, paperWidth - 272.75);
                 break;
         }
 
@@ -1542,6 +1534,8 @@ public class Settings {
 
         if (!paperSizeIsSupported(this.paperSize)) {
             changePaperSize(getSupportedPaperSizes().get(0));
+        } else {
+            changePaperSize(this.paperSize);
         }
     }
 
@@ -1556,11 +1550,12 @@ public class Settings {
 
             changePaperSize(papersize);
             refreshDimensions();
-
         }
     }
 
-    public void setPaperSize(double paperWidth, double paperHeight) throws UnsupportedPaperException {
+    public void setPaperSize(double paperWidth,
+                             double paperHeight)
+                      throws UnsupportedPaperException {
 
         if ((this.paperSize == PaperSize.CUSTOM) && paperSizeIsSupported(paperWidth, paperHeight)) {
 
@@ -1619,14 +1614,14 @@ public class Settings {
                     return true;
                 default:
                     return !duplex;
-
             }
         } else {
             if (getSaddleStitch()) {
                 return duplex;
             } else {
                 switch (embosser) {
-                    case INDEX_BASIC_D_V2:
+                    case INDEX_BASIC_D_V2:                        
+                        return !getZFolding() || duplex;
                     case INDEX_EVEREST_D_V2:
                     case INDEX_4X4_PRO_V2:
                     case INDEX_EVEREST_D_V3:
@@ -1663,7 +1658,8 @@ public class Settings {
         }
     }
 
-    public void setDuplex(boolean duplex) throws UnsupportedPaperException {
+    public void setDuplex(boolean duplex)
+                   throws UnsupportedPaperException {
 
         if (duplexIsSupported(duplex)) {
             changeDuplex(duplex);
@@ -1705,31 +1701,29 @@ public class Settings {
 
         switch (embosser) {
             case INDEX_BASIC_BLUE_BAR:
+                //minPaperWidth = ?
+                //minPaperHeight = ?
                 maxPaperWidth = 280d;
                 maxPaperHeight = 12*Paper.INCH_IN_MM;
                 break;
             case INDEX_BASIC_S_V2:
             case INDEX_BASIC_D_V2:
-                minPaperWidth = 138d; // 23*6
-                //minPaperHeight
-                //maxPaperWidth
-                //maxPaperHeight
+                minPaperWidth = 138d; // = 23*6
+                minPaperHeight = 1*Paper.INCH_IN_MM;
+                //maxPaperWidth = ?
+                maxPaperHeight = (20+2/3)*Paper.INCH_IN_MM;
+                break;
             case INDEX_EVEREST_D_V2:
-                minPaperWidth = 138d; // 23*6
+                minPaperWidth = 138d; // = 23*6
                 minPaperHeight = 100d;
-                //maxPaperWidth
+                //maxPaperWidth = ?
                 maxPaperHeight = 350d;
                 break;
             case INDEX_4X4_PRO_V2:
                 minPaperWidth = 100d;
-                minPaperHeight = 110d;
+                minPaperHeight = Math.max(110d, saddleStitch?276d:138d); // = 23*6(*2)
                 maxPaperWidth = 297d;
-                maxPaperHeight = 500d;
-                if (saddleStitch) {
-                    minPaperHeight = 276d; // 2*23*6
-                } else {
-                    minPaperWidth = 138d; // 23*6
-                }
+                maxPaperHeight = 500d;                
                 break;
             case INDEX_EVEREST_D_V3:
             case INDEX_4X4_PRO_V3:
@@ -1760,6 +1754,9 @@ public class Settings {
                 break;
             case INTERPOINT_55:
                 maxPaperHeight = 340d;
+                //minPaperHeight = ?
+                //maxPaperWidth = ?
+                //maxPaperHeight = ?
                 break;
             case IMPACTO_TEXTO:
             case IMPACTO_600:
@@ -1778,7 +1775,8 @@ public class Settings {
         changeSaddleStitch(saddleStitch && saddleStitchIsSupported());
     }
 
-    public void setSaddleStitch(boolean saddleStitch) throws UnsupportedPaperException {
+    public void setSaddleStitch(boolean saddleStitch)
+                         throws UnsupportedPaperException {
 
         if (saddleStitchIsSupported()) {
             changeSaddleStitch(saddleStitch);
@@ -1815,6 +1813,7 @@ public class Settings {
             return false;
         } else {
             switch (embosser) {
+                case INDEX_BASIC_D_V2:
                 case INDEX_BASIC_D_V3:
                 case INDEX_4WAVES_PRO_V3:
                     return true;
@@ -1829,16 +1828,16 @@ public class Settings {
     }
 
     private void refreshZFolding() {
-
-        if (!zFoldingIsSupported()) {
-            changeZFolding(false);
-        }
+        changeZFolding(zFolding && zFoldingIsSupported());
     }
 
-    public void setZFolding(boolean zFolding) {
+    public void setZFolding(boolean zFolding)
+                     throws UnsupportedPaperException {
 
         if (zFoldingIsSupported()) {
             changeZFolding(zFolding);
+            refreshDuplex();
+            refreshDimensions();
         }
     }
 
@@ -1858,17 +1857,17 @@ public class Settings {
             }
         } else {
             switch (embosser) {
+                case IMPACTO_TEXTO:
+                case IMPACTO_600:
+                    return true;
                 case INDEX_BASIC_S_V2:
                 case INDEX_BASIC_D_V2:
                 case INDEX_EVEREST_D_V2:
                 case INDEX_4X4_PRO_V2:
                 case INDEX_EVEREST_D_V3:
-                case INDEX_BASIC_D_V3:  
+                case INDEX_BASIC_D_V3:
                 case INDEX_4X4_PRO_V3:
                 case INDEX_4WAVES_PRO_V3:
-                case IMPACTO_TEXTO:
-                case IMPACTO_600:
-                    return true;
                 case INTERPOINT_55:
                 case INDEX_BASIC_BLUE_BAR:
                 case BRAILLO_200:
@@ -1929,7 +1928,8 @@ public class Settings {
         changeEightDots(eightDots && eightDotsIsSupported());
     }
 
-    public void setEightDots(boolean eightDots) throws UnsupportedPaperException {
+    public void setEightDots(boolean eightDots)
+                      throws UnsupportedPaperException {
 
         if (eightDotsIsSupported()) {
 
@@ -2024,6 +2024,11 @@ public class Settings {
                     tempMaxMarginInner = 10;
                     tempMaxMarginOuter = 10;
                     tempMaxMarginTop = 10;
+                    break;
+                case INDEX_BASIC_S_V2:
+                case INDEX_BASIC_D_V2:
+                case INDEX_EVEREST_D_V2:
+                case INDEX_4X4_PRO_V2:
                     break;
             }
 

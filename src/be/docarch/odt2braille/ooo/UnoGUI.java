@@ -96,8 +96,6 @@ public class UnoGUI {
     private XModel xDoc = null;
     private XWindow parentWindow = null;
     private XWindowPeer parentWindowPeer = null;
-    private Object desktop = null;
-    private XDesktop xDesktop = null;
     private XComponent xDesktopComponent = null;
 
     private Handler fh = null;
@@ -132,10 +130,10 @@ public class UnoGUI {
 
             this.m_xContext = m_xContext;
             this.m_xFrame = m_xFrame;
-            this.xMCF = (XMultiComponentFactory) UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
-            this.desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
-            this.xDesktop = (XDesktop) UnoRuntime.queryInterface(XDesktop.class, desktop);
-            this.xDesktopComponent = (XComponent) xDesktop.getCurrentComponent();
+            this.xMCF = (XMultiComponentFactory)UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
+            Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
+            XDesktop xDesktop = (XDesktop)UnoRuntime.queryInterface(XDesktop.class, desktop);
+            this.xDesktopComponent = (XComponent)xDesktop.getCurrentComponent();
 
             // Query Uno Object
             xDoc = (XModel) UnoRuntime.queryInterface(XModel.class, m_xFrame.getController().getModel());

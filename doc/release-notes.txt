@@ -182,6 +182,11 @@ Version ?
 ** Z-Folding
 
 
+* Translation tables:
+
+** Woluwe math improved
+
+
 * Bug fixes:
 
 ** Some list numbering bugs

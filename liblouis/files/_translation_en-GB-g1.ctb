@@ -12,6 +12,7 @@ endbold 46-3
 begcomp 6-346
 endcomp 6-346
 
+
 # the decimal digits
 litdigit 1 1
 litdigit 2 12
@@ -33,15 +34,33 @@ word I 24
 word O 135
 word o 135
 
-# punctuation
-prepunc " 236
-postpunc " 356
-always " 5
-prepunc ' 6-236
-postpunc ' 356-3
-postpunc '' 356
-postpunc ''' 356-3-356
 
+# quotation marks
+
+
+prepunc  \x0027         6-236     # dumb single quotation mark left
+postpunc \x0027         356-3     # dumb single quotation mark right
+prepunc  \x0022         236       # dumb double quotation mark left
+postpunc \x0022         356       # dumb double quotation mark right
+prepunc  \x0027\x0027   236       # dumb double quotation mark left
+postpunc \x0027\x0027   356       # dumb double quotation mark right
+always   \x00AB         236       # double angle quote left
+always   \x00BB         356       # double angle quote right
+always   \x2039         6-236     # single angle quote left
+always   \x203A         356-3     # single angle quote right
+always   \x2018         6-236     # smart single left quotation mark
+always   \x2019         356-3     # smart single right quotation mark
+always   \x201A         356-3     # smart single low quotation mark
+always   \x201B         6-236     # smart single high reverse quotation mark
+always   \x201C         236       # smart opening double quote
+always   \x201D         356       # smart closing double quote
+always   \x201E         356       # smart double low quotation mark
+always   \x201F         236       # smart double high reverse quotation mark
+
+
+# other punctuation
+
+postpunc ''' 356-3-356
 always ' 3
 endword 'd 3-145
 word 'em = 
@@ -105,16 +124,11 @@ repeated ::: 25-25-25
 
 repeated === 56-2356-56-2356-56-2356
 repeated ~~~ 4-156-4-156-4-156
-always \s-\s 36-36
 always \s-\scom 36-36-14-135-134
 always ... 3-3-3
 always .\s.\s. 3-3-3 . . .
 # always  \x2026 3-3-3 # 8230			MS Word smart ellipsis
 
-# the hyphen
-# always ­ 36
-repeated ­­­ 36-36-36
-always \s­\s 36-36
 
 largesign \x00C0 4-1      [C0] upper a grave
 largesign \x00E0   4-1      [E0] lower a grave
@@ -221,15 +235,6 @@ largesign \x00FF 4-13456 lower y with dieresis
 largesign \x1EF2 4-13456 upper y with grave
 largesign \x1EF3 4-13456 lower y with grave
 
-hyphen 	\x2010 36		 # 8208			hyphen
-
-always	\x2013 56-36		 # 8211		smart minus sign
-
-always	\x201C 236	 # 8220			smart opening double quote
-always	\x201D 356	 # 8221			smart closing double quote
-always	\x201E 236	 # 8222			smart double low quotation mark
-always	\x201F 356	 # 8223			smart double high reverse quotation mark
-
 
 # mathematical symbols
 decpoint . 2
@@ -241,8 +246,6 @@ midnum + 0-56-235-3456
 joinnum + 56-235
 begnum + 56-235
 joinword + 56-235
-midnum - 36-3456
-always - 36
 joinnum × 56-236
 joinword × 56-236
 midnum ÷ 0-56-256-3456 division sign
@@ -250,6 +253,39 @@ joinnum ÷ 56-256
 joinword ÷ 56-256
 begnum £ 123
 always £ 4-123 pounds
+
+
+# hyphen-minus
+
+midnum     \x002D     36-3456
+midnum     \x2010     36-3456
+midnum     \x2011     36-3456
+midnum     \x2012     36-3456
+midnum     \x2013     36-3456
+begnum     \x002D     56-36
+begnum     \x2010     56-36
+begnum     \x2011     56-36
+begnum     \x2012     56-36
+begnum     \x2013     56-36
+joinnum    \x002D     56-36
+joinnum    \x2010     56-36
+joinnum    \x2011     56-36
+joinnum    \x2012     56-36
+joinnum    \x2013     56-36
+midword    \x002D     36
+midword    \x2010     36
+midword    \x2011     36
+midword  \s\x002D\s   36-36
+midword  \s\x2010\s   36-36
+midword  \s\x2011\s   36-36
+midword  \s\x2012\s   36-36
+midword  \s\x2013\s   36-36
+always     \x2012     36-36
+always     \x2013     36-36
+begnum   to\s\x002D   235-56-36
+begnum   to\s\x2010   235-56-36
+begnum   to\s\x2011   235-56-36
+
 
 # other special characters
 always © 45-14 copyright

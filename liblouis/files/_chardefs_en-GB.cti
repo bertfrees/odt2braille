@@ -44,3 +44,20 @@ uplow \x1EF2\x1EF3 13456 # y with grave
 
 # punctuation \x2011 36		 # 8209			non-breaking hyphen
 punctuation \x2011 23478	# 8209  non-breaking hyphen
+
+punctuation   \x2010   36
+punctuation   \x2011   36
+punctuation   \x2012   36
+punctuation   \x2013   36
+punctuation   \x00AB   236       # double angle quote left
+punctuation   \x00BB   356       # double angle quote right
+punctuation   \x2039   6-236     # single angle quote left
+punctuation   \x203A   356-3     # single angle quote right
+punctuation   \x2018   6-236     # smart single left quotation mark
+punctuation   \x2019   356-3     # smart single right quotation mark
+punctuation   \x201A   356-3     # smart single low quotation mark
+punctuation   \x201B   6-236     # smart single high reverse quotation mark
+punctuation   \x201C   236       # smart opening double quote
+punctuation   \x201D   356       # smart closing double quote
+punctuation   \x201E   356       # smart double low quotation mark
+punctuation   \x201F   236       # smart double high reverse quotation mark
