@@ -104,7 +104,7 @@ public class PrintDialog implements XItemListener {
         logger.entering("PrintDialog", "<init>");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
                                                             + "/dialogs/PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
 
@@ -164,6 +164,9 @@ public class PrintDialog implements XItemListener {
 
         logger.entering("PrintDialog", "execute");
 
+        // System.setProperty("sun.java2d.print.polling", "false");
+
+
         XFixedText xFixedText = null;
 
         okButton.setLabel(L10N_okButton);
@@ -179,13 +182,14 @@ public class PrintDialog implements XItemListener {
                         xControlContainer.getControl(_numberOfCopiesLabel));
         xFixedText.setText(L10N_numberOfCopiesLabel);
 
-        PrintService[] printers = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);
+        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+        PrintService[] printers = PrintServiceLookup.lookupPrintServices(flavor, null);
 
         short i = 0;
         for (PrintService p : printers) {
             deviceListBox.addItem(p.getName(), i);
             i++;
-        }
+        } 
         deviceListBox.selectItemPos((short)0, true);
 
         numberOfCopiesField.setDecimalDigits((short)0);

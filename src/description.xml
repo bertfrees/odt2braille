@@ -5,7 +5,7 @@
     <!-- Platform Target (set with ANT) -->
     <platform value="@platform-oxt@"/>
     <!-- Identifier -->
-    <identifier value="be.docarch.odt2braille.ooo.Odt2BrailleAddOn"/>
+    <identifier value="be.docarch.odt2braille.ooo.odt2brailleaddon"/>
     <!-- OpenOffice.org Minimal Version -->
     <!-- Auto Update Link -->
     <update-information>

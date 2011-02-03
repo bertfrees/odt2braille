@@ -38,15 +38,17 @@
                     indent="yes"
                     omit-xml-declaration="no"/>
 
-        <xsl:variable name="styles"           select="/office:document/office:styles" />
-        <xsl:variable name="automatic-styles" select="/office:document/office:automatic-styles" />
+        <xsl:param    name="styles-url"       as="xsd:string" />
+        <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
+        <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
+        <xsl:variable name="body"             select="/office:document-content/office:body" />
 
         <xsl:include href="common-templates.xsl" />
 
     <xsl:template match="/">
 
         <xsl:variable name="paragraph-styles" as="xsd:string*" >
-            <xsl:for-each select="//office:body/office:text//text:p">
+            <xsl:for-each select="$body/office:text//text:p">
                 <xsl:variable name="is-paragraph" as="xsd:boolean">
                     <xsl:call-template name="is-paragraph">
                         <xsl:with-param name="node" select="." />
@@ -62,13 +64,13 @@
         </xsl:variable>
 
         <xsl:variable name="character-styles" as="xsd:string*" >
-            <xsl:for-each select="//office:body/office:text//text:span">
+            <xsl:for-each select="$body/office:text//text:span">
                 <xsl:call-template name="get-style-sequence">
                     <xsl:with-param name="style-name" select="@text:style-name" />
                     <xsl:with-param name="family"     select="'text'" />
                 </xsl:call-template>
             </xsl:for-each>
-            <xsl:if test="//office:body/office:text//text:a">
+            <xsl:if test="$body/office:text//text:a">
                 <xsl:sequence select="'Internet_20_link'" />
             </xsl:if>
         </xsl:variable>

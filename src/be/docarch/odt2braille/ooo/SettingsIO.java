@@ -198,7 +198,7 @@ public class SettingsIO {
         logger.entering("SettingsIO", "<init>");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        packageLocation = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn");
+        packageLocation = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon");
         this.xContext = xContext;
 
         XTextDocument xTextDoc = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class, xDesktopComponent);

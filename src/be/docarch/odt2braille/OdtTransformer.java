@@ -88,18 +88,19 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private TransformerFactoryImpl tFactory = null;
 
     private StatusIndicator statusIndicator = null;
-    private File odtFile = null;
-    //private File contentFile = null;
-    private File stylesFile = null;
-    //private File controllerFile = null;
-    private File flatOdtFile = null;
-    private File daisyFile1 = null;
-    private File daisyFile2 = null;
+    //private File odtFile = null;
+    private File tempXMLFile = null;
+    private File odtContentFile = null;
+    private File odtStylesFile = null;
+    private File odtMetaFile = null;
+    private File controllerFile = null;
+    private File daisyFile = null;
     private File usedStylesFile = null;
     private File usedLanguagesFile = null;
     //private File earlReport = null;
     private Locale odtLocale = null;
     private Locale oooLocale = null;
+    private String xsltFolder = null;
 
     private static String L10N_in = null;
     private static String L10N_and = null;
@@ -132,8 +133,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
     /**
      * Creates a new <code>OdtTransformer</code> instance.
      *
-     * @param flatOdtFile       The "flat XML" .odt file.
-     *                          This single file is the concatenation of all XML files in a normal .odt file.
+     * @param odtFile           The .odt file.
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
      * @param odtLocale         The <code>Locale</code> for the document.
      * @param oooLocale         The <code>Locale</code> for the user interface.
@@ -147,36 +147,41 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.entering("OdtTransformer","<init>");
 
-        this.odtFile = odtFile;
+        //this.odtFile = odtFile;
         this.oooLocale = oooLocale;
-
         this.statusIndicator = statusIndicator;
+
+        xsltFolder = "/be/docarch/odt2braille/xslt/";
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
+
+        // Temporary files
+
+        tempXMLFile = File.createTempFile(TMP_NAME, ".temp.xml");
+        tempXMLFile.deleteOnExit();
 
         // Convert ODT to XML files
 
-        stylesFile = File.createTempFile(TMP_NAME, ".odt.styles.xml");
-        stylesFile.deleteOnExit();
-        //contentFile = File.createTempFile(TMP_NAME, ".odt.content.ids.xml");
-        //contentFile.deleteOnExit();
-        //controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf");
-        //controllerFile.deleteOnExit();
-        //File origContentFile = File.createTempFile(TMP_NAME, ".odt.content.xml");
-        //origContentFile.deleteOnExit();
+        odtContentFile = File.createTempFile(TMP_NAME, ".odt.content.xml");
+        odtContentFile.deleteOnExit();
+        odtStylesFile = File.createTempFile(TMP_NAME, ".odt.styles.xml");
+        odtStylesFile.deleteOnExit();
+        odtMetaFile = File.createTempFile(TMP_NAME, ".odt.meta.xml");
+        odtMetaFile.deleteOnExit();
+        controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf.xml");
+        controllerFile.deleteOnExit();
 
         ZipFile zip = new ZipFile(odtFile.getAbsolutePath());
-        //getFileFromZip(zip, "content.xml", origContentFile);
-        getFileFromZip(zip, "styles.xml",  stylesFile);
+        getFileFromZip(zip, "content.xml", odtContentFile);
+        getFileFromZip(zip, "styles.xml",  odtStylesFile);
+        getFileFromZip(zip, "meta.xml",    odtMetaFile);
         zip.close();
-
-        //makeControlFlow(origContentFile);
 
         // Locale
 
         namespace = new NamespaceContext();
-        odtLocale = new Locale(XPathUtils.evaluateString(stylesFile.toURL().openStream(),
+        odtLocale = new Locale(XPathUtils.evaluateString(odtStylesFile.toURL().openStream(),
                 "//office:styles/style:default-style/style:text-properties/@fo:language",namespace).toLowerCase(),
-                               XPathUtils.evaluateString(stylesFile.toURL().openStream(),
+                               XPathUtils.evaluateString(odtStylesFile.toURL().openStream(),
                 "//office:styles/style:default-style/style:text-properties/@fo:country", namespace).toUpperCase());
 
         // L10N
@@ -196,70 +201,63 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
     }
 
-    public void convertToFlatOdtFile() throws IOException {
+    private void ensureMetadataReferences(File inputContentFile)
+                                   throws TransformerConfigurationException,
+                                          TransformerException {
 
-        logger.entering("OdtTransformer","convertToFlatOdtFile");
+        logger.entering("OdtTransformer","ensureMetadataReferences");
 
-        flatOdtFile = File.createTempFile(TMP_NAME, ".odt.flat.xml");
-        flatOdtFile.deleteOnExit();
-        String flatOdtUrl = flatOdtFile.getAbsolutePath();
-        OdtUtils odtutil = new OdtUtils();
-        odtutil.open(odtFile.getAbsolutePath());
-        odtutil.saveXML(flatOdtUrl);
+        Transformer ensureReferencesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
+                    xsltFolder + "ensure-references.xsl").toString()));
 
-        logger.entering("OdtTransformer","convertToFlatOdtFile");
+        ensureReferencesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
+        ensureReferencesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+        ensureReferencesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
+        ensureReferencesXSL.setOutputProperty(OutputKeys.INDENT, "no");
+
+        ensureReferencesXSL.transform(new StreamSource(inputContentFile), new StreamResult(odtContentFile));
+
+        logger.entering("OdtTransformer","ensureMetadataReferences");
     }
 
-    /*
-    public void makeControlFlow(File inputContentFile)
-                         throws IOException,
-                                TransformerConfigurationException,
-                                TransformerException {
+    public void makeControlFlow() throws IOException,
+                                         TransformerConfigurationException,
+                                         TransformerException {
 
         logger.entering("OdtTransformer","makeControlFlow");
 
-        TransformerFactoryImpl myTransformerFactory = new net.sf.saxon.TransformerFactoryImpl();
-        OutputURIResolver myResolver = new OutputURIResolver();
-        myTransformerFactory.setAttribute("http://saxon.sf.net/feature/outputURIResolver", myResolver);
+        Transformer controllerXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
+                    xsltFolder + "controller.xsl").toString()));
 
-        Transformer controllerXSL = myTransformerFactory.newTransformer(
-                new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/controller.xsl").toString()));
-
-        controllerXSL.setParameter("styles-url",     stylesFile.toURI());
-        controllerXSL.setParameter("controller-url", controllerFile.toURI());
-
-        // Set output properties
+        controllerXSL.setParameter("styles-url", odtStylesFile.toURI());
 
         controllerXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         controllerXSL.setOutputProperty(OutputKeys.METHOD, "xml");
         controllerXSL.setOutputProperty(OutputKeys.INDENT, "yes");
         controllerXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
 
-        // Transform
-
-        controllerXSL.transform(new StreamSource(inputContentFile), new StreamResult(contentFile));
+        controllerXSL.transform(new StreamSource(odtContentFile), new StreamResult(controllerFile));
 
         logger.entering("OdtTransformer","makeControlFlow");
 
     }
 
-    public void makeEarlReport() throws IOException,
-                                       TransformerException {
-
-        logger.entering("OdtTransformer","makeEarlReport");
-
-        earlReport = File.createTempFile(TMP_NAME, ".earl.rdf");
-        earlReport.deleteOnExit();
-
-        Transformer earlXSL = tFactory.newTransformer(
-                new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/earl.xsl").toString()));
-        earlXSL.transform(new StreamSource(controllerFile), new StreamResult(earlReport));
-
-        logger.entering("OdtTransformer","makeEarlReport");
-
-    }
-    */
+//    public void makeEarlReport() throws IOException,
+//                                        TransformerException {
+//
+//        logger.entering("OdtTransformer","makeEarlReport");
+//
+//        earlReport = File.createTempFile(TMP_NAME, ".earl.rdf.xml");
+//        earlReport.deleteOnExit();
+//
+//        Transformer earlXSL = tFactory.newTransformer(
+//                new StreamSource(getClass().getResource(xsltFolder + "earl.xsl").toString()));
+//        earlXSL.transform(new StreamSource(controllerFile), new StreamResult(earlReport));
+//
+//        logger.entering("OdtTransformer","makeEarlReport");
+//
+//    }
 
     /**
      * <ul>
@@ -279,8 +277,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.entering("OdtTransformer","preProcessing");
 
-        if (flatOdtFile == null) { convertToFlatOdtFile(); }
-
         listSettings = settings.getListStyles();
         headingSettings = settings.getHeadingStyles();
 
@@ -290,7 +286,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         DocumentBuilderFactory docFactory;
         DocumentBuilder docBuilder;
-        Document contentDoc;
         
         docFactory = DocumentBuilderFactory.newInstance();
         docFactory.setValidating(false);
@@ -301,18 +296,22 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
             }
         });
-        contentDoc = docBuilder.parse(flatOdtFile.getAbsolutePath());
-        Element root = contentDoc.getDocumentElement();
+        Document contentDoc = docBuilder.parse(odtContentFile.getAbsolutePath());
+        Document stylesDoc = docBuilder.parse(odtStylesFile.getAbsolutePath());
+        Document metaDoc = docBuilder.parse(odtMetaFile.getAbsolutePath());
+        Element contentRoot = contentDoc.getDocumentElement();
+        Element stylesRoot = stylesDoc.getDocumentElement();
+        Element metaRoot = metaDoc.getDocumentElement();
 
         logger.entering("OdtTransformer","paginationProcessing");
 
         Node firstNode = null;
-        firstNode = XPathAPI.selectSingleNode(root, "/document/body/text/sequence-decls/following-sibling::*[1]");
+        firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
         if (firstNode != null) {
             statusIndicator.start();
-            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(root, "/document/meta/document-statistic/@page-count").str()));
+            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
             statusIndicator.setStatus(L10N_statusIndicatorStep1);
-            insertPagination(settings, root, firstNode, 0, "Standard", true);
+            insertPagination(settings, contentRoot, stylesRoot, firstNode, 0, "Standard", true);
             statusIndicator.finish(true);
             statusIndicator.close();
 
@@ -321,12 +320,12 @@ public class OdtTransformer /* implements ExternalChecker */ {
         logger.exiting("OdtTransformer","paginationProcessing");
         logger.entering("OdtTransformer","headingNumberingProcessing");
 
-        firstNode = XPathAPI.selectSingleNode(root, "/document/body/text/sequence-decls/following::h[1]");
+        firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
         if (firstNode != null) {
             statusIndicator.start();
-            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(root, "count(/document/body/text//h)").str()));
+            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
             statusIndicator.setStatus(L10N_statusIndicatorStep2);
-            insertHeadingNumbering(root, firstNode, true);
+            insertHeadingNumbering(contentRoot, stylesRoot, firstNode, true);
             statusIndicator.finish(true);
             statusIndicator.close();
         }
@@ -334,23 +333,26 @@ public class OdtTransformer /* implements ExternalChecker */ {
         logger.exiting("OdtTransformer","headingNumberingProcessing");
         logger.entering("OdtTransformer","listNumberingProcessing");
 
-        firstNode = XPathAPI.selectSingleNode(root, "/document/body/text/sequence-decls/following::list[@id][1]");
+        firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
         if (firstNode != null) {
             statusIndicator.start();
-            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(root, "count(/document/body/text//list[@id])").str()));
+            statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
             statusIndicator.setStatus(L10N_statusIndicatorStep3);
-            insertListNumbering(root, firstNode, 0, true);
+            insertListNumbering(contentRoot, stylesRoot, firstNode, 0, true);
             statusIndicator.finish(true);
             statusIndicator.close();
         }
 
         logger.exiting("OdtTransformer","listNumberingProcessing");
 
-        OdtUtils.saveDOM(contentDoc, flatOdtFile.getAbsolutePath());
+        OdtUtils.saveDOM(contentDoc, tempXMLFile.getAbsolutePath());
 
         logger.entering("OdtTransformer","correctionProcessing");
 
-        OdtUtils.correctionProcessing(flatOdtFile.getAbsolutePath());
+        OdtUtils.correctionProcessing(tempXMLFile.getAbsolutePath());
+
+        ensureMetadataReferences(tempXMLFile);
+        makeControlFlow();
 
         logger.exiting("OdtTransformer","correctionProcessing");
         logger.exiting("OdtTransformer","preProcessing");
@@ -375,7 +377,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
      *
      */
     private Object[] insertPagination(Settings settings,
-                                      Node root,
+                                      Node contentRoot,
+                                      Node stylesRoot,
                                       Node node,
                                       int pagenum,
                                       String masterPageName,
@@ -465,18 +468,18 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         if (styleName != null) {
 
-            xpath = "/document/automatic-styles/style[@name='" + styleName + "']/paragraph-properties";
+            xpath = "//automatic-styles/style[@name='" + styleName + "']/paragraph-properties";
 
-            if (XPathAPI.eval(root, xpath + "[@page-number>0]").bool()) {
+            if (XPathAPI.eval(contentRoot, xpath + "[@page-number>0]").bool()) {
                 hardPageBreaksBefore ++;
-                pagenum = Integer.parseInt(XPathAPI.eval(root, xpath + "/@page-number").str()) - 1;
+                pagenum = Integer.parseInt(XPathAPI.eval(contentRoot, xpath + "/@page-number").str()) - 1;
             } else {
-                if (XPathAPI.eval(root, xpath + "[@page-number='auto']").bool()) {
-                    if (!XPathAPI.eval(root, "/document/automatic-styles/style[@name='" + styleName + "']/@master-page-name").str().equals("")) {
+                if (XPathAPI.eval(contentRoot, xpath + "[@page-number='auto']").bool()) {
+                    if (!XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str().equals("")) {
                         hardPageBreaksBefore ++;
                     }
                 } else {
-                    if (XPathAPI.eval(root, xpath + "[@break-before='page']").bool()) {
+                    if (XPathAPI.eval(contentRoot, xpath + "[@break-before='page']").bool()) {
                         hardPageBreaksBefore ++;
                     }
                 }
@@ -498,7 +501,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                softPageBreaksBefore + hardPageBreaksBefore +
                softPageBreaksAfter +  hardPageBreaksAfter > 0) {
 
-            Element pageNode = root.getOwnerDocument().createElement("pagenum");
+            Element pageNode = contentRoot.getOwnerDocument().createElement("pagenum");
 
             if (softPageBreaksBefore + hardPageBreaksBefore +
                 softPageBreaksAfter +  hardPageBreaksAfter > 0) {
@@ -506,13 +509,13 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 // Update masterPageName
 
                 if (!thisIsFirst) {
-                    temp = XPathAPI.eval(root, "/document/master-styles/master-page[@name='" + masterPageName + "']/@next-style-name").str();
+                    temp = XPathAPI.eval(stylesRoot, "//master-styles/master-page[@name='" + masterPageName + "']/@next-style-name").str();
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
                 }
                 if (softPageBreaksBefore + hardPageBreaksBefore > 0 && styleName != null) {
-                    temp = XPathAPI.eval(root, "/document/automatic-styles/style[@name='" + styleName + "']/@master-page-name").str();
+                    temp = XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str();
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
@@ -520,24 +523,26 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                 // Update inclPageNum, enumType and offset
 
-                xpath = "(count(/document/master-styles/master-page[@name='" + masterPageName + "']/header/p/page-number)" +
-                        "+count(/document/master-styles/master-page[@name='" + masterPageName + "']/footer/p/page-number))>0";
-                inclPageNum = XPathAPI.eval(root, xpath).bool();
+                xpath = "(count(//master-styles/master-page[@name='" + masterPageName + "']/header/p/page-number)" +
+                        "+count(//master-styles/master-page[@name='" + masterPageName + "']/footer/p/page-number))>0";
+                inclPageNum = XPathAPI.eval(stylesRoot, xpath).bool();
 
-                xpath = "/document/automatic-styles/page-layout[@name=(/document/master-styles/master-page[@name='" + masterPageName + "']" +
-                        "/@page-layout-name)]/page-layout-properties/@num-format";
-                enumType = XPathAPI.eval(root, xpath).str();
+                xpath = "//master-styles/master-page[@name='" + masterPageName + "']/@page-layout-name";
+                String pageLayoutName = XPathAPI.eval(stylesRoot, xpath).str();
+
+                xpath = "//automatic-styles/page-layout[@name='" + pageLayoutName + "']/page-layout-properties/@num-format";
+                enumType = XPathAPI.eval(contentRoot, xpath).str();
 
                 if (inclPageNum) {
 
-                    xpath = "/document/master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@num-format";
-                    temp = XPathAPI.eval(root, xpath).str();
+                    xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@num-format";
+                    temp = XPathAPI.eval(stylesRoot, xpath).str();
                     if(temp.length()>0){
                         enumType = temp;
                     }
 
-                    xpath = "/document/master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@page-adjust";
-                    temp = XPathAPI.eval(root, xpath).str();
+                    xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@page-adjust";
+                    temp = XPathAPI.eval(stylesRoot, xpath).str();
                     if (!temp.equals("")) {
                         offset = Integer.parseInt(temp);
                     }
@@ -613,7 +618,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                 while (child != null) {
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        ret = insertPagination(settings, root, child, pagenum, masterPageName, true);
+                        ret = insertPagination(settings, contentRoot, stylesRoot, child, pagenum, masterPageName, true);
                         pagenum = (Integer)ret[0];
                         masterPageName = (String)ret[1];
                         break;
@@ -626,7 +631,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                 while(child != null) {
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
-                        ret = insertPagination(settings, root, child, pagenum, masterPageName, false);
+                        ret = insertPagination(settings, contentRoot, stylesRoot, child, pagenum, masterPageName, false);
                         pagenum = (Integer)ret[0];
                         masterPageName = (String)ret[1];
                     }
@@ -640,7 +645,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
             NodeList softPageBreakDescendants = ((Element) node).getElementsByTagName("text:soft-page-break");
 
             for (int i = 0; i < softPageBreakDescendants.getLength();i++) {
-                ret = insertPagination(settings, root, softPageBreakDescendants.item(i), pagenum, masterPageName, false);
+                ret = insertPagination(settings, contentRoot, stylesRoot, softPageBreakDescendants.item(i), pagenum, masterPageName, false);
                 pagenum = (Integer)ret[0];
                 masterPageName = (String)ret[1];
             }
@@ -653,7 +658,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
             Node next = node.getNextSibling();
             while(next != null) {
                 if (next.getNodeType() == Node.ELEMENT_NODE) {
-                    ret = insertPagination(settings, root, next, pagenum, masterPageName, false);
+                    ret = insertPagination(settings, contentRoot, stylesRoot, next, pagenum, masterPageName, false);
                     pagenum = (Integer)ret[0];
                     masterPageName = (String)ret[1];
                 }
@@ -676,7 +681,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
      * @param  node     The next node to be processed. On the first call, this parameter is irrelevant.
      * @param  init     Should be set to <code>true</code> on the first call.
      */
-    private void insertHeadingNumbering(Node root,
+    private void insertHeadingNumbering(Node contentRoot,
+                                        Node stylesRoot,
                                         Node node,
                                         boolean init)
                                  throws TransformerException {
@@ -708,18 +714,18 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Process all headings outside frames
 
-            nodes = XPathAPI.selectNodeList(root, "/document/body/text/sequence-decls/following::h[not(ancestor::frame)]");
+            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::h[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
-                insertHeadingNumbering(root,next,false);
+                insertHeadingNumbering(contentRoot, stylesRoot, next, false);
             }
 
             // Process all frames of depth = 1
 
-            nodes = XPathAPI.selectNodeList(root, "/document/body/text/sequence-decls/following::frame[not(ancestor::frame)]");
+            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
-                insertHeadingNumbering(root,next,false);
+                insertHeadingNumbering(contentRoot, stylesRoot, next, false);
             }
 
         } else {
@@ -730,7 +736,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                     styleName = attr.getNamedItem("text:style-name").getNodeValue();
 
-                    if (!XPathAPI.eval(root, "/document/*/style[@name='" + styleName + "']/@list-style-name").bool()) {
+                    if (!XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@list-style-name").bool() &&
+                        !XPathAPI.eval(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name").bool()) {
 
                         // Get Properties
 
@@ -751,34 +758,34 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                             for (int i=0;i<10;i++) {
 
-                                xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@bullet-char";
-                                if (XPathAPI.eval(root, xpath).bool()) {
+                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@bullet-char";
+                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
                                     numFormat[i] = "bullet";
                                 } else {
-                                    xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@num-format";
-                                    numFormat[i] = XPathAPI.eval(root, xpath).str();
+                                    xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@num-format";
+                                    numFormat[i] = XPathAPI.eval(stylesRoot, xpath).str();
                                 }
-                                xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@start-value";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    startValue[i] = Integer.parseInt(XPathAPI.eval(root, xpath).str());
+                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@start-value";
+                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
+                                    startValue[i] = Integer.parseInt(XPathAPI.eval(stylesRoot, xpath).str());
                                 } else {
                                     startValue[i] = 1;
                                 }
-                                xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@display-levels";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    displayLevels[i] = Integer.parseInt(XPathAPI.eval(root, xpath).str());
+                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@display-levels";
+                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
+                                    displayLevels[i] = Integer.parseInt(XPathAPI.eval(stylesRoot, xpath).str());
                                 } else {
                                     displayLevels[i] = 1;
                                 }
-                                xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-prefix";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    prefix[i] = XPathAPI.eval(root, xpath).str();
+                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-prefix";
+                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
+                                    prefix[i] = XPathAPI.eval(stylesRoot, xpath).str();
                                 } else {
                                     prefix[i] = "";
                                 }
-                                xpath = "/document/styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-suffix";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    suffix[i] = XPathAPI.eval(root, xpath).str();
+                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-suffix";
+                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
+                                    suffix[i] = XPathAPI.eval(stylesRoot, xpath).str();
                                 } else {
                                     suffix[i] = "";
                                 }
@@ -819,7 +826,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                             display = prefix[newLevel-1] + suffix[newLevel-1];
                             if (!display.equals("")) {
-                                Element numNode = root.getOwnerDocument().createElement("num");
+                                Element numNode = contentRoot.getOwnerDocument().createElement("num");
                                 numNode.setAttribute("value", display + " ");
                                 node.insertBefore(numNode, node.getFirstChild());
                             }
@@ -894,7 +901,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                             display = prefix[newLevel-1] + display + suffix[newLevel-1];
 
-                            Element numNode = root.getOwnerDocument().createElement("num");
+                            Element numNode = contentRoot.getOwnerDocument().createElement("num");
                             numNode.setAttribute("value", display + " ");
                             headingText = node.getFirstChild();
                             while(isWhiteSpaceOnlyTextNode(headingText) ||
@@ -926,7 +933,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 nodes = XPathAPI.selectNodeList(node, "current()/descendant::h[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
-                    insertHeadingNumbering(root,next,false);
+                    insertHeadingNumbering(contentRoot, stylesRoot, next, false);
                 }
 
                 // Process all frame descendants
@@ -934,7 +941,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 nodes = XPathAPI.selectNodeList(node, "current()/descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
-                    insertHeadingNumbering(root,next,false);
+                    insertHeadingNumbering(contentRoot, stylesRoot, next, false);
                 }
             }
         }
@@ -949,7 +956,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
      * @param  level    The level of the next node, being the number of ancestors of type list. On the first call, this parameter is irrelevant.
      * @param  init     Should be set to <code>true</code> on the first call.
      */
-    private void insertListNumbering(Node root,
+    private void insertListNumbering(Node contentRoot,
+                                     Node stylesRoot,
                                      Node node,
                                      int level,
                                      boolean init)
@@ -991,7 +999,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Initialization
 
-            nodes = XPathAPI.selectNodeList(root, "/document/body/text/sequence-decls/following::list[@id]");
+            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id]");
 
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
@@ -1035,18 +1043,18 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Process all lists[@id] outside frames
 
-            nodes = XPathAPI.selectNodeList(root, "/document/body/text/sequence-decls/following::list[@id][not(ancestor::frame)]");
+            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id][not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
-                insertListNumbering(root,next,0,false);
+                insertListNumbering(contentRoot, stylesRoot, next, 0, false);
             }
 
             // Process all frames of depth = 1
 
-            nodes = XPathAPI.selectNodeList(root, "/document/body/text/sequence-decls/following::frame[not(ancestor::frame)]");
+            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
-                insertListNumbering(root,next,0,false);
+                insertListNumbering(contentRoot, stylesRoot, next, 0, false);
             }
 
         } else {
@@ -1080,7 +1088,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
                             displayLevels = new int[10];
                             startValue = new int[10];
 
-                            xpathBase = "/document/" + (autolist?"automatic-":"") + "styles/list-style[@name='" + listStyleName + "']/";
+                            xpathBase = "//" + (autolist?"automatic-":"") + "styles/list-style[@name='" + listStyleName + "']/";
+                            Node root = autolist?contentRoot:stylesRoot;
 
                             for (int i=0;i<10;i++) {
 
@@ -1146,7 +1155,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 nodes = XPathAPI.selectNodeList(node, "list-item | list-header");
                 for (int i=0;i<nodes.getLength();i++) {
                     child = nodes.item(i);
-                    insertListNumbering(root, child, level, false);
+                    insertListNumbering(contentRoot, stylesRoot, child, level, false);
                 }
 
             } else if (nodeName.equals("text:list-item") || nodeName.equals("text:list-header")) {
@@ -1187,7 +1196,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                                 display = prefix[newLevel-1] + suffix[newLevel-1];
                                 if (!display.equals("")) {
-                                    numNode = root.getOwnerDocument().createElement("num");
+                                    numNode = contentRoot.getOwnerDocument().createElement("num");
                                     numNode.setAttribute("value", display + " ");
                                 }
 
@@ -1198,7 +1207,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                                 display = listSettings.get(newLevel-1).getPrefix();
                                 if (!display.equals("")) {
-                                    numNode = root.getOwnerDocument().createElement("num");
+                                    numNode = contentRoot.getOwnerDocument().createElement("num");
                                     numNode.setAttribute("value", display + " ");
                                 }
 
@@ -1267,7 +1276,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                                 display = prefix[newLevel-1] + display + suffix[newLevel-1];
 
-                                numNode = root.getOwnerDocument().createElement("num");
+                                numNode = contentRoot.getOwnerDocument().createElement("num");
                                 numNode.setAttribute("value", display + " ");
 
                             }
@@ -1292,7 +1301,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                         } else if (child.getNodeName().equals("text:list")) {
                             newLevel = level + 1;
-                            insertListNumbering(root, child, newLevel, false);
+                            insertListNumbering(contentRoot, stylesRoot, child, newLevel, false);
                         }
                     }
                 }
@@ -1306,7 +1315,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 nodes = XPathAPI.selectNodeList(node, "current()/descendant::list[@id][count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
-                    insertListNumbering(root,next,level,false);
+                    insertListNumbering(contentRoot, stylesRoot, next, level, false);
                 }
 
                 // Process all frame descendants
@@ -1314,7 +1323,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 nodes = XPathAPI.selectNodeList(node, "current()/descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
-                    insertListNumbering(root,next,0,false);
+                    insertListNumbering(contentRoot, stylesRoot, next, 0, false);
                 }
             }
         }
@@ -1332,8 +1341,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Create transformer
 
-        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    "/be/docarch/odt2braille/xslt/split-volumes.xsl").toString()));
+        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "split-volumes.xsl").toString()));
 
         // Set parameters
 
@@ -1350,7 +1358,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Transform
 
-        splitVolumesXSL.transform(new StreamSource(daisyFile2), new StreamResult(saveToFile));
+        splitVolumesXSL.transform(new StreamSource(daisyFile), new StreamResult(saveToFile));
 
         logger.exiting("OdtTransformer","getBodyMatter");
 
@@ -1434,8 +1442,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Create transformer
 
-        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    "/be/docarch/odt2braille/xslt/split-volumes.xsl").toString()));
+        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "split-volumes.xsl").toString()));
 
         // Set parameters
 
@@ -1467,7 +1474,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Transform
 
-        splitVolumesXSL.transform(new StreamSource(daisyFile2), new StreamResult(saveToFile));
+        splitVolumesXSL.transform(new StreamSource(daisyFile), new StreamResult(saveToFile));
 
         logger.exiting("OdtTransformer","getFrontMatter");
         
@@ -1478,19 +1485,12 @@ public class OdtTransformer /* implements ExternalChecker */ {
                               TransformerConfigurationException,
                               TransformerException {
 
-        if (daisyFile1 == null) {
+        if (daisyFile == null) {
 
             logger.entering("OdtTransformer","transform");
 
-            if (flatOdtFile == null) { convertToFlatOdtFile(); }
-
-            daisyFile1 = File.createTempFile(TMP_NAME, ".daisy.1.xml");
-            daisyFile1.deleteOnExit();
-
-            if (daisyFile2 == null) {
-                daisyFile2 = File.createTempFile(TMP_NAME, ".daisy.2.xml");
-                daisyFile2.deleteOnExit();
-            }
+            daisyFile = File.createTempFile(TMP_NAME, ".daisy.xml");
+            daisyFile.deleteOnExit();
 
             ArrayList<String> languages = settings.getLanguages();
             ArrayList<String> translationTables = new ArrayList();
@@ -1541,12 +1541,13 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Create transformers
 
-            Transformer mainXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    "/be/docarch/odt2braille/xslt/main.xsl").toString()));
-            Transformer languagesAndTypefaceXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    "/be/docarch/odt2braille/xslt/languages-and-typeface.xsl").toString()));
+            Transformer mainXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "main.xsl").toString()));
+            Transformer languagesAndTypefaceXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "languages-and-typeface.xsl").toString()));
 
             // Set parameters
+            
+            mainXSL.setParameter("styles-url",     odtStylesFile.toURI());
+            mainXSL.setParameter("controller-url", controllerFile.toURI());
 
             mainXSL.setParameter("paramColumnDelimiter",          settings.getColumnDelimiter());
             mainXSL.setParameter("paramStairstepTableEnabled",    settings.stairstepTableIsEnabled());
@@ -1583,8 +1584,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Transform
 
-            mainXSL.transform(new StreamSource(flatOdtFile), new StreamResult(daisyFile1));
-            languagesAndTypefaceXSL.transform(new StreamSource(daisyFile1), new StreamResult(daisyFile2));
+            mainXSL.transform(new StreamSource(odtContentFile), new StreamResult(tempXMLFile));
+            languagesAndTypefaceXSL.transform(new StreamSource(tempXMLFile), new StreamResult(daisyFile));
 
             logger.exiting("OdtTransformer","transform");
             return true;
@@ -1601,18 +1602,18 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         if (usedLanguagesFile == null) {
 
-            if (flatOdtFile == null) { convertToFlatOdtFile(); }
-
             usedLanguagesFile = File.createTempFile(TMP_NAME, ".languages.xml");
             usedLanguagesFile.deleteOnExit();
 
-            Transformer languagesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/get-languages.xsl").toString()));
+            Transformer languagesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-languages.xsl").toString()));
+
+            languagesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
             languagesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             languagesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
             languagesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
             languagesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
-            languagesXSL.transform(new StreamSource(flatOdtFile), new StreamResult(usedLanguagesFile));
+            languagesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedLanguagesFile));
 
         }
 
@@ -1633,24 +1634,23 @@ public class OdtTransformer /* implements ExternalChecker */ {
     public TreeMap<String,ParagraphStyle> extractParagraphStyles() throws IOException,
                                                                       TransformerConfigurationException,
                                                                       TransformerException {
-
         logger.entering("OdtTransformer","extractParagraphStyles");
 
         if (usedStylesFile == null) {
 
-            if (flatOdtFile == null) { convertToFlatOdtFile(); }
-
             usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml");
             usedStylesFile.deleteOnExit();
 
-            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/get-styles.xsl").toString()));
+            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-styles.xsl").toString()));
+
+            stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
             stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
             stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
             stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
 
-            stylesXSL.transform(new StreamSource(flatOdtFile), new StreamResult(usedStylesFile));
+            stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
 
         }
 
@@ -1701,25 +1701,24 @@ public class OdtTransformer /* implements ExternalChecker */ {
     }
 
     public TreeMap<String,CharacterStyle> extractCharacterStyles() throws IOException,
-                                                                      TransformerConfigurationException,
-                                                                      TransformerException {
-    
+                                                                          TransformerConfigurationException,
+                                                                          TransformerException {
         logger.entering("OdtTransformer","extractCharacterStyles");
 
         if (usedStylesFile == null) {
 
-            if (flatOdtFile == null) { convertToFlatOdtFile(); }
-        
             usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml");
             usedStylesFile.deleteOnExit();
 
-            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/get-styles.xsl").toString()));
+            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-styles.xsl").toString()));
+
+            stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
             stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
             stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
             stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
             stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
-            stylesXSL.transform(new StreamSource(flatOdtFile), new StreamResult(usedStylesFile));
+            stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
             
         }
         
@@ -1778,7 +1777,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
         File temp = File.createTempFile(TMP_NAME, ".unicodeblocks.xml");
         temp.deleteOnExit();
 
-        Transformer unicodeBlocksXSL = tFactory.newTransformer(new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/get-unicodeblocks.xsl").toString()));
+        Transformer unicodeBlocksXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-unicodeblocks.xsl").toString()));
 
         unicodeBlocksXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         unicodeBlocksXSL.setOutputProperty(OutputKeys.METHOD, "xml");
@@ -1800,10 +1799,32 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
     }
 
-    public File getFlatOdtFile() throws IOException {
+//    public File getFlatOdtFile() throws IOException {
+//
+//        logger.entering("OdtTransformer","getFlatOdtFile");
+//
+//        File flatOdtFile = File.createTempFile(TMP_NAME, ".odt.flat.xml");
+//        flatOdtFile.deleteOnExit();
+//        String flatOdtUrl = flatOdtFile.getAbsolutePath();
+//        OdtUtils odtutil = new OdtUtils();
+//        odtutil.open(odtFile.getAbsolutePath());
+//        odtutil.saveXML(flatOdtUrl);
+//
+//        logger.entering("OdtTransformer","getFlatOdtFile");
+//
+//        return flatOdtFile;
+//    }
 
-        if (flatOdtFile == null) { convertToFlatOdtFile(); }
-        return flatOdtFile;
+    public File getOdtContentFile() {
+        return odtContentFile;
+    }
+
+    public File getOdtStylesFile() {
+        return odtStylesFile;
+    }
+
+    public File getOdtMetaFile() {
+        return odtMetaFile;
     }
 
 //    public File getAccessibilityReport() {

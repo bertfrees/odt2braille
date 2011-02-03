@@ -85,7 +85,7 @@ import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 
 /**
  * Show an OpenOffice.org dialog window for adjusting the braille settings.
- * The dialog has 10 tabs:
+ * The dialog has 11 tabs:
  * <ul>
  * <li>General Settings</li>
  * <li>Language Settings</li>
@@ -638,14 +638,12 @@ public class SettingsDialog implements XItemListener,
     private static String _ignoreEmptyPagesCheckBox = "CheckBox15";
     private static String _mergeUnnumberedPagesCheckBox = "CheckBox16";
     private static String _numbersAtTopOnSepLineCheckBox = "CheckBox17";
-    private static String _numbersAtBottomOnSepLineCheckBox = "CheckBox18";    
+    private static String _numbersAtBottomOnSepLineCheckBox = "CheckBox18";
 
     private static String _braillePageNumbersLabel = "Label10";
-    private static String _braillePageNumberAtLabel = "Label57";
     private static String _preliminaryPageNumberFormatLabel = "Label55";
     private static String _beginningBraillePageNumberLabel = "Label16";
     private static String _printPageNumbersLabel = "Label9";
-    private static String _printPageNumberAtLabel = "Label62";
     private static String _printPageNumberRangeLabel = "Label61";
     private static String _continuePagesLabel = "Label63";
     private static String _pageSeparatorLabel = "Label64";
@@ -653,14 +651,12 @@ public class SettingsDialog implements XItemListener,
     private static String _ignoreEmptyPagesLabel = "Label66";
     private static String _mergeUnnumberedPagesLabel = "Label67";
     private static String _numbersAtTopOnSepLineLabel = "Label68";
-    private static String _numbersAtBottomOnSepLineLabel = "Label69";    
+    private static String _numbersAtBottomOnSepLineLabel = "Label69";
 
     private String L10N_braillePageNumbersLabel = null;
-    private String L10N_braillePageNumberAtLabel = null;
     private String L10N_preliminaryPageNumberFormatLabel = null;
     private String L10N_beginningBraillePageNumberLabel = null;
     private String L10N_printPageNumbersLabel = null;
-    private String L10N_printPageNumberAtLabel = null;
     private String L10N_printPageNumberRangeLabel = null;
     private String L10N_continuePagesLabel = null;
     private String L10N_pageSeparatorLabel = null;
@@ -822,7 +818,7 @@ public class SettingsDialog implements XItemListener,
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn") + "/dialogs/SettingsDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/SettingsDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
@@ -1002,11 +998,9 @@ public class SettingsDialog implements XItemListener,
         // Pagenumbers Page
 
         L10N_braillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("braillePageNumbersLabel");
-        L10N_braillePageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("braillePageNumberAtLabel") + ":";
         L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
         L10N_beginningBraillePageNumberLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("beginningBraillePageNumberLabel") + ":";
         L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
-        L10N_printPageNumberAtLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printPageNumberAtLabel") + ":";
         L10N_printPageNumberRangeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printPageNumberRangeLabel");
         L10N_continuePagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("continuePagesLabel");
         L10N_pageSeparatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("pageSeparatorLabel");
@@ -2131,16 +2125,12 @@ public class SettingsDialog implements XItemListener,
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_braillePageNumbersLabel));
         xFixedText.setText(L10N_braillePageNumbersLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_braillePageNumberAtLabel));
-        xFixedText.setText(L10N_braillePageNumberAtLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preliminaryPageNumberFormatLabel));
         xFixedText.setText(L10N_preliminaryPageNumberFormatLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_beginningBraillePageNumberLabel));
         xFixedText.setText(L10N_beginningBraillePageNumberLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumbersLabel));
         xFixedText.setText(L10N_printPageNumbersLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumberAtLabel));
-        xFixedText.setText(L10N_printPageNumberAtLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_printPageNumberRangeLabel));
         xFixedText.setText(L10N_printPageNumberRangeLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_continuePagesLabel));
@@ -2789,8 +2779,7 @@ public class SettingsDialog implements XItemListener,
                                                                                        && settings.getPreliminaryPagesPresent());
         beginningBraillePageNumberFieldProperties.setPropertyValue("Enabled", settings.getBraillePageNumbers());
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent());
-        printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent()
-                                                                             && settings.getPrintPageNumbers());
+        printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
         printPageNumberRangeCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
         continuePagesCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
         pageSeparatorCheckBoxProperties.setPropertyValue("Enabled", !bana);
@@ -2811,7 +2800,7 @@ public class SettingsDialog implements XItemListener,
                                                                               && settings.getBraillePageNumberAt() == PageNumberPosition.BOTTOM_RIGHT)
                                                                              || (settings.getPrintPageNumbers()
                                                                               && settings.getPrintPageNumberAt() == PageNumberPosition.BOTTOM_RIGHT)));
-
+        
     }
 
     private void updateTableOfContentsPageFieldProperties() throws com.sun.star.uno.Exception {
@@ -3418,7 +3407,6 @@ public class SettingsDialog implements XItemListener,
                         
                         if (source.equals(tableSimpleRadioButton) ||
                             source.equals(tableStairstepRadioButton)) {
-
                             if (!settings.stairstepTableIsEnabled()) {
                                 tableSimpleRadioButton.setState(false);
                                 settings.setStairstepTable(true);
@@ -3474,7 +3462,7 @@ public class SettingsDialog implements XItemListener,
                             settings.setPrintPageNumberRange(printPageNumberRangeCheckBox.getState() == (short) 1);
                             numbersAtTopOnSepLineCheckBox.setState((short)(settings.getPageNumberAtTopOnSeparateLine()?1:0));
                         }
-                        
+
                         updatePageNumbersPageFieldProperties();
                         addPageNumbersPageListeners();
                         addTableOfContentsPageListeners();

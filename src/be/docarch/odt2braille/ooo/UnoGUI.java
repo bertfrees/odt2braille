@@ -31,6 +31,7 @@ import java.util.logging.SimpleFormatter;
 
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
+import com.sun.star.uno.AnyConverter;
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiComponentFactory;
@@ -89,6 +90,8 @@ public class UnoGUI {
     private static String L10N_Warning_MessageBox_Title = null;
     private static String L10N_Exception_MessageBox_Title = null;
     private static String L10N_Unexpected_Exception_Message = null;
+
+    private String exportFilename = null;
 
     private XMultiComponentFactory xMCF = null;
     private XComponentContext m_xContext = null;
@@ -189,6 +192,14 @@ public class UnoGUI {
             L10N_Exception_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("exceptionMessageBoxTitle");
             L10N_Unexpected_Exception_Message = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("unexpectedExceptionMessage");
 
+            exportFilename = L10N_Default_Export_Filename;
+            for (PropertyValue prop: xDoc.getArgs()) {
+                if (prop.Name.equals("Title")) {
+                    exportFilename = (String)AnyConverter.toString(prop.Value);
+                    break;
+                }
+            }
+
             // Export in ODT Format
             File odtFile = File.createTempFile(TMP_NAME, ".odt");
             odtFile.deleteOnExit();
@@ -212,7 +223,7 @@ public class UnoGUI {
 
             // Set liblouis directory
             liblouisPath = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
-                                .getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn")
+                                .getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
                                 + "/liblouis/", m_xContext)).getAbsolutePath();
 
             // Create new settingsIO
@@ -440,7 +451,7 @@ public class UnoGUI {
                     fileType = "";
             }
 
-            String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+            String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
             if (exportUnoUrl.length() < 1) {
                 logger.log(Level.INFO, "User cancelled save as dialog");
                 return false;
@@ -694,7 +705,7 @@ public class UnoGUI {
 
                     // Show Save As... Dialog:
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
-                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
                     if (exportUnoUrl.length() < 1) {
                         logger.log(Level.INFO, "User cancelled save as dialog");
                         return false;
@@ -749,7 +760,7 @@ public class UnoGUI {
 
                     // Show Save As... Dialog:
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
-                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(L10N_Default_Export_Filename, fileType, "*" + brailleExt, m_xContext);
+                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
                     if (exportUnoUrl.length() < 1) {
                         logger.log(Level.INFO, "User cancelled save as dialog");
                         return false;

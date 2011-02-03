@@ -122,7 +122,7 @@ public class InsertDialog implements XTextListener,
         L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
                                                             + "/dialogs/InsertDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);

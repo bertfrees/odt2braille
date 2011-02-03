@@ -24,6 +24,8 @@
 <xsl:stylesheet version="2.0"
 
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:ns1="http://www.docarch.be/accessibility/properties#"
         xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -77,18 +79,20 @@
 
         <!-- Global variables  -->
 
-        <xsl:param  name="controller-url"  as="xsd:string" />
+        <xsl:param    name="controller-url"   as="xsd:string" />
+        <xsl:param    name="styles-url"       as="xsd:string" />
 
         <xsl:variable name="controller"       select="doc($controller-url)" />
-        <xsl:variable name="styles"           select="/office:document/office:styles" />
-        <xsl:variable name="automatic-styles" select="/office:document/office:automatic-styles" />
+        <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
+        <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
+        <xsl:variable name="body"             select="/office:document-content/office:body" />
         <xsl:variable name="stylesheet"       select="document('')/xsl:stylesheet" />
 
         <xsl:variable name="main-language">
-            <xsl:value-of select="/office:document/office:styles/style:default-style[@style:family='paragraph'][1]
+            <xsl:value-of select="$styles/style:default-style[@style:family='paragraph'][1]
                                   /style:text-properties/@fo:language" />
             <xsl:text>-</xsl:text>
-            <xsl:value-of select="/office:document/office:styles/style:default-style[@style:family='paragraph'][1]
+            <xsl:value-of select="$styles/style:default-style[@style:family='paragraph'][1]
                                   /style:text-properties/@fo:country" />
         </xsl:variable>
 
@@ -122,21 +126,19 @@ DOCUMENT ROOT
             <dtb:book>
 
                 <!-- FRONTMATTER -->
-                <xsl:if test="/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']">
+                <xsl:if test="$body/office:text/text:section[@text:name='PreliminaryPages']">
                     <dtb:frontmatter>
                         <xsl:apply-templates mode="toplevel"
-                                             select="/office:document/office:body/office:text/
-                                                      text:section[@text:name='PreliminaryPages'][1]" />
+                                             select="$body/office:text/text:section[@text:name='PreliminaryPages'][1]" />
                     </dtb:frontmatter>
                 </xsl:if>
 
                 <!-- BODYMATTER -->
                 <dtb:bodymatter>
                     <xsl:choose>
-                        <xsl:when test="/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']">
+                        <xsl:when test="$body/office:text/text:section[@text:name='PreliminaryPages']">
                             <xsl:call-template name="bodymatter">
-                                <xsl:with-param name="currentNode" select="/office:document/office:body/office:text/
-                                                                            text:section[@text:name='PreliminaryPages']" />
+                                <xsl:with-param name="currentNode" select="$body/office:text/text:section[@text:name='PreliminaryPages']" />
                             </xsl:call-template>
                         </xsl:when>
                         <xsl:otherwise>
@@ -157,7 +159,7 @@ BODYMATTER
     -->
 
     <xsl:template name="bodymatter">
-        <xsl:param name="currentNode" select="/office:document/office:body/office:text/text:sequence-decls[1]" />
+        <xsl:param name="currentNode" select="$body/office:text/text:sequence-decls[1]" />
         <xsl:param name="supplement"  select="false()" as="xsd:boolean" />
         <xsl:param name="volumeNr"    select="1"       as="xsd:integer" />
 
@@ -532,14 +534,14 @@ INLINE ELEMENTS
             </xsl:variable>
 
             <xsl:variable name="language">
-                <xsl:if test="/office:document/office:automatic-styles/style:style[@style:name=($style-name)]
+                <xsl:if test="$automatic-styles/style:style[@style:name=($style-name)]
                               /style:text-properties/@fo:language">
-                    <xsl:value-of select="/office:document/office:automatic-styles/style:style[@style:name=($style-name)]
+                    <xsl:value-of select="$automatic-styles/style:style[@style:name=($style-name)]
                                           /style:text-properties/@fo:language" />
-                    <xsl:if test="/office:document/office:automatic-styles/style:style[@style:name=($style-name)]
+                    <xsl:if test="$automatic-styles/style:style[@style:name=($style-name)]
                                   /style:text-properties/@fo:country">
                         <xsl:text>-</xsl:text>
-                        <xsl:value-of select="/office:document/office:automatic-styles/style:style[@style:name=($style-name)]
+                        <xsl:value-of select="$automatic-styles/style:style[@style:name=($style-name)]
                                               /style:text-properties/@fo:country"  />
                     </xsl:if>
                 </xsl:if>
@@ -929,7 +931,12 @@ BLOCK ELEMENTS
                 <xsl:with-param name="style-name" select="$style-name" />
             </xsl:call-template>
         </xsl:variable>
-
+        <xsl:variable name="is-empty" as="xsd:boolean">
+            <xsl:call-template name="is-empty">
+                <xsl:with-param name="node" select="." />
+            </xsl:call-template>
+        </xsl:variable>
+        
         <xsl:choose>
 
             <!-- CAPTION -->
@@ -956,7 +963,7 @@ BLOCK ELEMENTS
                     <xsl:when test="$is-caption">
                         <xsl:apply-templates select="pagenum" />
                     </xsl:when>
-                    <xsl:when test="$is-paragraph and (string(.) = string-join(./*[self::draw:frame or self::draw:a], ''))">
+                    <xsl:when test="$is-paragraph and $is-empty">
 
                         <!-- Empty paragraph -->
                         <xsl:apply-templates select="pagenum" />
@@ -1069,7 +1076,7 @@ BLOCK ELEMENTS
         <xsl:apply-templates mode="toplevel" select="child::*" />
 
         <!-- Section endnotes -->
-        <xsl:if test="/office:document/office:automatic-styles/style:style[@style:name=($styleName)]
+        <xsl:if test="$automatic-styles/style:style[@style:name=($styleName)]
                       /style:section-properties/text:notes-configuration[@text:note-class='endnote']" >
 
             <xsl:call-template name="notesection">
@@ -1205,10 +1212,11 @@ BLOCK ELEMENTS
         <xsl:param name="transposed"       select="'false'" />
         <xsl:param name="transposeTables"  select="'false'" />
 
-        <xsl:variable name="styleName" select="current()/@table:style-name" />
+        <xsl:variable name="styleName"  select="current()/@table:style-name" />
+        <xsl:variable name="tableName" select="@table:name" />
         <xsl:variable name="border">
             <xsl:choose>
-                <xsl:when test="/office:document/office:automatic-styles/style:style
+                <xsl:when test="$automatic-styles/style:style
                                 [substring-before(@style:name,'.')=$styleName]
                                 /style:table-cell-properties[not(@fo:border='none')]">
                     <xsl:value-of select="''" />
@@ -1229,13 +1237,11 @@ BLOCK ELEMENTS
             </xsl:when>
             <xsl:otherwise>
                 <xsl:variable name="parentStyleNameFirstCell"
-                              select="/office:document/office:automatic-styles
+                              select="$automatic-styles
                                       /style:style[@style:name=(current()/table:table-row[1]/table:table-cell/text:p/@text:style-name)]
                                       /@style:parent-style-name" />
                 <xsl:variable name="styleNameFirstCell"
                               select="current()/table:table-row[1]/table:table-cell/text:p/@text:style-name"/>
-                <xsl:variable name="followingPara"
-                              select="current()/following-sibling::*[1][name()='text:p' and not(descendant::draw:frame)]" />
                 <xsl:variable name="transposedContent" select="current()/descendant::*[name()='table:table'
                                                                                     or name()='text:list'
                                                                                     or name()='draw:frame']" />
@@ -1284,17 +1290,21 @@ BLOCK ELEMENTS
                     </xsl:if>
 
                     <!-- Table caption -->
-                    <xsl:variable name="followingPara-is-caption" as="xsd:boolean">
-                        <xsl:call-template name="is-caption">
-                            <xsl:with-param name="style-name" select="$followingPara/@text:style-name" />
+                    <xsl:variable name="table-caption-id">
+                        <xsl:call-template name="get-table-caption-id">
+                            <xsl:with-param name="table-name" select="$tableName" />
                         </xsl:call-template>
                     </xsl:variable>
-                    <xsl:if test="$followingPara-is-caption">
-                        <dtb:div class="caption">
-                            <xsl:apply-templates select="$followingPara">
-                                <xsl:with-param name="caption" select="'true'" />
-                            </xsl:apply-templates>
-                        </dtb:div>
+                    <xsl:if test="$table-caption-id">
+                        <xsl:variable name="caption" select="$body//text:p[@xml:id=$table-caption-id]" />
+                        <xsl:if test="$caption" >
+                            <dtb:div class="caption">
+                                <xsl:apply-templates select="$caption">
+                                    <xsl:with-param name="caption" select="'true'" />
+                                    <xsl:with-param name="frames"  select="'false'" />
+                                </xsl:apply-templates>
+                            </dtb:div>
+                        </xsl:if>
                     </xsl:if>
                     <xsl:choose>
 
@@ -1474,57 +1484,18 @@ BLOCK ELEMENTS
         <xsl:param name="render"     select="'false'" />
         <xsl:param name="transposed" select="'false'" />
 
+        <xsl:variable name="caption-id">
+            <xsl:call-template name="get-frame-caption-id">
+                <xsl:with-param name="frame-name" select="@draw:name" />
+            </xsl:call-template>
+        </xsl:variable>
+
         <xsl:if test="$render='true' or $transposed='true'">
-
-            <!-- Frame caption -->
-            <xsl:variable name="parentPara"
-                          select="current()/parent::text:p[1]
-                                | current()/parent::draw:a/parent::text:p[1]" />
-            <xsl:variable name="followingPara"
-                          select="(current()/parent::*/following-sibling::*[1][name()='text:p' and not(descendant::draw:frame)])
-                                | (current()/parent::draw:a/parent::*/following-sibling::*[1][name()='text:p' and not(descendant::draw:frame)])
-                                | (current()/self::*[parent::draw:text-box]/following-sibling::*[1][name()='text:p' and not(descendant::draw:frame)])
-                                | (current()/parent::draw:a[parent::draw:text-box]/following-sibling::*[1][name()='text:p' and not(descendant::draw:frame)])" />
-            <xsl:variable name="lastParaInTextBox"
-                          select="current()/draw:text-box[not(descendant::draw:frame)]/text:p[last()]" />
-
-            <xsl:variable name="parentPara-is-caption" as="xsd:boolean">
-                <xsl:call-template name="is-caption">
-                    <xsl:with-param name="style-name" select="$parentPara/@text:style-name" />
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="followingPara-is-caption" as="xsd:boolean">
-                <xsl:call-template name="is-caption">
-                    <xsl:with-param name="style-name" select="$followingPara/@text:style-name" />
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:variable name="lastParaInTextBox-is-caption" as="xsd:boolean">
-                <xsl:call-template name="is-caption">
-                    <xsl:with-param name="style-name" select="$lastParaInTextBox/@text:style-name" />
-                </xsl:call-template>
-            </xsl:variable>
-
-            <xsl:variable name="caption">
-                <xsl:choose>
-                    <xsl:when test="$parentPara-is-caption        and not(string($parentPara) = string($parentPara/descendant::draw:frame[1]))">
-                        <xsl:value-of select="'parentPara'" />
-                    </xsl:when>
-                    <xsl:when test="$followingPara-is-caption     and not(string($followingPara) = '')">
-                        <xsl:value-of select="'followingPara'" />
-                    </xsl:when>
-                    <xsl:when test="$lastParaInTextBox-is-caption and not(string($lastParaInTextBox) = '')">
-                        <xsl:value-of select="'lastParaInTextBox'" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="'null'" />
-                    </xsl:otherwise>
-                </xsl:choose>
-            </xsl:variable>
             <xsl:choose>
 
                 <!-- Formula -->
                 <xsl:when test="current()/child::draw:object
-                            and /office:document/office:automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
+                            and $automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
                                 /@style:parent-style-name='Formula'">
                     <xsl:apply-templates select="draw:object/*" mode="math" />
                 </xsl:when>
@@ -1542,23 +1513,17 @@ BLOCK ELEMENTS
                             </xsl:if>
 
                             <!-- Caption -->
-                            <xsl:if test="$caption='parentPara'">
-                                <dtb:note>
-                                    <xsl:apply-templates select="$parentPara">
-                                        <xsl:with-param name="caption"  select="'true'"  />
-                                        <xsl:with-param name="frames"   select="'false'" />
-                                        <xsl:with-param name="notes"    select="'false'" />
-                                    </xsl:apply-templates>
-                                </dtb:note>
-                            </xsl:if>
-                            <xsl:if test="$caption='followingPara'">
-                                <dtb:note>
-                                    <xsl:apply-templates select="$followingPara">
-                                        <xsl:with-param name="caption"  select="'true'" />
-                                        <xsl:with-param name="frames"   select="'false'" />
-                                        <xsl:with-param name="notes"    select="'false'" />
-                                    </xsl:apply-templates>
-                                </dtb:note>
+                            <xsl:if test="$caption-id">
+                                <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
+                                <xsl:if test="$caption" >
+                                    <dtb:note>
+                                        <xsl:apply-templates select="$caption">
+                                            <xsl:with-param name="caption" select="'true'" />
+                                            <xsl:with-param name="frames"  select="'false'" />
+                                            <xsl:with-param name="notes"   select="'false'" />
+                                        </xsl:apply-templates>
+                                    </dtb:note>
+                                </xsl:if>
                             </xsl:if>
 
                             <!-- Not reproduced note -->
@@ -1589,17 +1554,11 @@ BLOCK ELEMENTS
                     </dtb:div>
 
                     <!-- Footnotes in caption -->
-                    <xsl:if test="$caption='parentPara'">
-                        <xsl:if test="$parentPara//text:note[@text:note-class='footnote']">
+                    <xsl:if test="$caption-id">
+                        <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
+                        <xsl:if test="$caption//text:note[@text:note-class='footnote']">
                             <xsl:call-template name="footnote">
-                                <xsl:with-param name="notes" select="$parentPara//text:note[@text:note-class='footnote']" />
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:if>
-                    <xsl:if test="$caption='followingPara'">
-                        <xsl:if test="$followingPara//text:note[@text:note-class='footnote']">
-                            <xsl:call-template name="footnote">
-                                <xsl:with-param name="notes" select="$followingPara//text:note[@text:note-class='footnote']" />
+                                <xsl:with-param name="notes" select="$caption//text:note[@text:note-class='footnote']" />
                             </xsl:call-template>
                         </xsl:if>
                     </xsl:if>
@@ -1609,13 +1568,13 @@ BLOCK ELEMENTS
                 <xsl:when test="current()/child::draw:text-box">
 
                     <xsl:variable name="border"
-                                  select="/office:document/office:automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
+                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
                                           /style:graphic-properties/@fo:border" />
                     <xsl:variable name="border-bottom"
-                                  select="/office:document/office:automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
+                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
                                           /style:graphic-properties/@fo:border-bottom" />
                     <xsl:variable name="border-top"
-                                  select="/office:document/office:automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
+                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
                                           /style:graphic-properties/@fo:border-top" />
 
                     <!-- Transposition notification -->
@@ -1642,26 +1601,16 @@ BLOCK ELEMENTS
                         </xsl:if>
 
                         <!-- Caption -->
-                        <xsl:if test="$caption='parentPara'">
-                            <dtb:div class="caption">
-                                <xsl:apply-templates select="$parentPara">
-                                    <xsl:with-param name="caption"  select="'true'" />
-                                </xsl:apply-templates>
-                            </dtb:div>
-                        </xsl:if>
-                        <xsl:if test="$caption='followingPara'">
-                            <dtb:div class="caption">
-                                <xsl:apply-templates select="$followingPara">
-                                    <xsl:with-param name="caption"  select="'true'" />
-                                </xsl:apply-templates>
-                            </dtb:div>
-                        </xsl:if>
-                        <xsl:if test="$caption='lastParaInTextBox'">
-                            <dtb:div class="caption">
-                                <xsl:apply-templates select="$lastParaInTextBox">
-                                    <xsl:with-param name="caption"  select="'true'" />
-                                </xsl:apply-templates>
-                            </dtb:div>
+                        <xsl:if test="$caption-id">
+                            <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id]" />
+                            <xsl:if test="$caption" >
+                                <dtb:div class="caption">
+                                    <xsl:apply-templates select="$caption">
+                                        <xsl:with-param name="caption" select="'true'" />
+                                        <xsl:with-param name="frames"  select="'false'" />
+                                    </xsl:apply-templates>
+                                </dtb:div>
+                            </xsl:if>
                         </xsl:if>
 
                         <!-- Box content -->
@@ -1811,7 +1760,7 @@ HELP TEMPLATES
                 <xsl:value-of select="'false'" />
             </xsl:when>
 
-            <xsl:when test="/office:document/office:automatic-styles/style:style[@style:name=($styleName)]
+            <xsl:when test="$automatic-styles/style:style[@style:name=($styleName)]
                             /style:section-properties/text:notes-configuration[@text:note-class='endnote']">
                 <xsl:value-of select="'true'" />
             </xsl:when>
@@ -1844,6 +1793,18 @@ HELP TEMPLATES
                 <xsl:value-of select="false()" />
             </xsl:otherwise>
         </xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="get-table-caption-id">
+        <xsl:param name="table-name" />
+        <xsl:value-of select="$controller//ns1:table[@rdf:about=$table-name]/ns1:hasCaption[1]/@rdf:resource" />
+    </xsl:template>
+
+
+    <xsl:template name="get-frame-caption-id">
+        <xsl:param name="frame-name" />
+        <xsl:value-of select="$controller//ns1:frame[@rdf:about=$frame-name]/ns1:hasCaption[1]/@rdf:resource" />
     </xsl:template>
 
 </xsl:stylesheet>

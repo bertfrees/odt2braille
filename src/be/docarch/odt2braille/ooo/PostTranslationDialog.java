@@ -93,7 +93,7 @@ public class PostTranslationDialog implements XActionListener {
         // Make dialog
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn") + "/dialogs/PostTranslationDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/PostTranslationDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         XControlContainer dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

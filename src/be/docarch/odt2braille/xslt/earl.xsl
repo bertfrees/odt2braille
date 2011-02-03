@@ -29,8 +29,8 @@
             xmlns:earl="http://www.w3.org/ns/earl#"
             xmlns:foaf="http://xmlns.com/foaf/0.1/"
             xmlns:dct="http://purl.org/dc/terms/"
-            xmlns:ns1="http://www.docarch.be/accessibility-checker/properties#"
-            xmlns:ns2="http://www.docarch.be/accessibility_checker/checks#"
+            xmlns:ns1="http://www.docarch.be/accessibility/properties#"
+            xmlns:ns2="http://www.docarch.be/accessibility/checks#"
 
             exclude-result-prefixes="xsl xsd rdf earl foaf dct ns1 ns2">
 
@@ -40,6 +40,8 @@
                     indent="yes"
                     omit-xml-declaration="no"/>
 
+        <xsl:variable name="content-base"     select="'../content.xml#'" />
+        
 
     <xsl:template match="/">
         <rdf:RDF>
@@ -51,29 +53,24 @@
                     <foaf:Person rdf:about="http://www.docarch.be/bert" />
                 </foaf:member>
             </foaf:Group>
-            <earl:TestCase rdf:about="http://www.docarch.be/accessibility_checker/checks#A_NoTitlePage" />
+            <earl:TestCase rdf:about="http://www.docarch.be/accessibility/checks#A_OmittedInBraille" />
 
-            <xsl:copy>
-                <xsl:apply-templates select="node()"/>
-            </xsl:copy>
+            <xsl:apply-templates select="//ns1:caption"/>
         </rdf:RDF>
     </xsl:template>
+    
 
-
-    <xsl:template match="rdf:Description">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
-        <xsl:variable name="about" select="@rdf:about" />
-        <xsl:if test="not(//rdf:Description/ns1:hasCaption[@rdf:resource=$about])">
+    <xsl:template match="ns1:caption">
+        <xsl:variable name="caption-id" select="./@rdf:about" />
+        <xsl:if test="not(//ns1:hasCaption[@rdf:resource=$caption-id])">
             <earl:Assertion>
                 <earl:assertedBy rdf:nodeID="assertor" />
                 <earl:subject>
                     <earl:TestSubject>
-                        <xsl:attribute name="rdf:about" select="$about" />
+                        <xsl:attribute name="rdf:about" select="concat($content-base,$caption-id)" />
                     </earl:TestSubject>
                 </earl:subject>
-                <earl:test rdf:resource="http://www.docarch.be/accessibility_checker/checks#A_NoTitlePage" />
+                <earl:test rdf:resource="http://www.docarch.be/accessibility/checks#A_OmittedInBraille" />
                 <earl:result>
                     <earl:TestResult>
                         <earl:outcome rdf:resource="http://www.w3.org/ns/earl#failed"/>
@@ -81,12 +78,6 @@
                 </earl:result>
             </earl:Assertion>
         </xsl:if>
-    </xsl:template>
-
-    <xsl:template match="@*|node()">
-        <xsl:copy>
-            <xsl:apply-templates select="@*|node()"/>
-        </xsl:copy>
     </xsl:template>
 
 </xsl:stylesheet>

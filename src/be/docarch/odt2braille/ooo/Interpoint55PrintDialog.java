@@ -157,7 +157,7 @@ public class Interpoint55PrintDialog implements XActionListener,
         settingsIO = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
                                                         + "/dialogs/Interpoint55PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         XMultiComponentFactory xMCF = xContext.getServiceManager();

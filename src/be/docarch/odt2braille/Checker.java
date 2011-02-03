@@ -149,20 +149,20 @@ public class Checker {
     public void checkOdtFile() throws MalformedURLException,
                                       IOException {
 
-        File flatOdtFile = odtTransformer.getFlatOdtFile();
+        File odtContentFile = odtTransformer.getOdtContentFile();
 
         logger.entering("Checker", "checkFlatOdtFile");
 
-        if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                "/office:document/office:body/office:text//table:covered-table-cell", namespace)) {
+        if (XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                "//office:body/office:text//table:covered-table-cell", namespace)) {
             tablesWithMergedCells = true;
         }
-        if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                "/office:document/office:body/office:text//draw:frame[draw:image and not(svg:title or svg:desc)]", namespace)) {
+        if (XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                "//office:body/office:text//draw:frame[draw:image and not(svg:title or svg:desc)]", namespace)) {
             imagesWithoutTitleOrAltDescription = true;
         }
-        if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                "/office:document/office:body/office:text//text:table-of-content", namespace)
+        if (XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                "//office:body/office:text//text:table-of-content", namespace)
                 && !settings.tableOfContentEnabled) {
             tocNotReplaced = true;
         }

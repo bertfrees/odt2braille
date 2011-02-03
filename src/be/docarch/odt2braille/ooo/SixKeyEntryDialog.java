@@ -97,7 +97,7 @@ public class SixKeyEntryDialog implements XKeyHandler {
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn")
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
                                                             + "/dialogs/SixKeyEntryDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);

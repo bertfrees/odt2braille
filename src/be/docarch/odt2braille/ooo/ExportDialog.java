@@ -153,7 +153,7 @@ public class ExportDialog implements XItemListener,
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.Odt2BrailleAddOn") + "/dialogs/ExportDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/ExportDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

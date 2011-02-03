@@ -27,18 +27,29 @@
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
             xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+            xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
             xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
             xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
 
-            exclude-result-prefixes="xsd style text table fo office" >
+            exclude-result-prefixes="xsd style text table fo office draw" >
 
             <xsl:variable name="all-styles" select="$styles | $automatic-styles" />
 
+    <xsl:template name="is-empty">
+        <xsl:param name="node" />
+        <xsl:choose>
+            <xsl:when test="string($node)=string-join($node/*[self::draw:frame or self::draw:a], '')">
+                <xsl:value-of select="true()" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="false()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
 
     <xsl:template name="is-caption">
         <xsl:param name="style-name" />
-
         <xsl:choose>
             <xsl:when test="$style-name='Caption'">
                 <xsl:value-of select="true()" />

@@ -38,17 +38,20 @@
                 indent="yes"
                 omit-xml-declaration="no"/>
 
+    <xsl:param    name="styles-url"       as="xsd:string" />
+    <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
+    <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
 
     <xsl:template match="/">
 
         <xsl:variable name="main-language">
-            <xsl:value-of select="/office:document/office:styles/style:default-style[@style:family='paragraph'][1]/style:text-properties/@fo:language" />
+            <xsl:value-of select="$styles/style:default-style[@style:family='paragraph'][1]/style:text-properties/@fo:language" />
             <xsl:text>-</xsl:text>
-            <xsl:value-of select="/office:document/office:styles/style:default-style[@style:family='paragraph'][1]/style:text-properties/@fo:country" />
+            <xsl:value-of select="$styles/style:default-style[@style:family='paragraph'][1]/style:text-properties/@fo:country" />
         </xsl:variable>
 
         <xsl:variable name="languages" as="xsd:string*" >
-            <xsl:for-each select="/office:document/office:automatic-styles/style:style/style:text-properties[@fo:language]">
+            <xsl:for-each select="$automatic-styles/style:style/style:text-properties[@fo:language]">
                 <xsl:variable name="language">
                     <xsl:value-of select="@fo:language" />
                     <xsl:text>-</xsl:text>

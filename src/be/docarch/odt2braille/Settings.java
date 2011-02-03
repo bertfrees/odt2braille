@@ -85,7 +85,7 @@ public class Settings {
     protected boolean HEADINGS_PRESENT = false;
     protected boolean LISTS_PRESENT = false;
     protected boolean TABLES_PRESENT = false;
-    protected boolean PAGE_NUMBERS_PRESENT = false;
+    protected boolean PAGE_NUMBER_IN_HEADER_FOOTER = false;
     protected boolean MATH_PRESENT = false;
 
     // General Settings
@@ -293,7 +293,7 @@ public class Settings {
         this.HEADINGS_PRESENT = copySettings.HEADINGS_PRESENT;
         this.LISTS_PRESENT = copySettings.LISTS_PRESENT;
         this.TABLES_PRESENT = copySettings.TABLES_PRESENT;
-        this.PAGE_NUMBERS_PRESENT = copySettings.PAGE_NUMBERS_PRESENT;
+        this.PAGE_NUMBER_IN_HEADER_FOOTER = copySettings.PAGE_NUMBER_IN_HEADER_FOOTER;
         this.MATH_PRESENT = copySettings.MATH_PRESENT;
         this.printPageNumbers = copySettings.printPageNumbers;
         this.braillePageNumbers = copySettings.braillePageNumbers;
@@ -430,7 +430,9 @@ public class Settings {
 
         logger.entering("Settings","<init>");
 
-        File flatOdtFile = odtTransformer.getFlatOdtFile();
+        File odtContentFile = odtTransformer.getOdtContentFile();
+        File odtStylesFile = odtTransformer.getOdtStylesFile();
+        File odtMetaFile = odtTransformer.getOdtMetaFile();
 
         // L10N
 
@@ -441,72 +443,72 @@ public class Settings {
 
         // Readonly properties
 
-        PARAGRAPHS_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text//text:p",namespace);
-        HEADINGS_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text//text:h",namespace);
-        LISTS_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text//text:list",namespace);
-        TABLES_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text//table:table",namespace);
-        PAGE_NUMBERS_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:master-styles//style:header/text:p/text:page-number or " +
-                    "/office:document/office:master-styles//style:footer/text:p/text:page-number", namespace);
-        MATH_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text//draw:object",namespace);
-        PRELIMINARY_PAGES_PRESENT = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']",namespace);
+        PARAGRAPHS_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text//text:p",namespace);
+        HEADINGS_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text//text:h",namespace);
+        LISTS_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text//text:list",namespace);
+        TABLES_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text//table:table",namespace);
+        PAGE_NUMBER_IN_HEADER_FOOTER = XPathUtils.evaluateBoolean(odtStylesFile.toURL().openStream(),
+                    "//office:master-styles//style:header/text:p/text:page-number or " +
+                    "//office:master-styles//style:footer/text:p/text:page-number", namespace);
+        MATH_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text//draw:object",namespace);
+        PRELIMINARY_PAGES_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text/text:section[@text:name='PreliminaryPages']",namespace);
 
         NUMBER_OF_VOLUMES = 0;
         NUMBER_OF_SUPPLEMENTS = 0;
 
         if ((PRELIMINARY_PAGES_PRESENT
-                && XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                        "/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']" +
+                && XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                        "//office:body/office:text/text:section[@text:name='PreliminaryPages']" +
                         "/following-sibling::text:section[@text:name='Volume1']",namespace))
            || (!PRELIMINARY_PAGES_PRESENT
-                && XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                        "/office:document/office:body/office:text/text:sequence-decls[1]" +
+                && XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                        "//office:body/office:text/text:sequence-decls[1]" +
                         "/following-sibling::text:section[@text:name='Volume1']",namespace))) {
 
             NUMBER_OF_VOLUMES = 1;
-            while(XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text/text:section[@text:name='Volume" + (NUMBER_OF_VOLUMES) + "']" +
+            while(XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text/text:section[@text:name='Volume" + (NUMBER_OF_VOLUMES) + "']" +
                     "/following-sibling::text:section[@text:name='Volume" + (NUMBER_OF_VOLUMES + 1) + "']",namespace)) {
                 NUMBER_OF_VOLUMES ++;
             }
         }
 
         if (((NUMBER_OF_VOLUMES > 0)
-                && XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                        "/office:document/office:body/office:text/text:section[@text:name='Volume" + NUMBER_OF_VOLUMES + "']" +
+                && XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                        "//office:body/office:text/text:section[@text:name='Volume" + NUMBER_OF_VOLUMES + "']" +
                         "/following-sibling::text:section[@text:name='Supplement1']",namespace))
             || ((NUMBER_OF_VOLUMES == 0) && PRELIMINARY_PAGES_PRESENT
-                && XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                        "/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']" +
+                && XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                        "//office:body/office:text/text:section[@text:name='PreliminaryPages']" +
                         "/following-sibling::text:section[@text:name='Supplement1']",namespace))
             || ((NUMBER_OF_VOLUMES == 0) && !PRELIMINARY_PAGES_PRESENT
-                && XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                        "/office:document/office:body/office:text/text:sequence-decls[1]" +
+                && XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                        "//office:body/office:text/text:sequence-decls[1]" +
                         "/following-sibling::text:section[@text:name='Supplement1']",namespace))) {
 
             NUMBER_OF_SUPPLEMENTS = 1;
-            while(XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text/text:section[@text:name='Supplement" + (NUMBER_OF_SUPPLEMENTS) + "']" +
+            while(XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text/text:section[@text:name='Supplement" + (NUMBER_OF_SUPPLEMENTS) + "']" +
                     "/following-sibling::text:section[@text:name='Supplement" + (NUMBER_OF_SUPPLEMENTS + 1) + "']",namespace)) {
                 NUMBER_OF_SUPPLEMENTS ++;
             }
         }
 
-        TRANSCRIPTION_INFO_AVAILABLE = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
+        TRANSCRIPTION_INFO_AVAILABLE = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
                     "//text:section[@text:name='TitlePage']",namespace);
-        VOLUME_INFO_AVAILABLE = XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(),
-                    "/office:document/office:body/office:text/text:section[@text:name='PreliminaryPages']" +
+        VOLUME_INFO_AVAILABLE = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
+                    "//office:body/office:text/text:section[@text:name='PreliminaryPages']" +
                     "//text:section[@text:name='TitlePage']",namespace);
-        if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(), "/office:document/office:meta/dc:date",namespace)) {
-            DATE = XPathUtils.evaluateString(flatOdtFile.toURL().openStream(), "/office:document/office:meta/dc:date/text()",namespace).substring(0, 4);
-        } else if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(), "/office:document/office:meta/meta:creation-date",namespace)) {
-            DATE = XPathUtils.evaluateString(flatOdtFile.toURL().openStream(), "/office:document/office:meta/meta:creation-date/text()",namespace).substring(0, 4);
+        if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/dc:date",namespace)) {
+            DATE = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/dc:date/text()",namespace).substring(0, 4);
+        } else if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/meta:creation-date",namespace)) {
+            DATE = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/meta:creation-date/text()",namespace).substring(0, 4);
         } else {
             DATE = (new SimpleDateFormat("yyyy")).format(new Date());
         }
@@ -628,15 +630,15 @@ public class Settings {
         // Settings
 
         continuedSuffix = L10N_continuedSuffix;
-
+       
         setTranscribersNotesPageTitle(L10N_transcribersNotesPageTitle.toUpperCase());
         setSpecialSymbolsListTitle(L10N_specialSymbolsListTitle.toUpperCase());
         setTableOfContentTitle(L10N_tableOfContentTitle.toUpperCase());
 
-        if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(), "/office:document/office:meta/dc:creator",namespace)) {
-            creator = XPathUtils.evaluateString(flatOdtFile.toURL().openStream(), "/office:document/office:meta/dc:creator/text()",namespace);
-        } else if (XPathUtils.evaluateBoolean(flatOdtFile.toURL().openStream(), "/office:document/office:meta/meta:initial-creator",namespace)) {
-            creator = XPathUtils.evaluateString(flatOdtFile.toURL().openStream(), "/office:document/office:meta/meta:initial-creator/text()",namespace);
+        if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/dc:creator",namespace)) {
+            creator = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/dc:creator/text()",namespace);
+        } else if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/meta:initial-creator",namespace)) {
+            creator = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/meta:initial-creator/text()",namespace);
         } else {
             creator = "";
         }
@@ -2390,7 +2392,7 @@ public class Settings {
 
     public void setPrintPageNumbers(boolean b) {
 
-        this.printPageNumbers = b && PAGE_NUMBERS_PRESENT;
+        this.printPageNumbers = b && PAGE_NUMBER_IN_HEADER_FOOTER;
         setPrintPageNumberRange(printPageNumberRange);
         setContinuePages(continuePages);
         setPageNumberAtTopOnSeparateLine(pageNumberAtTopOnSeparateLine);
@@ -2741,7 +2743,7 @@ public class Settings {
     }
 
     public boolean getPageNumbersPresent() {
-        return PAGE_NUMBERS_PRESENT;
+        return PAGE_NUMBER_IN_HEADER_FOOTER;
     }
 
     public boolean getMathPresent() {
@@ -2871,11 +2873,11 @@ public class Settings {
 
         if (this.brailleRules==BrailleRules.BANA) {
 
-            setPrintPageNumbers(PAGE_NUMBERS_PRESENT);
+            setPrintPageNumbers(true);
             setBraillePageNumbers(true);
             setPageSeparator(true);
-            setPageSeparatorNumber(PAGE_NUMBERS_PRESENT);
-            setContinuePages(PAGE_NUMBERS_PRESENT);
+            setPageSeparatorNumber(true);
+            setContinuePages(true);
             setIgnoreEmptyPages(false);
             setMergeUnnumberedPages(false);
             setPageNumberAtTopOnSeparateLine(false);
