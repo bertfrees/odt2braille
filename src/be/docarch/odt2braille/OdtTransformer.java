@@ -88,8 +88,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private TransformerFactoryImpl tFactory = null;
 
     private StatusIndicator statusIndicator = null;
-    //private File odtFile = null;
-    private File tempXMLFile = null;
     private File odtContentFile = null;
     private File odtStylesFile = null;
     private File odtMetaFile = null;
@@ -97,7 +95,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private File daisyFile = null;
     private File usedStylesFile = null;
     private File usedLanguagesFile = null;
-    //private File earlReport = null;
     private Locale odtLocale = null;
     private Locale oooLocale = null;
     private String xsltFolder = null;
@@ -147,17 +144,11 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.entering("OdtTransformer","<init>");
 
-        //this.odtFile = odtFile;
         this.oooLocale = oooLocale;
         this.statusIndicator = statusIndicator;
 
         xsltFolder = "/be/docarch/odt2braille/xslt/";
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
-
-        // Temporary files
-
-        tempXMLFile = File.createTempFile(TMP_NAME, ".temp.xml");
-        tempXMLFile.deleteOnExit();
 
         // Convert ODT to XML files
 
@@ -201,9 +192,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
     }
 
-    private void ensureMetadataReferences(File inputContentFile)
-                                   throws TransformerConfigurationException,
-                                          TransformerException {
+    public void ensureMetadataReferences() throws TransformerConfigurationException,
+                                                  TransformerException {
 
         logger.entering("OdtTransformer","ensureMetadataReferences");
 
@@ -216,7 +206,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
         ensureReferencesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
         ensureReferencesXSL.setOutputProperty(OutputKeys.INDENT, "no");
 
-        ensureReferencesXSL.transform(new StreamSource(inputContentFile), new StreamResult(odtContentFile));
+        File tempFile = new File(odtContentFile.getAbsoluteFile() + ".temp");
+        ensureReferencesXSL.transform(new StreamSource(odtContentFile), new StreamResult(tempFile));
+        odtContentFile.delete();
+        tempFile.renameTo(odtContentFile);
 
         logger.entering("OdtTransformer","ensureMetadataReferences");
     }
@@ -242,22 +235,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
         logger.entering("OdtTransformer","makeControlFlow");
 
     }
-
-//    public void makeEarlReport() throws IOException,
-//                                        TransformerException {
-//
-//        logger.entering("OdtTransformer","makeEarlReport");
-//
-//        earlReport = File.createTempFile(TMP_NAME, ".earl.rdf.xml");
-//        earlReport.deleteOnExit();
-//
-//        Transformer earlXSL = tFactory.newTransformer(
-//                new StreamSource(getClass().getResource(xsltFolder + "earl.xsl").toString()));
-//        earlXSL.transform(new StreamSource(controllerFile), new StreamResult(earlReport));
-//
-//        logger.entering("OdtTransformer","makeEarlReport");
-//
-//    }
 
     /**
      * <ul>
@@ -345,14 +322,11 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.exiting("OdtTransformer","listNumberingProcessing");
 
-        OdtUtils.saveDOM(contentDoc, tempXMLFile.getAbsolutePath());
+        OdtUtils.saveDOM(contentDoc, odtContentFile.getAbsolutePath());
 
         logger.entering("OdtTransformer","correctionProcessing");
 
-        OdtUtils.correctionProcessing(tempXMLFile.getAbsolutePath());
-
-        ensureMetadataReferences(tempXMLFile);
-        makeControlFlow();
+        OdtUtils.correctionProcessing(odtContentFile.getAbsolutePath());
 
         logger.exiting("OdtTransformer","correctionProcessing");
         logger.exiting("OdtTransformer","preProcessing");
@@ -1584,8 +1558,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Transform
 
-            mainXSL.transform(new StreamSource(odtContentFile), new StreamResult(tempXMLFile));
-            languagesAndTypefaceXSL.transform(new StreamSource(tempXMLFile), new StreamResult(daisyFile));
+            File tempFile = new File(daisyFile.getAbsoluteFile() + ".temp");
+            mainXSL.transform(new StreamSource(odtContentFile), new StreamResult(tempFile));
+            languagesAndTypefaceXSL.transform(new StreamSource(tempFile), new StreamResult(daisyFile));
+            tempFile.delete();
 
             logger.exiting("OdtTransformer","transform");
             return true;
@@ -1827,19 +1803,9 @@ public class OdtTransformer /* implements ExternalChecker */ {
         return odtMetaFile;
     }
 
-//    public File getAccessibilityReport() {
-//
-//        if (earlReport == null) {
-//            try {
-//                makeEarlReport();
-//            } catch (IOException ex) {
-//                logger.log(Level.SEVERE, null, ex);
-//            } catch (TransformerException ex) {
-//                logger.log(Level.SEVERE, null, ex);
-//            }
-//        }
-//        return earlReport;
-//    }
+    public File getControllerFile() {
+        return controllerFile;
+    }
 
     public Locale getOdtLocale() {
         return odtLocale;

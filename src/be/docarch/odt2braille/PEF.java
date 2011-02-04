@@ -177,6 +177,8 @@ public class PEF implements ErrorHandler {
 
         // odtTransformer preProcessing
         odtTransformer.preProcessing(settings);
+        odtTransformer.ensureMetadataReferences();
+        odtTransformer.makeControlFlow();
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
