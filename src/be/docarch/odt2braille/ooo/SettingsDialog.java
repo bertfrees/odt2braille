@@ -107,6 +107,7 @@ public class SettingsDialog implements XItemListener,
                                        XActionListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static String L10N_BUNDLE = "be/docarch/odt2braille/ooo/l10n/Bundle";
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -845,7 +846,7 @@ public class SettingsDialog implements XItemListener,
         XWindow xWindow = (XWindow) UnoRuntime.queryInterface(XWindow.class, dialogControl);
         dialogControl.createPeer(xToolkit, null);
         windowProperties.setPropertyValue("Title",
-                ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("settingsDialogTitle")
+                ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")
                 + "  -  Loading... please wait");
         windowProperties.setPropertyValue("Step", 100);
         xWindow.setVisible(true);
@@ -884,161 +885,161 @@ public class SettingsDialog implements XItemListener,
 
         // Main Window
 
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("settingsDialogTitle");
-        L10N_roadmapTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("settingsRoadmapTitle");
-        L10N_roadmapLabels[GENERAL_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("generalSettingsPageTitle");
-        L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("languageSettingsPageTitle");
-        L10N_roadmapLabels[TYPEFACE_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("typefaceSettingsPageTitle");
-        L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("paragraphSettingsPageTitle");
-        L10N_roadmapLabels[HEADINGS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("headingSettingsPageTitle");
-        L10N_roadmapLabels[LISTS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("listSettingsPageTitle");
-        L10N_roadmapLabels[TABLES_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableSettingsPageTitle");
-        L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("pagenumberSettingsPageTitle");
-        L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsSettingsPageTitle");
-        L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsSettingsPageTitle");
-        L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("mathSettingsPageTitle");
+        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle");
+        L10N_roadmapTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsRoadmapTitle");
+        L10N_roadmapLabels[GENERAL_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("generalSettingsPageTitle");
+        L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageSettingsPageTitle");
+        L10N_roadmapLabels[TYPEFACE_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("typefaceSettingsPageTitle");
+        L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphSettingsPageTitle");
+        L10N_roadmapLabels[HEADINGS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("headingSettingsPageTitle");
+        L10N_roadmapLabels[LISTS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listSettingsPageTitle");
+        L10N_roadmapLabels[TABLES_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableSettingsPageTitle");
+        L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pagenumberSettingsPageTitle");
+        L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsSettingsPageTitle");
+        L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsSettingsPageTitle");
+        L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("mathSettingsPageTitle");
 
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("saveButton");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
-        L10N_backButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("backButton");
-        L10N_nextButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("nextButton");
+        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saveButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
+        L10N_backButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("backButton");
+        L10N_nextButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("nextButton");
 
         // General Page
 
-        L10N_creatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("creatorLabel") + ":";
-        L10N_mainTranslationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
-        L10N_mainGradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_mainEightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("useEightDotsLabel");
-        L10N_transcribersNotesPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("transcribersNotesPageLabel");
-        L10N_transcriptionInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("transcriptionInfoLabel");
-        L10N_volumeInfoLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("volumeInfoLabel");
-        L10N_preliminaryVolumeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("preliminaryVolumeLabel");
-        L10N_hyphenateLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("hyphenateLabel");
-        L10N_hardPageBreaksLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("hardPageBreaksLabel");
-        L10N_transcriptionInfoStyleLabel = "Paragraph style:";
-        L10N_volumeInfoStyleLabel = "Paragraph style:";
+        L10N_creatorLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("creatorLabel") + ":";
+        L10N_mainTranslationTableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageLabel") + ":";
+        L10N_mainGradeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("gradeLabel") + ":";
+        L10N_mainEightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("useEightDotsLabel");
+        L10N_transcribersNotesPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("transcribersNotesPageLabel");
+        L10N_transcriptionInfoLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("transcriptionInfoLabel");
+        L10N_volumeInfoLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("volumeInfoLabel");
+        L10N_preliminaryVolumeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("preliminaryVolumeLabel");
+        L10N_hyphenateLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("hyphenateLabel");
+        L10N_hardPageBreaksLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("hardPageBreaksLabel");
+        L10N_transcriptionInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
+        L10N_volumeInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
 
         // Languages Page
 
-        L10N_translationTableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("languageLabel") + ":";
-        L10N_gradeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("gradeLabel") + ":";
-        L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("useEightDotsLabel");
+        L10N_translationTableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageLabel") + ":";
+        L10N_gradeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("gradeLabel") + ":";
+        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("useEightDotsLabel");
 
         // Typeface Page
 
-        L10N_characterStyleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("styleLabel");
-        L10N_characterInheritLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("inheritLabel") + ":";
-        L10N_characterBoldfaceLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("characterBoldfaceLabel");
-        L10N_characterItalicLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("characterItalicLabel");
-        L10N_characterUnderlineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("characterUnderlineLabel");
-        L10N_characterCapitalsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("characterCapitalsLabel");
+        L10N_characterStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("styleLabel");
+        L10N_characterInheritLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inheritLabel") + ":";
+        L10N_characterBoldfaceLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterBoldfaceLabel");
+        L10N_characterItalicLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterItalicLabel");
+        L10N_characterUnderlineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterUnderlineLabel");
+        L10N_characterCapitalsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterCapitalsLabel");
 
         // Paragraphs Page
 
-        L10N_paragraphStyleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("styleLabel");
-        L10N_paragraphInheritLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("inheritLabel") + ":";
-        L10N_paragraphAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
-        L10N_paragraphFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
-        L10N_paragraphRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
-        L10N_paragraphMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
-        L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
-        L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("paragraphKeepEmptyLabel");
-        L10N_paragraphKeepWithNextLabel = "Keep with next";
-        L10N_paragraphDontSplitLabel = "Don't split";
-        L10N_paragraphWidowControlLabel = "Widow control:";
-        L10N_paragraphOrphanControlLabel = "Orphan control:";
+        L10N_paragraphStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("styleLabel");
+        L10N_paragraphInheritLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inheritLabel") + ":";
+        L10N_paragraphAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
+        L10N_paragraphFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
+        L10N_paragraphRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
+        L10N_paragraphMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
+        L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
+        L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
+        L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphKeepEmptyLabel");
+        L10N_paragraphKeepWithNextLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("keepWithNextLabel");
+        L10N_paragraphDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("dontSplitLabel");
+        L10N_paragraphWidowControlLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("widowControlLabel") + ":";
+        L10N_paragraphOrphanControlLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("orphanControlLabel") + ":";
 
         // Headings Page
 
-        L10N_headingLevelLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("levelLabel");
-        L10N_headingAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
-        L10N_headingFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
-        L10N_headingRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
-        L10N_headingMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_headingLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
-        L10N_headingLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
-        L10N_headingNewBraillePageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("headingNewBraillePageLabel");
-        L10N_headingKeepWithNextLabel = "Keep with next";
-        L10N_headingDontSplitLabel = "Don't split";
+        L10N_headingLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
+        L10N_headingAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
+        L10N_headingFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
+        L10N_headingRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
+        L10N_headingMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
+        L10N_headingLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
+        L10N_headingLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
+        L10N_headingNewBraillePageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("headingNewBraillePageLabel");
+        L10N_headingKeepWithNextLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("keepWithNextLabel");
+        L10N_headingDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("dontSplitLabel");
 
         // Lists Page
 
-        L10N_listLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("listLinesAboveLabel") + ":";
-        L10N_listLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("listLinesBelowLabel") + ":";
-        L10N_listLinesBetweenLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("listLinesBetweenLabel") + ":";
-        L10N_listLevelLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("levelLabel");
-        L10N_listAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
-        L10N_listFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
-        L10N_listRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
-        L10N_listMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_listPrefixLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("listPrefixLabel") + ":";
-        L10N_listDontSplitLabel = "Don't split list";
-        L10N_listDontSplitItemsLabel = "Don't split items";
+        L10N_listLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesAboveLabel") + ":";
+        L10N_listLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesBelowLabel") + ":";
+        L10N_listLinesBetweenLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesBetweenLabel") + ":";
+        L10N_listLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
+        L10N_listAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
+        L10N_listFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
+        L10N_listRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
+        L10N_listMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
+        L10N_listPrefixLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listPrefixLabel") + ":";
+        L10N_listDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listDontSplitLabel");
+        L10N_listDontSplitItemsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listDontSplitItemsLabel");
         L10N_listPrefixButton = "...";
 
         // Tables Page
 
-        L10N_tableSimpleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("simpleTableLabel");
-        L10N_tableStairstepLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("stairstepTableLabel");
-        L10N_tableLinesAboveLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesAboveLabel") + ":";
-        L10N_tableLinesBelowLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("linesBelowLabel") + ":";
-        L10N_tableLinesBetweenLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableLinesBetweenLabel") + ":";
-        L10N_tableColumnLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("columnLabel");
-        L10N_tableAlignmentLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("alignmentLabel") + ":";
-        L10N_tableFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
-        L10N_tableRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
-        L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("columnDelimiterLabel") + ":";
-        L10N_tablePositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("positionLabel");
-        L10N_tableSpacingLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("spacingLabel");
-        L10N_tableDontSplitRowsLabel = "Don't split rows";
+        L10N_tableSimpleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("simpleTableLabel");
+        L10N_tableStairstepLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("stairstepTableLabel");
+        L10N_tableLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
+        L10N_tableLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
+        L10N_tableLinesBetweenLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLinesBetweenLabel") + ":";
+        L10N_tableColumnLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("columnLabel");
+        L10N_tableAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
+        L10N_tableFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
+        L10N_tableRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
+        L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
+        L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("columnDelimiterLabel") + ":";
+        L10N_tablePositionLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("positionLabel");
+        L10N_tableSpacingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("spacingLabel");
+        L10N_tableDontSplitRowsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableDontSplitRowsLabel");
         L10N_tableColumnDelimiterButton = "...";
 
         // Pagenumbers Page
 
-        L10N_braillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("braillePageNumbersLabel");
-        L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
-        L10N_beginningBraillePageNumberLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("beginningBraillePageNumberLabel") + ":";
-        L10N_printPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printPageNumbersLabel");
-        L10N_printPageNumberRangeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printPageNumberRangeLabel");
-        L10N_continuePagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("continuePagesLabel");
-        L10N_pageSeparatorLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("pageSeparatorLabel");
-        L10N_pageSeparatorNumberLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("pageSeparatorNumberLabel");
-        L10N_ignoreEmptyPagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("ignoreEmptyPagesLabel");
-        L10N_mergeUnnumberedPagesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("mergeUnnumberedPagesLabel");
-        L10N_numbersAtTopOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numbersAtTopOnSepLineLabel");
-        L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numbersAtBottomOnSepLineLabel");
-        L10N_top = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("top");
-        L10N_bottom = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("bottom");
+        L10N_braillePageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("braillePageNumbersLabel");
+        L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
+        L10N_beginningBraillePageNumberLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("beginningBraillePageNumberLabel") + ":";
+        L10N_printPageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("printPageNumbersLabel");
+        L10N_printPageNumberRangeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("printPageNumberRangeLabel");
+        L10N_continuePagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("continuePagesLabel");
+        L10N_pageSeparatorLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pageSeparatorLabel");
+        L10N_pageSeparatorNumberLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pageSeparatorNumberLabel");
+        L10N_ignoreEmptyPagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("ignoreEmptyPagesLabel");
+        L10N_mergeUnnumberedPagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("mergeUnnumberedPagesLabel");
+        L10N_numbersAtTopOnSepLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numbersAtTopOnSepLineLabel");
+        L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numbersAtBottomOnSepLineLabel");
+        L10N_top = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top");
+        L10N_bottom = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom");
 
         // Table of Contents Page
 
-        L10N_tableOfContentsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsLabel");
-        L10N_tableOfContentsTitleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsTitleLabel") + ":";
-        L10N_tableOfContentsLevelLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("levelLabel");
-        L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("firstLineLabel") + ":";
-        L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("runoversLabel") + ":";
-        L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("lineFillSymbolLabel") + ":";
-        L10N_tableOfContentsPrintPageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsPrintPageNumbersLabel");
-        L10N_tableOfContentsBraillePageNumbersLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableOfContentsBraillePageNumbersLabel");
-        L10N_tableOfContentsPositionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("positionLabel");
+        L10N_tableOfContentsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsLabel");
+        L10N_tableOfContentsTitleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsTitleLabel") + ":";
+        L10N_tableOfContentsLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
+        L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
+        L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
+        L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("lineFillSymbolLabel") + ":";
+        L10N_tableOfContentsPrintPageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsPrintPageNumbersLabel");
+        L10N_tableOfContentsBraillePageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsBraillePageNumbersLabel");
+        L10N_tableOfContentsPositionLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("positionLabel");
 
         // Special Symbols Page
         
-        L10N_specialSymbolsListLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsListLabel");
-        L10N_specialSymbolsListTitleLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsListTitleLabel") + ":";
-        L10N_specialSymbolsSymbolLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsSymbolLabel") + ":";
-        L10N_specialSymbolsDescriptionLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsDescriptionLabel") + ":";
-        L10N_specialSymbolsMode0Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode0Label");
-        L10N_specialSymbolsMode1Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode1Label");
-        L10N_specialSymbolsMode2Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode2Label");
-        L10N_specialSymbolsMode3Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsMode3Label");
-        L10N_specialSymbolsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("specialSymbolsLabel");
+        L10N_specialSymbolsListLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsListLabel");
+        L10N_specialSymbolsListTitleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsListTitleLabel") + ":";
+        L10N_specialSymbolsSymbolLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsSymbolLabel") + ":";
+        L10N_specialSymbolsDescriptionLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsDescriptionLabel") + ":";
+        L10N_specialSymbolsMode0Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode0Label");
+        L10N_specialSymbolsMode1Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode1Label");
+        L10N_specialSymbolsMode2Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode2Label");
+        L10N_specialSymbolsMode3Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode3Label");
+        L10N_specialSymbolsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsLabel");
 
         // Mathematics Page
 
-        L10N_mathLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("formulasLabel") + ":";
+        L10N_mathLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("formulasLabel") + ":";
 
         L10N_math.put(MathType.NEMETH,    "Nemeth");
         L10N_math.put(MathType.UKMATHS,   "UK Maths");
@@ -1053,13 +1054,13 @@ public class SettingsDialog implements XItemListener,
         L10N_grades.put(3, "Grade 3");
         L10N_grades.put(4, "Grade 4");
 
-        L10N_alignment.put(Alignment.LEFT,     ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("left"));
-        L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("center"));
-        L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("right"));
+        L10N_alignment.put(Alignment.LEFT,     ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("left"));
+        L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("center"));
+        L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("right"));
 
-        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("followPrint"));
-        L10N_typeface.put(TypefaceOption.YES,          ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("yes"));
-        L10N_typeface.put(TypefaceOption.NO,           ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("no"));
+        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("followPrint"));
+        L10N_typeface.put(TypefaceOption.YES,          ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("yes"));
+        L10N_typeface.put(TypefaceOption.NO,           ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("no"));
 
         String key = null;
         String value = null;
@@ -1074,7 +1075,7 @@ public class SettingsDialog implements XItemListener,
 
         for (int i=0;i<mainTranslationTables.size();i++) {
             key = mainTranslationTables.get(i);
-            value = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("language_" + key);
+            value = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("language_" + key);
             L10N_translationTables.put(key, value);
         }
 
@@ -1099,7 +1100,7 @@ public class SettingsDialog implements XItemListener,
 
         for (int i=0;i<specialTranslationTables.size();i++) {
             key = specialTranslationTables.get(i);
-            value = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("language_" + key);
+            value = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("language_" + key);
             L10N_translationTables.put(key, value);
         }
 

@@ -1412,6 +1412,8 @@ public class Settings {
         }
         if (!exportOrEmboss) {
             switch (embosser) {
+                case NONE:
+                    return false;
                 case INDEX_BASIC_BLUE_BAR:
                 case INDEX_BASIC_S_V2:
                 case INDEX_BASIC_D_V2:

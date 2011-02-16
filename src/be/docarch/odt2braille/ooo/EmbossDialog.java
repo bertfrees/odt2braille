@@ -71,6 +71,7 @@ public class EmbossDialog implements XItemListener,
                                      XTextListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static String L10N_BUNDLE = "be/docarch/odt2braille/ooo/l10n/Bundle";
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -239,28 +240,28 @@ public class EmbossDialog implements XItemListener,
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
 
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embossDialogTitle");
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
-        L10N_settingsButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("settingsDialogTitle")+ "\u2026";
+        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossDialogTitle");
+        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
+        L10N_settingsButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")+ "\u2026";
 
-        L10N_embosserLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embosserLabel") + ":";
-        L10N_tableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableLabel") + ":";
-        L10N_paperSizeLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("paperSizeLabel") + ":";
-        L10N_paperWidthLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("paperWidthLabel") + ":";
-        L10N_paperHeightLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("paperHeightLabel") + ":";
-        L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("duplexLabel");
-        L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("eightDotsLabel");
-        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_marginLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("marginLabel") + ":";
-        L10N_marginInnerLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("inner");
-        L10N_marginOuterLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("outer");
-        L10N_marginTopLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("top");
-        L10N_marginBottomLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("bottom");
-        L10N_zFoldingLabel = "Z-folding";
-        L10N_saddleStitchLabel = "Saddle stitch (magazine style)";
-        L10N_sheetsPerQuireLabel = "Number of sheets per quire:";
+        L10N_embosserLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embosserLabel") + ":";
+        L10N_tableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLabel") + ":";
+        L10N_paperSizeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperSizeLabel") + ":";
+        L10N_paperWidthLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperWidthLabel") + ":";
+        L10N_paperHeightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperHeightLabel") + ":";
+        L10N_duplexLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("duplexLabel");
+        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("eightDotsLabel");
+        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
+        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
+        L10N_marginLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("marginLabel") + ":";
+        L10N_marginInnerLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inner");
+        L10N_marginOuterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("outer");
+        L10N_marginTopLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top");
+        L10N_marginBottomLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom");
+        L10N_zFoldingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("zFoldingLabel");
+        L10N_saddleStitchLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saddleStitchLabel");
+        L10N_sheetsPerQuireLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("sheetsPerQuireLabel") + ":";
 
         L10N_embosser.put(EmbosserType.NONE,                    "-");
         L10N_embosser.put(EmbosserType.INDEX_3_7,               "Index 3.7");
@@ -304,7 +305,7 @@ public class EmbossDialog implements XItemListener,
 
         L10N_paperSize.put(PaperSize.UNDEFINED,         "-");
         L10N_paperSize.put(PaperSize.A4_LANDSCAPE,      "A4 (Landscape)");
-        L10N_paperSize.put(PaperSize.A3_LANDSCAPE,                "A3 (Landscape)");
+        L10N_paperSize.put(PaperSize.A3_LANDSCAPE,      "A3 (Landscape)");
         L10N_paperSize.put(PaperSize.W210MM_X_H10INCH,  "210 mm x 10 inch");
         L10N_paperSize.put(PaperSize.W210MM_X_H11INCH,  "210 mm x 11 inch");
         L10N_paperSize.put(PaperSize.W210MM_X_H12INCH,  "210 mm x 12 inch");
@@ -554,7 +555,8 @@ public class EmbossDialog implements XItemListener,
      *
      */
     private void updateOKButton() throws com.sun.star.uno.Exception {
-        okButtonProperties.setPropertyValue("Enabled", settings.getPaperSize()!=PaperSize.UNDEFINED);
+        okButtonProperties.setPropertyValue("Enabled", settings.getPaperSize()!=PaperSize.UNDEFINED &&
+                                                       settings.getEmbosser()!=EmbosserType.NONE);
     }
 
     /**

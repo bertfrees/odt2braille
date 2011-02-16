@@ -364,21 +364,11 @@ public class UnoGUI {
             settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
             settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings);
 
-            // Checker
-            checker = new Checker(oooLocale, changedSettings, odtTransformer);
-            checker.checkSettings();
-
-            // Show first warning
-            checker.checkOdtFile();
-            if (!(warning = checker.getFirstWarning()).equals("")) {
-                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on first warning");
-                    return false;
-                }
-            }
-
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
+
+            // Checker
+            checker = new Checker(oooLocale, changedSettings, odtTransformer);
 
             // Create PEF
             pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
@@ -392,10 +382,10 @@ public class UnoGUI {
             // Checker
             checker.checkPefFile(pef.getSinglePEF());
 
-            // Show second warning
-            if (!(warning = checker.getSecondWarning()).equals("")) {
+            // Show warning
+            if (!(warning = checker.getWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on second warning");
+                    logger.log(Level.INFO, "User cancelled export on warning");
                     return false;
                 }
             }
@@ -622,21 +612,11 @@ public class UnoGUI {
             settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
             settingsIO.saveEmbossSettingsToDocument(changedSettings, loadedSettings);
 
-            // Checker
-            checker = new Checker(oooLocale, changedSettings, odtTransformer);
-            checker.checkSettings();
-
-            // Show first checker warning
-            checker.checkOdtFile();
-            if (!(warning = checker.getFirstWarning()).equals("")) {
-                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on first warning");
-                    return false;
-                }
-            }
-
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
+
+            // Checker
+            checker = new Checker(oooLocale, changedSettings, odtTransformer);
 
             // Create PEF
             pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
@@ -650,10 +630,10 @@ public class UnoGUI {
             // Checker
             checker.checkPefFile(pef.getSinglePEF());
 
-            // Show second checker warning
-            if (!(warning = checker.getSecondWarning()).equals("")) {
+            // Show warning
+            if (!(warning = checker.getWarning()).equals("")) {
                 if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on second warning");
+                    logger.log(Level.INFO, "User cancelled export on warning");
                     return false;
                 }
             }

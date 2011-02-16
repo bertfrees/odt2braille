@@ -11,6 +11,7 @@ public class BrailleCheck extends Check {
     public static enum ID {
 
         A_NoPreliminarySection,
+        A_NoTitlePage,
         A_NoBrailleToc,
         A_NotInBrailleVolume,
         A_OmittedInBraille,
@@ -33,6 +34,7 @@ public class BrailleCheck extends Check {
 
         switch (identifier) {
             case A_NoPreliminarySection:
+            case A_NoTitlePage:
             case A_NoBrailleToc:
             case A_NotInBrailleVolume:
             case A_OmittedInBraille:
@@ -48,6 +50,7 @@ public class BrailleCheck extends Check {
 
         switch (identifier) {
             case A_NoPreliminarySection:
+            case A_NoTitlePage:
             case A_NoBrailleToc:
             case A_NotInBrailleVolume:
             case A_OmittedInBraille:

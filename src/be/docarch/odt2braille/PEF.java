@@ -176,9 +176,9 @@ public class PEF implements ErrorHandler {
         L10N_statusIndicatorStep = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("statusIndicatorStep");
 
         // odtTransformer preProcessing
-        odtTransformer.preProcessing(settings);
         odtTransformer.ensureMetadataReferences();
         odtTransformer.makeControlFlow();
+        odtTransformer.preProcessing(settings);
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();

@@ -62,6 +62,7 @@ public class ExportDialog implements XItemListener,
                                      XActionListener {
 
     private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static String L10N_BUNDLE = "be/docarch/odt2braille/ooo/l10n/Bundle";
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -161,18 +162,18 @@ public class ExportDialog implements XItemListener,
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
 
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("exportDialogTitle");
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("exportButton");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
-        L10N_settingsButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("settingsDialogTitle")+ "\u2026";
+        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportDialogTitle");
+        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
+        L10N_settingsButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")+ "\u2026";
 
-        L10N_brailleFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("brailleFileLabel") + ":";
-        L10N_tableLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("tableLabel") + ":";
-        L10N_duplexLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("duplexLabel");
-        L10N_eightDotsLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("eightDotsLabel");
-        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_multipleFilesLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("multipleFilesLabel");
+        L10N_brailleFileLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("brailleFileLabel") + ":";
+        L10N_tableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLabel") + ":";
+        L10N_duplexLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("duplexLabel");
+        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("eightDotsLabel");
+        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
+        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
+        L10N_multipleFilesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("multipleFilesLabel");
 
         L10N_table.put(TableType.UNDEFINED,         "-");
         L10N_table.put(TableType.UNICODE_BRAILLE,   "PEF (Unicode Braille)");

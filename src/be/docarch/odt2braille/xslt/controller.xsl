@@ -60,6 +60,19 @@
         </rdf:RDF>
     </xsl:template>
 
+    <!-- VOLUME MANAGEMENT -->
+    
+    <xsl:template match="text:section">
+         
+        
+
+
+
+         
+         
+    </xsl:template>
+
+
     <!-- TABLE CAPTIONS -->
 
     <xsl:template match="table:table">

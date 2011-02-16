@@ -25,14 +25,14 @@ import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.Logger;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
@@ -91,6 +91,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private File odtContentFile = null;
     private File odtStylesFile = null;
     private File odtMetaFile = null;
+    private File odtSettingsFile = null;
     private File controllerFile = null;
     private File daisyFile = null;
     private File usedStylesFile = null;
@@ -158,13 +159,16 @@ public class OdtTransformer /* implements ExternalChecker */ {
         odtStylesFile.deleteOnExit();
         odtMetaFile = File.createTempFile(TMP_NAME, ".odt.meta.xml");
         odtMetaFile.deleteOnExit();
+        odtSettingsFile = File.createTempFile(TMP_NAME, ".odt.settings.xml");
+        odtSettingsFile.deleteOnExit();
         controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf.xml");
         controllerFile.deleteOnExit();
 
         ZipFile zip = new ZipFile(odtFile.getAbsolutePath());
-        getFileFromZip(zip, "content.xml", odtContentFile);
-        getFileFromZip(zip, "styles.xml",  odtStylesFile);
-        getFileFromZip(zip, "meta.xml",    odtMetaFile);
+        getFileFromZip(zip, "content.xml",  odtContentFile);
+        getFileFromZip(zip, "styles.xml",   odtStylesFile);
+        getFileFromZip(zip, "meta.xml",     odtMetaFile);
+        //getFileFromZip(zip, "settings.xml", odtSettingsFile);
         zip.close();
 
         // Locale
@@ -232,7 +236,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         controllerXSL.transform(new StreamSource(odtContentFile), new StreamResult(controllerFile));
 
-        logger.entering("OdtTransformer","makeControlFlow");
+        logger.exiting("OdtTransformer","makeControlFlow");
 
     }
 
@@ -291,7 +295,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
             insertPagination(settings, contentRoot, stylesRoot, firstNode, 0, "Standard", true);
             statusIndicator.finish(true);
             statusIndicator.close();
-
         }
 
         logger.exiting("OdtTransformer","paginationProcessing");
@@ -505,7 +508,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 String pageLayoutName = XPathAPI.eval(stylesRoot, xpath).str();
 
                 xpath = "//automatic-styles/page-layout[@name='" + pageLayoutName + "']/page-layout-properties/@num-format";
-                enumType = XPathAPI.eval(contentRoot, xpath).str();
+                enumType = XPathAPI.eval(stylesRoot, xpath).str();
 
                 if (inclPageNum) {
 
@@ -661,7 +664,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
                                         boolean init)
                                  throws TransformerException {
 
-        String styleName = null;
         String xpath = null;
         String display = null;
         String numFormat_i = null;
@@ -708,10 +710,23 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
                 if (attr.getNamedItem("text:style-name") != null) {
 
-                    styleName = attr.getNamedItem("text:style-name").getNodeValue();
+                    boolean outlineNumbering = true;
+                    String styleName = attr.getNamedItem("text:style-name").getNodeValue();
+                    String parentStyleName = "";
+                    while (styleName.length() > 0) {
+                        if (XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@list-style-name").bool() ||
+                            XPathAPI.eval(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name").bool()) {
+                            outlineNumbering = false;
+                            break;
+                        }
+                        parentStyleName = XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@parent-style-name").str();
+                        if (parentStyleName.length() == 0) {
+                            parentStyleName = XPathAPI.eval(stylesRoot, "//style[@name='" + styleName + "']/@parent-style-name").str();
+                        }
+                        styleName = parentStyleName;
+                    }
 
-                    if (!XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@list-style-name").bool() &&
-                        !XPathAPI.eval(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name").bool()) {
+                    if (outlineNumbering) {
 
                         // Get Properties
 
@@ -1801,6 +1816,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
     public File getOdtMetaFile() {
         return odtMetaFile;
+    }
+
+    public File getOdtSettingsFile() {
+        return odtSettingsFile;
     }
 
     public File getControllerFile() {
