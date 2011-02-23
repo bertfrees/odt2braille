@@ -255,10 +255,10 @@ public class EmbossDialog implements XItemListener,
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_marginLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("marginLabel") + ":";
-        L10N_marginInnerLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inner");
-        L10N_marginOuterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("outer");
-        L10N_marginTopLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top");
-        L10N_marginBottomLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom");
+        L10N_marginInnerLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inner") + ":";
+        L10N_marginOuterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("outer") + ":";
+        L10N_marginTopLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top") + ":";
+        L10N_marginBottomLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom") + ":";
         L10N_zFoldingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("zFoldingLabel");
         L10N_saddleStitchLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saddleStitchLabel");
         L10N_sheetsPerQuireLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("sheetsPerQuireLabel") + ":";

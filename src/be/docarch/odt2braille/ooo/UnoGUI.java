@@ -592,6 +592,7 @@ public class UnoGUI {
             initialise();
 
             // Load emboss settings
+            settingsIO.loadEmbossSettingsFromOpenOffice(loadedSettings);
             settingsIO.loadEmbossSettingsFromDocument(loadedSettings);
             changedSettings = new Settings(loadedSettings);
 
@@ -611,6 +612,7 @@ public class UnoGUI {
             // Save settings
             settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
             settingsIO.saveEmbossSettingsToDocument(changedSettings, loadedSettings);
+            settingsIO.saveEmbossSettingsToOpenOffice(changedSettings, loadedSettings);
 
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);

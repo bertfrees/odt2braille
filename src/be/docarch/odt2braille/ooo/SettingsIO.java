@@ -850,76 +850,7 @@ public class SettingsIO {
 
         logger.entering("SettingsIO", "loadEmbossSettingsFromDocument");
 
-        String s;
-        Boolean b;
         Double d;
-        Double d2;
-
-        loadedSettings.setExportOrEmboss(false);
-
-        if ((s = getStringProperty(embosserProperty)) != null) {
-            try {
-                try {
-                    loadedSettings.setEmbosser(EmbosserType.valueOf(s));
-                } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                    logger.log(Level.SEVERE, null, ex);
-                }
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid embossertype");
-            }
-        }
-        
-        if ((b = getBooleanProperty(saddleStitchProperty)) != null) {
-            try {
-                loadedSettings.setSaddleStitch(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if (!(d = getDoubleProperty(sheetsPerQuireProperty)).isNaN()) {
-            loadedSettings.setSheetsPerQuire(d.intValue());
-        }
-
-        if ((b = getBooleanProperty(zFoldingProperty)) != null) {
-            try {
-                loadedSettings.setZFolding(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if ((b = getBooleanProperty(embossDuplexProperty)) != null) {
-            try {
-                loadedSettings.setDuplex(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if ((b = getBooleanProperty(embossEightDotsProperty)) != null) {
-            try {
-                loadedSettings.setEightDots(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
-
-        if ((s = getStringProperty(paperSizeProperty)) != null) {
-            try {
-                loadedSettings.setPaperSize(PaperSize.valueOf(s));
-                if (s.equals("CUSTOM")) {
-                    if (!(d =  getDoubleProperty(customPaperWidthProperty)).isNaN() &&
-                        !(d2 = getDoubleProperty(customPaperHeightProperty)).isNaN()) {
-                        loadedSettings.setPaperSize(d, d2);
-                    }
-                }
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid papersize");
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-        }
 
         if (!(d = getDoubleProperty(embossNumberOfCellsPerLineProperty)).isNaN()) {
             loadedSettings.setCellsPerLine(d.intValue());
@@ -937,7 +868,96 @@ public class SettingsIO {
             loadedSettings.setMarginTop(d.intValue());
         }
 
-        if ((s = getStringProperty(embossTableProperty)) != null) {
+        logger.exiting("SettingsIO", "loadEmbossSettingsFromDocument");
+
+    }
+
+    public void loadEmbossSettingsFromOpenOffice(Settings loadedSettings)
+                                          throws IOException {
+
+        logger.entering("SettingsIO", "loadEmbossSettingsFromOpenOffice");
+
+        Properties embosserSettings = loadSettingsFromOpenOffice("embosser");
+
+        loadedSettings.setExportOrEmboss(false);
+
+        String s;
+
+        if ((s = embosserSettings.getProperty(embosserProperty)) != null) {
+            try {
+                try {
+                    loadedSettings.setEmbosser(EmbosserType.valueOf(s));
+                } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                }
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid embossertype");
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(saddleStitchProperty)) != null) {
+            try {
+                loadedSettings.setSaddleStitch(s.equals("true"));
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(sheetsPerQuireProperty)) != null) {
+            try {
+                loadedSettings.setSheetsPerQuire(Integer.parseInt(s));
+            } catch (NumberFormatException ex) {
+                logger.log(Level.SEVERE, null, s + " is not an integer");
+            }
+        }
+            
+        if ((s = embosserSettings.getProperty(zFoldingProperty)) != null) {
+            try {
+                loadedSettings.setZFolding(s.equals("true"));
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(embossDuplexProperty)) != null) {
+            try {
+                loadedSettings.setDuplex(s.equals("true"));
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(embossEightDotsProperty)) != null) {
+            try {
+                loadedSettings.setEightDots(s.equals("true"));
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(paperSizeProperty)) != null) {
+            try {
+                loadedSettings.setPaperSize(PaperSize.valueOf(s));
+                if (s.equals("CUSTOM")) {
+                    String s1;
+                    String s2;
+                    if ((s1 = embosserSettings.getProperty(customPaperWidthProperty)) != null &&
+                        (s2 = embosserSettings.getProperty(customPaperHeightProperty)) != null) {
+                        try {
+                            loadedSettings.setPaperSize(Integer.parseInt(s1), Integer.parseInt(s2));
+                        } catch (NumberFormatException ex) {
+                            logger.log(Level.SEVERE, null, s1 + " or " + s2 + " is not an integer");
+                        }
+                    }
+                }
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid papersize");
+            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
+                logger.log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if ((s = embosserSettings.getProperty(embossTableProperty)) != null) {
             try {
                 loadedSettings.setTable(TableType.valueOf(s));
             } catch (IllegalArgumentException ex) {
@@ -945,10 +965,8 @@ public class SettingsIO {
             }
         }
 
-        logger.exiting("SettingsIO", "loadEmbossSettingsFromDocument");
-
+        logger.exiting("SettingsIO", "loadEmbossSettingsFromOpenOffice");
     }
-
 
     /**
      * Write a <code>String</code>, <code>Double</code> or <code>Boolean</code> property to the OpenOffice document,
@@ -975,6 +993,19 @@ public class SettingsIO {
         }
     }
 
+    private void setProperty(Properties properties,
+                             String property,
+                             Object valueAfterChange,
+                             Object valueBeforeChange) {
+
+        if (valueAfterChange!=null) {
+            if (!valueAfterChange.equals(valueBeforeChange)) {
+                properties.setProperty(property, String.valueOf(valueAfterChange));
+                odtModified = true;
+            }
+        }
+    }
+
     /**
      * Save settings to the OpenOffice.org Writer document.
      * The settings are stored in the document as user-defined meta-data.
@@ -986,7 +1017,7 @@ public class SettingsIO {
                                                Settings settingsBeforeChange)
                                         throws com.sun.star.uno.Exception {
 
-        logger.entering("SettingsIO", "saveSettingsToDocument");
+        logger.entering("SettingsIO", "saveBrailleSettingsToDocument");
 
         odtModified = false;
 
@@ -1452,30 +1483,6 @@ public class SettingsIO {
 
         odtModified = false;
 
-        setProperty(embosserProperty,
-                    settingsAfterChange.getEmbosser().name(),
-                    settingsBeforeChange.getEmbosser().name());
-        setProperty(saddleStitchProperty,
-                    settingsAfterChange.getSaddleStitch(),
-                    settingsBeforeChange.getSaddleStitch());
-        setProperty(sheetsPerQuireProperty,
-                    settingsAfterChange.getSheetsPerQuire(),
-                    settingsBeforeChange.getSheetsPerQuire());
-        setProperty(zFoldingProperty,
-                    settingsAfterChange.getZFolding(),
-                    settingsBeforeChange.getZFolding());
-        setProperty(embossTableProperty,
-                    settingsAfterChange.getTable().name(),
-                    settingsBeforeChange.getTable().name());
-        setProperty(paperSizeProperty,
-                    settingsAfterChange.getPaperSize().name(),
-                    settingsBeforeChange.getPaperSize().name());
-        setProperty(embossDuplexProperty,
-                    settingsAfterChange.getDuplex(),
-                    settingsBeforeChange.getDuplex());
-        setProperty(embossEightDotsProperty,
-                    settingsAfterChange.getEightDots(),
-                    settingsBeforeChange.getEightDots());
         setProperty(embossNumberOfCellsPerLineProperty,
                     settingsAfterChange.getCellsPerLine(),
                     settingsBeforeChange.getCellsPerLine());
@@ -1489,15 +1496,6 @@ public class SettingsIO {
                     settingsAfterChange.getMarginTop(),
                     settingsBeforeChange.getMarginTop());
 
-        if (settingsAfterChange.getPaperSize()==PaperSize.CUSTOM) {
-            setProperty(customPaperWidthProperty,
-                        settingsAfterChange.getPaperWidth(),
-                        settingsBeforeChange.getPaperWidth());
-            setProperty(customPaperHeightProperty,
-                    settingsAfterChange.getPaperHeight(),
-                    settingsBeforeChange.getPaperHeight());
-        }
-
         if (odtModified) {
             xModifiable.setModified(true);
         }
@@ -1506,6 +1504,68 @@ public class SettingsIO {
 
     }
 
+    public void saveEmbossSettingsToOpenOffice (Settings settingsAfterChange,
+                                                Settings settingsBeforeChange)
+                                         throws IOException,
+                                                com.sun.star.uno.Exception {
+
+        logger.entering("SettingsIO", "saveEmbossSettingsToOpenOffice");
+
+        Properties embosserSettings = new Properties();
+
+        odtModified = false;
+
+        setProperty(embosserSettings,
+                    embosserProperty,
+                    settingsAfterChange.getEmbosser().name(),
+                    settingsBeforeChange.getEmbosser().name());
+        setProperty(embosserSettings,
+                    saddleStitchProperty,
+                    settingsAfterChange.getSaddleStitch(),
+                    settingsBeforeChange.getSaddleStitch());
+        setProperty(embosserSettings,
+                    sheetsPerQuireProperty,
+                    settingsAfterChange.getSheetsPerQuire(),
+                    settingsBeforeChange.getSheetsPerQuire());
+        setProperty(embosserSettings,
+                    zFoldingProperty,
+                    settingsAfterChange.getZFolding(),
+                    settingsBeforeChange.getZFolding());
+        setProperty(embosserSettings,
+                    embossTableProperty,
+                    settingsAfterChange.getTable().name(),
+                    settingsBeforeChange.getTable().name());
+        setProperty(embosserSettings,
+                    paperSizeProperty,
+                    settingsAfterChange.getPaperSize().name(),
+                    settingsBeforeChange.getPaperSize().name());
+        setProperty(embosserSettings,
+                    embossDuplexProperty,
+                    settingsAfterChange.getDuplex(),
+                    settingsBeforeChange.getDuplex());
+        setProperty(embosserSettings,
+                    embossEightDotsProperty,
+                    settingsAfterChange.getEightDots(),
+                    settingsBeforeChange.getEightDots());
+        
+        if (settingsAfterChange.getPaperSize()==PaperSize.CUSTOM) {
+            setProperty(embosserSettings,
+                        customPaperWidthProperty,
+                        settingsAfterChange.getPaperWidth(),
+                        settingsBeforeChange.getPaperWidth());
+            setProperty(embosserSettings,
+                        customPaperHeightProperty,
+                        settingsAfterChange.getPaperHeight(),
+                        settingsBeforeChange.getPaperHeight());
+        }
+
+        if (odtModified) {
+            saveSettingsToOpenOffice("embosser", embosserSettings);
+            xModifiable.setModified(true);
+        }
+
+        logger.exiting("SettingsIO", "saveEmbossSettingsToOpenOffice");
+    }
 
     /**
      * Load settings from OpenOffice.org.

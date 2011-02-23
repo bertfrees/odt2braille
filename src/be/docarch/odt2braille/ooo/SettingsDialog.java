@@ -33,6 +33,7 @@ import java.util.Arrays;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
+import com.sun.star.uno.AnyConverter;
 import com.sun.star.lang.XComponent;
 import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.lang.XSingleServiceFactory;
@@ -1148,7 +1149,7 @@ public class SettingsDialog implements XItemListener,
         // Roadmap
 
         int roadMapWidth = 85;
-        int roadMapHeight = 227;
+        int roadMapHeight = 231;
 
         XMultiServiceFactory xMSFDialog = (XMultiServiceFactory)UnoRuntime.queryInterface(XMultiServiceFactory.class, dialogControl.getModel());
         XNameContainer dialogNameContainer = (XNameContainer)UnoRuntime.queryInterface(XNameContainer.class, dialogControl.getModel());
@@ -1156,9 +1157,9 @@ public class SettingsDialog implements XItemListener,
         Object roadmapModel = xMSFDialog.createInstance("com.sun.star.awt.UnoControlRoadmapModel");
         XMultiPropertySet roadMapMPSet = (XMultiPropertySet) UnoRuntime.queryInterface(XMultiPropertySet.class, roadmapModel);
         String roadmapName = "SettingsRoadmap";
-        roadMapMPSet.setPropertyValues( new String[] {"Complete",    "Height",      "Name",      "PositionX", "PositionY", "Text",            "Width" },
-                                        new Object[] {Boolean.FALSE, roadMapHeight, roadmapName, 0,           0,           L10N_roadmapTitle, roadMapWidth});
-        roadmapProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, roadmapModel);
+        roadMapMPSet.setPropertyValues( new String[] {"Complete",    "Height",      "Name",      "PositionX", "PositionY", "TabIndex", "Text",            "Width" },
+                                        new Object[] {Boolean.FALSE, roadMapHeight, roadmapName, 0,           0,           (short)0,   L10N_roadmapTitle, roadMapWidth});
+        roadmapProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, roadmapModel);
         dialogNameContainer.insertByName(roadmapName, roadmapModel);
         XSingleServiceFactory xSSFRoadmap = (XSingleServiceFactory) UnoRuntime.queryInterface(XSingleServiceFactory.class, roadmapModel);
         XIndexContainer roadmapIndexContainer = (XIndexContainer) UnoRuntime.queryInterface(XIndexContainer.class, roadmapModel);
@@ -1170,7 +1171,7 @@ public class SettingsDialog implements XItemListener,
         for (int i=0;i<NUMBER_OF_PAGES;i++) {
 
             roadmapItem = xSSFRoadmap.createInstance();
-            roadMapItemProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, roadmapItem);
+            roadMapItemProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, roadmapItem);
             roadMapItemProperties.setPropertyValue("Label", L10N_roadmapLabels[i]);
             roadMapItemProperties.setPropertyValue("Enabled", pagesEnabled[i]);
             roadMapItemProperties.setPropertyValue("ID", new Integer(i+1));

@@ -34,6 +34,7 @@ public class BrailleChecker implements ExternalChecker {
     private Transformer earlXSL = null;
     private Date lastChecked = null;
     private SimpleDateFormat dateFormat = null;
+    private Set<Check> checks = null;
 
     public BrailleChecker() {
 
@@ -67,9 +68,11 @@ public class BrailleChecker implements ExternalChecker {
 
     public Set<Check> getChecks() {
 
-        Set<Check> checks = new HashSet<Check>();
-        for (BrailleCheck.ID id : BrailleCheck.ID.values()) {
-            checks.add(new BrailleCheck(id));
+        if (checks == null) {
+            checks = new HashSet<Check>();
+            for (BrailleCheck.ID id : BrailleCheck.ID.values()) {
+                checks.add(new BrailleCheck(id));
+            }
         }
         return checks;
     }

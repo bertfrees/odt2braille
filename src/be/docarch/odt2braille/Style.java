@@ -66,6 +66,10 @@ public class Style implements Comparable {
         linesBetween = 0;
 
     }
+
+    public Style() {
+        this("");
+    }
     
     public void setAlignment  (Alignment alignment)  { this.alignment = alignment; }
     public void setDontSplit  (boolean dontSplit)    { this.dontSplit = dontSplit; }

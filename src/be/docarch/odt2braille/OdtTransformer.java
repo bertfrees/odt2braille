@@ -26,10 +26,11 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TreeMap;
-import java.util.regex.Pattern;
+import java.util.TreeSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
+import java.util.Set;
 import java.util.Iterator;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -37,6 +38,7 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import java.util.regex.Pattern;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
@@ -159,8 +161,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
         odtStylesFile.deleteOnExit();
         odtMetaFile = File.createTempFile(TMP_NAME, ".odt.meta.xml");
         odtMetaFile.deleteOnExit();
-        odtSettingsFile = File.createTempFile(TMP_NAME, ".odt.settings.xml");
-        odtSettingsFile.deleteOnExit();
+        //odtSettingsFile = File.createTempFile(TMP_NAME, ".odt.settings.xml");
+        //odtSettingsFile.deleteOnExit();
         controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf.xml");
         controllerFile.deleteOnExit();
 
@@ -1542,6 +1544,9 @@ public class OdtTransformer /* implements ExternalChecker */ {
             mainXSL.setParameter("paramStairstepTableEnabled",    settings.stairstepTableIsEnabled());
             mainXSL.setParameter("paramHyphenationEnabled",       settings.getHyphenate());
             mainXSL.setParameter("paramKeepHardPageBreaks",       settings.getHardPageBreaks());
+
+            mainXSL.setParameter("paramNoterefNumberFormats",     settings.getNoterefNumberPrefixMap().keySet().toArray(new String[settings.getNoterefNumberPrefixMap().size()]));
+            mainXSL.setParameter("paramNoterefNumberPrefixes",    settings.getNoterefNumberPrefixMap().values().toArray(new String[settings.getNoterefNumberPrefixMap().size()]));
             mainXSL.setParameter("paramKeepEmptyParagraphStyles", keepEmptyParagraphStyles.toArray(new String[keepEmptyParagraphStyles.size()]));
 
             languagesAndTypefaceXSL.setParameter("paramLanguages",            languages.toArray(new String[languages.size()]));
@@ -1756,6 +1761,17 @@ public class OdtTransformer /* implements ExternalChecker */ {
         
         return styles;
     
+    }
+
+    public Set<String> extractSpecialNoteReferences() throws IOException  {
+
+        logger.entering("OdtTransformer","extractSpecialNoteReferences");
+
+        TreeSet<String> references = new TreeSet<String>();
+
+        logger.exiting("OdtTransformer","extractSpecialNoteReferences");
+
+        return references;
     }
 
     public String[] extractUnicodeBlocks(File inputFile)

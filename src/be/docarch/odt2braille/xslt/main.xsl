@@ -75,7 +75,9 @@
         <xsl:param name="paramEllipsisDots"		  as="xsd:string"   select="'(5, 5, 5)'" />
         <xsl:param name="paramDoubleDashDots"		  as="xsd:string"   select="'(36, 36, 36, 36)'" />
 
-        <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"   />
+        <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"  />
+        <xsl:param name="paramNoterefNumberPrefixes"      as="xsd:string*"  />
+        <xsl:param name="paramNoterefNumberFormats"       as="xsd:string*"  />
 
         <!-- Global variables  -->
 
@@ -802,9 +804,52 @@ INLINE ELEMENTS
     <!-- NOTE REFERENCES -->
 
     <xsl:template match="text:note">
-
+        
         <dtb:noteref>
-            <xsl:value-of select="text:note-citation/text()" />
+            <xsl:variable name="note-class" select="@text:note-class" />
+            <xsl:choose>
+                <xsl:when test="text:note-citation[not(@text:label)]">
+                    <xsl:variable name="num-format" as="xsd:string">
+                        <xsl:call-template name="get-note-format">
+                            <xsl:with-param name="section"    select="ancestor::text:section[1]" />
+                            <xsl:with-param name="note-class" select="$note-class" />
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <dtb:span class="unspaced">
+                        <xsl:call-template name="get-noteref-prefix">
+                            <xsl:with-param name="num-format" select="$num-format" />
+                        </xsl:call-template>
+                    </dtb:span>                    
+                    <xsl:choose>
+                        <xsl:when test="$note-class='endnote' and $num-format='i'">
+                            <xsl:value-of select="text:note-citation/text()" />
+                        </xsl:when>
+                        <xsl:when test="$note-class='endnote' and $num-format='I'">
+                            <xsl:value-of select="upper-case(./text:note-citation/text())" />
+                        </xsl:when>
+                        <xsl:when test="$note-class='endnote'">
+                            <xsl:call-template name="format-number">
+                                <xsl:with-param name="integer">
+                                    <xsl:call-template name="roman-to-integer">
+                                        <xsl:with-param name="roman" select="text:note-citation/text()" />
+                                    </xsl:call-template>
+                                </xsl:with-param>
+                                <xsl:with-param name="num-format" select="$num-format" />
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:when test="$note-class='footnote'">
+                            <xsl:call-template name="format-number">
+                                <xsl:with-param name="integer"    select="text:note-citation/text()" />
+                                <xsl:with-param name="num-format" select="$num-format" />
+                            </xsl:call-template>
+                        </xsl:when>
+                        <xsl:otherwise />
+                    </xsl:choose>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="text:note-citation/text()" />
+                </xsl:otherwise>
+            </xsl:choose>
         </dtb:noteref>
     </xsl:template>
 
@@ -1791,6 +1836,27 @@ HELP TEMPLATES
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="false()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="get-noteref-prefix">
+        <xsl:param name="num-format" as="xsd:string" />
+        <xsl:variable name="occurences" as="xsd:integer*">
+            <xsl:for-each select="$paramNoterefNumberFormats">
+                <xsl:if test=".=$num-format">
+                    <xsl:sequence select="position()" />
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$occurences[1]">
+                <xsl:variable name="i" select="$occurences[1]" />
+                <xsl:value-of select="$paramNoterefNumberPrefixes[$i]" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="''" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

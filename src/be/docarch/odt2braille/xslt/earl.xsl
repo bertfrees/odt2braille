@@ -59,7 +59,7 @@
         <xsl:variable name="body"            select="doc($content-url)/office:document-content/office:body" />
         <xsl:variable name="meta"            select="doc($meta-url)/office:document-meta" />
 
-        <xsl:variable name="content-base"    select="'content.xml#'" />
+        <xsl:variable name="content-base"    select="'../../content.xml#'" />
         
 
     <xsl:template match="/">
@@ -122,8 +122,8 @@
                 </earl:Assertion>
             </xsl:if>
             
-
-            <xsl:if test="not(string($meta/meta:user-defined[@meta:name='[BRL]TableOfContent'
+            <xsl:if test="not($body/office:text/text:section[@text:name='PreliminaryPages']
+                              and string($meta/meta:user-defined[@meta:name='[BRL]TableOfContent'
                                                          and @meta:value-type='boolean'][1])='true')
                           and($body/office:text//text:table-of-content)">
                 <earl:Assertion>

@@ -38,7 +38,7 @@
   <dlg:text dlg:id="Label12" dlg:tab-index="128" dlg:left="103" dlg:top="131" dlg:width="163" dlg:height="10" dlg:page="2" dlg:value="Label12" dlg:multiline="true"/>
   <dlg:text dlg:id="Label9" dlg:tab-index="123" dlg:left="103" dlg:top="74" dlg:width="109" dlg:height="10" dlg:page="8" dlg:value="Label9" dlg:multiline="true"/>
   <dlg:button dlg:id="CommandButton3" dlg:tab-index="117" dlg:left="81" dlg:top="239" dlg:width="45" dlg:height="12"/>
-  <dlg:button dlg:id="CommandButton4" dlg:tab-index="0" dlg:left="142" dlg:top="239" dlg:width="45" dlg:height="12"/>
+  <dlg:button dlg:id="CommandButton4" dlg:tab-index="118" dlg:left="142" dlg:top="239" dlg:width="45" dlg:height="12"/>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="130" dlg:left="0" dlg:top="231" dlg:width="270" dlg:height="1"/>
   <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="131" dlg:left="85" dlg:top="0" dlg:width="1" dlg:height="231" dlg:align="vertical"/>
   <dlg:radiogroup>

@@ -27,6 +27,7 @@ import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
+import java.util.Map;
 import java.text.SimpleDateFormat;
 
 import java.net.MalformedURLException;
@@ -128,9 +129,9 @@ public class Settings {
     
     // Language Settings
 
-    protected TreeMap<String,String> translationTableMap;
-    protected TreeMap<String,Integer> gradeMap;
-    protected TreeMap<String,Integer> dotsMap;
+    protected Map<String,String> translationTableMap;
+    protected Map<String,Integer> gradeMap;
+    protected Map<String,Integer> dotsMap;
 
     // Table Of Contents Settings
 
@@ -143,6 +144,14 @@ public class Settings {
     // Mathematics Settings
 
     protected MathType math;
+
+    // Notes Settings
+
+    Map<String,String> noterefNumberPrefixMap = null;
+    Map<String,String> noterefCharactersMap = null;
+    boolean noterefSpaceBefore = false;
+    boolean noterefSpaceAfter = false;
+    Style footnoteStyle = null;
 
     // Emboss & Export Settings
 
@@ -207,8 +216,8 @@ public class Settings {
 
     // Various
 
-    protected TreeMap<String,ParagraphStyle> paragraphStylesMap;
-    protected TreeMap<String,CharacterStyle> characterStylesMap;
+    protected Map<String,ParagraphStyle> paragraphStylesMap;
+    protected Map<String,CharacterStyle> characterStylesMap;
     protected ArrayList<HeadingStyle> headingStyles;
     protected ArrayList<ListStyle> listStyles;
     protected TableStyle tableStyle;
@@ -319,6 +328,8 @@ public class Settings {
         this.hyphenate = copySettings.hyphenate;
         this.zFolding = copySettings.zFolding;
         this.saddleStitch = copySettings.saddleStitch;
+        this.noterefSpaceBefore = copySettings.noterefSpaceBefore;
+        this.noterefSpaceAfter = copySettings.noterefSpaceAfter;
 
         this.printPageNumberAt = copySettings.printPageNumberAt;
         this.braillePageNumberAt = copySettings.braillePageNumberAt;
@@ -332,6 +343,8 @@ public class Settings {
         this.math = copySettings.math;
 
         this.translationTableMap = new TreeMap(copySettings.translationTableMap);
+        this.noterefNumberPrefixMap = new TreeMap(copySettings.noterefNumberPrefixMap);
+        this.noterefCharactersMap = new TreeMap(copySettings.noterefCharactersMap);
 
         this.gradeMap = new TreeMap(copySettings.gradeMap);
         this.dotsMap = new TreeMap(copySettings.dotsMap);
@@ -389,6 +402,7 @@ public class Settings {
         this.tocStyle = new TocStyle(copySettings.tocStyle);
         this.volumeInfoStyle = this.paragraphStylesMap.get(copySettings.volumeInfoStyle.getName());
         this.transcriptionInfoStyle = this.paragraphStylesMap.get(copySettings.transcriptionInfoStyle.getName());
+        this.footnoteStyle = new Style(copySettings.footnoteStyle);
 
         this.supportedTranslationTablesGrades = new ArrayList(copySettings.supportedTranslationTablesGrades);
         this.specialTranslationTables = new ArrayList(copySettings.specialTranslationTables);
@@ -626,6 +640,7 @@ public class Settings {
         tocStyle = new TocStyle();
         setVolumeInfoStyle("Standard");
         setTranscriptionInfoStyle("Standard");
+        footnoteStyle = new Style();
 
         // Settings
 
@@ -654,6 +669,10 @@ public class Settings {
         setTranscriptionInfoStyle(paragraphStylesMap.get("Standard"));
 
         hardPageBreaks = false;
+        noterefSpaceBefore = true;
+        noterefSpaceAfter = true;
+        noterefNumberPrefixMap = new TreeMap();
+        noterefCharactersMap = new TreeMap();
 
         setBraillePageNumberAt(PageNumberPosition.BOTTOM_RIGHT);
         setPreliminaryPageFormat(PageNumberFormat.P);
@@ -2869,6 +2888,18 @@ public class Settings {
         return false;
     }
 
+    public void setNoterefNumberPrefix(String numFormat, String prefix) {
+
+        if (prefix.length() == 0 ||
+            prefix.matches("[\\p{InBraille_Patterns}]*")) {
+            noterefNumberPrefixMap.put(numFormat, prefix);
+        }
+    }
+
+    public Map<String,String> getNoterefNumberPrefixMap() {
+        return noterefNumberPrefixMap;
+    }
+
     public void setBrailleRules(BrailleRules rules) {
 
         this.brailleRules = rules;
@@ -2889,6 +2920,12 @@ public class Settings {
             setBraillePageNumberAt(PageNumberPosition.BOTTOM_RIGHT);
             setPreliminaryPageFormat(PageNumberFormat.P);
             setLineFillSymbol('\u2804');
+            noterefNumberPrefixMap.clear();
+            setNoterefNumberPrefix("1", "\u2814\u2814");
+            setNoterefNumberPrefix("a", "\u2814\u2814\u2830");
+            setNoterefNumberPrefix("A", "\u2814\u2814");
+            setNoterefNumberPrefix("i", "\u2814\u2814\u2830");
+            setNoterefNumberPrefix("I", "\u2814\u2814");
 
             ArrayList<ParagraphStyle> paragraphStylesList = getParagraphStyles();
             ArrayList<CharacterStyle> characterStylesList = getCharacterStyles();

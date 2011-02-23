@@ -256,8 +256,8 @@
 # Note references
 # Notes
 
-	no       noteref \s\x2814\x2814,\*\s
-	no       &xpath(//dtb:note/dtb:noteref) \x2814\x2814,\*\s
+	no       noteref \s,\*\s
+	no       &xpath(//dtb:note/dtb:noteref) \*\s
 
 	footnote   note,class,footnote
 	endnote    note,class,endnote

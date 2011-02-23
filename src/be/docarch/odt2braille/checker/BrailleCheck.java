@@ -1,5 +1,8 @@
 package be.docarch.odt2braille.checker;
 
+import java.util.Locale;
+import java.util.ResourceBundle;
+
 import be.docarch.accessibility.Check;
 
 /**
@@ -8,15 +11,20 @@ import be.docarch.accessibility.Check;
  */
 public class BrailleCheck extends Check {
 
+    private static Locale locale = Locale.getDefault();
+    private static ResourceBundle names = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/names", locale);
+    private static ResourceBundle descriptions = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/descriptions", locale);
+    private static ResourceBundle suggestions = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/suggestions", locale);
+
     public static enum ID {
 
         A_NoPreliminarySection,
         A_NoTitlePage,
         A_NoBrailleToc,
-        A_NotInBrailleVolume,
-        A_OmittedInBraille,
-        A_TransposedInBraille,
-        A_UnnaturalVolumeBreak
+        A_NotInBrailleVolume,       // ***
+        A_OmittedInBraille,         // voor captions: ok
+        A_TransposedInBraille,      // ***
+        A_UnnaturalVolumeBreak      // ***
 
     }
 
@@ -63,15 +71,36 @@ public class BrailleCheck extends Check {
     }
 
     public String getName() {
-        return "";
+
+        if (identifier == null) {
+            return null;
+        } else if (names.containsKey(identifier.name())) {
+            return names.getString(identifier.name());
+        } else {
+            return identifier.name();
+        }
     }
 
     public String getDescription() {
-        return "";
+
+        if (identifier == null) {
+            return null;
+        } else if (descriptions.containsKey(identifier.name())) {
+            return descriptions.getString(identifier.name());
+        } else {
+            return identifier.name();
+        }
     }
 
     public String getSuggestion() {
-        return "";
+
+        if (identifier == null) {
+            return null;
+        } else if (suggestions.containsKey(identifier.name())) {
+            return suggestions.getString(identifier.name());
+        } else {
+            return identifier.name();
+        }
     }
 
     public RepairMode getRepairMode() {
