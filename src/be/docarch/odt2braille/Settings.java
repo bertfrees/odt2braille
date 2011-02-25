@@ -58,8 +58,9 @@ public class Settings {
     public static enum PageNumberFormat { NORMAL, ROMAN, P, S, BLANK };
     public static enum PageNumberPosition { TOP_LEFT, TOP_RIGHT, TOP_CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_CENTER };
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static NamespaceContext namespace = new NamespaceContext();
+    private final static String L10N = Constants.L10N_PATH;
 
     private static final BrailleFileType DEFAULT_BRAILLE_FILE_TYPE = BrailleFileType.BRF;
     private static final TableType DEFAULT_TABLE = TableType.EN_US;
@@ -450,10 +451,10 @@ public class Settings {
 
         // L10N
 
-        L10N_transcribersNotesPageTitle = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("transcribersNotesPageTitle");
-        L10N_specialSymbolsListTitle = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolsListTitle");
-        L10N_tableOfContentTitle = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("tableOfContentTitle");
-        L10N_continuedSuffix = " " + ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("continuedSuffix");
+        L10N_transcribersNotesPageTitle = ResourceBundle.getBundle(L10N, odtLocale).getString("transcribersNotesPageTitle");
+        L10N_specialSymbolsListTitle = ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolsListTitle");
+        L10N_tableOfContentTitle = ResourceBundle.getBundle(L10N, odtLocale).getString("tableOfContentTitle");
+        L10N_continuedSuffix = " " + ResourceBundle.getBundle(L10N, odtLocale).getString("continuedSuffix");
 
         // Readonly properties
 
@@ -712,35 +713,35 @@ public class Settings {
         
         specialSymbolsList = new ArrayList();
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.ELLIPSIS, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolEllipsisDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolEllipsisDescription"),
                                            SpecialSymbolType.ELLIPSIS,
                                            SpecialSymbolMode.IF_PRESENT_IN_VOLUME));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.DOUBLE_DASH, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolDoubleDashDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolDoubleDashDescription"),
                                            SpecialSymbolType.DOUBLE_DASH,
                                            SpecialSymbolMode.IF_PRESENT_IN_VOLUME));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.LETTER_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolLetterIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolLetterIndicatorDescription"),
                                            SpecialSymbolType.LETTER_INDICATOR,
                                            SpecialSymbolMode.NEVER));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.NUMBER_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolNumberIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolNumberIndicatorDescription"),
                                            SpecialSymbolType.NUMBER_INDICATOR,
                                            SpecialSymbolMode.NEVER));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.TRANSCRIBERS_NOTE_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolTNIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolTNIndicatorDescription"),
                                            SpecialSymbolType.TRANSCRIBERS_NOTE_INDICATOR,
                                            SpecialSymbolMode.IF_PRESENT_IN_VOLUME));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.NOTE_REFERENCE_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolNoterefIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolNoterefIndicatorDescription"),
                                            SpecialSymbolType.NOTE_REFERENCE_INDICATOR,
                                            SpecialSymbolMode.IF_PRESENT_IN_VOLUME));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.ITALIC_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolItalicIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolItalicIndicatorDescription"),
                                            SpecialSymbolType.ITALIC_INDICATOR,
                                            SpecialSymbolMode.NEVER));
         addSpecialSymbol(new SpecialSymbol(getDefaultSpecialSymbol(SpecialSymbolType.BOLDFACE_INDICATOR, mainLanguage),
-                                           ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("specialSymbolBoldIndicatorDescription"),
+                                           ResourceBundle.getBundle(L10N, odtLocale).getString("specialSymbolBoldIndicatorDescription"),
                                            SpecialSymbolType.BOLDFACE_INDICATOR,
                                            SpecialSymbolMode.NEVER));
 

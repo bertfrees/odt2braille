@@ -46,6 +46,8 @@ import com.sun.star.text.XTextCursor;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
 
+import be.docarch.odt2braille.Constants;
+
 
 /**
  *
@@ -54,7 +56,8 @@ import com.sun.star.awt.ActionEvent;
 public class InsertDialog implements XTextListener,
                                      XActionListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N = Constants.OOO_L10N_PATH;
 
     private boolean ret = false;
 
@@ -100,8 +103,8 @@ public class InsertDialog implements XTextListener,
         xText = xViewCursor.getText();
         xTextCursor = xText.createTextCursorByRange(xViewCursor.getStart());
 
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("closeButton");
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("insertButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("closeButton");
+        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("insertButton");
         nextButtonProperties.setPropertyValue("Enabled", true);
         nextButton.addActionListener(this);
     }
@@ -118,12 +121,11 @@ public class InsertDialog implements XTextListener,
             oooLocale = Locale.getDefault();
         }
         
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("insertDialogTitle");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
+        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("insertDialogTitle");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
-                                                            + "/dialogs/InsertDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/InsertDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

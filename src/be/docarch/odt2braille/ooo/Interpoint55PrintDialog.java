@@ -60,6 +60,7 @@ import com.sun.star.beans.XPropertySet;
 
 import java.io.IOException;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 
 /**
@@ -80,7 +81,8 @@ import be.docarch.odt2braille.Settings;
 public class Interpoint55PrintDialog implements XActionListener,
                                                 XItemListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N = Constants.OOO_L10N_PATH;
 
     private Settings settings = null;
     private SettingsIO settingsIO = null;
@@ -157,8 +159,7 @@ public class Interpoint55PrintDialog implements XActionListener,
         settingsIO = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
-                                                        + "/dialogs/Interpoint55PrintDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/Interpoint55PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         XMultiComponentFactory xMCF = xContext.getServiceManager();
 
@@ -171,14 +172,14 @@ public class Interpoint55PrintDialog implements XActionListener,
             oooLocale = Locale.getDefault();
         }
 
-        L10N_wp55Label = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("wp55Label") + ":";
-        L10N_iniLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("iniLabel") + ":";
-        L10N_overWriteLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("overWriteLabel");
-        L10N_printToFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printToFileLabel");
+        L10N_wp55Label = ResourceBundle.getBundle(L10N, oooLocale).getString("wp55Label") + ":";
+        L10N_iniLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("iniLabel") + ":";
+        L10N_overWriteLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("overWriteLabel");
+        L10N_printToFileLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("printToFileLabel");
         L10N_searchWp55Button = "...";
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("interpoint55EmbossDialogTitle");
+        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("embossButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
+        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("interpoint55EmbossDialogTitle");
 
         xFolderPicker = (XFolderPicker) UnoRuntime.queryInterface(XFolderPicker.class,
                 xMCF.createInstanceWithContext("com.sun.star.ui.dialogs.FolderPicker", xContext));
@@ -563,7 +564,8 @@ public class Interpoint55PrintDialog implements XActionListener,
                 XExecutableDialog xExecutable = (XExecutableDialog) UnoRuntime.queryInterface(XExecutableDialog.class, xFolderPicker);
                 short nResult = xExecutable.execute();
                 if (nResult == com.sun.star.ui.dialogs.ExecutableDialogResults.OK){
-                    wp55File = new File(UnoUtils.UnoURLtoURL(xFolderPicker.getDirectory(), xContext) + System.getProperty("file.separator") + "WP55.exe");
+                    wp55File = new File(UnoUtils.UnoURLtoURL(xFolderPicker.getDirectory(), xContext)
+                            + System.getProperty("file.separator") + "WP55.exe");
                     wp55FolderUrl = wp55File.getParent();
 
                     updateWp55Field();

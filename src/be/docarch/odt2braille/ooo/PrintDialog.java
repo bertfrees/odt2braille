@@ -19,6 +19,14 @@
 
 package be.docarch.odt2braille.ooo;
 
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.lang.XComponent;
@@ -40,13 +48,7 @@ import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
-import javax.print.DocFlavor;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import be.docarch.odt2braille.Constants;
 
 
 /**
@@ -56,7 +58,8 @@ import java.util.logging.Logger;
  */
 public class PrintDialog implements XItemListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N = Constants.OOO_L10N_PATH;
 
     private boolean printToFile = false;
     private int numberOfCopies = 1;
@@ -104,8 +107,7 @@ public class PrintDialog implements XItemListener {
         logger.entering("PrintDialog", "<init>");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
-                                                            + "/dialogs/PrintDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
 
         Locale oooLocale = null;
@@ -117,12 +119,12 @@ public class PrintDialog implements XItemListener {
             oooLocale = Locale.getDefault();
         }
 
-        L10N_deviceLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("deviceLabel") + ":";
-        L10N_printToFileLabel = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("printToFileLabel");
+        L10N_deviceLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("deviceLabel") + ":";
+        L10N_printToFileLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("printToFileLabel");
         L10N_numberOfCopiesLabel = "Number of copies:";
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("cancelButton");
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("embossDialogTitle");
+        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("embossButton");
+        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
+        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("embossDialogTitle");
 
         xDialog = xDialogProvider.createDialog(dialogUrl);
 

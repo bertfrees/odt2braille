@@ -72,6 +72,7 @@ import org.xml.sax.SAXException;
 import javax.xml.transform.TransformerException;
 import javax.xml.parsers.ParserConfigurationException;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
@@ -89,7 +90,9 @@ public class PreviewDialog implements XItemListener,
                                       XActionListener,
                                       XWindowListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String OOO_L10N = Constants.OOO_L10N_PATH;
+    private final static String L10N = Constants.L10N_PATH;
 
     private static final String FONT_6_DOT = "odt2braille 6 dot";
     private static final String FONT_8_DOT = "odt2braille 8 dot";
@@ -214,10 +217,10 @@ public class PreviewDialog implements XItemListener,
             oooLocale = Locale.getDefault();
         }
 
-        L10N_windowTitle = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("previewDialogTitle");
-        L10N_volume = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("volume");
-        L10N_preliminary_volume = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("preliminary");
-        L10N_supplement = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("supplement");
+        L10N_windowTitle = ResourceBundle.getBundle(OOO_L10N, oooLocale).getString("previewDialogTitle");
+        L10N_volume = ResourceBundle.getBundle(L10N, oooLocale).getString("volume");
+        L10N_preliminary_volume = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminary");
+        L10N_supplement = ResourceBundle.getBundle(L10N, oooLocale).getString("supplement");
         L10N_preliminary_section = "Preliminary Section";
         L10N_main_section = "Main Section";
 

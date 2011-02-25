@@ -41,6 +41,7 @@ import com.sun.star.document.XDocumentPropertiesSupplier;
 import com.sun.star.lang.XComponent;
 import com.sun.star.text.XTextDocument;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
@@ -78,7 +79,7 @@ import java.io.IOException;
  */
 public class SettingsIO {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
     private XComponentContext xContext = null;
     private String packageLocation = null;
@@ -198,7 +199,7 @@ public class SettingsIO {
         logger.entering("SettingsIO", "<init>");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        packageLocation = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon");
+        packageLocation = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME);
         this.xContext = xContext;
 
         XTextDocument xTextDoc = (XTextDocument) UnoRuntime.queryInterface(XTextDocument.class, xDesktopComponent);

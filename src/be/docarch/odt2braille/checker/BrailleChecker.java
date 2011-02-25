@@ -14,6 +14,7 @@ import net.sf.saxon.TransformerFactoryImpl;
 
 import be.docarch.accessibility.Check;
 import be.docarch.accessibility.ExternalChecker;
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.OdtTransformer;
 
 import java.io.IOException;
@@ -27,7 +28,7 @@ import javax.xml.transform.TransformerException;
  */
 public class BrailleChecker implements ExternalChecker {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
     private File odtFile = null;
     private File earlReport = null;
@@ -43,7 +44,7 @@ public class BrailleChecker implements ExternalChecker {
         try {
             TransformerFactoryImpl tFactory = new net.sf.saxon.TransformerFactoryImpl();
             earlXSL = tFactory.newTransformer(
-                    new StreamSource(getClass().getResource("/be/docarch/odt2braille/xslt/earl.xsl").toString()));
+                    new StreamSource(getClass().getResource(Constants.XSLT_PATH + "earl.xsl").toString()));
 
             earlXSL.setParameter("paramNoPreliminarySection", "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoPreliminarySection.name());
             earlXSL.setParameter("paramNoTitlePage",          "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoTitlePage.name());
@@ -53,7 +54,7 @@ public class BrailleChecker implements ExternalChecker {
             earlXSL.setParameter("paramTransposedInBraille",  "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_TransposedInBraille.name());
             earlXSL.setParameter("paramUnnaturalVolumeBreak", "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_UnnaturalVolumeBreak.name());
 
-            earlReport = File.createTempFile("odt2braille.", ".earl.rdf.xml");
+            earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
             earlReport.deleteOnExit();
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);

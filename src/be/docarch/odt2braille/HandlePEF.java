@@ -42,11 +42,11 @@ import org_pef_text.pef2text.PEFParser;
 import org_pef_text.pef2text.EmbosserFactoryException;
 import org_pef_text.pef2text.UnsupportedWidthException;
 
-import com_indexbraille.BlueBarEmbosser;
-import org.daisy.braille.embosser.EmbosserWriter;
-import org.daisy.braille.pef.PEFHandler.Alignment;
-import org_pef_text.pef2text.Paper.PaperSize;
-import org_pef_text.pef2text.Paper;
+//import com_indexbraille.BlueBarEmbosser;
+//import org.daisy.braille.embosser.EmbosserWriter;
+//import org.daisy.braille.pef.PEFHandler.Alignment;
+//import org_pef_text.pef2text.Paper.PaperSize;
+//import org_pef_text.pef2text.Paper;
 
 
 /**
@@ -59,8 +59,9 @@ import org_pef_text.pef2text.Paper;
  */
 public class HandlePEF {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
-    private static final String TMP_NAME = "odt2braille";
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final String TMP_NAME = Constants.TMP_PREFIX;
+    private static final File TMP_DIR = Constants.getTmpDirectory();
 
     private Settings settings = null;
     private PEF pef = null;
@@ -97,7 +98,7 @@ public class HandlePEF {
 
         logger.entering("HandlePEF", "convertToSingleFile");
 
-        File output = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase());
+        File output = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase(), TMP_DIR);
         output.deleteOnExit();
 
         convertToFile(fileType, pef.getSinglePEF(), output);
@@ -135,7 +136,7 @@ public class HandlePEF {
         outputFiles = new File[pefFiles.length];
         for (int i=0; i<outputFiles.length; i++) {
 
-            outputFiles[i] = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase());
+            outputFiles[i] = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase(), TMP_DIR);
             outputFiles[i].deleteOnExit();
             convertToFile(fileType, pefFiles[i], outputFiles[i]);
             
@@ -284,7 +285,7 @@ public class HandlePEF {
 
         logger.entering("HandlePEF", "embossToDevice");
 
-        File prnFile = File.createTempFile(TMP_NAME, ".prn");
+        File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
         prnFile.deleteOnExit();
 
         if (settings.getEmbosser()==EmbosserType.INTERPOINT_55) {

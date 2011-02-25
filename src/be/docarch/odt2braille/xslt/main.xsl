@@ -810,7 +810,13 @@ INLINE ELEMENTS
             <xsl:choose>
                 <xsl:when test="text:note-citation[not(@text:label)]">
                     <xsl:variable name="num-format" as="xsd:string">
-                        <xsl:call-template name="get-note-format">
+                        <xsl:call-template name="get-note-num-format">
+                            <xsl:with-param name="section"    select="ancestor::text:section[1]" />
+                            <xsl:with-param name="note-class" select="$note-class" />
+                        </xsl:call-template>
+                    </xsl:variable>
+                    <xsl:variable name="num-letter-sync" as="xsd:boolean">
+                        <xsl:call-template name="get-note-num-letter-sync">
                             <xsl:with-param name="section"    select="ancestor::text:section[1]" />
                             <xsl:with-param name="note-class" select="$note-class" />
                         </xsl:call-template>
@@ -819,32 +825,22 @@ INLINE ELEMENTS
                         <xsl:call-template name="get-noteref-prefix">
                             <xsl:with-param name="num-format" select="$num-format" />
                         </xsl:call-template>
-                    </dtb:span>                    
-                    <xsl:choose>
-                        <xsl:when test="$note-class='endnote' and $num-format='i'">
-                            <xsl:value-of select="text:note-citation/text()" />
-                        </xsl:when>
-                        <xsl:when test="$note-class='endnote' and $num-format='I'">
-                            <xsl:value-of select="upper-case(./text:note-citation/text())" />
-                        </xsl:when>
-                        <xsl:when test="$note-class='endnote'">
-                            <xsl:call-template name="format-number">
-                                <xsl:with-param name="integer">
-                                    <xsl:call-template name="roman-to-integer">
-                                        <xsl:with-param name="roman" select="text:note-citation/text()" />
-                                    </xsl:call-template>
-                                </xsl:with-param>
-                                <xsl:with-param name="num-format" select="$num-format" />
+                    </dtb:span>
+                    <xsl:call-template name="format-number">
+                        <xsl:with-param name="num-in"              select="text:note-citation/text()" />
+                        <xsl:with-param name="num-format-out"      select="$num-format" />
+                        <xsl:with-param name="num-letter-sync-out" select="$num-letter-sync" />
+                        <xsl:with-param name="num-format-in">
+                            <xsl:call-template name="get-default-note-num-format">
+                                <xsl:with-param name="note-class" select="$note-class" />
                             </xsl:call-template>
-                        </xsl:when>
-                        <xsl:when test="$note-class='footnote'">
-                            <xsl:call-template name="format-number">
-                                <xsl:with-param name="integer"    select="text:note-citation/text()" />
-                                <xsl:with-param name="num-format" select="$num-format" />
+                        </xsl:with-param>
+                        <xsl:with-param name="num-letter-sync-in">
+                            <xsl:call-template name="get-default-note-num-letter-sync">
+                                <xsl:with-param name="note-class" select="$note-class" />
                             </xsl:call-template>
-                        </xsl:when>
-                        <xsl:otherwise />
-                    </xsl:choose>
+                        </xsl:with-param>
+                    </xsl:call-template>
                 </xsl:when>
                 <xsl:otherwise>
                     <xsl:value-of select="text:note-citation/text()" />

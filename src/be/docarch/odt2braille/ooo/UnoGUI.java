@@ -57,6 +57,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.LiblouisXML;
 import be.docarch.odt2braille.Settings;
@@ -82,9 +83,11 @@ import be.docarch.odt2braille.LiblouisXMLException;
  */
 public class UnoGUI {
 
-    private static final String TMP_NAME = "odt2braille.";
+    private static final String TMP_NAME = Constants.TMP_PREFIX;
+    private static final File TMP_DIR = Constants.getTmpDirectory();
     private static final String FLAT_XML_FILTER_NAME = "writer8";
-    private static final Logger logger = Logger.getLogger("odt2braille");
+    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final String L10N = Constants.OOO_L10N_PATH;
 
     private static String L10N_Default_Export_Filename = null;
     private static String L10N_Warning_MessageBox_Title = null;
@@ -147,7 +150,8 @@ public class UnoGUI {
             progressBar = new ProgressBar(m_xFrame);
 
             // Configuring logger
-            logFile = File.createTempFile(TMP_NAME, ".log");
+            logFile = File.createTempFile(TMP_NAME, ".log", TMP_DIR);
+            logFile.deleteOnExit();
             fh = new FileHandler(logFile.getAbsolutePath());
             fh.setFormatter(new SimpleFormatter());
             Logger.getLogger("").addHandler(fh);
@@ -187,10 +191,10 @@ public class UnoGUI {
 
         try {
 
-            L10N_Default_Export_Filename = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("defaultExportFilename");
-            L10N_Warning_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("warningMessageBoxTitle");
-            L10N_Exception_MessageBox_Title = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("exceptionMessageBoxTitle");
-            L10N_Unexpected_Exception_Message = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("unexpectedExceptionMessage");
+            L10N_Default_Export_Filename = ResourceBundle.getBundle(L10N, oooLocale).getString("defaultExportFilename");
+            L10N_Warning_MessageBox_Title = ResourceBundle.getBundle(L10N, oooLocale).getString("warningMessageBoxTitle");
+            L10N_Exception_MessageBox_Title = ResourceBundle.getBundle(L10N, oooLocale).getString("exceptionMessageBoxTitle");
+            L10N_Unexpected_Exception_Message = ResourceBundle.getBundle(L10N, oooLocale).getString("unexpectedExceptionMessage");
 
             exportFilename = L10N_Default_Export_Filename;
             for (PropertyValue prop: xDoc.getArgs()) {
@@ -201,7 +205,7 @@ public class UnoGUI {
             }
 
             // Export in ODT Format
-            File odtFile = File.createTempFile(TMP_NAME, ".odt");
+            File odtFile = File.createTempFile(TMP_NAME, ".odt", TMP_DIR);
             odtFile.deleteOnExit();
             String odtUnoUrl = UnoUtils.createUnoFileURL(odtFile.getAbsolutePath(), m_xContext);
             PropertyValue[] conversionProperties = new PropertyValue[1];
@@ -223,7 +227,7 @@ public class UnoGUI {
 
             // Set liblouis directory
             liblouisPath = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
-                                .getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
+                                .getPackageLocation(Constants.OOO_PACKAGE_NAME)
                                 + "/liblouis/", m_xContext)).getAbsolutePath();
 
             // Create new settingsIO
@@ -660,7 +664,7 @@ public class UnoGUI {
             if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
 
                 // Create temporary Braille file
-                File brailleFile = File.createTempFile(TMP_NAME, ".brf");
+                File brailleFile = File.createTempFile(TMP_NAME, ".brf", TMP_DIR);
                 brailleFile.deleteOnExit();
 
                 Interpoint55PrintDialog interpoint55PrintDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, changedSettings);
@@ -809,7 +813,6 @@ public class UnoGUI {
                 progressBar.close();
             }
         }
-
     }
 
     public boolean sixKeyEntryMode (){
@@ -838,7 +841,6 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         }
-
     }
 
     public boolean insertBraille () {

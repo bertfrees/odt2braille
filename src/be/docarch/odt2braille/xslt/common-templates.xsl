@@ -315,68 +315,87 @@
     </xsl:template>
 
     <xsl:template name="format-number">
-        <xsl:param name="integer"         as="xsd:integer" />
-        <xsl:param name="num-format"      as="xsd:string"  select="'1'" />
-        <xsl:param name="num-letter-sync" as="xsd:boolean" select="false()" />
+        <xsl:param name="num-in" />
+        <xsl:param name="num-format-in"       as="xsd:string"  select="'1'" />
+        <xsl:param name="num-format-out"      as="xsd:string"  select="'1'" />
+        <xsl:param name="num-letter-sync-in"  as="xsd:boolean" select="false()" />
+        <xsl:param name="num-letter-sync-out" as="xsd:boolean" select="false()" />
         <xsl:choose>
-            <xsl:when test="$num-format='a'">
-                <xsl:call-template name="integer-to-letter">
-                    <xsl:with-param name="integer"         select="$integer" />
-                    <xsl:with-param name="num-letter-sync" select="$num-letter-sync" />
+            <xsl:when test="$num-format-in=$num-format-out and
+                            $num-letter-sync-in=$num-letter-sync-out">
+                <xsl:value-of select="$num-in" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='1' and $num-format-out='a'">
+                <xsl:value-of select="num:integer-to-letter($num-in, $num-letter-sync-out)" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='1' and $num-format-out='A'">
+                <xsl:value-of select="upper-case(num:integer-to-letter($num-in, $num-letter-sync-out))" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='1' and $num-format-out='i'">
+                <xsl:value-of select="num:integer-to-roman($num-in)" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='1' and $num-format-out='I'">
+                <xsl:value-of select="upper-case(num:integer-to-roman($num-in))" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='a' and $num-format-out='A' and
+                            $num-letter-sync-in=$num-letter-sync-out">
+                <xsl:value-of select="upper-case($num-in)" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='A' and $num-format-out='a' and 
+                            $num-letter-sync-in=$num-letter-sync-out">
+                <xsl:value-of select="lower-case($num-in)" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='i' and $num-format-out='I'">
+                <xsl:value-of select="upper-case($num-in)" />
+            </xsl:when>
+            <xsl:when test="$num-format-in='I' and $num-format-out='i'">
+                <xsl:value-of select="lower-case($num-in)" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="format-number">
+                    <xsl:with-param name="num-in">
+                        <xsl:choose>
+                            <xsl:when test="$num-format-in='a'">
+                                <xsl:value-of select="num:letter-to-integer($num-in, $num-letter-sync-in)" />
+                            </xsl:when>
+                            <xsl:when test="$num-format-in='A'">
+                                <xsl:value-of select="num:letter-to-integer(lower-case($num-in), $num-letter-sync-in)" />
+                            </xsl:when>
+                            <xsl:when test="$num-format-in='i'">
+                                <xsl:value-of select="num:roman-to-integer($num-in)" />
+                            </xsl:when>
+                            <xsl:when test="$num-format-in='I'">
+                                <xsl:value-of select="num:roman-to-integer(lower-case($num-in))" />
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <xsl:value-of select="$num-in" />
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </xsl:with-param>
+                    <xsl:with-param name="num-format-in" select="'1'" />
+                    <xsl:with-param name="num-format-out" select="$num-format-out" />
+                    <xsl:with-param name="num-letter-sync-in" select="false()" />
+                    <xsl:with-param name="num-letter-sync-out" select="$num-letter-sync-out" />
                 </xsl:call-template>
-            </xsl:when>
-            <xsl:when test="$num-format='A'">
-                <xsl:variable name="letter">
-                    <xsl:call-template name="integer-to-letter">
-                        <xsl:with-param name="integer"         select="$integer" />
-                        <xsl:with-param name="num-letter-sync" select="$num-letter-sync" />
-                    </xsl:call-template>
-                </xsl:variable>
-                <xsl:value-of select="upper-case($letter)" />
-            </xsl:when>
-            <xsl:when test="$num-format='i'">
-                <xsl:number value="$integer" format="i" />
-            </xsl:when>
-            <xsl:when test="$num-format='I'">
-                <xsl:number value="$integer" format="I" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:number value="$integer" format="1" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="integer-to-letter">
-        <xsl:param name="integer"         as="xsd:integer" />
-        <xsl:param name="num-letter-sync" as="xsd:boolean" select="false()" />
-        <xsl:choose>
-            <xsl:when test="$num-letter-sync">
-                <xsl:variable name="r">
-                    <xsl:number value="(($integer - 1) mod 26) + 1" format="a" />
-                </xsl:variable>
-                <xsl:value-of select="num:repeat-string($r, (($integer - 1) idiv 26) + 1)" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:number value="$integer" format="a" />
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-
-    <xsl:template name="get-note-format">
+    <xsl:template name="get-note-num-format">
         <xsl:param name="section"/>
         <xsl:param name="note-class" as="xsd:string" />
         <xsl:choose>
             <xsl:when test="$section">
-                <xsl:variable name="num-format"
+                <xsl:variable name="notes-configuration"
                               select="$automatic-styles/style:style[@style:family='section' and @style:name=($section/@text:style-name)]
-                                                       /style:section-properties/text:notes-configuration[@text:note-class=($note-class)]
-                                                       /@style:num-format" />
+                                                       /style:section-properties
+                                                       /text:notes-configuration[@text:note-class=($note-class) and @style:num-format]" />
                 <xsl:choose>
-                    <xsl:when test="$num-format">
-                        <xsl:value-of select="$num-format" />
+                    <xsl:when test="$notes-configuration">
+                        <xsl:value-of select="$notes-configuration/@style:num-format" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:call-template name="get-note-format">
+                        <xsl:call-template name="get-note-num-format">
                             <xsl:with-param name="section"    select="$section/ancestor::text:section[1]" />
                             <xsl:with-param name="note-class" select="$note-class" />
                         </xsl:call-template>
@@ -384,15 +403,98 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <value-of select="$styles/text:notes-configuration[@text:note-class=($note-class)]/@style:num-format" />
+                <xsl:call-template name="get-default-note-num-format">
+                    <xsl:with-param name="note-class" select="$note-class" />
+                </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
-    <xsl:template name="roman-to-integer">
-        <xsl:param name="roman" as="xsd:string"/>
-        <xsl:value-of select="num:roman-to-integer($roman)" />
+    <xsl:template name="get-note-num-letter-sync">
+        <xsl:param name="section"/>
+        <xsl:param name="note-class" as="xsd:string" />
+        <xsl:choose>
+            <xsl:when test="$section">
+                <xsl:variable name="notes-configuration"
+                              select="$automatic-styles/style:style[@style:family='section' and @style:name=($section/@text:style-name)]
+                                                       /style:section-properties
+                                                       /text:notes-configuration[@text:note-class=$note-class and @style:num-format]" />
+                <xsl:choose>
+                    <xsl:when test="$notes-configuration">
+                        <xsl:value-of select="boolean($notes-configuration/@style:num-letter-sync='true')" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:call-template name="get-note-num-letter-sync">
+                            <xsl:with-param name="section"    select="$section/ancestor::text:section[1]" />
+                            <xsl:with-param name="note-class" select="$note-class" />
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:call-template name="get-default-note-num-letter-sync">
+                    <xsl:with-param name="note-class" select="$note-class" />
+                </xsl:call-template>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
+    
+    <xsl:template name="get-default-note-num-format">
+        <xsl:param name="note-class" as="xsd:string" />
+        <xsl:value-of select="$styles/text:notes-configuration[@text:note-class=$note-class]/@style:num-format" />
+    </xsl:template>
+
+    <xsl:template name="get-default-note-num-letter-sync">
+        <xsl:param name="note-class" as="xsd:string" />
+        <xsl:value-of select="boolean($styles/text:notes-configuration[@text:note-class=$note-class]/@style:num-letter-sync='true')" />
+    </xsl:template>
+
+    <xsl:function name="num:integer-to-letter" as="xsd:string">
+        <xsl:param name="i"               as="xsd:integer" />
+        <xsl:param name="num-letter-sync" as="xsd:boolean" />
+        <xsl:choose>
+            <xsl:when test="$num-letter-sync">
+                <xsl:variable name="r">
+                    <xsl:number value="(($i - 1) mod 26) + 1" format="a" />
+                </xsl:variable>
+                <xsl:value-of select="num:repeat-string($r, (($i - 1) idiv 26) + 1)" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:number value="$i" format="a" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
+
+    <xsl:function name="num:integer-to-roman" as="xsd:string">
+        <xsl:param name="i" as="xsd:integer" />
+        <xsl:number value="$i" format="i" />
+    </xsl:function>
+    
+    <xsl:function name="num:letter-to-integer" as="xsd:integer">
+        <xsl:param name="r"               as="xsd:string" />
+        <xsl:param name="num-letter-sync" as="xsd:boolean" />
+        <xsl:variable name="len" select="string-length($r)" />
+        <xsl:choose>
+            <xsl:when test="$len=1">
+                <xsl:sequence select="string-to-codepoints($r)-string-to-codepoints('a')+1"/>
+            </xsl:when>
+            <xsl:when test="$len>1">
+                <xsl:choose>
+                    <xsl:when test="$num-letter-sync">
+                        <xsl:sequence select="26 * ($len - 1)
+                                                 + num:letter-to-integer(substring($r, $len - 1), $num-letter-sync)"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:sequence select="26 * num:letter-to-integer(substring($r, 0, $len - 1), $num-letter-sync)
+                                                 + num:letter-to-integer(substring($r, $len - 1), $num-letter-sync)"/>
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:sequence select="0"/>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:function>
 
     <xsl:function name="num:roman-to-integer" as="xsd:integer">
         <xsl:param name="r" as="xsd:string"/>

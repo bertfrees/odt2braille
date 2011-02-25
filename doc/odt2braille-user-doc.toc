@@ -3,24 +3,24 @@
 @numchapentry{Advanced Guide}{2}{Advanced Guide}{4}
 @numsecentry{Languages}{2.1}{Languages}{4}
 @numsecentry{Paragraphs}{2.2}{Paragraphs}{4}
-@numsecentry{Headings}{2.3}{Headings}{4}
-@numsecentry{Lists}{2.4}{Lists}{5}
-@numsecentry{Tables}{2.5}{Tables}{6}
-@numsecentry{Textboxes}{2.6}{Textboxes}{7}
+@numsecentry{Headings}{2.3}{Headings}{5}
+@numsecentry{Lists}{2.4}{Lists}{6}
+@numsecentry{Tables}{2.5}{Tables}{7}
+@numsecentry{Textboxes}{2.6}{Textboxes}{8}
 @numsecentry{Images}{2.7}{Images}{9}
-@numsecentry{Captions}{2.8}{Captions}{9}
-@numsecentry{Notes}{2.9}{Notes}{10}
-@numsecentry{Special Typeface}{2.10}{Special Typeface}{11}
+@numsecentry{Captions}{2.8}{Captions}{10}
+@numsecentry{Notes}{2.9}{Notes}{11}
+@numsecentry{Special Typeface}{2.10}{Special Typeface}{12}
 @numsecentry{Page Numbering}{2.11}{Page Numbering}{12}
 @numsecentry{Preliminary Pages}{2.12}{Preliminary Pages}{13}
 @numsecentry{Volume Management}{2.13}{Volume Management}{14}
-@numsecentry{Title Page}{2.14}{Title Page}{14}
-@numsecentry{List of Special Symbols}{2.15}{List of Special Symbols}{15}
-@numsecentry{Transcriber's Notes}{2.16}{Transcriber's Notes}{16}
+@numsecentry{Title Page}{2.14}{Title Page}{15}
+@numsecentry{List of Special Symbols}{2.15}{List of Special Symbols}{16}
+@numsecentry{Transcriber's Notes}{2.16}{Transcriber's Notes}{17}
 @numsecentry{Table of Contents}{2.17}{Table of Contents}{17}
-@numsecentry{Bibliographies}{2.18}{Bibliographies}{17}
-@numsecentry{Mathematics}{2.19}{Mathematics}{18}
-@numsecentry{Inserting Literal Braille}{2.20}{Inserting Literal Braille}{18}
+@numsecentry{Bibliographies}{2.18}{Bibliographies}{18}
+@numsecentry{Mathematics}{2.19}{Mathematics}{19}
+@numsecentry{Inserting Literal Braille}{2.20}{Inserting Literal Braille}{19}
 @numsecentry{Braille-only Material}{2.21}{Braille-only Material}{19}
 @numsecentry{Hyphenation}{2.22}{Hyphenation}{19}
-@numsecentry{Templates}{2.23}{Templates}{19}
+@numsecentry{Templates}{2.23}{Templates}{20}

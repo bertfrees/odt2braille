@@ -46,6 +46,8 @@ import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.text.XText;
 import com.sun.star.text.XTextCursor;
 
+import be.docarch.odt2braille.Constants;
+
 
 /**
  *
@@ -53,7 +55,7 @@ import com.sun.star.text.XTextCursor;
  */
 public class SixKeyEntryDialog implements XKeyHandler {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private XText xText = null;
     private XTextCursor xTextCursor = null;
     private XExtendedToolkit myExtToolkit = null;
@@ -97,8 +99,7 @@ public class SixKeyEntryDialog implements XKeyHandler {
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon")
-                                                            + "/dialogs/SixKeyEntryDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/SixKeyEntryDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

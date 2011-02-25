@@ -53,6 +53,7 @@ import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 import org_pef_text.pef2text.Paper;
 import org_pef_text.pef2text.Paper.PaperSize;
@@ -70,8 +71,8 @@ public class EmbossDialog implements XItemListener,
                                      XActionListener,
                                      XTextListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
-    private final static String L10N_BUNDLE = "be/docarch/odt2braille/ooo/l10n/Bundle";
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -232,7 +233,7 @@ public class EmbossDialog implements XItemListener,
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/EmbossDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/EmbossDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

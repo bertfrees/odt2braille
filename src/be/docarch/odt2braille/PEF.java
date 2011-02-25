@@ -87,11 +87,13 @@ import org_pef_text.TableFactory.TableType;
  */
 public class PEF implements ErrorHandler {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static NamespaceContext namespace = new NamespaceContext();
 
-    private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
-    private static final String TMP_NAME = "odt2braille.";
+    private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+    private static final String TMP_NAME = Constants.TMP_PREFIX;
+    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final String L10N = Constants.L10N_PATH;
 
     public enum TranscribersNote { };
     enum State {HEADER, BODY, FOOTER};
@@ -170,10 +172,10 @@ public class PEF implements ErrorHandler {
         this.statusIndicator = statusIndicator;
         this.checker = checker;
 
-        pefFile = File.createTempFile(TMP_NAME, ".pef");
+        pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
 
-        L10N_statusIndicatorStep = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("statusIndicatorStep");
+        L10N_statusIndicatorStep = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep");
 
         // odtTransformer preProcessing
         odtTransformer.ensureMetadataReferences();
@@ -272,7 +274,7 @@ public class PEF implements ErrorHandler {
 
         volumeElements = new Element[volumes.size()];
 
-        File brailleFile = File.createTempFile(TMP_NAME, ".txt");
+        File brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
         brailleFile.deleteOnExit();
 
         try {
@@ -305,7 +307,7 @@ public class PEF implements ErrorHandler {
 
             beginPage = settings.getBeginningBraillePageNumber();
 
-            bodyFile = File.createTempFile(TMP_NAME, ".daisy.body.xml");
+            bodyFile = File.createTempFile(TMP_NAME, ".daisy.body.xml", TMP_DIR);
             bodyFile.deleteOnExit();
 
             odtTransformer.getBodyMatter(settings, bodyFile);
@@ -529,7 +531,7 @@ public class PEF implements ErrorHandler {
 
                     // Extract preliminary page range
 
-                    preliminaryFile = File.createTempFile(TMP_NAME, ".daisy." + volumeType + volumeNr + ".xml");
+                    preliminaryFile = File.createTempFile(TMP_NAME, ".daisy." + volumeType + volumeNr + ".xml", TMP_DIR);
                     preliminaryFile.deleteOnExit();
 
                     sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");

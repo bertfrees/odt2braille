@@ -47,13 +47,14 @@ import org_pef_text.TableFactory.TableType;
  */
 public class LiblouisXML {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
     private final static String FILE_SEPARATOR = System.getProperty("file.separator");
     private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private final static boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
     private static final String LIBLOUISXML_EXEC_NAME = "xml2brl";
-    private static final String TMP_NAME = "odt2braille.";
+    private static final String TMP_NAME = Constants.TMP_PREFIX;
+    private static final File TMP_DIR = Constants.getTmpDirectory();
     private static final String LIBLOUISXML_VERSION_ATLEAST = "2.3.0";
     private static final String LIBLOUIS_VERSION_ATLEAST = "2.1.1";
 
@@ -158,8 +159,8 @@ public class LiblouisXML {
 
         logger.entering("LiblouisXML", "createStylesFiles");
 
-        File newStylesFile = File.createTempFile(TMP_NAME, ".styles.cfg");
-        File newParagraphsFile = File.createTempFile(TMP_NAME, ".paragraphs.sem");
+        File newStylesFile = File.createTempFile(TMP_NAME, ".styles.cfg", TMP_DIR);
+        File newParagraphsFile = File.createTempFile(TMP_NAME, ".paragraphs.sem", TMP_DIR);
         ArrayList<ParagraphStyle> paragraphStyles = settings.getParagraphStyles();
         ArrayList<HeadingStyle> headingStyles = settings.getHeadingStyles();
         ArrayList<ListStyle> listStyles = settings.getListStyles();

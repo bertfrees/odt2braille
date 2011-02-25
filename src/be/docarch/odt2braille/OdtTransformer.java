@@ -82,9 +82,11 @@ import com.versusoft.packages.jodl.RomanNumbering;
  */
 public class OdtTransformer /* implements ExternalChecker */ {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
-
-    private static final String TMP_NAME = "odt2braille.";
+    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final String TMP_NAME = Constants.TMP_PREFIX;
+    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final String XSLT = Constants.XSLT_PATH;
+    private static final String L10N = Constants.L10N_PATH;
 
     private static NamespaceContext namespace = null;
     private TransformerFactoryImpl tFactory = null;
@@ -100,7 +102,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private File usedLanguagesFile = null;
     private Locale odtLocale = null;
     private Locale oooLocale = null;
-    private String xsltFolder = null;
 
     private static String L10N_in = null;
     private static String L10N_and = null;
@@ -150,20 +151,19 @@ public class OdtTransformer /* implements ExternalChecker */ {
         this.oooLocale = oooLocale;
         this.statusIndicator = statusIndicator;
 
-        xsltFolder = "/be/docarch/odt2braille/xslt/";
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
 
         // Convert ODT to XML files
 
-        odtContentFile = File.createTempFile(TMP_NAME, ".odt.content.xml");
+        odtContentFile = File.createTempFile(TMP_NAME, ".odt.content.xml", TMP_DIR);
         odtContentFile.deleteOnExit();
-        odtStylesFile = File.createTempFile(TMP_NAME, ".odt.styles.xml");
+        odtStylesFile = File.createTempFile(TMP_NAME, ".odt.styles.xml", TMP_DIR);
         odtStylesFile.deleteOnExit();
-        odtMetaFile = File.createTempFile(TMP_NAME, ".odt.meta.xml");
+        odtMetaFile = File.createTempFile(TMP_NAME, ".odt.meta.xml", TMP_DIR);
         odtMetaFile.deleteOnExit();
-        //odtSettingsFile = File.createTempFile(TMP_NAME, ".odt.settings.xml");
+        //odtSettingsFile = File.createTempFile(TMP_PREFIX, ".odt.settings.xml", TMP_DIR);
         //odtSettingsFile.deleteOnExit();
-        controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf.xml");
+        controllerFile = File.createTempFile(TMP_NAME, ".controller.rdf.xml", TMP_DIR);
         controllerFile.deleteOnExit();
 
         ZipFile zip = new ZipFile(odtFile.getAbsolutePath());
@@ -183,16 +183,16 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // L10N
 
-        L10N_in = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("in");
-        L10N_and = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("and");
-        L10N_volume = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("volume");
-        L10N_volumes = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("volumes");
-        L10N_supplement = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("supplement");
-        L10N_supplements = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("supplements");
-        L10N_preliminary = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("preliminary");
-        L10N_braillePages = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("braillePages");
-        L10N_printPages = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("printPages");
-        L10N_transcriptionInfo = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", odtLocale).getString("transcriptionInfo");
+        L10N_in = ResourceBundle.getBundle(L10N, odtLocale).getString("in");
+        L10N_and = ResourceBundle.getBundle(L10N, odtLocale).getString("and");
+        L10N_volume = ResourceBundle.getBundle(L10N, odtLocale).getString("volume");
+        L10N_volumes = ResourceBundle.getBundle(L10N, odtLocale).getString("volumes");
+        L10N_supplement = ResourceBundle.getBundle(L10N, odtLocale).getString("supplement");
+        L10N_supplements = ResourceBundle.getBundle(L10N, odtLocale).getString("supplements");
+        L10N_preliminary = ResourceBundle.getBundle(L10N, odtLocale).getString("preliminary");
+        L10N_braillePages = ResourceBundle.getBundle(L10N, odtLocale).getString("braillePages");
+        L10N_printPages = ResourceBundle.getBundle(L10N, odtLocale).getString("printPages");
+        L10N_transcriptionInfo = ResourceBundle.getBundle(L10N, odtLocale).getString("transcriptionInfo");
 
         logger.exiting("OdtTransformer","<init>");
 
@@ -204,7 +204,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
         logger.entering("OdtTransformer","ensureMetadataReferences");
 
         Transformer ensureReferencesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    xsltFolder + "ensure-references.xsl").toString()));
+                    XSLT + "ensure-references.xsl").toString()));
 
         ensureReferencesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
@@ -227,7 +227,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
         logger.entering("OdtTransformer","makeControlFlow");
 
         Transformer controllerXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(
-                    xsltFolder + "controller.xsl").toString()));
+                    XSLT + "controller.xsl").toString()));
 
         controllerXSL.setParameter("styles-url", odtStylesFile.toURI());
 
@@ -263,9 +263,9 @@ public class OdtTransformer /* implements ExternalChecker */ {
         listSettings = settings.getListStyles();
         headingSettings = settings.getHeadingStyles();
 
-        L10N_statusIndicatorStep1 = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("statusIndicatorStep1");
-        L10N_statusIndicatorStep2 = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("statusIndicatorStep2");
-        L10N_statusIndicatorStep3 = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("statusIndicatorStep3");
+        L10N_statusIndicatorStep1 = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1");
+        L10N_statusIndicatorStep2 = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2");
+        L10N_statusIndicatorStep3 = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3");
 
         DocumentBuilderFactory docFactory;
         DocumentBuilder docBuilder;
@@ -1332,7 +1332,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Create transformer
 
-        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "split-volumes.xsl").toString()));
+        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "split-volumes.xsl").toString()));
 
         // Set parameters
 
@@ -1433,7 +1433,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         // Create transformer
 
-        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "split-volumes.xsl").toString()));
+        Transformer splitVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "split-volumes.xsl").toString()));
 
         // Set parameters
 
@@ -1480,7 +1480,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             logger.entering("OdtTransformer","transform");
 
-            daisyFile = File.createTempFile(TMP_NAME, ".daisy.xml");
+            daisyFile = File.createTempFile(TMP_NAME, ".daisy.xml", TMP_DIR);
             daisyFile.deleteOnExit();
 
             ArrayList<String> languages = settings.getLanguages();
@@ -1532,8 +1532,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             // Create transformers
 
-            Transformer mainXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "main.xsl").toString()));
-            Transformer languagesAndTypefaceXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "languages-and-typeface.xsl").toString()));
+            Transformer mainXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "main.xsl").toString()));
+            Transformer languagesAndTypefaceXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "languages-and-typeface.xsl").toString()));
 
             // Set parameters
             
@@ -1598,10 +1598,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         if (usedLanguagesFile == null) {
 
-            usedLanguagesFile = File.createTempFile(TMP_NAME, ".languages.xml");
+            usedLanguagesFile = File.createTempFile(TMP_NAME, ".languages.xml", TMP_DIR);
             usedLanguagesFile.deleteOnExit();
 
-            Transformer languagesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-languages.xsl").toString()));
+            Transformer languagesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-languages.xsl").toString()));
 
             languagesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
@@ -1634,10 +1634,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         if (usedStylesFile == null) {
 
-            usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml");
+            usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
             usedStylesFile.deleteOnExit();
 
-            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-styles.xsl").toString()));
+            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
 
             stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
@@ -1703,10 +1703,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         if (usedStylesFile == null) {
 
-            usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml");
+            usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
             usedStylesFile.deleteOnExit();
 
-            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-styles.xsl").toString()));
+            Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
 
             stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
@@ -1781,10 +1781,10 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.entering("OdtTransformer","extractUnicodeBlocks");
 
-        File temp = File.createTempFile(TMP_NAME, ".unicodeblocks.xml");
+        File temp = File.createTempFile(TMP_NAME, ".unicodeblocks.xml", TMP_DIR);
         temp.deleteOnExit();
 
-        Transformer unicodeBlocksXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(xsltFolder + "get-unicodeblocks.xsl").toString()));
+        Transformer unicodeBlocksXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-unicodeblocks.xsl").toString()));
 
         unicodeBlocksXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         unicodeBlocksXSL.setOutputProperty(OutputKeys.METHOD, "xml");
@@ -1810,7 +1810,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 //
 //        logger.entering("OdtTransformer","getFlatOdtFile");
 //
-//        File flatOdtFile = File.createTempFile(TMP_NAME, ".odt.flat.xml");
+//        File flatOdtFile = File.createTempFile(TMP_PREFIX, ".odt.flat.xml", TMP_DIR);
 //        flatOdtFile.deleteOnExit();
 //        String flatOdtUrl = flatOdtFile.getAbsolutePath();
 //        OdtUtils odtutil = new OdtUtils();

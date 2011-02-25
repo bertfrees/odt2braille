@@ -66,6 +66,7 @@ import com.sun.star.awt.XItemEventBroadcaster;
 import com.sun.star.awt.XWindow;
 import com.sun.star.awt.XToolkit;
 
+import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
@@ -107,8 +108,8 @@ import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
 public class SettingsDialog implements XItemListener,
                                        XActionListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
-    private final static String L10N_BUNDLE = "be/docarch/odt2braille/ooo/l10n/Bundle";
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -371,10 +372,10 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphKeepEmptyCheckBox = "CheckBox9";
     private static String _paragraphKeepWithNextCheckBox = "CheckBox27";
     private static String _paragraphDontSplitCheckBox = "CheckBox28";
-    private static String _paragraphWidowControlCheckBox = "CheckBox31";
-    private static String _paragraphOrphanControlCheckBox = "CheckBox32";
-    private static String _paragraphWidowControlField = "NumericField16";
-    private static String _paragraphOrphanControlField  = "NumericField26";
+    private static String _paragraphWidowControlCheckBox = "CheckBox32";
+    private static String _paragraphOrphanControlCheckBox = "CheckBox31";
+    private static String _paragraphWidowControlField = "NumericField26";
+    private static String _paragraphOrphanControlField  = "NumericField16";
 
     private static String _paragraphStyleLabel = "Label83";
     private static String _paragraphInheritLabel = "Label84";
@@ -387,8 +388,8 @@ public class SettingsDialog implements XItemListener,
     private static String _paragraphKeepEmptyLabel = "Label14";
     private static String _paragraphKeepWithNextLabel = "Label70";
     private static String _paragraphDontSplitLabel = "Label71";
-    private static String _paragraphWidowControlLabel = "Label88";
-    private static String _paragraphOrphanControlLabel = "Label92";
+    private static String _paragraphWidowControlLabel = "Label92";
+    private static String _paragraphOrphanControlLabel = "Label88";
 
     private String L10N_paragraphStyleLabel = null;
     private String L10N_paragraphInheritLabel = null;
@@ -820,7 +821,7 @@ public class SettingsDialog implements XItemListener,
         }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/SettingsDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/SettingsDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
@@ -2695,10 +2696,10 @@ public class SettingsDialog implements XItemListener,
         paragraphKeepEmptyCheckBoxProperties.setPropertyValue("Enabled", !inherit);
         paragraphKeepWithNextCheckBoxProperties.setPropertyValue("Enabled", !inherit);
         paragraphDontSplitCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getKeepWithNext());
-        paragraphWidowControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
-        paragraphOrphanControlCheckBoxProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit());
-        paragraphWidowControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit() && style.getWidowControlEnabled());
-        paragraphOrphanControlFieldProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit()&& style.getOrphanControlEnabled());
+        paragraphWidowControlCheckBoxProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit());
+        paragraphOrphanControlCheckBoxProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit());
+        paragraphWidowControlFieldProperties.setPropertyValue("Enabled", false && !inherit && !style.getDontSplit() && style.getWidowControlEnabled());
+        paragraphOrphanControlFieldProperties.setPropertyValue("Enabled", !inherit && !style.getDontSplit()&& style.getOrphanControlEnabled());
 
     }
 

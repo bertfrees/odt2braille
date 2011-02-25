@@ -43,13 +43,17 @@ import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
 
+import be.docarch.odt2braille.Constants;
+
+
 /**
  *
  * @author freesb
  */
 public class PostTranslationDialog implements XActionListener {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N = Constants.OOO_L10N_PATH;
 
     private PreviewDialog preview = null;
     private XDialog dialog = null;
@@ -87,13 +91,13 @@ public class PostTranslationDialog implements XActionListener {
 
         L10N_windowTitle = "Succes";
         L10N_message = "The document was succesfully translated into Braille.";
-        L10N_previewButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("previewButton");
-        L10N_okButton = ResourceBundle.getBundle("be/docarch/odt2braille/ooo/l10n/Bundle", oooLocale).getString("continueButton");
+        L10N_previewButton = ResourceBundle.getBundle(L10N, oooLocale).getString("previewButton");
+        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("continueButton");
 
         // Make dialog
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
-        String dialogUrl = xPkgInfo.getPackageLocation("be.docarch.odt2braille.ooo.odt2brailleaddon") + "/dialogs/PostTranslationDialog.xdl";
+        String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PostTranslationDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         XControlContainer dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);

@@ -149,49 +149,59 @@ Localisation:
 
 
 =============================
-Version ?
+Version 0.1.0
 =============================
 
-* New embossers:
+Changes/Updates:
 
+
+* Improved handling of notes (note references with special number formats)
+* odt2braille fonts: updated (version 1.2)
+
+
+New features:
+
+* New embossers:
 ** Index Basic-S V2
 ** Index 4X4 Pro V2
 ** Index 4X4 Pro V3
 ** Index 4Waves Pro V3
 
-
 * New user preferences:
-
 ** Volume info / transcription info:
-	- use paragraph style
+*** Use paragraph style
 ** Paragraphs / headings:
-	- keep with next
-	- don't split
-	- widow control
+*** Keep with next
+*** Don't split
+*** Orphan control
 ** Lists:
-	- don't split list
-	- don't splits items
+*** Don't split list
+*** Don't split items
 ** Tables:
-	- don't split rows
-	
+*** Don't split rows
 	
 * New embossing options:
-
 ** Number of copies
 ** Magazine style
 ** Z-Folding
 
 
-* Translation tables:
-
-** Woluwe math improved
+Translation tables:
 
 
-* Bug fixes:
-
-** Some list numbering bugs
-** Page numbering bug
-** Custom paper
+* Woluwe math improved
 
 
-* odt2braille fonts: updated (version 1.2)
+Fixed bugs:
+
+
+* Some list numbering bugs
+* Page numbering bug
+* Custom paper format
+
+
+Localisation:
+
+
+* Swedish
+

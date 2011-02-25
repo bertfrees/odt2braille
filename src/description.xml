@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Release Number -->
-    <version value="0.0.3"/>
+    <version value="0.1.0"/>
     <!-- Platform Target (set with ANT) -->
     <platform value="@platform-oxt@"/>
     <!-- Identifier -->
@@ -24,7 +24,6 @@
         <!-- <src xlink:href="description/desc_cs.txt"    lang="cs" /> -->
         <!-- <src xlink:href="description/desc_da.txt"    lang="da" /> -->
         <!-- <src xlink:href="description/desc_is.txt"    lang="is" /> -->
-        <!-- <src xlink:href="description/desc_sv.txt"    lang="sv" /> -->
         <src lang="en" xlink:href="description/desc_en.txt"/>
         <src lang="ca" xlink:href="description/desc_ca.txt"/>
         <src lang="de" xlink:href="description/desc_de.txt"/>
@@ -36,6 +35,7 @@
         <src lang="pt" xlink:href="description/desc_pt.txt"/>
         <src lang="pt-BR" xlink:href="description/desc_pt-BR.txt"/>
         <src lang="sl" xlink:href="description/desc_sl.txt"/>
+        <src lang="sv" xlink:href="description/desc_sv.txt"/>
     </extension-description>
     <!-- Extension Dialog Icon -->
     <icon>

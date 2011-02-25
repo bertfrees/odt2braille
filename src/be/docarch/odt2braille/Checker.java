@@ -47,7 +47,9 @@ import be.docarch.odt2braille.Volume.VolumeType;
  */
 public class Checker {
 
-    private final static Logger logger = Logger.getLogger("be.docarch.odt2braille");
+    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static String L10N = Constants.L10N_PATH;
+
     private Settings settings = null;
     private OdtTransformer odtTransformer = null;
     private static NamespaceContext namespace = new NamespaceContext();
@@ -113,27 +115,27 @@ public class Checker {
         this.settings = settings;
         this.odtTransformer = odtTransformer;
 
-        L10N_warning = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("checkerWarning");
-        L10N_question = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("checkerQuestion");
-        L10N_details = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("checkerDetails");
+        L10N_warning = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerWarning");
+        L10N_question = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerQuestion");
+        L10N_details = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerDetails");
 
-        L10N_noPreliminaryPages = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("noPreliminaryPagesWarning");
-        L10N_noTitlePage = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("noTitlePageWarning");
-        L10N_noHeadings = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("noHeadingsWarning");
-        L10N_tablesWithoutHeading = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("tablesWithoutHeadingWarning");
-        L10N_tablesWithMergedCells = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("tablesWithColOrRowSpanWarning");
-        L10N_imagesWithoutTitleOrAltDescription = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("imagesWithoutTitleOrAltDescriptionWarning");
-        L10N_volumesTooLong = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("volumesTooLongWarning");
-        L10N_volumesTooShort = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("volumesTooShortWarning");
-        L10N_volumesDifferTooMuch = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("volumesDifferTooMuchWarning");
-        L10N_preliminaryVolumeRequired = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("preliminaryVolumeRequiredWarning");
-        L10N_preliminaryVolumeTooShort = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("preliminaryVolumeTooShortWarning");
-        L10N_volumeDoesntBeginWithHeading = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("volumeDoesntBeginWithHeadingWarning");
-        L10N_omissionsInsideVolume = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("omissionsInsideVolumeWarning");
-        L10N_omissionsOutsideVolume = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("omissionsOutsideVolumeWarning");
-        L10N_transpositions = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("transpositionsWarning");
-        L10N_tocNotReplaced = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("tocNotReplacedWarning");
-        L10N_pageWidthTooSmall = ResourceBundle.getBundle("be/docarch/odt2braille/l10n/Bundle", oooLocale).getString("pageWidthTooSmallWarning");
+        L10N_noPreliminaryPages = ResourceBundle.getBundle(L10N, oooLocale).getString("noPreliminaryPagesWarning");
+        L10N_noTitlePage = ResourceBundle.getBundle(L10N, oooLocale).getString("noTitlePageWarning");
+        L10N_noHeadings = ResourceBundle.getBundle(L10N, oooLocale).getString("noHeadingsWarning");
+        L10N_tablesWithoutHeading = ResourceBundle.getBundle(L10N, oooLocale).getString("tablesWithoutHeadingWarning");
+        L10N_tablesWithMergedCells = ResourceBundle.getBundle(L10N, oooLocale).getString("tablesWithColOrRowSpanWarning");
+        L10N_imagesWithoutTitleOrAltDescription = ResourceBundle.getBundle(L10N, oooLocale).getString("imagesWithoutTitleOrAltDescriptionWarning");
+        L10N_volumesTooLong = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesTooLongWarning");
+        L10N_volumesTooShort = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesTooShortWarning");
+        L10N_volumesDifferTooMuch = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesDifferTooMuchWarning");
+        L10N_preliminaryVolumeRequired = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminaryVolumeRequiredWarning");
+        L10N_preliminaryVolumeTooShort = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminaryVolumeTooShortWarning");
+        L10N_volumeDoesntBeginWithHeading = ResourceBundle.getBundle(L10N, oooLocale).getString("volumeDoesntBeginWithHeadingWarning");
+        L10N_omissionsInsideVolume = ResourceBundle.getBundle(L10N, oooLocale).getString("omissionsInsideVolumeWarning");
+        L10N_omissionsOutsideVolume = ResourceBundle.getBundle(L10N, oooLocale).getString("omissionsOutsideVolumeWarning");
+        L10N_transpositions = ResourceBundle.getBundle(L10N, oooLocale).getString("transpositionsWarning");
+        L10N_tocNotReplaced = ResourceBundle.getBundle(L10N, oooLocale).getString("tocNotReplacedWarning");
+        L10N_pageWidthTooSmall = ResourceBundle.getBundle(L10N, oooLocale).getString("pageWidthTooSmallWarning");
 
         L10N_eightDotsNotSupported = (settings.exportOrEmboss?
                                             "The " + settings.getBrailleFileType().name() + " file format ":
