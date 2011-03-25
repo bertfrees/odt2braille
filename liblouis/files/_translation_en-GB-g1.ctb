@@ -5,13 +5,18 @@ letsign 56
 capsign 6
 begcaps 6-6
 endcaps 6-3
-begital 46
-endital 46-3
 begbold 46-46
 endbold 46-3
 begcomp 6-346
 endcomp 6-346
 
+# Italic
+italsign 46
+firstwordital 46-46
+# lastworditalafter 46-3
+lenitalphrase 4
+firstletterital 46-2
+lastletterital 46-3
 
 # the decimal digits
 litdigit 1 1

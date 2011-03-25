@@ -30,6 +30,7 @@ public class ListStyle extends Style {
     protected ListStyle parentLevel;
     protected boolean dontSplitItems;
     protected String prefix;
+    protected int linesBetween;
 
 
     public ListStyle(ListStyle copyStyle) {
@@ -39,6 +40,7 @@ public class ListStyle extends Style {
         this.parentLevel = copyStyle.parentLevel;
         this.dontSplitItems = copyStyle.dontSplitItems;
         this.prefix = copyStyle.prefix;
+        this.linesBetween = copyStyle.linesBetween;
     
     }
 
@@ -49,17 +51,20 @@ public class ListStyle extends Style {
         this.parentLevel = null;
         this.dontSplitItems = false;
         this.prefix = "";
+        this.linesBetween = 0;
         
     }
 
     public void setParentLevel    (ListStyle parentLevel)   { if (parentLevel != null) { this.parentLevel = parentLevel; }}
     public void setDontSplitItems (boolean dontSplitItems)  { this.dontSplitItems = dontSplitItems; }
     public void setPrefix         (String prefix)           { this.prefix = prefix; }
+    public void setLinesBetween   (int linesBetween)        { if (linesBetween >= 0) { this.linesBetween = linesBetween; }}
 
     public int       getLevel()           { return level; }
     public ListStyle getParentLevel()     { return parentLevel; }
     public boolean   getDontSplitItems()  { return getDontSplit() || dontSplitItems; }
     public String    getPrefix()          { return prefix; }
+    public int       getLinesBetween()    { return linesBetween; }
 
     @Override public boolean  getDontSplit() { return (parentLevel!=null)?dontSplit || parentLevel.getDontSplitItems():dontSplit; }
 

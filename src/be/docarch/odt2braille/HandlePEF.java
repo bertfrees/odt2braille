@@ -42,12 +42,6 @@ import org_pef_text.pef2text.PEFParser;
 import org_pef_text.pef2text.EmbosserFactoryException;
 import org_pef_text.pef2text.UnsupportedWidthException;
 
-//import com_indexbraille.BlueBarEmbosser;
-//import org.daisy.braille.embosser.EmbosserWriter;
-//import org.daisy.braille.pef.PEFHandler.Alignment;
-//import org_pef_text.pef2text.Paper.PaperSize;
-//import org_pef_text.pef2text.Paper;
-
 
 /**
  * This class handles the processing of a .pef file.
@@ -123,7 +117,7 @@ public class HandlePEF {
         File[] outputFiles;
         File[] pefFiles;
             
-        if (settings.getMultipleFiles()) {
+        if (settings.getMultipleFilesEnabled()) {
             pefFiles = pef.getPEFs();
         } else {
             pefFiles = new File[] { pef.getSinglePEF() };
@@ -198,20 +192,6 @@ public class HandlePEF {
 
         logger.entering("HandlePEF", "embossToFile");
 
-//        if (settings.getEmbosser() == EmbosserType.INDEX_BASIC_BLUE_BAR) {
-//
-//            BlueBarEmbosser embosser = new BlueBarEmbosser("", "");
-//            EmbosserWriter writer = embosser.newEmbosserWriter(new FileOutputStream(output));
-//            org.daisy.braille.pef.PEFHandler.Builder b = new org.daisy.braille.pef.PEFHandler.Builder(writer)
-//                      .range(null)
-//                      .align(Alignment.INNER)
-//                      .offset(offset)
-//                      .topOffset(topOffset);
-//
-//            org.daisy.braille.ui.PEFParser.parse(pef.getSinglePEF(), b.build());
-//
-//        }
-
         EmbosserFactory ef = new EmbosserFactory(settings);
         ef.setNumberOfCopies(numberOfCopies);
         ef.setPageCount(getPageCount());
@@ -222,6 +202,7 @@ public class HandlePEF {
         switch (settings.getEmbosser()) {
 
             /* Margins not in header (or configuration file) */
+            case NONE:
             case INDEX_BASIC_BLUE_BAR:
             case INDEX_BASIC_S_V2:
             case INDEX_BASIC_D_V2:
@@ -230,6 +211,9 @@ public class HandlePEF {
             case BRAILLO_200:
             case BRAILLO_400_S:
             case BRAILLO_400_SR:
+            case IMPACTO_600:
+            case IMPACTO_TEXTO:
+            case PORTATHIEL_BLUE:
                 offset = settings.getMarginInner();
                 topOffset = settings.getMarginTop();
                 break;
@@ -239,15 +223,11 @@ public class HandlePEF {
             case INDEX_EVEREST_D_V3:
             case INDEX_4X4_PRO_V3:
             case INDEX_4WAVES_PRO_V3:
-            case IMPACTO_600:
-            case IMPACTO_TEXTO:
-            case PORTATHIEL_BLUE:
             case INTERPOINT_55:
             default:
                 offset = 0;
                 topOffset = 0;
                 break;
-
         }
 
         AbstractEmbosser embosserObj = ef.newEmbosser(new FileOutputStream(output));

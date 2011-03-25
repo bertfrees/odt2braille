@@ -101,7 +101,4 @@ public class ParagraphStyle extends Style {
     @Override public int       getMarginLeftRight() { return inherit?parentStyle.getMarginLeftRight():marginLeftRight; }
     @Override public int       getLinesAbove()      { return inherit?parentStyle.getLinesAbove():linesAbove; }
     @Override public int       getLinesBelow()      { return inherit?parentStyle.getLinesBelow():linesBelow; }
-    @Override public int       getLinesBetween()    { return inherit?parentStyle.getLinesBetween():linesBetween; }
-
-
 }

@@ -39,37 +39,38 @@ Copyright (C) 2010 by DocArch `http://www.docarch.be'.
 <body>
 <div id="guide-container"><h1>User Guide</h1>
 
-   <div class="contents">
+<div class="contents">
 <h2>Table of Contents</h2>
 <ul>
 <li><a name="toc_Top" href="#Top">Getting Started</a>
-<li><a name="toc_Quick-Guide" href="#Quick-Guide">1 Quick Guide</a>
-<li><a name="toc_Advanced-Guide" href="#Advanced-Guide">2 Advanced Guide</a>
+<li><a name="toc_Authoring-Braille" href="#Authoring-Braille">1 Authoring Braille</a>
 <ul>
-<li><a href="#Languages">2.1 Languages</a>
-<li><a href="#Paragraphs">2.2 Paragraphs</a>
-<li><a href="#Headings">2.3 Headings</a>
-<li><a href="#Lists">2.4 Lists</a>
-<li><a href="#Tables">2.5 Tables</a>
-<li><a href="#Textboxes">2.6 Textboxes</a>
-<li><a href="#Images">2.7 Images</a>
-<li><a href="#Captions">2.8 Captions</a>
-<li><a href="#Notes">2.9 Notes</a>
-<li><a href="#Special-Typeface">2.10 Special Typeface</a>
-<li><a href="#Page-Numbering">2.11 Page Numbering</a>
-<li><a href="#Preliminary-Pages">2.12 Preliminary Pages</a>
-<li><a href="#Volume-Management">2.13 Volume Management</a>
-<li><a href="#Title-Page">2.14 Title Page</a>
-<li><a href="#List-of-Special-Symbols">2.15 List of Special Symbols</a>
-<li><a href="#Transcriber_0027s-Notes">2.16 Transcriber's Notes</a>
-<li><a href="#Table-of-Contents">2.17 Table of Contents</a>
-<li><a href="#Bibliographies">2.18 Bibliographies</a>
-<li><a href="#Mathematics">2.19 Mathematics</a>
-<li><a href="#Inserting-Literal-Braille">2.20 Inserting Literal Braille</a>
-<li><a href="#Braille_002donly-Material">2.21 Braille-only Material</a>
-<li><a href="#Hyphenation">2.22 Hyphenation</a>
-<li><a href="#Templates">2.23 Templates</a>
+<li><a href="#Languages">1.1 Languages</a>
+<li><a href="#Paragraphs">1.2 Paragraphs</a>
+<li><a href="#Headings">1.3 Headings</a>
+<li><a href="#Lists">1.4 Lists</a>
+<li><a href="#Tables">1.5 Tables</a>
+<li><a href="#Textboxes">1.6 Textboxes</a>
+<li><a href="#Images">1.7 Images</a>
+<li><a href="#Captions">1.8 Captions</a>
+<li><a href="#Notes">1.9 Notes</a>
+<li><a href="#Special-Typeface">1.10 Special Typeface</a>
+<li><a href="#Page-Numbering">1.11 Page Numbering</a>
+<li><a href="#Preliminary-Pages">1.12 Preliminary Pages</a>
+<li><a href="#Volume-Management">1.13 Volume Management</a>
+<li><a href="#Title-Page">1.14 Title Page</a>
+<li><a href="#List-of-Special-Symbols">1.15 List of Special Symbols</a>
+<li><a href="#Transcriber_0027s-Notes">1.16 Transcriber's Notes</a>
+<li><a href="#Table-of-Contents">1.17 Table of Contents</a>
+<li><a href="#Bibliographies">1.18 Bibliographies</a>
+<li><a href="#Mathematics">1.19 Mathematics</a>
+<li><a href="#Inserting-Literal-Braille">1.20 Inserting Literal Braille</a>
+<li><a href="#Braille_002donly-Material">1.21 Braille-only Material</a>
+<li><a href="#Hyphenation">1.22 Hyphenation</a>
+<li><a href="#Templates">1.23 Templates</a>
 </li></ul>
+<li><a name="toc_Embossing-Braille" href="#Embossing-Braille">2 Embossing Braille</a>
+<li><a name="toc_Exporting-Braille" href="#Exporting-Braille">3 Exporting Braille</a>
 </li></ul>
 </div>
 
@@ -117,9 +118,7 @@ installation package and follow the steps. You can download the latest version f
 <em>.zip</em> file. In this case, just rename the file back to <em>.oxt</em>. 
 </blockquote>
 
-   <p>It is strongly recommended that you also download and install the SimBraille font from Duxbury Systems at
-<a href="http://www.duxburysystems.com/product2.asp?product=The%20Braille%20TrueType%20Fonts&amp;level=free&amp;action=pur"">http://www.duxburysystems.com/product2.asp?product=The%20Braille%20TrueType%20Fonts&amp;level=free&amp;action=pur"</a>. As
-of version 0.0.3, odtbraille will use his own <em>odt2braille fonts</em> instead:
+   <p>It is strongly recommended that you also download and install the <em>odt2braille fonts</em>:
 <a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf</a> for 6-dot
 Braille and <a href="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille8.ttf">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille8.ttf</a>
 for 8-dot Braille.
@@ -148,8 +147,7 @@ etcetera you use the extension).
 <h3 class="heading">Introduction</h3>
 
 <p>This guide explains how to create a document in OpenOffice.org Writer and prepare it for Braille
-production. Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find
-a more comprehensive reference. You can find more help on working with Writer at
+production. You can find more help on working with Writer at
 <a href="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide</a>.
 
    <p>After installing odt2braille, a whole new range of user preferences will become available. 
@@ -164,21 +162,15 @@ simplify the production of valid and well-formatted Braille.
 
    <p>What follows next is a detailed overview of all possibilities odt2braille offers.
 
-<p><a name="Quick-Guide"></a>
+<p><a name="Authoring-Braille"></a>
 
-<h2 class="chapter">1 Quick Guide</h2>
-
-<p>Quick guide
-
-<p><a name="Advanced-Guide"></a>
-
-<h2 class="chapter">2 Advanced Guide</h2>
+<h2 class="chapter">1 Authoring Braille</h2>
 
 <p>	<a name="Languages"></a>
 
    <p>	
 
-<h3 class="section">2.1 Languages</h3>
+<h3 class="section">1.1 Languages</h3>
 
 <p>		
 
@@ -202,7 +194,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.2 Paragraphs</h3>
+<h3 class="section">1.2 Paragraphs</h3>
 
 <p>		
 
@@ -256,7 +248,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.3 Headings</h3>
+<h3 class="section">1.3 Headings</h3>
 
 <p>		
 
@@ -339,7 +331,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.4 Lists</h3>
+<h3 class="section">1.4 Lists</h3>
 
 <p>		
 
@@ -400,7 +392,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.5 Tables</h3>
+<h3 class="section">1.5 Tables</h3>
 
 <p>		
 
@@ -488,7 +480,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.6 Textboxes</h3>
+<h3 class="section">1.6 Textboxes</h3>
 
 <p>		
 
@@ -557,7 +549,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.7 Images</h3>
+<h3 class="section">1.7 Images</h3>
 
 <p>		
 
@@ -637,7 +629,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.8 Captions</h3>
+<h3 class="section">1.8 Captions</h3>
 
 <p>		
 
@@ -687,7 +679,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.9 Notes</h3>
+<h3 class="section">1.9 Notes</h3>
 
 <p>		
 
@@ -753,7 +745,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.10 Special Typeface</h3>
+<h3 class="section">1.10 Special Typeface</h3>
 
 <p>		
 
@@ -794,7 +786,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.11 Page Numbering</h3>
+<h3 class="section">1.11 Page Numbering</h3>
 
 <p>		
 
@@ -856,7 +848,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.12 Preliminary Pages</h3>
+<h3 class="section">1.12 Preliminary Pages</h3>
 
 <p>		Preliminary pages are those pages that precede the actual text of the document. These can include for example
 		a title page, a special symbols page, a transcriber's note page, cover material, about the author, a dedication,
@@ -918,7 +910,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.13 Volume Management</h3>
+<h3 class="section">1.13 Volume Management</h3>
 
 <p>		Often, because documents are too long to be bound in one single Braille book, they are arranged in <em>volumes</em>. 
 		<blockquote>
@@ -976,7 +968,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.14 Title Page</h3>
+<h3 class="section">1.14 Title Page</h3>
 
 <p>		
 
@@ -1032,7 +1024,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.15 List of Special Symbols</h3>
+<h3 class="section">1.15 List of Special Symbols</h3>
 
 <p>		
 
@@ -1086,7 +1078,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.16 Transcriber's Notes</h3>
+<h3 class="section">1.16 Transcriber's Notes</h3>
 
 <p>		A transcriber's note is a note that is added in the Braille edition by the transcriber but not
 		shown in the print text. Some notes are inserted between other items in the document body,
@@ -1128,7 +1120,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.17 Table of Contents</h3>
+<h3 class="section">1.17 Table of Contents</h3>
 
 <p>		
 
@@ -1192,7 +1184,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.18 Bibliographies</h3>
+<h3 class="section">1.18 Bibliographies</h3>
 
 <p>		
 
@@ -1235,7 +1227,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.19 Mathematics</h3>
+<h3 class="section">1.19 Mathematics</h3>
 
 <p>		
 
@@ -1266,7 +1258,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.20 Inserting Literal Braille</h3>
+<h3 class="section">1.20 Inserting Literal Braille</h3>
 
 <p>			
      <ul>
@@ -1296,7 +1288,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.21 Braille-only Material</h3>
+<h3 class="section">1.21 Braille-only Material</h3>
 
 <p>			
      <ul>
@@ -1316,7 +1308,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.22 Hyphenation</h3>
+<h3 class="section">1.22 Hyphenation</h3>
 
 <p>			
      <ul>
@@ -1340,7 +1332,7 @@ simplify the production of valid and well-formatted Braille.
 
    <p>	
 
-<h3 class="section">2.23 Templates</h3>
+<h3 class="section">1.23 Templates</h3>
 
 <p>			
      <ul>
@@ -1353,7 +1345,35 @@ simplify the production of valid and well-formatted Braille.
 				[<em>File &gt; New &gt; Templates and Documents &gt; Templates &gt; Braille Documents</em>]. 
 			</ul>
 
-   <p></div>
+<p><a name="Embossing-Braille"></a>
+
+<h2 class="chapter">2 Embossing Braille</h2>
+
+<p>	To print a document on a Braille embosser, call the <em>Emboss...</em> window from the <em>File</em> menu,
+	right beneath <em>Print...</em>.
+
+   <p>	
+     <ul>
+		<li>		Select your embosser from the dropdown list. If your embosser is not supported, please contact us
+		and we will add it if possible. You can request features at
+		<a href="http://sourceforge.net/tracker/?func=add&amp;group_id=330251&amp;atid=1385420">http://sourceforge.net/tracker/?func=add&amp;group_id=330251&amp;atid=1385420</a>. 
+		<li>		Check that your embosser is powered on and loaded with paper. Specify the paper size in the dialog. 
+		If the paper is not in the list, define a "<em>Custom</em>" paper size. 
+		<li>		Depending on the type of embosser, you can choose between single- or double-sided printing, and
+		between a 6- or 8-dot matrix. In addition, some embossers have special features like
+		<em>Character set selection</em>, <em>Magazine style</em> and <em>Z-folding</em>. 
+		<li>		Finally, select the number of characters per line, the number of lines per page and the margins. 
+	</ul>
+
+   <p>	Pressing the <em>Emboss</em> button will trigger the transcription process. When the document is succesfully
+	translated, you are given the option to "<em>Preview</em>" the Braille output before printing, or go on and
+	print the document immediately.
+
+<p><a name="Exporting-Braille"></a>
+
+<h2 class="chapter">3 Exporting Braille</h2>
+
+<p></div>
 
 </body></html>
 

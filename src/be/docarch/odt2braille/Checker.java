@@ -20,7 +20,7 @@
 package be.docarch.odt2braille;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import java.net.MalformedURLException;
 import java.io.IOException;
 
-import be.docarch.odt2braille.Volume.VolumeType;
 
 /**
  * With this class a document can be checked for possible accessibility issues.
@@ -199,63 +198,63 @@ public class Checker {
      *                                  {@link VolumeType#SUPPLEMENTARY}).
      *
      */
-    public void checkVolumes(ArrayList<Volume> volumes) {
+    public void checkVolumes(List<Volume> volumes) {
 
         logger.entering("Checker", "checkVolumes");
 
-        int bodyRectoVersoPageCount = 0;
-        int preliminaryRectoVersoPageCount = 0;
-        int maxLength = 0;
-        int minLength = Integer.MAX_VALUE;
-        int length = 0;
-
-        Volume volume;
-        VolumeType type;
-        int volumeNr;
-        int numberOfBodyPages;
-        int numberOfPreliminaryPages;
-
-        for (int i=0;i<volumes.size();i++) {
-
-            volume = volumes.get(i);
-            type = volume.getType();
-            volumeNr = volume.getNumber();
-            numberOfBodyPages = volume.getLastBraillePage() - volume.getFirstBraillePage() + 1;
-            numberOfPreliminaryPages = volume.getNumberOfPreliminaryPages();
-
-            bodyRectoVersoPageCount = settings.getDuplex()?(int)Math.ceil(numberOfBodyPages/2):numberOfBodyPages;
-            preliminaryRectoVersoPageCount = settings.getDuplex()?(int)Math.ceil(numberOfPreliminaryPages/2):numberOfPreliminaryPages;
-            length = preliminaryRectoVersoPageCount + bodyRectoVersoPageCount;
-
-            switch (type) {
-                case PRELIMINARY:
-                    if (length < MIN_VOLUME_LENGTH) {
-                        preliminaryVolumeTooShort = true;
-                    }
-                    break;
-                case NORMAL:
-                    if (volumeNr == 1 && numberOfPreliminaryPages > MAX_VOLUME_LENGTH) {
-                        preliminaryVolumeRequired = true;
-                    }
-                    if (length > MAX_VOLUME_LENGTH) {
-                        volumesTooLong = true;
-                    }
-                    maxLength = Math.max(maxLength, length);
-                    if (volumeNr < settings.NUMBER_OF_VOLUMES) {
-                        if (length < MIN_VOLUME_LENGTH) {
-                            volumesTooShort = true;
-                        }
-                        minLength = Math.min(minLength, length);
-                    }
-                    break;
-                case SUPPLEMENTARY:
-                default:
-            }
-        }
-
-        if (settings.NUMBER_OF_VOLUMES > 1 && maxLength > minLength + MAX_VOLUME_DIFFERENCE) {
-            volumesDifferTooMuch = true;
-        }
+//        int bodyRectoVersoPageCount = 0;
+//        int preliminaryRectoVersoPageCount = 0;
+//        int maxLength = 0;
+//        int minLength = Integer.MAX_VALUE;
+//        int length = 0;
+//
+//        Volume volume;
+//        Volume.Type type;
+//        int volumeNr;
+//        int numberOfBodyPages;
+//        int numberOfPreliminaryPages;
+//
+//        for (int i=0;i<volumes.size();i++) {
+//
+//            volume = volumes.get(i);
+//            type = volume.getType();
+//            volumeNr = volume.getNumber();
+//            numberOfBodyPages = volume.getLastBraillePage() - volume.getFirstBraillePage() + 1;
+//            numberOfPreliminaryPages = volume.getNumberOfPreliminaryPages();
+//
+//            bodyRectoVersoPageCount = settings.getDuplex()?(int)Math.ceil(numberOfBodyPages/2):numberOfBodyPages;
+//            preliminaryRectoVersoPageCount = settings.getDuplex()?(int)Math.ceil(numberOfPreliminaryPages/2):numberOfPreliminaryPages;
+//            length = preliminaryRectoVersoPageCount + bodyRectoVersoPageCount;
+//
+//            switch (type) {
+//                case PRELIMINARY:
+//                    if (length < MIN_VOLUME_LENGTH) {
+//                        preliminaryVolumeTooShort = true;
+//                    }
+//                    break;
+//                case NORMAL:
+//                    if (volumeNr == 1 && numberOfPreliminaryPages > MAX_VOLUME_LENGTH) {
+//                        preliminaryVolumeRequired = true;
+//                    }
+//                    if (length > MAX_VOLUME_LENGTH) {
+//                        volumesTooLong = true;
+//                    }
+//                    maxLength = Math.max(maxLength, length);
+//                    if (volumeNr < settings.NUMBER_OF_VOLUMES) {
+//                        if (length < MIN_VOLUME_LENGTH) {
+//                            volumesTooShort = true;
+//                        }
+//                        minLength = Math.min(minLength, length);
+//                    }
+//                    break;
+//                case SUPPLEMENTARY:
+//                default:
+//            }
+//        }
+//
+//        if (settings.NUMBER_OF_VOLUMES > 1 && maxLength > minLength + MAX_VOLUME_DIFFERENCE) {
+//            volumesDifferTooMuch = true;
+//        }
     }
 
     /**

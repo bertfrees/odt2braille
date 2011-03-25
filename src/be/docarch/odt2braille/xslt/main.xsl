@@ -52,7 +52,7 @@
         xmlns:o2b="http://odt2braille.sf.net"
 
         exclude-result-prefixes="o2b dtb exsl office style dom xforms xsi xsd text table draw fo
-                                 xlink number svg chart dr3d math form script dc meta xalan" >
+                                 xlink number svg chart dr3d math form script dc meta xalan rdf ns1" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
@@ -63,7 +63,11 @@
 
         <!-- XSLT Parameters  -->
 
-        <xsl:param name="paramNoteSectionTitle"           as="xsd:string"   select="'NOTES'"    />
+        <xsl:param name="paramVolumeManagementMode"       as="xsd:string"  select="'SINGLE'"  />
+
+        <xsl:param name="paramAutoVolumeBoundaries"       as="xsd:integer*"  />
+        <xsl:param name="paramAutoVolumeIds"              as="xsd:string*"   />
+
         <xsl:param name="paramColumnDelimiter"            as="xsd:string"   select='"&#x2806;"' />
 
         <xsl:param name="paramStairstepTableEnabled"      as="xsd:boolean"  select="false()"  />
@@ -78,6 +82,15 @@
         <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberPrefixes"      as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberFormats"       as="xsd:string*"  />
+
+        <xsl:param name="paramTocUptoLevel"               as="xsd:integer"  select="2" />
+
+        <xsl:param name="paramTableUpperBorder"           as="xsd:boolean"  select="false()" />
+        <xsl:param name="paramTableLowerBorder"           as="xsd:boolean"  select="false()" />
+        <xsl:param name="paramFrameUpperBorder"           as="xsd:boolean"  select="false()" />
+        <xsl:param name="paramFrameLowerBorder"           as="xsd:boolean"  select="false()" />
+        <xsl:param name="paramHeadingUpperBorder"         as="xsd:boolean*" select="(false(),false(),false(),false(),false(),false(),false(),false(),false(),false())" />
+        <xsl:param name="paramHeadingLowerBorder"         as="xsd:boolean*" select="(false(),false(),false(),false(),false(),false(),false(),false(),false(),false())" />
 
         <!-- Global variables  -->
 
@@ -128,190 +141,45 @@ DOCUMENT ROOT
             <dtb:book>
 
                 <!-- FRONTMATTER -->
-                <xsl:if test="$body/office:text/text:section[@text:name='PreliminaryPages']">
-                    <dtb:frontmatter>
+                <dtb:frontmatter>                    
+                    <xsl:variable name="frontmatter-section" as="xsd:string">
+                        <xsl:call-template name="get-frontmatter-section" />
+                    </xsl:variable>                    
+                    <xsl:if test="string-length($frontmatter-section)>0">
                         <xsl:apply-templates mode="toplevel"
-                                             select="$body/office:text/text:section[@text:name='PreliminaryPages'][1]" />
-                    </dtb:frontmatter>
-                </xsl:if>
+                                             select="$body/office:text//text:section[@text:name=$frontmatter-section][1]">
+                            <xsl:with-param name="frontmatter" select="true()" />
+                        </xsl:apply-templates>
+                    </xsl:if>
+                </dtb:frontmatter>
 
                 <!-- BODYMATTER -->
                 <dtb:bodymatter>
                     <xsl:choose>
-                        <xsl:when test="$body/office:text/text:section[@text:name='PreliminaryPages']">
-                            <xsl:call-template name="bodymatter">
-                                <xsl:with-param name="currentNode" select="$body/office:text/text:section[@text:name='PreliminaryPages']" />
-                            </xsl:call-template>
+                        <xsl:when test="$paramVolumeManagementMode='SINGLE'">
+                            <dtb:volume>
+                                <xsl:apply-templates mode="toplevel"
+                                                     select="$body/office:text/text:sequence-decls/following-sibling::*">
+                                    <xsl:with-param name="volume" select="true()" />
+                                </xsl:apply-templates>
+                            </dtb:volume>
                         </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:call-template name="bodymatter" />
-                        </xsl:otherwise>
+                        <xsl:when test="$paramVolumeManagementMode='MANUAL'">
+                            <xsl:apply-templates mode="toplevel"
+                                                 select="$body/office:text/text:sequence-decls/following-sibling::*">
+                                <xsl:with-param name="volume" select="true()" />
+                            </xsl:apply-templates>
+                        </xsl:when>
+                        <xsl:when test="$paramVolumeManagementMode='AUTOMATIC'">
+                            
+                        </xsl:when>
+                        <xsl:otherwise />
                     </xsl:choose>
                 </dtb:bodymatter>
             </dtb:book>
         </dtb:dtbook>
 
         <xsl:value-of select="'&#10;'" />
-    </xsl:template>
-
-    <!--
-==========
-BODYMATTER
-==========
-    -->
-
-    <xsl:template name="bodymatter">
-        <xsl:param name="currentNode" select="$body/office:text/text:sequence-decls[1]" />
-        <xsl:param name="supplement"  select="false()" as="xsd:boolean" />
-        <xsl:param name="volumeNr"    select="1"       as="xsd:integer" />
-
-        <xsl:variable name="sectionName">
-            <xsl:choose>
-                <xsl:when test="$supplement">
-                    <xsl:value-of select="concat('Supplement',$volumeNr)" />
-                </xsl:when>
-                <xsl:otherwise>
-                    <xsl:value-of select="concat('Volume',$volumeNr)" />
-                </xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$currentNode/following-sibling::text:section[@text:name=$sectionName]">
-
-                <!-- This volume -->
-                <dtb:div>
-                    <xsl:attribute name="class">
-                        <xsl:choose>
-                            <xsl:when test="$supplement">
-                                <xsl:value-of select="'supplement'" />
-                            </xsl:when>
-                            <xsl:otherwise>
-                                <xsl:value-of select="'volume'" />
-                            </xsl:otherwise>
-                        </xsl:choose>
-                    </xsl:attribute>
-
-                    <xsl:attribute name="id" select="lower-case($sectionName)" />
-                    
-                    <!-- Omitted pages before this volume -->
-                    <xsl:if test="$currentNode[@text:name='PreliminaryPages']
-                               or $currentNode/following-sibling::*[following-sibling::text:section[@text:name=$sectionName]]">
-                        <dtb:div class="not-in-volume">
-                            <xsl:if test="$currentNode[@text:name='PreliminaryPages']">
-                                <xsl:apply-templates mode="toplevel"
-                                                     select="$currentNode/following-sibling::*[1]/preceding-sibling::*[not(self::text:sequence-decls)]">
-                                    <xsl:with-param name="render" select="false()" />
-                                </xsl:apply-templates>
-                            </xsl:if>
-                            <xsl:apply-templates mode="toplevel"
-                                                 select="$currentNode/following-sibling::*[following-sibling::text:section[@text:name=$sectionName]]">
-                                <xsl:with-param name="render" select="false()" />
-                            </xsl:apply-templates>
-                        </dtb:div>
-                    </xsl:if>
-                    
-                    <!-- Body -->
-                    <xsl:apply-templates mode="toplevel"
-                                         select="$currentNode/following-sibling::text:section[@text:name=$sectionName]/child::*">
-                    </xsl:apply-templates>
-
-                    <!-- Notesection -->
-                    <xsl:call-template name="notesection">
-                        <xsl:with-param name="sectionName" select="$sectionName" />
-                        <xsl:with-param name="endnotes"    select="$currentNode/following-sibling::text:section[@text:name=$sectionName]
-                                                                               //text:note[@text:note-class='endnote']" />
-                    </xsl:call-template>
-
-                    <!-- Omitted pages after this volume -->
-                    <xsl:if test="(    $supplement  and not($currentNode/following-sibling::text:section[@text:name=concat('Supplement',$volumeNr+1)]))
-                               or (not($supplement) and not($currentNode/following-sibling::text:section[@text:name=concat('Volume',    $volumeNr+1)]) 
-                                                    and not($currentNode/following-sibling::text:section[@text:name='Supplement1']))">
-                        <dtb:div class="not-in-volume">
-                            <xsl:apply-templates mode="toplevel"
-                                                 select="$currentNode/following-sibling::text:section[@text:name=$sectionName]/following-sibling::*">
-                                <xsl:with-param name="render"    select="false()" />
-                            </xsl:apply-templates>
-                        </dtb:div>
-                    </xsl:if>
-                </dtb:div>
-                
-                <!-- Next volume -->
-                <xsl:call-template name="bodymatter">
-                    <xsl:with-param name="currentNode" select="$currentNode/following-sibling::text:section[@text:name=$sectionName]"/>
-                    <xsl:with-param name="supplement"  select="$supplement" />
-                    <xsl:with-param name="volumeNr"    select="$volumeNr+1" />
-                </xsl:call-template>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:if test="not($supplement)">
-                    <xsl:choose>
-                        <xsl:when test="$volumeNr=1">
-
-                            <!-- This volume -->
-                            <dtb:div class="volume" id="volume1">
-
-                                <!-- Omitted pages before this volume -->
-                                <xsl:if test="$currentNode[@text:name='PreliminaryPages']">
-                                    <dtb:div class="not-in-volume">
-                                        <xsl:apply-templates mode="toplevel"
-                                                             select="$currentNode/following-sibling::*[1]/preceding-sibling::*[not(self::text:sequence-decls)]">
-                                            <xsl:with-param name="render" select="false()" />
-                                        </xsl:apply-templates>
-                                    </dtb:div>
-                                </xsl:if>
-                                <xsl:choose>
-                                    <xsl:when test="$currentNode/following-sibling::text:section[@text:name='Supplement1']">
-
-                                        <!-- Body -->
-                                        <xsl:apply-templates mode="toplevel"
-                                                             select="$currentNode/following-sibling::*[following-sibling::text:section[@text:name='Supplement1']]">
-                                        </xsl:apply-templates>
-
-                                        <!-- Notesection -->
-                                        <xsl:call-template name="notesection">
-                                            <xsl:with-param name="endnotes"
-                                                            select="$currentNode/following-sibling::*[following-sibling::text:section[@text:name='Supplement1']]
-                                                                                /descendant-or-self::text:note[@text:note-class='endnote']" />
-                                        </xsl:call-template>
-                                    </xsl:when>
-                                    <xsl:otherwise>
-
-                                        <!-- Body -->
-                                        <xsl:apply-templates mode="toplevel"
-                                                             select="$currentNode/following-sibling::*">
-                                        </xsl:apply-templates>
-
-                                        <!-- Notesection -->
-                                        <xsl:call-template name="notesection">
-                                            <xsl:with-param name="endnotes"
-                                                            select="$currentNode/following-sibling::*/descendant-or-self::text:note[@text:note-class='endnote']" />
-                                        </xsl:call-template>
-                                    </xsl:otherwise>
-                                </xsl:choose>
-                            </dtb:div>
-
-                            <!-- Next volume -->
-                            <xsl:if test="$currentNode/following-sibling::text:section[@text:name='Supplement1']">
-                                <xsl:call-template name="bodymatter">
-                                    <xsl:with-param name="currentNode" select="$currentNode/following-sibling::*[following-sibling::text:section[@text:name='Supplement1']][last()]"/>
-                                    <xsl:with-param name="supplement"  select="true()" />
-                                    <xsl:with-param name="volumeNr"    select="1" />
-                                </xsl:call-template>
-                            </xsl:if>
-                        </xsl:when>
-                        <xsl:otherwise>
-
-                            <!-- Next volume -->
-                            <xsl:call-template name="bodymatter">
-                                <xsl:with-param name="currentNode" select="$currentNode"/>
-                                <xsl:with-param name="supplement"  select="true()" />
-                                <xsl:with-param name="volumeNr"    select="1" />
-                            </xsl:call-template>
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:if>
-            </xsl:otherwise>
-        </xsl:choose>
     </xsl:template>
 
 
@@ -322,10 +190,12 @@ TOP LEVEL
     -->
 
     <xsl:template match="*|@*" name="toplevel" mode="toplevel">
-        <xsl:param name="render"      as="xsd:boolean" select="true()"  />
-        <xsl:param name="omissions"   as="xsd:boolean" select="true()"  />
-        <xsl:param name="pagenumbers" as="xsd:boolean" select="true()"  />
+        <xsl:param name="volume"       as="xsd:boolean" select="false()" />
+        <xsl:param name="frontmatter"  as="xsd:boolean" select="false()" />
+        <xsl:param name="omissions"    as="xsd:boolean" select="true()"  />
+        <xsl:param name="pagenumbers"  as="xsd:boolean" select="true()"  />
 
+        <xsl:variable name="render"    as="xsd:boolean" select="$volume or $frontmatter" />
         <xsl:choose>
 
             <!-- PAGENUMBER -->
@@ -343,11 +213,6 @@ TOP LEVEL
                 <xsl:call-template name="para" />
             </xsl:when>
 
-            <!-- TITLE PAGE -->
-            <xsl:when test="$render and name(current())='text:section' and @text:name='TitlePage'">
-                <xsl:call-template name="titlepage" />
-            </xsl:when>
-
             <!-- LIST -->
             <xsl:when test="$render and name(current())='text:list'">
                 <xsl:call-template name="list"/>
@@ -357,33 +222,101 @@ TOP LEVEL
             <xsl:when test="$render and name(current())='table:table'">
                 <xsl:call-template name="table"/>
             </xsl:when>
-
-            <!-- SECTION -->
-            <xsl:when test="$render and name(current())='text:section'">
-                <xsl:call-template name="section" />
-            </xsl:when>
-
+            
             <!-- BIBLIOGRAPHY -->
             <xsl:when test="$render and name(current())='text:bibliography'">
                 <xsl:call-template name="bibliography" />
             </xsl:when>
 
-            <!-- NOT RENDERED PRELIMINARY PAGES -->
-            <xsl:when test="not($render) and current()/self::text:section[@text:name='PreliminaryPages']">
-                <xsl:apply-templates select="current()/child::*" mode="toplevel">
-                    <xsl:with-param name="render"      select="false()"      />
-                    <xsl:with-param name="omissions"   select="false()"      />
-                    <xsl:with-param name="pagenumbers" select="$pagenumbers" />
-                </xsl:apply-templates>
-            </xsl:when>
+            <!-- SECTIONS -->
+            <xsl:when test="name(current())='text:section'">                
+                <xsl:variable name="section-name" select="@text:name" />
+                <xsl:variable name="frontmatter-section" as="xsd:string">
+                    <xsl:call-template name="get-frontmatter-section"/>
+                </xsl:variable>
+                <xsl:choose>
+                    
+                    <!-- NOT RENDERED FRONTMATTER -->
+                    <xsl:when test="$section-name=$frontmatter-section and not($frontmatter)">
+                        <xsl:if test="$pagenumbers">
+                            <xsl:apply-templates select="current()/descendant::pagenum" />
+                        </xsl:if>
+                    </xsl:when>
 
-            <!-- NOT RENDERED SECTION -->
-            <xsl:when test="not($render) and name(current())='text:section'">
-                <xsl:apply-templates select="current()/child::*" mode="toplevel">
-                    <xsl:with-param name="render"      select="false()"      />
-                    <xsl:with-param name="omissions"   select="$omissions"   />
-                    <xsl:with-param name="pagenumbers" select="$pagenumbers" />
-                </xsl:apply-templates>
+                    <!-- NOT RENDERED SECTION -->
+                    <xsl:when test="not($render)">
+                        <xsl:apply-templates select="current()/child::*" mode="toplevel">
+                            <xsl:with-param name="omissions"   select="$omissions"   />
+                            <xsl:with-param name="pagenumbers" select="$pagenumbers" />
+                        </xsl:apply-templates>
+                    </xsl:when>
+
+                    <!-- VOLUME -->
+                    <xsl:when test="$paramVolumeManagementMode='MANUAL' and
+                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:volume>
+                            <xsl:attribute name="id" select="$section-name" />
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="volume"              select="true()"  />
+                                <xsl:with-param name="without-notesection" select="true()"  />
+                            </xsl:call-template>
+                        </dtb:volume>
+                    </xsl:when>
+
+                    <!-- EXTENDED FRONTMATTER -->
+                    <xsl:when test="$frontmatter and
+                                    $controller//ns1:ext-frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:ext-frontmatter>
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="frontmatter"         select="true()"   />
+                                <xsl:with-param name="without-notesection" select="true()"  />
+                            </xsl:call-template>
+                        </dtb:ext-frontmatter>
+                    </xsl:when>
+
+                    <!-- FRONTMATTER = TITLE PAGE -->
+                    <xsl:when test="$frontmatter and
+                                    $controller//ns1:basic-frontmatter[@rdf:about=concat('section:/', $section-name)] and
+                                    $controller//ns1:titlepage        [@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:basic-frontmatter>
+                            <dtb:titlepage>
+                                <xsl:call-template name="section">
+                                    <xsl:with-param name="frontmatter"         select="true()"   />
+                                    <xsl:with-param name="without-notesection" select="true()"  />
+                                </xsl:call-template>
+                            </dtb:titlepage>
+                        </dtb:basic-frontmatter>
+                    </xsl:when>
+
+                    <!-- FRONTMATTER -->
+                    <xsl:when test="$frontmatter and
+                                    $controller//ns1:basic-frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:basic-frontmatter>
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="frontmatter"         select="true()"   />
+                                <xsl:with-param name="without-notesection" select="true()"  />
+                            </xsl:call-template>
+                        </dtb:basic-frontmatter>
+                    </xsl:when>
+
+                    <!-- TITLE PAGE -->
+                    <xsl:when test="$frontmatter and
+                                    $controller//ns1:titlepage[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:titlepage>
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="frontmatter" select="true()"   />
+                            </xsl:call-template>
+                        </dtb:titlepage>
+                    </xsl:when>
+
+                    <!-- OTHER SECTION -->
+                    <xsl:when test="$render">
+                        <xsl:call-template name="section">
+                            <xsl:with-param name="volume"      select="$volume"      />
+                            <xsl:with-param name="frontmatter" select="$frontmatter" />
+                        </xsl:call-template>
+                    </xsl:when>
+                </xsl:choose>
             </xsl:when>
 
             <!-- TABLE OF CONTENT -->
@@ -412,6 +345,40 @@ TOP LEVEL
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+
+    <!-- SECTIONS -->
+
+    <xsl:template name="section">
+        <xsl:param    name="volume"              select="false()" as="xsd:boolean" />
+        <xsl:param    name="frontmatter"         select="false()" as="xsd:boolean" />
+        <xsl:param    name="without-notesection" select="false()" as="xsd:boolean" />
+
+        <xsl:variable name="style-name"    select="@text:style-name" />
+        <xsl:variable name="section-name"  select="@text:name"       />
+        <xsl:variable name="frontmatter-section" as="xsd:string">
+            <xsl:call-template name="get-frontmatter-section"/>
+        </xsl:variable>
+
+        <xsl:if test="not(string-length($frontmatter-section)>0 and
+                          $section-name=$frontmatter-section    and
+                          not($frontmatter))">
+            <xsl:apply-templates mode="toplevel" select="child::*">
+                <xsl:with-param name="frontmatter" select="$frontmatter" />
+                <xsl:with-param name="volume"      select="$volume"      />
+            </xsl:apply-templates>
+        </xsl:if>
+
+        <!-- Section endnotes -->
+        <xsl:if test="not($without-notesection) and
+                      $automatic-styles/style:style[@style:name=($style-name)]
+                      /style:section-properties/text:notes-configuration[@text:note-class='endnote']">
+            <dtb:note-section>
+                <xsl:attribute name="section-name" select="$section-name" />
+            </dtb:note-section>
+        </xsl:if>
+    </xsl:template>
+    
 
     <!--
 ===============
@@ -516,8 +483,8 @@ INLINE ELEMENTS
     <!-- LANGUAGE -->
 
     <xsl:template match="*|@*" mode="language">
-        <xsl:param name="pagenum"          select="'true'" />
-        <xsl:param name="specialtypeface"  select="'true'" />
+        <xsl:param name="pagenum"          as="xsd:boolean" select="true()" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="true()" />
 
         <xsl:if test="(name(current())='text:p')
                    or (name(current())='text:h')
@@ -573,8 +540,8 @@ INLINE ELEMENTS
 
     <xsl:template match="*|@*" mode="typeface">
 
-        <xsl:param name="pagenum"          select="'true'" />
-        <xsl:param name="specialtypeface"  select="'true'" />
+        <xsl:param name="pagenum"          as="xsd:boolean" select="true()" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="true()" />
 
         <xsl:if test="(name(current())='text:p')
                    or (name(current())='text:h')
@@ -602,10 +569,10 @@ INLINE ELEMENTS
                 </xsl:choose>
             </xsl:variable>
             <xsl:choose>
-                <xsl:when test="$specialtypeface='false'">
+                <xsl:when test="not($specialtypeface)">
                     <xsl:apply-templates>
                         <xsl:with-param name="pagenum"         select="$pagenum" />
-                        <xsl:with-param name="specialtypeface" select="'false'" />
+                        <xsl:with-param name="specialtypeface" select="false()" />
                     </xsl:apply-templates>
                 </xsl:when>
                 <xsl:otherwise>
@@ -680,8 +647,8 @@ INLINE ELEMENTS
     <!-- SPAN ELEMENTS -->
 
     <xsl:template match="text:span">
-        <xsl:param name="specialtypeface" select="'true'" />
-        <xsl:param name="pagenum"         select="'true'" />
+        <xsl:param name="specialtypeface" as="xsd:boolean" select="true()" />
+        <xsl:param name="pagenum"         as="xsd:boolean" select="true()" />
 
         <xsl:if test="string(.) or count(./*) > 0">
 
@@ -691,7 +658,7 @@ INLINE ELEMENTS
                 </xsl:call-template>
             </xsl:variable>
             <xsl:choose>
-                <xsl:when test="$specialtypeface='true' and not($character-style-name='')">
+                <xsl:when test="$specialtypeface and not($character-style-name='')">
                     <dtb:span>
                         <xsl:attribute name="style">
                             <xsl:value-of select="$character-style-name" />
@@ -715,8 +682,8 @@ INLINE ELEMENTS
     <!-- HYPERLINKS -->
 
     <xsl:template match="text:a">
-        <xsl:param name="specialtypeface" select="'true'" />
-        <xsl:param name="pagenum"         select="'true'" />
+        <xsl:param name="specialtypeface" as="xsd:boolean" select="true()" />
+        <xsl:param name="pagenum"         as="xsd:boolean" select="true()" />
 
         <xsl:variable name="protocol"     select="substring-before(@xlink:href,':')" />
 
@@ -756,10 +723,9 @@ INLINE ELEMENTS
     <!-- PAGENUMBERS -->
 
     <xsl:template match="pagenum" name="pagenumbering">
+        <xsl:param name="pagenum" as="xsd:boolean" select="true()" />
 
-        <xsl:param name="pagenum" select="'true'" />
-
-        <xsl:if test="$pagenum='true'">
+        <xsl:if test="$pagenum">
             <xsl:if test="(@type = 'hard' and $paramKeepHardPageBreaks) or
                           (@type = 'new-braille-page')">
                 <dtb:pagebreak />
@@ -767,7 +733,7 @@ INLINE ELEMENTS
             <xsl:if test="@num and @enum and @render and @value">
                 <xsl:variable name="attrPage">
                     <xsl:choose>
-                        <xsl:when test="@enum = '1'">
+                        <xsl:when test="@enum='1'">
                             <xsl:value-of select="'normal'" />
                         </xsl:when>
                         <xsl:otherwise>
@@ -776,7 +742,7 @@ INLINE ELEMENTS
                     </xsl:choose>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="@render = 'true'">
+                    <xsl:when test="@render='true'">
                         <dtb:pagenum>
                             <xsl:attribute name="page">
                                 <xsl:value-of select="$attrPage" />
@@ -800,11 +766,10 @@ INLINE ELEMENTS
             <xsl:value-of select="@value" />
         </dtb:span>
     </xsl:template>
-    
+
     <!-- NOTE REFERENCES -->
 
-    <xsl:template match="text:note">
-        
+    <xsl:template name="noteref">  
         <dtb:noteref>
             <xsl:variable name="note-class" select="@text:note-class" />
             <xsl:choose>
@@ -850,6 +815,15 @@ INLINE ELEMENTS
     </xsl:template>
 
 
+    <xsl:template match="text:note">
+        <xsl:call-template name="noteref" />
+        <xsl:variable name="note-class" select="@text:note-class" />
+        <xsl:if test="$note-class='endnote'">
+            <xsl:call-template name="endnote" />
+        </xsl:if>
+    </xsl:template>
+
+
    <!--
 ==============
 BLOCK ELEMENTS
@@ -859,79 +833,103 @@ BLOCK ELEMENTS
     <!-- HEADINGS -->
 
     <xsl:template match="text:h">
-        <xsl:param name="specialtypeface"  select="'false'" />
-        <xsl:param name="notes"            select="'true'"  />
-        <xsl:param name="frames"           select="'true'"  />
-        <xsl:param name="omitFrames"       select="'false'" />
-        <xsl:param name="transposeFrames"  select="'false'" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="false()" />
+        <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
+        <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
+        <xsl:param name="omit-frames"      as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-frames" as="xsd:boolean" select="false()" />
 
         <xsl:call-template name="heading">
-            <xsl:with-param name="specialtypeface"  select="$specialtypeface" />
-            <xsl:with-param name="notes"            select="$notes"           />
-            <xsl:with-param name="frames"           select="$frames"          />
-            <xsl:with-param name="omitFrames"       select="$omitFrames"      />
-            <xsl:with-param name="transposeFrames"  select="$transposeFrames" />
+            <xsl:with-param name="specialtypeface"  select="$specialtypeface"  />
+            <xsl:with-param name="notes"            select="$notes"            />
+            <xsl:with-param name="frames"           select="$frames"           />
+            <xsl:with-param name="omit-frames"      select="$omit-frames"      />
+            <xsl:with-param name="transpose-frames" select="$transpose-frames" />
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="heading">
-        <xsl:param name="specialtypeface"  select="'false'" />
-        <xsl:param name="notes"            select="'true'"  />
-        <xsl:param name="frames"           select="'true'"  />
-        <xsl:param name="omitFrames"       select="'false'" />
-        <xsl:param name="transposeFrames"  select="'false'" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="false()" />
+        <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
+        <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
+        <xsl:param name="omit-frames"      as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-frames" as="xsd:boolean" select="false()" />
 
         <xsl:variable name="outline-level" as="xsd:integer" select="current()/@text:outline-level" />
+        <xsl:variable name="upper-border" as="xsd:boolean">
+            <xsl:value-of select="$paramHeadingUpperBorder[$outline-level]" />
+        </xsl:variable>
+        <xsl:variable name="lower-border" as="xsd:boolean">
+            <xsl:value-of select="$paramHeadingLowerBorder[$outline-level]" />
+        </xsl:variable>
 
         <dtb:heading>
-            <xsl:if test="current()/child::* | current()/text()">
-                <xsl:element name="dtb:h{$outline-level}">
-                    <xsl:apply-templates select="current()" mode="language">
-                        <xsl:with-param name="specialtypeface" select="$specialtypeface" />
-                    </xsl:apply-templates>
-                </xsl:element>
+
+            <!-- Top boxline -->
+            <xsl:if test="$upper-border">
+                <dtb:hr/>
             </xsl:if>
-            <xsl:choose>
-                <xsl:when test="$omitFrames='true'">
 
-                    <!-- Omit frames -->
-                    <xsl:for-each select="current()/draw:frame | current()/draw:a">
-                        <dtb:div class="omission">
-                            <dtb:flag class="double-dash" />
-                            <dtb:span class="spaced">
-                                <dtb:value-of select="$paramDoubleDash" />
-                            </dtb:span>
-                        </dtb:div>
-                    </xsl:for-each>
-                </xsl:when>
-                <xsl:when test="$transposeFrames='true'">
-
-                    <!-- Transpose frames -->
-                    <xsl:for-each select="current()/draw:frame | current()/draw:a">
-                        <dtb:div class="transposition">
-                            <dtb:flag class="double-dash" />
-                            <dtb:span class="spaced">
-                                <dtb:value-of select="$paramDoubleDash" />
-                            </dtb:span>
-                        </dtb:div>
-                    </xsl:for-each>
-                </xsl:when>
-            </xsl:choose>
-            <xsl:if test="$notes = 'true'">
-
-                <!-- Footnotes -->
-                <xsl:if test="current()//text:note[@text:note-class='footnote']">
-                    <xsl:call-template name="footnote">
-                        <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
-                    </xsl:call-template>
+            <dtb:div class="border">
+                <xsl:if test="current()/child::* | current()/text()">
+                    <xsl:element name="dtb:h{$outline-level}">
+                        <xsl:if test="$outline-level>$paramTocUptoLevel or ./ancestor::draw:frame">
+                            <xsl:attribute name="class">
+                                <xsl:value-of select="'dummy'" />
+                            </xsl:attribute>
+                        </xsl:if>
+                        <xsl:apply-templates select="current()" mode="language">
+                            <xsl:with-param name="specialtypeface" select="$specialtypeface" />
+                        </xsl:apply-templates>
+                    </xsl:element>
                 </xsl:if>
+                <xsl:choose>
+                    <xsl:when test="$omit-frames">
+
+                        <!-- Omit frames -->
+                        <xsl:for-each select="current()/draw:frame | current()/draw:a">
+                            <dtb:div class="omission">
+                                <dtb:flag class="double-dash" />
+                                <dtb:span class="spaced">
+                                    <dtb:value-of select="$paramDoubleDash" />
+                                </dtb:span>
+                            </dtb:div>
+                        </xsl:for-each>
+                    </xsl:when>
+                    <xsl:when test="$transpose-frames">
+
+                        <!-- Transpose frames -->
+                        <xsl:for-each select="current()/draw:frame | current()/draw:a">
+                            <dtb:div class="transposition">
+                                <dtb:flag class="double-dash" />
+                                <dtb:span class="spaced">
+                                    <dtb:value-of select="$paramDoubleDash" />
+                                </dtb:span>
+                            </dtb:div>
+                        </xsl:for-each>
+                    </xsl:when>
+                </xsl:choose>
+                <xsl:if test="$notes">
+
+                    <!-- Footnotes -->
+                    <xsl:if test="current()//text:note[@text:note-class='footnote']">
+                        <xsl:call-template name="footnote">
+                            <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:if>
+            </dtb:div>
+
+            <!-- Bottom boxline -->
+            <xsl:if test="$lower-border">
+                <dtb:hr/>
             </xsl:if>
         </dtb:heading>
 
         <!-- Frames -->
-        <xsl:if test="$frames='true' and $transposeFrames='false' and $omitFrames='false'">
+        <xsl:if test="$frames and not($transpose-frames) and not($omit-frames)">
             <xsl:apply-templates select="current()/draw:frame | current()/draw:a">
-                <xsl:with-param name="render" select="'true'" />
+                <xsl:with-param name="render" select="true()" />
             </xsl:apply-templates>
         </xsl:if>
     </xsl:template>
@@ -939,27 +937,27 @@ BLOCK ELEMENTS
     <!-- PARAGRAPHS -->
 
     <xsl:template match="text:p">
-        <xsl:param name="caption"           select="'false'" />
-        <xsl:param name="notes"             select="'true'"  />
-        <xsl:param name="frames"            select="'true'"  />
-        <xsl:param name="omitFrames"        select="'false'" />
-        <xsl:param name="transposeFrames"   select="'false'" />
+        <xsl:param name="caption"          as="xsd:boolean" select="false()" />
+        <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
+        <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
+        <xsl:param name="omit-frames"      as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-frames" as="xsd:boolean" select="false()" />
 
         <xsl:call-template name="para">
-            <xsl:with-param name="caption"           select="$caption"         />
-            <xsl:with-param name="notes"             select="$notes"           />
-            <xsl:with-param name="frames"            select="$frames"          />
-            <xsl:with-param name="omitFrames"        select="$omitFrames"      />
-            <xsl:with-param name="transposeFrames"   select="$transposeFrames" />
+            <xsl:with-param name="caption"           select="$caption"          />
+            <xsl:with-param name="notes"             select="$notes"            />
+            <xsl:with-param name="frames"            select="$frames"           />
+            <xsl:with-param name="omit-frames"       select="$omit-frames"      />
+            <xsl:with-param name="transpose-frames"  select="$transpose-frames" />
         </xsl:call-template>
     </xsl:template>
 
     <xsl:template name="para">
-        <xsl:param name="caption"           select="'false'" />
-        <xsl:param name="notes"             select="'true'"  />
-        <xsl:param name="frames"            select="'true'"  />
-        <xsl:param name="omitFrames"        select="'false'" />
-        <xsl:param name="transposeFrames"   select="'false'" />
+        <xsl:param name="caption"          as="xsd:boolean" select="false()" />
+        <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
+        <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
+        <xsl:param name="omit-frames"      as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-frames" as="xsd:boolean" select="false()" />
 
         <xsl:variable name="style-name" select="@text:style-name" />
         <xsl:variable name="is-paragraph" as="xsd:boolean">
@@ -981,15 +979,15 @@ BLOCK ELEMENTS
         <xsl:choose>
 
             <!-- CAPTION -->
-            <xsl:when test="$caption='true'">
+            <xsl:when test="$caption">
                 <dtb:caption>
                     <xsl:apply-templates select="current()" mode="language">
-                        <xsl:with-param name="pagenum" select="'false'" />
+                        <xsl:with-param name="pagenum" select="false()" />
                     </xsl:apply-templates>
                 </dtb:caption>
 
                 <!-- Footnotes -->
-                <xsl:if test="$notes='true'">
+                <xsl:if test="$notes">
                     <xsl:if test="current()//text:note[@text:note-class='footnote']">
                         <xsl:call-template name="footnote">
                             <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
@@ -1029,7 +1027,7 @@ BLOCK ELEMENTS
                                 </dtb:p>
                             </xsl:if>
                             <xsl:choose>
-                                <xsl:when test="$omitFrames='true'">
+                                <xsl:when test="$omit-frames">
 
                                     <!-- Omit frames -->
                                     <xsl:for-each select="./draw:frame | ./draw:a">
@@ -1041,7 +1039,7 @@ BLOCK ELEMENTS
                                         </dtb:div>
                                     </xsl:for-each>
                                 </xsl:when>
-                                <xsl:when test="$transposeFrames='true'">
+                                <xsl:when test="$transpose-frames">
 
                                     <!-- Transpose frames -->
                                     <xsl:for-each select="current()/draw:frame | current()/draw:a">
@@ -1056,7 +1054,7 @@ BLOCK ELEMENTS
                             </xsl:choose>
 
                             <!-- Footnotes -->
-                            <xsl:if test="$notes='true'">
+                            <xsl:if test="$notes">
                                 <xsl:if test="current()//text:note[@text:note-class='footnote']">
                                     <xsl:call-template name="footnote">
                                         <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
@@ -1070,9 +1068,9 @@ BLOCK ELEMENTS
         </xsl:choose>
 
         <!-- Frames -->
-        <xsl:if test="$frames='true' and $transposeFrames='false' and $omitFrames='false'">
+        <xsl:if test="$frames and not($transpose-frames) and not($omit-frames)">
             <xsl:apply-templates select="current()/draw:frame | current()/draw:a">
-                <xsl:with-param name="render" select="'true'" />
+                <xsl:with-param name="render" select="true()" />
             </xsl:apply-templates>
         </xsl:if>
     </xsl:template>
@@ -1087,108 +1085,53 @@ BLOCK ELEMENTS
                 <xsl:attribute name="class">
                     <xsl:value-of select="'footnote'" />
                 </xsl:attribute>
-                <xsl:apply-templates select="current()" />
+                <xsl:call-template name="noteref" />
                 <xsl:apply-templates select="(current()/text:note-body/text:p)
                                             |(current()/text:note-body/text:h)">
-                    <xsl:with-param name="frames"           select="'false'" />
-                    <xsl:with-param name="notes"            select="'false'" />
-                    <xsl:with-param name="specialtypeface"  select="'true'"  />
-                    <xsl:with-param name="omitFrames"       select="'true'"  />
+                    <xsl:with-param name="frames"          select="false()" />
+                    <xsl:with-param name="notes"           select="false()" />
+                    <xsl:with-param name="specialtypeface" select="true()"  />
+                    <xsl:with-param name="omit-frames"     select="true()"  />
                 </xsl:apply-templates>
             </dtb:note>
         </xsl:for-each>
     </xsl:template>
 
-    <!-- TITLE PAGE -->
-
-    <xsl:template name="titlepage">
-
-        <dtb:titlepage newpage="yes">
-            <xsl:apply-templates mode="toplevel" select="child::*" />
-        </dtb:titlepage>
-    </xsl:template>
-
-    <!-- SECTIONS -->
-
-    <xsl:template name="section">
-        <xsl:variable name="styleName"      select="@text:style-name" />
-        <xsl:variable name="sectionName"    select="@text:name"       />
-
-        <xsl:apply-templates mode="toplevel" select="child::*" />
-
-        <!-- Section endnotes -->
-        <xsl:if test="$automatic-styles/style:style[@style:name=($styleName)]
-                      /style:section-properties/text:notes-configuration[@text:note-class='endnote']" >
-
-            <xsl:call-template name="notesection">
-                <xsl:with-param name="sectionName" select="$sectionName" />
-                <xsl:with-param name="endnotes" select="current()//text:note[@text:note-class='endnote']" />
-            </xsl:call-template>
-        </xsl:if>
-    </xsl:template>
-
-    <!-- ENDNOTE SECTIONS -->
-
-    <xsl:template name="notesection" >
-        <xsl:param name="sectionName" select="''"/>
-        <xsl:param name="endnotes" />
-
-        <xsl:if test="$endnotes">
-            <dtb:notesection newpage="yes">
-                <dtb:heading>
-                    <dtb:h1 class="dummy">
-                        <xsl:value-of select="$paramNoteSectionTitle" />
-                    </dtb:h1>
-                </dtb:heading>
-                <xsl:for-each select="$endnotes">
-                    <xsl:call-template name="endnote">
-                        <xsl:with-param name="sectionName" select="$sectionName" />
-                    </xsl:call-template>
-                </xsl:for-each>
-            </dtb:notesection>
-        </xsl:if>
-    </xsl:template>
-
     <!-- ENDNOTE -->
 
     <xsl:template name="endnote" >
-        <xsl:param name="sectionName" />
 
-        <xsl:variable name="hasAlreadyBeenRendered">
-            <xsl:call-template name="endnoteBeenRendered">
-                <xsl:with-param name="parentSection" select="current()/ancestor::text:section[1]" />
-                <xsl:with-param name="topSectionName" select="$sectionName" />
+        <xsl:variable name="end-of-section">
+            <xsl:call-template name="get-endnote-section">
+                <xsl:with-param name="start-section" select="./ancestor::text:section[1]" />
             </xsl:call-template>
         </xsl:variable>
-        
-        <xsl:if test="$hasAlreadyBeenRendered='false'">
-
-            <dtb:note>
-                <xsl:attribute name="class">
-                    <xsl:value-of select="'endnote'" />
-                </xsl:attribute>
-                <xsl:apply-templates select="current()" />
-                <xsl:apply-templates select="(current()/text:note-body/text:p)
-                                            |(current()/text:note-body/text:h)">
-                    <xsl:with-param name="frames"           select="'false'" />
-                    <xsl:with-param name="notes"            select="'false'" />
-                    <xsl:with-param name="specialtypeface"  select="'true'"  />
-                    <xsl:with-param name="omitFrames"       select="'true'"  />
-                </xsl:apply-templates>
-            </dtb:note>
-        </xsl:if>
+        <dtb:note>
+            <xsl:attribute name="class" select="'endnote'" />
+            <xsl:if test="string-length($end-of-section)>0">
+                <xsl:attribute name="end-of-section" select="$end-of-section" />
+            </xsl:if>
+            <xsl:call-template name="noteref" />
+            <xsl:apply-templates select="(current()/text:note-body/text:p)
+                                        |(current()/text:note-body/text:h)">
+                <xsl:with-param name="frames"           select="false()" />
+                <xsl:with-param name="notes"            select="false()" />
+                <xsl:with-param name="specialtypeface"  select="true()"  />
+                <xsl:with-param name="omit-frames"      select="true()"  />
+            </xsl:apply-templates>
+        </dtb:note>
     </xsl:template>
 
     <!-- LISTS -->
 
     <xsl:template name="list" match="text:list">
 
-        <xsl:param name="listlevel"       select="0" />
-        <xsl:param name="transposed"      select="'false'" />
-        <xsl:param name="transposeLists"  select="'false'" />
+        <xsl:param name="listlevel"       as="xsd:integer" select="0" />
+        <xsl:param name="transposed"      as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-lists" as="xsd:boolean" select="false()" />
 
         <xsl:choose>
-            <xsl:when test="$transposeLists='true'">
+            <xsl:when test="$transpose-lists">
                 <dtb:div class="transposition">
                     <dtb:flag class="double-dash" />
                     <dtb:span class="spaced">
@@ -1197,7 +1140,7 @@ BLOCK ELEMENTS
                 </dtb:div>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:if test="$transposed='true'">
+                <xsl:if test="$transposed">
                     <dtb:div class="tn">
                         <dtb:note>
                             <xsl:value-of select='"The list below was transposed from it&apos;s original location."' />
@@ -1216,7 +1159,7 @@ BLOCK ELEMENTS
                                                     |(current()//text:list-header/*/draw:frame)
                                                     |(current()//text:list-header/*/draw:a)">
 
-                            <xsl:with-param name="render" select="'true'" />
+                            <xsl:with-param name="render" select="true()" />
                         </xsl:apply-templates>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1235,12 +1178,12 @@ BLOCK ELEMENTS
 
     <xsl:template match="text:list-item | text:list-header">
 
-        <xsl:param name="listlevel" select="0" />
+        <xsl:param name="listlevel" as="xsd:integer" select="0" />
         <dtb:li>
             <xsl:apply-templates select="current()/child::*">
-                <xsl:with-param name="specialtypeface"  select="'true'"     />
-                <xsl:with-param name="notes"            select="'true'"     />
-                <xsl:with-param name="frames"           select="'false'"    />
+                <xsl:with-param name="specialtypeface"  select="true()"     />
+                <xsl:with-param name="notes"            select="true()"     />
+                <xsl:with-param name="frames"           select="false()"    />
                 <xsl:with-param name="listlevel"        select="$listlevel" />
             </xsl:apply-templates>
         </dtb:li>
@@ -1250,8 +1193,8 @@ BLOCK ELEMENTS
 
     <xsl:template match="table:table" name="table">
 
-        <xsl:param name="transposed"       select="'false'" />
-        <xsl:param name="transposeTables"  select="'false'" />
+        <xsl:param name="transposed"       as="xsd:boolean" select="false()" />
+        <xsl:param name="transpose-tables" as="xsd:boolean" select="false()" />
 
         <xsl:variable name="styleName"  select="current()/@table:style-name" />
         <xsl:variable name="tableName" select="@table:name" />
@@ -1267,8 +1210,14 @@ BLOCK ELEMENTS
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="upper-border" as="xsd:boolean">
+            <xsl:value-of select="$paramTableUpperBorder" />
+        </xsl:variable>
+        <xsl:variable name="lower-border" as="xsd:boolean">
+            <xsl:value-of select="$paramTableLowerBorder" />
+        </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$transposeTables='true'">
+            <xsl:when test="$transpose-tables">
                 <dtb:div class="transposition">
                     <dtb:flag class="double-dash" />
                     <dtb:span class="spaced">
@@ -1290,9 +1239,9 @@ BLOCK ELEMENTS
                                                             [not(string(self::*) or count(self::*/*) > 0)]
                                                      or current()/table:table-header-rows/table:table-row/table:table-cell
                                                             [not(string(self::*) or count(self::*/*) > 0)]" />
-                <xsl:if test="$transposedContent or ($transposed='true')">
+                <xsl:if test="$transposedContent or $transposed">
                     <dtb:div class="tn">
-                        <xsl:if test="$transposed='true'">
+                        <xsl:if test="$transposed">
                             <dtb:note>
                                 <xsl:value-of select='"The table below was transposed from it&apos;s original location."' />
                             </dtb:note>
@@ -1317,95 +1266,91 @@ BLOCK ELEMENTS
                     </dtb:div>
                 </xsl:if>
 
-                <!-- Top boxline -->
-                <xsl:if test="not($border='none')">
-                    <dtb:hr />
-                </xsl:if>
-
                 <dtb:table>
-                    <!-- No border -->
-                    <xsl:if test="$border='none'">
-                        <xsl:attribute name="border">
-                            <xsl:value-of select="'none'" />
-                        </xsl:attribute>
-                    </xsl:if>
 
-                    <!-- Table caption -->
-                    <xsl:variable name="table-caption-id">
-                        <xsl:call-template name="get-table-caption-id">
-                            <xsl:with-param name="table-name" select="$tableName" />
-                        </xsl:call-template>
-                    </xsl:variable>
-                    <xsl:if test="$table-caption-id">
-                        <xsl:variable name="caption" select="$body//text:p[@xml:id=$table-caption-id]" />
-                        <xsl:if test="$caption" >
-                            <dtb:div class="caption">
-                                <xsl:apply-templates select="$caption">
-                                    <xsl:with-param name="caption" select="'true'" />
-                                    <xsl:with-param name="frames"  select="'false'" />
-                                </xsl:apply-templates>
-                            </dtb:div>
+                    <!-- Top boxline -->
+                    <xsl:if test="$upper-border">
+                        <dtb:hr/>
+                    </xsl:if>
+                    <dtb:div class="border">
+
+                        <!-- Table caption -->
+                        <xsl:variable name="table-caption-id">
+                            <xsl:call-template name="get-table-caption-id">
+                                <xsl:with-param name="table-name" select="$tableName" />
+                            </xsl:call-template>
+                        </xsl:variable>
+                        <xsl:if test="$table-caption-id">
+                            <xsl:variable name="caption" select="$body//text:p[@xml:id=$table-caption-id]" />
+                            <xsl:if test="$caption" >
+                                <dtb:div class="caption">
+                                    <xsl:apply-templates select="$caption">
+                                        <xsl:with-param name="caption" select="true()" />
+                                        <xsl:with-param name="frames"  select="false()" />
+                                    </xsl:apply-templates>
+                                </dtb:div>
+                            </xsl:if>
                         </xsl:if>
-                    </xsl:if>
-                    <xsl:choose>
+                        <xsl:choose>
 
-                        <!-- Table with headings -->
-                        <xsl:when test="$parentStyleNameFirstCell = 'Table_20_Heading' or $styleNameFirstCell = 'Table_20_Heading'">
+                            <!-- Table with headings -->
+                            <xsl:when test="$parentStyleNameFirstCell = 'Table_20_Heading' or $styleNameFirstCell = 'Table_20_Heading'">
 
-                            <dtb:thead>
-                                <xsl:apply-templates select="current()/table:table-row[ position() = 1 ]">
-                                    <xsl:with-param name="heading" select="true()" />
-                                </xsl:apply-templates>
-                            </dtb:thead>
+                                <dtb:thead>
+                                    <xsl:apply-templates select="current()/table:table-row[ position() = 1 ]">
+                                        <xsl:with-param name="heading" select="true()" />
+                                    </xsl:apply-templates>
+                                </dtb:thead>
 
-                            <dtb:hr />
+                                <dtb:hr />
 
-                            <dtb:tbody>
-                                <xsl:apply-templates select="current()/table:table-row[ position() > 1 ] |
-                                                             current()/child::*[position() &lt; last() and name()='pagenum']" />
-                            </dtb:tbody>
-                        </xsl:when>
-                        <xsl:when test="current()/table:table-header-rows">
+                                <dtb:tbody>
+                                    <xsl:apply-templates select="current()/table:table-row[ position() > 1 ] |
+                                                                 current()/child::*[position() &lt; last() and name()='pagenum']" />
+                                </dtb:tbody>
+                            </xsl:when>
+                            <xsl:when test="current()/table:table-header-rows">
 
-                            <dtb:thead>
-                                <xsl:apply-templates select="current()/table:table-header-rows/table:table-row" >
-                                    <xsl:with-param name="heading" select="true()" />
-                                </xsl:apply-templates>
-                                <xsl:apply-templates select="current()/table:table-header-rows/pagenum" />
-                            </dtb:thead>
+                                <dtb:thead>
+                                    <xsl:apply-templates select="current()/table:table-header-rows/table:table-row" >
+                                        <xsl:with-param name="heading" select="true()" />
+                                    </xsl:apply-templates>
+                                    <xsl:apply-templates select="current()/table:table-header-rows/pagenum" />
+                                </dtb:thead>
 
-                            <dtb:hr />
+                                <dtb:hr />
 
-                            <dtb:tbody>
+                                <dtb:tbody>
+                                    <xsl:apply-templates select="current()/table:table-row |
+                                                                 current()/child::*[position() &lt; last() and name()='pagenum']" />
+                                </dtb:tbody>
+                            </xsl:when>
+
+                            <!-- Table without headings -->
+                            <xsl:otherwise>
                                 <xsl:apply-templates select="current()/table:table-row |
                                                              current()/child::*[position() &lt; last() and name()='pagenum']" />
-                            </dtb:tbody>
-                        </xsl:when>
+                            </xsl:otherwise>
+                        </xsl:choose>
 
-                        <!-- Table without headings -->
-                        <xsl:otherwise>
-                            <xsl:apply-templates select="current()/table:table-row |
-                                                         current()/child::*[position() &lt; last() and name()='pagenum']" />
-                        </xsl:otherwise>
-                    </xsl:choose>
+                        <!-- Table footnotes  -->
+                        <xsl:variable name="depth" select="count(current()/ancestor::*)" />
+                        <xsl:variable name="notes" select="current()//text:note[@text:note-class='footnote'
+                                                                           and (count(ancestor::table:table[1]/ancestor::*) = $depth)
+                                                                           and (count(ancestor::text:list[1]/ancestor::*) &lt; $depth)
+                                                                           and (count(ancestor::draw:frame[1]/ancestor::*) &lt; $depth) ]" />
+                        <xsl:if test="$notes">
+                            <xsl:call-template name="footnote">
+                                <xsl:with-param name="notes" select="$notes" />
+                            </xsl:call-template>
+                        </xsl:if>
+                    </dtb:div>
 
-                    <!-- Table footnotes  -->
-                    <xsl:variable name="depth" select="count(current()/ancestor::*)" />
-                    <xsl:variable name="notes" select="current()//text:note[@text:note-class='footnote'
-                                                                       and (count(ancestor::table:table[1]/ancestor::*) = $depth)
-                                                                       and (count(ancestor::text:list[1]/ancestor::*) &lt; $depth)
-                                                                       and (count(ancestor::draw:frame[1]/ancestor::*) &lt; $depth) ]" />
-                    <xsl:if test="$notes">
-                        <xsl:call-template name="footnote">
-                            <xsl:with-param name="notes" select="$notes" />
-                        </xsl:call-template>
+                    <!-- Bottom boxline -->
+                    <xsl:if test="$lower-border">
+                        <dtb:hr/>
                     </xsl:if>
                 </dtb:table>
-
-                <!-- Bottom boxline -->
-                <xsl:if test="not($border='none')">
-                    <dtb:hr />
-                </xsl:if>
 
                 <xsl:apply-templates select="current()/child::*[position()=last() and name()='pagenum']" />
 
@@ -1419,7 +1364,7 @@ BLOCK ELEMENTS
                                             |(current()/table:table-header-rows/table:table-row/table:table-cell/table:table)
                                             |(current()/table:table-header-rows/table:table-row/table:table-cell/text:list)">
 
-                    <xsl:with-param name="transposed" select="'true'" />
+                    <xsl:with-param name="transposed" select="true()" />
                 </xsl:apply-templates>
             </xsl:otherwise>
         </xsl:choose>
@@ -1428,7 +1373,7 @@ BLOCK ELEMENTS
     <!-- TABLE ROW  -->
 
     <xsl:template match="table:table-row" name="table-row">
-        <xsl:param name="heading" select="false()" />
+        <xsl:param name="heading" as="xsd:boolean" select="false()" />
 
         <dtb:tr>
             <xsl:apply-templates>
@@ -1440,7 +1385,7 @@ BLOCK ELEMENTS
     <!-- TABLE CELL  -->
 
     <xsl:template match="table:table-cell" name="table-cell">
-        <xsl:param name="heading" select="false()" />
+        <xsl:param name="heading" as="xsd:boolean" select="false()" />
 
         <xsl:choose>
             <xsl:when test="$heading">
@@ -1448,12 +1393,12 @@ BLOCK ELEMENTS
                     <xsl:choose>
                         <xsl:when test="string(.) or count(./*) > 0">
                             <xsl:apply-templates>
-                                <xsl:with-param name="frames"           select="'false'" />
-                                <xsl:with-param name="notes"            select="'false'" />
-                                <xsl:with-param name="specialtypeface"  select="'true'"  />
-                                <xsl:with-param name="transposeFrames"  select="'true'"  />
-                                <xsl:with-param name="transposeTables"  select="'true'"  />
-                                <xsl:with-param name="transposeLists"   select="'true'"  />
+                                <xsl:with-param name="frames"           select="false()" />
+                                <xsl:with-param name="notes"            select="false()" />
+                                <xsl:with-param name="specialtypeface"  select="true()"  />
+                                <xsl:with-param name="transpose-frames" select="true()"  />
+                                <xsl:with-param name="transpose-tables" select="true()"  />
+                                <xsl:with-param name="transpose-lists"  select="true()"  />
                             </xsl:apply-templates>
                             <xsl:if test="not($paramStairstepTableEnabled) and (position() &lt; last())">
                                 <dtb:span class="unspaced">
@@ -1475,12 +1420,12 @@ BLOCK ELEMENTS
                     <xsl:choose>
                         <xsl:when test="string(.) or count(./*) > 0">
                             <xsl:apply-templates>
-                                <xsl:with-param name="frames"           select="'false'" />
-                                <xsl:with-param name="notes"            select="'false'" />
-                                <xsl:with-param name="specialtypeface"  select="'true'"  />
-                                <xsl:with-param name="transposeFrames"  select="'true'"  />
-                                <xsl:with-param name="transposeTables"  select="'true'"  />
-                                <xsl:with-param name="transposeLists"   select="'true'"  />
+                                <xsl:with-param name="frames"           select="false()" />
+                                <xsl:with-param name="notes"            select="false()" />
+                                <xsl:with-param name="specialtypeface"  select="true()"  />
+                                <xsl:with-param name="transpose-frames" select="true()"  />
+                                <xsl:with-param name="transpose-tables" select="true()"  />
+                                <xsl:with-param name="transpose-lists"  select="true()"  />
                             </xsl:apply-templates>
                             <xsl:if test="not($paramStairstepTableEnabled) and (position() &lt; last())">
                                 <dtb:span class="unspaced">
@@ -1501,7 +1446,7 @@ BLOCK ELEMENTS
     </xsl:template>
 
     <xsl:template match="table:covered-table-cell">
-        <xsl:param name="heading" select="false()" />
+        <xsl:param name="heading" as="xsd:boolean" select="false()" />
 
         <xsl:choose>
             <xsl:when test="$heading">
@@ -1522,8 +1467,8 @@ BLOCK ELEMENTS
     <!-- FRAMES -->
 
     <xsl:template match="draw:frame">
-        <xsl:param name="render"     select="'false'" />
-        <xsl:param name="transposed" select="'false'" />
+        <xsl:param name="render"     as="xsd:boolean" select="false()" />
+        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
 
         <xsl:variable name="caption-id">
             <xsl:call-template name="get-frame-caption-id">
@@ -1531,7 +1476,7 @@ BLOCK ELEMENTS
             </xsl:call-template>
         </xsl:variable>
 
-        <xsl:if test="$render='true' or $transposed='true'">
+        <xsl:if test="$render or $transposed">
             <xsl:choose>
 
                 <!-- Formula -->
@@ -1547,7 +1492,7 @@ BLOCK ELEMENTS
                         <dtb:div class="tn">
 
                             <!-- Transposition notification -->
-                            <xsl:if test="$transposed='true'">
+                            <xsl:if test="$transposed">
                                 <dtb:note>
                                     <xsl:value-of select='"The image below was transposed from it&apos;s original location."' />
                                 </dtb:note>
@@ -1559,9 +1504,9 @@ BLOCK ELEMENTS
                                 <xsl:if test="$caption" >
                                     <dtb:note>
                                         <xsl:apply-templates select="$caption">
-                                            <xsl:with-param name="caption" select="'true'" />
-                                            <xsl:with-param name="frames"  select="'false'" />
-                                            <xsl:with-param name="notes"   select="'false'" />
+                                            <xsl:with-param name="caption" select="true()" />
+                                            <xsl:with-param name="frames"  select="false()" />
+                                            <xsl:with-param name="notes"   select="false()" />
                                         </xsl:apply-templates>
                                     </dtb:note>
                                 </xsl:if>
@@ -1617,9 +1562,15 @@ BLOCK ELEMENTS
                     <xsl:variable name="border-top"
                                   select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
                                           /style:graphic-properties/@fo:border-top" />
+                    <xsl:variable name="upper-border" as="xsd:boolean">
+                        <xsl:value-of select="$paramFrameUpperBorder" />
+                    </xsl:variable>
+                    <xsl:variable name="lower-border" as="xsd:boolean">
+                        <xsl:value-of select="$paramFrameLowerBorder" />
+                    </xsl:variable>
 
                     <!-- Transposition notification -->
-                    <xsl:if test="$transposed='true'">
+                    <xsl:if test="$transposed">
                         <dtb:div class="tn">
                             <dtb:note>
                                 <xsl:value-of select='"The textbox below was transposed from it&apos;s original location."' />
@@ -1627,44 +1578,39 @@ BLOCK ELEMENTS
                         </dtb:div>
                     </xsl:if>
 
-                    <!-- Top boxline -->
-                    <xsl:if test="not($border='none')">
-                        <dtb:hr />
-                    </xsl:if>
-
                     <dtb:div class="frame">
 
-                        <!-- No border -->
-                        <xsl:if test="$border='none'">
-                            <xsl:attribute name="border">
-                                <xsl:value-of select="'none'" />
-                            </xsl:attribute>
+                        <!-- Top boxline -->
+                        <xsl:if test="$upper-border">
+                            <dtb:hr/>
                         </xsl:if>
+                        <dtb:div class="border">
 
-                        <!-- Caption -->
-                        <xsl:if test="$caption-id">
-                            <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id]" />
-                            <xsl:if test="$caption" >
-                                <dtb:div class="caption">
-                                    <xsl:apply-templates select="$caption">
-                                        <xsl:with-param name="caption" select="'true'" />
-                                        <xsl:with-param name="frames"  select="'false'" />
-                                    </xsl:apply-templates>
-                                </dtb:div>
+                            <!-- Caption -->
+                            <xsl:if test="$caption-id">
+                                <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id]" />
+                                <xsl:if test="$caption" >
+                                    <dtb:div class="caption">
+                                        <xsl:apply-templates select="$caption">
+                                            <xsl:with-param name="caption" select="true()" />
+                                            <xsl:with-param name="frames"  select="false()" />
+                                        </xsl:apply-templates>
+                                    </dtb:div>
+                                </xsl:if>
                             </xsl:if>
+
+                            <!-- Box content -->
+                            <xsl:apply-templates select="current()/draw:text-box/draw:frame | current()/draw:text-box/draw:a">
+                                <xsl:with-param name="render" select="true()" />
+                            </xsl:apply-templates>
+                            <xsl:apply-templates select="current()/draw:text-box/*" />
+                        </dtb:div>
+
+                        <!-- Bottom boxline -->
+                        <xsl:if test="$upper-border">
+                            <dtb:hr/>
                         </xsl:if>
-
-                        <!-- Box content -->
-                        <xsl:apply-templates select="current()/draw:text-box/draw:frame | current()/draw:text-box/draw:a">
-                            <xsl:with-param name="render" select="'true'" />
-                        </xsl:apply-templates>
-                        <xsl:apply-templates select="current()/draw:text-box/*" />
                     </dtb:div>
-
-                    <!-- Bottom boxline -->
-                    <xsl:if test="not($border='none')">
-                        <dtb:hr />
-                    </xsl:if>
                 </xsl:when>
             </xsl:choose>
         </xsl:if>
@@ -1710,11 +1656,11 @@ BLOCK ELEMENTS
     <!-- FRAME LINKS -->
 
     <xsl:template match="draw:a">
-        <xsl:param name="render"     select="'false'" />
-        <xsl:param name="transposed" select="'false'" />
+        <xsl:param name="render"     as="xsd:boolean" select="false()" />
+        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
 
         <xsl:apply-templates select="draw:frame">
-            <xsl:with-param name="render" select="$render" />
+            <xsl:with-param name="render"     select="$render" />
             <xsl:with-param name="transposed" select="$transposed" />
         </xsl:apply-templates>
     </xsl:template>
@@ -1727,7 +1673,7 @@ BLOCK ELEMENTS
             <dtb:heading>
                 <dtb:h1 class="dummy">
                     <xsl:apply-templates select="current()/text:index-body/text:index-title/text:p" mode="language">
-                        <xsl:with-param name="specialtypeface" select="'false'" />
+                        <xsl:with-param name="specialtypeface" select="false()" />
                     </xsl:apply-templates>
                 </dtb:h1>
             </dtb:heading>
@@ -1736,7 +1682,7 @@ BLOCK ELEMENTS
                     <dtb:li>
                         <dtb:p>
                             <xsl:apply-templates select="current()" mode="language">
-                                <xsl:with-param name="pagenum" select="'false'" />
+                                <xsl:with-param name="pagenum" select="false()" />
                             </xsl:apply-templates>
                         </dtb:p>
                     </dtb:li>
@@ -1786,35 +1732,25 @@ HELP TEMPLATES
 ==============
     -->
 
-    <xsl:template name="endnoteBeenRendered">
-        <xsl:param name="parentSection" />
-        <xsl:param name="topSectionName" />
-
-        <xsl:variable name="styleName" select="$parentSection/@text:style-name" />
-
+    <xsl:template name="get-endnote-section">
+        <xsl:param name="start-section" />
+        <xsl:variable name="style-name"   select="$start-section/@text:style-name" />
         <xsl:choose>
-            <xsl:when test="not($parentSection)">
-                <xsl:value-of select="'false'" />
+            <xsl:when test="not($start-section)">
+                <xsl:value-of select="''" />
             </xsl:when>
-
-            <xsl:when test="$parentSection/@text:name=($topSectionName)">
-                <xsl:value-of select="'false'" />
-            </xsl:when>
-
-            <xsl:when test="$automatic-styles/style:style[@style:name=($styleName)]
+            <xsl:when test="$automatic-styles/style:style[@style:name=($style-name)]
                             /style:section-properties/text:notes-configuration[@text:note-class='endnote']">
-                <xsl:value-of select="'true'" />
+                <xsl:value-of select="$start-section/@text:name" />
             </xsl:when>
-            
             <xsl:otherwise>
-                <xsl:call-template name="endnoteBeenRendered">
-                    <xsl:with-param name="parentSection"  select="$parentSection/ancestor::text:section[1]" />
-                    <xsl:with-param name="topSectionName" select="$topSectionName" />
+                <xsl:call-template name="get-endnote-section">
+                    <xsl:with-param name="start-section" select="$start-section/ancestor::text:section[1]" />
                 </xsl:call-template>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
+    
     
     <xsl:template name="get-keep-empty-para-style">
         <xsl:param name="style" />
@@ -1867,6 +1803,24 @@ HELP TEMPLATES
     <xsl:template name="get-frame-caption-id">
         <xsl:param name="frame-name" />
         <xsl:value-of select="$controller//ns1:frame[@rdf:about=$frame-name]/ns1:hasCaption[1]/@rdf:resource" />
+    </xsl:template>
+
+
+    <xsl:template name="get-frontmatter-section">
+        <xsl:choose>
+            <!-- EXTENDED FRONT -->
+            <xsl:when test="$controller//ns1:ext-frontmatter">
+                <xsl:value-of select="substring-after(string($controller//ns1:ext-frontmatter/@rdf:about), 'section:/')" />
+            </xsl:when>
+
+            <!-- BASIC FRONT -->
+            <xsl:when test="$controller//ns1:basic-frontmatter">
+                <xsl:value-of select="substring-after(string($controller//ns1:basic-frontmatter/@rdf:about), 'section:/')" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="''" />
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 </xsl:stylesheet>

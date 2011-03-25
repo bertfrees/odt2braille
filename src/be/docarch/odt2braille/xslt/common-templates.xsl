@@ -115,6 +115,27 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="is-heading">
+        <xsl:param name="node" />
+        <xsl:choose>
+            <xsl:when test="$node/ancestor::table:table">
+                <xsl:value-of select="false()" />
+            </xsl:when>
+            <xsl:when test="$node/ancestor::text:list">
+                <xsl:value-of select="false()" />
+            </xsl:when>
+            <xsl:when test="$node/ancestor::text:note">
+                <xsl:value-of select="false()" />
+            </xsl:when>
+            <xsl:when test="$node/self::text:h">
+                <xsl:value-of select="true()" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="false()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="get-parent-style-name">
         <xsl:param name="style-name" />
         <xsl:param name="family" select="'paragraph'" />

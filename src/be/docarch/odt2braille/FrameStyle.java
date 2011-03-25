@@ -24,11 +24,8 @@ package be.docarch.odt2braille;
  *
  * @author Bert Frees
  */
-public class HeadingStyle extends Style {
+public class FrameStyle extends Style {
 
-    protected int level;
-    protected boolean newBraillePage;
-    protected boolean keepWithNext;
     protected int paddingAbove;
     protected int paddingBelow;
     protected boolean upperBorder;
@@ -36,14 +33,9 @@ public class HeadingStyle extends Style {
     protected char upperBorderStyle;
     protected char lowerBorderStyle;
 
-    public HeadingStyle(HeadingStyle copyStyle) {
-
+    public FrameStyle(FrameStyle copyStyle) {
+    
         super(copyStyle);
-
-        this.level = copyStyle.level;
-        this.newBraillePage = copyStyle.newBraillePage;
-        this.keepWithNext = copyStyle.keepWithNext;
-        this.dontSplit = copyStyle.dontSplit;
         this.paddingAbove = copyStyle.paddingAbove;
         this.paddingBelow = copyStyle.paddingBelow;
         this.upperBorder = copyStyle.upperBorder;
@@ -52,13 +44,9 @@ public class HeadingStyle extends Style {
         this.lowerBorderStyle = copyStyle.lowerBorderStyle;
     }
 
-    public HeadingStyle(int level) {
+    public FrameStyle() {
 
-        super("h" + level);
-        this.newBraillePage = false;
-        this.level = level;
-        this.keepWithNext = false;
-        this.dontSplit = false;
+        super("frame");
         this.paddingAbove = 0;
         this.paddingBelow = 0;
         this.upperBorder = false;
@@ -67,26 +55,18 @@ public class HeadingStyle extends Style {
         this.lowerBorderStyle = '\u2812';
     }
 
-    public void    setNewBraillePage   (boolean newBraillePage) { this.newBraillePage = newBraillePage;
-                                                                  keepWithNext =  !newBraillePage && keepWithNext;
-                                                                  dontSplit = !newBraillePage && dontSplit; }
-    public void    setKeepWithNext     (boolean keepWithNext)   { this.keepWithNext = keepWithNext;
-                                                                  dontSplit = keepWithNext || dontSplit; }
     public void    setPaddingAbove     (int paddingAbove)       { if (paddingAbove >= 0) { this.paddingAbove = paddingAbove; }}
     public void    setPaddingBelow     (int paddingBelow)       { if (paddingBelow >= 0) { this.paddingBelow = paddingBelow; }}
     public void    setUpperBorder      (boolean border)         { this.upperBorder = border; }
     public void    setLowerBorder      (boolean border)         { this.lowerBorder = border; }
-    public boolean setUpperBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.upperBorderStyle = border; return true; } return false; }
-    public boolean setLowerBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.lowerBorderStyle = border; return true; } return false; }
+    public void    setUpperBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.upperBorderStyle = border; }}
+    public void    setLowerBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.lowerBorderStyle = border; }}
 
-    public boolean getNewBraillePage  () { return newBraillePage; }
-    public int     getLevel           () { return level; }
-    public boolean getKeepWithNext    () { return keepWithNext; }
     public int     getPaddingAbove    () { return paddingAbove; }
     public int     getPaddingBelow    () { return paddingBelow; }
     public boolean getUpperBorder     () { return upperBorder; }
     public boolean getLowerBorder     () { return lowerBorder; }
     public char    getUpperBorderStyle() { return upperBorderStyle; }
     public char    getLowerBorderStyle() { return lowerBorderStyle; }
-
+    
 }

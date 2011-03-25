@@ -36,7 +36,6 @@ public class Style implements Comparable {
     protected int marginLeftRight;
     protected int linesAbove;
     protected int linesBelow;
-    protected int linesBetween;
 
 
     public Style(Style copyStyle) {
@@ -46,7 +45,6 @@ public class Style implements Comparable {
         this.firstLine = copyStyle.firstLine;
         this.linesAbove = copyStyle.linesAbove;
         this.linesBelow = copyStyle.linesBelow;
-        this.linesBetween = copyStyle.linesBetween;
         this.runovers = copyStyle.runovers;
         this.marginLeftRight = copyStyle.marginLeftRight;
         this.dontSplit = copyStyle.dontSplit;
@@ -63,7 +61,6 @@ public class Style implements Comparable {
         marginLeftRight = 0;
         linesAbove = 0;
         linesBelow = 0;
-        linesBetween = 0;
 
     }
 
@@ -79,7 +76,6 @@ public class Style implements Comparable {
     public void setMarginLeftRight (int margin)       { if (margin >= 0)       { this.marginLeftRight = margin; }}
     public void setLinesAbove      (int linesAbove)   { if (linesAbove >= 0)   { this.linesAbove = linesAbove; }}
     public void setLinesBelow      (int linesBelow)   { if (linesBelow >= 0)   { this.linesBelow = linesBelow; }}
-    public void setLinesBetween    (int linesBetween) { if (linesBetween >= 0) { this.linesBetween = linesBetween; }}
 
     public String    getName()            { return name; }
     public Alignment getAlignment()       { return alignment; }
@@ -88,7 +84,6 @@ public class Style implements Comparable {
     public int       getMarginLeftRight() { return marginLeftRight; }
     public int       getLinesAbove()      { return linesAbove; }
     public int       getLinesBelow()      { return linesBelow; }
-    public int       getLinesBetween()    { return linesBetween; }
     public boolean   getDontSplit()       { return dontSplit; }
 
     @Override

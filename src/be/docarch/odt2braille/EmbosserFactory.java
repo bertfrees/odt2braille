@@ -53,7 +53,17 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
 		TableFactory btb = new TableFactory();
                 btb.setTable(settings.getTable());
                 switch (settings.getEmbosser()) {
-			case INDEX_BASIC_BLUE_BAR:
+                        case NONE:
+                            b = new ConfigurableEmbosser.Builder(os, btb.newTable())
+                                .breaks(LineBreaks.Type.DOS)
+                                .padNewline(ConfigurableEmbosser.Padding.NONE)
+                                .supportsDuplex(settings.getDuplex())
+                                .supports8dot(false)
+                                .supportsAligning(true)
+                                .setPaper(paper);
+                            return b.build();
+
+                        case INDEX_BASIC_BLUE_BAR:
                             b = new ConfigurableEmbosser.Builder(os, btb.newTable())
                                 .breaks(LineBreaks.Type.DOS)
                                 .padNewline(ConfigurableEmbosser.Padding.NONE)
@@ -133,29 +143,43 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
 
                         case IMPACTO_TEXTO:
                         case IMPACTO_600:
-				b = new ConfigurableEmbosser.Builder(os, btb.newTable())
-                                    .breaks(LineBreaks.Type.IMPACTO)
-                                    .padNewline(ConfigurableEmbosser.Padding.NONE)
-                                    .supportsDuplex(true)
-                                    .supportsAligning(true)
-                                    .setWidth(settings.getCellsPerLine())
-                                    .setHeight(settings.getLinesPerPage())
-                                    .header(getImpactoHeader(settings, pageCount))
-                                    .footer(new byte[]{0x1b,0x54});
-                                return b.build();
+                            if (numberOfCopies > 32767 || numberOfCopies < 1) {
+                                throw new EmbosserFactoryException("Invalid number of copies: " + numberOfCopies + " is not in [1, 32767]");
+                            }
+                            b = new ConfigurableEmbosser.Builder(os, btb.newTable())
+                                .breaks(LineBreaks.Type.IMPACTO)
+                                .padNewline(ConfigurableEmbosser.Padding.NONE)
+                                .supportsDuplex(settings.getDuplex())
+                                .supportsAligning(true)
+                                .supports8dot(false)
+                                .setWidth(settings.getCellsInWidth())
+                                .setHeight(settings.getLinesInHeight())
+                                .header(getImpactoHeader(settings, pageCount, numberOfCopies))
+                                .footer(new byte[]{0x1b,0x54});
+                            return b.build();
 
                         case PORTATHIEL_BLUE:
-                                break;
+                            b = new ConfigurableEmbosser.Builder(os, btb.newTable())
+                                .breaks(LineBreaks.Type.PORTATHIEL)
+                                .padNewline(ConfigurableEmbosser.Padding.NONE)
+                                .supportsDuplex(settings.getDuplex())
+                                .supportsAligning(true)
+                                .supports8dot(false)
+                                .setWidth(settings.getCellsInWidth())
+                                .setHeight(settings.getLinesInHeight())
+                                .header(getPortathielHeader(settings))
+                                .footer(new byte[]{0x1b,0x54});
+                            return b.build();
 
 			case BRAILLO_200: case BRAILLO_400_S: case BRAILLO_400_SR:
-				b = new ConfigurableEmbosser.Builder(os, btb.newTable())
-					.breaks(LineBreaks.Type.DOS)
-					.padNewline(ConfigurableEmbosser.Padding.BEFORE)
-					.supportsDuplex(true)
-					.supportsAligning(true)
-					.setPaper(paper);
-				b.header(getBrailloHeader(b.getWidth(), paper));
-                                return b.build();
+                            b = new ConfigurableEmbosser.Builder(os, btb.newTable())
+                                    .breaks(LineBreaks.Type.DOS)
+                                    .padNewline(ConfigurableEmbosser.Padding.BEFORE)
+                                    .supportsDuplex(true)
+                                    .supportsAligning(true)
+                                    .setPaper(paper);
+                            b.header(getBrailloHeader(b.getWidth(), paper));
+                            return b.build();
 
 		}
 		throw new IllegalArgumentException("Cannot find embosser type " + settings.getEmbosser());
@@ -333,27 +357,29 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
         }
 
         private static byte[] getImpactoHeader(Settings settings,
-                                               int pageCount)
+                                               int pageCount,
+                                               int numberOfCopies)
                                         throws UnsupportedPaperException {
 
             boolean eightDots = settings.getEightDots();
             boolean duplex = settings.getDuplex();
-            int linesPerPage = settings.getLinesPerPage();                                        // in cells
-            int cellsInWidth = settings.getCellsInWidth();                                        // in cells
-            int marginInner = settings.getMarginInner();                                          // in cells
-            int marginOuter = settings.getMarginOuter();                                          // in cells
-            int pageLength = (int)Math.ceil(settings.getPageHeight()/Paper.INCH_IN_MM);           // in inches
-            int cellHeight = (int)Math.floor(settings.getLineSpacing()/(0.1*Paper.INCH_IN_MM));   // in tenths of an inch
-            int topMargin = 1 + settings.getMarginTop()*cellHeight;                               // in tenths of an inch
-            int bottomMargin = 1 + pageLength*10 - linesPerPage*cellHeight;                       // in tenths of an inch
+            int linesPerPage = settings.getLinesInHeight();                             // in cells
+            int charsPerLine = settings.getCellsInWidth();                              // in cells
+            int pageLength = (int)Math.ceil(settings.getPageHeight()/Paper.INCH_IN_MM); // in inches
 
-            StringBuffer header = new StringBuffer();            
+//            int marginInner = settings.getMarginInner();                                                          // in cells
+//            int marginOuter = settings.getMarginOuter();                                                          // in cells
+//            int topMargin = (int)Math.floor(settings.getMarginTop()*getCellHeight()/(0.1*Paper.INCH_IN_MM));      // in tenths of an inch
+//            int bottomMargin = pageLength*10 - topMargin
+//                          - (int)Math.floor(settings.getLinesInHeight()*getCellHeight()/(0.1*Paper.INCH_IN_MM));  // in tenths of an inch      
 
             if (pageLength   < 6  || pageLength   > 13) { throw new UnsupportedPaperException("Paper height = " + pageLength + " inches, must be in [6,13]"); }
-            if (cellsInWidth < 12 || cellsInWidth > 42) { throw new UnsupportedPaperException("Characters per line = " + cellsInWidth + ", must be in [12,42]"); }
+            if (charsPerLine < 12 || charsPerLine > 42) { throw new UnsupportedPaperException("Characters per line = " + charsPerLine + ", must be in [12,42]"); }
             if (linesPerPage < 12 || linesPerPage > 43) { throw new UnsupportedPaperException("Lines per page = " + linesPerPage + ", must be in [12,43]"); }
-            if (topMargin    < 0  || topMargin    > 99) { throw new UnsupportedPaperException("Top margin = " + topMargin + " x 0.1\", must be in [0,99]"); }
-            if (bottomMargin < 0  || bottomMargin > 99) { throw new UnsupportedPaperException("Bottom margin = " + bottomMargin + " x 0.1\", must be in [0,99]"); }
+//            if (topMargin    < 0  || topMargin    > 99) { throw new EmbosserFactoryException("Top margin = " + topMargin + " x 0.1\", must be in [0,99]"); }
+//            if (bottomMargin < 0  || bottomMargin > 99) { throw new EmbosserFactoryException("Bottom margin = " + bottomMargin + " x 0.1\", must be in [0,99]"); }
+
+            StringBuffer header = new StringBuffer();
 
             header.append((char)0x1b); header.append(')');                          // Transparent mode
             header.append((char)0x1b); header.append(eightDots?'+':'*');            // 6- or 8-dot matrix
@@ -361,7 +387,7 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
                                        header.append((char)(0x30 + pageLength));    // Page length in inches
             header.append((char)0x1b); header.append("/1");                         // Line spacing in tenths of an inch
             header.append((char)0x1b); header.append('0');
-                                       header.append((char)(0x30 + cellsInWidth));  // Characters per line
+                                       header.append((char)(0x30 + charsPerLine));  // Characters per line
             header.append((char)0x1b); header.append('1');
                                        header.append((char)(0x30 + linesPerPage));  // Lines per page
             header.append((char)0x1b); header.append('3');                          // Cut off words
@@ -369,22 +395,15 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             header.append((char)0x1b); header.append("EP");
                                        header.append(String.valueOf(pageCount));
                                        header.append('\n');                         // Number of last page to emboss
-            header.append((char)0x1b); header.append("GU");
-                                       header.append(String.valueOf(marginInner));
-                                       header.append('\n');                         // Gutter
-            header.append((char)0x1b); header.append("IN0\n");                      // Indent first line of paragraph
-            header.append((char)0x1b); header.append("MB");
-                                       header.append(String.valueOf(bottomMargin));
-                                       header.append('\n');                         // Bottom margin in tenths of an inch
-            header.append((char)0x1b); header.append("ML");
-                                       header.append(String.valueOf(marginInner));
-                                       header.append('\n');                         // Left margin in characters
-            header.append((char)0x1b); header.append("MR");
-                                       header.append(String.valueOf(marginOuter));
-                                       header.append('\n');                         // Right margin in characters
-            header.append((char)0x1b); header.append("MT");
-                                       header.append(String.valueOf(topMargin));
-                                       header.append('\n');                         // Top margin in tenths of an inch
+            header.append((char)0x1b); header.append("GU0\n");                      // Gutter (binding margin) = 0
+            header.append((char)0x1b); header.append("IN0\n");                      // Indent first line of paragraph = 0
+            header.append((char)0x1b); header.append("MB0\n");                      // Bottom margin in tenths of an inch = 0
+            header.append((char)0x1b); header.append("ML0\n");                      // Left margin in characters = 0
+            header.append((char)0x1b); header.append("MR0\n");                      // Right margin in characters = 0
+            header.append((char)0x1b); header.append("MT0\n");                      // Top margin in tenths of an inch = 0
+            header.append((char)0x1b); header.append("NC1");
+                                       header.append(String.valueOf(numberOfCopies));
+                                       header.append('\n');                         // Number of copies
             header.append((char)0x1b); header.append("NC1\n");                      // Number of copies
             header.append((char)0x1b); header.append("PM0\n");                      // Embossing mode
             header.append((char)0x1b); header.append("PN0\n");                      // Number pages
@@ -394,4 +413,36 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             return header.toString().getBytes();
 
         }
+
+        private static byte[] getPortathielHeader(Settings settings)
+                                           throws EmbosserFactoryException {
+
+        boolean eightDots = settings.getEightDots();
+        boolean duplex = settings.getDuplex();
+        int linesPerPage = settings.getLinesInHeight();                             // in cells
+        int charsPerLine = settings.getCellsInWidth();                              // in cells
+        int pageLength = (int)Math.ceil(settings.getPageHeight()/Paper.INCH_IN_MM); // in inches
+
+        if (pageLength   < 8  || pageLength   > 13) { throw new UnsupportedPaperException("Paper height = " + pageLength + " inches, must be in [8,13]"); }
+        if (charsPerLine < 12 || charsPerLine > 42) { throw new UnsupportedPaperException("Characters per line = " + charsPerLine + ", must be in [12,42]"); }
+        if (linesPerPage < 10 || linesPerPage > 31) { throw new UnsupportedPaperException("Lines per page = " + linesPerPage + ", must be in [10,31]"); }
+
+        StringBuffer header = new StringBuffer();
+
+        header.append(  "\u001b!TP");                                             // Transparent mode ON
+        header.append("\r\u001b!DT");  header.append(eightDots?'6':'8');          // 6 or 8 dots
+        header.append("\r\u001b!DS");  header.append(duplex?'1':'0');             // Front-side or double-sided embossing
+        header.append("\r\u001b!LM0");                                            // Left margin
+        header.append("\r\u001b!SL1");                                            // Interline space = 1/10 inch
+        header.append("\r\u001b!PL");  header.append(toBytes(pageLength, 2));     // Page length in inches
+        header.append("\r\u001b!LP");  header.append(toBytes(linesPerPage, 2));   // Lines per page
+        header.append("\r\u001b!CL");  header.append(toBytes(charsPerLine, 2));   // Characters per line
+        header.append("\r\u001b!CT1");                                            // Cut off words
+        header.append("\r\u001b!NI1");                                            // No indent
+        header.append("\r\u001b!JB0");                                            // Jumbo mode OFF
+        header.append("\r\u001b!FF1");                                            // Form feeds ON
+        header.append('\r');
+
+        return header.toString().getBytes();
+    }
 }

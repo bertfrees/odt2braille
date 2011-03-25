@@ -30,6 +30,13 @@ public class TableStyle extends Style {
     protected boolean dontSplitRows;
     protected Style[] columns;
     protected String columnDelimiter;
+    protected int paddingAbove;
+    protected int paddingBelow;
+    protected boolean upperBorder;
+    protected boolean lowerBorder;
+    protected char upperBorderStyle;
+    protected char lowerBorderStyle;
+    protected int linesBetween;
 
     public TableStyle(TableStyle copyStyle) {
     
@@ -41,6 +48,14 @@ public class TableStyle extends Style {
         for (int i=0; i<columns.length; i++) {
             columns[i] = new Style(copyStyle.columns[i]);
         }
+        this.paddingAbove = copyStyle.paddingAbove;
+        this.paddingBelow = copyStyle.paddingBelow;
+        this.upperBorder = copyStyle.upperBorder;
+        this.lowerBorder = copyStyle.lowerBorder;
+        this.upperBorderStyle = copyStyle.upperBorderStyle;
+        this.lowerBorderStyle = copyStyle.lowerBorderStyle;
+        this.linesBetween = copyStyle.linesBetween;
+        
     }
 
     public TableStyle() {
@@ -52,15 +67,36 @@ public class TableStyle extends Style {
         for (int i=0; i<columns.length; i++) {
             columns[i] = new Style("table_" + (i+1));
         }
+        this.paddingAbove = 0;
+        this.paddingBelow = 0;
+        this.upperBorder = false;
+        this.lowerBorder = false;
+        this.upperBorderStyle = '\u2812';
+        this.lowerBorderStyle = '\u2812';
+        this.linesBetween = 0;
     }
 
     public void     setDontSplitRows    (boolean dontSplitRows)  { this.dontSplitRows = dontSplitRows; }
     public void     setStairstepTable   (boolean stairstep)      { this.stairstep = stairstep; }
     public void     setColumnDelimiter  (String delimiter)       { this.columnDelimiter = delimiter; }
+    public void     setPaddingAbove     (int paddingAbove)       { if (paddingAbove >= 0) { this.paddingAbove = paddingAbove; }}
+    public void     setPaddingBelow     (int paddingBelow)       { if (paddingBelow >= 0) { this.paddingBelow = paddingBelow; }}
+    public void     setUpperBorder      (boolean border)         { this.upperBorder = border; }
+    public void     setLowerBorder      (boolean border)         { this.lowerBorder = border; }
+    public void     setUpperBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.upperBorderStyle = border; }}
+    public void     setLowerBorderStyle (char border)            { if (border > 0x2800 && border < 0x2840) { this.lowerBorderStyle = border; }}
+    public void     setLinesBetween     (int linesBetween)       { if (linesBetween >= 0) { this.linesBetween = linesBetween; }}
 
     public boolean  getDontSplitRows   ()          { return getDontSplit() || dontSplitRows; }
     public boolean  getStairstepTable  ()          { return stairstep; }
     public String   getColumnDelimiter ()          { return columnDelimiter; }
     public Style    getColumn          (int index) { return (index <= columns.length && index > 0)?columns[index-1]:null; }
+    public int      getPaddingAbove    ()          { return paddingAbove; }
+    public int      getPaddingBelow    ()          { return paddingBelow; }
+    public boolean  getUpperBorder     ()          { return upperBorder; }
+    public boolean  getLowerBorder     ()          { return lowerBorder; }
+    public char     getUpperBorderStyle()          { return upperBorderStyle; }
+    public char     getLowerBorderStyle()          { return lowerBorderStyle; }
+    public int      getLinesBetween    ()          { return linesBetween; }
     
 }

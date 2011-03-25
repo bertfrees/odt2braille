@@ -182,8 +182,8 @@ flat xml odt file to a @url{http://www.daisy.org/projects/braille/braille_workar
 generic braille formats, or it can be converted to an embosser-specific braille file
 (and optionally sent to an embosser device).
 The braille transcription is powered by liblouisxml, and for the pef processing, odt2braille uses
-the BrailleUtils library. The Java OpenDocument Library (JODL) is used for creating and cleaning 
-the flat .odt file (see @url{http://odt2daisy.sourceforge.net/downloads/}).
+the BrailleUtils library. For cleaning, modifying and preparing the .odt file, code of the Java 
+OpenDocument Library (JODL) is used (see @url{http://odt2daisy.sourceforge.net/downloads/}).
 
 @unnumberedsubsec Documentation
 

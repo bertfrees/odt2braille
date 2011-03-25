@@ -25,39 +25,39 @@ package be.docarch.odt2braille;
  */
 public class SpecialSymbol {
 
-    public enum SpecialSymbolType { LETTER_INDICATOR,
-                                    NUMBER_INDICATOR,
-                                    NOTE_REFERENCE_INDICATOR,
-                                    TRANSCRIBERS_NOTE_INDICATOR,
-                                    ITALIC_INDICATOR,
-                                    BOLDFACE_INDICATOR,
-                                    ELLIPSIS,
-                                    DOUBLE_DASH,
-                                    OTHER };
+    public enum Type { LETTER_INDICATOR,
+                       NUMBER_INDICATOR,
+                       NOTE_REFERENCE_INDICATOR,
+                       TRANSCRIBERS_NOTE_INDICATOR,
+                       ITALIC_INDICATOR,
+                       BOLDFACE_INDICATOR,
+                       ELLIPSIS,
+                       DOUBLE_DASH,
+                       OTHER };
 
-    public enum SpecialSymbolMode { NEVER,
-                                    FIRST_VOLUME,
-                                    IF_PRESENT_IN_VOLUME,
-                                    ALWAYS };
+    public enum Mode { NEVER,
+                       FIRST_VOLUME,
+                       IF_PRESENT_IN_VOLUME,
+                       ALWAYS };
 
     private String symbol;
     private String description;
-    private SpecialSymbolType type;
-    private SpecialSymbolMode mode;
+    private Type type;
+    private Mode mode;
 
     public SpecialSymbol() {
-        this("\u2800", "", SpecialSymbolType.OTHER, SpecialSymbolMode.NEVER);
+        this("\u2800", "", Type.OTHER, Mode.NEVER);
     }
 
     public SpecialSymbol(String symbol,
                          String description,
-                         SpecialSymbolType type,
-                         SpecialSymbolMode mode) {
+                         Type type,
+                         Mode mode) {
 
         if (!setSymbol(symbol)) { this.symbol = "\u2800"; }
         setDescription(description);
         this.type = type;
-        if (!setMode(mode)) { this.mode = SpecialSymbolMode.NEVER; }
+        if (!setMode(mode)) { this.mode = Mode.NEVER; }
     }
 
     public SpecialSymbol(SpecialSymbol copySpecialSymbol) {
@@ -79,10 +79,10 @@ public class SpecialSymbol {
     }
 
     public void setDescription(String description)     { this.description = description; }
-    public void setType       (SpecialSymbolType type) { this.type = type; }
+    public void setType       (Type type) { this.type = type; }
 
-    public boolean setMode(SpecialSymbolMode mode) {
-        if (this.type != SpecialSymbolType.OTHER || mode != SpecialSymbolMode.IF_PRESENT_IN_VOLUME) {
+    public boolean setMode(Mode mode) {
+        if (this.type != Type.OTHER || mode != Mode.IF_PRESENT_IN_VOLUME) {
             this.mode = mode;
             return true;
         } else {
@@ -92,8 +92,8 @@ public class SpecialSymbol {
 
     public String            getSymbol()      { return this.symbol;}
     public String            getDescription() { return this.description;}
-    public SpecialSymbolType getType()        { return this.type; }
-    public SpecialSymbolMode getMode()        { return this.mode; }
+    public Type getType()        { return this.type; }
+    public Mode getMode()        { return this.mode; }
 
     public String getDots() {
 

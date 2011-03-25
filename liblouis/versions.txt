@@ -22,5 +22,6 @@
     * handling of soft hyphens
     * improved handling of linesBefore, linesAfter
     * new style attributes: centeredMargin, dontSplit, keepWithNext, widowControl, orphanControl, linesFromTop
+	* heading5..10 and contents5..10
     
   => TODO: merge this modified version with latest liblouisxml (or liblouisutdml) version

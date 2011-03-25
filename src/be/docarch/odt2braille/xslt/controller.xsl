@@ -45,6 +45,11 @@
                     indent="no"
                     omit-xml-declaration="no"/>
 
+        <xsl:param name="paramFrontMatterSection"      as="xsd:string"   />
+        <xsl:param name="paramExtFrontMatterSection"   as="xsd:string"   />
+        <xsl:param name="paramTitlePageSection"        as="xsd:string"   />
+        <xsl:param name="paramVolumeSections"          as="xsd:string*"  />
+
         <xsl:param    name="styles-url"       as="xsd:string" />
         <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
         <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
@@ -54,7 +59,8 @@
 
     <xsl:template match="/">
         <rdf:RDF>
-            <xsl:apply-templates select="//table:table |
+            <xsl:apply-templates select="//text:section |
+                                         //table:table |
                                          //draw:frame |
                                          //text:p[@xml:id]"/>
         </rdf:RDF>
@@ -63,13 +69,55 @@
     <!-- VOLUME MANAGEMENT -->
     
     <xsl:template match="text:section">
-         
-        
+        <xsl:variable name="section-name" select="@text:name" />
+        <xsl:variable name="i" as="xsd:integer">
+            <xsl:call-template name="get-volume-index">
+                <xsl:with-param name="section-name" select="$section-name" />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:if test="$i>0">
+            <ns1:volume>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:volume>
+        </xsl:if>
+        <xsl:if test="$section-name=$paramFrontMatterSection">
+            <ns1:basic-frontmatter>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:basic-frontmatter>
+        </xsl:if>
+        <xsl:if test="$section-name=$paramExtFrontMatterSection and
+                      descendant::text:section[@text:name=$paramFrontMatterSection]">
+            <ns1:ext-frontmatter>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:ext-frontmatter>
+        </xsl:if>
+        <xsl:if test="$section-name=$paramTitlePageSection and
+                      (ancestor::text:section[@text:name=$paramFrontMatterSection]
+                        or self::text:section[@text:name=$paramFrontMatterSection])">
+            <ns1:titlepage>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:titlepage>
+        </xsl:if>
+    </xsl:template>
 
-
-
-         
-         
+    <xsl:template name="get-volume-index">
+        <xsl:param name="section-name" as="xsd:string" />
+        <xsl:variable name="occurences" as="xsd:integer*">
+            <xsl:for-each select="$paramVolumeSections">
+                <xsl:variable name="i" select="position()" />
+                <xsl:if test=".=$section-name">
+                    <xsl:sequence select="$i" />
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$occurences[1]">
+                <xsl:value-of select="$occurences[1]" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="-1" />
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
 
 
@@ -95,7 +143,7 @@
             </xsl:variable>
             <xsl:if test="$caption-id and not($is-empty)">
                 <ns1:table>
-                    <xsl:attribute name="rdf:about" select="$table-name" />
+                    <xsl:attribute name="rdf:about" select="concat('table:/',$table-name)" />
                     <ns1:hasCaption>
                         <xsl:attribute name="rdf:resource" select="$caption-id" />
                     </ns1:hasCaption>
@@ -175,7 +223,7 @@
         </xsl:variable>
         <xsl:if test="string-length($caption-id)>0">
             <ns1:frame>
-                <xsl:attribute name="rdf:about" select="$frame-name" />
+                <xsl:attribute name="rdf:about" select="concat('frame:/',$frame-name)" />
                 <ns1:hasCaption>
                     <xsl:attribute name="rdf:resource" select="$caption-id" />
                 </ns1:hasCaption>

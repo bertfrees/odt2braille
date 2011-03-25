@@ -53,11 +53,12 @@
         <xsl:param    name="paramUnnaturalVolumeBreak"   as="xsd:string" />
 
         <xsl:param    name="paramTimestamp"              as="xsd:string" />
+        <xsl:param    name="paramTocEnabled"             as="xsd:string" />
         <xsl:param    name="content-url"                 as="xsd:string" />
-        <xsl:param    name="meta-url"                    as="xsd:string" />
+    <!--<xsl:param    name="meta-url"                    as="xsd:string" />-->
 
         <xsl:variable name="body"            select="doc($content-url)/office:document-content/office:body" />
-        <xsl:variable name="meta"            select="doc($meta-url)/office:document-meta" />
+    <!--<xsl:variable name="meta"            select="doc($meta-url)/office:document-meta" />-->
 
         <xsl:variable name="content-base"    select="'../../content.xml#'" />
         
@@ -73,7 +74,7 @@
                 </foaf:member>
             </foaf:Group>
 
-            <xsl:if test="not($body/office:text/text:section[@text:name='PreliminaryPages'])">
+            <xsl:if test="not(//ns2:frontmatter)">
                 <earl:Assertion>
                     <earl:assertedBy rdf:nodeID="assertor" />
                     <earl:subject>
@@ -98,7 +99,7 @@
             </xsl:if>
 
 
-            <xsl:if test="not($body//text:section[@text:name='TitlePage'])">
+            <xsl:if test="not(//ns2:titlepage)">
                 <earl:Assertion>
                     <earl:assertedBy rdf:nodeID="assertor" />
                     <earl:subject>
@@ -122,10 +123,7 @@
                 </earl:Assertion>
             </xsl:if>
             
-            <xsl:if test="not($body/office:text/text:section[@text:name='PreliminaryPages']
-                              and string($meta/meta:user-defined[@meta:name='[BRL]TableOfContent'
-                                                         and @meta:value-type='boolean'][1])='true')
-                          and($body/office:text//text:table-of-content)">
+            <xsl:if test="not($paramTocEnabled) and $body/office:text//text:table-of-content">
                 <earl:Assertion>
                     <earl:assertedBy rdf:nodeID="assertor" />
                     <earl:subject>

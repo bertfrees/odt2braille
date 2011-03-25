@@ -20,7 +20,7 @@
 package be.docarch.odt2braille.ooo;
 
 import java.io.File;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
@@ -64,7 +64,6 @@ import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.Volume;
-import be.docarch.odt2braille.Volume.VolumeType;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Checker;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
@@ -109,7 +108,7 @@ public class UnoGUI {
 
     private OdtTransformer odtTransformer = null;
 
-    private String liblouisPath = null;
+    private File liblouisLocation = null;
 
     private SettingsIO settingsIO = null;
     private ProgressBar progressBar = null;
@@ -226,9 +225,10 @@ public class UnoGUI {
             odtLocale = odtTransformer.getOdtLocale();
 
             // Set liblouis directory
-            liblouisPath = new File(UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
-                                .getPackageLocation(Constants.OOO_PACKAGE_NAME)
-                                + "/liblouis/", m_xContext)).getAbsolutePath();
+            String packageLocation = UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
+                                        .getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/", m_xContext);
+
+            liblouisLocation = new File(packageLocation + File.separator + "liblouis");
 
             // Create new settingsIO
             settingsIO = new SettingsIO(m_xContext, xDesktopComponent);
@@ -240,7 +240,11 @@ public class UnoGUI {
 
             logger.exiting("UnoGUI", "initialise");
 
+        } catch (ParserConfigurationException ex) {
+            handleUnexpectedException(ex);
         } catch (IOException ex) {
+            handleUnexpectedException(ex);
+        } catch (SAXException ex) {
             handleUnexpectedException(ex);
         } catch (com.sun.star.uno.Exception ex) {
             handleUnexpectedException(ex);
@@ -369,7 +373,7 @@ public class UnoGUI {
             settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings);
 
             // Create LiblouisXML
-            LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
+            LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
             // Checker
             checker = new Checker(oooLocale, changedSettings, odtTransformer);
@@ -397,7 +401,7 @@ public class UnoGUI {
             // Convert to Braille file(s)
             if (changedSettings.getBrailleFileType() == BrailleFileType.PEF)  {
 
-                if (changedSettings.getMultipleFiles()) {
+                if (changedSettings.getMultipleFilesEnabled()) {
                     brailleFiles = pef.getPEFs();
                 } else {
                     brailleFiles = new File[] { pef.getSinglePEF() };
@@ -472,9 +476,7 @@ public class UnoGUI {
                     fileName = folderName.substring(0, folderName.lastIndexOf(brailleExt));
                 }
 
-                ArrayList<Volume> volumes = pef.getVolumes();
-                Volume volume;
-                String suffix;
+                List<Volume> volumes = changedSettings.getVolumes();
 
                 if (brailleFiles.length != volumes.size()) {
                     logger.log(Level.INFO, "The number of brailleFiles is not equals to the number of volumes");
@@ -483,13 +485,7 @@ public class UnoGUI {
 
                 for (int i=0; i<brailleFiles.length; i++) {
 
-                    volume = volumes.get(i);
-                    if      (volume.getType() == VolumeType.NORMAL)      { suffix = ".volume"; }
-                    else if (volume.getType() == VolumeType.PRELIMINARY) { suffix = ".preliminary"; }
-                    else                                                 { suffix = ".supplement"; }
-                    suffix += volume.getNumber();
-
-                    newFile = new File(newFolder.getAbsolutePath() + fileSeparator + fileName + "." + i + suffix + brailleExt);
+                    newFile = new File(newFolder.getAbsolutePath() + fileSeparator + fileName + "." + (i+1) + brailleExt);
 
                     if (newFile.exists()) { newFile.delete(); }
                     brailleFiles[i].renameTo(newFile);
@@ -619,7 +615,7 @@ public class UnoGUI {
             settingsIO.saveEmbossSettingsToOpenOffice(changedSettings, loadedSettings);
 
             // Create LiblouisXML
-            LiblouisXML liblouisXML = new LiblouisXML(liblouisPath, changedSettings);
+            LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
             // Checker
             checker = new Checker(oooLocale, changedSettings, odtTransformer);
@@ -723,6 +719,9 @@ public class UnoGUI {
                     case INDEX_4X4_PRO_V2:
                         printDialog.setMaxNumberOfCopies(999);
                         break;
+                    case IMPACTO_600:
+                    case IMPACTO_TEXTO:
+                        printDialog.setMaxNumberOfCopies(32767);
                     default:
 
                 }
@@ -893,6 +892,12 @@ public class UnoGUI {
     public void clean () {
         if (progressBar != null) {
             progressBar.close();
+        }
+        if (odtTransformer != null) {
+            try {
+                odtTransformer.close();
+            } catch (IOException e) {
+            }
         }
         if (fh != null) {
             fh.flush();

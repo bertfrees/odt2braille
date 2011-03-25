@@ -2850,10 +2850,6 @@ styleBody (void)
 
 /**** Removed by Bert Frees ***************************************
       if (ud->braille_pages && ud->braille_page_number_at && (action ==
-/**** Added by Bert Frees *****************************************/
-      if (ud->braille_pages && (action ==
-/******************************************************************/
-
 							      heading1
 							      || action ==
 							      heading2
@@ -2861,6 +2857,15 @@ styleBody (void)
 							      heading3
 							      || action ==
 							      heading4))
+/**** Added by Bert Frees *****************************************/
+      if (ud->braille_pages && (action == heading1 || action == heading2 ||
+                                action == heading3 || action == heading4 ||
+                                action == heading5 || action == heading6 ||
+                                action == heading7 || action == heading8 ||
+                                action == heading9 || action == heading10))
+/******************************************************************/
+
+
 	getBraillePageString ();
       start_heading (action, translatedBuffer, translatedLength);
     }

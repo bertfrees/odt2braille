@@ -20,11 +20,13 @@
 package be.docarch.odt2braille.ooo;
 
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.TreeMap;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -81,9 +83,9 @@ public class EmbossDialog implements XItemListener,
     private ProgressBar progressbar = null;
     private SettingsDialog settingsDialog = null;
 
-    private ArrayList<EmbosserType> embosserTypes = null;
-    private ArrayList<TableType> tableTypes = null;
-    private ArrayList<PaperSize> paperSizes = null;
+    private List<EmbosserType> embosserTypes = null;
+    private List<TableType> tableTypes = null;
+    private List<PaperSize> paperSizes = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -207,9 +209,9 @@ public class EmbossDialog implements XItemListener,
     private String L10N_saddleStitchLabel = null;
     private String L10N_sheetsPerQuireLabel = null;
 
-    private TreeMap<EmbosserType,String> L10N_embosser = new TreeMap<EmbosserType,String>();
-    private TreeMap<TableType,String> L10N_table = new TreeMap<TableType,String>();
-    private TreeMap<PaperSize,String> L10N_paperSize = new TreeMap<PaperSize,String>();
+    private Map<EmbosserType,String> L10N_embosser = new TreeMap<EmbosserType,String>();
+    private Map<TableType,String> L10N_table = new TreeMap<TableType,String>();
+    private Map<PaperSize,String> L10N_paperSize = new TreeMap<PaperSize,String>();
 
 
     public EmbossDialog(XComponentContext xContext,
@@ -264,7 +266,7 @@ public class EmbossDialog implements XItemListener,
         L10N_saddleStitchLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saddleStitchLabel");
         L10N_sheetsPerQuireLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("sheetsPerQuireLabel") + ":";
 
-        L10N_embosser.put(EmbosserType.NONE,                    "-");
+        L10N_embosser.put(EmbosserType.NONE,                    "Generic");
         L10N_embosser.put(EmbosserType.INDEX_3_7,               "Index 3.7");
         L10N_embosser.put(EmbosserType.INDEX_ADVANCED,          "Index Advanced");
         L10N_embosser.put(EmbosserType.INDEX_BASIC_BLUE_BAR,    "Index Basic Blue-Bar");
@@ -293,16 +295,20 @@ public class EmbossDialog implements XItemListener,
         L10N_embosser.put(EmbosserType.PORTATHIEL_BLUE,         "Portathiel Blue");
 
         L10N_table.put(TableType.UNDEFINED,             "-");
-        L10N_table.put(TableType.EN_US,                 "US Computer Braille");
-        L10N_table.put(TableType.EN_GB,                 "US Computer Braille (Lower Case)");
         L10N_table.put(TableType.BRAILLO_6DOT_001_00,   "Braillo USA 6 Dot 001.00");
         L10N_table.put(TableType.BRAILLO_6DOT_044_00,   "Braillo England 6 Dot 044.00");
         L10N_table.put(TableType.BRAILLO_6DOT_046_01,   "Braillo Sweden 6 Dot 046.01");
         L10N_table.put(TableType.BRAILLO_6DOT_047_01,   "Braillo Norway 6 Dot 047.01");
-        L10N_table.put(TableType.IMPACTO,               "Impacto");
-        L10N_table.put(TableType.IMPACTO_256,           "Impacto");
-        L10N_table.put(TableType.INDEX_TRANSPARENT,     "Index");
-        L10N_table.put(TableType.INDEX_TRANSPARENT_256, "Index");
+        L10N_table.put(TableType.EN_US,                 "US English (Uppercase)");
+        L10N_table.put(TableType.EN_GB,                 "UK English (Lowercase)");
+        L10N_table.put(TableType.NL,                    "Dutch");
+        L10N_table.put(TableType.DA_DK,                 "Danish");
+        L10N_table.put(TableType.DE_DE,                 "German");
+        L10N_table.put(TableType.IT_IT_FIRENZE,         "Italian");
+        L10N_table.put(TableType.SV_SE_CX,              "Swedish");
+        L10N_table.put(TableType.SV_SE_MIXED,           "Swedish (2)");
+        L10N_table.put(TableType.ES_OLD,                "Spanish (Old)");
+        L10N_table.put(TableType.ES_NEW,                "Spanish (New)");
 
         L10N_paperSize.put(PaperSize.UNDEFINED,         "-");
         L10N_paperSize.put(PaperSize.A4_LANDSCAPE,      "A4 (Landscape)");
@@ -546,7 +552,9 @@ public class EmbossDialog implements XItemListener,
 
     private void getDialogValues() {
 
-        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        if (tableTypes.size() > 1) {
+            settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        }
         settings.setSheetsPerQuire((int)sheetsPerQuireField.getValue());
 
     }
@@ -556,8 +564,9 @@ public class EmbossDialog implements XItemListener,
      *
      */
     private void updateOKButton() throws com.sun.star.uno.Exception {
-        okButtonProperties.setPropertyValue("Enabled", settings.getPaperSize()!=PaperSize.UNDEFINED &&
-                                                       settings.getEmbosser()!=EmbosserType.NONE);
+        okButtonProperties.setPropertyValue("Enabled", settings.getPaperSize()!=null &&
+                                                       settings.getEmbosser()!=null ||
+                                                       settings.getPaperSize()!=null);
     }
 
     /**
@@ -596,17 +605,21 @@ public class EmbossDialog implements XItemListener,
 
         tableListBox.removeItems((short)0, Short.MAX_VALUE);
         tableTypes = settings.getSupportedTableTypes();
-        for (int i=0;i<tableTypes.size();i++) {
-            key = tableTypes.get(i);
-            if (L10N_table.containsKey(key)) {
-                tableListBox.addItem(L10N_table.get(key), (short)i);
-            } else {
-                tableListBox.addItem(key.name(), (short)i);
-            }
-        }
-        tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-        tableListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
 
+        if (tableTypes.size() > 1) {
+            tableListBoxProperties.setPropertyValue("Enabled", true);
+            for (int i=0;i<tableTypes.size();i++) {
+                key = tableTypes.get(i);
+                if (L10N_table.containsKey(key)) {
+                    tableListBox.addItem(L10N_table.get(key), (short)i);
+                } else {
+                    tableListBox.addItem(key.name(), (short)i);
+                }
+            }
+            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
+        } else {
+            tableListBoxProperties.setPropertyValue("Enabled", false);
+        }
     }
 
     /**
@@ -629,8 +642,12 @@ public class EmbossDialog implements XItemListener,
                     paperSizeListBox.addItem(key.name(), (short)i);
                 }
             }
-            paperSizeListBox.selectItemPos((short)paperSizes.indexOf(settings.getPaperSize()), true);
-            paperSizeListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=EmbosserType.NONE);
+            if (paperSizes.size() > 0) {
+                paperSizeListBox.selectItemPos((short)paperSizes.indexOf(settings.getPaperSize()), true);
+                paperSizeListBoxProperties.setPropertyValue("Enabled", settings.getEmbosser()!=null);
+            } else {
+                paperSizeListBoxProperties.setPropertyValue("Enabled", false);
+            }
 
         paperSizeListBox.addItemListener(this);
 
@@ -643,10 +660,10 @@ public class EmbossDialog implements XItemListener,
 
             paperWidthFieldProperties.setPropertyValue("Enabled", settings.getPaperSize() == PaperSize.CUSTOM);
             paperHeightFieldProperties.setPropertyValue("Enabled", settings.getPaperSize() == PaperSize.CUSTOM);
-            paperWidthUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != PaperSize.UNDEFINED);
-            paperHeightUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != PaperSize.UNDEFINED);
+            paperWidthUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != null);
+            paperHeightUnitListBoxProperties.setPropertyValue("Enabled", settings.getPaperSize() != null);
 
-            if (settings.getPaperSize() == PaperSize.UNDEFINED) {
+            if (settings.getPaperSize() == null) {
 
                 paperWidthField.setDecimalDigits((short)0);
                 paperHeightField.setDecimalDigits((short)0);

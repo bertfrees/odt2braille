@@ -22,10 +22,10 @@ package be.docarch.odt2braille.ooo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.logging.Logger;
-import java.util.ArrayList;
-import java.util.logging.Level;
+import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
@@ -43,14 +43,13 @@ import com.sun.star.text.XTextDocument;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.SettingsLoader;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import be.docarch.odt2braille.Settings.PageNumberPosition;
 import be.docarch.odt2braille.SpecialSymbol;
-import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolMode;
-import be.docarch.odt2braille.SpecialSymbol.SpecialSymbolType;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
 import be.docarch.odt2braille.ParagraphStyle;
@@ -77,7 +76,7 @@ import java.io.IOException;
  * @see         be.docarch.odt2braille.Settings
  * @author      Bert Frees
  */
-public class SettingsIO {
+public class SettingsIO extends SettingsLoader {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
@@ -93,102 +92,9 @@ public class SettingsIO {
 
     private final static short OPTIONAL = (short) 256;
 
-    // Braille settings
-
-    private static String brailleRulesProperty =                 "[BRL]BrailleRules";
-    private static String languageProperty =                     "[BRL]Language";
-    private static String gradeProperty =                        "[BRL]Grade";
-    private static String dotsProperty =                         "[BRL]Dots";
-    private static String transcriptionInfoEnabledProperty =     "[BRL]TranscriptionInfo";
-    private static String creatorProperty =                      "[BRL]Creator";
-    private static String volumeInfoEnabledProperty =            "[BRL]VolumeInfo";
-    private static String transcriptionInfoStyleProperty =       "[BRL]TranscriptionInfoStyle";
-    private static String volumeInfoStyleProperty =              "[BRL]VolumeInfoStyle";
-    private static String specialSymbolsListEnabledProperty =    "[BRL]ListOfSpecialSymbols";
-    private static String specialSymbolsListTitleProperty =      "[BRL]ListOfSpecialSymbolsTitle";
-    private static String transcribersNotesPageEnabledProperty = "[BRL]TNPage";
-    private static String transcribersNotesPageTitleProperty =   "[BRL]TNPageTitle";
-    private static String tableOfContentEnabledProperty =        "[BRL]TableOfContent";
-    private static String tableOfContentTitleProperty =          "[BRL]TableOfContentTitle";
-    private static String preliminaryVolumeEnabledProperty =     "[BRL]PreliminaryVolume";
-    private static String stairstepTableProperty =               "[BRL]StairstepTable";
-    private static String columnDelimiterProperty =              "[BRL]ColumnDelimiter";
-    private static String lineFillSymbolProperty =               "[BRL]LineFillSymbol";
-    private static String mathProperty =                         "[BRL]Math";
-    private static String inheritProperty =                      "[BRL]Inherit";
-    private static String alignmentProperty =                    "[BRL]Alignment";
-    private static String firstLineProperty =                    "[BRL]FirstLineIndent";
-    private static String runoversProperty =                     "[BRL]Runovers";
-    private static String marginLeftRightProperty =              "[BRL]MarginLeftRight";
-    private static String linesAboveProperty =                   "[BRL]LinesAbove";
-    private static String linesBelowProperty =                   "[BRL]LinesBelow";
-    private static String linesBetweenProperty =                 "[BRL]LinesBetween";
-    private static String prefixProperty =                       "[BRL]ListPrefix";
-    private static String keepEmptyParagraphsProperty =          "[BRL]KeepEmptyParagraphs";
-    private static String newBraillePage =                       "[BRL]NewBraillePage";
-    private static String dontSplitProperty =                    "[BRL]DontSplit";
-    private static String dontSplitTableRowsProperty =           "[BRL]DontSplitTableRows";
-    private static String dontSplitItemsProperty =               "[BRL]DontSplitItems";
-    private static String keepWithNextProperty =                 "[BRL]KeepWithNext";
-    private static String orphanControlEnabledProperty =         "[BRL]OrphanControlEnabled";
-    private static String widowControlEnabledProperty =          "[BRL]WidowControlEnabled";
-    private static String orphanControlProperty =                "[BRL]OrphanControl";
-    private static String widowControlProperty =                 "[BRL]WidowControl";
-    private static String boldProperty =                         "[BRL]Boldface";
-    private static String italicProperty =                       "[BRL]Italic";
-    private static String underlineProperty =                    "[BRL]Underline";
-    private static String capsProperty =                         "[BRL]Capitals";
-    private static String printPageNumbersProperty =             "[BRL]PrintPageNumbers";
-    private static String braillePageNumbersProperty =           "[BRL]BraillePageNumbers";
-    private static String pageSeparatorProperty =                "[BRL]PageSeparator";
-    private static String pageSeparatorNumberProperty =          "[BRL]PageSeparatorNumber";
-    private static String continuePagesProperty =                "[BRL]ContinuePages";
-    private static String ignoreEmptyPagesProperty =             "[BRL]IgnoreEmptyPages";
-    private static String mergeUnnumberedPagesProperty =         "[BRL]MergeUnnumberedPages";
-    private static String pageNumberAtTopOnSepLineProperty =     "[BRL]PageNumberAtTopOnSepLine";
-    private static String pageNumberAtBottomOnSepLineProperty =  "[BRL]PageNumberAtBottomOnSepLine";
-    private static String printPageNumberRangeProperty =         "[BRL]PrintPageNumberRange";
-    private static String printPageNumberAtProperty =            "[BRL]PrintPageNumberAt";
-    private static String braillePageNumberAtProperty =          "[BRL]BraillePageNumberAt";
-    private static String preliminaryPageNumberFormatProperty =  "[BRL]PreliminaryPageNumberFormat";
-    private static String beginningBraillePageNumberProperty =   "[BRL]BeginningBraillePageNumber";
-    private static String printPageNumbersInTocProperty =        "[BRL]PrintpageNumbersInToc";
-    private static String braillePageNumbersInTocProperty =      "[BRL]BrintpageNumbersInToc";
-    private static String hardPageBreaksProperty =               "[BRL]HardPageBreaks";
-    private static String hyphenateProperty =                    "[BRL]Hyphenation";
-    private static String specialSymbolProperty =                "[BRL]SpecialSymbol";
-    private static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
-
-    // Export settings
-
-    private static String exportFileProperty =                   "[BRL]ExportFileType";
-    private static String exportTableProperty =                  "[BRL]ExportCharacterSet";
-    private static String exportNumberOfCellsPerLineProperty =   "[BRL]ExportCellsPerLine";
-    private static String exportNumberOfLinesPerPageProperty =   "[BRL]ExportLinesPerPage";
-    private static String exportDuplexProperty =                 "[BRL]ExportRectoVerso";
-    private static String exportEightDotsProperty =              "[BRL]ExportEightDots";
-    private static String exportMultipleFilesProperty =          "[BRL]ExportMultipleFiles";
-
-    // Emboss settings
-
-    private static String embosserProperty =                     "[BRL]Embosser";
-    private static String saddleStitchProperty =                 "[BRL]SaddleStitch";
-    private static String sheetsPerQuireProperty =               "[BRL]SheetsPerQuire";
-    private static String zFoldingProperty =                     "[BRL]ZFolding";
-    private static String paperSizeProperty =                    "[BRL]PaperSize";
-    private static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
-    private static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
-    private static String marginLeftProperty =                   "[BRL]MarginLeft";
-    private static String marginTopProperty =                    "[BRL]MarginTop";
-    private static String embossTableProperty =                  "[BRL]EmbossCharacterSet";
-    private static String embossNumberOfCellsPerLineProperty =   "[BRL]EmbossCellsPerLine";
-    private static String embossNumberOfLinesPerPageProperty =   "[BRL]EmbossLinesPerPage";
-    private static String embossDuplexProperty =                 "[BRL]EmbossRectoVerso";
-    private static String embossEightDotsProperty =              "[BRL]EmbossEightDots";
-
 
     /**
-     * Creates a new <code>SettingsIO</code> instance.
+     * Creates a new <code>SettingsLoader</code> instance.
      *
      * @param   xContext
      */
@@ -304,13 +210,14 @@ public class SettingsIO {
         Double d;
         Boolean b;
 
-        ArrayList<String> languages = loadedSettings.getLanguages();
-        ArrayList<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
-        ArrayList<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
-        ArrayList<HeadingStyle> headingStyles = loadedSettings.getHeadingStyles();
-        ArrayList<ListStyle> listStyles = loadedSettings.getListStyles();
+        List<String> languages = loadedSettings.getLanguages();
+        List<ParagraphStyle> paragraphStyles = loadedSettings.getParagraphStyles();
+        List<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
+        List<HeadingStyle> headingStyles = loadedSettings.getHeadingStyles();
+        List<ListStyle> listStyles = loadedSettings.getListStyles();
         TableStyle tableStyle = loadedSettings.getTableStyle();
         TocStyle tocStyle = loadedSettings.getTocStyle();
+        Style footnoteStyle = loadedSettings.getFootnoteStyle();
         ParagraphStyle paraStyle = null;
         CharacterStyle charStyle = null;
         HeadingStyle headStyle = null;
@@ -469,6 +376,28 @@ public class SettingsIO {
             if ((b = getBooleanProperty(newBraillePage + "_heading_" + level)) != null) {
                 headStyle.setNewBraillePage(b);
             }
+            if ((b = getBooleanProperty(upperBorderProperty + "_heading_" + level)) != null) {
+                headStyle.setUpperBorder(b);
+            }
+            if ((b = getBooleanProperty(lowerBorderProperty + "_heading_" + level)) != null) {
+                headStyle.setLowerBorder(b);
+            }
+            if ((s = getStringProperty(upperBorderStyleProperty + "_heading_" + level)) != null) {
+                if (s.length()==1) {
+                    headStyle.setUpperBorderStyle(s.charAt(0));
+                }
+            }
+            if ((s = getStringProperty(lowerBorderStyleProperty + "_heading_" + level)) != null) {
+                if (s.length()==1) {
+                    headStyle.setLowerBorderStyle(s.charAt(0));
+                }
+            }
+            if (!((d = getDoubleProperty(paddingAboveProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setPaddingAbove(d.intValue());
+            }
+            if (!((d = getDoubleProperty(paddingBelowProperty + "_heading_" + level)).isNaN())) {
+                headStyle.setPaddingBelow(d.intValue());
+            }
         }
 
         for (int i=0;i<listStyles.size();i++) {
@@ -501,7 +430,7 @@ public class SettingsIO {
                     logger.log(Level.SEVERE, null, s + " is no valid alignment option");
                 }
             }
-            if ((s = getStringProperty(prefixProperty + "_list_" + level)) != null) {
+            if ((s = getStringProperty(listPrefixProperty + "_list_" + level)) != null) {
                 listStyle.setPrefix(s);
             }
             if ((b = getBooleanProperty(dontSplitItemsProperty + "_list_" + level)) != null) {
@@ -586,8 +515,11 @@ public class SettingsIO {
                 loadedSettings.setLineFillSymbol(s.charAt(0));
             }
         }
+        if (!(d = getDoubleProperty(tableOfContentLevelProperty)).isNaN()) {
+            tocStyle.setUptoLevel(d.intValue());
+        }
 
-        for (level=1;level<=4;level++) {
+        for (level=1;level<=10;level++) {
 
             style = tocStyle.getLevel(level);
 
@@ -598,6 +530,35 @@ public class SettingsIO {
                 if (!((d = getDoubleProperty(runoversProperty + "_toc_" + level)).isNaN())) {
                     style.setRunovers(d.intValue());
                 }
+            }
+        }
+
+        if (!(d = getDoubleProperty(firstLineProperty + "_footnote")).isNaN()) {
+            footnoteStyle.setFirstLine(d.intValue());
+        }
+        if (!((d = getDoubleProperty(runoversProperty + "_footnote")).isNaN())) {
+            footnoteStyle.setRunovers(d.intValue());
+        }
+        if (!((d = getDoubleProperty(marginLeftRightProperty + "_footnote")).isNaN())) {
+            footnoteStyle.setMarginLeftRight(d.intValue());
+        }
+        if (!((d = getDoubleProperty(linesAboveProperty + "_footnote")).isNaN())) {
+            footnoteStyle.setLinesAbove(d.intValue());
+        }
+        if (!((d = getDoubleProperty(linesBelowProperty + "_footnote")).isNaN())) {
+            footnoteStyle.setLinesBelow(d.intValue());
+        }
+        if ((s = getStringProperty(alignmentProperty + "_footnote")) != null) {
+            try {
+                footnoteStyle.setAlignment(Alignment.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid alignment option");
+            }
+        }
+
+        for (String format : loadedSettings.getNoterefNumberFormats()) {
+            if ((s = getStringProperty(noterefPrefixProperty + "_" + format)) != null) {
+                loadedSettings.setNoterefNumberPrefix(format, s);
             }
         }
 
@@ -621,14 +582,14 @@ public class SettingsIO {
             }
             if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1) + "_Type")) != null) {
                 try {
-                    loadedSettings.getSpecialSymbol(i).setType(SpecialSymbolType.valueOf(s));
+                    loadedSettings.getSpecialSymbol(i).setType(SpecialSymbol.Type.valueOf(s));
                 } catch (IllegalArgumentException ex) {
                     logger.log(Level.SEVERE, null, s + " is no valid special symbol type");
                 }
             }
             if ((s = getStringProperty(specialSymbolProperty + "_" + (i+1) + "_Mode")) != null) {
                 try {
-                    loadedSettings.getSpecialSymbol(i).setMode(SpecialSymbolMode.valueOf(s));
+                    loadedSettings.getSpecialSymbol(i).setMode(SpecialSymbol.Mode.valueOf(s));
                 } catch (IllegalArgumentException ex) {
                     logger.log(Level.SEVERE, null, s + " is no valid special symbol mode");
                 }
@@ -839,7 +800,7 @@ public class SettingsIO {
         }
 
         if ((b = getBooleanProperty(exportMultipleFilesProperty)) != null) {
-            loadedSettings.setMultipleFiles(b);
+            loadedSettings.setMultipleFilesEnabled(b);
         }
 
         logger.exiting("SettingsIO", "loadExportSettingsFromDocument");
@@ -1022,21 +983,23 @@ public class SettingsIO {
 
         odtModified = false;
 
-        ArrayList<String> languages = settingsAfterChange.getLanguages();
-        ArrayList<SpecialSymbol> specialSymbolsAfterChange = settingsAfterChange.getSpecialSymbolsList();
-        ArrayList<SpecialSymbol> specialSymbolsBeforeChange = settingsBeforeChange.getSpecialSymbolsList();
-        ArrayList<ParagraphStyle> paragraphStylesAfterChange = settingsAfterChange.getParagraphStyles();
-        ArrayList<ParagraphStyle> paragraphStylesBeforeChange = settingsBeforeChange.getParagraphStyles();
-        ArrayList<CharacterStyle> characterStylesAfterChange = settingsAfterChange.getCharacterStyles();
-        ArrayList<CharacterStyle> characterStylesBeforeChange = settingsBeforeChange.getCharacterStyles();
-        ArrayList<HeadingStyle> headingStylesAfterChange = settingsAfterChange.getHeadingStyles();
-        ArrayList<HeadingStyle> headingStylesBeforeChange = settingsBeforeChange.getHeadingStyles();
-        ArrayList<ListStyle> listStylesBeforeChange = settingsBeforeChange.getListStyles();
-        ArrayList<ListStyle> listStylesAfterChange = settingsAfterChange.getListStyles();
+        List<String> languages = settingsAfterChange.getLanguages();
+        List<SpecialSymbol> specialSymbolsAfterChange = settingsAfterChange.getSpecialSymbolsList();
+        List<SpecialSymbol> specialSymbolsBeforeChange = settingsBeforeChange.getSpecialSymbolsList();
+        List<ParagraphStyle> paragraphStylesAfterChange = settingsAfterChange.getParagraphStyles();
+        List<ParagraphStyle> paragraphStylesBeforeChange = settingsBeforeChange.getParagraphStyles();
+        List<CharacterStyle> characterStylesAfterChange = settingsAfterChange.getCharacterStyles();
+        List<CharacterStyle> characterStylesBeforeChange = settingsBeforeChange.getCharacterStyles();
+        List<HeadingStyle> headingStylesAfterChange = settingsAfterChange.getHeadingStyles();
+        List<HeadingStyle> headingStylesBeforeChange = settingsBeforeChange.getHeadingStyles();
+        List<ListStyle> listStylesBeforeChange = settingsBeforeChange.getListStyles();
+        List<ListStyle> listStylesAfterChange = settingsAfterChange.getListStyles();
         TableStyle tableStyleBeforeChange = settingsBeforeChange.getTableStyle();
         TableStyle tableStyleAfterChange = settingsAfterChange.getTableStyle();
         TocStyle tocStyleBeforeChange = settingsBeforeChange.getTocStyle();
         TocStyle tocStyleAfterChange = settingsAfterChange.getTocStyle();
+        Style footnoteStyleBeforeChange = settingsBeforeChange.getFootnoteStyle();
+        Style footnoteStyleAfterChange = settingsAfterChange.getFootnoteStyle();
         ParagraphStyle paraStyleAfterChange = null;
         ParagraphStyle paraStyleBeforeChange = null;
         CharacterStyle charStyleAfterChange = null;
@@ -1180,7 +1143,25 @@ public class SettingsIO {
             setProperty(keepWithNextProperty + "_heading_" + level,
                         headStyleAfterChange.getKeepWithNext(),
                         headStyleBeforeChange.getKeepWithNext());
-
+            setProperty(upperBorderProperty + "_heading_" + level,
+                        headStyleAfterChange.getUpperBorder(),
+                        headStyleBeforeChange.getUpperBorder());
+            setProperty(lowerBorderProperty + "_heading_" + level,
+                        headStyleAfterChange.getLowerBorder(),
+                        headStyleBeforeChange.getLowerBorder());
+            setProperty(upperBorderStyleProperty + "_heading_" + level,
+                        String.valueOf(headStyleAfterChange.getUpperBorderStyle()),
+                        String.valueOf(headStyleBeforeChange.getUpperBorderStyle()));
+            setProperty(lowerBorderStyleProperty + "_heading_" + level,
+                        String.valueOf(headStyleAfterChange.getLowerBorderStyle()),
+                        String.valueOf(headStyleBeforeChange.getLowerBorderStyle()));
+            setProperty(paddingAboveProperty + "_heading_" + level,
+                        headStyleAfterChange.getPaddingAbove(),
+                        headStyleBeforeChange.getPaddingBelow());
+            setProperty(paddingBelowProperty + "_heading_" + level,
+                        headStyleAfterChange.getPaddingBelow(),
+                        headStyleBeforeChange.getPaddingBelow());
+            
         }
 
         for (int i=0;i<listStylesBeforeChange.size();i++) {
@@ -1210,7 +1191,7 @@ public class SettingsIO {
             setProperty(linesBetweenProperty + "_list_" + level,
                         listStyleAfterChange.getLinesBetween(),
                         listStyleBeforeChange.getLinesBetween());
-            setProperty(prefixProperty + "_list_" + level,
+            setProperty(listPrefixProperty + "_list_" + level,
                         listStyleAfterChange.getPrefix(),
                         listStyleBeforeChange.getPrefix());
             setProperty(dontSplitItemsProperty + "_list_" + level,
@@ -1280,14 +1261,42 @@ public class SettingsIO {
             }
         }
 
+        setProperty(alignmentProperty + "_footnote",
+                    footnoteStyleAfterChange.getAlignment().name(),
+                    footnoteStyleBeforeChange.getAlignment().name());
+        setProperty(firstLineProperty + "_footnote",
+                    footnoteStyleAfterChange.getFirstLine(),
+                    footnoteStyleBeforeChange.getFirstLine());
+        setProperty(runoversProperty + "_footnote",
+                    footnoteStyleAfterChange.getRunovers(),
+                    footnoteStyleBeforeChange.getRunovers());
+        setProperty(marginLeftRightProperty + "_footnote",
+                    footnoteStyleAfterChange.getMarginLeftRight(),
+                    footnoteStyleBeforeChange.getMarginLeftRight());
+        setProperty(linesAboveProperty + "_footnote",
+                    footnoteStyleAfterChange.getLinesAbove(),
+                    footnoteStyleBeforeChange.getLinesAbove());
+        setProperty(linesBelowProperty + "_footnote",
+                    footnoteStyleAfterChange.getLinesBelow(),
+                    footnoteStyleBeforeChange.getLinesBelow());
+
+        for (String format : settingsBeforeChange.getNoterefNumberFormats()) {
+            setProperty(noterefPrefixProperty + "_" + format,
+                        settingsAfterChange.getNoterefNumberPrefix(format),
+                        settingsBeforeChange.getNoterefNumberPrefix(format));
+        }
+
         setProperty(tableOfContentTitleProperty,
                     settingsAfterChange.getTableOfContentTitle(),
                     settingsBeforeChange.getTableOfContentTitle());
         setProperty(lineFillSymbolProperty,
                     String.valueOf(settingsAfterChange.getLineFillSymbol()),
                     String.valueOf(settingsBeforeChange.getLineFillSymbol()));
+        setProperty(tableOfContentLevelProperty,
+                    tocStyleAfterChange.getUptoLevel(),
+                    tocStyleBeforeChange.getUptoLevel());
 
-        for (level=1;level<=4;level++) {
+        for (level=1;level<=10;level++) {
 
             styleAfterChange = tocStyleAfterChange.getLevel(level);
             styleBeforeChange = tocStyleBeforeChange.getLevel(level);
@@ -1465,8 +1474,8 @@ public class SettingsIO {
                     settingsAfterChange.getLinesPerPage(),
                     settingsBeforeChange.getLinesPerPage());
         setProperty(exportMultipleFilesProperty,
-                    settingsAfterChange.getMultipleFiles(),
-                    settingsBeforeChange.getMultipleFiles());
+                    settingsAfterChange.getMultipleFilesEnabled(),
+                    settingsBeforeChange.getMultipleFilesEnabled());
 
         if (odtModified) {
             xModifiable.setModified(true);

@@ -205,3 +205,26 @@ Localisation:
 
 * Swedish
 
+
+=============================
+Version 0.1.1
+=============================
+
+bugs fixed:
+
+-Math
+-Multiple files checkbox
+
+embossers:
+
+-generic
+
+changes:
+
+-headings: tot level 10
+-table of contents: upto level 1..10
+
+added:
+
+-borders on headings/tables/frames
+-note settings: noteref/footnotes

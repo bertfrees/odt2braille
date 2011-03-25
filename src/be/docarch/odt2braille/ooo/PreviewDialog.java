@@ -20,9 +20,10 @@
 package be.docarch.odt2braille.ooo;
 
 import java.util.Locale;
+import java.util.List;
+import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.logging.Level;
-import java.util.ResourceBundle;
 import java.io.ByteArrayInputStream;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -74,10 +75,11 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
+import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.RomanNumbering;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import com.versusoft.packages.jodl.RomanNumbering;
 import org_pef_text.AbstractTable;
 import org_pef_text.TableFactory;
 
@@ -92,7 +94,6 @@ public class PreviewDialog implements XItemListener,
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String OOO_L10N = Constants.OOO_L10N_PATH;
-    private final static String L10N = Constants.L10N_PATH;
 
     private static final String FONT_6_DOT = "odt2braille 6 dot";
     private static final String FONT_8_DOT = "odt2braille 8 dot";
@@ -125,15 +126,12 @@ public class PreviewDialog implements XItemListener,
     private int marginOuter;
     private int marginTop;
     private int marginBottom;
-    private int numberOfVolumes;
-    private int numberOfSupplements;
-    private boolean preliminaryVolumeEnabled;
     private boolean duplex;
-    private boolean preliminaryPagesPresent;
     private PageNumberFormat preliminaryPageFormat;
     private AbstractTable table;
     private short charset;
-    private int beginningBraillePageNumber;
+
+    private List<Volume> volumes = null;
 
     private int volume;
     private int section;
@@ -168,9 +166,6 @@ public class PreviewDialog implements XItemListener,
     private XWindow previewFieldWindow = null;
 
     private String L10N_windowTitle = null;
-    private String L10N_volume = null;
-    private String L10N_preliminary_volume = null;
-    private String L10N_supplement = null;
     private String L10N_preliminary_section = null;
     private String L10N_main_section = null;
 
@@ -189,16 +184,13 @@ public class PreviewDialog implements XItemListener,
         this.cellsPerLine = settings.getCellsPerLine();
         this.linesPerPage = settings.getLinesPerPage();
         this.marginInner = settings.getMarginInner();
-        this.marginOuter = settings.getMarginInner();
+        this.marginOuter = settings.getMarginOuter();
         this.marginTop = settings.getMarginTop();
         this.marginBottom = settings.getMarginBottom();
         this.duplex = settings.getDuplex();
-        this.numberOfVolumes = settings.getNumberOfVolumes();
-        this.numberOfSupplements = settings.getNumberOfSupplements();
-        this.preliminaryVolumeEnabled = settings.getPreliminaryVolumeEnabled();
-        this.preliminaryPagesPresent = settings.getPreliminaryPagesPresent();
         this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
-        this.beginningBraillePageNumber = settings.getBeginningBraillePageNumber();
+
+        volumes = settings.getVolumes();
 
         if (settings.getBrailleFileType() == BrailleFileType.BRF ||
             settings.getBrailleFileType() == BrailleFileType.BRA) {
@@ -218,15 +210,8 @@ public class PreviewDialog implements XItemListener,
         }
 
         L10N_windowTitle = ResourceBundle.getBundle(OOO_L10N, oooLocale).getString("previewDialogTitle");
-        L10N_volume = ResourceBundle.getBundle(L10N, oooLocale).getString("volume");
-        L10N_preliminary_volume = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminary");
-        L10N_supplement = ResourceBundle.getBundle(L10N, oooLocale).getString("supplement");
         L10N_preliminary_section = "Preliminary Section";
         L10N_main_section = "Main Section";
-
-        L10N_volume = L10N_volume.substring(0, 1).toUpperCase() + L10N_volume.substring(1);
-        L10N_preliminary_volume = L10N_preliminary_volume.substring(0, 1).toUpperCase() + L10N_preliminary_volume.substring(1);
-        L10N_supplement = L10N_supplement.substring(0, 1).toUpperCase() + L10N_supplement.substring(1);
 
         // Load PEF file
         
@@ -498,39 +483,30 @@ public class PreviewDialog implements XItemListener,
 
     private void updateVolumesListBox() {
 
-        String vol;
         volumesListBox.removeItemListener(this);
-        volumeCount = Math.max(1, numberOfVolumes) + numberOfSupplements + (preliminaryVolumeEnabled?1:0);
+        volumeCount = volumes.size();
 
         for (int i=0;i<volumeCount;i++) {
-            if (i==0 && preliminaryVolumeEnabled) {
-                vol = L10N_preliminary_volume;
-            } else if (i < Math.max(1, numberOfVolumes) + (preliminaryVolumeEnabled?1:0)) {
-                vol = L10N_volume + " " + (i + 1 - (preliminaryVolumeEnabled?1:0));
-            } else {
-                vol = L10N_supplement + " " + (i + 1 - Math.max(1, numberOfVolumes) - (preliminaryVolumeEnabled?1:0));
-            }
-            volumesListBox.addItem(vol, (short)i);
+            volumesListBox.addItem(volumes.get(i).getTitle(), (short)i);
         }
 
         volumesListBox.selectItemPos((short)(volume-1), true);
         volumesListBox.addItemListener(this);
-
     }
 
-    private void updateSectionsListBox() {
+    private void updateSectionsListBox() throws TransformerException {
 
-        sectionCount = 0;
         sectionsListBox.removeItemListener(this);
         sectionsListBox.removeItems((short)0, Short.MAX_VALUE);
+        sectionCount = XPathAPI.selectNodeList(root, "/pef/body/volume[" + volume + "]/section").getLength();
 
-        if (preliminaryPagesPresent) {
+        if (volumes.get(volume-1).getType() == Volume.Type.PRELIMINARY) {
             sectionsListBox.addItem(L10N_preliminary_section, (short)0);
-            sectionCount++;
-        }
-        if (!(volume==1 && preliminaryVolumeEnabled)) {
-            sectionsListBox.addItem(L10N_main_section, (short)sectionCount);
-            sectionCount++;
+        } else if (sectionCount == 2) {
+            sectionsListBox.addItem(L10N_preliminary_section, (short)0);
+            sectionsListBox.addItem(L10N_main_section,        (short)1);
+        } else if (sectionCount == 1) {
+            sectionsListBox.addItem(L10N_main_section,        (short)0);
         }
 
         sectionsListBox.selectItemPos((short)(section-1), true);
@@ -540,20 +516,17 @@ public class PreviewDialog implements XItemListener,
 
     private void updatePagesListBox() throws TransformerException {
 
-        int firstpage = 1;
         String pag = null;
         pagesListBox.removeItemListener(this);
         pagesListBox.removeItems((short)0, Short.MAX_VALUE);
-        pageCount = Integer.parseInt(XPathAPI.eval(root,
-                "count(/pef/body/volume[" + volume + "]/section[" + section + "]/page)").str());
+        pageCount = XPathAPI.selectNodeList(root, "/pef/body/volume[" + volume + "]/section[" + section + "]/page").getLength();
 
-        if (!(preliminaryPagesPresent && section == 1)) {
-            firstpage = beginningBraillePageNumber +
-                    Integer.parseInt(XPathAPI.eval(root,
-                        "count(/pef/body/volume[" + volume + "]/preceding-sibling::*/section[position()=" + section + "]/page)").str());
-        }
+        Volume vol = volumes.get(volume-1);        
+        boolean preliminaryPages = (vol.getType() == Volume.Type.PRELIMINARY) || (section < sectionCount);
+        int firstpage = preliminaryPages?1:vol.getFirstBraillePage();
+
         for (int i=0; i<pageCount;i++) {
-            if (preliminaryPagesPresent && section == 1) {
+            if (preliminaryPages) {
                 if (preliminaryPageFormat == PageNumberFormat.P) {
                     pag = "p" + (firstpage + i);
                 } else {

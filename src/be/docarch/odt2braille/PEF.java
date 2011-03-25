@@ -26,6 +26,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.Stack;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -68,8 +69,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import be.docarch.odt2braille.Volume.VolumeType;
-import com.versusoft.packages.jodl.OdtUtils;
+import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import org_pef_text.AbstractTable;
 import org_pef_text.TableFactory;
 import org_pef_text.TableFactory.TableType;
@@ -107,7 +107,6 @@ public class PEF implements ErrorHandler {
     private StatusIndicator statusIndicator = null;
     private Checker checker = null;
     private Verifier validator = null;
-    private ArrayList<Volume> volumes = null;
 
     AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
 
@@ -179,8 +178,7 @@ public class PEF implements ErrorHandler {
 
         // odtTransformer preProcessing
         odtTransformer.ensureMetadataReferences();
-        odtTransformer.makeControlFlow();
-        odtTransformer.preProcessing(settings);
+        odtTransformer.makeControlFlow(settings);
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
@@ -218,6 +216,7 @@ public class PEF implements ErrorHandler {
      * The checker checks the DAISY-like files and the volume lengths.
      *
      */
+
     public boolean makePEF() throws IOException,
                                     ParserConfigurationException,
                                     TransformerConfigurationException,
@@ -226,6 +225,8 @@ public class PEF implements ErrorHandler {
                                     SAXException,
                                     ValidationException,
                                     LiblouisXMLException {
+
+        settings.configureVolumes();
 
         logger.entering("PEF", "makePEF");
 
@@ -246,8 +247,6 @@ public class PEF implements ErrorHandler {
         InputStreamReader inputStreamReader = null;
         String brfInput = null;
         String line = null;
-        String volumeType;
-        int volumeNr;
         int lineCount;
         int pageCount;
         int beginPage;
@@ -258,20 +257,9 @@ public class PEF implements ErrorHandler {
         Volume volume;
         File bodyFile;
         File preliminaryFile;
-        ArrayList<SpecialSymbol> specialSymbolsList = settings.getSpecialSymbolsList();
+        List<SpecialSymbol> specialSymbolsList = settings.getSpecialSymbolsList();
 
-        volumes = new ArrayList();
-
-        if (settings.preliminaryVolumeEnabled) {
-            volumes.add(new Volume(VolumeType.PRELIMINARY, 1));
-        }
-        for (int i=0; i<Math.max(1,settings.NUMBER_OF_VOLUMES); i++) {
-            volumes.add(new Volume(VolumeType.NORMAL, i+1));
-        }
-        for (int i=0; i<settings.NUMBER_OF_SUPPLEMENTS; i++) {
-            volumes.add(new Volume(VolumeType.SUPPLEMENTARY, i+1));
-        }
-
+        List<Volume>volumes = settings.getVolumes();
         volumeElements = new Element[volumes.size()];
 
         File brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
@@ -319,22 +307,25 @@ public class PEF implements ErrorHandler {
             inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
             bufferedReader = new BufferedReader(inputStreamReader);
 
-            statusIndicator.start();
-            statusIndicator.setSteps(1 + (settings.PRELIMINARY_PAGES_PRESENT?volumes.size():0));
-            statusIndicator.setStatus(L10N_statusIndicatorStep);
+            int steps = 1;
+            for (Volume v : volumes) {
+                if (v.getFrontMatter() ||
+                    v.getToc() ||
+                    v.getTranscribersNotesPage() ||
+                    v.getSpecialSymbolsList()) {
+                    steps++;
+                }
+            }
 
-            pageCount = beginPage;
+            statusIndicator.start();
+            statusIndicator.setSteps(steps);
+            statusIndicator.setStatus(L10N_statusIndicatorStep);
 
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
                 volume = volumes.get(volumeCount);
-                volumeNr = volume.getNumber();
 
-                if      (volume.getType() == VolumeType.NORMAL)      { volumeType = "volume"; }
-                else if (volume.getType() == VolumeType.PRELIMINARY) { volumeType = "preliminary"; }
-                else                                                 { volumeType = "supplement"; }
-
-                logger.log(Level.INFO, "Processing body of " + volumeType + volumeNr);
+                logger.info("Processing body of volume " + (volumeCount + 1) + " : " + volume.getType().name());
 
                 volumeElements[volumeCount] = document.createElementNS("http://www.daisy.org/ns/2008/pef","volume");
                 volumeElements[volumeCount].setAttributeNS(null,"cols",String.valueOf(settings.getCellsPerLine()));
@@ -342,14 +333,13 @@ public class PEF implements ErrorHandler {
                 volumeElements[volumeCount].setAttributeNS(null,"rowgap","0");
                 volumeElements[volumeCount].setAttributeNS(null,"duplex",settings.getDuplex()?"true":"false");
 
-                if (volume.getType() != VolumeType.PRELIMINARY) {
-
-                    logger.info(volumeType + volumeNr);
+                if (volume.getType() != Volume.Type.PRELIMINARY) {
 
                     sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
 
                     cont = true;
-                    volume.setFirstBraillePage(pageCount);
+                    volume.setBraillePagesStart(beginPage);
+                    pageCount = 1;
                     while (cont) {
 
                         pageElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","page");
@@ -365,7 +355,7 @@ public class PEF implements ErrorHandler {
                             if (line.contains("\uE000")) {
                                 line = line.replaceAll("\uE000","\u0020");
                                 cont = false;
-                                volume.setLastBraillePage(pageCount);
+                                volume.setNumberOfBraillePages(pageCount);
                             }
                             rowElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","row");
                             node = document.createTextNode(liblouisTable.toBraille(line));
@@ -379,6 +369,8 @@ public class PEF implements ErrorHandler {
                         bufferedReader.skip(1);
                         pageCount++;
                     }
+
+                    beginPage += pageCount;
 
                     volumeElements[volumeCount].appendChild(sectionElement);
                 }
@@ -394,53 +386,55 @@ public class PEF implements ErrorHandler {
 
             // Insert preliminary sections before body of volumes 1,2,3,...
 
-            if (settings.PRELIMINARY_PAGES_PRESENT) {
+            for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
-                for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
+                volume = volumes.get(volumeCount);
 
-                    volume = volumes.get(volumeCount);
-                    volumeNr = volume.getNumber();
+                if (volume.getFrontMatter() ||
+                    volume.getToc() ||
+                    volume.getTranscribersNotesPage() ||
+                    volume.getSpecialSymbolsList()) {
 
-                    if      (volume.getType() == VolumeType.NORMAL)      { volumeType = "volume"; }
-                    else if (volume.getType() == VolumeType.PRELIMINARY) { volumeType = "preliminary"; }
-                    else                                                 { volumeType = "supplement"; }
-
-                    logger.log(Level.INFO, "Processing preliminary pages of " + volumeType + volumeNr);
+                    logger.log(Level.INFO, "Processing preliminary pages of volume " + (volumeCount + 1) + " : " + volume.getType().name());
 
                     // Print page range
 
-                    if (settings.volumeInfoEnabled && volume.getType() != VolumeType.PRELIMINARY) {
+                    if (settings.volumeInfoEnabled &&
+                        volume.getFrontMatter() &&
+                        volume.getType() != Volume.Type.PRELIMINARY) {
+
+                        String volumeNode = "dtb:volume"
+                                + ((volume.getType()!=Volume.Type.SINGLE) ? "[@id='" + volume.getIdentifier() + "']" : "");
 
                         String s;
                         if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                            "//dtb:div[@id='" + volumeType + volumeNr + "']" +
+                                            "//" + volumeNode +
                                             "/*[not(self::dtb:pagebreak or ancestor::dtb:div[@class='not-in-volume'])][1][self::dtb:pagenum]", namespace)) {
                             s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
-                                            "//dtb:div[@id='" + volumeType + volumeNr + "']" +
+                                            "//" + volumeNode +
                                             "/*[not(self::dtb:pagebreak or ancestor::dtb:div[@class='not-in-volume'])][1][self::dtb:pagenum]", namespace);
                         } else {
                             s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
-                                            "//dtb:div[@id='" + volumeType + volumeNr + "']" +
+                                            "//" + volumeNode +
                                             "/*[not(ancestor::dtb:div[@class='not-in-volume'])][1]/preceding::dtb:pagenum[1]", namespace);
                         }
                         if (s.equals("")){
                             if (settings.mergeUnnumberedPages) {
                                 s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
-                                            "//dtb:div[@id='" + volumeType + volumeNr + "']" +
+                                            "//" + volumeNode +
                                             "/*[not(self::dtb:div[@class='not-in-volume'])][1]/preceding::dtb:pagenum[text()][1]", namespace);
                             } else {
                                 s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
-                                            "//dtb:div[@id='" + volumeType + volumeNr + "']" +
+                                            "//" + volumeNode +
                                             "//dtb:pagenum[text() and not(ancestor::dtb:div[@class='not-in-volume'])][1]", namespace);
                             }
                         }
                         if (!s.equals("")){
                             volume.setFirstPrintPage(s);
                             s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
-                                         "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:pagenum[" +
+                                           "//" + volumeNode + "//dtb:pagenum[" +
                                            "text() and not(ancestor::dtb:div[@class='not-in-volume']) and not(following::dtb:pagenum[ancestor::" +
-                                           "dtb:div[@id='" + volumeType + volumeNr + "'] and " +
-                                           "text() and not(ancestor::dtb:div[@class='not-in-volume'])])]", namespace);
+                                           volumeNode + " and text() and not(ancestor::dtb:div[@class='not-in-volume'])])]", namespace);
                             if (!(s.equals("") || s.equals(volume.getFirstPrintPage()))) {
                                 volume.setLastPrintPage(s);
                             }
@@ -449,10 +443,14 @@ public class PEF implements ErrorHandler {
 
                     // Determine which symbols to display in list of special symbols
 
-                    if (settings.specialSymbolsListEnabled) {
+                    if (volume.getSpecialSymbolsList()) {
 
                         ArrayList<Boolean> specialSymbolsPresent = new ArrayList();
                         boolean specialSymbolPresent;
+
+                        String volumeNode = "dtb:volume"
+                                + ((volume.getType()!=Volume.Type.SINGLE &&
+                                    volume.getType()!=Volume.Type.PRELIMINARY) ? "[@id='" + volume.getIdentifier() + "']" : "");
 
                         for (int i=0; i<specialSymbolsList.size(); i++) {
 
@@ -468,31 +466,31 @@ public class PEF implements ErrorHandler {
                                     if (volumeCount == 0) { specialSymbolPresent = true; }
                                     break;
                                 case IF_PRESENT_IN_VOLUME:
-                                    if (volume.getType() != VolumeType.PRELIMINARY) {
+                                    if (volume.getType() != Volume.Type.PRELIMINARY) {
                                         switch (specialSymbolsList.get(i).getType()) {
                                             case NOTE_REFERENCE_INDICATOR:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:note[@class='footnote' or @class='endnote']",namespace);
+                                                    "//" + volumeNode + "//dtb:note[@class='footnote' or @class='endnote']",namespace);
                                                 break;
                                             case TRANSCRIBERS_NOTE_INDICATOR:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:div[@class='tn']/dtb:note",namespace);
+                                                    "//" + volumeNode + "//dtb:div[@class='tn']/dtb:note",namespace);
                                                 break;
                                             case ITALIC_INDICATOR:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:em[not(@class='reset')]",namespace);
+                                                    "//" + volumeNode + "//dtb:em[not(@class='reset')]",namespace);
                                                 break;
                                             case BOLDFACE_INDICATOR:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:strong[not(@class='reset')]",namespace);
+                                                    "//" + volumeNode + "//dtb:strong[not(@class='reset')]",namespace);
                                                 break;
                                             case ELLIPSIS:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:flag[@class='ellipsis']",namespace);
+                                                    "//" + volumeNode + "//dtb:flag[@class='ellipsis']",namespace);
                                                 break;
                                             case DOUBLE_DASH:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//dtb:div[@id='" + volumeType + volumeNr + "']//dtb:flag[@class='double-dash']",namespace);
+                                                   "//" +  volumeNode + "//dtb:flag[@class='double-dash']",namespace);
                                                 break;
                                             default:
                                         }
@@ -508,7 +506,7 @@ public class PEF implements ErrorHandler {
 
                     // Determine which notes to display on transcriber's note page
 
-                    if (settings.transcribersNotesPageEnabled) {
+                    if (volume.getTranscribersNotesPage()) {
 
                         TranscribersNote[] transcribersNoteValues = TranscribersNote.values();
                         ArrayList<Boolean> transcribersNotesEnabled = new ArrayList();
@@ -531,13 +529,13 @@ public class PEF implements ErrorHandler {
 
                     // Extract preliminary page range
 
-                    preliminaryFile = File.createTempFile(TMP_NAME, ".daisy." + volumeType + volumeNr + ".xml", TMP_DIR);
+                    preliminaryFile = File.createTempFile(TMP_NAME, ".daisy." + (volumeCount + 1) + ".xml", TMP_DIR);
                     preliminaryFile.deleteOnExit();
 
                     sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
 
                     odtTransformer.getFrontMatter(settings, preliminaryFile, volume);
-                    liblouisXML.configure(preliminaryFile, brailleFile, true, settings.tableOfContentEnabled?volume.getFirstBraillePage():1);
+                    liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getToc()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
                     fileInputStream = new FileInputStream(brailleFile);
@@ -552,7 +550,7 @@ public class PEF implements ErrorHandler {
                         if (ch=='\f') {
                             pageCount ++;
                         } else {
-                            if (settings.tableOfContentEnabled) {
+                            if (volume.getToc()) {
                                 pageCount --;
                             }
                             break;
@@ -570,7 +568,7 @@ public class PEF implements ErrorHandler {
 
                     odtTransformer.getFrontMatter(settings, preliminaryFile, volume);
                     checker.checkDaisyFile(preliminaryFile);
-                    liblouisXML.configure(preliminaryFile, brailleFile, false, settings.tableOfContentEnabled?volume.getFirstBraillePage():1);
+                    liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getToc()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
                     fileInputStream = new FileInputStream(brailleFile);
@@ -605,13 +603,6 @@ public class PEF implements ErrorHandler {
                     }
 
                     volumeElements[volumeCount].insertBefore(sectionElement, volumeElements[volumeCount].getFirstChild());
-
-                    if (!settings.tableOfContentEnabled && !settings.volumeInfoEnabled && volumeCount>0) {
-                        for (volumeCount=volumeCount+1; volumeCount<volumes.size(); volumeCount++) {
-                            volumeElements[volumeCount].insertBefore(sectionElement.cloneNode(true), volumeElements[volumeCount].getFirstChild());
-                        }
-                        break;
-                    }
 
                     statusIndicator.increment();
 
@@ -686,7 +677,7 @@ public class PEF implements ErrorHandler {
 
         logger.entering("PEF", "getPEFs");
 
-        if (volumes.size() == 1) {
+        if (settings.getVolumeManagementMode() == VolumeManagementMode.SINGLE) {
             return new File[] { pefFile };
         } else {
             Stack<File> pefFiles = splitPEF();
@@ -802,10 +793,6 @@ public class PEF implements ErrorHandler {
 
         return files;
 
-    }
-
-    public ArrayList<Volume> getVolumes() {
-        return volumes;
     }
 
     public void fatalError(SAXParseException exception) throws SAXException {

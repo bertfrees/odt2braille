@@ -27,7 +27,9 @@ import java.io.Writer;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.TreeMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -63,6 +65,7 @@ public class LiblouisXML {
 
     private File stylesFile = null;
     private File paragraphsFile = null;
+    private File bordersFile = null;
 
     private Settings settings = null;
 
@@ -70,8 +73,8 @@ public class LiblouisXML {
 
     AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
 
-    public LiblouisXML (String liblouisPath,
-                        Settings settings)
+    public LiblouisXML (Settings settings,
+                        File liblouisLocation)
                  throws IOException,
                         InterruptedException,
                         LiblouisXMLException {
@@ -79,7 +82,11 @@ public class LiblouisXML {
         logger.entering("LiblouisXML", "<init>");
 
         this.settings = settings;
-        this.liblouisPath = liblouisPath;
+        try {
+            this.liblouisPath = liblouisLocation.getAbsolutePath();
+        } catch (NullPointerException e) {
+            throw new LiblouisXMLException("Could not find liblouis directory");
+        }
 
         if (IS_WINDOWS) {
 
@@ -101,6 +108,8 @@ public class LiblouisXML {
 //            }
 
         } else {
+
+            // check version with "xml2brl --version" !!!
 
             Runtime runtime = Runtime.getRuntime();
             Process process = null;
@@ -150,6 +159,7 @@ public class LiblouisXML {
 
         stylesFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_styles.cfg");
         paragraphsFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_paragraphs.sem");
+        bordersFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_borders.sem");
 
         logger.exiting("LiblouisXML", "<init>");
 
@@ -161,19 +171,12 @@ public class LiblouisXML {
 
         File newStylesFile = File.createTempFile(TMP_NAME, ".styles.cfg", TMP_DIR);
         File newParagraphsFile = File.createTempFile(TMP_NAME, ".paragraphs.sem", TMP_DIR);
-        ArrayList<ParagraphStyle> paragraphStyles = settings.getParagraphStyles();
-        ArrayList<HeadingStyle> headingStyles = settings.getHeadingStyles();
-        ArrayList<ListStyle> listStyles = settings.getListStyles();
+        File newBordersFile = File.createTempFile(TMP_NAME, ".borders.sem", TMP_DIR);
         String sep = System.getProperty("line.separator");
         String s = null;
         Style style = null;
-        ParagraphStyle paraStyle = null;
-        HeadingStyle headStyle = null;
-        ListStyle listStyle = null;
-        TableStyle tableStyle = null;
-        TocStyle tocStyle = null;
         Writer bufferedWriter = null;
-        TreeMap<Alignment,String> alignmentMap = new TreeMap();
+        Map<Alignment,String> alignmentMap = new TreeMap();
 
         bufferedWriter = new BufferedWriter(new FileWriter(newStylesFile));
 
@@ -188,9 +191,7 @@ public class LiblouisXML {
 
         // Paragraphs
 
-        for (int i=0; i<paragraphStyles.size(); i++) {
-
-            paraStyle = paragraphStyles.get(i);
+        for (ParagraphStyle paraStyle : settings.getParagraphStyles()) {
 
             s = "firstLineIndent " + (paraStyle.getFirstLine() - paraStyle.getRunovers()) + sep
               + "leftMargin "      + paraStyle.getRunovers() + sep
@@ -211,9 +212,8 @@ public class LiblouisXML {
 
         // Headings
 
-        for (int i=0; i<headingStyles.size(); i++) {
+        for (HeadingStyle headStyle : settings.getHeadingStyles()) {
 
-            headStyle = headingStyles.get(i);
             int level = headStyle.getLevel();
 
             s = "firstLineIndent " + (headStyle.getFirstLine() - headStyle.getRunovers()) + sep
@@ -222,21 +222,23 @@ public class LiblouisXML {
               + "linesBefore "     + 0 + sep
               + "linesAfter "      + 0 + sep
               + "format "          + alignmentMap.get(headStyle.getAlignment()) + sep;
-            bufferedWriter.write("style " + "heading" + level + sep + s);
+            bufferedWriter.write("style heading" + level + sep + s);
             bufferedWriter.write("style dummy-heading" + level + sep + s);
             s = "linesBefore "     + headStyle.getLinesAbove() + sep
               + "linesAfter "      + headStyle.getLinesBelow() + sep
               + "keepWithNext "    + (headStyle.getKeepWithNext()?"yes":"no") + sep
               + "dontSplit "       + (headStyle.getDontSplit()?"yes":"no") + sep;
-            bufferedWriter.write("style " + "wrap-heading" + level + sep + s);
+            bufferedWriter.write("style wrap-heading" + level + sep + s);
+            s = "linesBefore "     + (headStyle.getUpperBorder()?headStyle.getPaddingAbove():0) + sep
+              + "linesAfter "      + (headStyle.getLowerBorder()?headStyle.getPaddingBelow():0) + sep;
+            bufferedWriter.write("style pad-heading" + level + sep + s);
 
         }
 
         // Lists
 
-        for (int i=0;i<10;i++) {
+        for (ListStyle listStyle : settings.getListStyles()) {
 
-            listStyle = listStyles.get(i);
             int level = listStyle.getLevel();
 
             s = "linesBefore "     + listStyle.getLinesAbove() + sep
@@ -256,13 +258,27 @@ public class LiblouisXML {
 
         }
 
+        // Frames
+
+        FrameStyle frameStyle = settings.getFrameStyle();
+
+        s = "linesBefore " + frameStyle.getLinesAbove() + sep
+          + "linesAfter "  + frameStyle.getLinesBelow() + sep;
+        bufferedWriter.write("style frame" + sep + s);
+        s = "linesBefore " + (frameStyle.getUpperBorder()?frameStyle.getPaddingAbove():0) + sep
+          + "linesAfter "  + (frameStyle.getLowerBorder()?frameStyle.getPaddingBelow():0) + sep;
+        bufferedWriter.write("style pad-frame" + sep + s);
+
         // Tables
 
-        tableStyle = settings.getTableStyle();
+        TableStyle tableStyle = settings.getTableStyle();
 
         s = "linesBefore " + tableStyle.getLinesAbove() + sep
           + "linesAfter "  + tableStyle.getLinesBelow() + sep;
-        bufferedWriter.write("style tablenoborder" + sep + s);
+        bufferedWriter.write("style table" + sep + s);
+        s = "linesBefore " + (tableStyle.getUpperBorder()?tableStyle.getPaddingAbove():0) + sep
+          + "linesAfter "  + (tableStyle.getLowerBorder()?tableStyle.getPaddingBelow():0) + sep;
+        bufferedWriter.write("style pad-table" + sep + s);
 
         if (settings.stairstepTableIsEnabled()) {
 
@@ -303,19 +319,19 @@ public class LiblouisXML {
 
         // Table of contents
 
-        headStyle = headingStyles.get(0);
+        HeadingStyle contentsHeader = settings.getHeadingStyles().get(0);
 
-        s = "firstLineIndent " + (headStyle.getFirstLine() - headStyle.getRunovers()) + sep
-          + "leftMargin "      + headStyle.getRunovers() + sep
-          + "centeredMargin "  + headStyle.getMarginLeftRight() + sep
-          + "linesBefore "     + headStyle.getLinesAbove() + sep
-          + "linesAfter "      + headStyle.getLinesBelow() + sep
-          + "format "          + alignmentMap.get(headStyle.getAlignment()) + sep;
+        s = "firstLineIndent " + (contentsHeader.getFirstLine() - contentsHeader.getRunovers()) + sep
+          + "leftMargin "      + contentsHeader.getRunovers() + sep
+          + "centeredMargin "  + contentsHeader.getMarginLeftRight() + sep
+          + "linesBefore "     + contentsHeader.getLinesAbove() + sep
+          + "linesAfter "      + contentsHeader.getLinesBelow() + sep
+          + "format "          + alignmentMap.get(contentsHeader.getAlignment()) + sep;
         bufferedWriter.write("style contentsheader" + sep + s);
 
-        tocStyle = settings.getTocStyle();
+        TocStyle tocStyle = settings.getTocStyle();
 
-        for (int i=1;i<=4;i++) {
+        for (int i=1;i<=10;i++) {
 
             style = tocStyle.getLevel(i);
 
@@ -324,6 +340,17 @@ public class LiblouisXML {
               + "format "          + "contents" + sep;
             bufferedWriter.write("style contents" + i + sep + s);
         }
+
+        // Footnotes
+
+        Style footnoteStyle = settings.getFootnoteStyle();
+
+        s = "linesBefore "     + footnoteStyle.getLinesAbove() + sep
+          + "linesAfter "      + footnoteStyle.getLinesBelow() + sep
+          + "firstLineIndent " + (footnoteStyle.getFirstLine() - footnoteStyle.getRunovers()) + sep
+          + "leftMargin "      + footnoteStyle.getRunovers() + sep
+          + "format "          + alignmentMap.get(footnoteStyle.getAlignment()) + sep;
+        bufferedWriter.write("style footnote" + sep + s);
 
         bufferedWriter.close();
         if (stylesFile.exists()) { stylesFile.delete(); }
@@ -338,8 +365,8 @@ public class LiblouisXML {
 
         String styleName = null;
         String xpath = null;
-        for (int i=0; i<paragraphStyles.size(); i++) {
-            styleName = paragraphStyles.get(i).getName();
+        for (ParagraphStyle paraStyle : settings.getParagraphStyles()) {
+            styleName = paraStyle.getName();
             xpath = "//dtb:paragraph[@style='" + styleName + "' and " +
                     "not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)]";
             bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
@@ -358,6 +385,33 @@ public class LiblouisXML {
         bufferedWriter.close();
         if (paragraphsFile.exists()) { paragraphsFile.delete(); }
         newParagraphsFile.renameTo(paragraphsFile);
+
+        bufferedWriter = new BufferedWriter(new FileWriter(newBordersFile));
+
+        // Create _sem_borders.sem file
+
+        bufferedWriter.write("# BORDERS STYLES FILE" + sep +
+                             "# generated by be.docarch.odt2braille.LiblouisXML#createStylesFiles()" + sep + sep);
+
+        bufferedWriter.write("boxline &xpath(//dtb:table/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) "
+                + liblouisTable.toText(String.valueOf(tableStyle.getUpperBorderStyle())) + sep);
+        bufferedWriter.write("boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) "
+                + liblouisTable.toText(String.valueOf(tableStyle.getLowerBorderStyle())) + sep);
+        bufferedWriter.write("boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) "
+                + liblouisTable.toText(String.valueOf(frameStyle.getUpperBorderStyle())) + sep);
+        bufferedWriter.write("boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) "
+                + liblouisTable.toText(String.valueOf(frameStyle.getLowerBorderStyle())) + sep);
+
+        for (HeadingStyle headStyle : settings.getHeadingStyles()) {
+            bufferedWriter.write("boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h"
+                    + headStyle.getLevel() + "]]]) " + liblouisTable.toText(String.valueOf(headStyle.getUpperBorderStyle())) + sep);
+            bufferedWriter.write("boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h"
+                    + headStyle.getLevel() + "]]]) " + liblouisTable.toText(String.valueOf(headStyle.getLowerBorderStyle())) + sep);
+        }
+
+        bufferedWriter.close();
+        if (bordersFile.exists()) { bordersFile.delete(); }
+        newBordersFile.renameTo(bordersFile);
 
         logger.exiting("LiblouisXML", "createStylesFiles");
 
@@ -453,6 +507,7 @@ public class LiblouisXML {
         String configFiles = liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_main.cfg," + "_cfg_styles.cfg";
         String semanticFiles = "_sem_main.sem," +
                                "_sem_paragraphs.sem," +
+                               "_sem_borders.sem," +
                               (extractpprangemode?"_sem_extractpprangemode.sem,":"") +
                               (settings.stairstepTableIsEnabled()?"_sem_stairsteptable.sem,":"") +
                               "_sem_" + math + ".sem";

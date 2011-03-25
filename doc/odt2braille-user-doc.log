@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.12.16)  24 FEB 2011 17:52
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdftex 2010.12.16)  11 MAR 2011 13:02
 entering extended mode
 **C:/Users/freesb/Documents/NetBeansProjects/odt2braille/Odt2BrailleAddOn/doc/o
 dt2braille-user-doc.texi
@@ -497,11 +497,11 @@ t2braille-user-doc.toc) [-1]
 t2braille-user-doc.toc)
 (C:\Users\freesb\Documents\NetBeansProjects\odt2braille\Odt2BrailleAddOn\doc\od
 t2braille-user-doc.toc) (Getting Started)
-Underfull \hbox (badness 4940) in paragraph at lines 82--88
+Underfull \hbox (badness 10000) in paragraph at lines 82--86
 []@textrm It is strongly rec-om-mended that you also down-load and in-stall the
- Sim-
 
-@hbox(7.60416+2.12917)x433.62, glue set 3.67097
+
+@hbox(7.60416+2.12917)x433.62, glue set 5.43808
 .@hbox(0.0+0.0)x15.0
 .@textrm I
 .@textrm t
@@ -510,46 +510,33 @@ Underfull \hbox (badness 4940) in paragraph at lines 82--88
 .etc.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--88
-@textrm Braille font from Duxbury Sys-tems at [][]@texttt http://www.duxburysys
-tems.com/
+Underfull \hbox (badness 10000) in paragraph at lines 82--86
+@textit odt2braille fonts@textrm : [][]@texttt http://odt2braille.svn.sourcefor
+ge.net/viewvc/
 
-@hbox(7.60416+2.43333)x433.62, glue set 6.91405
-.@textrm B
-.@textrm r
-.@textrm a
-.@textrm i
-.@textrm l
+@hbox(7.60416+2.43333)x433.62, glue set 15.78523
+.@textit o
+.@kern-0.55968
+.@textit d
+.@textit t
+.@textit 2
 .etc.
 
 
-Overfull \hbox (6.32195pt too wide) in paragraph at lines 82--88
-@texttt product2.asp?product=The%20Braille%20TrueType%20Fonts&level=free&action
-=pur"[][][]@textrm .
+Underfull \hbox (badness 10000) in paragraph at lines 82--86
+@texttt odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf[][][] @textrm for 6
+-dot Braille and
 
-@hbox(7.60416+2.43333)x433.62
-.@texttt p
-.@texttt r
+@hbox(7.60416+0.91246)x433.62, glue set 5.2921
 .@texttt o
 .@texttt d
-.@texttt u
+.@texttt t
+.@texttt 2
+.@texttt b
 .etc.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 82--88
-@textrm As of ver-sion 0.0.3, odt-braille will use his own @textit odt2braille 
-fonts @textrm in-stead:
-
-@hbox(7.60416+2.12917)x433.62, glue set 4.48743
-.@textrm A
-.@textrm s
-.@glue 3.65 plus 1.825 minus 1.21666
-.@textrm o
-.@textrm f
-.etc.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 82--88
+Underfull \hbox (badness 10000) in paragraph at lines 82--86
 [][]@texttt http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2Brail
 leAddOn/
 
@@ -559,36 +546,33 @@ leAddOn/
  /URI /URI (http://odt2braille.svn.sourceforge@ETC.}
 
 
-Overfull \hbox (16.42134pt too wide) in paragraph at lines 82--88
-@texttt fonts/odt2braille6.ttf[][][] @textrm for 6-dot Braille and [][]@texttt 
-http://odt2braille.svn.sourceforge.net/
+Underfull \hbox (badness 10000) in paragraph at lines 108--111
+[][]@texttt http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Gu
+ides/
 
-@hbox(7.60416+2.43333)x433.62, glue set - 1.0
-.@texttt f
-.@texttt o
-.@texttt n
-.@texttt t
-.@texttt s
-.etc.
+@hbox(7.60416+2.43333)x433.62
+.@pdfliteral{0 0.89 0.94 0.28 k}
+.@pdfstartlink(*+*)x* attr{/Border [0 0 0]} action user{/Subtype /Link /A << /S
+ /URI /URI (http://wiki.services.openoffice.or@ETC.}
 
-[1] Chapter 1 [2] Chapter 2 [3] [4] [5] [6] [7] [8]
-l.2: Unicode char @u8:’ not defined for Texinfo [9] [10] [11] [12] [13]
-[14] [15] l.982: Unicode char @u8:⠰ not defined for Texinfo
-l.984: Unicode char @u8:⠼ not defined for Texinfo
-l.986: Unicode char @u8:⠔ not defined for Texinfo
-l.986: Unicode char @u8:⠔ not defined for Texinfo
-l.988: Unicode char @u8:⠠ not defined for Texinfo
-l.988: Unicode char @u8:⠄ not defined for Texinfo
-l.990: Unicode char @u8:⠨ not defined for Texinfo
-l.992: Unicode char @u8:⠸ not defined for Texinfo
-l.994: Unicode char @u8:⠤ not defined for Texinfo
-l.994: Unicode char @u8:⠤ not defined for Texinfo
-l.994: Unicode char @u8:⠤ not defined for Texinfo
-l.994: Unicode char @u8:⠤ not defined for Texinfo
-l.996: Unicode char @u8:⠐ not defined for Texinfo
-l.996: Unicode char @u8:⠐ not defined for Texinfo
-l.996: Unicode char @u8:⠐ not defined for Texinfo [16] [17] [18]
-Underfull \hbox (badness 10000) in paragraph at lines 1132--1138
+[1] Chapter 1 [2] [3] [4] [5] [6] [7]
+l.2: Unicode char @u8:’ not defined for Texinfo [8] [9] [10] [11] [12]
+[13] [14] l.975: Unicode char @u8:⠰ not defined for Texinfo
+l.977: Unicode char @u8:⠼ not defined for Texinfo
+l.979: Unicode char @u8:⠔ not defined for Texinfo
+l.979: Unicode char @u8:⠔ not defined for Texinfo
+l.981: Unicode char @u8:⠠ not defined for Texinfo
+l.981: Unicode char @u8:⠄ not defined for Texinfo
+l.983: Unicode char @u8:⠨ not defined for Texinfo
+l.985: Unicode char @u8:⠸ not defined for Texinfo
+l.987: Unicode char @u8:⠤ not defined for Texinfo
+l.987: Unicode char @u8:⠤ not defined for Texinfo
+l.987: Unicode char @u8:⠤ not defined for Texinfo
+l.987: Unicode char @u8:⠤ not defined for Texinfo
+l.989: Unicode char @u8:⠐ not defined for Texinfo
+l.989: Unicode char @u8:⠐ not defined for Texinfo
+l.989: Unicode char @u8:⠐ not defined for Texinfo [15] [16] [17]
+Underfull \hbox (badness 10000) in paragraph at lines 1125--1131
  @textrm math guide at [][]@texttt http://wiki.services.openoffice.org/wiki/Doc
 umentation/
 
@@ -600,28 +584,29 @@ umentation/
 .@textrm h
 .etc.
 
-[19] [20] ) 
+[18] Chapter 2 [19] Chapter 3 [20] [21] ) 
 Here is how much of TeX's memory you used:
- 2269 strings out of 497541
- 26145 string characters out of 3209712
- 58220 words of memory out of 3000000
- 3190 multiletter control sequences out of 15000+200000
+ 2275 strings out of 497541
+ 26275 string characters out of 3209712
+ 57847 words of memory out of 3000000
+ 3194 multiletter control sequences out of 15000+200000
  32127 words of font info for 112 fonts, out of 3000000 for 9000
  51 hyphenation exceptions out of 8191
- 12i,6n,17p,528b,361s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cm
-b10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmbx1
-2.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmcsc10
-.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi10.p
-fb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmmi12.pfb
-><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmr10.pfb><C
-:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsltt10.pfb><C
-:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
-Program Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Pr
-ogram Files (x86)/MiKTeX 2.8/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on odt2braille-user-doc.pdf (23 pages, 251037 bytes).
+ 12i,6n,17p,528b,364s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x86)/MiKTeX 2.8/fon
+ts/type1/public/amsfonts/cm/cmb10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/
+type1/public/amsfonts/cm/cmbx12.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/ty
+pe1/public/amsfonts/cm/cmcsc10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/typ
+e1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1
+/public/amsfonts/cm/cmmi12.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/p
+ublic/amsfonts/cm/cmr10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/publ
+ic/amsfonts/cm/cmsltt10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/publ
+ic/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public
+/amsfonts/cm/cmti10.pfb><C:/Program Files (x86)/MiKTeX 2.8/fonts/type1/public/a
+msfonts/cm/cmtt10.pfb>
+Output written on odt2braille-user-doc.pdf (24 pages, 252373 bytes).
 PDF statistics:
- 416 PDF objects out of 1000 (max. 8388607)
- 47 named destinations out of 1000 (max. 500000)
- 221 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 427 PDF objects out of 1000 (max. 8388607)
+ 49 named destinations out of 1000 (max. 500000)
+ 229 words of extra memory for PDF output out of 10000 (max. 10000000)
 

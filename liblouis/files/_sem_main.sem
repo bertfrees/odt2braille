@@ -19,12 +19,14 @@
 	generic a
 	no bodymatter
 	preliminary frontmatter
+    no basic-frontmatter
+    no ext-frontmatter
 	skip flag
 	
 # Volumes
 
-	generic       &xpath(//dtb:div[@class='volume' or @class='supplement'][not(position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]))]) \*@e
-	newPageBefore &xpath(//dtb:div[@class='volume' or @class='supplement'][    position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]) ]) \*@e
+	generic       &xpath(//dtb:volume[not(position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]))]) \*@e
+	newPageBefore &xpath(//dtb:volume[    position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]) ]) \*@e
 	
 # Special Typefaces
 # Languages
@@ -52,9 +54,9 @@
 	skip          &xpath(//dtb:book/dtb:frontmatter//dtb:pagenum)
 	
 	newPageAfter  pagebreak
-	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume'] or ancestor::dtb:titlepage])
-	skip          &xpath(//dtb:pagebreak[not(preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])                       ][1][not(self::dtb:pagebreak)])])
-	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'] or self::dtb:pagebreak)][1][not(self::dtb:div[@class='toc'])])])
+	skip          &xpath(//dtb:pagebreak[ancestor::dtb:div[@class='not-in-volume']])
+	skip          &xpath(//dtb:pagebreak[not(preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])                       ][1][not(self::dtb:pagebreak)])])
+	skip          &xpath(//dtb:pagebreak[not(following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'] or self::dtb:pagebreak)][1][not(self::dtb:div[@class='toc'])])])
 	
 # Title pages
 # Notesections
@@ -64,50 +66,67 @@
 # Table of contents
 
     no 			   titlepage
-    no 			   notesection
+    no 			   note-section
     no 			   bibliography
     no			   special-symbols-list
     no			   tn-page
     no             div,class,toc
 	
-    skip 		   &xpath(//dtb:notesection         [not(child::dtb:note)])
+    skip 		   &xpath(//dtb:note-section        [not(child::dtb:note)])
     skip 		   &xpath(//dtb:tn-page             [not(child::dtb:note)])
     skip 		   &xpath(//dtb:special-symbols-list[not(descendant::dtb:li)])
 
-    newPageBeforeAndAfter  &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
-    newPageBefore          &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
-    newPageAfter           &xpath(//*[@newpage='yes'][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])     
+    newPageBeforeAndAfter  &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
+    newPageBefore          &xpath(//*[@newpage='yes'][    ( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak)] ) and not ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])
+    newPageAfter           &xpath(//*[@newpage='yes'][ not( preceding-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak)] ) and     ( following-sibling::*[not(self::dtb:pagenum or self::dtb:div[@class='not-in-volume' or @class='omission'])][1][not(self::dtb:pagebreak or self::dtb:div[@class='toc'] or self::*[@newpage='yes'])])])     
 
 # Paragraphs
 # Headings
 
-	heading1 h1
-	heading2 h2
-	heading3 h3
-	heading4 h4
-	heading4 h5
-	heading4 h6
-	heading4 h7
-	heading4 h8
-	heading4 h9
-	heading4 h10
+	heading1  h1
+	heading2  h2
+	heading3  h3
+	heading4  h4
+	heading5  h5
+	heading6  h6
+	heading7  h7
+	heading8  h8
+	heading9  h9
+	heading10 h10
 
-	dummy-heading1 h1,class,dummy
-	dummy-heading2 h2,class,dummy
-	dummy-heading3 h3,class,dummy
-	dummy-heading4 h4,class,dummy
-	dummy-heading4 h5,class,dummy
-	dummy-heading4 h6,class,dummy
-	dummy-heading4 h7,class,dummy
-	dummy-heading4 h8,class,dummy
-	dummy-heading4 h9,class,dummy
-	dummy-heading4 h10,class,dummy
+	dummy-heading1  h1,class,dummy
+	dummy-heading2  h2,class,dummy
+	dummy-heading3  h3,class,dummy
+	dummy-heading4  h4,class,dummy
+	dummy-heading5  h5,class,dummy
+	dummy-heading6  h6,class,dummy
+	dummy-heading7  h7,class,dummy
+	dummy-heading8  h8,class,dummy
+	dummy-heading9  h9,class,dummy
+	dummy-heading10 h10,class,dummy
 	
-	wrap-heading1  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[child::dtb:h1])
-	wrap-heading2  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[child::dtb:h2])
-	wrap-heading3  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[child::dtb:h3])
-	wrap-heading4  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[child::dtb:h4 or child::dtb:h5 or child::dtb:h6 or child::dtb:h7 or child::dtb:h8 or child::dtb:h9 or child::dtb:h10])
+	wrap-heading1   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h1])
+	wrap-heading2   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h2])
+	wrap-heading3   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h3])
+	wrap-heading4   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h4])
+	wrap-heading5   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h5])
+	wrap-heading6   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h6])
+	wrap-heading7   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h7])
+	wrap-heading8   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h8])
+	wrap-heading9   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h9])
+	wrap-heading10  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h10])
 
+	pad-heading1    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h1])
+	pad-heading2    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h2])
+	pad-heading3    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h3])
+	pad-heading4    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h4])
+	pad-heading5    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h5])
+	pad-heading6    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h6])
+	pad-heading7    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h7])
+	pad-heading8    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h8])
+	pad-heading9    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h9])
+	pad-heading10   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h10])
+	
 	contentsheader  &xpath(//dtb:div[@class='toc']//dtb:h1)
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li]/*[self::dtb:heading or self::dtb:paragraph])
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]//*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
@@ -193,12 +212,12 @@
 
 # Tables
 	
-	no table
-	tablenoborder table,border,none
+	table table
+	pad-table &xpath(//dtb:table/dtb:div[@class='border'])
 	no thead
 	no tbody
     tablerow tr
-    lasttablerow  &xpath(//dtb:tr[position()=last()])
+    lasttablerow &xpath(//dtb:tr[position()=last()])
     generic td
     generic th
 
@@ -230,23 +249,43 @@
 
 # Textboxes
 	
-	no div,class,frame
-	textboxnoborder &xpath(//dtb:div[@class='frame' and @border='none'])
+	frame div,class,frame
+	pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
 	
 # Images
 	
 	no div,class,image
-	
-# Horizontal rules
 
-	boxline &xpath(//*[not(self::dtb:div[@class='frame'])]/dtb:hr[following-sibling::*[1][self::dtb:table[not(@border='none')]]]) 7
-	boxline &xpath(//*[not(self::dtb:div[@class='frame'])]/dtb:hr[preceding-sibling::*[1][self::dtb:table[not(@border='none')]]]) g
-	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:table[not(@border='none')]]]) =
-	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:table[not(@border='none')]]]) =
-	boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:thead]]) 3
-	
-	boxline &xpath(//dtb:hr[following-sibling::*[1][self::dtb:div[@class='frame' and not(@border='none')]]]) 7
-	boxline &xpath(//dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='frame' and not(@border='none')]]]) g
+# ----------------------------------------------------------------------------------------------
+# Borders (_sem.borders.sem)
+
+    boxline &xpath(//dtb:table//dtb:hr[preceding-sibling::*[1][self::dtb:thead]]) 		                          3
+
+#   boxline &xpath(//dtb:table/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) 				  ?
+#   boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) 				  ?	
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) 	  ?
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) 	  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h1]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h2]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h3]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h4]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h5]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h6]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h7]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h8]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h9]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h10]]]) ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h1]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h2]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h3]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h4]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h5]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h6]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h7]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h8]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h9]]])  ?
+#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h10]]]) ?
+# ----------------------------------------------------------------------------------------------
 
 # Transcriber's notes
 	

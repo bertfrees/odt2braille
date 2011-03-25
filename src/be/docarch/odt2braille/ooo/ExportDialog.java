@@ -20,11 +20,12 @@
 package be.docarch.odt2braille.ooo;
 
 import java.util.logging.Logger;
+import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
 import java.util.TreeMap;
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -71,8 +72,8 @@ public class ExportDialog implements XItemListener,
     private ProgressBar progressbar = null;
     private SettingsDialog settingsDialog = null;
 
-    private ArrayList<BrailleFileType> brailleFileTypes = null;
-    private ArrayList<TableType> tableTypes = null;
+    private List<BrailleFileType> brailleFileTypes = null;
+    private List<TableType> tableTypes = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -132,8 +133,8 @@ public class ExportDialog implements XItemListener,
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_multipleFilesLabel = null;
 
-    private TreeMap<BrailleFileType,String> L10N_brailleFile = new TreeMap();
-    private TreeMap<TableType,String> L10N_table = new TreeMap();
+    private Map<BrailleFileType,String> L10N_brailleFile = new TreeMap();
+    private Map<TableType,String> L10N_table = new TreeMap();
 
 
     public ExportDialog(XComponentContext xContext,
@@ -186,8 +187,6 @@ public class ExportDialog implements XItemListener,
         L10N_table.put(TableType.IT_IT_FIRENZE,     "Italian");
         L10N_table.put(TableType.SV_SE_CX,          "Swedish");
         L10N_table.put(TableType.SV_SE_MIXED,       "Swedish (2)");
-
-        L10N_table.put(TableType.BRL,               "BRL (Non-ASCII Braille)");
         L10N_table.put(TableType.ES_OLD,            "Spanish (Old)");
         L10N_table.put(TableType.ES_NEW,            "Spanish (New)");
 
@@ -304,15 +303,7 @@ public class ExportDialog implements XItemListener,
         numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
 
-        if (System.getProperty("os.name").toLowerCase().contains("mac os") ||
-                (Math.min(1, settings.getNumberOfVolumes()) +
-                 settings.getNumberOfSupplements() +
-                (settings.getPreliminaryVolumeEnabled()?1:0)) < 2) {
-            settings.setMultipleFiles(false);
-            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
-        }
-
-        multipleFilesCheckBox.setState((short)(settings.getMultipleFiles()?1:0));
+        updateMultipleFilesCheckBox();
 
         updateBrailleFileListBox();
         updateDuplexCheckBox();
@@ -327,7 +318,7 @@ public class ExportDialog implements XItemListener,
         settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
         settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
         settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
-        settings.setMultipleFiles(multipleFilesCheckBox.getState()==(short)1);
+        settings.setMultipleFilesEnabled(multipleFilesCheckBox.getState()==(short)1);
         try {
             settings.setDuplex((duplexCheckBox.getState()==(short)1));
         } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
@@ -340,7 +331,8 @@ public class ExportDialog implements XItemListener,
      *
      */
     private void updateOKButton() throws com.sun.star.uno.Exception {
-        okButtonProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=BrailleFileType.NONE);
+        okButtonProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=null &&
+                                                       settings.getTable()!=null);
     }
 
     /**
@@ -363,6 +355,7 @@ public class ExportDialog implements XItemListener,
                     brailleFileListBox.addItem(key.name(), (short)i);
                 }
             }
+
             brailleFileListBox.selectItemPos((short)brailleFileTypes.indexOf(settings.getBrailleFileType()), true);
 
         brailleFileListBox.addItemListener(this);
@@ -379,17 +372,21 @@ public class ExportDialog implements XItemListener,
 
         tableListBox.removeItems((short)0, Short.MAX_VALUE);
         tableTypes = settings.getSupportedTableTypes();
-        for (int i=0;i<tableTypes.size();i++) {
-            key = tableTypes.get(i);
-            if (L10N_table.containsKey(key)) {
-                tableListBox.addItem(L10N_table.get(key), (short)i);
-            } else {
-                tableListBox.addItem(key.name(), (short)i);
-            }
-        }
-        tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-        tableListBoxProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=BrailleFileType.NONE);
 
+        if (tableTypes.size() > 1) {
+            tableListBoxProperties.setPropertyValue("Enabled", true);
+            for (int i=0;i<tableTypes.size();i++) {
+                key = tableTypes.get(i);
+                if (L10N_table.containsKey(key)) {
+                    tableListBox.addItem(L10N_table.get(key), (short)i);
+                } else {
+                    tableListBox.addItem(key.name(), (short)i);
+                }
+            }
+            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
+        } else {
+            tableListBoxProperties.setPropertyValue("Enabled", false);
+        }
     }
 
     /**
@@ -420,6 +417,21 @@ public class ExportDialog implements XItemListener,
             eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported() && !eightDotsSupported);
         eightDotsCheckBox.addItemListener(this);
 
+    }
+
+    private void updateMultipleFilesCheckBox() throws com.sun.star.uno.Exception {
+
+        if (System.getProperty("os.name").toLowerCase().contains("mac os") ||
+                (Math.max(1, settings.getNumberOfVolumes()) +
+                 settings.getNumberOfSupplements() +
+                (settings.getPreliminaryVolumeEnabled()?1:0)) < 2) {
+            settings.setMultipleFilesEnabled(false);
+            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
+        } else {
+            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", true);
+        }
+
+        multipleFilesCheckBox.setState((short)(settings.getMultipleFilesEnabled()?1:0));
     }
 
     public void itemStateChanged(ItemEvent itemEvent) {
@@ -471,6 +483,8 @@ public class ExportDialog implements XItemListener,
                 }
 
                 settingsDialog.execute();
+
+                updateMultipleFilesCheckBox();
 
             }
         } catch (com.sun.star.uno.Exception ex) {

@@ -79,9 +79,7 @@ installation package and follow the steps. You can download the latest version f
 @note{Make sure the installation package is an @emph{.oxt} file. It might happen that Internet Explorer saves it as a 
 @emph{.zip} file. In this case, just rename the file back to @emph{.oxt}.}
 
-It is strongly recommended that you also download and install the SimBraille font from Duxbury Systems at
-@url{http://www.duxburysystems.com/@/product2.asp?product=The%20Braille%20TrueType%20Fonts&level=free&action=pur"}. As
-of version 0.0.3, odtbraille will use his own @emph{odt2braille fonts} instead:
+It is strongly recommended that you also download and install the @emph{odt2braille fonts}:
 @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille6.ttf} for 6-dot
 Braille and @url{http://odt2braille.svn.sourceforge.net/@/viewvc/@/odt2braille/@/Odt2BrailleAddOn/@/fonts/@/odt2braille8.ttf}
 for 8-dot Braille.
@@ -108,8 +106,7 @@ etcetera you use the extension).
 @heading Introduction
 
 This guide explains how to create a document in OpenOffice.org Writer and prepare it for Braille 
-production. Chapter 1 explains all you have to know to get started real quickly. In chapter 2 you will find 
-a more comprehensive reference. You can find more help on working with Writer at 
+production. You can find more help on working with Writer at 
 @url{http://wiki.services.openoffice.org/@/wiki/@/Documentation/@/OOo3_User_Guides/@/Writer_Guide}.
 
 After installing odt2braille, a whole new range of user preferences will become available.
@@ -125,17 +122,13 @@ simplify the production of valid and well-formatted Braille.
 What follows next is a detailed overview of all possibilities odt2braille offers.
 
 @menu
-* Quick Guide::
-* Advanced Guide::
+* Authoring Braille::
+* Embossing Braille::
+* Exporting Braille::
 @end menu
 
-@node Quick Guide
-@chapter Quick Guide
-
-Quick guide
-
-@node Advanced Guide
-@chapter Advanced Guide
+@node Authoring Braille
+@chapter Authoring Braille
 
 @menu
 * Languages::
@@ -1224,6 +1217,36 @@ Quick guide
 				contain a preliminary section with a titlepage. You can find them under
 				[@emph{File > New > Templates and Documents > Templates > Braille Documents}].
 			@end itemize
+	
+@node Embossing Braille
+@chapter Embossing Braille
+
+	To print a document on a Braille embosser, call the @emph{Emboss...} window from the @emph{File} menu,
+	right beneath @emph{Print...}.
+	
+	@itemize @bullet
+		@item
+		Select your embosser from the dropdown list. If your embosser is not supported, please contact us
+		and we will add it if possible. You can request features at 
+		@url{http://sourceforge.net/@/tracker/@/?func=add&group_id=330251&atid=1385420}.
+		@item
+		Check that your embosser is powered on and loaded with paper. Specify the paper size in the dialog.
+		If the paper is not in the list, define a "@emph{Custom}" paper size.
+		@item
+		Depending on the type of embosser, you can choose between single- or double-sided printing, and
+		between a 6- or 8-dot matrix. In addition, some embossers have special features like 
+		@emph{Character set selection}, @emph{Magazine style} and @emph{Z-folding}.
+		@item
+		Finally, select the number of characters per line, the number of lines per page and the margins.
+	@end itemize
+	
+	Pressing the @emph{Emboss} button will trigger the transcription process. When the document is succesfully
+	translated, you are given the option to "@emph{Preview}" the Braille output before printing, or go on and
+	print the document immediately.	
+
+@node Exporting Braille
+@chapter Exporting Braille
+	
 	
 @html
 </div>
