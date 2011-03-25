@@ -16,10 +16,14 @@ import be.docarch.accessibility.Check;
 import be.docarch.accessibility.ExternalChecker;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.OdtTransformer;
+import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.Volume;
 
 import java.io.IOException;
+import org.xml.sax.SAXException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.parsers.ParserConfigurationException;
 
 
 /**
@@ -99,13 +103,29 @@ public class BrailleChecker implements ExternalChecker {
         try {
 
             OdtTransformer odtTransformer = new OdtTransformer(odtFile, null, null);
-            odtTransformer.makeControlFlow();
+            Settings settings = new Settings(odtTransformer);
+            odtTransformer.makeControlFlow(settings);
+
+            boolean tocEnabled = false;
+            for (Volume volume : settings.getVolumes()) {
+                if (volume.getToc()) {
+                    tocEnabled = true;
+                    break;
+                }
+            }
+
+            earlXSL.setParameter("paramTocEnabled", tocEnabled);
             earlXSL.setParameter("paramTimestamp", dateFormat.format(lastChecked));
             earlXSL.setParameter("content-url", odtTransformer.getOdtContentFile().toURI());
-            earlXSL.setParameter("meta-url", odtTransformer.getOdtMetaFile().toURI());
+            //earlXSL.setParameter("meta-url", odtTransformer.getOdtMetaFile().toURI());
             earlXSL.transform(new StreamSource(odtTransformer.getControllerFile()), new StreamResult(earlReport));
+            odtTransformer.close();
 
+        } catch (ParserConfigurationException ex) {
+            logger.log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            logger.log(Level.SEVERE, null, ex);
+        } catch (SAXException ex) {
             logger.log(Level.SEVERE, null, ex);
         } catch (TransformerException ex) {
             logger.log(Level.SEVERE, null, ex);
