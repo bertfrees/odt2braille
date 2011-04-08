@@ -76,6 +76,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.PreliminaryVolume;
 import be.docarch.odt2braille.RomanNumbering;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
@@ -500,7 +501,7 @@ public class PreviewDialog implements XItemListener,
         sectionsListBox.removeItems((short)0, Short.MAX_VALUE);
         sectionCount = XPathAPI.selectNodeList(root, "/pef/body/volume[" + volume + "]/section").getLength();
 
-        if (volumes.get(volume-1).getType() == Volume.Type.PRELIMINARY) {
+        if (volumes.get(volume-1) instanceof PreliminaryVolume) {
             sectionsListBox.addItem(L10N_preliminary_section, (short)0);
         } else if (sectionCount == 2) {
             sectionsListBox.addItem(L10N_preliminary_section, (short)0);
@@ -522,7 +523,7 @@ public class PreviewDialog implements XItemListener,
         pageCount = XPathAPI.selectNodeList(root, "/pef/body/volume[" + volume + "]/section[" + section + "]/page").getLength();
 
         Volume vol = volumes.get(volume-1);        
-        boolean preliminaryPages = (vol.getType() == Volume.Type.PRELIMINARY) || (section < sectionCount);
+        boolean preliminaryPages = (vol instanceof PreliminaryVolume) || (section < sectionCount);
         int firstpage = preliminaryPages?1:vol.getFirstBraillePage();
 
         for (int i=0; i<pageCount;i++) {

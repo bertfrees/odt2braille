@@ -202,8 +202,8 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             header.append((char)0x02);
             header.append("x,");                            // 0: Activated braille code
             header.append("0,");                            // 1: Type of braille code      = Computer
-            header.append("1,");                            // 2: 6/8 dot braille           = 8 dot
-            header.append("x,");                            // 3: Capital prefix
+            header.append(eightDots?'1':'0');               // 2: 6/8 dot braille
+            header.append(",x,");                           // 3: Capital prefix
             header.append("x,");                            // 4: Baud rate
             header.append("x,");                            // 5: Number of data bits
             header.append("x,");                            // 6: Parity
@@ -217,7 +217,7 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
             header.append("0,");                            // 11: Binding margin           = 0 characters
             header.append("0,");                            // 12: Top margin               = 0 lines
             header.append("0,");                            // 13: Bottom margin            = 0 lines
-            header.append(eightDots?'4':'0');               // 14: Line spacing             = 2.5 mm (6 dot) or 5 mm (8 dot)
+            header.append("0,");                            // 14: Line spacing             = 5 mm
             header.append(",");            
             if (saddleStitch) { header.append('4'); } else
             if (zFolding)     { header.append('3'); } else
@@ -280,10 +280,9 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
 
             header.append((char)0x1b);
             header.append("D");                                         // Activate temporary formatting properties of a document
-            header.append(",BT0");                                      // Default braille table
-            header.append("TD0");                                       // Text dot distance = 2.5 mm
-            header.append(",LS");
-            header.append(eightDots?'4':'0');                           // Line spacing = 2.5 mm or 5 mm
+            header.append("BT0");                                       // Default braille table
+            header.append(",TD0");                                      // Text dot distance = 2.5 mm
+            header.append(",LS50");                                     // Line spacing = 5 mm
             header.append(",DP");
             if (saddleStitch)       { header.append('4'); } else
             if (zFolding && duplex) { header.append('3'); } else

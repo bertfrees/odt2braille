@@ -42,13 +42,7 @@ typedef struct
   int lineNumber;
   int numEntries;
   int unedited;
-
-/**** Removed by Bert Frees ***************************************
-  char line[2 * MAXNAMELEN];
-/**** Added by Bert Frees *****************************************/
   char line[5 * MAXNAMELEN];
-/******************************************************************/
-
 }
 FileInfo;
 

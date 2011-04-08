@@ -1521,7 +1521,7 @@ public class SettingsIO extends SettingsLoader {
 
         logger.entering("SettingsIO", "saveEmbossSettingsToOpenOffice");
 
-        Properties embosserSettings = new Properties();
+        Properties embosserSettings = loadSettingsFromOpenOffice("embosser");
 
         odtModified = false;
 

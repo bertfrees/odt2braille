@@ -74,7 +74,7 @@ import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
  * @see <a href="http://www.daisy.org/z3986/2005/Z3986-2005.html">DAISY xml specification</a>
  * @author Bert Frees
  */
-public class OdtTransformer /* implements ExternalChecker */ {
+public class OdtTransformer {
 
     private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String TMP_NAME = Constants.TMP_PREFIX;
@@ -86,6 +86,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private TransformerFactoryImpl tFactory = null;
 
     private StatusIndicator statusIndicator = null;
+    private Settings settings = null;
+
     private ZipFile zip = null;
     private DocumentBuilder docBuilder = null;
     private Document contentDoc = null;
@@ -110,6 +112,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
     private boolean listNumberingDone = false;
     private boolean correctionDone = false;
     private boolean metaDataReferencesDone = false;
+    private boolean splitInAutomaticVolumesDone = false;
 
     private static String L10N_in = null;
     private static String L10N_and = null;
@@ -214,6 +217,16 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
     }
 
+    public boolean configure(Settings settings) {
+        
+        if (this.settings == null) {
+            this.settings = settings;
+            settings.lock();
+            return true;
+        }
+        return false;
+    }
+
     private void parseDocument() throws IOException,
                                         SAXException {
         if (!documentParsed) {
@@ -270,10 +283,11 @@ public class OdtTransformer /* implements ExternalChecker */ {
         }
     }
   
-    public void makeControlFlow(Settings settings)
-                         throws IOException,
-                                TransformerConfigurationException,
-                                TransformerException {
+    public boolean makeControlFlow() throws IOException,
+                                            TransformerConfigurationException,
+                                            TransformerException {
+
+        if (settings == null) { return false; }
 
         if (controllerFile == null) {
 
@@ -314,6 +328,8 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             logger.exiting("OdtTransformer","makeControlFlow");
         }
+
+        return true;
     }
 
     private void correctionProcessing() throws SAXException,
@@ -342,7 +358,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
     }
 
 
-    private void paginationProcessing(Settings settings)
+    private void paginationProcessing(List<HeadingStyle> headingSettings)
                                throws IOException,
                                       SAXException,
                                       TransformerConfigurationException,
@@ -354,8 +370,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
             parseDocument();
 
-            listSettings = settings.getListStyles();
-            headingSettings = settings.getHeadingStyles();
+            this.headingSettings = headingSettings;
 
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
@@ -408,15 +423,18 @@ public class OdtTransformer /* implements ExternalChecker */ {
         }
     }
 
-    private void listNumberingProcessing() throws IOException,
-                                                  SAXException,
-                                                  TransformerConfigurationException,
-                                                  TransformerException {
+    private void listNumberingProcessing(List<ListStyle> listSettings)
+                                  throws IOException,
+                                         SAXException,
+                                         TransformerConfigurationException,
+                                         TransformerException {
         if (!listNumberingDone) {
 
             logger.entering("OdtTransformer","listNumberingProcessing");
 
             parseDocument();
+
+            this.listSettings = listSettings;
 
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
@@ -1419,17 +1437,19 @@ public class OdtTransformer /* implements ExternalChecker */ {
         }
     }
 
-    public void getBodyMatter(Settings settings,
-                              File saveToFile)
-                       throws IOException,
-                              SAXException,
-                              TransformerConfigurationException,
-                              TransformerException {
+    public boolean getBodyMatter(File saveToFile)
+                          throws IOException,
+                                 SAXException,
+                                 TransformerConfigurationException,
+                                 TransformerException {
 
-        logger.entering("OdtTransformer","getBodyMatter");
+        if (settings == null) { return false; }
 
         // Dependencies
-        transform(settings);
+        if (!transform()) { return false; }
+        splitInAutomaticVolumes();
+
+        logger.entering("OdtTransformer","getBodyMatter");
 
         // Create transformer
 
@@ -1455,20 +1475,23 @@ public class OdtTransformer /* implements ExternalChecker */ {
 
         logger.exiting("OdtTransformer","getBodyMatter");
 
+        return true;
     }
 
-    public void getFrontMatter(Settings settings,
-                               File saveToFile,
-                               Volume volume)
-                        throws IOException,
-                               SAXException,
-                               TransformerConfigurationException,
-                               TransformerException {
+    public boolean getFrontMatter(File saveToFile,
+                                  Volume volume)
+                           throws IOException,
+                                  SAXException,
+                                  TransformerConfigurationException,
+                                  TransformerException {
 
-        logger.entering("OdtTransformer","getFrontMatter");
+        if (settings == null) { return false; }
 
         // Dependencies
-        transform(settings);
+        if (!transform()) { return false; }
+        splitInAutomaticVolumes();
+
+        logger.entering("OdtTransformer","getFrontMatter");
 
         List<SpecialSymbol> specialSymbolsList = settings.getSpecialSymbolsList();
         List<String> specialSymbols = new ArrayList();
@@ -1507,7 +1530,7 @@ public class OdtTransformer /* implements ExternalChecker */ {
         String volumeInfo = settings.volumeInfo.replaceFirst("@title", volume.getTitle())
                                                .replaceFirst("@pages", braillePages + (printPages.length()>0?"\n":"") + printPages);
         String transcriptionInfo = settings.transcriptionInfo.replaceFirst("@creator", settings.getCreator())
-                                                             .replaceFirst("@date",    settings.DATE);
+                                                             .replaceFirst("@date",    settings.getDate());
 
         if (volume.getSpecialSymbolsList()) {
             for (int i=0; i<specialSymbolsList.size(); i++) {
@@ -1526,27 +1549,32 @@ public class OdtTransformer /* implements ExternalChecker */ {
         // Set parameters
 
         splitVolumesXSL.setParameter("paramBodyMatterEnabled", false);
-        splitVolumesXSL.setParameter("paramAllVolumes", type == Volume.Type.SINGLE);
-        splitVolumesXSL.setParameter("paramVolumeId", volume.getIdentifier());
-        splitVolumesXSL.setParameter("paramFrontMatterEnabled", true);
+        splitVolumesXSL.setParameter("paramAllVolumes", volume instanceof SingleVolume);
+        splitVolumesXSL.setParameter("paramFrontMatterEnabled", volume.getFrontMatter());
         splitVolumesXSL.setParameter("paramTableOfContentEnabled", volume.getToc());
         splitVolumesXSL.setParameter("paramSpecialSymbolsListEnabled", volume.getSpecialSymbolsList());
         splitVolumesXSL.setParameter("paramTNPageEnabled", volume.getTranscribersNotesPage());
         splitVolumesXSL.setParameter("paramExtendedFront", volume.getExtFrontMatter());
         splitVolumesXSL.setParameter("paramExtendedToc", volume.getExtToc());
-        splitVolumesXSL.setParameter("paramVolumeInfoEnabled", settings.volumeInfoEnabled);
-        splitVolumesXSL.setParameter("paramTranscriptionInfoEnabled", settings.transcriptionInfoEnabled);
+        splitVolumesXSL.setParameter("paramVolumeInfoEnabled", settings.getVolumeInfoEnabled());
+        splitVolumesXSL.setParameter("paramTranscriptionInfoEnabled", settings.getTranscriptionInfoEnabled());
         splitVolumesXSL.setParameter("paramTranscriptionInfoLine", transcriptionInfo);
         splitVolumesXSL.setParameter("paramVolumeInfoLines", volumeInfo.split("\n"));
-        splitVolumesXSL.setParameter("paramTableOfContentTitle", settings.tableOfContentTitle);
-        splitVolumesXSL.setParameter("paramTNPageTitle",settings.transcribersNotesPageTitle);
+        splitVolumesXSL.setParameter("paramTableOfContentTitle", settings.getTableOfContentTitle());
+        splitVolumesXSL.setParameter("paramTNPageTitle",settings.getTranscribersNotesPageTitle());
         splitVolumesXSL.setParameter("paramTranscribersNotes", transcribersNotes.toArray(new String[transcribersNotes.size()]));
-        splitVolumesXSL.setParameter("paramSpecialSymbolsListTitle", settings.specialSymbolsListTitle);
+        splitVolumesXSL.setParameter("paramSpecialSymbolsListTitle", settings.getSpecialSymbolsListTitle());
         splitVolumesXSL.setParameter("paramSpecialSymbols", specialSymbols.toArray(new String[specialSymbols.size()]));
         splitVolumesXSL.setParameter("paramSpecialSymbolsDots", specialSymbolsDots.toArray(new String[specialSymbolsDots.size()]));
         splitVolumesXSL.setParameter("paramSpecialSymbolsDescription", specialSymbolsDescription.toArray(new String[specialSymbolsDescription.size()]));
         splitVolumesXSL.setParameter("paramNoteSectionTitle", "NOTES");
-        splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", settings.continuedSuffix);
+        splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", settings.getContinuedSuffix());
+
+        if (volume instanceof SectionVolume) {
+            splitVolumesXSL.setParameter("paramVolumeId", ((SectionVolume)volume).getSectionName());
+        } else if (volume instanceof AutomaticVolume) {
+            splitVolumesXSL.setParameter("paramVolumeId", ((AutomaticVolume)volume).getIdentifier());
+        }
 
         // Set output options
 
@@ -1560,14 +1588,59 @@ public class OdtTransformer /* implements ExternalChecker */ {
         splitVolumesXSL.transform(new StreamSource(daisyFile), new StreamResult(saveToFile));
 
         logger.exiting("OdtTransformer","getFrontMatter");
-        
+
+        return true;
     }
 
-    private boolean transform(Settings settings)
-                       throws IOException,
-                              SAXException,
-                              TransformerConfigurationException,
-                              TransformerException {
+    private boolean splitInAutomaticVolumes() throws IOException,
+                                                     SAXException,
+                                                     TransformerException,
+                                                     TransformerConfigurationException {
+        // Dependencies
+        if (!transform()) { return false; }
+
+        if (settings.getVolumeManagementMode() == VolumeManagementMode.AUTOMATIC &&
+                !splitInAutomaticVolumesDone) {
+
+            logger.entering("OdtTransformer","splitInAutomaticVolumes");
+
+            List<Integer> volumeBoundaries = new ArrayList<Integer>();
+            List<String> volumeIds = new ArrayList<String>();
+            for (AutomaticVolume volume : settings.getAutomaticVolumes()) {
+                volumeBoundaries.add(volume.getStartPage());
+                volumeIds.add(volume.getIdentifier());
+            }
+
+            Transformer autoVolumesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "auto-volumes.xsl").toString()));
+
+            autoVolumesXSL.setParameter("paramAutoVolumeBoundaries", volumeBoundaries.toArray(new Integer[volumeBoundaries.size()]));
+            autoVolumesXSL.setParameter("paramAutoVolumeIds",        volumeIds.toArray(new String[volumeIds.size()]));
+
+            autoVolumesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+            autoVolumesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
+            autoVolumesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
+            autoVolumesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+
+            File tempFile = new File(daisyFile.getAbsoluteFile() + ".temp");
+            autoVolumesXSL.transform(new StreamSource(daisyFile), new StreamResult(tempFile));
+            daisyFile.delete();
+            tempFile.renameTo(daisyFile);
+
+            logger.exiting("OdtTransformer","splitInAutomaticVolumes");
+
+            splitInAutomaticVolumesDone = true;
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean transform() throws IOException,
+                                       SAXException,
+                                       TransformerConfigurationException,
+                                       TransformerException {
+
+        if (settings == null) { return false; }
 
         if (daisyFile == null) {
 
@@ -1577,11 +1650,11 @@ public class OdtTransformer /* implements ExternalChecker */ {
             daisyFile.deleteOnExit();
 
             // Dependencies
-            paginationProcessing(settings);
+            paginationProcessing(settings.getHeadingStyles());
             headingNumberingProcessing();
-            listNumberingProcessing();
+            listNumberingProcessing(settings.getListStyles());
             correctionProcessing();
-            makeControlFlow(settings);
+            makeControlFlow();
 
             List<String> languages = settings.getLanguages();
             List<String> translationTables = new ArrayList<String>();
@@ -1599,7 +1672,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
             List<Boolean> capsFollowPrint = new ArrayList<Boolean>();
             List<Boolean> headingUpperBorder = new ArrayList<Boolean>();
             List<Boolean> headingLowerBorder = new ArrayList<Boolean>();
-            List<String> autoVolumeIds = new ArrayList<String>();
             List<String> noterefNumberFormats = settings.getNoterefNumberFormats();
             List<String> noterefNumberPrefixes = new ArrayList<String>();
 
@@ -1640,12 +1712,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
                 headingLowerBorder.add(headStyle.getLowerBorder());
             }
 
-            if (settings.getVolumeManagementMode()==VolumeManagementMode.AUTOMATIC) {
-                for (Volume v : settings.getAutomaticVolumes()) {
-                    autoVolumeIds.add(v.getIdentifier());
-                }
-            }
-
             for (String s : noterefNumberFormats) {
                 noterefNumberPrefixes.add(settings.getNoterefNumberPrefix(s));
             }
@@ -1661,8 +1727,6 @@ public class OdtTransformer /* implements ExternalChecker */ {
             mainXSL.setParameter("controller-url",                controllerFile.toURI());
 
             mainXSL.setParameter("paramVolumeManagementMode",     settings.getVolumeManagementMode().name());
-            mainXSL.setParameter("paramAutoVolumeBoundaries",     null);
-            mainXSL.setParameter("paramAutoVolumeIds",            autoVolumeIds.toArray(new String[autoVolumeIds.size()]));
             mainXSL.setParameter("paramStairstepTableEnabled",    settings.stairstepTableIsEnabled());
             mainXSL.setParameter("paramHyphenationEnabled",       settings.getHyphenate());
             mainXSL.setParameter("paramKeepHardPageBreaks",       settings.getHardPageBreaks());
@@ -1716,10 +1780,9 @@ public class OdtTransformer /* implements ExternalChecker */ {
             tempFile.delete();
 
             logger.exiting("OdtTransformer","transform");
-            return true;
+        }
 
-        } else { return false; }
-
+        return true;
     }
 
     public String[] extractLanguages() throws IOException,
@@ -1933,32 +1996,34 @@ public class OdtTransformer /* implements ExternalChecker */ {
         }
     }
 
-    public int[] extractDocumentOutline(Settings settings) throws IOException,
-                                                                  SAXException,
-                                                                  TransformerConfigurationException,
-                                                                  TransformerException {
+    public int[] extractDocumentOutline() throws IOException,
+                                                 SAXException,
+                                                 TransformerConfigurationException,
+                                                 TransformerException {
         // Dependencies
-        paginationProcessing(settings);
-        
+        if (!transform()) { return new int[0]; }
+
         logger.entering("OdtTransformer","extractDocumentOutline");
 
-        parseDocument();
+        Document daisy = docBuilder.parse(daisyFile);
+        Node root = daisy.getDocumentElement();
 
-        Node root = contentDoc.getDocumentElement();
-        
-        int pageCount =  Integer.parseInt(XPathAPI.eval(root, "count(//body/text//pagenum)").str());
+        int pageCount =  Integer.parseInt(XPathAPI.eval(root, "count(//bodymatter/volume[1]//pagenum)").str());
         int[] outline = new int[pageCount];
         NodeIterator iterator;
         int lvl;
         for (int i=0; i<pageCount; i++) {
             outline[i] = 0;
-            iterator = XPathAPI.selectNodeIterator(root, "//h[not(ancestor::table:table or " +
-                                                                 "ancestor::text:list or " +
-                                                                 "ancestor::text:note or " +
-                                                                 "ancestor::draw:frame) and count(preceding::pagenum)=" + (i+1) + "]/@outline-level");
+            iterator = XPathAPI.selectNodeIterator(root, "//bodymatter/volume[1]/heading" +
+                                                            "//*[(self::h1 or self::h2 or self::h3 or " +
+                                                                 "self::h4 or self::h5 or self::h6 or " +
+                                                                 "self::h7 or self::h8 or self::h9 or self::h10) " +
+                                                             "and not(@dummy) " +
+                                                             "and count(preceding::pagenum[ancestor::bodymatter])=" + (i+1) +"]");
+
             for (Node node = iterator.nextNode(); node != null; node = iterator.nextNode()) {
                 try {
-                    lvl = Integer.parseInt(node.getNodeValue());
+                    lvl = Integer.parseInt(node.getNodeName().substring(5));
                     if (outline[i]==0 && lvl>0) {
                         outline[i] = lvl;
                     } else if (lvl<outline[i]) {

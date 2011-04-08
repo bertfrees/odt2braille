@@ -141,13 +141,15 @@
     <xsl:template match="dtb:bodymatter">
 
         <xsl:choose>
-            <xsl:when test="($paramBodyMatterEnabled and $paramAllVolumes) or 
-                            ($paramTableOfContentEnabled and $paramExtendedToc)">
+            <xsl:when test="(($paramBodyMatterEnabled or $paramTableOfContentEnabled)
+                                    and $paramAllVolumes)
+                                or ($paramTableOfContentEnabled and $paramExtendedToc)">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume"/>
                 </xsl:copy>
             </xsl:when>
-            <xsl:when test="$paramBodyMatterEnabled or $paramTableOfContentEnabled">
+            <xsl:when test="($paramBodyMatterEnabled or $paramTableOfContentEnabled)
+                                and string-length($paramVolumeId) > 0">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume[@id=$paramVolumeId]"/>
                 </xsl:copy>
@@ -187,8 +189,9 @@
                 <!-- Continued heading -->
                 <xsl:otherwise>
                     <xsl:apply-templates select="$first-child/preceding-sibling::*"/>
-                    <xsl:apply-templates select="$first-child/preceding::dtb:heading[parent::dtb:volume][1]"
-                                         mode="continued-heading" />
+                    <xsl:apply-templates select="$first-child/preceding::dtb:heading[parent::dtb:volume][1]">
+                        <xsl:with-param name="continued-heading" select="true()" />
+                    </xsl:apply-templates>
                     <xsl:apply-templates select="$first-child" />
                     <xsl:apply-templates select="$first-child/following-sibling::*" />
                 </xsl:otherwise>

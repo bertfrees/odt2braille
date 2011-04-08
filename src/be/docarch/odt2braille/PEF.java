@@ -123,9 +123,8 @@ public class PEF implements ErrorHandler {
      * @param checker           The <code>Checker</code> that will check the braille document for possible accessibility issues.
      * @param odtLocale         The <code>Locale</code> for the document.
      */
-    public PEF(OdtTransformer odtTransformer,
+    public PEF(Settings settings,
                LiblouisXML liblouisXML,
-               Settings settings,
                StatusIndicator statusIndicator,
                Checker checker)
         throws IOException,
@@ -136,7 +135,7 @@ public class PEF implements ErrorHandler {
                InterruptedException,
                LiblouisXMLException {
 
-        this(odtTransformer, liblouisXML, settings, statusIndicator, checker, Locale.getDefault());
+        this(settings, liblouisXML, statusIndicator, checker, Locale.getDefault());
 
     }
 
@@ -151,9 +150,8 @@ public class PEF implements ErrorHandler {
      * @param checker           The <code>Checker</code> that will check the braille document for possible accessibility issues.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
-    public PEF(OdtTransformer odtTransformer,
+    public PEF(Settings settings,
                LiblouisXML liblouisXML,
-               Settings settings,
                StatusIndicator statusIndicator,
                Checker checker,
                Locale oooLocale)
@@ -166,10 +164,13 @@ public class PEF implements ErrorHandler {
         logger.entering("PEF", "<init>");
 
         this.settings = settings;
-        this.odtTransformer = odtTransformer;
         this.liblouisXML = liblouisXML;
         this.statusIndicator = statusIndicator;
         this.checker = checker;
+        
+        settings.configureVolumes();
+        odtTransformer = settings.odtTransformer;
+        odtTransformer.configure(settings);
 
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
@@ -178,7 +179,7 @@ public class PEF implements ErrorHandler {
 
         // odtTransformer preProcessing
         odtTransformer.ensureMetadataReferences();
-        odtTransformer.makeControlFlow(settings);
+        odtTransformer.makeControlFlow();
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
@@ -225,8 +226,6 @@ public class PEF implements ErrorHandler {
                                     SAXException,
                                     ValidationException,
                                     LiblouisXMLException {
-
-        settings.configureVolumes();
 
         logger.entering("PEF", "makePEF");
 
@@ -298,7 +297,7 @@ public class PEF implements ErrorHandler {
             bodyFile = File.createTempFile(TMP_NAME, ".daisy.body.xml", TMP_DIR);
             bodyFile.deleteOnExit();
 
-            odtTransformer.getBodyMatter(settings, bodyFile);
+            odtTransformer.getBodyMatter(bodyFile);
             checker.checkDaisyFile(bodyFile);
             liblouisXML.configure(bodyFile, brailleFile, false, beginPage);
             liblouisXML.run();
@@ -333,17 +332,18 @@ public class PEF implements ErrorHandler {
                 volumeElements[volumeCount].setAttributeNS(null,"rowgap","0");
                 volumeElements[volumeCount].setAttributeNS(null,"duplex",settings.getDuplex()?"true":"false");
 
-                if (volume.getType() != Volume.Type.PRELIMINARY) {
+                if (!(volume instanceof PreliminaryVolume)) {
 
                     sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
 
                     cont = true;
                     volume.setBraillePagesStart(beginPage);
-                    pageCount = 1;
+                    pageCount = 0;
                     while (cont) {
 
                         pageElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","page");
 
+                        pageCount++;
                         lineCount = 1;
                         while (lineCount <= settings.getLinesPerPage()) {
 
@@ -367,7 +367,6 @@ public class PEF implements ErrorHandler {
 
                         sectionElement.appendChild(pageElement);
                         bufferedReader.skip(1);
-                        pageCount++;
                     }
 
                     beginPage += pageCount;
@@ -399,12 +398,16 @@ public class PEF implements ErrorHandler {
 
                     // Print page range
 
-                    if (settings.volumeInfoEnabled &&
+                    if (settings.getVolumeInfoEnabled() &&
                         volume.getFrontMatter() &&
-                        volume.getType() != Volume.Type.PRELIMINARY) {
+                        !(volume instanceof PreliminaryVolume)) {
 
-                        String volumeNode = "dtb:volume"
-                                + ((volume.getType()!=Volume.Type.SINGLE) ? "[@id='" + volume.getIdentifier() + "']" : "");
+                        String volumeNode = "dtb:volume";
+                        if (volume instanceof SectionVolume) {
+                            volumeNode += "[@id='" + ((SectionVolume)volume).getSectionName()  + "']";
+                        } else if (volume instanceof AutomaticVolume) {
+                            volumeNode += "[@id='" + ((AutomaticVolume)volume).getIdentifier() + "']";
+                        }
 
                         String s;
                         if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
@@ -419,7 +422,7 @@ public class PEF implements ErrorHandler {
                                             "/*[not(ancestor::dtb:div[@class='not-in-volume'])][1]/preceding::dtb:pagenum[1]", namespace);
                         }
                         if (s.equals("")){
-                            if (settings.mergeUnnumberedPages) {
+                            if (settings.getMergeUnnumberedPages()) {
                                 s = XPathUtils.evaluateString(bodyFile.toURL().openStream(),
                                             "//" + volumeNode +
                                             "/*[not(self::dtb:div[@class='not-in-volume'])][1]/preceding::dtb:pagenum[text()][1]", namespace);
@@ -448,9 +451,12 @@ public class PEF implements ErrorHandler {
                         ArrayList<Boolean> specialSymbolsPresent = new ArrayList();
                         boolean specialSymbolPresent;
 
-                        String volumeNode = "dtb:volume"
-                                + ((volume.getType()!=Volume.Type.SINGLE &&
-                                    volume.getType()!=Volume.Type.PRELIMINARY) ? "[@id='" + volume.getIdentifier() + "']" : "");
+                        String volumeNode = "dtb:volume";
+                        if (volume instanceof SectionVolume) {
+                            volumeNode += "[@id='" + ((SectionVolume)volume).getSectionName()  + "']";
+                        } else if (volume instanceof AutomaticVolume) {
+                            volumeNode += "[@id='" + ((AutomaticVolume)volume).getIdentifier() + "']";
+                        }
 
                         for (int i=0; i<specialSymbolsList.size(); i++) {
 
@@ -466,7 +472,7 @@ public class PEF implements ErrorHandler {
                                     if (volumeCount == 0) { specialSymbolPresent = true; }
                                     break;
                                 case IF_PRESENT_IN_VOLUME:
-                                    if (volume.getType() != Volume.Type.PRELIMINARY) {
+                                    if (!(volume instanceof PreliminaryVolume)) {
                                         switch (specialSymbolsList.get(i).getType()) {
                                             case NOTE_REFERENCE_INDICATOR:
                                                 specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
@@ -534,7 +540,7 @@ public class PEF implements ErrorHandler {
 
                     sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
 
-                    odtTransformer.getFrontMatter(settings, preliminaryFile, volume);
+                    odtTransformer.getFrontMatter(preliminaryFile, volume);
                     liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getToc()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
@@ -566,7 +572,7 @@ public class PEF implements ErrorHandler {
 
                     // Get preliminary pages
 
-                    odtTransformer.getFrontMatter(settings, preliminaryFile, volume);
+                    odtTransformer.getFrontMatter(preliminaryFile, volume);
                     checker.checkDaisyFile(preliminaryFile);
                     liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getToc()?volume.getFirstBraillePage():1);
                     liblouisXML.run();

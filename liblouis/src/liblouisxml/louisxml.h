@@ -61,19 +61,15 @@ typedef struct
   int lines_before;
   int lines_after;
   int left_margin;
-
-/**** Added by Bert Frees *****************************************/
   int centered_margin;
   int keep_with_next;
   int dont_split;
   int orphan_control;
   int widow_control;
   int lines_from_top;
-/******************************************************************/
-
   int first_line_indent;	/* At true margin if negative */
   sem_act translate;
-  int skip_number_lines;	/* Don't write on lines with page numbers */
+  int skip_number_lines;	/*Don't write on lines with page numbers */
   StyleFormat format;
   BrlPageNumFormat brlNumFormat;
   int newpage_before;
@@ -94,6 +90,7 @@ typedef struct
 #define MAXNAMELEN 256
 #define MAXNUMLEN 32
 #define STACKSIZE 100
+#define MAXLINES 512
 
 typedef enum
 {
@@ -167,52 +164,29 @@ typedef struct
   char *mainBrailleTable;
   char *inbuf;
   int inlen;
-  widechar *outbuf;
-  int outlen;
-  int outlen_so_far;
-
-/**** Added by Bert Frees *****************************************/
-
-  widechar *buffer2;
-  widechar *buffer3;
-  int buffer2_len;
-  int buffer3_len;
-  int buffer2_len_so_far;
-  int buffer3_len_so_far;
-  int buffer2_enabled;
-  int buffer3_enabled;
-
-  widechar page_separator_number_first[MAXNUMLEN];
-  widechar page_separator_number_last[MAXNUMLEN];
-  widechar print_page_number_first[MAXNUMLEN];
-  widechar print_page_number_last[MAXNUMLEN];
-
-  int page_separator;
-  int page_separator_number;
-  int ignore_empty_pages;
-  int continue_pages;
-  int merge_unnumbered_pages;
-  int print_page_number_range;
-  int page_number_top_separate_line;
-  int page_number_bottom_separate_line;
-  int print_page_numbers_in_contents;
-  int braille_page_numbers_in_contents;
-
-  int after_contents;
+  widechar *outbuf1;
+  widechar *outbuf2;
+  widechar *outbuf3;
+  int outbuf1_len;
+  int outbuf2_len;
+  int outbuf3_len;
+  int outbuf1_len_so_far;
+  int outbuf2_len_so_far;
+  int outbuf3_len_so_far;
+  int outbuf2_enabled;
+  int outbuf3_enabled;
   int fill_pages;
+  int after_contents;
   int fill_page_skipped;
   int blank_lines;
   int new_print_page;
-
-  int lines_pagenum[501];
-  int lines_newpage[501];
+  int print_page_numbers_in_contents;
+  int braille_page_numbers_in_contents;
+  int lines_pagenum[MAXLINES+1];
+  int lines_newpage[MAXLINES+1];
   int lines_length;
-
   char soft_hyphens[2 * BUFSIZE];
   BrlPageNumFormat cur_brl_page_num_format;
-
-/******************************************************************/
-
   int lines_on_page;
   int braille_page_number;
   int prelim_pages;
@@ -239,6 +213,18 @@ typedef struct
   char interline_back_table_name[MAXNAMELEN];
   char semantic_files[MAXNAMELEN];
   widechar print_page_number[MAXNUMLEN];
+  widechar page_separator_number_first[MAXNUMLEN];
+  widechar page_separator_number_last[MAXNUMLEN];
+  widechar print_page_number_first[MAXNUMLEN];
+  widechar print_page_number_last[MAXNUMLEN];
+  int page_separator;
+  int page_separator_number;
+  int ignore_empty_pages;
+  int continue_pages;
+  int merge_unnumbered_pages;
+  int print_page_number_range;
+  int page_number_top_separate_line;
+  int page_number_bottom_separate_line;
   widechar braille_page_string[MAXNUMLEN];
   char lineEnd[8];
   char pageEnd[8];

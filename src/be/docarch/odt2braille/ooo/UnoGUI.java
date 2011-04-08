@@ -106,8 +106,6 @@ public class UnoGUI {
     private Handler fh = null;
     private File logFile = null;
 
-    private OdtTransformer odtTransformer = null;
-
     private File liblouisLocation = null;
 
     private SettingsIO settingsIO = null;
@@ -218,7 +216,7 @@ public class UnoGUI {
             progressBar.increment();
 
             // Create odtTransformer
-            odtTransformer = new OdtTransformer(odtFile, progressBar, oooLocale);
+            OdtTransformer odtTransformer = new OdtTransformer(odtFile, progressBar, oooLocale);
             progressBar.increment();
 
             // Locale
@@ -376,10 +374,10 @@ public class UnoGUI {
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
             // Checker
-            checker = new Checker(oooLocale, changedSettings, odtTransformer);
+            checker = new Checker(oooLocale, changedSettings);
 
             // Create PEF
-            pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
+            pef = new PEF(changedSettings, liblouisXML, progressBar, checker, oooLocale);
 
             // Translate into braille
             if(!pef.makePEF()) {
@@ -618,10 +616,10 @@ public class UnoGUI {
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
             // Checker
-            checker = new Checker(oooLocale, changedSettings, odtTransformer);
+            checker = new Checker(oooLocale, changedSettings);
 
             // Create PEF
-            pef = new PEF(odtTransformer, liblouisXML, changedSettings, progressBar, checker, oooLocale);
+            pef = new PEF(changedSettings, liblouisXML, progressBar, checker, oooLocale);
 
             // Translate into braille
             if(!pef.makePEF()) {
@@ -893,9 +891,9 @@ public class UnoGUI {
         if (progressBar != null) {
             progressBar.close();
         }
-        if (odtTransformer != null) {
+        if (loadedSettings.odtTransformer != null) {
             try {
-                odtTransformer.close();
+                loadedSettings.odtTransformer.close();
             } catch (IOException e) {
             }
         }

@@ -1,7 +1,5 @@
 package be.docarch.odt2braille;
 
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.AbstractCollection;
@@ -13,14 +11,12 @@ import java.util.Iterator;
  */
 public class Combinations extends AbstractCollection<Combination> {
 
-    protected SortedSet<Integer> of = new TreeSet<Integer>();
     private Collection<Combination> ok = new ArrayList<Combination>();
     private Collection<Combination> all = new ArrayList<Combination>();
 
     public Combinations(Collection<Integer> integers) {
 
         super();
-        of.addAll(integers);
         Combination n;
         Collection<Combination> m = new ArrayList<Combination>();
         for (Integer i : integers) {
@@ -39,8 +35,6 @@ public class Combinations extends AbstractCollection<Combination> {
     public Combinations(Combinations x,
                         Combinations y) {
         super();
-        of.addAll(x.of);
-        of.addAll(y.of);
         addAll(x);
         addAll(y);
         for (Combination xx : x) {

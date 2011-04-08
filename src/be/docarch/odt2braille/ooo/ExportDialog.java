@@ -317,7 +317,9 @@ public class ExportDialog implements XItemListener,
 
         settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
         settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
-        settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        if (tableTypes.size() > 1) {
+            settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        }
         settings.setMultipleFilesEnabled(multipleFilesCheckBox.getState()==(short)1);
         try {
             settings.setDuplex((duplexCheckBox.getState()==(short)1));
@@ -403,8 +405,7 @@ public class ExportDialog implements XItemListener,
 
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
-        boolean eightDotsSupported = settings.eightDotsIsSupported();
-        if (eightDotsSupported) {
+        if (settings.eightDotsIsSupported()) {
             try {
                 settings.setEightDots(true);
             } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
@@ -414,7 +415,7 @@ public class ExportDialog implements XItemListener,
 
         eightDotsCheckBox.removeItemListener(this);
             eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
-            eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported() && !eightDotsSupported);
+            eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
         eightDotsCheckBox.addItemListener(this);
 
     }

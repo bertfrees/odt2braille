@@ -65,9 +65,6 @@
 
         <xsl:param name="paramVolumeManagementMode"       as="xsd:string"  select="'SINGLE'"  />
 
-        <xsl:param name="paramAutoVolumeBoundaries"       as="xsd:integer*"  />
-        <xsl:param name="paramAutoVolumeIds"              as="xsd:string*"   />
-
         <xsl:param name="paramColumnDelimiter"            as="xsd:string"   select='"&#x2806;"' />
 
         <xsl:param name="paramStairstepTableEnabled"      as="xsd:boolean"  select="false()"  />
@@ -156,7 +153,8 @@ DOCUMENT ROOT
                 <!-- BODYMATTER -->
                 <dtb:bodymatter>
                     <xsl:choose>
-                        <xsl:when test="$paramVolumeManagementMode='SINGLE'">
+                        <xsl:when test="$paramVolumeManagementMode='SINGLE' or
+                                        $paramVolumeManagementMode='AUTOMATIC'">
                             <dtb:volume>
                                 <xsl:apply-templates mode="toplevel"
                                                      select="$body/office:text/text:sequence-decls/following-sibling::*">
@@ -169,9 +167,6 @@ DOCUMENT ROOT
                                                  select="$body/office:text/text:sequence-decls/following-sibling::*">
                                 <xsl:with-param name="volume" select="true()" />
                             </xsl:apply-templates>
-                        </xsl:when>
-                        <xsl:when test="$paramVolumeManagementMode='AUTOMATIC'">
-                            
                         </xsl:when>
                         <xsl:otherwise />
                     </xsl:choose>

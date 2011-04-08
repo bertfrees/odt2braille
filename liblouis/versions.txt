@@ -11,17 +11,5 @@
   liblouisxml
  *************
 
- = modified version of revision 215
- 
-   changes (some changes are adopted in liblouisxml v2.3.0):
-   
-    * improved handling of pagenum action
-    * additional page numbering options
-    * additional table of contents options
-    * fixed table of contents bugs
-    * handling of soft hyphens
-    * improved handling of linesBefore, linesAfter
-    * new style attributes: centeredMargin, dontSplit, keepWithNext, widowControl, orphanControl, linesFromTop
-	* heading5..10 and contents5..10
-    
-  => TODO: merge this modified version with latest liblouisxml (or liblouisutdml) version
+ = revision 300
+ + handling of soft hyphens

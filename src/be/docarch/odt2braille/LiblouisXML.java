@@ -57,10 +57,10 @@ public class LiblouisXML {
     private static final String LIBLOUISXML_EXEC_NAME = "xml2brl";
     private static final String TMP_NAME = Constants.TMP_PREFIX;
     private static final File TMP_DIR = Constants.getTmpDirectory();
-    private static final String LIBLOUISXML_VERSION_ATLEAST = "2.3.0";
+    private static final String LIBLOUISXML_VERSION_ATLEAST = "2.3.1";
     private static final String LIBLOUIS_VERSION_ATLEAST = "2.1.1";
 
-    private File liblouisxmlExec = null;
+    private String liblouisxmlExec = null;
     private String liblouisPath = null;
 
     private File stylesFile = null;
@@ -69,7 +69,7 @@ public class LiblouisXML {
 
     private Settings settings = null;
 
-    private ArrayList configurationList = new ArrayList();
+    private List configurationList = new ArrayList();
 
     AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
 
@@ -88,78 +88,68 @@ public class LiblouisXML {
             throw new LiblouisXMLException("Could not find liblouis directory");
         }
 
+        stylesFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_styles.cfg");
+        paragraphsFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_paragraphs.sem");
+        bordersFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_borders.sem");
+
         if (IS_WINDOWS) {
 
-            liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" + FILE_SEPARATOR + "win" + FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME + ".exe");
+            liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" + FILE_SEPARATOR + "win" + FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME + ".exe").getAbsolutePath();
 
         } else if (IS_MAC_OS) {
 
-            liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" + FILE_SEPARATOR + "mac" + FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME);
-
+            liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" + FILE_SEPARATOR + "mac" + FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME).getAbsolutePath();
             Runtime.getRuntime().exec(new String[] { "chmod",
                                                      "775",
-                                                     liblouisxmlExec.getAbsolutePath() });
-
-//            /* JAVA 6 */
-//            if (!liblouisxmlExec.canExecute()) {
-//                if (!liblouisxmlExec.setExecutable(true, false)) {
-//                    throw new LiblouisXMLException("xml2brl could not be executed");
-//                }
-//            }
+                                                     liblouisxmlExec });
 
         } else {
-
-            // check version with "xml2brl --version" !!!
 
             Runtime runtime = Runtime.getRuntime();
             Process process = null;
             InputStream stdout = null;
             InputStreamReader isr = null;
             BufferedReader br = null;
-
-            logger.log(Level.INFO, "pkg-config --atleast-version=" + LIBLOUISXML_VERSION_ATLEAST + " liblouisxml");
-            process = runtime.exec(new String[]{"pkg-config",
-                                                "--atleast-version=" + LIBLOUISXML_VERSION_ATLEAST,
-                                                "liblouisxml"});
-
-            if (process.waitFor() != 0) {
-                throw new LiblouisXMLException("liblouisxml (> " + LIBLOUISXML_VERSION_ATLEAST + ") not installed");
-            }
-
-            logger.log(Level.INFO, "pkg-config --libs-only-L liblouisxml");
-            process = runtime.exec(new String[]{"pkg-config",
-                                                "--libs-only-L",
-                                                "liblouisxml"});
-
+            process = runtime.exec(new String[]{"xml2brl", "--version"});
             if (process.waitFor() == 0) {
                 stdout = process.getInputStream();
                 isr = new InputStreamReader(stdout);
                 br = new BufferedReader(isr);
-                String line = null;
-                File lib = null;
-                if ((line = br.readLine()) != null) {
-                    logger.log(Level.INFO, line);
-                    line = line.substring(2);
-                    if (line.contains(" ")) { line = line.substring(0,line.indexOf(" ")); }
-                    if ((lib = new File(line)).isDirectory()) {
-                        liblouisxmlExec = new File(lib.getParentFile() + FILE_SEPARATOR + "bin" + FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME);
-                    }
+                String r;
+                if ((r = br.readLine()) != null) {
+                    try {
+                        int i,j,k,l;
+                        String version = r.substring(r.lastIndexOf(' ') + 1);
+                        String versionAtLeast = LIBLOUISXML_VERSION_ATLEAST;
+                        while (true) {
+                            i = version.indexOf('.');
+                            j = versionAtLeast.indexOf('.');
+                            if (i<0 || j<0) {
+                                break;
+                            } else {
+                                k = Integer.parseInt(version.substring(0, i));
+                                l = Integer.parseInt(versionAtLeast.substring(0, j));
+                                if (k < l) {
+                                    break;
+                                } else if (k > l) {
+                                    liblouisxmlExec = "xml2brl";
+                                    break;
+                                }
+                            }
+                            version = version.substring(i + 1);
+                            versionAtLeast = versionAtLeast.substring(j + 1);
+                        }
+                    } catch (Exception e) {}
                 }
             }
-
             if (isr != null) {
                 isr.close();
                 stdout.close();
             }
-
-            if (liblouisxmlExec == null || !liblouisxmlExec.exists()) {
-                throw new LiblouisXMLException("Could not find liblouisxml installation directory");
+            if (liblouisxmlExec == null) {
+                throw new LiblouisXMLException("liblouisxml " + LIBLOUISXML_VERSION_ATLEAST + " not installed");
             }
         }
-
-        stylesFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_styles.cfg");
-        paragraphsFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_paragraphs.sem");
-        bordersFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_sem_borders.sem");
 
         logger.exiting("LiblouisXML", "<init>");
 
@@ -204,7 +194,7 @@ public class LiblouisXML {
               + "linesAfter "      + paraStyle.getLinesBelow() + sep
               + "keepWithNext "    + (paraStyle.getKeepWithNext()?"yes":"no") + sep
               + "dontSplit "       + (paraStyle.getDontSplit()?"yes":"no") + sep
-              + "widowControl "    + (paraStyle.widowControlEnabled?paraStyle.getWidowControl():0) + sep
+              // + "widowControl "    + (paraStyle.widowControlEnabled?paraStyle.getWidowControl():0) + sep
               + "orphanControl "   + (paraStyle.orphanControlEnabled?paraStyle.getOrphanControl():0) + sep;
             bufferedWriter.write("style wrap-paragraph_" + paraStyle.getName() + sep + s);
 
@@ -349,6 +339,7 @@ public class LiblouisXML {
           + "linesAfter "      + footnoteStyle.getLinesBelow() + sep
           + "firstLineIndent " + (footnoteStyle.getFirstLine() - footnoteStyle.getRunovers()) + sep
           + "leftMargin "      + footnoteStyle.getRunovers() + sep
+          + "centeredMargin "  + footnoteStyle.getMarginLeftRight() + sep
           + "format "          + alignmentMap.get(footnoteStyle.getAlignment()) + sep;
         bufferedWriter.write("style footnote" + sep + s);
 
@@ -469,9 +460,9 @@ public class LiblouisXML {
         logger.exiting("LiblouisXML","run");
 
         if (!errors.equals("")) {
-            throw new LiblouisXMLException("liblouisxml error:  " + errors);
+            throw new LiblouisXMLException("liblouisxml error:  " + "\n" + errors);
         }
-
+        
     }
 
     /**
@@ -514,7 +505,7 @@ public class LiblouisXML {
         String mathTable = "__" + math + ".ctb";
         String editTables = "_edit_" + math + ".ctb";
 
-        configurationList.add(liblouisxmlExec.getAbsolutePath());
+        configurationList.add(liblouisxmlExec);
         configurationList.add("-f");
         configurationList.add(configFiles);
 

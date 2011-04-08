@@ -106,13 +106,12 @@ public class Checker {
      * @param settings          The braille settings.
      */
     public Checker(Locale oooLocale,
-                   Settings settings,
-                   OdtTransformer odtTransformer) {
+                   Settings settings) {
 
         logger.entering("Checker", "<init>");
 
         this.settings = settings;
-        this.odtTransformer = odtTransformer;
+        this.odtTransformer = settings.odtTransformer;
 
         L10N_warning = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerWarning");
         L10N_question = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerQuestion");
@@ -136,7 +135,7 @@ public class Checker {
         L10N_tocNotReplaced = ResourceBundle.getBundle(L10N, oooLocale).getString("tocNotReplacedWarning");
         L10N_pageWidthTooSmall = ResourceBundle.getBundle(L10N, oooLocale).getString("pageWidthTooSmallWarning");
 
-        L10N_eightDotsNotSupported = (settings.exportOrEmboss?
+        L10N_eightDotsNotSupported = (settings.getExportOrEmboss()?
                                             "The " + settings.getBrailleFileType().name() + " file format ":
                                             "The selected embosser ")
                                      + "doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";

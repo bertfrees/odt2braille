@@ -146,15 +146,15 @@ lbx_translateString (const char *const configFileName,
     return 0;
   ud->inbuf = inbuf;
   ud->inlen = inlen;
-  ud->outbuf = outbuf;
-  ud->outlen = *outlen;
+  ud->outbuf1 = outbuf;
+  ud->outbuf1_len = *outlen;
   for (k = 0; k < inlen; k++)
     if (inbuf[k] > ' ')
       break;
   if (inbuf[k] != '<')
     {
       transcribe_text_string ();
-      *outlen = ud->outlen_so_far;
+      *outlen = ud->outbuf1_len_so_far;
       return 1;
     }
   if (inbuf[k + 1] == '?')
@@ -173,7 +173,7 @@ lbx_translateString (const char *const configFileName,
     }
   if (!processXmlDocument (xmlInbuf, inlen, mode))
     return 0;
-  *outlen = ud->outlen_so_far;
+  *outlen = ud->outbuf1_len_so_far;
   if (xmlInbuf != inbuf)
     free (xmlInbuf);
   return 1;
@@ -190,21 +190,18 @@ int
 * an error message and return 0.*/
 
   widechar outbuf[2 * BUFSIZE];
+  widechar outbuf2[2 * BUFSIZE];
+  widechar outbuf3[2 * BUFSIZE];
   xmlParserCtxtPtr ctxt = NULL;
   xmlDoc *doc;
   if (!read_configuration_file (configFileName, NULL, NULL, mode))
     return 0;
-  ud->outbuf = outbuf;
-  ud->outlen = (sizeof (outbuf) / CHARSIZE) - 4;
-
-/**** Added by Bert Frees *****************************************/
-    widechar buffer2[2 * BUFSIZE];
-    widechar buffer3[2 * BUFSIZE];
-    ud->buffer2 = buffer2;
-    ud->buffer3 = buffer3;
-    ud->buffer2_len = (sizeof (buffer2) / CHARSIZE) - 4;
-    ud->buffer3_len = (sizeof (buffer3) / CHARSIZE) - 4;
-/******************************************************************/
+  ud->outbuf1 = outbuf;
+  ud->outbuf2 = outbuf2;
+  ud->outbuf3 = outbuf3;
+  ud->outbuf1_len = (sizeof (outbuf) / CHARSIZE) - 4;
+  ud->outbuf2_len = (sizeof (outbuf2) / CHARSIZE) - 4;
+  ud->outbuf3_len = (sizeof (outbuf3) / CHARSIZE) - 4;
 
   if (strcmp (outFileName, "stdout"))
     {

@@ -105,11 +105,6 @@
 			</fileset>
         </copy>
 	</target>
-
-        <!-- copy linux binaries -->
-	<target name="copy-binaries-linux" if="linux_x86">
-
-	</target>
 	
 	<!-- rebuild extension with some fixes -->
     <target name="-post-uno-package" depends="init-target-os">
@@ -134,7 +129,6 @@
         </copy>
 		<antcall target="copy-binaries-win"/>
 		<antcall target="copy-binaries-mac"/>
-                <antcall target="copy-binaries-linux"/>
 		
 		<!-- add settings folder -->
         <copy todir="${build.oxt.dir}${file.separator}${settings.dir}">

@@ -27,20 +27,18 @@ import java.util.List;
  *
  * @author freesb
  */
-public class Volume {
+public abstract class Volume {
 
     public enum Type { PRELIMINARY,
                        NORMAL,
-                       SUPPLEMENTARY,
-                       SINGLE };
+                       SUPPLEMENTARY};
 
     private static boolean frontMatterAvailable = false;
     private static boolean extFrontMatterAvailable = false;
 
     private static List<Volume> volumes = new ArrayList<Volume>();
 
-    private Type type;
-    private String id;
+    protected Type type;
     private String title;
     private int braillePagesStart;
     private int numberOfBraillePages;
@@ -60,9 +58,8 @@ public class Volume {
         volumes.clear();
     }
 
-    public Volume(Volume copyVolume) {
+    public void copyVolume(Volume copyVolume) {
 
-        this.type = copyVolume.type;
         this.title = new String(copyVolume.title);
         this.braillePagesStart = copyVolume.braillePagesStart;
         this.numberOfBraillePages = copyVolume.numberOfBraillePages;
@@ -78,7 +75,6 @@ public class Volume {
         this.specialSymbolsPresent = null;
         this.transcribersNotesEnabled = null;
 
-        if (copyVolume.id != null)                       { this.id = new String(copyVolume.id); }
         if (copyVolume.firstPrintPage != null)           { this.firstPrintPage = new String(copyVolume.firstPrintPage); }
         if (copyVolume.lastPrintPage != null)            { this.lastPrintPage = new String(copyVolume.lastPrintPage); }
         if (copyVolume.specialSymbolsPresent != null)    { this.specialSymbolsPresent = new ArrayList(copyVolume.specialSymbolsPresent); }
@@ -87,8 +83,7 @@ public class Volume {
         volumes.add(this);
     }
 
-    public Volume(Type type,
-                  String id) {
+    public Volume(Type type) {
 
         this.type = type;
 
@@ -109,23 +104,6 @@ public class Volume {
 
         setFrontMatter(true);
         setToc(true);
-
-        switch (type) {
-            case PRELIMINARY:
-                setExtFrontMatter(true);
-                setExtToc(true);
-                this.id = "";
-                break;
-            case SINGLE:
-                this.id = "";
-                break;
-            default:
-                if (id==null) {
-                    this.id = "";
-                } else {
-                    this.id = id;
-                }
-        }
 
         volumes.add(this);
     }
@@ -171,7 +149,6 @@ public class Volume {
     }
 
     public Type            getType()                      { return type; }
-    public String          getIdentifier()                { return id; }
     public String          getTitle()                     { return title; }
     public boolean         getFrontMatter()               { return frontMatter; }
     public boolean         getExtFrontMatter()            { return extFrontMatter; }

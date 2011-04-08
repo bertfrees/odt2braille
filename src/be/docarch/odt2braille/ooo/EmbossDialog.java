@@ -24,7 +24,6 @@ import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.TreeMap;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -286,9 +285,9 @@ public class EmbossDialog implements XItemListener,
         L10N_embosser.put(EmbosserType.INDEX_EVEREST_D_V4,      "Index Everest-D V4");
         L10N_embosser.put(EmbosserType.INDEX_4X4_PRO_V4,        "Index 4X4 Pro V4");
         L10N_embosser.put(EmbosserType.INDEX_BRAILLE_BOX_V4,    "Index Braille Box V4");
-        L10N_embosser.put(EmbosserType.BRAILLO_200,             "Braillo 200 (firmware 000.17 or later)");
-        L10N_embosser.put(EmbosserType.BRAILLO_400_S,           "Braillo 400S (firmware 000.17 or later)");
-        L10N_embosser.put(EmbosserType.BRAILLO_400_SR,          "Braillo 400SR (firmware 000.17 or later)");
+        L10N_embosser.put(EmbosserType.BRAILLO_200,             "Braillo 200");
+        L10N_embosser.put(EmbosserType.BRAILLO_400_S,           "Braillo 400S");
+        L10N_embosser.put(EmbosserType.BRAILLO_400_SR,          "Braillo 400SR");
         L10N_embosser.put(EmbosserType.INTERPOINT_55,           "Interpoint 55");
         L10N_embosser.put(EmbosserType.IMPACTO_600,             "Impacto 600");
         L10N_embosser.put(EmbosserType.IMPACTO_TEXTO,           "Impacto Texto");

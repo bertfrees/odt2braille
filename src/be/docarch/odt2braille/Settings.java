@@ -67,7 +67,9 @@ public class Settings {
     private final static NamespaceContext namespace = new NamespaceContext();
     private final static String L10N = Constants.L10N_PATH;
 
-    private OdtTransformer odtTransformer;
+    public final OdtTransformer odtTransformer;
+
+    private boolean locked = false;
 
     private static String L10N_transcribersNotesPageTitle;
     private static String L10N_specialSymbolsListTitle;
@@ -92,58 +94,58 @@ public class Settings {
 
     // Read only properties
 
-    protected String DATE;
-    protected int NUMBER_OF_VOLUMES;
-    protected int NUMBER_OF_SUPPLEMENTS;
-    protected boolean PARAGRAPHS_PRESENT = false;
-    protected boolean HEADINGS_PRESENT = false;
-    protected boolean LISTS_PRESENT = false;
-    protected boolean TABLES_PRESENT = false;
-    protected boolean PAGE_NUMBER_IN_HEADER_FOOTER = false;
-    protected boolean MATH_PRESENT = false;
+    private String DATE;
+    private int NUMBER_OF_VOLUMES;
+    private int NUMBER_OF_SUPPLEMENTS;
+    private boolean PARAGRAPHS_PRESENT = false;
+    private boolean HEADINGS_PRESENT = false;
+    private boolean LISTS_PRESENT = false;
+    private boolean TABLES_PRESENT = false;
+    private boolean PAGE_NUMBER_IN_HEADER_FOOTER = false;
+    private boolean MATH_PRESENT = false;
 
     // General Settings
 
-    protected BrailleRules brailleRules;
+    private BrailleRules brailleRules;
 
-    protected String mainLanguage;
+    private String mainLanguage;
 
-    protected String creator;
-    protected String transcribersNotesPageTitle;
-    protected String specialSymbolsListTitle;
-    protected String tableOfContentTitle;
-    protected String continuedSuffix;
+    private String creator;
+    private String transcribersNotesPageTitle;
+    private String specialSymbolsListTitle;
+    private String tableOfContentTitle;
+    private String continuedSuffix;
 
-    protected boolean hyphenate = false;
-    protected boolean hardPageBreaks = false;
+    private boolean hyphenate = false;
+    private boolean hardPageBreaks = false;
 
     // Page Numbers Settings
 
-    protected boolean printPageNumbers = false;
-    protected boolean braillePageNumbers = false;
-    protected boolean pageSeparator = false;
-    protected boolean pageSeparatorNumber = false;
-    protected boolean continuePages = false;
-    protected boolean ignoreEmptyPages = false;
-    protected boolean mergeUnnumberedPages = false;
-    protected boolean pageNumberAtTopOnSeparateLine = false;
-    protected boolean pageNumberAtBottomOnSeparateLine = false;
-    protected boolean printPageNumberRange = false;
-    protected PageNumberPosition printPageNumberAt;
-    protected PageNumberPosition braillePageNumberAt;
-    protected PageNumberFormat preliminaryPageNumberFormat;
-    protected PageNumberFormat supplementaryPageNumberFormat;
-    protected int beginningBraillePageNumber;
+    private boolean printPageNumbers = false;
+    private boolean braillePageNumbers = false;
+    private boolean pageSeparator = false;
+    private boolean pageSeparatorNumber = false;
+    private boolean continuePages = false;
+    private boolean ignoreEmptyPages = false;
+    private boolean mergeUnnumberedPages = false;
+    private boolean pageNumberAtTopOnSeparateLine = false;
+    private boolean pageNumberAtBottomOnSeparateLine = false;
+    private boolean printPageNumberRange = false;
+    private PageNumberPosition printPageNumberAt;
+    private PageNumberPosition braillePageNumberAt;
+    private PageNumberFormat preliminaryPageNumberFormat;
+    private PageNumberFormat supplementaryPageNumberFormat;
+    private int beginningBraillePageNumber;
     
     // Language Settings
 
-    protected Map<String,String> translationTableMap;
-    protected Map<String,Integer> gradeMap;
-    protected Map<String,Integer> dotsMap;
+    private Map<String,String> translationTableMap;
+    private Map<String,Integer> gradeMap;
+    private Map<String,Integer> dotsMap;
 
     // Table Of Contents Settings
 
-    protected boolean tableOfContentEnabled = false;
+    private boolean tableOfContentEnabled = false;
 
     // List Of Special Symbols Settings
 
@@ -151,113 +153,113 @@ public class Settings {
 
     // Mathematics Settings
 
-    protected MathType math;
+    private MathType math;
 
     // Notes Settings
 
-    protected Map<String,String> noterefNumberPrefixMap = null;
-    protected Map<String,String> noterefCharactersMap = null;
-//    protected boolean noterefSpaceBefore = false;
-//    protected boolean noterefSpaceAfter = false;
-    protected Style footnoteStyle = null;
+    private Map<String,String> noterefNumberPrefixMap = null;
+    private Map<String,String> noterefCharactersMap = null;
+//    private boolean noterefSpaceBefore = false;
+//    private boolean noterefSpaceAfter = false;
+    private Style footnoteStyle = null;
 
     // Volume management
 
-    protected VolumeManagementMode volumeManagementMode = null;
-    protected Section rootSection = null;
-    protected List<Section> mainSections = null;
-    protected List<Section> allSections = null;
-    protected Map<Section,Volume> volumeSectionsMap = null;
-    protected List<Volume> automaticVolumes = null;
-    protected Volume singleVolume = null;
-    protected Volume preliminaryVolume = null;
-    protected Section frontMatterSection = null;
-    protected Section titlePageSection = null;
-    protected Section extendedFrontMatterSection = null;
-    protected boolean volumeInfoEnabled = false;
-    protected boolean transcriptionInfoEnabled = false;
+    private VolumeManagementMode volumeManagementMode = null;
+    private Section rootSection = null;
+    private List<Section> mainSections = null;
+    private List<Section> allSections = null;
+    private Map<Section,SectionVolume> volumeSectionsMap = null;
+    private List<AutomaticVolume> automaticVolumes = null;
+    private SingleVolume singleVolume = null;
+    private PreliminaryVolume preliminaryVolume = null;
+    private Section frontMatterSection = null;
+    private Section titlePageSection = null;
+    private Section extendedFrontMatterSection = null;
+    private boolean volumeInfoEnabled = false;
+    private boolean transcriptionInfoEnabled = false;
     protected String volumeInfo = null;
     protected String transcriptionInfo = null;
 
-    protected boolean transcribersNotesPageEnabled = false;
-    protected boolean specialSymbolsListEnabled = false;
-    protected boolean preliminaryVolumeEnabled = false;
+    private boolean transcribersNotesPageEnabled = false;
+    private boolean specialSymbolsListEnabled = false;
+    private boolean preliminaryVolumeEnabled = false;
 
     // Emboss & Export Settings
 
-    protected EmbosserType embosser;
-    protected PaperSize paperSize;
-    protected TableType table;
-    protected BrailleFileType brailleFileType;
+    private EmbosserType embosser;
+    private PaperSize paperSize;
+    private TableType table;
+    private BrailleFileType brailleFileType;
 
-    protected boolean multipleFiles = false;
-    protected boolean exportOrEmboss = false;
+    private boolean multipleFiles = false;
+    private boolean exportOrEmboss = false;
 
-    protected double cellSpacing;
-    protected double lineSpacing;
-    protected double cellHeight;
-    protected double cellWidth;
-    protected double interpointShiftX;
-    protected double interpointShiftY;
+    private double cellSpacing;
+    private double lineSpacing;
+    private double cellHeight;
+    private double cellWidth;
+    private double interpointShiftX;
+    private double interpointShiftY;
 
-    protected double paperWidth;
-    protected double paperHeight;
-    protected double maxPaperWidth;
-    protected double maxPaperHeight;
-    protected double minPaperWidth;
-    protected double minPaperHeight;
+    private double paperWidth;
+    private double paperHeight;
+    private double maxPaperWidth;
+    private double maxPaperHeight;
+    private double minPaperWidth;
+    private double minPaperHeight;
 
-    protected double pageWidth;
-    protected double pageHeight;
-    protected double printablePageWidth;
-    protected double printablePageHeight;
-    protected double unprintableInner;
-    protected double unprintableOuter;
-    protected double unprintableTop;
-    protected double unprintableBottom;
+    private double pageWidth;
+    private double pageHeight;
+    private double printablePageWidth;
+    private double printablePageHeight;
+    private double unprintableInner;
+    private double unprintableOuter;
+    private double unprintableTop;
+    private double unprintableBottom;
 
-    protected int cellsInWidth;
-    protected int linesInHeight;
-    protected int cellsPerLine;
-    protected int linesPerPage;
-    protected int maxCellsPerLine;
-    protected int maxLinesPerPage;
-    protected int minCellsPerLine;
-    protected int minLinesPerPage;
+    private int cellsInWidth;
+    private int linesInHeight;
+    private int cellsPerLine;
+    private int linesPerPage;
+    private int maxCellsPerLine;
+    private int maxLinesPerPage;
+    private int minCellsPerLine;
+    private int minLinesPerPage;
 
-    protected int marginInner;
-    protected int marginOuter;
-    protected int marginTop;
-    protected int marginBottom;
-    protected int maxMarginInner;
-    protected int maxMarginOuter;
-    protected int maxMarginTop;
-    protected int maxMarginBottom;
-    protected int minMarginInner;
-    protected int minMarginOuter;
-    protected int minMarginTop;
-    protected int minMarginBottom;
+    private int marginInner;
+    private int marginOuter;
+    private int marginTop;
+    private int marginBottom;
+    private int maxMarginInner;
+    private int maxMarginOuter;
+    private int maxMarginTop;
+    private int maxMarginBottom;
+    private int minMarginInner;
+    private int minMarginOuter;
+    private int minMarginTop;
+    private int minMarginBottom;
 
-    protected boolean duplex = false;
-    protected boolean eightDots = false;
-    protected boolean zFolding = false;
-    protected boolean saddleStitch = false;
-    protected int sheetsPerQuire;
+    private boolean duplex = false;
+    private boolean eightDots = false;
+    private boolean zFolding = false;
+    private boolean saddleStitch = false;
+    private int sheetsPerQuire;
 
     // Various
 
-    protected Map<String,ParagraphStyle> paragraphStylesMap;
-    protected Map<String,CharacterStyle> characterStylesMap;
-    protected List<HeadingStyle> headingStyles;
-    protected List<ListStyle> listStyles;
-    protected TableStyle tableStyle;
-    protected FrameStyle frameStyle;
-    protected TocStyle tocStyle;
-    protected ParagraphStyle volumeInfoStyle;
-    protected ParagraphStyle transcriptionInfoStyle;
-    protected List<String> supportedTranslationTablesGrades;
-    protected List<String> specialTranslationTables;
-
+    private Map<String,ParagraphStyle> paragraphStylesMap;
+    private Map<String,CharacterStyle> characterStylesMap;
+    private List<HeadingStyle> headingStyles;
+    private List<ListStyle> listStyles;
+    private TableStyle tableStyle;
+    private FrameStyle frameStyle;
+    private TocStyle tocStyle;
+    private ParagraphStyle volumeInfoStyle;
+    private ParagraphStyle transcriptionInfoStyle;
+    private List<String> supportedTranslationTablesGrades;
+    private List<String> specialTranslationTables;
+    
 
     /**
      * Creates a new <code>Settings</code> instance by copying other <code>Settings</code>.
@@ -269,6 +271,9 @@ public class Settings {
         logger.entering("Settings", "<init>");
 
         Volume.init();
+
+        this.locked = copySettings.locked;
+        copySettings.lock();
 
         this.odtTransformer = copySettings.odtTransformer;
 
@@ -453,13 +458,13 @@ public class Settings {
             this.extendedFrontMatterSection = allSections.get(allSections.indexOf(copySettings.extendedFrontMatterSection));
         }
 
-        this.singleVolume = new Volume(copySettings.singleVolume);
-        this.preliminaryVolume = new Volume(copySettings.preliminaryVolume);
-        this.volumeSectionsMap = new HashMap<Section,Volume>();
+        this.singleVolume = new SingleVolume(copySettings.singleVolume);
+        this.preliminaryVolume = new PreliminaryVolume(copySettings.preliminaryVolume);
+        this.volumeSectionsMap = new HashMap<Section,SectionVolume>();
         for (Section s : mainSections) {
-            Volume v = copySettings.volumeSectionsMap.get(s);
+            SectionVolume v = copySettings.volumeSectionsMap.get(s);
             if (v!=null) {
-                this.volumeSectionsMap.put(s, new Volume(v));
+                this.volumeSectionsMap.put(s, new SectionVolume(v));
             }
         }
 
@@ -504,6 +509,8 @@ public class Settings {
 
         this.odtTransformer = odtTransformer;
 
+        locked = false;
+
         File odtContentFile = odtTransformer.getOdtContentFile();
         File odtStylesFile = odtTransformer.getOdtStylesFile();
         File odtMetaFile = odtTransformer.getOdtMetaFile();
@@ -513,7 +520,7 @@ public class Settings {
         rootSection = odtTransformer.extractSectionTree();
         mainSections = rootSection.getChildren();
         allSections = rootSection.getDescendants();
-        volumeSectionsMap = new HashMap<Section,Volume>();
+        volumeSectionsMap = new HashMap<Section,SectionVolume>();
 
         // L10N
 
@@ -563,6 +570,7 @@ public class Settings {
                                                                  "bo-g0",
                                                                  "bra-g0",
                                                                                   "ca-g1",
+                                                                                  "ckb-g1",
                                                               /* "cs-g0",     */  "cs-g1",
                                                               /* "cy-g0",     */  "cy-g1",      "cy-g2",
                                                               /* "da-g0-8d",  */  "da-g1-8d",   "da-g2-8d",
@@ -585,6 +593,7 @@ public class Settings {
                                                               /* "fr-CA-g0",      "fr-CA-g1",   "fr-CA-g2", */
                                                                  "ga-g0",
                                                                  "gd-g0",
+                                                                                  "gez-g1",
                                                                  "gon-g0",
                                                                  "gu-g0",
                                                                  "he-g0",
@@ -623,6 +632,7 @@ public class Settings {
                                                                  "sd-g0",
                                                               /* "sk-g0",     */  "sk-g1",
                                                               /* "sl-g0",     */  "sl-g1",
+                                                                                  "sr-g1",
                                                               /* "sv-g0",     */  "sv-g1",      "sv-g2",
                                                                  "ta-g0",
                                                                  "te-g0",
@@ -693,9 +703,9 @@ public class Settings {
         setVolumeInfoStyle(paragraphStylesMap.get("Standard"));
         setTranscriptionInfoStyle(paragraphStylesMap.get("Standard"));
 
-        singleVolume = new Volume(Volume.Type.SINGLE, null);
+        singleVolume = new SingleVolume();
         singleVolume.setTitle("(Single volume)");
-        preliminaryVolume = new Volume(Volume.Type.PRELIMINARY, null);
+        preliminaryVolume = new PreliminaryVolume();
         preliminaryVolume.setTitle(capitalizeFirstLetter(L10N_preliminary));
 
         boolean PRELIMINARY_PAGES_PRESENT = XPathUtils.evaluateBoolean(odtContentFile.toURL().openStream(),
@@ -929,6 +939,10 @@ public class Settings {
 
     }
 
+    public void lock() {
+        locked = true;
+    }
+
     /**
      * Compute the most appropriate translation table for a certain language.
      *
@@ -1112,8 +1126,10 @@ public class Settings {
      * @param   translationTable    The desired translation table code.
      * @param   language            The language code.
      */
-    public void setTranslationTable(String translationTable, String language) {
+    public boolean setTranslationTable(String translationTable, String language) {
     
+        if (locked) { return false; }
+
         String trantab = computeTranslationTable(translationTable);
         
         if (trantab!=null) {
@@ -1122,7 +1138,9 @@ public class Settings {
         } else if (!translationTableMap.containsKey(language)) {
             translationTableMap.put(language, DEFAULT_TRANSLATION_TABLE);
             setGrade(0,language);
-        }  
+        }
+
+        return true;
     }
 
     /**
@@ -1132,19 +1150,27 @@ public class Settings {
      * @param   grade     The desired grade.
      * @param   language  The language code.
      */
-    public void setGrade(int grade, String language) {
+    public boolean setGrade(int grade, String language) {
+
+        if (locked) { return false; }
 
         if (translationTableMap.containsKey(language)) {
             gradeMap.put(language, computeGrade(grade, language));
             setDots(6, language);
         }
+
+        return true;
     }
 
-    public void setDots(int dots, String language) {
+    public boolean setDots(int dots, String language) {
+
+        if (locked) { return false; }
 
         if (translationTableMap.containsKey(language)) {
             dotsMap.put(language, computeDots(dots, language));
         }
+
+        return true;
     }
 
     /**
@@ -1208,8 +1234,13 @@ public class Settings {
         return mainLanguage;
     }
 
-    public void setMultipleFilesEnabled(boolean multipleFiles) {
+    public boolean setMultipleFilesEnabled(boolean multipleFiles) {
+        
+        if (locked) { return false; }
+        
         this.multipleFiles = multipleFiles && exportOrEmboss;
+
+        return true;
     }
     
     public boolean getMultipleFilesEnabled() {
@@ -1221,7 +1252,9 @@ public class Settings {
      *
      * @param   exportOrEmboss.
      */
-    public void setExportOrEmboss(boolean exportOrEmboss) {
+    public boolean setExportOrEmboss(boolean exportOrEmboss) {
+
+        if (locked) { return false; }
 
         this.exportOrEmboss = exportOrEmboss;
 
@@ -1237,6 +1270,11 @@ public class Settings {
             refreshDimensions();
         } catch (UnsupportedPaperException ex) {}
 
+        return true;
+    }
+
+    public boolean getExportOrEmboss() {
+        return exportOrEmboss;
     }
 
     /**
@@ -1279,7 +1317,7 @@ public class Settings {
     /**
      * @return   A list of all supported embosser types, given the current settings.
      */
-    public ArrayList<EmbosserType> getSupportedEmbossers() {
+    public List<EmbosserType> getSupportedEmbossers() {
 
         EmbosserType[] allEmbosserTypes = EmbosserType.values();
         ArrayList<EmbosserType> supportedEmbosserTypes = new ArrayList();
@@ -1314,7 +1352,10 @@ public class Settings {
      *
      * @param   embosser   The desired embosser type.
      */
-    public void setEmbosser(EmbosserType embosser) throws UnsupportedPaperException {
+    public boolean setEmbosser(EmbosserType embosser)
+                        throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (embosserIsSupported(embosser)) {
 
@@ -1326,7 +1367,11 @@ public class Settings {
             refreshTable();
             refreshPaperSize();
             refreshDimensions();
+
+            return true;
         }
+        
+        return false;
     }
 
     /**
@@ -1394,7 +1439,9 @@ public class Settings {
      *
      * @param   brailleFileType  The desired braille file type.
      */
-    public void setBrailleFileType(BrailleFileType brailleFileType) {
+    public boolean setBrailleFileType(BrailleFileType brailleFileType) {
+
+        if (locked) { return false; }
 
         if (brailleFileTypeIsSupported(brailleFileType)) {
 
@@ -1406,8 +1453,13 @@ public class Settings {
             refreshTable();
             try { 
                 refreshDimensions();
-            } catch (UnsupportedPaperException ex) {}
+            } catch (UnsupportedPaperException ex) {
+            }
+            
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -1546,11 +1598,16 @@ public class Settings {
      *
      * @param   table   The desired character set.
      */
-    public void setTable(TableType table) {
+    public boolean setTable(TableType table) {
+
+        if (locked) { return false; }
 
         if (tableIsSupported(table)) {
             changeTable(table);
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -1721,24 +1778,33 @@ public class Settings {
      *
      * @param   paperSize   The desired paper size.
      */
-    public void setPaperSize(PaperSize papersize) throws UnsupportedPaperException {
+    public boolean setPaperSize(PaperSize papersize)
+                         throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (paperSizeIsSupported(papersize)) {
-
             changePaperSize(papersize);
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
-    public void setPaperSize(double paperWidth,
-                             double paperHeight)
+    public boolean setPaperSize(double paperWidth,
+                                double paperHeight)
                       throws UnsupportedPaperException {
 
-        if ((this.paperSize == PaperSize.CUSTOM) && paperSizeIsSupported(paperWidth, paperHeight)) {
+        if (locked) { return false; }
 
+        if ((this.paperSize == PaperSize.CUSTOM) && paperSizeIsSupported(paperWidth, paperHeight)) {
             changePaperSize(paperWidth, paperHeight);
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -1840,13 +1906,18 @@ public class Settings {
         }
     }
 
-    public void setDuplex(boolean duplex)
-                   throws UnsupportedPaperException {
+    public boolean setDuplex(boolean duplex)
+                      throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (duplexIsSupported(duplex)) {
             changeDuplex(duplex);
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
     /**
@@ -1966,15 +2037,20 @@ public class Settings {
         changeSaddleStitch(saddleStitch && saddleStitchIsSupported());
     }
 
-    public void setSaddleStitch(boolean saddleStitch)
-                         throws UnsupportedPaperException {
+    public boolean setSaddleStitch(boolean saddleStitch)
+                            throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (saddleStitchIsSupported()) {
             changeSaddleStitch(saddleStitch);
             refreshDuplex();
             refreshPaperSize();
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
     public boolean getSaddleStitch() {
@@ -1987,11 +2063,16 @@ public class Settings {
                 embosser == EmbosserType.INTERPOINT_55);
     }
 
-    public void setSheetsPerQuire(int sheetsPerQuire) {
+    public boolean setSheetsPerQuire(int sheetsPerQuire) {
+
+        if (locked) { return false; }
 
         if (zFoldingIsSupported() && sheetsPerQuire > 0) {
             this.sheetsPerQuire = sheetsPerQuire;
+            return true;
         }
+
+        return false;
     }
 
     public int getSheetsPerQuire() {
@@ -2023,14 +2104,19 @@ public class Settings {
         changeZFolding(zFolding && zFoldingIsSupported());
     }
 
-    public void setZFolding(boolean zFolding)
-                     throws UnsupportedPaperException {
+    public boolean setZFolding(boolean zFolding)
+                        throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (zFoldingIsSupported()) {
             changeZFolding(zFolding);
             refreshDuplex();
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
     public boolean getZFolding() {
@@ -2126,15 +2212,19 @@ public class Settings {
         changeEightDots(eightDots && eightDotsIsSupported());
     }
 
-    public void setEightDots(boolean eightDots)
-                      throws UnsupportedPaperException {
+    public boolean setEightDots(boolean eightDots)
+                         throws UnsupportedPaperException {
+
+        if (locked) { return false; }
 
         if (eightDotsIsSupported()) {
-
             changeEightDots(eightDots);
             refreshTable();
             refreshDimensions();
+            return true;
         }
+
+        return false;
     }
 
     public boolean getEightDots() {
@@ -2274,7 +2364,9 @@ public class Settings {
      *
      * @param   cells  The desired value.
      */
-    public void setCellsPerLine(int cells) {
+    public boolean setCellsPerLine(int cells) {
+
+        if (locked) { return false; }
 
         cellsPerLine = Math.min(maxCellsPerLine, Math.max(minCellsPerLine, cells));
 
@@ -2286,6 +2378,8 @@ public class Settings {
             marginInner = 0;
             marginOuter = 0;
         }
+
+        return true;
     }
 
     /**
@@ -2294,7 +2388,9 @@ public class Settings {
      *
      * @param   lines  The desired value.
      */
-    public void setLinesPerPage(int lines) {
+    public boolean setLinesPerPage(int lines) {
+
+        if (locked) { return false; }
 
         linesPerPage = Math.min(maxLinesPerPage, Math.max(minLinesPerPage, lines));
 
@@ -2306,6 +2402,8 @@ public class Settings {
             marginTop = 0;
             marginBottom = 0;
         }
+
+        return true;
     }
 
     public int getCellsInWidth() {
@@ -2371,7 +2469,9 @@ public class Settings {
      *
      * @param   margin  The desired value.
      */
-    public void setMarginInner(int margin) {
+    public boolean setMarginInner(int margin) {
+
+        if (locked) { return false; }
 
         if (marginsSupported()) {
             marginInner =  Math.min(maxMarginInner,  Math.max(minMarginInner,  margin));
@@ -2381,6 +2481,8 @@ public class Settings {
         } else {
             marginInner = 0;
         }
+
+        return true;
     }
 
     /**
@@ -2389,7 +2491,9 @@ public class Settings {
      *
      * @param   margin  The desired value.
      */
-    public void setMarginOuter(int margin) {
+    public boolean setMarginOuter(int margin) {
+
+        if (locked) { return false; }
 
         if (marginsSupported()) {
             marginOuter =  Math.min(maxMarginOuter,  Math.max(minMarginOuter,  margin));
@@ -2399,6 +2503,8 @@ public class Settings {
         } else {
             marginOuter = 0;
         }
+
+        return true;
     }
 
     /**
@@ -2407,7 +2513,9 @@ public class Settings {
      *
      * @param   margin  The desired value.
      */
-    public void setMarginTop(int margin) {
+    public boolean setMarginTop(int margin) {
+
+        if (locked) { return false; }
 
         if (marginsSupported()) {
             marginTop =    Math.min(maxMarginTop,    Math.max(minMarginTop,    margin));
@@ -2417,6 +2525,8 @@ public class Settings {
         } else {
             marginTop = 0;
         }
+
+        return true;
     }
 
     /**
@@ -2425,7 +2535,9 @@ public class Settings {
      *
      * @param   margin  The desired value.
      */
-    public void setMarginBottom(int margin) {
+    public boolean setMarginBottom(int margin) {
+
+        if (locked) { return false; }
 
         if (marginsSupported()) {
             marginBottom = Math.min(maxMarginBottom, Math.max(minMarginBottom, margin));
@@ -2435,6 +2547,8 @@ public class Settings {
         } else {
             marginBottom = 0;
         }
+
+        return true;
     }
 
     public int getMarginInner() {
@@ -2550,8 +2664,11 @@ public class Settings {
     /**
      * @param stairstep
      */
-    public void setStairstepTable(boolean stairstep) {
+    public boolean setStairstepTable(boolean stairstep) {
+
+        if (locked) { return false; }
         tableStyle.setStairstepTable(stairstep);
+        return true;
     }
 
     /**
@@ -2564,8 +2681,11 @@ public class Settings {
     /**
      * @param delimiter
      */
-    public void setColumnDelimiter(String delimiter) {
+    public boolean setColumnDelimiter(String delimiter) {
+        
+        if (locked) { return false; }        
         tableStyle.setColumnDelimiter(delimiter);
+        return true;
     }
 
     /**
@@ -2580,6 +2700,8 @@ public class Settings {
      * @return  <code>true</code> if lineFillSymbol is in [U+2801,U+283F].
      */
     public boolean setLineFillSymbol(char symbol) {
+
+        if (locked) { return false; }
         return tocStyle.setLineFillSymbol(symbol);
     }
 
@@ -2587,111 +2709,146 @@ public class Settings {
         return tocStyle.getLineFillSymbol();
     }
 
-    public void setMath(MathType math) {
+    public boolean setMath(MathType math) {
+
+        if (locked) { return false; }
         this.math = math;
+        return true;
     }
 
     public MathType getMath() {
         return math;
     }
 
-    public void setPrintPageNumbers(boolean b) {
+    public boolean setPrintPageNumbers(boolean b) {
 
+        if (locked) { return false; }
         this.printPageNumbers = b && PAGE_NUMBER_IN_HEADER_FOOTER;
         setPrintPageNumberRange(printPageNumberRange);
         setContinuePages(continuePages);
         setPageNumberAtTopOnSeparateLine(pageNumberAtTopOnSeparateLine);
         setPageSeparatorNumber(pageSeparatorNumber);
         setPrintPageNumbersInToc(tocStyle.getPrintPageNumbers());
-
+        return true;
     }
     
-    public void setBraillePageNumbers(boolean b) {
+    public boolean setBraillePageNumbers(boolean b) {
 
+        if (locked) { return false; }
         this.braillePageNumbers = b;
         setBraillePageNumbersInToc(tocStyle.getBraillePageNumbers());
-
+        return true;
     }
     
-    public void setPageSeparator(boolean b) {
+    public boolean setPageSeparator(boolean b) {
 
+        if (locked) { return false; }
         this.pageSeparator = b;
         setPageSeparatorNumber(pageSeparatorNumber);
-
+        return true;
     }
     
-    public void setPageSeparatorNumber(boolean b) {
+    public boolean setPageSeparatorNumber(boolean b) {
 
+        if (locked) { return false; }
         this.pageSeparatorNumber = b && printPageNumbers && pageSeparator;
-
+        return true;
     }
     
-    public void setContinuePages(boolean b) {
+    public boolean setContinuePages(boolean b) {
+
+        if (locked) { return false; }
         this.continuePages = b && printPageNumbers;
+        return true;
     }
     
-    public void setIgnoreEmptyPages(boolean b) {
-        this.ignoreEmptyPages = b;
-    }
-    
-    public void setMergeUnnumberedPages(boolean b) {
-        this.mergeUnnumberedPages = b;
-    }
-    
-    public void setPageNumberAtTopOnSeparateLine(boolean b) {
+    public boolean setIgnoreEmptyPages(boolean b) {
 
+        if (locked) { return false; }
+        this.ignoreEmptyPages = b;
+        return true;
+    }
+    
+    public boolean setMergeUnnumberedPages(boolean b) {
+        
+        if (locked) { return false; }
+        this.mergeUnnumberedPages = b;
+        return true;
+    }
+    
+    public boolean setPageNumberAtTopOnSeparateLine(boolean b) {
+
+        if (locked) { return false; }
         this.pageNumberAtTopOnSeparateLine = b
                 || (printPageNumbers && (printPageNumberAt == PageNumberPosition.TOP_RIGHT
                                       || printPageNumberAt == PageNumberPosition.TOP_LEFT) && printPageNumberRange);
-
+        return true;
     }
     
-    public void setPageNumberAtBottomOnSeparateLine(boolean b) {
+    public boolean setPageNumberAtBottomOnSeparateLine(boolean b) {
+
+        if (locked) { return false; }
         this.pageNumberAtBottomOnSeparateLine = b;
+        return true;
     }
     
-    public void setPrintPageNumberRange(boolean b) {
+    public boolean setPrintPageNumberRange(boolean b) {
 
+        if (locked) { return false; }
         this.printPageNumberRange = b && this.printPageNumbers;
         setPageNumberAtTopOnSeparateLine(pageNumberAtTopOnSeparateLine);
-
+        return true;
     }
     
-    public void setPrintPageNumberAt(PageNumberPosition at) {
+    public boolean setPrintPageNumberAt(PageNumberPosition at) {
         
+        if (locked) { return false; }
         if (at == PageNumberPosition.TOP_RIGHT || at == PageNumberPosition.BOTTOM_RIGHT) {
             this.printPageNumberAt = at;
             setPageNumberAtTopOnSeparateLine(pageNumberAtTopOnSeparateLine);
         }
+        return true;
     }
     
-    public void setBraillePageNumberAt(PageNumberPosition at) {
+    public boolean setBraillePageNumberAt(PageNumberPosition at) {
         
+        if (locked) { return false; }
         if (at == PageNumberPosition.TOP_RIGHT || at == PageNumberPosition.BOTTOM_RIGHT) {
             this.braillePageNumberAt = at;
         }
+        return true;
     }
 
-    public void setPreliminaryPageFormat(PageNumberFormat format) {
+    public boolean setPreliminaryPageFormat(PageNumberFormat format) {
 
+        if (locked) { return false; }
         if (format == PageNumberFormat.P || format == PageNumberFormat.ROMAN ) {
             this.preliminaryPageNumberFormat = format;
         }
+        return true;
     }
 
-    public void setBeginningBraillePageNumber(int number) {
+    public boolean setBeginningBraillePageNumber(int number) {
 
+        if (locked) { return false; }
         if (number > 0) {
             this.beginningBraillePageNumber = number;
         }
+        return true;
     }
 
-    public void setPrintPageNumbersInToc(boolean b) {
+    public boolean setPrintPageNumbersInToc(boolean b) {
+
+        if (locked) { return false; }
         tocStyle.setPrintPageNumbers(b && this.printPageNumbers);
+        return true;
     }
 
-    public void setBraillePageNumbersInToc(boolean b) {
+    public boolean setBraillePageNumbersInToc(boolean b) {
+
+        if (locked) { return false; }
         tocStyle.setBraillePageNumbers(b && this.braillePageNumbers);
+        return true;
     }
 
     public boolean getPrintPageNumbers() {
@@ -2762,8 +2919,11 @@ public class Settings {
         return tocStyle.getBraillePageNumbers();
     }
 
-    public void setHardPageBreaks(boolean b) {
+    public boolean setHardPageBreaks(boolean b) {
+
+        if (locked) { return false; }
         this.hardPageBreaks = b;
+        return true;
     }
 
     public boolean getHardPageBreaks() {
@@ -2782,8 +2942,11 @@ public class Settings {
         return this.creator;
     }
 
-    public void setHyphenate(boolean hyphenate) {
+    public boolean setHyphenate(boolean hyphenate) {
+
+        if (locked) { return false; }
         this.hyphenate = hyphenate;
+        return true;
     }
 
     public boolean getHyphenate() {
@@ -2798,8 +2961,11 @@ public class Settings {
         return specialSymbolsList.get(index);
     }
 
-    public void setSpecialSymbol(SpecialSymbol specialSymbol, int index) {
+    public boolean setSpecialSymbol(SpecialSymbol specialSymbol, int index) {
+
+        if (locked) { return false; }
         specialSymbolsList.set(index, specialSymbol);
+        return true;
     }
 
     private void addSpecialSymbol(SpecialSymbol specialSymbol) {
@@ -2848,16 +3014,25 @@ public class Settings {
         return volumeManagementMode;
     }
 
-    public List<Volume> getAutomaticVolumes() {
+    public List<AutomaticVolume> getAutomaticVolumes() {
 
         if (automaticVolumes==null) {
-
             try {
 
-                int[] allPages = odtTransformer.extractDocumentOutline(this);
+                odtTransformer.configure(this);
+
+                int[] allPages = odtTransformer.extractDocumentOutline();
                 int[] optimalVolumes = computeOptimalVolumeSizes(allPages);
 
-
+                automaticVolumes = new ArrayList<AutomaticVolume>();
+                AutomaticVolume v = new AutomaticVolume(1, 1);
+                v.setTitle(capitalizeFirstLetter(L10N_volume) + " 1");
+                automaticVolumes.add(v);
+                for (int i=0; i<optimalVolumes.length; i++) {
+                    v = new AutomaticVolume(i+2, optimalVolumes[i]+1);
+                    v.setTitle(capitalizeFirstLetter(L10N_volume) + " " + (i+2));
+                    automaticVolumes.add(v);
+                }
 
             } catch (Exception e) {
                 logger.log(Level.SEVERE, null, e);
@@ -2866,7 +3041,7 @@ public class Settings {
         return automaticVolumes;
     }
 
-    public Volume getPreliminaryVolume() {
+    private Volume getPreliminaryVolume() {
         return preliminaryVolume;
     }
 
@@ -2879,13 +3054,13 @@ public class Settings {
         Volume volume = null;
         List<Volume> volumes = new ArrayList<Volume>();
         if (getPreliminaryVolumeEnabled()) {
-            volumes.add(preliminaryVolume);
+            volumes.add(getPreliminaryVolume());
         }
 
         switch (volumeManagementMode) {
             case MANUAL:
                 for (Section section : getAvailableVolumeSections()) {
-                    volume = volumeSectionsMap.get(section);
+                    volume = getVolume(section);
                     if (volume != null) {
                         volumes.add(volume);
                     }
@@ -2901,16 +3076,22 @@ public class Settings {
         return volumes;
     }
 
-    public void setVolumeSection(Section section,
+    public boolean setVolumeSection(Section section,
                                  boolean enabled,
                                  boolean supplement) {
+
+        if (locked) { return false; }
+
         if (!enabled) {
             volumeSectionsMap.remove(section);
         } else {
             if (!volumeSectionsMap.containsKey(section)) {
-                volumeSectionsMap.put(section, new Volume(supplement?Volume.Type.SUPPLEMENTARY:Volume.Type.NORMAL, section.getName()));
+                volumeSectionsMap.put(section,
+                        new SectionVolume(supplement?Volume.Type.SUPPLEMENTARY:Volume.Type.NORMAL, section.getName()));
             }
         }
+
+        return true;
     }
 
     public Set<Section> getVolumeSections() {
@@ -2955,7 +3136,9 @@ public class Settings {
         return extendedFrontMatterSection;
     }
 
-    public void setTitlePageSection(Section section) {
+    public boolean setTitlePageSection(Section section) {
+
+        if (locked) { return false; }
 
         if (getAvailableTitlePageSections().contains(section)) {
             titlePageSection = section;
@@ -2965,9 +3148,13 @@ public class Settings {
         }
         setVolumeInfoEnabled(volumeInfoEnabled);
         setTranscriptionInfoEnabled(transcriptionInfoEnabled);
+
+        return true;
     }
 
-    public void setFrontMatterSection(Section section) {
+    public boolean setFrontMatterSection(Section section) {
+
+        if (locked) { return false; }
 
         if (getAvailableFrontMatterSections().contains(section)) {
             frontMatterSection = section;
@@ -2978,9 +3165,13 @@ public class Settings {
         setTitlePageSection(titlePageSection);
         setExtendedFrontMatterSection(extendedFrontMatterSection);
         Volume.setFrontMatterAvailable(frontMatterSection != null);
+
+        return true;
     }
 
-    public void setExtendedFrontMatterSection(Section section) {
+    public boolean setExtendedFrontMatterSection(Section section) {
+
+        if (locked) { return false; }
 
         List<Section> availableSections = getAvailableExtendedFrontMatterSections();
         if (availableSections.contains(section)) {
@@ -2990,78 +3181,111 @@ public class Settings {
             extendedFrontMatterSection = null;
         }        
         Volume.setExtFrontMatterAvailable(extendedFrontMatterSection != null);
+
+        return true;
     }
 
-    public void setTranscribersNotesPageEnabled(boolean b) {
+    public boolean setTranscribersNotesPageEnabled(boolean b) {
+
+        if (locked) { return false; }
         transcribersNotesPageEnabled = b && getPreliminaryPagesPresent();
+        return true;
     }
 
     public boolean getTranscribersNotesPageEnabled() {
         return transcribersNotesPageEnabled;
     }
 
-    public void setSpecialSymbolsListEnabled(boolean b) {
+    public boolean setSpecialSymbolsListEnabled(boolean b) {
+
+        if (locked) { return false; }
         specialSymbolsListEnabled = b && getPreliminaryPagesPresent();
+        return true;
     }
 
     public boolean getSpecialSymbolsListEnabled() {
         return specialSymbolsListEnabled;
     }
 
-    public void setTableOfContentEnabled(boolean b) {
+    public boolean setTableOfContentEnabled(boolean b) {
+
+        if (locked) { return false; }
         tableOfContentEnabled = b && getPreliminaryPagesPresent();
+        return true;
     }
 
     public boolean getTableOfContentEnabled() {
         return tableOfContentEnabled;
     }
 
-    public void setVolumeInfoEnabled(boolean b) {
+    public boolean setVolumeInfoEnabled(boolean b) {
+
+        if (locked) { return false; }
         volumeInfoEnabled = b && getVolumeInfoAvailable();
+        return true;
     }
 
     public boolean getVolumeInfoEnabled() {
         return volumeInfoEnabled;
     }
 
-    public void setTranscriptionInfoEnabled(boolean b) {
+    public boolean setTranscriptionInfoEnabled(boolean b) {
+
+        if (locked) { return false; }
         transcriptionInfoEnabled = b && getTranscriptionInfoAvailable();
+        return true;
     }
 
     public boolean getTranscriptionInfoEnabled() {
         return transcriptionInfoEnabled;
     }
 
-    public void setPreliminaryVolumeEnabled(boolean b) {
+    public boolean setPreliminaryVolumeEnabled(boolean b) {
+
+        if (locked) { return false; }
         preliminaryVolumeEnabled = b && getPreliminaryPagesPresent();
+        return true;
     }
 
     public boolean getPreliminaryVolumeEnabled() {
         return preliminaryVolumeEnabled;
     }
 
-    public void setTranscribersNotesPageTitle(String s) {
+    public boolean setTranscribersNotesPageTitle(String s) {
+
+        if (locked) { return false; }
         transcribersNotesPageTitle = s;
+        return true;
     }
 
     public String getTranscribersNotesPageTitle() {
         return transcribersNotesPageTitle;
     }
 
-    public void setSpecialSymbolsListTitle(String s) {
+    public boolean setSpecialSymbolsListTitle(String s) {
+
+        if (locked) { return false; }
         specialSymbolsListTitle = s;
+        return true;
     }
 
     public String getSpecialSymbolsListTitle() {
         return specialSymbolsListTitle;
     }
 
-    public void setTableOfContentTitle(String s) {
+    public boolean setTableOfContentTitle(String s) {
+
+        if (locked) { return false; }
         tableOfContentTitle = s;
+        return true;
     }
 
     public String getTableOfContentTitle() {
         return tableOfContentTitle;
+    }
+
+    public String getContinuedSuffix() {
+        return continuedSuffix;
     }
 
     public String getDate() {
@@ -3266,7 +3490,9 @@ public class Settings {
         return in.substring(0,1).toUpperCase() + in.substring(1);
     }
 
-    public void setBrailleRules(BrailleRules rules) {
+    public boolean setBrailleRules(BrailleRules rules) {
+
+        if (locked) { return false; }
 
         this.brailleRules = rules;
 
@@ -3416,20 +3642,23 @@ public class Settings {
             footnoteStyle.setFirstLine(6);
             footnoteStyle.setRunovers(4);
         }
+
+        return true;
     }
 
     public BrailleRules getBrailleRules() {
         return brailleRules;
     }
 
-    public void configureVolumes() {
+    public boolean configureVolumes() {
+
+        if (locked) { return false; }
 
 
 
+        setVolumeManagementMode(VolumeManagementMode.AUTOMATIC);
 
-        //setVolumeManagementMode(VolumeManagementMode.AUTOMATIC);
 
-        
 
 
         volumeInfo = capitalizeFirstLetter(L10N_in) + " ";
@@ -3472,6 +3701,8 @@ public class Settings {
                 v.setExtFrontMatter(false);
             }
         }
+
+        return true;
     }
 
     private int[] computeOptimalVolumeSizes(int[] pages) {

@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.Comparator;
 import java.util.Map;
@@ -1207,7 +1208,7 @@ public class SettingsDialog implements XItemListener,
 
         String key = null;
         String value = null;
-        TreeSet treeSet = null;
+        Set treeSet = null;
 
         languages.remove(settings.getMainLanguage());
         for (int i=0;i<languages.size();i++) {

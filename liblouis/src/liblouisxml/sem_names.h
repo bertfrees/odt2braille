@@ -45,13 +45,7 @@ static const char *semNames[] = {
   "boxline",
   "italicx",
   "boldx",
-
-/**** Added by Bert Frees *****************************************/
-
   "underlinex",
-
-/******************************************************************/
-
   "linespacing",
   "blankline",
   "softreturn",

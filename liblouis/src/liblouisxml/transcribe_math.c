@@ -49,6 +49,9 @@ transcribe_math (xmlNode * node, int action)
   push_sem_stack (node);
   switch (ud->stack[ud->top])
     {
+    case no:
+      pop_sem_stack ();
+      break;
     case skip:
       pop_sem_stack ();
       return 1;
@@ -106,10 +109,6 @@ static void
 mathText (xmlNode * node, int action)
 {
   if (ud->stack[ud->top] == mtext)
-    {
-      mathTrans ();
-      insert_text (node);
-    }
-  else
-    insert_utf8 (node->content);
+    mathTrans ();
+  insert_text (node);
 }

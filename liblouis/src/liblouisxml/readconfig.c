@@ -514,8 +514,6 @@ compileConfig (FileInfo * nested)
     "34",
     "debug",
     "35",
-
-/**** Added by Bert Frees *****************************************/
     "pageSeparator",
     "36",
     "pageSeparatorNumber",
@@ -536,8 +534,6 @@ compileConfig (FileInfo * nested)
     "44",
     "braillePageNumbersInContents",
     "45",
-/******************************************************************/
-
     "style",
     "90",
     NULL
@@ -616,16 +612,9 @@ compileConfig (FileInfo * nested)
 	  break;
 	case 11:
 	  if ((k = checkValues (nested, topBottom)) != NOTFOUND)
-
-/**** Removed by Bert Frees ***************************************
-	    ud->print_page_number_at = ud->braille_page_number_at = k;
-/**** Added by Bert Frees *****************************************/
-        ud->print_page_number_at = k;
-/******************************************************************/
-
+	    ud->print_page_number_at = k;
 	  break;
 	case 12:
-
 	  if ((k = checkValues (nested, topBottom)) != NOTFOUND)
 	    {
 	      if (k)
@@ -633,13 +622,8 @@ compileConfig (FileInfo * nested)
 	      else
 		k = 1;
 
-/**** Removed by Bert Frees ***************************************
-	      ud->print_page_number_at = ud->braille_page_number_at = k;
-/**** Added by Bert Frees *****************************************/
-          ud->braille_page_number_at = k;
-/******************************************************************/
-
-        }
+	    ud->braille_page_number_at = k;
+	    }
 	  break;
 	case 13:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
@@ -749,40 +733,62 @@ compileConfig (FileInfo * nested)
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 	    ud->debug = k;
 	  break;
-
-/**** Added by Bert Frees *****************************************/
 	case 36:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->page_separator = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_separator = k;
+	    }
 	  break;
 	case 37:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->page_separator_number = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_separator_number = k;
+	    }
 	  break;
 	case 38:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->ignore_empty_pages = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->ignore_empty_pages = k;
+	    }
 	  break;
 	case 39:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->continue_pages = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->continue_pages = k;
+	    }
 	  break;
 	case 40:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->merge_unnumbered_pages = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->merge_unnumbered_pages = k;
+	    }
 	  break;
 	case 41:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->page_number_top_separate_line = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_number_top_separate_line = k;
+	    }
 	  break;
 	case 42:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->page_number_bottom_separate_line = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->page_number_bottom_separate_line = k;
+	    }
 	  break;
-    case 43:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->print_page_number_range = k; }
+	case 43:
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+	    {
+	      ud->print_page_number_range = k;
+	    }
 	  break;
     case 44:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->print_page_numbers_in_contents = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		ud->print_page_numbers_in_contents = k;
 	  break;
     case 45:
-	  if ((k = checkValues (nested, yesNo)) != NOTFOUND) { ud->braille_page_numbers_in_contents = k; }
+	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
+		ud->braille_page_numbers_in_contents = k;
 	  break;
-/******************************************************************/
-
 	case 90:
 	  {
 	    static const char *actions[] = {
@@ -806,10 +812,8 @@ compileConfig (FileInfo * nested)
 	      "10",
 	      "rightHandPage",
 	      "11",
-	      "braillePageNumberFormat",
-	      "12",
-
-/**** Added by Bert Frees *****************************************/
+		  "braillePageNumberFormat",
+		  "12",
           "centeredMargin",
           "13",
           "keepWithNext",
@@ -822,8 +826,6 @@ compileConfig (FileInfo * nested)
           "17",
           "linesFromTop",
           "18",
-/******************************************************************/
-
 	      NULL
 	    };
 	    static const char *formats[] = {
@@ -915,8 +917,6 @@ compileConfig (FileInfo * nested)
 			NOTFOUND)
 		      style->brlNumFormat = k;
 		    break;
-
-/**** Added by Bert Frees *****************************************/
           case 13:
             style->centered_margin = atoi (nested->value);
             break;
@@ -937,8 +937,6 @@ compileConfig (FileInfo * nested)
           case 18:
             style->lines_from_top = atoi (nested->value);
             break;
-/******************************************************************/
-
 		  default:
 		    configureError (nested, "Program error in readconfig.c");
 		    continue;
@@ -952,15 +950,6 @@ compileConfig (FileInfo * nested)
 	  continue;
 	}
     }
-
-/**** Removed by Bert Frees ***************************************
-  if (!((ud->print_page_number_at && ud->braille_page_number_at) ||
-	(!ud->print_page_number_at && !ud->braille_page_number_at)))
-    configureError (nested,
-		    "invalid combination of braille and print page number placements");
-/******************************************************************/
-
-
   return 1;
 }
 
@@ -1019,33 +1008,27 @@ read_configuration_file (const char *configFileList, const char
       ud->inFile = NULL;
       ud->outFile = NULL;
       ud->mainBrailleTable = ud->contracted_table_name;
-      ud->outlen_so_far = 0;
-      ud->lines_on_page = 0;
-      ud->braille_page_number = ud->beginning_braille_page_number;
-
-/**** Added by Bert Frees *****************************************/
-
-      ud->buffer2_len_so_far = 0;
-      ud->buffer3_len_so_far = 0;
-      ud->buffer2_enabled = ud->braille_pages &&
-                            ud->print_pages &&
-                            ud->print_page_number_range &&
-                            ud->print_page_number_at;
-      ud->buffer3_enabled = 0;
-      ud->print_page_number[1] = 0;
-      ud->print_page_number_first[0] = '_';
-      ud->print_page_number_first[1] = 0;
-      ud->print_page_number_last[0] = 0;
-      ud->page_separator_number_first[0] = 0;
-      ud->page_separator_number_first[0] = 0;
-      ud->fill_pages = 0;
+      ud->outbuf1_len_so_far = 0;
+	  ud->outbuf2_len_so_far = 0;
+      ud->outbuf3_len_so_far = 0;
+	  ud->outbuf2_enabled = ud->braille_pages &&
+		ud->print_pages &&
+		ud->print_page_number_range &&
+		ud->print_page_number_at;
+      ud->outbuf3_enabled = 0;
+	  ud->fill_pages = 0;
       ud->fill_page_skipped = 0;
       ud->blank_lines = 0;
       ud->lines_length = 0;
       ud->new_print_page = 0;
-
-/******************************************************************/
-
+      ud->lines_on_page = 0;
+      ud->braille_page_number = ud->beginning_braille_page_number;
+      ud->print_page_number_first[0] = '_';
+      ud->print_page_number[1] = 0;
+      ud->print_page_number_first[1] = 0;
+      ud->print_page_number_last[0] = 0;
+      ud->page_separator_number_first[0] = 0;
+      ud->page_separator_number_first[0] = 0;
       return 1;
     }
   lbx_free ();

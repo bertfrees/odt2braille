@@ -52,27 +52,21 @@ static char tempFileName[MAXNAMELEN];
 static int saved_udContents;
 static int saved_linesOnPage;
 static int saved_braillePageNumber;
-
-/**** Added by Bert Frees *****************************************/
 static widechar saved_printPageNumber[MAXNUMLEN];
 static widechar saved_printPageNumberFirst[MAXNUMLEN];
 static widechar saved_printPageNumberLast[MAXNUMLEN];
 static BrlPageNumFormat saved_braillePageNumberFormat;
 static StyleRecord *styleSpec;
-/******************************************************************/
 
 int
 initialize_contents (void)
 {
 
-/**** Added by Bert Frees *****************************************/
   saved_braillePageNumberFormat = ud->brl_page_num_format;
   widestrcpy(saved_printPageNumber, ud->print_page_number, -1);
   widestrcpy(saved_printPageNumberFirst, ud->print_page_number_first, -1);
   widestrcpy(saved_printPageNumberLast, ud->print_page_number_last, -1);
   ud->after_contents = 1;
-/******************************************************************/
-
   saved_udContents = ud->contents;
   saved_linesOnPage = ud->lines_on_page;
   saved_braillePageNumber = ud->braille_page_number;
@@ -102,15 +96,11 @@ start_heading (sem_act action, widechar * translatedBuffer, int
 {
   int k;
   if (!(ud->contents && (action == heading1 || action == heading2 ||
-                         action == heading3 || action == heading4 ||
-
-/**** Added by Bert Frees *****************************************/
-                         action == heading5 || action == heading6 ||
-                         action == heading7 || action == heading8 ||
-                         action == heading9 || action == heading10 ||
-/******************************************************************/
-
-                         action == contentsheader)))
+			 action == heading3 || action == heading4 ||
+			 action == heading5 || action == heading6 ||
+			 action == heading7 || action == heading8 ||
+			 action == heading9 || action == heading10 ||
+			 action == contentsheader)))
     return 1;
   if (translatedLength > 3 * MAXNAMELEN)
     translatedLength = 3 * MAXNAMELEN;
@@ -129,54 +119,37 @@ finish_heading (sem_act action)
   int initHeadingLength = heading.headingLength;
   SaveHeading *headingPtr;
   if (!(ud->contents && (action == heading1 || action == heading2 ||
-                         action == heading3 || action == heading4 ||
-
-/**** Added by Bert Frees *****************************************/
-                         action == heading5 || action == heading6 ||
-                         action == heading7 || action == heading8 ||
-                         action == heading9 || action == heading10 ||
-/******************************************************************/
-
-                         action == contentsheader)))
+			 action == heading3 || action == heading4 ||
+			 action == heading5 || action == heading6 ||
+			 action == heading7 || action == heading8 ||
+			 action == heading9 || action == heading10 ||
+			 action == contentsheader)))
     return 1;
   heading.next = NULL;
   if (action != contentsheader)
     {
-
-/**** Removed by Bert Frees ***************************************
-
-      if (*ud->print_page_number != '_')
+      if (ud->print_pages &&
+		  ud->print_page_numbers_in_contents &&
+		  *ud->print_page_number != '_')
 	{
-      heading.headingChars[heading.headingLength++] = ' ';
-	  k = 0;
-      while (ud->print_page_number[k])
+	  heading.headingChars[heading.headingLength++] = ' ';
+      if (ud->print_page_number[0] != '+' &&
+          ud->print_page_number[0] != ' ')
+        heading.headingChars[heading.headingLength++] = 
+	      ud->print_page_number[0];
+      k = 1;
+	  while (ud->print_page_number[k])
 	    heading.headingChars[heading.headingLength++] =
 	      ud->print_page_number[k++];
 	}
-      if (*ud->braille_page_string)
+      if (ud->braille_pages &&
+		  ud->braille_page_numbers_in_contents && 
+		  *ud->braille_page_string)
 	{
-	  if (*ud->print_page_number != '_')
+	  if (ud->print_pages &&
+		  ud->print_page_numbers_in_contents &&
+		  *ud->print_page_number != '_')
 	    heading.headingChars[heading.headingLength++] = 0xa0;
-
-/**** Added by Bert Frees *****************************************/
-
-    if (ud->print_pages && ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
-      heading.headingChars[heading.headingLength++] = ' ';
-      if (ud->print_page_number[0] != '+' &&
-          ud->print_page_number[0] != ' ') {
-        heading.headingChars[heading.headingLength++] = ud->print_page_number[0];
-      }
-      k = 1;
-      while (ud->print_page_number[k]) {
-	    heading.headingChars[heading.headingLength++] = ud->print_page_number[k++];
-	  }
-    }
-    if (ud->braille_pages && ud->braille_pages && ud->braille_page_numbers_in_contents &&  *ud->braille_page_string) {
-	  if (ud->print_pages && ud->print_page_numbers_in_contents && *ud->print_page_number != '_') {
-	    heading.headingChars[heading.headingLength++] = 0xa0;
-	  }
-/*****************************************************************/
-
 	  else
 	    heading.headingChars[heading.headingLength++] = ' ';
 	  k = 0;
@@ -215,16 +188,12 @@ make_contents (void)
     {
       ud->lines_on_page = saved_linesOnPage;
       ud->braille_page_number = saved_braillePageNumber;
-
-/**** Added by Bert Frees *****************************************/
       styleSpec = &ud->style_stack[ud->style_top];
       styleSpec->curBrlNumFormat = saved_braillePageNumberFormat;
       ud->brl_page_num_format = saved_braillePageNumberFormat;
       widestrcpy(ud->print_page_number, saved_printPageNumber, -1);
       widestrcpy(ud->print_page_number_first, saved_printPageNumberFirst, -1);
       widestrcpy(ud->print_page_number_last, saved_printPageNumberLast, -1);
-/******************************************************************/
-
       do_newpage ();
       ud->contents = 2;
       currentHeading = firstHeading;
@@ -248,8 +217,6 @@ make_contents (void)
 	    case heading4:
 	      action = contents4;
 	      break;
-
-/**** Added by Bert Frees *****************************************/
 	    case heading5:
 	      action = contents5;
 	      break;
@@ -268,7 +235,6 @@ make_contents (void)
         case heading10:
 	      action = contents10;
 	      break;
-/******************************************************************/
 	    }
 	  style = action_to_style (action);
 	  start_style (style);

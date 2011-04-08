@@ -104,7 +104,8 @@ public class BrailleChecker implements ExternalChecker {
 
             OdtTransformer odtTransformer = new OdtTransformer(odtFile, null, null);
             Settings settings = new Settings(odtTransformer);
-            odtTransformer.makeControlFlow(settings);
+            odtTransformer.configure(settings);
+            odtTransformer.makeControlFlow();
 
             boolean tocEnabled = false;
             for (Volume volume : settings.getVolumes()) {
