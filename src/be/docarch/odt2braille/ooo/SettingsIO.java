@@ -49,6 +49,7 @@ import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import be.docarch.odt2braille.Settings.PageNumberPosition;
+import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import be.docarch.odt2braille.SpecialSymbol;
 import be.docarch.odt2braille.Style;
 import be.docarch.odt2braille.Style.Alignment;
@@ -734,6 +735,27 @@ public class SettingsIO extends SettingsLoader {
 
         if ((b = getBooleanProperty(preliminaryVolumeEnabledProperty)) != null) {
             loadedSettings.setPreliminaryVolumeEnabled(b);
+        }
+
+        if ((s = getStringProperty(volumeManagementModeProperty)) != null) {
+            try {
+                loadedSettings.setVolumeManagementMode(VolumeManagementMode.valueOf(s));
+            } catch (IllegalArgumentException ex) {
+                logger.log(Level.SEVERE, null, s + " is no valid volume management mode");
+            }
+        }
+
+        if (!(d = getDoubleProperty(preferredVolumeSizeProperty)).isNaN()) {
+            loadedSettings.setPreferredVolumeSize(d.intValue());
+        }
+        if (!(d = getDoubleProperty(minVolumeSizeProperty)).isNaN()) {
+            loadedSettings.setMinVolumeSize(d.intValue());
+        }
+        if (!(d = getDoubleProperty(maxVolumeSizeProperty)).isNaN()) {
+            loadedSettings.setMaxVolumeSize(d.intValue());
+        }
+        if (!(d = getDoubleProperty(minLastVolumeSizeProperty)).isNaN()) {
+            loadedSettings.setMinLastVolumeSize(d.intValue());
         }
 
         if ((s = getStringProperty(brailleRulesProperty)) != null) {
@@ -1427,6 +1449,21 @@ public class SettingsIO extends SettingsLoader {
         setProperty(preliminaryVolumeEnabledProperty,
                     settingsAfterChange.getPreliminaryVolumeEnabled(),
                     settingsBeforeChange.getPreliminaryVolumeEnabled());
+        setProperty(volumeManagementModeProperty,
+                    settingsAfterChange.getVolumeManagementMode().name(),
+                    settingsBeforeChange.getVolumeManagementMode().name());
+        setProperty(preferredVolumeSizeProperty,
+                    settingsAfterChange.getPreferredVolumeSize(),
+                    settingsBeforeChange.getPreferredVolumeSize());
+        setProperty(minVolumeSizeProperty,
+                    settingsAfterChange.getMinVolumeSize(),
+                    settingsBeforeChange.getMinVolumeSize());
+        setProperty(maxVolumeSizeProperty,
+                    settingsAfterChange.getMaxVolumeSize(),
+                    settingsBeforeChange.getMaxVolumeSize());
+        setProperty(minLastVolumeSizeProperty,
+                    settingsAfterChange.getMinLastVolumeSize(),
+                    settingsBeforeChange.getMinLastVolumeSize());
         setProperty(mathProperty,
                     settingsAfterChange.getMath().name(),
                     settingsBeforeChange.getMath().name());

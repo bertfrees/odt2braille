@@ -80,6 +80,11 @@ public class SettingsLoader {
     protected static String lowerBorderProperty =                  "[BRL]LowerBorder";
     protected static String paddingAboveProperty =                 "[BRL]PaddingAbove";
     protected static String paddingBelowProperty =                 "[BRL]PaddingBelow";
+    protected static String volumeManagementModeProperty =         "[BRL]VolumeManagementMode";
+    protected static String preferredVolumeSizeProperty =          "[BRL]PreferredVolumeSize";
+    protected static String minVolumeSizeProperty =                "[BRL]MinimumVolumeSize";
+    protected static String maxVolumeSizeProperty =                "[BRL]MaximumVolumeSize";
+    protected static String minLastVolumeSizeProperty =            "[BRL]MinimumLastVolumeSize";
 
     // Export settings
 

@@ -1461,6 +1461,7 @@ public class OdtTransformer {
         splitVolumesXSL.setParameter("paramBodyMatterEnabled", true);
         splitVolumesXSL.setParameter("paramAllVolumes", true);
         splitVolumesXSL.setParameter("paramNoteSectionTitle", "NOTES");
+        splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", settings.getContinuedSuffix());
         
         // Set output options
 

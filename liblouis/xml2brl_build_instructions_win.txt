@@ -5,6 +5,8 @@
 * In [Settings > Compiler and Debugger], check that:
 ** Compiler = mingw32-gcc.exe
 ** Search directories = C:\msys\1.0\mingw\include (your mingw installation directory)
+				      + C:\Program Files (x86)\Java\jdk1.6.0_17\include (jdk installation directory)
+					  + C:\Program Files (x86)\Java\jdk1.6.0_17\include\win32
 
 *********
  STEP 1

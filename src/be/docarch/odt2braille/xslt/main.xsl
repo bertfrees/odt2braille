@@ -1664,7 +1664,7 @@ BLOCK ELEMENTS
 
     <xsl:template match="text:bibliography" name="bibliography">
 
-        <dtb:bibliography newpage="yes">
+        <dtb:bibliography>
             <dtb:heading>
                 <dtb:h1 class="dummy">
                     <xsl:apply-templates select="current()/text:index-body/text:index-title/text:p" mode="language">

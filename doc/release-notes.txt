@@ -217,7 +217,11 @@ bugs fixed:
 
 embossers:
 
--generic
+- generic
+- (enabling technologies)
+- (mountbatten)
+- (viewplus)
+- ...
 
 changes:
 
@@ -228,3 +232,10 @@ added:
 
 -borders on headings/tables/frames
 -note settings: noteref/footnotes
+-volume management settings: automatic splitting in volumes
+
+new tables:
+
+- Serbian
+- Kurdish
+- Ethiopic

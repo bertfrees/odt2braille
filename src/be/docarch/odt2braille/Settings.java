@@ -24,7 +24,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Date;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.TreeMap;
 import java.util.HashMap;
@@ -185,6 +184,11 @@ public class Settings {
     private boolean specialSymbolsListEnabled = false;
     private boolean preliminaryVolumeEnabled = false;
 
+    private int minVolumeSize;
+    private int maxVolumeSize;
+    private int minLastVolumeSize;
+    private int preferredVolumeSize;
+
     // Emboss & Export Settings
 
     private EmbosserType embosser;
@@ -301,6 +305,10 @@ public class Settings {
         this.marginBottom = copySettings.marginBottom;
         this.beginningBraillePageNumber = copySettings.beginningBraillePageNumber;
         this.sheetsPerQuire = copySettings.sheetsPerQuire;
+        this.minVolumeSize = copySettings.minVolumeSize;
+        this.maxVolumeSize = copySettings.maxVolumeSize;
+        this.minLastVolumeSize = copySettings.minLastVolumeSize;
+        this.preferredVolumeSize = copySettings.preferredVolumeSize;
 
         this.cellSpacing = copySettings.cellSpacing;
         this.lineSpacing = copySettings.lineSpacing;
@@ -753,7 +761,6 @@ public class Settings {
                             setVolumeSection(s, true, false);
                             Volume v = getVolume(s);
                             v.setTitle(capitalizeFirstLetter(L10N_volume) + " " + nr);
-
                         }
                     } catch (Exception e) {}
                 }
@@ -788,6 +795,11 @@ public class Settings {
 //            setVolumeSection(section, true);
 //            getVolume(section).setTitle(capitalizeFirstLetter(L10N_volume) + " " + volumeCount);
 //        }
+
+        minVolumeSize = 30;
+        maxVolumeSize = 40;
+        minLastVolumeSize = 20;
+        preferredVolumeSize = 35;
 
         transcriptionInfo = L10N_transcriptionInfo;
         volumeInfo = "@title\n@pages";
@@ -1306,6 +1318,7 @@ public class Settings {
                 case PORTATHIEL_BLUE:
                     return true;
                 case INTERPOINT_ELEKUL_03:
+                case MOUNTBATTEN:
                 default:
                     return false;
             }
@@ -2931,6 +2944,8 @@ public class Settings {
     }
 
     public boolean setCreator(String creator) {
+
+        if (locked) { return false; }
         if (creator.length() > 0) {
             this.creator = creator;
             return true;
@@ -2961,29 +2976,38 @@ public class Settings {
         return specialSymbolsList.get(index);
     }
 
-    public boolean setSpecialSymbol(SpecialSymbol specialSymbol, int index) {
+    public boolean setSpecialSymbol(SpecialSymbol specialSymbol,
+                                    int index) {
 
         if (locked) { return false; }
         specialSymbolsList.set(index, specialSymbol);
         return true;
     }
 
-    private void addSpecialSymbol(SpecialSymbol specialSymbol) {
+    private boolean addSpecialSymbol(SpecialSymbol specialSymbol) {
+        
+        if (locked) { return false; }
         specialSymbolsList.add(specialSymbol);
+        return true;
     }
 
     public int addSpecialSymbol() {
+
+        if (locked) { return -1; }
         specialSymbolsList.add(new SpecialSymbol());
         return specialSymbolsList.size()-1;
     }
 
     public int deleteSpecialSymbol(int index) {
+
+        if (locked) { return -1; }
         specialSymbolsList.remove(index);
         return Math.min(index, specialSymbolsList.size()-1);
     }
 
     public int moveSpecialSymbolUp(int index) {
 
+        if (locked) { return -1; }
         try {
             Collections.swap(specialSymbolsList, index, index-1);
             return index-1;
@@ -2993,6 +3017,8 @@ public class Settings {
     }
 
     public int moveSpecialSymbolDown(int index) {
+
+        if (locked) { return -1; }
         try {
             Collections.swap(specialSymbolsList, index, index+1);
             return index+1;
@@ -3003,6 +3029,7 @@ public class Settings {
     
     public boolean setVolumeManagementMode(VolumeManagementMode mode) {
 
+        if (locked) { return false; }
         if (mode == VolumeManagementMode.MANUAL && mainSections.size() < 1) {
             return false;
         }
@@ -3014,6 +3041,63 @@ public class Settings {
         return volumeManagementMode;
     }
 
+    public boolean setMinVolumeSize(int size) {
+
+        if (locked || size < 1) { return false; }
+
+        minVolumeSize =       size;
+        maxVolumeSize =       Math.max(minVolumeSize, maxVolumeSize);
+        preferredVolumeSize = Math.max(minVolumeSize, preferredVolumeSize);
+        minLastVolumeSize =   Math.min(minVolumeSize, minLastVolumeSize);
+        return true;
+    }
+
+    public boolean setMaxVolumeSize(int size) {
+
+        if (locked || size < 1) { return false; }
+
+        maxVolumeSize =       size;
+        minVolumeSize =       Math.min(maxVolumeSize, minVolumeSize);
+        preferredVolumeSize = Math.min(maxVolumeSize, preferredVolumeSize);
+        minLastVolumeSize =   Math.min(minVolumeSize, minLastVolumeSize);
+        return true;
+    }
+
+    public boolean setMinLastVolumeSize(int size) {
+
+        if (locked || size < 1 || size > minVolumeSize) { return false; }
+
+        minLastVolumeSize = size;
+        return true;
+    }
+
+    public boolean setPreferredVolumeSize(int size) {
+
+        if (locked || size < 1) { return false; }
+
+        preferredVolumeSize = size;
+        maxVolumeSize =       Math.max(preferredVolumeSize, maxVolumeSize);
+        minVolumeSize =       Math.min(preferredVolumeSize, minVolumeSize);
+        minLastVolumeSize =   Math.min(minVolumeSize, minLastVolumeSize);
+        return true;
+    }
+
+    public int getMinVolumeSize() {
+        return minVolumeSize;
+    }
+
+    public int getMaxVolumeSize() {
+        return maxVolumeSize;
+    }
+
+    public int getMinLastVolumeSize() {
+        return minLastVolumeSize;
+    }
+
+    public int getPreferredVolumeSize() {
+        return preferredVolumeSize;
+    }
+
     public List<AutomaticVolume> getAutomaticVolumes() {
 
         if (automaticVolumes==null) {
@@ -3022,18 +3106,23 @@ public class Settings {
                 odtTransformer.configure(this);
 
                 int[] allPages = odtTransformer.extractDocumentOutline();
-                int[] optimalVolumes = computeOptimalVolumeSizes(allPages);
+
+                int min = 23;
+                int max = 35;
+                int preferred = 30;
+                int minlast = 15;
+
+                int[] optimalVolumes = computeOptimalVolumes(allPages, min, max, preferred, minlast);
 
                 automaticVolumes = new ArrayList<AutomaticVolume>();
-                AutomaticVolume v = new AutomaticVolume(1, 1);
-                v.setTitle(capitalizeFirstLetter(L10N_volume) + " 1");
-                automaticVolumes.add(v);
+
+                AutomaticVolume v;
                 for (int i=0; i<optimalVolumes.length; i++) {
-                    v = new AutomaticVolume(i+2, optimalVolumes[i]+1);
-                    v.setTitle(capitalizeFirstLetter(L10N_volume) + " " + (i+2));
+                    v = new AutomaticVolume(i+1, optimalVolumes[i]+1);
+                    v.setTitle(capitalizeFirstLetter(L10N_volume) + " " + (i+1));
                     automaticVolumes.add(v);
                 }
-
+                
             } catch (Exception e) {
                 logger.log(Level.SEVERE, null, e);
             }
@@ -3654,13 +3743,6 @@ public class Settings {
 
         if (locked) { return false; }
 
-
-
-        setVolumeManagementMode(VolumeManagementMode.AUTOMATIC);
-
-
-
-
         volumeInfo = capitalizeFirstLetter(L10N_in) + " ";
         if (getPreliminaryVolumeEnabled()) {
            volumeInfo += "1 " + L10N_preliminary + " " + L10N_and + " ";
@@ -3705,99 +3787,105 @@ public class Settings {
         return true;
     }
 
-    private int[] computeOptimalVolumeSizes(int[] pages) {
+    private int[] computeOptimalVolumes(int[] pages,
+                                        int min,
+                                        int max,
+                                        int preferred,
+                                        int minLast) {
 
-        Combination optimalCombination = null;
-
+        int total = Math.max(1,pages.length);
         int[] weigths = new int[] { 512, 0, 1, 2, 4, 8, 16, 32, 64, 128, 256 };
-        int total = pages.length;
-        int preferred = 55;
+        TreeMap<Integer, ArrayList<Integer>> optimalpartitions = new TreeMap<Integer, ArrayList<Integer>>();        
+        int[] minerror1 = new int[total+1];
+        int[] minerror2 = new int[total+1];
+        boolean[] ok = new boolean[total+1];
+        int previouspage;
+        int currentpage;
+        ArrayList<Integer> previouspartition;
+        ArrayList<Integer> currentpartition;
+
+        max =   Math.max(1,max);
+        min =   Math.max(1,Math.min(min,max));
+        preferred = Math.max(min, Math.min(max, preferred));
+        int maxMinLast = Math.min(min, total);
+        int lower = max;
+        int upper = 2*min;
+        while (true) {
+            if (total <= lower) {
+                break;
+            } else if (total < upper) {
+                maxMinLast = total - lower;
+                break;
+            }
+            lower += max;
+            upper += min;
+        }
+        minLast = Math.max(1,Math.min(minLast,maxMinLast));
+
+        for (int i=0; i<=total; i++) {
+            ok[i] = false;
+            minerror1[i] = Integer.MAX_VALUE;
+            minerror2[i] = Integer.MAX_VALUE;
+        }
+        for (int i=total-minLast; i>=total-max; i--) {
+            ok[i] = true;
+        }
+        minerror1[0] = 0;
+        minerror2[0] = 0;
         
-        int min = 40;
-        int max = 60;
-        int minLast = 20;
-
-        Combination.setBoundaries(total, min, max, minLast);
-
-        Combination zeroCombination = new Combination();
-
-        if (zeroCombination.dividable()) {
-
-            Combinations allCombinations = null;
-            Collection<Combination> possibleCombinations = null;
-            Collection<Combination> selectedCombinations = new ArrayList<Combination>();
-            double minError;
-            double error;
-
-            List<Collection<Integer>> h = new ArrayList<Collection<Integer>>();
-            for (int i=0; i<=10; i++) {
-                h.add(new ArrayList<Integer>());
-            }
-            for (int i=0; i<pages.length; i++) {
-                h.get(pages[i]).add(i);
-            }
-            
-            int level = 1;
-            allCombinations = new Combinations(h.get(level));
-            possibleCombinations = allCombinations.getOK();
-
-            if (zeroCombination.ok()) {
-                possibleCombinations.add(zeroCombination);
-            } else {
-                while (possibleCombinations.size()==0 && level<10) {
-                    level++;
-                    allCombinations = new Combinations(allCombinations, new Combinations(h.get(level)));
-                    possibleCombinations = allCombinations.getOK();
-                }
-                if (possibleCombinations.size()==0) {
-                    allCombinations = new Combinations(allCombinations, new Combinations(h.get(0)));
-                    possibleCombinations = allCombinations.getOK();
-                }
-            }
-            
-            minError = (double)Integer.MAX_VALUE;
-            for (Combination c : possibleCombinations) {
-                error = 0;
-                if (c.size()>0) {
-                    for (int i : c) {
-                        error += weigths[pages[i-1]];
+        currentpartition = new ArrayList<Integer>();
+        currentpartition.add(0);
+        optimalpartitions.put(0, currentpartition);
+        
+        for (int j=0; j<total; j++) {
+            if (optimalpartitions.containsKey(j)) {
+                previouspartition = optimalpartitions.get(j);
+                previouspage = previouspartition.get(previouspartition.size()-1);
+                for (int i=min; i<max; i++) {
+                    currentpage = previouspage + i;
+                    if (currentpage >= total) { break; }
+                    currentpartition = new ArrayList<Integer>(previouspartition);
+                    currentpartition.add(currentpage);
+                    int e1 = minerror1[previouspage] + weigths[pages[currentpage]];
+                    int e2 = minerror2[previouspage] + Math.abs(i-preferred);
+                    if (e1<minerror1[currentpage]) {
+                        minerror1[currentpage] = e1;
+                        minerror2[currentpage] = Integer.MAX_VALUE;
+                        optimalpartitions.put(currentpage, currentpartition);
+                    } else if (e1==minerror1[currentpage]) {
+                        if (e2<minerror2[currentpage]) {
+                            minerror2[currentpage] = e2;
+                            optimalpartitions.put(currentpage, currentpartition);
+                        }
                     }
-                    error /= c.size();
-                }
-                if (error <= minError) {
-                    if (error < minError) {
-                        selectedCombinations.clear();
+                    if (ok[currentpage]) {
+                        if (e1<minerror1[total-1]) {
+                            minerror1[total-1] = e1;
+                            minerror2[total-1] = Integer.MAX_VALUE;
+                            optimalpartitions.put(total, currentpartition);
+                        } else if (e1==minerror1[total-1]) {
+                            e2 += Math.abs(total-currentpage-preferred);
+                            if (e2<minerror2[total-1]) {
+                                minerror2[total-1] = e2;
+                                optimalpartitions.put(total, currentpartition);
+                            }
+                        }
                     }
-                    selectedCombinations.add(c);
-                }
-            }
-
-            minError = (double)Integer.MAX_VALUE;
-            for (Combination c : selectedCombinations) {
-                error = 0;
-                int start = 0;
-                for (int end : c) {
-                    error += Math.pow(end-start-preferred,2);
-                    start = end;
-                }
-                error += Math.pow(total-start-preferred,2);
-                error /= (c.size()+1);
-                if (error < minError) {
-                    optimalCombination = c;
                 }
             }
         }
-        
-        if (optimalCombination != null) {
-            int[] r = new int[optimalCombination.size()];
-            int i = 0;
-            for (int b : optimalCombination) {
-                r[i] = b;
-                i++;
+
+        if (optimalpartitions.containsKey(total)) {
+            ArrayList<Integer> optimalpartition = optimalpartitions.get(total);
+            int[] r = new int[optimalpartition.size()];
+            int j = 0;
+            for (int i : optimalpartition) {
+                r[j] = i;
+                j++;
             }
             return r;
         } else {
-            return new int[0];
+            return new int[]{0};
         }
     }
 }

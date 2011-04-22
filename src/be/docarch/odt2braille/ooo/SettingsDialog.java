@@ -60,8 +60,10 @@ import com.sun.star.awt.XRadioButton;
 import com.sun.star.awt.XNumericField;
 import com.sun.star.awt.XItemListener;
 import com.sun.star.awt.ItemEvent;
+import com.sun.star.awt.TextEvent;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XActionListener;
+import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.ActionEvent;
 import com.sun.star.awt.XItemEventBroadcaster;
 import com.sun.star.awt.XWindow;
@@ -73,6 +75,7 @@ import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
 import be.docarch.odt2braille.Settings.PageNumberPosition;
+import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import be.docarch.odt2braille.SpecialSymbol;
 import be.docarch.odt2braille.SpecialSymbol.Type;
 import be.docarch.odt2braille.SpecialSymbol.Mode;
@@ -98,6 +101,7 @@ import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
  * <li>List Settings</li>
  * <li>Table Settings</li>
  * <li>Pagenumber Settings</li>
+ * <li>Volume Management Settings</li>
  * <li>Table of Contents Settings</li>
  * <li>Special Symbols Settings</li>
  * <li>Mathematics Settings</li>
@@ -107,7 +111,8 @@ import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
  * @author      Bert Frees
  */
 public class SettingsDialog implements XItemListener,
-                                       XActionListener {
+                                       XActionListener,
+                                       XTextListener {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
@@ -125,14 +130,15 @@ public class SettingsDialog implements XItemListener,
     private final static short TABLES_PAGE = 7;
     private final static short NOTES_PAGE = 8;
     private final static short PAGENUMBERS_PAGE = 9;
-    private final static short TOC_PAGE = 10;
-    private final static short SPECIAL_SYMBOLS_PAGE = 11;
-    private final static short MATH_PAGE = 12;
+    private final static short VOLUME_MANAGEMENT_PAGE = 10;
+    private final static short TOC_PAGE = 11;
+    private final static short SPECIAL_SYMBOLS_PAGE = 12;
+    private final static short MATH_PAGE = 13;
 
-    private final static short NUMBER_OF_PAGES = 12;
+    private final static short NUMBER_OF_PAGES = 13;
 
-    private boolean[] pagesEnabled = {true, true, true, true, true, true, true, true, true, true, true, true};
-    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false,false};
+    private boolean[] pagesEnabled = {true, true, true, true, true, true, true, true, true, true, true, true, true};
+    private boolean[] pagesVisited = {false,false,false,false,false,false,false,false,false,false,false,false,false};
     private int currentPage = 1;
 
     private int currentListLevel;
@@ -776,6 +782,51 @@ public class SettingsDialog implements XItemListener,
     private String L10N_top = null;
     private String L10N_bottom = null;
 
+    // Volume Management Page
+
+    private XRadioButton singleVolumeRadioButton = null;
+    private XRadioButton manualVolumesRadioButton = null;
+    private XRadioButton automaticVolumesRadioButton = null;
+    private XNumericField preferredVolumeSizeField = null;
+    private XNumericField maxVolumeSizeField = null;
+    private XNumericField minVolumeSizeField = null;
+    private XNumericField minLastVolumeSizeField = null;
+
+    private XTextComponent preferredVolumeSizeTextComponent = null;
+    private XTextComponent maxVolumeSizeTextComponent = null;
+    private XTextComponent minVolumeSizeTextComponent = null;
+    private XTextComponent minLastVolumeSizeTextComponent = null;
+
+    private XPropertySet manualVolumesRadioButtonProperties = null;
+    private XPropertySet preferredVolumeSizeFieldProperties = null;
+    private XPropertySet maxVolumeSizeFieldProperties = null;
+    private XPropertySet minVolumeSizeFieldProperties = null;
+    private XPropertySet minLastVolumeSizeFieldProperties = null;
+
+    private static String _singleVolumeRadioButton = "OptionButton1";
+    private static String _manualVolumesRadioButton = "OptionButton2";
+    private static String _automaticVolumesRadioButton = "OptionButton9";
+    private static String _preferredVolumeSizeField = "NumericField36";
+    private static String _maxVolumeSizeField = "NumericField37";
+    private static String _minVolumeSizeField = "NumericField38";
+    private static String _minLastVolumeSizeField = "NumericField39";
+
+    private static String _singleVolumeLabel = "Label110";
+    private static String _manualVolumesLabel = "Label111";
+    private static String _automaticVolumesLabel = "Label112";
+    private static String _preferredVolumeSizeLabel = "Label114";
+    private static String _maxVolumeSizeLabel = "Label113";
+    private static String _minVolumeSizeLabel = "Label115";
+    private static String _minLastVolumeSizeLabel = "Label116";
+
+    private String L10N_singleVolumeLabel = null;
+    private String L10N_manualVolumesLabel = null;
+    private String L10N_automaticVolumesLabel = null;
+    private String L10N_preferredVolumeSizeLabel = null;
+    private String L10N_maxVolumeSizeLabel = null;
+    private String L10N_minVolumeSizeLabel = null;
+    private String L10N_minLastVolumeSizeLabel = null;
+
     // Table of Contents Page
 
     private XCheckBox tableOfContentsCheckBox = null;
@@ -1007,6 +1058,7 @@ public class SettingsDialog implements XItemListener,
         L10N_roadmapLabels[TABLES_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableSettingsPageTitle");
         L10N_roadmapLabels[NOTES_PAGE-1] = "Notes";
         L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pagenumberSettingsPageTitle");
+        L10N_roadmapLabels[VOLUME_MANAGEMENT_PAGE-1] = "Volume Management";
         L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsSettingsPageTitle");
         L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsSettingsPageTitle");
         L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("mathSettingsPageTitle");
@@ -1149,6 +1201,16 @@ public class SettingsDialog implements XItemListener,
         L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numbersAtBottomOnSepLineLabel");
         L10N_top = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top");
         L10N_bottom = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom");
+
+        // Volume Management Page
+
+        L10N_singleVolumeLabel = "Single volume";
+        L10N_manualVolumesLabel = "Manual volumes";
+        L10N_automaticVolumesLabel = "Automatic volumes";
+        L10N_preferredVolumeSizeLabel = "Preferred volume size";
+        L10N_maxVolumeSizeLabel = "Maximum volume size";
+        L10N_minVolumeSizeLabel = "Minimum volume size";
+        L10N_minLastVolumeSizeLabel = "Minimum size of last volume";
 
         // Table of Contents Page
 
@@ -1579,6 +1641,31 @@ public class SettingsDialog implements XItemListener,
         numbersAtBottomOnSepLineCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                 dialogControlContainer.getControl(_numbersAtBottomOnSepLineCheckBox));
 
+        // Volume Management Page
+        
+        singleVolumeRadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_singleVolumeRadioButton));
+        manualVolumesRadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_manualVolumesRadioButton));
+        automaticVolumesRadioButton = (XRadioButton) UnoRuntime.queryInterface(XRadioButton.class,
+                dialogControlContainer.getControl(_automaticVolumesRadioButton));
+        preferredVolumeSizeField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_preferredVolumeSizeField));
+        maxVolumeSizeField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_maxVolumeSizeField));
+        minVolumeSizeField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_minVolumeSizeField));
+        minLastVolumeSizeField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_minLastVolumeSizeField));        
+        preferredVolumeSizeTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_preferredVolumeSizeField));
+        maxVolumeSizeTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_maxVolumeSizeField));
+        minVolumeSizeTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_minVolumeSizeField));
+        minLastVolumeSizeTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                dialogControlContainer.getControl(_minLastVolumeSizeField));
+
         // Table of Contents Page
 
         tableOfContentsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
@@ -1850,6 +1937,19 @@ public class SettingsDialog implements XItemListener,
         numbersAtBottomOnSepLineCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numbersAtBottomOnSepLineCheckBox)).getModel());
 
+        // Volume Management Page
+        
+        manualVolumesRadioButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, manualVolumesRadioButton)).getModel());
+        preferredVolumeSizeFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, preferredVolumeSizeField)).getModel());
+        maxVolumeSizeFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, maxVolumeSizeField)).getModel());
+        minVolumeSizeFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, minVolumeSizeField)).getModel());
+        minLastVolumeSizeFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, minLastVolumeSizeField)).getModel());
+
         // Table of Contents Page
 
         tableOfContentsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
@@ -1939,6 +2039,7 @@ public class SettingsDialog implements XItemListener,
         addTablesPageListeners();
         addNotesPageListeners();
         addPageNumbersPageListeners();
+        addVolumeManagementPageListeners();
         addTableOfContentsPageListeners();
         addSpecialSymbolsPageListeners();
 
@@ -2029,6 +2130,18 @@ public class SettingsDialog implements XItemListener,
         printPageNumberAtListBox.addItemListener(this);
         printPageNumberRangeCheckBox.addItemListener(this);
         pageSeparatorCheckBox.addItemListener(this);
+
+    }
+
+    private void addVolumeManagementPageListeners() {
+
+        singleVolumeRadioButton.addItemListener(this);
+        manualVolumesRadioButton.addItemListener(this);
+        automaticVolumesRadioButton.addItemListener(this);
+        preferredVolumeSizeTextComponent.addTextListener(this);
+        maxVolumeSizeTextComponent.addTextListener(this);
+        minVolumeSizeTextComponent.addTextListener(this);
+        minLastVolumeSizeTextComponent.addTextListener(this);
 
     }
 
@@ -2135,6 +2248,18 @@ public class SettingsDialog implements XItemListener,
         printPageNumberAtListBox.removeItemListener(this);
         printPageNumberRangeCheckBox.removeItemListener(this);
         pageSeparatorCheckBox.removeItemListener(this);
+
+    }
+
+    private void removeVolumeManagementPageListeners() {
+
+        singleVolumeRadioButton.removeItemListener(this);
+        manualVolumesRadioButton.removeItemListener(this);
+        automaticVolumesRadioButton.removeItemListener(this);
+        preferredVolumeSizeTextComponent.removeTextListener(this);
+        maxVolumeSizeTextComponent.removeTextListener(this);
+        minVolumeSizeTextComponent.removeTextListener(this);
+        minLastVolumeSizeTextComponent.removeTextListener(this);
 
     }
 
@@ -2418,6 +2543,23 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_numbersAtTopOnSepLineLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numbersAtBottomOnSepLineLabel));
         xFixedText.setText(L10N_numbersAtBottomOnSepLineLabel);
+
+        // Volume Management Page
+
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_singleVolumeLabel));
+        xFixedText.setText(L10N_singleVolumeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_manualVolumesLabel));
+        xFixedText.setText(L10N_manualVolumesLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_automaticVolumesLabel));
+        xFixedText.setText(L10N_automaticVolumesLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_preferredVolumeSizeLabel));
+        xFixedText.setText(L10N_preferredVolumeSizeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_maxVolumeSizeLabel));
+        xFixedText.setText(L10N_maxVolumeSizeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_minVolumeSizeLabel));
+        xFixedText.setText(L10N_minVolumeSizeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_minLastVolumeSizeLabel));
+        xFixedText.setText(L10N_minLastVolumeSizeLabel);
 
         // Table of Contents Page
 
@@ -2827,6 +2969,43 @@ public class SettingsDialog implements XItemListener,
 
         }
 
+        if (pagesEnabled[VOLUME_MANAGEMENT_PAGE-1]) {
+
+            singleVolumeRadioButton.setState(false);
+            manualVolumesRadioButton.setState(false);
+            automaticVolumesRadioButton.setState(false);
+            switch (settings.getVolumeManagementMode()) {
+                case SINGLE:
+                    singleVolumeRadioButton.setState(true);
+                    break;
+                case MANUAL:
+                    manualVolumesRadioButton.setState(true);
+                    break;
+                case AUTOMATIC:
+                    automaticVolumesRadioButton.setState(true);
+                    break;
+                default:
+            }
+
+            manualVolumesRadioButtonProperties.setPropertyValue("Enabled", settings.getVolumeSections().size()>0);
+            
+            preferredVolumeSizeField.setDecimalDigits((short)0);
+            maxVolumeSizeField.setDecimalDigits((short)0);
+            minVolumeSizeField.setDecimalDigits((short)0);
+            minLastVolumeSizeField.setDecimalDigits((short)0);
+            preferredVolumeSizeField.setMax((double)Integer.MAX_VALUE);
+            maxVolumeSizeField.setMax((double)Integer.MAX_VALUE);
+            minVolumeSizeField.setMax((double)Integer.MAX_VALUE);
+            minLastVolumeSizeField.setMax((double)Integer.MAX_VALUE);
+            preferredVolumeSizeField.setMin((double)1);
+            maxVolumeSizeField.setMin((double)1);
+            minVolumeSizeField.setMin((double)1);
+            minLastVolumeSizeField.setMin((double)1);
+
+            updateVolumeManagementPageFieldValues();
+            updateVolumeManagementPageFieldProperties();
+        }
+
         if (pagesEnabled[TOC_PAGE-1]) {
 
             currentTableOfContentsLevel = 1;
@@ -2947,6 +3126,8 @@ public class SettingsDialog implements XItemListener,
         }
 
         if (pagesVisited[PAGENUMBERS_PAGE-1]) { savePageNumbersPageFieldValues(); }
+
+        if (pagesVisited[VOLUME_MANAGEMENT_PAGE-1]) { }
 
         if (pagesVisited[TOC_PAGE-1]) {
 
@@ -3204,6 +3385,17 @@ public class SettingsDialog implements XItemListener,
         tableOfContentsRunoversFieldProperties.setPropertyValue("Enabled", !bana);
         tableOfContentsBraillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", settings.getBraillePageNumbers());
         tableOfContentsPrintPageNumbersCheckBoxProperties.setPropertyValue("Enabled",  settings.getPrintPageNumbers());
+
+    }
+
+    private void updateVolumeManagementPageFieldProperties() throws com.sun.star.uno.Exception {
+
+        boolean enabled = (settings.getVolumeManagementMode() == VolumeManagementMode.AUTOMATIC);
+
+        preferredVolumeSizeFieldProperties.setPropertyValue("Enabled", enabled);
+        maxVolumeSizeFieldProperties.setPropertyValue("Enabled", enabled);
+        minVolumeSizeFieldProperties.setPropertyValue("Enabled", enabled);
+        minLastVolumeSizeFieldProperties.setPropertyValue("Enabled", enabled);
 
     }
 
@@ -3469,6 +3661,15 @@ public class SettingsDialog implements XItemListener,
         settings.setMergeUnnumberedPages(mergeUnnumberedPagesCheckBox.getState() == (short) 1);
         settings.setPageNumberAtTopOnSeparateLine(numbersAtTopOnSepLineCheckBox.getState() == (short) 1);
         settings.setPageNumberAtBottomOnSeparateLine(numbersAtBottomOnSepLineCheckBox.getState() == (short) 1);
+
+    }
+
+    private void updateVolumeManagementPageFieldValues() {
+
+        preferredVolumeSizeField.setValue((double)settings.getPreferredVolumeSize());
+        maxVolumeSizeField.setValue((double)settings.getMaxVolumeSize());
+        minVolumeSizeField.setValue((double)settings.getMinVolumeSize());
+        minLastVolumeSizeField.setValue((double)settings.getMinLastVolumeSize());
 
     }
 
@@ -3909,6 +4110,28 @@ public class SettingsDialog implements XItemListener,
                         addTableOfContentsPageListeners();
                         break;
 
+                    case VOLUME_MANAGEMENT_PAGE:
+
+                        removeVolumeManagementPageListeners();
+
+                        if (source.equals(singleVolumeRadioButton)) {
+                            settings.setVolumeManagementMode(VolumeManagementMode.SINGLE);
+                            manualVolumesRadioButton.setState(false);
+                            automaticVolumesRadioButton.setState(false);
+                        } else if (source.equals(manualVolumesRadioButton)) {
+                            settings.setVolumeManagementMode(VolumeManagementMode.MANUAL);
+                            singleVolumeRadioButton.setState(false);
+                            automaticVolumesRadioButton.setState(false);
+                        } else if (source.equals(automaticVolumesRadioButton)) {
+                            settings.setVolumeManagementMode(VolumeManagementMode.AUTOMATIC);
+                            singleVolumeRadioButton.setState(false);
+                            manualVolumesRadioButton.setState(false);
+                        }
+
+                        updateVolumeManagementPageFieldProperties();
+                        addVolumeManagementPageListeners();
+                        break;
+
                     case TOC_PAGE:
 
                         removeTableOfContentsPageListeners();
@@ -4171,6 +4394,32 @@ public class SettingsDialog implements XItemListener,
 
         } catch (com.sun.star.uno.Exception ex) {
             logger.log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void textChanged(TextEvent textEvent) {
+
+        Object source = textEvent.Source;
+
+        switch (currentPage) {
+
+            case VOLUME_MANAGEMENT_PAGE:
+
+                removeVolumeManagementPageListeners();
+
+                if (source.equals(preferredVolumeSizeField)) {
+                    settings.setPreferredVolumeSize((int)preferredVolumeSizeField.getValue());
+                } else if (source.equals(maxVolumeSizeField)) {
+                    settings.setMaxVolumeSize((int)maxVolumeSizeField.getValue());
+                } else if (source.equals(minVolumeSizeField)) {
+                    settings.setMinVolumeSize((int)minVolumeSizeField.getValue());
+                } else if (source.equals(minLastVolumeSizeField)) {
+                    settings.setMinLastVolumeSize((int)minLastVolumeSizeField.getValue());
+                }
+
+                updateVolumeManagementPageFieldValues();
+                addVolumeManagementPageListeners();
+                break;
         }
     }
 
