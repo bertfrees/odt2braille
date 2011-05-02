@@ -33,6 +33,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.apache.xpath.XPathAPI;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -66,7 +67,6 @@ import com.sun.star.awt.WindowEvent;
 import com.sun.star.awt.FontDescriptor;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.beans.XMultiPropertySet;
-import com.sun.org.apache.xpath.internal.XPathAPI;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;

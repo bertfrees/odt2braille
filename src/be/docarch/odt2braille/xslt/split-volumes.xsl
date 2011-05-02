@@ -227,7 +227,7 @@
 
     <xsl:template match="dtb:note">
 
-        <xsl:if test="@class='footnote'">
+        <xsl:if test="not(@class='endnote')">
             <xsl:copy>
                 <xsl:apply-templates select="@class|node()"/>
             </xsl:copy>

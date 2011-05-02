@@ -49,7 +49,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
-import com.sun.org.apache.xpath.internal.XPathAPI;
+import org.apache.xpath.XPathAPI;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
