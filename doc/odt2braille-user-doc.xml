@@ -1,0 +1,1349 @@
+<!DOCTYPE article
+  PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+ <articleinfo>
+  <title lang="en">User Guide</title>
+  <title lang="nl">Gebruikershandleiding</title>
+  
+  <!--
+  <subtitle lang="en">for version 0.1.0</subtitle>
+  <subtitle lang="nl">voor versie 0.1.0</subtitle>
+  <authorgroup> 
+   <author>
+    <firstname>Bert</firstname>
+    <surname>Frees</surname>
+   </author>
+   <author>
+    <firstname>Christophe</firstname>
+    <surname>Strobbe</surname>
+   </author>
+   <othercredit class="translator">
+	<contrib>Vertaling in het Nederlands</contrib>
+    <firstname>Edwin</firstname>
+   </othercredit>
+  </authorgroup>
+  -->
+  
+  <copyright>
+   <year>2010</year>
+   <year>2011</year>
+   <holder>
+    <ulink url="http://www.docarch.be">DocArch</ulink>
+   </holder>
+  </copyright>
+  <legalnotice lang="en">
+   <para>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</para>
+   <para>This program is distributed in the hope that it will be useful, but <emphasis role="sc">without any warranty</emphasis>; without even the implied warranty of <emphasis role="sc">merchantability</emphasis> or <emphasis role="sc">fitness for a particular purpose</emphasis>. See the GNU Lesser General Public License for more details.</para>
+   <para>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <ulink url="http://www.gnu.org/licenses">http://www.gnu.org/licenses</ulink>.</para>
+  </legalnotice>
+ </articleinfo>
+ 
+ <section id="getting-started">
+  <title lang="en">Getting started</title>
+  <para lang="en">The instructions are written for OpenOffice.org but should also work for LibreOffice.</para>
+  <para lang="nl"></para> 
+  
+  <section id="installation">
+   <title lang="en">Installation</title>
+   <para lang="en">In order to install odt2braille, OpenOffice.org version 3.0 or later is required. You can find the latest version of OpenOffice.org at <ulink url="http://download.openoffice.org/other.html">http://download.openoffice.org/other.html</ulink>. If you don't have <emphasis>Java</emphasis> installed on your system (verify your Java version at <ulink url="http://www.java.com/en/download/installed.jsp">http://www.java.com/en/download/installed.jsp</ulink>), make sure you include the <emphasis>Java Runtime Environment (JRE)</emphasis> to the download. Java 1.6 is required. If you choose not to download OpenOffice.org with Java you can easily install Java afterwards. You can get the latest version from <ulink url="http://java.com/en/">http://java.com/en/</ulink>.</para>
+   <para lang="nl"></para>
+   <para lang="en">To add the odt2braille extension, launch OpenOffice.org and open <guimenuitem>Tools &gt; Extension Manager…</guimenuitem>. First remove any older versions of odt2braille. Then choose <emphasis>Add…</emphasis>, select the odt2brailleinstallation package and follow the steps. You can download the latest version from <ulink url="http://odt2braille.sourceforge.net/downloads.html">http://odt2braille.sourceforge.net/downloads.html</ulink>.</para>
+   <para lang="nl"></para>
+   <note>
+    <para lang="en">Make sure the installation package is an <emphasis>.oxt</emphasis> file. It might happen that Internet Explorer saves it as a <emphasis>.zip</emphasis> file. In this case, just rename the file back to <emphasis>.oxt</emphasis>.</para>
+    <para lang="nl"></para>
+   </note>
+   <para lang="en">It is strongly recommended that you also download and install the <emphasis>odt2braille fonts</emphasis>: <ulink url="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille6.ttf</ulink> for 6-dot Braille and <ulink url="http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille8.ttf">http://odt2braille.svn.sourceforge.net/viewvc/odt2braille/Odt2BrailleAddOn/fonts/odt2braille8.ttf</ulink> for 8-dot Braille.</para>
+   <para lang="nl"></para>
+   <note>
+    <para lang="en">Make sure you install the fonts <emphasis>after</emphasis> the plugin has been installed. Doing it the other way around may cause the Braille preview window to show a bunch of meaningless squares or periods instead of Braille symbols.</para>
+    <para lang="nl"></para>
+   </note>
+   <para lang="en">Finally, when everything is installed, restart OpenOffice.org and you're ready to go.</para>
+   <para lang="nl"></para>
+  </section>
+  
+  <section id="accessibility">
+   <title lang="en">OpenOffice.org and LibreOffice Accessibility</title>
+   <para lang="en">OpenOffice.org and LibreOffice are poorly accessible with traditional screen readers on Windows. Accessing these office suites with the newer screen reader NVDA (NonVisual Desktop Access <ulink url="http://www.nvda-project.org/">http://www.nvda-project.org/</ulink>) appears to work better. Mac OS users can access OpenOffice.org with VoiceOver (<ulink url="http://www.apple.com/accessibility/voiceover/">http://www.apple.com/accessibility/voiceover/</ulink>); Linux users can access itwith Orca (<ulink url="http://live.gnome.org/Orca">http://live.gnome.org/Orca</ulink>). (Some screen readers may provide good access to the user interface but not to document content, for example, the text alternative for an image.) However, access to OpenOffice.org or LibreOffice does not necessarily imply that the user interface of an extension is accessible in the same way. The odt2braille project would greatly appreciate any feedback about the accessibility of the extension (with information on which OpenOffice.org/LibreOffice version, which screen reader version, which operating system, etcetera you use the extension).</para>
+   <para lang="nl"></para>
+  </section>
+  
+  <section id="introduction">
+   <title lang="en">Introduction</title>
+   <para lang="en">This guide explains how to create a document in OpenOffice.org Writer and prepare it for Braille production. You can find more help on working with Writer at <ulink url="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Writer_Guide</ulink>.</para>
+   <para lang="nl"></para>
+   <para lang="en">After installing odt2braille, a whole new range of user preferences will become available. Because of the broad range of Braille formatting conventions in use worldwide, odt2braille provides a lot of flexibility. Users are able to adjust the Braille layout in detail, just like they can fully customize the print layout.</para>
+   <para lang="nl"></para>
+   <para lang="en">To make sure that non-technical users will not be overwhelmed with possibilities, they have the option to choose from a series of <emphasis>formal</emphasis> Braille rules, e.g. the <emphasis>BANA principles of print to Braille transcription</emphasis> (see <ulink url="http://www.brl.org/formats/">http://www.brl.org/formats/</ulink>). This will considerably limit their freedom, but it will also greatly simplify the production of valid and well-formatted Braille.</para>
+   <para lang="nl"></para>
+   <para lang="en">What follows next is a detailed overview of all possibilities odt2braille offers.</para>
+   <para lang="nl"></para>
+  </section>
+ </section>
+
+ <section id="authoring-braille">
+  <title lang="en">Authoring Braille</title>
+  
+  <section id="languages">
+   <title lang="en">Languages</title>
+
+   <section>   
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">OpenOffice.org allows you to write documents in various languages or mix multiple languages within the same document. You can set the language for the whole document, individual paragraphs, or even individual words and characters. The language tools can be found in <guimenuitem>Tools &gt; Languages</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Languages can be associated with <emphasis>Braille translation tables</emphasis> in <guimenuitem>File &gt; Braille Settings…</guimenuitem>. The translation table for the whole document can be set with the main language option on the <emphasis>General</emphasis> tab. A contraction level can also be chosen. If the document contains multiple languages, each additional language can be linked to a translation table and contraction level in the <emphasis>Languages</emphasis> tab.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>  
+      <para lang="en">Translation tables are available for all Western European languages, Modern Hebrew, some Asian languages and even some minority languages like Gaelic and Esperanto.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="paragraphs">
+   <title lang="en">Paragraphs</title>        
+
+   <section>
+    <title lang="en">OpenOffice.org</title>        
+    <itemizedlist>
+     <listitem>    
+      <para lang="en">In OpenOffice.org, all regular text between <emphasis>¶ markers</emphasis> is considered a paragraph (¶ markers can be made visible by selecting <guimenuitem>View &gt; Nonprinting Characters</guimenuitem>).</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Each paragraph has got a formatting <emphasis>style</emphasis>. Paragraph styles can be assigned and modified in <guimenuitem>Format &gt; Styles and Formatting (F11)</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">All paragraphs will be transcribed as Braille paragraphs, except</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>   
+        <para lang="en"><link linkend="headings">headings</link>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en"><link linkend="captions">captions</link>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">paragraphs inside a <link linkend="lists">list</link>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">inside a <link linkend="tables">table</link>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">inside a <link linkend="notes">note</link>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">or on the <link linkend="title-page">title page</link>.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+     </listitem> 
+    </itemizedlist>
+   </section>
+      
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">By default, paragraphs are rendered in <emphasis>indented paragraph style</emphasis> (first line cell 3, runovers cell 1 and not separated by blank lines.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Paragraph settings can be altered in <guimenuitem>File &gt; Braille Settings &gt; Paragraphs</guimenuitem>. You can link each used paragraph style with a different Braille formatting style.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Braille formatting settings for paragraphs include spacing, alignment and margins. You can control how many lines of a paragraph must be printed at least at the bottom of a page (<emphasis>Orphan control</emphasis>). Moreover, you can protect a paragraph from being split across multiple pages (<emphasis>Don't split</emphasis>), and you can keep a paragraph together with the first line of the next (<emphasis>Keep with next</emphasis>).</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">By default, empty paragraphs are dropped in the Braille edition. By checking the option <emphasis>Keep empty paragraphs</emphasis>, an empty paragraph is brailled as an empty line.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+     
+  <section id="headings">
+   <title lang="en">Headings</title>
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In order for a paragraph to be interpreted by odt2braille as a <emphasis>heading</emphasis>, following conditions must be true:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem> 
+        <para lang="en">An <emphasis>outline level</emphasis> has to be assigned to the text. This can be achieved in two ways:</para>
+        <para lang="nl"></para>
+        <itemizedlist>
+         <listitem>
+          <para lang="en">Outline levels can be permanently linked to paragraph styles in <guimenuitem>Tools &gt; Outline Numbering</guimenuitem>.</para>
+          <para lang="nl"></para>
+         </listitem>
+         <listitem>
+          <para lang="en">If no outline level is linked to the current paragraph style, a level can still be assigned to the text by setting <emphasis>Outline Level</emphasis> in <guimenuitem>Format &gt; Paragraph &gt; Outline &amp; Numbering</guimenuitem>.</para>
+          <para lang="nl"></para>
+         </listitem>
+        </itemizedlist>
+        <para lang="en">By default, the paragraph styles <emphasis>Heading 1</emphasis>, <emphasis>Heading 2</emphasis>, etc. have outline levels 1, 2, etc. The navigator <guimenuitem>View &gt; Navigator (F5)</guimenuitem> provides an overview of all headings in a document and the outline levels.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem> 
+        <para lang="en">In addition, a heading should not be placed inside a <link linkend="lists">list</link>, <link linkend="tables">table</link> or <link linkend="notes">note</link>.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+     </listitem>
+     <listitem>
+      <para lang="en">To enable automatic numbering or bulleting of headings, set <emphasis>Numbering Style</emphasis> (<guimenuitem>Format &gt; Paragraph &gt; Outline &amp; Numbering</guimenuitem>) to <emphasis>Outline Numbering</emphasis>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">The exact formatting of bullets and numbers can be determined in <guimenuitem>Tools - Outline Numbering</guimenuitem>. Alternatively, choose <guimenuitem>Format &gt; Bullets &amp; Numbering</guimenuitem> when a heading has the cursor.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+      
+   <section>
+    <title lang="en">Braille</title>  
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In Braille, headings are rendered as follows:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">Level 1 headings are centered and preceded and followed by a blank line.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Level 2 headings are centered as well but are only preceded by a blank line.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Level 3 headings begin in cell 5 (runovers too) and are preceded by a blank line.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Headings with an outline level greater than 3 begin in cell 1 (runovers too) and are preceded by a blank line.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+      <para lang="en">All these settings can be altered in <guimenuitem>File &gt; Braille Settings &gt; Headings</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">As with paragraphs, you can set spacing, alignment and margins, you can protect a heading from being split across multiple pages, and you can keep a heading together with the first line of the following heading or paragraph.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">In addition, you can make a heading start on a new page.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Numbers of headings are completely adopted in Braille.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Bullets inside headings are automatically removed.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Empty headings are automatically removed.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">All <link linkend="special-typeface">special typeface</link> in a heading is ignored.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Only headings inside the <emphasis>body</emphasis> of the document (not in the preliminary section) are included in the <link linkend="table-of-contents">table of contents</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Footnotes in headings: see <link linkend="notes">Notes</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">When a regular <link linkend="volume-management">volume</link> (not a preliminary or supplementary volume) doesn't start with a heading, odt2braille inserts a <emphasis>continuation heading</emphasis>: the closest preceding heading is repeated and suffixed with the string "<userinput>(Cont.)</userinput>". This continuation heading is included in the table of contents as well.</para>
+      <para lang="nl"></para>
+      <tip>
+       <para lang="en">Always start a volume with a heading.</para>
+       <para lang="nl"></para>
+      </tip>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+   
+  <section id="lists">
+   <title lang="en">Lists</title>
+    
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">Each paragraph with a <emphasis>Numbering Style</emphasis> <guimenuitem>Format &gt; Paragraph &gt; Outline &amp; Numbering</guimenuitem> that is not <emphasis>Outline Numbering</emphasis> or <emphasis>None</emphasis>, will be interpreted by odt2braille as an item of a list.</para>
+      <para lang="nl"></para>
+      </listitem>
+     <listitem>
+      <para lang="en">To produce a numbered or bulleted list in OpenOffice.org, either use the <emphasis>numbering</emphasis> and <emphasis>bullets</emphasis> icons, or use <emphasis>list styles</emphasis>.</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">The numbering and bullets icons can be found on the <emphasis>Formatting</emphasis> toolbar <guimenuitem>View &gt; Toolbars &gt; Formatting</guimenuitem> or the <emphasis>Bullets and Numbering</emphasis> toolbar <guimenuitem>View &gt; Toolbars &gt; Bullets and Numbering</guimenuitem>.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">List styles can be selected in <guimenuitem>Format &gt; Styles and Formatting &gt; List Styles</guimenuitem>. When creating a new list style, make sure the name is not of the form <keycap>L1</keycap> / <keycap>L2</keycap> / …</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+     </listitem>
+     <listitem>
+      <para lang="en">The <emphasis>level</emphasis> of a list item can be modified with keyboard shortcuts (<emphasis role="sc">tab</emphasis> to move down a level, <emphasis role="sc">shift</emphasis> + <emphasis role="sc">tab</emphasis> to move up a level) or with the <emphasis>Bullets and Numbering</emphasis> toolbar.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">The exact formatting of lists can be determined in <guimenuitem>Format &gt; Bullets and Numbering</guimenuitem>. Alternatively, if the list was created using list styles <guimenuitem>Format &gt; Styles and Formatting &gt; List Styles</guimenuitem>, right click on the list style and choose <emphasis>Modify</emphasis>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">All Braille formatting settings for lists can be altered in <guimenuitem>File &gt; Braille Settings &gt; Lists</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">By default, lists are brailled as follows:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">Level 1 list items begin in cell 1, runovers begin in cell 5.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Level 2 list items begin in cell 3, runovers in cell 7.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Level 3 list items begin in cell 5, runovers in cell 9.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">List items with an outline level greater than 3 begin in cell 7, runovers in cell 11.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+      <para lang="en">The entire list is preceded and following by a blank line.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Numbers of list items are completely adopted in Braille.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">The user can determine how bullets are brailled.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">List items or entire lists can be protected from being split across pages.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en"><link linkend="textboxes">Textboxes</link> and <link linkend="images">images</link> that are anchored to a list item are rendered only after completion of the entire list.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+   
+  <section id="tables">
+   <title lang="en">Tables</title>     
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In OpenOffice.org, tables are created with <guimenuitem>Table &gt; Insert &gt; Table</guimenuitem> or <guimenuitem>Insert &gt; Table</guimenuitem> or with the <emphasis>Table</emphasis> toolbar <guimenuitem>View &gt; Toolbars &gt; Table</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">The first row(s) of a table can be defined as <emphasis>column headings</emphasis> by checking the <emphasis>Headings</emphasis> box. Set multiple heading rows by checking <emphasis>Repeat headings</emphasis>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">To add a <link linkend="captions">caption</link> to the table, place the cursor inside the table and choose <guimenuitem>Insert &gt; Caption</guimenuitem>. In order for a table caption to be correctly linked to the table, it must be placed directly beneath the table and no other frame (i.e. <link linkend="textboxes">textbox</link> or <link linkend="images">image</link>) can be anchored to it.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In Braille, tables are by default rendered in <emphasis>stairstep format</emphasis>:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">Column 1 table cells begin in cell 1, runovers too.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Column 2 table cells begin in cell 3, runovers too.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">…</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Table cells in column 10 and beyond begin in cell 19.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+     </listitem>
+     <listitem>
+      <para lang="en">However, is it also possible to render tables in <emphasis>linear format</emphasis>. In this case, all cells in a table row are joined together. The user can choose the <emphasis>column delimiter</emphasis> symbol which separates the cells.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Table rows can be protected from being split across Braille pages.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">All table settings can be accessed in <guimenuitem>File &gt; Braille Settings &gt; Tables</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Only regular text is retained in a table cell, all other elements are dropped or transposed. If a table cell contains multiple paragraphs, these are first serialized.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Table lines are only shown in Braille if they are present in print. A table line is represented by a series of unspaced Braille dots 2356 (top table line) or 1245 (bottom table line), extended across the full width of the Braille page. A table inside a larger textbox is enclosed by full table lines (Braille dots 123456). If no table lines are shown in print, the table is preceded and/or followed by a blank line.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">If column headings are present, these table rows are separated from the table body by a series of unspaced Braille dots 25, extended across the full width of the Braille page.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">If a <link linkend="captions">caption</link> is correctly linked to the table, it is centered and placed directly below the top table line (or top blank line if the table line is absent). A blank line is inserted between the caption and the actual table content.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">All <link linkend="notes">footnotes</link> are collected beneath the table body, but above the bottom table line (or bottom blank line if the table line is absent). Footnotes in the table caption are placed directly below the caption.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Empty table cells are indicated with an ellipsis (Braille dots 5-5-5). This usage is explained on the <link linkend="transcribers-notes">transcriber's notes page</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">When a table contains other tables, <link linkend="lists">lists</link>, <link linkend="textboxes">textboxes</link> or <link linkend="images">images</link>, these elements are moved outside the table. Every transposition is indicated by a double dash (Braille dots 36-36-36-36) at the element's original location. An explaining <link linkend="transcribers-notes">transcriber's note</link> is inserted before the table. Only after completion of the entire table, all previously omitted material is rendered. Each element is preceded by another transcriber's note explaining it was moved from it's original location.</para>
+      <para lang="nl"></para>
+      <tip> 
+       <para lang="en">Do not place other tables, lists, textboxes or images inside a table.</para>
+       <para lang="nl"></para>
+      </tip>
+     </listitem>
+     <listitem>
+      <para lang="en">A merged table cell is processed as if its whole content were in the left- and uppermost 'sub'-cell. The other (empty) 'sub'-cells are not shown in Braille. This currently also applies to right-to-left writing systems such as Hebrew.</para>
+      <para lang="nl"></para>
+      <tip>
+       <para lang="en">Try to avoid merged cells.</para>
+       <para lang="nl"></para>
+      </tip>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="textboxes">
+   <title lang="en">Textboxes</title>
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>     
+     <listitem>
+      <para lang="en">In OpenOffice.org, textboxes can be produced by choosing <guimenuitem>Insert &gt; Frame</guimenuitem>. Options can be modified later in <guimenuitem>Format &gt; Frame/Object</guimenuitem>. On the <emphasis>Type</emphasis> tab, the anchor type can be selected. The anchor is the basis of the position and behavior of the textbox within a document. It makes the textbox move with the object it is anchored to. You can anchor frames as a character or to a page, paragraph, or character. In addition, if a textbox has been placed inside another textbox, it can be anchored to this outer frame. The anchor is symbolized by a gray marker, which is only visible if the textbox is selected.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">To add a <link linkend="captions">caption</link> to the textbox, place the cursor inside the textbox and choose <guimenuitem>Insert &gt; Caption</guimenuitem>. In order for a caption to be correctly linked to the textbox by odt2braille, one of the following must be true:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">The textbox is anchored to a caption.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">The paragraph immediately following the object the textbox is anchored to is a caption, and no other frame (i.e. textbox or <link linkend="images">image</link>) is anchored to it.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">The last paragraph of the textbox is a caption and no other frame is anchored to it.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+      <para lang="en">A caption that has been inserted through <guimenuitem>Insert &gt; Caption</guimenuitem> is automatically linked to the textbox.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">If textboxes are anchored as a character or to a paragraph or character, they are rendered in Braille after completion of the paragraph or heading that contains the anchor.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">If textboxes are anchored to another textbox, they are rendered inside this outer textbox, before any other material it contains.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Textboxes are omitted in Braille if they are anchored to a page.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Textboxes that are anchored to a <link linkend="lists">list item</link> are rendered only after completion of the entire list.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Textboxes that are anchored to a <link linkend="tables">table cell</link> are rendered only after completion of the entire table.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Textboxes that are anchored to a <link linkend="notes">note</link> are replaced by a double dash (Braille dots 36-36-36-36), indicating the omission.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Box lines are only shown in Braille if they are present in print. A box line is represented by a series of unspaced Braille dots 2356 (top table line) or 1245 (bottom table line), extended across the full width of the Braille page. If no box lines are shown in print, the textbox is preceded and/or followed by a blank line.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">If a <link linkend="captions">caption</link> is correctly linked to the textbox, it is centered and placed directly below the top box line (or top blank line if the box line is absent). A blank line is inserted between the caption and the actual content of the box.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">All material inside a textbox is retained in Braille. <link linkend="headings">Headings</link> are included in the <link linkend="table-of-contents">table of contents</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="images">
+   <title lang="en">Images</title>
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In OpenOffice.org, images can be inserted by choosing <guimenuitem>Insert &gt; Picture &gt; From File</guimenuitem>. Options can be modified later in <guimenuitem>Format &gt; Picture</guimenuitem>. Like <link linkend="textboxes">textboxes</link>, an image can be anchored as a character or to a page, paragraph, character, or frame.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">To add a <link linkend="captions">caption</link> to the image, select the image and choose <guimenuitem>Insert &gt; Caption</guimenuitem>. In order for a caption to be correctly linked to the image by odt2braille, one of the following must be true:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">The image is anchored to a caption (<emphasis>Anchored to paragraph, to character or as character</emphasis>).</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">The paragraph immediately following the object the image is anchored to is a caption, and no other frame (i.e. <link linkend="textboxes">textbox</link> or image) is anchored to it.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+      <para lang="en">A caption that has been inserted through <guimenuitem>Insert &gt; Caption</guimenuitem> is automatically linked to the image.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">For each image, a title and/or description can be provided in <guimenuitem>Format &gt; Object &gt; Description</guimenuitem>. Alternatively, the title can be set with the <emphasis>Alternative (Text only)</emphasis> field in <guimenuitem>Format &gt; Picture &gt; Options</guimenuitem>.</para>
+      <para lang="nl"></para>
+      <tip>
+       <para lang="en">The image description should be as brief and concise as possible.</para>
+      </tip>
+      <note>
+       <para lang="en">OpenOffice 3.2 and older versions have a bug that deletes an image’s text alternatives (Title and Description) if the anchor is modified or when a caption is added. To avoid this, the text alternatives should be added after modifying the anchor or after adding a caption.</para>
+      </note>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem> 
+      <para lang="en">In Braille, images are replaced by a <link linkend="transcribers-notes">transcriber's note</link>, which includes</para>
+      <para lang="nl"></para>
+      <orderedlist>
+       <listitem>
+        <para lang="en">The image <link linkend="captions">caption</link> (if one is correctly linked to the image).</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">A note saying that the image is not reproduced in Braille.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">The image title (if one is defined).</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">An alternative desciption (if one is defined).</para>
+        <para lang="nl"></para>
+       </listitem>
+      </orderedlist>
+     </listitem>
+     <listitem>
+      <para lang="en">If images are anchored as a character or to a paragraph or character, they are rendered in Braille after completion of the paragraph or heading that contains the anchor.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">If images are anchored to a <link linkend="textboxes">textbox</link>, they are rendered inside this textbox, before any other material it contains.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Images are omitted in Braille if they are anchored to a page.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Images that are anchored to a <link linkend="lists">list item</link> are rendered only after completion of the entire list.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Images that are anchored to a <link linkend="tables">table cell</link> are rendered only after completion of the entire table.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Images that are anchored to a <link linkend="notes">note</link> are replaced by a double dash (Braille dots 36-36-36-36), indicating the omission.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="captions">
+   <title lang="en">Captions</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">To add a caption to an object in OpenOffice.org, select this object and choose <guimenuitem>Insert &gt; Caption</guimenuitem>. odt2braille treats all text elements (with the exception of <link linkend="headings">headings</link>), with a paragraph style <guimenuitem>Format &gt; Styles and Formatting &gt; Paragraph Styles</guimenuitem> that is</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en"><emphasis>Caption</emphasis>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en"><emphasis>Table</emphasis>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en"><emphasis>Drawing</emphasis>,</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en"><emphasis>Illustration</emphasis> or</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en"><emphasis>Text</emphasis>,</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+      <para lang="en">as captions. You can also add your own caption style by right-clicking on one of the above styles and choosing <emphasis>New</emphasis>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">A caption is only rendered in Braille if odt2braille links the caption to an object. Captions can be linked to <link linkend="tables">tables</link>, <link linkend="textboxes">textboxes</link> or <link linkend="images">images</link>. For more details on the linking of captions to objects, see the appropriate sections.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Table captions and textbox sections are centered and placed directly below the top table/textbox line (or top blank line if the table/textbox line is absent). A blank line is inserted between the caption and the actual table/textbox content. Image captions are contained in the transcriber's note that represents the image.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Footnotes in captions: see <link linkend="notes">Notes</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="notes">
+   <title lang="en">Notes</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">To insert a note in an OpenOffice.org document, put the cursor where you want the note reference marker to appear, then select <guimenuitem>Insert &gt; Footnote/Endnote</guimenuitem>. Footnotes are displayed at the bottom of the page containing their corresponding reference. By default, endnotes are collected at the end of the entire document. To collect endnotes at the end of the OpenOffice.org <emphasis>section</emphasis> that contains the note reference, choose <guimenuitem>Format &gt; Sections</guimenuitem>, select a section, choose <guimenuitem>Options &gt; Footnotes/Endnotes</guimenuitem> and check the option <emphasis>Collect at end of section</emphasis>. Sections can be inserted by choosing <guimenuitem>Insert &gt; Section</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+     <listitem>
+      <para lang="en">In Braille, note references are preceded by the unspaced <emphasis>reference indicator</emphasis> (Braille dots 35-35) and a number indicator (in case of a number) or a letter indicator (in case of a letter). References are separated from surrounding text by at least one blank cell.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Footnotes and endnotes are always preceded by their corresponding reference. No blank lines are left before, after or between notes.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Only regular text is retained inside a note, all other elements are dropped. If the note contains multiple paragraphs, these are first serialized. Every omission of an element is indicated by a double dash (Braille dots 36-36-36-36) at the element's original location.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Footnotes begin in cell 7, runovers begin in cell 5. Footnotes in <link linkend="paragraphs">paragraphs</link>, <link linkend="headings">headings</link>, <link linkend="captions">captions</link> and <link linkend="lists">list items</link> are rendered immediately below the paragraph, heading, caption or list item. Footnotes in <link linkend="tables">tables</link> are are collected beneath the table body, but above the bottom table line (or bottom blank line if the table line is absent).</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">Endnotes are collected in <emphasis>note sections</emphasis>. Each note section begins on a new page. The fully capitalized heading ("<userinput>NOTES</userinput>") is centered at the top of the page and followed by a blank line. This heading is not included in the <link linkend="table-of-contents">table of contents</link>. Then the endnotes are listed, ordered by their appearance in print. Each endnote begins in cell 1, runovers begin in cell 3. When the note section is complete, subsequent text is resumed on a new page. Note sections can appear at various places in the Braille document:</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+       <listitem>
+        <para lang="en">If an endnote reference is contained in an OpenOffice.org section that has the <emphasis>Collect at end of section</emphasis> option checked, the note is brailled accordingly at the end of that section.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">Else, if an endnote reference is placed on the <link linkend="preliminary-pages">preliminary pages</link>, the corresponding note is rendered at the end of the preliminary section.</para>
+        <para lang="nl"></para>
+       </listitem>
+       <listitem>
+        <para lang="en">All remaining endnotes of a <link linkend="volume-management">volume</link> are collected at the very end of that volume.</para>
+        <para lang="nl"></para>
+       </listitem>
+      </itemizedlist>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="special-typeface">
+   <title lang="en">Special Typeface</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">In OpenOffice.org, you can apply many formats to characters using the <guimenuitem>Format &gt; Character…</guimenuitem> window and the buttons on the <emphasis>Formatting</emphasis> toolbar (<guimenuitem>View &gt; Toolbars &gt; Formatting</guimenuitem>). Text can also be formatted by applying a character style (<guimenuitem>Format &gt; Styles and Formatting &gt; Character Styles</guimenuitem>).</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The relevant options for odt2braille are <emphasis>Bold</emphasis>, <emphasis>Italic</emphasis>, <emphasis>Underline</emphasis> and <emphasis>(Small) Capitals</emphasis>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">Braille formatting settings for characters can be altered in <guimenuitem>File &gt; Braille Settings &gt; Special Typeface</guimenuitem>. The user can link each used character style with a different Braille formatting style. Bold, Italic, Underline and Capitals can be turned on or off in Braille, irrespective of how the text is actually formatted in print. By default, the print version in followed.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">In English Braille, a single italic word is prefixed by the unspaced <emphasis>italic sign</emphasis> (Braille dots 46). If more than three consecutive words are italicized, the first word is preceded by the <emphasis>double italic sign</emphasis> (Braille dots 46-46), and the last word by the single italic sign.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">A single bold word is prefixed by the unspaced <emphasis>bold sign</emphasis> (Braille dots 456). If more than three consecutive words are boldfaced, the first word is preceded by the <emphasis>double bold sign</emphasis> (Braille dots 456-456), and the last word by the single bold sign.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Other special typefaces like <emphasis>underline</emphasis>, <emphasis>small caps</emphasis>, etc. are not indicated in English Braille.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">All special typeface in <link linkend="headings">headings</link> is ignored in the Braille edition.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">In other <link linkend="languages">languages</link>, other rules for indicating special typeface might apply.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="page-numbering">
+   <title lang="en">Page Numbering</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">To add a page number, put the cursor where you want the number to appear, then select <guimenuitem>Insert &gt; Fields &gt; Page Number</guimenuitem>. If you want to number all your pages automatically, insert a page number in the page header <guimenuitem>Insert &gt; Header &gt; Default</guimenuitem> or page footer <guimenuitem>Insert &gt; Footer &gt; Default</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">odt2braille will only proces the <emphasis>first</emphasis> page number in a header or footer (in that order).</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">All pages of text in the Braille edition carry consecutive Braille page numbers starting with arabic 1 in the first volume (or a higher value specified by the option <emphasis>Start numbering at</emphasis>). In subsequent <link linkend="volume-management">volumes</link>, pages of text are numbered consecutively from volume to volume. Preliminary page numbers are either prefixed by the unspaced letter <emphasis>p</emphasis>, or rendered in Roman numerals, the choice is up to the user. Each preliminary section is numbered individually, starting with <emphasis>p1</emphasis> or <emphasis>i</emphasis>. By default, the Braille page number is displayed in the bottom right corner of the page, with no fewer than three blank cells left between the text and the number. The user can also decide to place page numbers at the top, or not display them at all.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">If the source document contains page numbers, they can be included in the Braille version as well. By default, print page numbers are displayed in the top right corner of each Braille page (except on <link linkend="preliminary-pages">preliminary pages</link>), again with no fewer than three blank cells left between the text and the number. The number can also be placed at the bottom. When print page numbers and Braille page numbers are both placed at the top or bottom, they are rendered next to each other, print number first, with a space in between.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">If material on a print page cannot be contained on a single Braille page and must be continued on one or more pages, the same print page number is placed in the top right corner of each of these pages. The number is prefixed by the unspaced letter <emphasis>a</emphasis> (brailled without the letter indicator) for the first continued page, the letter <emphasis>b</emphasis> for the second, etc.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Optionally, the user can decide to display the <emphasis>range</emphasis> of print pages contained in a Braille page (instead of only the page number of the <emphasis>first</emphasis> print page). If the first page in this range is a continued print page, it is prefixed with a letter as usual.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">When a new print page begins <emphasis>within</emphasis> a Braille page, a <emphasis>page change indicator</emphasis>, a line of unspaced Braille dots 36, can be produced, with or without the new print page number placed on the same line at the right margin. No space is left between this indicator and the first symbol of the page number.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">By default, empty pages are completely ignored. If this setting is disabled, a <emphasis>combined</emphasis> print page number will be displayed whenever empty pages are encountered: the number of the first empty page is combined with that of the page on which text reappears, e.g. 5-7. If lettered continuation pages are required, they carry only the number of the page on which text reappears.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Another option is to treat <emphasis>unnumbered</emphasis> print pages as if they were a part of the preceding page (as if their was no page break).</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">All page number settings can be found in <guimenuitem>File &gt; Braille Settings &gt; Page Numbers</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="preliminary-pages">
+   <title lang="en">Preliminary Pages</title>  
+   <para lang="en">Preliminary pages are those pages that precede the actual text of the document. These can include for example a title page, a special symbols page, a transcriber's note page, cover material, about the author, a dedication, acknowledgements, an abstract, a table of contents, author's notes, a preface, a foreword, an introduction or a prologue, etc.</para>
+   <para lang="nl"></para>
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">Which content is included in the preliminary section and the order of items is totally up to the transcriber. All preliminary content must be placed inside a level 1 section (not nested in another section) named <userinput>PreliminaryPages</userinput>. In OpenOffice.org, sections can be inserted by choosing <guimenuitem>Insert &gt; Section</guimenuitem>. An overview of all sections the document contains and there level is provided by the navigator <guimenuitem>View &gt; Navigator (F5)</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">If a preliminary section has been defined, the transcriber has the option to include a list of special symbols, a transcriber's note page and a table of contents. These options can be found on the <emphasis>General</emphasis>, <emphasis>Table of Contents</emphasis> and <emphasis>Special Symbols</emphasis> tabs in <guimenuitem>File &gt; Braille Settings…</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Another possibility is to create a preliminary volume. This option should be checked if more than 80-90 Braille pages are required for the preliminary pages in the first volume to include all items (see <link linkend="volume-management">Volume Management</link>).</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">All content before the <userinput>PreliminaryPages</userinput> section will be ignored.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">If a preliminary section has been defined in OpenOffice.org, every <link linkend="volume-management">Braille volume</link> or supplement will be preceded by a number of preliminary pages.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Some pages (i.e. the <link linkend="title-page">title page</link>, the <link linkend="special-symbols-list">special symbols page</link>, the <link linkend="transcribers-notes">transcriber's notes page</link> and the <link linkend="table-of-contents">table of contents</link>) are repeated in every Braille volume. However, their content is different for each volume. All other pages only appear in the <emphasis>extended</emphasis> preliminary section. This section is either included in the <emphasis>preliminary volume</emphasis> (if present) or in volume 1.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The print order of items is completely adapted in Braille. The special symbols page, transcriber's notes page and table of contents are placed (in that order) at the very end of the preliminary pages, before any possible <link linkend="notes">note sections</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">Preliminary pages are distinguished from normal pages by a different <link linkend="page-numbering">page numbering</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The actual volume body that follows the preliminary section always starts on a new right-hand Braille page.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="volume-management">
+   <title lang="en">Volume Management</title>
+   <para lang="en">Often, because documents are too long to be bound in one single Braille book, they are arranged in <emphasis>volumes</emphasis>.</para>
+   <para lang="nl"></para>
+   <tip>
+    <para lang="en">Typically a volume should have around 80-90 one-sided pages (the page count includes all pages, including the preliminary pages). Ideally, the next volume starts at a logical place, such as the beginning of a new chapter. As a guideline, there should not be a difference of more than 15 pages between two volumes.</para>
+    <para lang="nl"></para>
+   </tip>
+   <para lang="en">Also, appendixes, glossaries, indexes, <link linkend="bibliographies">bibliographies</link>etc. are often more useful when bound in separate <emphasis>supplementary</emphasis> volumes (<emphasis>supplements</emphasis>). Finally, the <link linkend="preliminary-pages">extended preliminary pages</link> (i.e. with all preliminary content included) are sometimes bound in a separate <emphasis>preliminary</emphasis> volume, when the first volume would otherwise become to long.</para>
+   <para lang="nl"></para>
+   
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">OpenOffice.org, by default, puts the entire document in one single volume.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">To create a volume manually, insert a level 1 section <guimenuitem>Insert &gt; Section</guimenuitem> and name it <userinput>Volume1</userinput>, <userinput>Volume2</userinput>, etc. It is important to arrange volumes in this order, otherwise they will not be accepted.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">A supplementary volume can be created by inserting a section named <userinput>Supplement1</userinput>, <userinput>Supplement2</userinput>, etc. Make sure you put supplementy volumes after the last regular volume and in the right order, otherwise they will not be accepted.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">If no regular volumes have been defined manually, everything between the <link linkend="preliminary-pages">preliminary pages</link> (or beginning of the document) and supplement 1 (or end of the document) is equal to volume 1.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">If a preliminary section is present, a preliminary volume can be created by checking the Create preliminary volume option in <guimenuitem>File &gt; Braille Settings &gt; General</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">In Braille, every volume or supplement has its own preliminary section (if enabled by the user). Both the preliminary section and the volume body start on a new right-hand Braille page. If a preliminary volume is created, it contains the <link linkend="preliminary-pages">extended preliminary pages</link>, but no actual volume body.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">When a regular volume doesn't start with a heading, odt2braille automatically inserts a <link linkend="headings">continuation heading</link>: the closest preceding heading is repeated and suffixed with the string "<userinput>(Cont.)</userinput>".</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="title-page">
+   <title lang="en">Title Page</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+	  <para lang="en">To create a title page, insert a section named <userinput>TitlePage</userinput> <guimenuitem>Insert &gt; Section</guimenuitem> (this does not have to be a level 1 section). The title page can be placed anywhere, but it is recommended to put it at the beginning of the document. If a <link linkend="preliminary-pages">preliminary section</link> is present, place the title page inside of it, so that it is repeated in each volume.</para>
+      <para lang="nl"></para>
+	  <tip>
+	   <para lang="en">The title page should be the very first page.</para>
+	  </tip>
+	 </listitem>
+	 <listitem>
+      <para lang="en">If a title page has been defined, the transcriber has the option to include a transcription information block. Furthermore, if the title page is a preliminary page, a volume information block can be included as well. These options can be found in <guimenuitem>File &gt; Braille Settings &gt; General</guimenuitem>. The Braille formatting of the blocks can be specified by the <emphasis>Paragraph style</emphasis> fields. The name of the transcriber can be set with the <emphasis>Transcriber</emphasis> field.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">The print order of items on the title page is adopted in Braille. The volume information block and transcription information blocks are placed (in that order) at the very end of the title page.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+	  <para lang="en">The volume information block contains the volume identification, the total number of volumes, the page range, etc.</para>
+      <para lang="nl"></para>
+      <example>
+       <title lang="en">Example 1</title>
+       <title lang="nl">Voorbeeld 1</title>
+	   <para><emphasis>In 9 volumes and 2 supplements</emphasis></para>
+       <para><emphasis>Volume 2</emphasis></para>
+       <para><emphasis>Braille pages p1-p16 and 1-72</emphasis></para>
+       <para><emphasis>Print pages 46-79</emphasis></para>
+	  </example>
+	  <example>
+	   <title lang="en">Example 2</title>
+       <title lang="nl">Voorbeeld 2</title>
+	   <para><emphasis>In 1 preliminary and 5 volumes</emphasis></para>
+	   <para><emphasis>Preliminary volume</emphasis></para>
+	   <para><emphasis>Braille pages p1-p81</emphasis></para>
+	  </example>
+	 </listitem>
+     <listitem>
+	  <para lang="en">The transcription information block contains the transcriber's name, the year of Braille transcription, etc.</para>
+	  <para lang="nl"></para>
+	  <example>
+	   <title lang="en">Example</title>
+       <title lang="nl">Voorbeeld</title>
+	   <para><emphasis>Transcribed 2010 by Bert Frees with odt2braille</emphasis></para>
+	  </example>
+	 </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="special-symbols-list">
+   <title lang="en">List of Special Symbols</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">If a preliminary section has been defined, the transcriber has the option to include a list of special symbols in <guimenuitem>File &gt; Braille Settings &gt; Special Symbols</guimenuitem>. He or she can also decide which symbols will be shown, in which order, under which conditions (always, only in the first volume, or only when actually used in the current volume), and how they are described. The list heading can be modified as well. By default, it is set to "<userinput>SPECIAL SYMBOLS USED IN THIS VOLUME</userinput>".</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">A special symbols list is included in the <link linkend="preliminary-pages">preliminary pages</link> of each <link linkend="volume-management">volume</link>. The actual content varies between volumes. The special symbols list begins on a new Braille page. The heading is centered at the top of the page. It is not included in the <link linkend="table-of-contents">table of contents</link>.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+	  <para lang="en">After a blank line, the list follows. Each Braille symbol begins in cell 1 and is followed, after one blank cell, by its identifying dot numbers, enclosed in parentheses, and its description. Runovers begin in cell 3. These are the symbols that are listed by default:</para>
+      <para lang="nl"></para>
+	  <itemizedlist>
+	   <listitem>
+        <para lang="en"><userinput>⠰ (56) Letter indicator</userinput>,</para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠼ (3456) Number indicator</userinput>,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠔⠔ (35, 35) Note reference indicator</userinput>,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠠⠄ (6, 3) Transcriber's note indicator</userinput>,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠨ (46) Italic indicator</userinput>,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠸ (456) Boldface indicator</userinput>,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠤⠤⠤⠤ (36, 36, 36, 36) Double dash indicating an omission</userinput>, and</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en"><userinput>⠐⠐⠐ (5, 5, 5) Ellipsis indicating empty table cell</userinput>.</para>
+        <para lang="nl"></para>
+       </listitem>
+	  </itemizedlist>
+	  <para lang="en">The exact Braille dots of some symbols can differ between <link linkend="languages">languages</link>.</para>
+      <para lang="nl"></para>
+	 </listitem>
+	 <listitem>
+      <para lang="en">If no symbols are listed, the special symbols list is not displayed.</para>
+      <para lang="nl"></para>
+     </listitem>  
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="transcribers-notes">
+   <title lang="en">Transcriber's Notes</title>  
+   <para lang="en">A transcriber's note is a note that is added in the Braille edition by the transcriber but not shown in the print text. Some notes are inserted between other items in the document body, some notes are displayed on a separate <emphasis>transcriber's note page</emphasis> in the preliminary section.</para>
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">Transcriber's notes are automatically inserted by odt2braille. A user can only control whether or not a transcriber's note page is included in the preliminary pages, through the option Include transcriber's note page in <guimenuitem>File &gt; Braille Settings &gt; General</guimenuitem>. The transcriber's note page heading can be modified in the field below. By default, it is set to "<userinput>TRANSCRIBER'S NOTES</userinput>".</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">Transcriber's notes that appear throughout the document are brailled in <emphasis>paragraph form</emphasis>. A note consists of one or more <emphasis>note paragraphs</emphasis>. Each note paragraph begins in cell 7, runovers begin in cell 5. No blank lines are left before, after or between note paragraphs. The complete note is preceded and followed by the unspaced <emphasis>transcriber's note indicator</emphasis> (Braille dots 6-3).</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The transcriber's note page begins on a new Braille page. The heading is centered at the top of the page. It is not included in the <link linkend="table-of-contents">table of contents</link>. After a blank line the notes are listed. Notes are brailled as indented <link linkend="paragraphs">paragraphs</link> (first line cell 3, runovers cell 1, no blank lines between notes). No <emphasis>transcriber's note indicators</emphasis> are used. If the transcriber's note page doesn't contain any notes, it is not displayed.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="table-of-contents">
+   <title lang="en">Table of Contents</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+	  <para lang="en">In OpenOffice, a table of contents can be added to the document by selecting <guimenuitem>Insert &gt; Indexes and Tables &gt; Indexes and Tables</guimenuitem> and choosing <emphasis>Table of Contents</emphasis> for <emphasis>Type</emphasis>. However, these tables are not adopted in the Braille version. Instead, odt2braille generates its own table of contents, and the user is given the option to include this table of contents in the preliminary pages of each volume. This option is found in <guimenuitem>File &gt; Braille Settings &gt; Table of Contents</guimenuitem>. The table heading can be modified in the field below. By default, it is set to "<userinput>CONTENTS</userinput>".</para>
+      <para lang="nl"></para>
+	  <tip>
+	   <para lang="en">If a table of contents is present in print, include it in the Braille version also.</para>
+	  </tip>
+	 </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">The table of contents is rendered at the very end of the <link linkend="preliminary-pages">preliminary section</link>, before any possible <link linkend="notes">note sections</link>. The table of contents begins on a new Braille page. The heading is centered at the top of the page and followed by a blank line.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The actual content varies between volumes. On the <emphasis>extended</emphasis> preliminary pages (either included in the <link linkend="volume-management">preliminary volume</link>, if present, or in volume 1), the table of contents lists all headings in the entire document. Only headings in the <emphasis>body</emphasis> of the document are included. In all other regular volumes, the table of contents is limited to headings in that particular volume. No table of contents is included in supplementary volumes.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+	  <para lang="en">Each table entry is composed of</para>
+      <para lang="nl"></para>
+      <itemizedlist>
+	   <listitem>
+        <para lang="en">the heading,</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en">[the <link linkend="page-numbering">print page number</link>, prefixed with the appropriate letter if the heading begins on a continued page], and</para>
+        <para lang="nl"></para>
+       </listitem>
+	   <listitem>
+        <para lang="en">[the Braille page number]</para>
+        <para lang="nl"></para>
+       </listitem>
+	  </itemizedlist>
+      <para lang="en">Print and Braille page numbers in the table of contents can be enabled or disabled.</para>
+      <para lang="nl"></para>
+	 </listitem>
+     <listitem>
+      <para lang="en">By default, level 1 headings begin in cell 1, runovers in cell 5. Level 2 headings begin in cell 3, runovers in cell 7. Level 3 headings begin in cell 5, runovers in cell 9. Headings with an outline level greater than 3 begin in cell 7, runovers in cell 11. All these settings can be altered in <guimenuitem>File &gt; Braille Settings &gt; Table of Contents</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+     <listitem>
+      <para lang="en">The print and Braille page numbers are placed to end at the right margin of the Braille line on which the heading ends. If space allows it, a sequence of unspaced <emphasis>guide dots</emphasis>, preceded and followed by a blank cell, is inserted between the heading and the page numbers. The Braille symbol for these guide dots can be specified by the user, the default value is Braille dots 5.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="bibliographies">
+   <title lang="en">Bibliographies</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">In OpenOffice.org, references to source material can be added through <guimenuitem>Insert &gt; Indexes and Tables &gt; Bibliography Entry</guimenuitem>. Although you can define sources within the document itself, creating and keeping a <emphasis>bibliographic database</emphasis> allows reuse in other documents and saves a lot of time. Select <guimenuitem>Tools &gt; Bibliography Database</guimenuitem> to show this database.</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+	  <para lang="en">To generate a bibliography that lists all referenced sources, put the cursor where you want this bibliography to appear, then select <guimenuitem>Insert &gt; Indexes and Tables &gt; Indexes and Tables</guimenuitem> and choose <emphasis>Bibliography</emphasis> for <emphasis>Type</emphasis>. The bibliography heading can be modified in the <emphasis>Title</emphasis> field.</para>
+      <para lang="nl"></para>
+	  <tip>
+	   <para lang="en">Bibliographies are often more useful when bound in a supplementary volume.</para>
+	  </tip>
+	 </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">In Braille, references to bibliography entries are rendered exactly as in print (the short name or a number enclosed by square brackets).</para>
+      <para lang="nl"></para>
+     </listitem>
+	 <listitem>
+      <para lang="en">The bibliography begins on a new Braille page. On the first line, the heading is centered and followed by a blank line. It is not included in the <link linkend="table-of-contents">table of contents</link>. The actual bibliography entries are brailled like any other <link linkend="lists">list</link>. Each item begins in cell 1, runovers in cell 3. The entries are translated literally, including <link linkend="special-typeface">special typeface</link>. After completion of the bibliography, subsequent text is resumed on a new page.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="mathematics">
+   <title lang="en">Mathematics</title>  
+
+   <section>
+    <title lang="en">OpenOffice.org</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">To insert a mathematical expression in OpenOffice.org, go to <guimenuitem>Insert &gt; Object &gt; Formula</guimenuitem>. The equation editor will open at the bottom of the screen, and the floating Selection window appears. The equation editor uses a markup language to represent formulas. For more information on inserting math, read the math guide at <ulink url="http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Math_Guide">http://wiki.services.openoffice.org/wiki/Documentation/OOo3_User_Guides/Math_Guide</ulink>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>    
+
+   <section>
+    <title lang="en">Braille</title>
+    <itemizedlist>
+	 <listitem>
+      <para lang="en">Mathematical equations are conveyed to Braille through the use of specialized math Braille codes. Supported math codes are <emphasis>Nemeth</emphasis> (generally accepted in the United States), <emphasis>Marburg</emphasis> (Germany), <emphasis>UK Maths</emphasis> (United Kingdom) and <emphasis>Woluwe</emphasis> (Flanders, Belgium). You can select which code you want to use in <guimenuitem>File &gt; Braille Settings &gt; Mathematics</guimenuitem>.</para>
+      <para lang="nl"></para>
+     </listitem>
+    </itemizedlist>
+   </section>
+  </section>
+
+  <section id="literal-braille">
+   <title lang="en">Inserting Literal Braille</title>  
+   <itemizedlist>
+   
+    <listitem>
+	 <para lang="en">To insert Braille characters in the document that will be rendered identically in the Braille edition and the print edition, the transcriber has two possibilities.</para>
+     <para lang="nl"></para>
+     <itemizedlist>
+	  <listitem>
+        <para lang="en">In the <emphasis>dot pattern entry mode</emphasis>, Braille strings are specified by their dot patterns, e.g. 12-1235-1-24-123-123-15 (<emphasis>"braille"</emphasis> in uncontracted English Braille).</para>
+        <para lang="nl"></para>
+      </listitem>
+	  <listitem>
+	   <para lang="en">In the <emphasis>six-key entry mode</emphasis>, users can insert characters with the keys <keycap>S</keycap> (dot 3), <keycap>D</keycap> (dot 2), <keycap>F</keycap> (dot 1), <keycap>J</keycap> (dot 4), <keycap>K</keycap> (dot 5) and <keycap>L</keycap> (dot 6), as if they were using a mechanical embosser such as the Perkins Brailler. So to insert <emphasis>"braille"</emphasis>, type <keycombo action='simul'><keycap>D</keycap><keycap>F</keycap></keycombo>, <keycombo action='simul'><keycap>S</keycap><keycap>D</keycap><keycap>F</keycap><keycap>K</keycap></keycombo>, <keycap>F</keycap>, <keycombo action='simul'><keycap>D</keycap><keycap>J</keycap></keycombo>, <keycombo action='simul'><keycap>S</keycap><keycap>D</keycap><keycap>F</keycap></keycombo>, <keycombo action='simul'><keycap>S</keycap><keycap>D</keycap><keycap>F</keycap></keycombo>, <keycombo action='simul'><keycap>F</keycap><keycap>K</keycap></keycombo>. Spaces are entered with the spacebar as usual and the <keycap>enter</keycap> / <keycap>return</keycap> key generates a hard return without starting a new paragraph.</para>
+       <para lang="nl"></para>
+       <note> 
+        <para lang="en">Not all keyboards support this feature!</para>
+       </note>
+      </listitem>
+     </itemizedlist>
+     <para lang="en">These modes can be activated in the menu <guimenuitem>Insert &gt; Braille Characters</guimenuitem>.</para>
+     <para lang="nl"></para>
+	</listitem>
+   </itemizedlist>
+  </section>
+
+  <section id="braille-only-material">
+   <title lang="en">Braille-only Material</title>  
+   <itemizedlist>
+	<listitem>
+	 <para lang="en">Text can be formatted such that it will only be rendered in the Braille edition of the document, but not in the print edition.</para>
+     <para lang="nl"></para>
+	 <itemizedlist>
+	  <listitem>
+       <para lang="en">To insert non-printing text, go to <guimenuitem>Insert &gt; Fields &gt; Other… &gt; Functions &gt; Hidden text</guimenuitem>.</para>
+       <para lang="nl"></para>
+      </listitem>
+	  <listitem>
+       <para lang="en">To insert a non-printing paragraph, go to <guimenuitem>Insert &gt; Fields &gt; Other… &gt; Functions &gt; Hidden Paragraph</guimenuitem>. In the <emphasis>Condition</emphasis> field, enter <userinput>TRUE</userinput>.</para>
+       <para lang="nl"></para>
+      </listitem>
+	 </itemizedlist>
+     <para lang="en">You can highlight these fields by checking <guimenuitem>View &gt; Field Shadings</guimenuitem>.</para>
+     <para lang="nl"></para>
+	</listitem>     
+   </itemizedlist>
+  </section>
+
+  <section id="hyphenation">
+   <title lang="en">Hyphenation</title>  
+   <itemizedlist>
+	<listitem>
+     <para lang="en">The user can choose to split words at the end of Braille lines if they are too long. This will improve the layout of paragraphs. To enable hyphenation, check the corresponding box in <guimenuitem>File &gt; Braille Settings… &gt; General</guimenuitem>.</para>
+     <para lang="nl"></para>
+    </listitem>
+	<listitem>
+	 <para lang="en">For most languages, odt2braille has a hyphenation dictionary for automatic breaking of words. In addition, a word at the end of a Braille line is always split when it contains a <emphasis>hard hyphen</emphasis>, i.e. a plain minus sign ( - ). This allows for manual hyphenation. A more elegant solution is to use <emphasis>soft hyphens</emphasis>, which are not brailled when the word appears in the middle of a Braille line. To insert a soft hyphen, go to <guimenuitem>Insert &gt; Formatting Mark &gt; Optional Hyphen</guimenuitem>. They are only visible in OpenOffice.org when <guimenuitem>View &gt; Field Shadings</guimenuitem> is checked.</para>
+     <para lang="nl"></para>
+	 <note>
+	  <para lang="en">Soft hyphens can only be used in Windows.</para>
+	 </note>
+	</listitem>
+   </itemizedlist>
+  </section>
+
+  <section id="templates">
+   <title lang="en">Templates</title>  
+   <itemizedlist>
+	<listitem>
+     <para lang="en">When you use the same Braille settings and layout frequently, it may be a good idea to store these settings and layout in a <emphasis>template</emphasis>. Simply save your document as <emphasis>ODF Text Document Template (.ott)</emphasis>.</para>
+     <para lang="nl"></para>
+    </listitem>
+	<listitem>
+     <para lang="en">odt2braille also includes some predefined, real handy Braille templates. One for a simple Braille document and one for a more advanced, multi-volume Braille document. Both templates contain a preliminary section with a titlepage. You can find them under <guimenuitem>File &gt; New &gt; Templates and Documents &gt; Templates &gt; Braille Documents</guimenuitem>.</para>
+     <para lang="nl"></para>
+    </listitem>
+   </itemizedlist>
+  </section>
+ </section>
+  
+ <section id="embossing">
+  <title lang="en">Embossing Braille</title>
+  <para lang="en">To print a document on a Braille embosser, call the <emphasis>Emboss…</emphasis> window from the <emphasis>File</emphasis> menu, right beneath <emphasis>Print…</emphasis>.</para>
+  <para lang="nl"></para>
+  <itemizedlist>
+   <listitem>
+    <para lang="en">Select your embosser from the dropdown list. If your embosser is not supported, please contact us and we will add it if possible. You can request features at <ulink url="http://sourceforge.net/tracker/?func=add&amp;group_id=330251&amp;atid=1385420">http://sourceforge.net/tracker/?func=add&amp;group_id=330251&amp;atid=1385420</ulink>.</para>
+    <para lang="nl"></para>
+   </listitem>
+   <listitem>
+    <para lang="en">Check that your embosser is powered on and loaded with paper. Specify the paper size in the dialog. If the paper is not in the list, define a "<emphasis>Custom</emphasis>" paper size.</para>
+    <para lang="nl"></para>
+   </listitem>
+   <listitem>
+    <para lang="en">Depending on the type of embosser, you can choose between single- or double-sided printing, and between a 6- or 8-dot matrix. In addition, some embossers have special features like <emphasis>Character set selection</emphasis>, <emphasis>Magazine style</emphasis> and <emphasis>Z-folding</emphasis>.</para>
+    <para lang="nl"></para>
+   </listitem>
+   <listitem>
+    <para lang="en">Finally, select the number of characters per line, the number of lines per page and the margins.</para>
+    <para lang="nl"></para>
+   </listitem>
+  </itemizedlist>
+  <para lang="en">Pressing the <emphasis>Emboss</emphasis> button will trigger the transcription process. When the document is succesfully translated, you are given the option to "<emphasis>Preview</emphasis>" the Braille output before printing, or go on and print the document immediately.</para>
+  <para lang="nl"></para> 
+ </section>
+</article>
