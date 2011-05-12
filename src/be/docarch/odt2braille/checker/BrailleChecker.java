@@ -50,8 +50,6 @@ public class BrailleChecker implements ExternalChecker {
             earlXSL = tFactory.newTransformer(
                     new StreamSource(getClass().getResource(Constants.XSLT_PATH + "earl.xsl").toString()));
 
-            earlXSL.setParameter("paramNoPreliminarySection", "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoPreliminarySection.name());
-            earlXSL.setParameter("paramNoTitlePage",          "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoTitlePage.name());
             earlXSL.setParameter("paramNoBrailleToc",         "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoBrailleToc.name());
             earlXSL.setParameter("paramNotInBrailleVolume",   "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NotInBrailleVolume.name());
             earlXSL.setParameter("paramOmittedInBraille",     "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_OmittedInBraille.name());
@@ -67,10 +65,12 @@ public class BrailleChecker implements ExternalChecker {
         }
     }
 
+    @Override
     public void setOdtFile(File odtFile) {
         this.odtFile = odtFile;
     }
 
+    @Override
     public Set<Check> getChecks() {
 
         if (checks == null) {
@@ -82,6 +82,7 @@ public class BrailleChecker implements ExternalChecker {
         return checks;
     }
 
+    @Override
     public Check getCheck(String identifier) {
 
         BrailleCheck.ID id = BrailleCheck.ID.valueOf(identifier);
@@ -92,10 +93,12 @@ public class BrailleChecker implements ExternalChecker {
         }
     }
 
+    @Override
     public File getAccessibilityReport() {
         return earlReport;
     }
 
+    @Override
     public void check() {
 
         lastChecked = new Date();
@@ -104,9 +107,13 @@ public class BrailleChecker implements ExternalChecker {
 
             OdtTransformer odtTransformer = new OdtTransformer(odtFile, null, null);
             Settings settings = new Settings(odtTransformer);
+
+              // TODO: load settings from odt-file
+
             odtTransformer.configure(settings);
             odtTransformer.makeControlFlow();
 
+            settings.configureVolumes();
             boolean tocEnabled = false;
             for (Volume volume : settings.getVolumes()) {
                 if (volume.getToc()) {
@@ -133,10 +140,12 @@ public class BrailleChecker implements ExternalChecker {
         }
     }
 
+    @Override
     public String getIdentifier() {
         return "be.docarch.odt2braille.checker.BrailleChecker";
     }
 
+    @Override
     public Date getLastChecked() {
 
         try {

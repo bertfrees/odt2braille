@@ -534,6 +534,8 @@ compileConfig (FileInfo * nested)
     "44",
     "braillePageNumbersInContents",
     "45",
+    "minSyllableLength",
+    "46",
     "style",
     "90",
     NULL
@@ -788,6 +790,9 @@ compileConfig (FileInfo * nested)
     case 45:
 	  if ((k = checkValues (nested, yesNo)) != NOTFOUND)
 		ud->braille_page_numbers_in_contents = k;
+	  break;
+    case 46:
+	  ud->min_syllable_length = atoi (nested->value);
 	  break;
 	case 90:
 	  {

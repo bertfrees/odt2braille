@@ -116,6 +116,7 @@ public class SettingsDialog implements XItemListener,
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
+    private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -218,6 +219,7 @@ public class SettingsDialog implements XItemListener,
     private XCheckBox hardPageBreaksCheckBox = null;
     private XListBox transcriptionInfoStyleListBox = null;
     private XListBox volumeInfoStyleListBox = null;
+    private XNumericField minSyllableLengthField = null;
 
     private XPropertySet mainEightDotsCheckBoxProperties = null;
     private XPropertySet transcribersNotesPageFieldProperties = null;    
@@ -228,6 +230,7 @@ public class SettingsDialog implements XItemListener,
     private XPropertySet preliminaryVolumeCheckBoxProperties = null;
     private XPropertySet transcriptionInfoStyleListBoxProperties = null;
     private XPropertySet volumeInfoStyleListBoxProperties = null;
+    private XPropertySet minSyllableLengthFieldProperties = null;
 
     private static String _mainTranslationTableListBox = "ListBox1";
     private static String _mainGradeListBox = "ListBox2";
@@ -242,6 +245,7 @@ public class SettingsDialog implements XItemListener,
     private static String _hardPageBreaksCheckBox = "CheckBox19";
     private static String _transcriptionInfoStyleListBox = "ListBox6";
     private static String _volumeInfoStyleListBox = "ListBox7";
+    private static String _minSyllableLengthField = "NumericField40";
 
     private static String _mainTranslationTableLabel = "Label1";
     private static String _mainGradeLabel = "Label2";
@@ -255,6 +259,7 @@ public class SettingsDialog implements XItemListener,
     private static String _hardPageBreaksLabel = "Label72";
     private static String _transcriptionInfoStyleLabel = "Label98";
     private static String _volumeInfoStyleLabel = "Label99";
+    private static String _minSyllableLengthLabel = "Label117";
 
     private String L10N_creatorLabel = null;
     private String L10N_mainTranslationTableLabel = null;
@@ -268,6 +273,7 @@ public class SettingsDialog implements XItemListener,
     private String L10N_hardPageBreaksLabel = null;
     private String L10N_transcriptionInfoStyleLabel = null;
     private String L10N_volumeInfoStyleLabel = null;
+    private String L10N_minSyllableLengthLabel = null;
 
     private Map<Integer,String> L10N_grades = new TreeMap();
     private Map<String,String> L10N_translationTables = new TreeMap();
@@ -1082,6 +1088,7 @@ public class SettingsDialog implements XItemListener,
         L10N_hardPageBreaksLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("hardPageBreaksLabel");
         L10N_transcriptionInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
         L10N_volumeInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
+        L10N_minSyllableLengthLabel = "Don't break words into parts smaller than:";
 
         // Languages Page
 
@@ -1289,6 +1296,7 @@ public class SettingsDialog implements XItemListener,
         mainTranslationTables.clear();
 
         treeSet = new TreeSet(new Comparator() {
+            @Override
             public int compare(Object entry1, Object entry2) {
                 return ((Comparable) ((Map.Entry) entry1).getValue()).compareTo(((Map.Entry) entry2).getValue());
             }
@@ -1318,6 +1326,7 @@ public class SettingsDialog implements XItemListener,
         }
 
         treeSet = new TreeSet(new Comparator() {
+            @Override
             public int compare(Object style1, Object style2) {
                 return ((Style) style1).compareTo(style2);
             }
@@ -1430,6 +1439,8 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_transcriptionInfoStyleListBox));
         volumeInfoStyleListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
                 dialogControlContainer.getControl(_volumeInfoStyleListBox));
+        minSyllableLengthField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
+                dialogControlContainer.getControl(_minSyllableLengthField));
 
         // Languages Page
 
@@ -1733,6 +1744,8 @@ public class SettingsDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, backButton)).getModel());
         nextButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, nextButton)).getModel());
+        minSyllableLengthFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, minSyllableLengthField)).getModel());
 
         // General Page
 
@@ -2361,6 +2374,8 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_transcriptionInfoStyleLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_volumeInfoStyleLabel));
         xFixedText.setText(L10N_volumeInfoStyleLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_minSyllableLengthLabel));
+        xFixedText.setText(L10N_minSyllableLengthLabel);
 
         // Languages Page
 
@@ -2659,8 +2674,8 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[GENERAL_PAGE-1]) {
 
-            transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
-            preliminaryVolumeCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
+            transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
+            preliminaryVolumeCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
             transcriptionInfoCheckBoxProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoAvailable());
             volumeInfoCheckBoxProperties.setPropertyValue("Enabled", settings.getVolumeInfoAvailable());
 
@@ -2683,6 +2698,12 @@ public class SettingsDialog implements XItemListener,
             for (int i=0;i<mainTranslationTables.size();i++) {
                 mainTranslationTableListBox.addItem(L10N_translationTables.get(mainTranslationTables.get(i)), (short)i);
             }
+            
+            minSyllableLengthField.setDecimalDigits((short)0);
+            minSyllableLengthField.setMin((double)1);
+            minSyllableLengthField.setMax((double)Integer.MAX_VALUE);
+            minSyllableLengthField.setValue((double)settings.getMinSyllableLength());
+            minSyllableLengthFieldProperties.setPropertyValue("Enabled", IS_WINDOWS);
 
             updateMainTranslationTableListBox();
             updateMainGradeListBox();
@@ -3011,7 +3032,7 @@ public class SettingsDialog implements XItemListener,
             currentTableOfContentsLevel = 1;
 
             tableOfContentsCheckBox.setState((short)(settings.getTableOfContentEnabled()?1:0));
-            tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
+            tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
             tableOfContentsTitleField.setText(settings.getTableOfContentTitle());
             tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
             tableOfContentsPrintPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbersInToc()?1:0));
@@ -3041,7 +3062,7 @@ public class SettingsDialog implements XItemListener,
 
             selectedSpecialSymbolPos = 0;
 
-            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent());
+            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
             specialSymbolsListField.setText(settings.getSpecialSymbolsListTitle());
             specialSymbolsListCheckBox.setState((short)(settings.getSpecialSymbolsListEnabled()?1:0));
 
@@ -3347,7 +3368,7 @@ public class SettingsDialog implements XItemListener,
         braillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
         braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
         preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers()
-                                                                                       && settings.getPreliminaryPagesPresent());
+                                                                                       && settings.getPreliminaryPagesPresent()); // TODO: remove "&& settings.getPreliminaryPagesPresent()"
         beginningBraillePageNumberFieldProperties.setPropertyValue("Enabled", settings.getBraillePageNumbers());
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent());
         printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());
@@ -3451,6 +3472,7 @@ public class SettingsDialog implements XItemListener,
         settings.setHardPageBreaks(hardPageBreaksCheckBox.getState() == (short) 1);
         settings.setTranscriptionInfoStyle(paragraphStyles.get(transcriptionInfoStyleListBox.getSelectedItemPos()));
         settings.setVolumeInfoStyle(paragraphStyles.get(volumeInfoStyleListBox.getSelectedItemPos()));
+        settings.setMinSyllableLength((int)minSyllableLengthField.getValue());
 
     }
     
@@ -3801,6 +3823,7 @@ public class SettingsDialog implements XItemListener,
      *
      * @param itemEvent
      */
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         Object source = itemEvent.Source;
@@ -4203,6 +4226,7 @@ public class SettingsDialog implements XItemListener,
      *
      * @param actionEvent
      */
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
         Object source = actionEvent.Source;
@@ -4397,6 +4421,7 @@ public class SettingsDialog implements XItemListener,
         }
     }
 
+    @Override
     public void textChanged(TextEvent textEvent) {
 
         Object source = textEvent.Source;
@@ -4426,6 +4451,7 @@ public class SettingsDialog implements XItemListener,
     /**
      * @param event
      */
+    @Override
     public void disposing(EventObject event) {}
 
 }

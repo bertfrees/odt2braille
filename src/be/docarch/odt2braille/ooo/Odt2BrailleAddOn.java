@@ -66,10 +66,12 @@ public final class Odt2BrailleAddOn extends WeakBase
                                                 xRegistryKey);
     }
 
+    @Override
     public String getImplementationName() {
          return m_implementationName;
     }
 
+    @Override
     public boolean supportsService( String sService ) {
         int len = m_serviceNames.length;
 
@@ -80,10 +82,12 @@ public final class Odt2BrailleAddOn extends WeakBase
         return false;
     }
 
+    @Override
     public String[] getSupportedServiceNames() {
         return m_serviceNames;
     }
 
+    @Override
     public com.sun.star.frame.XDispatch queryDispatch( com.sun.star.util.URL aURL,
                                                        String sTargetFrameName,
                                                        int iSearchFlags )
@@ -105,6 +109,7 @@ public final class Odt2BrailleAddOn extends WeakBase
         return null;
     }
 
+    @Override
     public com.sun.star.frame.XDispatch[] queryDispatches(
          com.sun.star.frame.DispatchDescriptor[] seqDescriptors )
     {
@@ -121,6 +126,7 @@ public final class Odt2BrailleAddOn extends WeakBase
         return seqDispatcher;
     }
 
+    @Override
     public void initialize( Object[] object )
         throws com.sun.star.uno.Exception
     {
@@ -131,6 +137,7 @@ public final class Odt2BrailleAddOn extends WeakBase
         }
     }
 
+    @Override
      public void dispatch( com.sun.star.util.URL aURL,
                            com.sun.star.beans.PropertyValue[] aArguments )
     {
@@ -208,10 +215,12 @@ public final class Odt2BrailleAddOn extends WeakBase
         }
     }
 
+    @Override
     public void addStatusListener( com.sun.star.frame.XStatusListener xControl,
                                     com.sun.star.util.URL aURL )
     {}
 
+    @Override
     public void removeStatusListener( com.sun.star.frame.XStatusListener xControl,
                                        com.sun.star.util.URL aURL )
     {}

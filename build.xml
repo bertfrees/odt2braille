@@ -71,42 +71,58 @@
 
         <!-- ask target.os as an input -->
         <target name="init-target-os">
-                <input message="Choose extension target platform:"
-                       validargs="${list.target.os}"
-                       addproperty="target.os" />
+            <input message="Choose extension target platform:"
+                   validargs="${list.target.os}"
+                   addproperty="target.os" />
 
-                <condition property="windows_x86">
-                        <equals arg1="${target.os}" arg2="windows_x86"/>
-                </condition>
-                <condition property="macosx_x86">
-                        <equals arg1="${target.os}" arg2="macosx_x86"/>
-                </condition>
-                <condition property="linux_x86">
-                        <equals arg1="${target.os}" arg2="linux_x86"/>
-                </condition>
+            <condition property="windows_x86">
+                <equals arg1="${target.os}" arg2="windows_x86"/>
+            </condition>
+            <condition property="macosx_x86">
+                <equals arg1="${target.os}" arg2="macosx_x86"/>
+            </condition>
+            <condition property="linux_x86">
+                <equals arg1="${target.os}" arg2="linux_x86"/>
+            </condition>
         </target>
 	
 	<!-- copy windows binaries -->
 	<target name="copy-binaries-win" if="windows_x86">	
-		<copy file="${liblouis.bin.win.dir}${file.separator}xml2brl.exe" todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}" />
-		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}">
-			<fileset dir="${liblouis.bin.win.dir}">
-				<filename name="*.dll"/>
-			</fileset>
-        </copy>
+            <copy file="${liblouis.bin.win.dir}${file.separator}xml2brl.exe" todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}" />
+            <copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}">
+                <fileset dir="${liblouis.bin.win.dir}">
+                    <filename name="*.dll"/>
+                </fileset>
+            </copy>
 	</target>
 	
 	<!-- copy mac os binaries -->	
 	<target name="copy-binaries-mac" if="macosx_x86">	
-		<copy file="${liblouis.bin.mac.dir}${file.separator}xml2brl" todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}" />
-		<copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}">
-			<fileset dir="${liblouis.bin.mac.dir}">
-				<filename name="*.dylib"/>
-			</fileset>
-        </copy>
+            <copy file="${liblouis.bin.mac.dir}${file.separator}xml2brl" todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}" />
+            <copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}">
+                <fileset dir="${liblouis.bin.mac.dir}">
+                    <filename name="*.dylib"/>
+                </fileset>
+            </copy>
 	</target>
-	
-	<!-- rebuild extension with some fixes -->
+
+
+    <target name="-pre-uno-package">
+
+        <delete dir="${build.dir}${file.separator}${external.jar.dir}" />
+
+
+
+        <copy todir="${build.oxt.dir}${file.separator}${licenses.dir}">
+            <fileset dir="${licenses.dir}" />
+        </copy>
+
+
+
+
+    </target>
+
+    <!-- rebuild extension with some fixes -->
     <target name="-post-uno-package" depends="init-target-os">
 
         <echo message="post uno packaging" />
@@ -121,26 +137,25 @@
             <fileset dir="${templates.dir}" />
         </copy>
 		
-		<!-- add liblouis folder -->
-		
-		<mkdir dir="${build.oxt.dir}${file.separator}${liblouis.dir}" />
+        <!-- add liblouis folder -->
+        <mkdir dir="${build.oxt.dir}${file.separator}${liblouis.dir}" />
         <copy todir="${build.oxt.dir}${file.separator}${liblouis.files.dir}">
             <fileset dir="${liblouis.files.dir}" />
         </copy>
-		<antcall target="copy-binaries-win"/>
-		<antcall target="copy-binaries-mac"/>
+        <antcall target="copy-binaries-win"/>
+        <antcall target="copy-binaries-mac"/>
 		
-		<!-- add settings folder -->
+        <!-- add settings folder -->
         <copy todir="${build.oxt.dir}${file.separator}${settings.dir}">
             <fileset dir="${settings.dir}" />
         </copy>
 		
-		<!-- add licenses folder -->
+        <!-- add licenses folder -->
         <copy todir="${build.oxt.dir}${file.separator}${licenses.dir}">
             <fileset dir="${licenses.dir}" />
         </copy>
-		
-		<!-- specify target in description.xml -->
+
+        <!-- specify target in description.xml -->
         <delete file="${build.oxt.dir}${file.separator}description.xml" />
         <filter token="platform-oxt" value="${target.os}"/>
         <copy file="${src.dir}${file.separator}description.xml"

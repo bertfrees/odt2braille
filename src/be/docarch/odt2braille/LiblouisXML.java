@@ -57,8 +57,7 @@ public class LiblouisXML {
     private static final String LIBLOUISXML_EXEC_NAME = "xml2brl";
     private static final String TMP_NAME = Constants.TMP_PREFIX;
     private static final File TMP_DIR = Constants.getTmpDirectory();
-    private static final String LIBLOUISXML_VERSION_ATLEAST = "2.3.1";
-    private static final String LIBLOUIS_VERSION_ATLEAST = "2.1.1";
+    private static final String LIBLOUISXML_VERSION_ATLEAST = "2.4.0";
 
     private String liblouisxmlExec = null;
     private String liblouisPath = null;
@@ -492,9 +491,12 @@ public class LiblouisXML {
         configurationList.clear();
 
         String math = settings.getMath().name().toLowerCase();
-        String translationTable = "__" + settings.getTranslationTable(settings.getMainLanguage()) +
-                                  "-g" + settings.getGrade(settings.getMainLanguage()) +
-                                  ((settings.getDots(settings.getMainLanguage())==8)?"-8d":"") + ".ctb";
+        String table = settings.getTranslationTable(settings.getMainLanguage());
+        int grade = settings.getGrade(settings.getMainLanguage());
+        boolean eightDots = (settings.getDots(settings.getMainLanguage())==8);
+
+        String translationTable = "__" + table + "-g" + grade + (eightDots?"-8d":"") + ".ctb";
+        String backTranslationTable = "__" + table + "-g" + grade + (eightDots?"-8d":"") + (table.equals("nl-BE")?"-back":"") + ".ctb";
         String configFiles = liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_main.cfg," + "_cfg_styles.cfg";
         String semanticFiles = "_sem_main.sem," +
                                "_sem_paragraphs.sem," +
@@ -510,6 +512,7 @@ public class LiblouisXML {
         configurationList.add(configFiles);
 
         configurationList.add("-C" + "literaryTextTable="            + translationTable);
+        configurationList.add("-C" + "interlineBackTable="           + backTranslationTable);
         configurationList.add("-C" + "semanticFiles="                + semanticFiles);
         configurationList.add("-C" + "mathtextTable="                + translationTable);
         configurationList.add("-C" + "mathexprTable="                + mathTable);
@@ -517,6 +520,7 @@ public class LiblouisXML {
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
         configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(settings.getCellsPerLine()));
         configurationList.add("-C" + "linesPerPage="                 + Integer.toString(settings.getLinesPerPage()));
+        configurationList.add("-C" + "minSyllableLength="            + Integer.toString(settings.getMinSyllableLength()));
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));
         configurationList.add("-C" + "pageSeparator="                + (settings.getPageSeparator()?"yes":"no"));

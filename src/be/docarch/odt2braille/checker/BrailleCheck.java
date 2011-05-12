@@ -18,13 +18,13 @@ public class BrailleCheck extends Check {
 
     public static enum ID {
 
-        A_NoPreliminarySection,
-        A_NoTitlePage,
         A_NoBrailleToc,
         A_NotInBrailleVolume,       // ***
         A_OmittedInBraille,         // voor captions: ok
         A_TransposedInBraille,      // ***
-        A_UnnaturalVolumeBreak      // ***
+        A_UnnaturalVolumeBreak      // *** info pas beschikbaar na split-volumes.xsl
+
+                // Table or image without caption ?
 
     }
 
@@ -34,15 +34,15 @@ public class BrailleCheck extends Check {
         this.identifier = identifier;
     }
 
+    @Override
     public String getIdentifier() {
         return identifier.name();
     }
 
+    @Override
     public Status getStatus() {
 
         switch (identifier) {
-            case A_NoPreliminarySection:
-            case A_NoTitlePage:
             case A_NoBrailleToc:
             case A_NotInBrailleVolume:
             case A_OmittedInBraille:
@@ -54,11 +54,10 @@ public class BrailleCheck extends Check {
         }
     }
 
+    @Override
     public Category getCategory() {
 
         switch (identifier) {
-            case A_NoPreliminarySection:
-            case A_NoTitlePage:
             case A_NoBrailleToc:
             case A_NotInBrailleVolume:
             case A_OmittedInBraille:
@@ -70,6 +69,7 @@ public class BrailleCheck extends Check {
         }
     }
 
+    @Override
     public String getName() {
 
         if (identifier == null) {
@@ -81,6 +81,7 @@ public class BrailleCheck extends Check {
         }
     }
 
+    @Override
     public String getDescription() {
 
         if (identifier == null) {
@@ -92,6 +93,7 @@ public class BrailleCheck extends Check {
         }
     }
 
+    @Override
     public String getSuggestion() {
 
         if (identifier == null) {
@@ -103,6 +105,7 @@ public class BrailleCheck extends Check {
         }
     }
 
+    @Override
     public RepairMode getRepairMode() {
         return RepairMode.MANUAL;
     }

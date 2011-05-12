@@ -601,6 +601,10 @@ public class SettingsIO extends SettingsLoader {
             loadedSettings.setHyphenate(b);
         }
 
+        if (!(d = getDoubleProperty(minSyllableLengthProperty)).isNaN()) {
+            loadedSettings.setMinSyllableLength(d.intValue());
+        }
+
         if ((s = getStringProperty(mathProperty)) != null) {
             try {
                 loadedSettings.setMath(MathType.valueOf(s));
@@ -1368,6 +1372,9 @@ public class SettingsIO extends SettingsLoader {
         setProperty(hyphenateProperty,
                     settingsAfterChange.getHyphenate(),
                     settingsBeforeChange.getHyphenate());
+        setProperty(minSyllableLengthProperty,
+                    settingsAfterChange.getMinSyllableLength(),
+                    settingsBeforeChange.getMinSyllableLength());
         setProperty(creatorProperty,
                     settingsAfterChange.getCreator(),
                     settingsBeforeChange.getCreator());

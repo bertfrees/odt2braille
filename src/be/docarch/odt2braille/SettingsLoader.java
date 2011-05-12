@@ -85,6 +85,7 @@ public class SettingsLoader {
     protected static String minVolumeSizeProperty =                "[BRL]MinimumVolumeSize";
     protected static String maxVolumeSizeProperty =                "[BRL]MaximumVolumeSize";
     protected static String minLastVolumeSizeProperty =            "[BRL]MinimumLastVolumeSize";
+    protected static String minSyllableLengthProperty =            "[BRL]MinimumSyllableLength";
 
     // Export settings
 

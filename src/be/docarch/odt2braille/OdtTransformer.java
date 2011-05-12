@@ -187,6 +187,7 @@ public class OdtTransformer {
         docFactory.setValidating(false);
         docBuilder = docFactory.newDocumentBuilder();
         docBuilder.setEntityResolver(new EntityResolver() {
+            @Override
             public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
                 return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
             }

@@ -174,7 +174,6 @@ public class UnoGUI {
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
         }
-
     }
 
     /**
@@ -544,10 +543,6 @@ public class UnoGUI {
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
             return false;
-        } finally {
-            if (progressBar != null) {
-                progressBar.close();
-            }
         }
     }
 
@@ -805,10 +800,6 @@ public class UnoGUI {
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
             return false;
-        } finally {
-            if (progressBar != null) {
-                progressBar.close();
-            }
         }
     }
 
@@ -891,10 +882,12 @@ public class UnoGUI {
         if (progressBar != null) {
             progressBar.close();
         }
-        if (loadedSettings.odtTransformer != null) {
-            try {
-                loadedSettings.odtTransformer.close();
-            } catch (IOException e) {
+        if (loadedSettings != null) {
+            if (loadedSettings.odtTransformer != null) {
+                try {
+                    loadedSettings.odtTransformer.close();
+                } catch (IOException e) {
+                }
             }
         }
         if (fh != null) {

@@ -65,6 +65,7 @@ public class Settings {
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static NamespaceContext namespace = new NamespaceContext();
     private final static String L10N = Constants.L10N_PATH;
+    private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
 
     public final OdtTransformer odtTransformer;
 
@@ -117,6 +118,8 @@ public class Settings {
 
     private boolean hyphenate = false;
     private boolean hardPageBreaks = false;
+
+    private int minSyllableLength;
 
     // Page Numbers Settings
 
@@ -309,6 +312,7 @@ public class Settings {
         this.maxVolumeSize = copySettings.maxVolumeSize;
         this.minLastVolumeSize = copySettings.minLastVolumeSize;
         this.preferredVolumeSize = copySettings.preferredVolumeSize;
+        this.minSyllableLength = copySettings.minSyllableLength;
 
         this.cellSpacing = copySettings.cellSpacing;
         this.lineSpacing = copySettings.lineSpacing;
@@ -708,6 +712,7 @@ public class Settings {
         transcriptionInfoEnabled = false;
 
         setHyphenate(false);
+        setMinSyllableLength(2);
         setVolumeInfoStyle(paragraphStylesMap.get("Standard"));
         setTranscriptionInfoStyle(paragraphStylesMap.get("Standard"));
 
@@ -2968,6 +2973,21 @@ public class Settings {
         return this.hyphenate;
     }
 
+    public boolean setMinSyllableLength(int length) {
+
+        if (locked) { return false; }
+        if (!IS_WINDOWS) {
+            minSyllableLength = 2;
+            return false;
+        }
+        minSyllableLength = Math.max(1, length);
+        return true;
+    }
+
+    public int getMinSyllableLength() {
+        return minSyllableLength;
+    }
+
     public List<SpecialSymbol> getSpecialSymbolsList() {
         return specialSymbolsList;
     }
@@ -3277,7 +3297,7 @@ public class Settings {
     public boolean setTranscribersNotesPageEnabled(boolean b) {
 
         if (locked) { return false; }
-        transcribersNotesPageEnabled = b && getPreliminaryPagesPresent();
+        transcribersNotesPageEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
         return true;
     }
 
@@ -3288,7 +3308,7 @@ public class Settings {
     public boolean setSpecialSymbolsListEnabled(boolean b) {
 
         if (locked) { return false; }
-        specialSymbolsListEnabled = b && getPreliminaryPagesPresent();
+        specialSymbolsListEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
         return true;
     }
 
@@ -3299,7 +3319,7 @@ public class Settings {
     public boolean setTableOfContentEnabled(boolean b) {
 
         if (locked) { return false; }
-        tableOfContentEnabled = b && getPreliminaryPagesPresent();
+        tableOfContentEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
         return true;
     }
 
@@ -3332,7 +3352,7 @@ public class Settings {
     public boolean setPreliminaryVolumeEnabled(boolean b) {
 
         if (locked) { return false; }
-        preliminaryVolumeEnabled = b && getPreliminaryPagesPresent();
+        preliminaryVolumeEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
         return true;
     }
 
@@ -3827,7 +3847,7 @@ public class Settings {
             minerror1[i] = Integer.MAX_VALUE;
             minerror2[i] = Integer.MAX_VALUE;
         }
-        for (int i=total-minLast; i>=total-max; i--) {
+        for (int i=total-minLast; i>=total-max && i>=0; i--) {
             ok[i] = true;
         }
         minerror1[0] = 0;

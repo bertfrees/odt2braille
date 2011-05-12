@@ -1524,21 +1524,25 @@ restorePointers(void)
 static int
 hyphenatex (int lastBlank, int lineEnd)
 {
+  int minSyllableLength = maximum(1, ud->min_syllable_length);
+  int minWordLength = 5;
+  int minNextLine = 12;
+
   char hyphens[MAXNAMELEN];
   int k;
   int wordStart = lastBlank + 1;
   int wordLength;
   int breakAt = 0;
   int hyphenFound = 0;
-  if ((translatedLength - wordStart) < 12)
+  if ((translatedLength - wordStart) < minNextLine)
     return 0;
   for (wordLength = wordStart; wordLength < translatedLength; wordLength++)
     if (translatedBuffer[wordLength] == ' ')
       break;
   wordLength -= wordStart;
-  if (wordLength < 5 || wordLength > ud->cells_per_line)
+  if (wordLength < minWordLength || wordLength > ud->cells_per_line)
     return 0;
-  for (k = wordLength - 2; k >= 0; k--)
+  for (k = wordLength - minSyllableLength - 1; k >= minSyllableLength; k--)
     if ((wordStart + k) < lineEnd && translatedBuffer[wordStart + k] ==
 	*litHyphen && !hyphenFound)
       {
@@ -1550,18 +1554,19 @@ hyphenatex (int lastBlank, int lineEnd)
   hyphens[wordLength] = 0;
   if (!hyphenFound)
     {
-      if (!lou_hyphenate (ud->mainBrailleTable,
+      if (!lou_hyphenate (ud->interline_back_table_name,
 			  &translatedBuffer[wordStart], wordLength,
 			  hyphens, 1))
 	return 0;
     }
-  for (k = strlen (hyphens) - 2; k > 0; k--)
+  for (k = strlen (hyphens) - minSyllableLength; k > 0; k--)
     {
       breakAt = wordStart + k;
-      if ((hyphens[k] == '1' || softHyphens[wordStart + k] == '1') && (breakAt < lineEnd))
+      if ((hyphens[k] == '1' || softHyphens[wordStart + k] == '1') &&
+         (breakAt < lineEnd || (breakAt == lineEnd && translatedBuffer[breakAt - 1] == *litHyphen)))
 	break;
     }
-  if (k < 2)
+  if (k < minSyllableLength)
     return 0;
   return breakAt;
 }
