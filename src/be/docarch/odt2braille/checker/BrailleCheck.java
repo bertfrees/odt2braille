@@ -12,9 +12,7 @@ import be.docarch.accessibility.Check;
 public class BrailleCheck extends Check {
 
     private static Locale locale = Locale.getDefault();
-    private static ResourceBundle names = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/names", locale);
-    private static ResourceBundle descriptions = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/descriptions", locale);
-    private static ResourceBundle suggestions = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/suggestions", locale);
+    private static ResourceBundle bundle = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/Bundle", locale);
 
     public static enum ID {
 
@@ -22,9 +20,20 @@ public class BrailleCheck extends Check {
         A_NotInBrailleVolume,       // ***
         A_OmittedInBraille,         // voor captions: ok
         A_TransposedInBraille,      // ***
-        A_UnnaturalVolumeBreak      // *** info pas beschikbaar na split-volumes.xsl
+        A_UnnaturalVolumeBreak,      // *** info pas beschikbaar na split-volumes.xsl
 
-                // Table or image without caption ?
+        // Table or image without caption ?
+
+        A_VolumesTooLong,
+        A_VolumesTooShort,
+        A_VolumesDifferTooMuch,
+        A_PreliminaryVolumeRequired,
+        A_PreliminaryVolumeTooShort,
+        A_VolumeDoesntBeginWithHeading,
+        A_OmissionsInsideVolume,
+        A_OmissionsOutsideVolume,
+        A_Transpositions,
+        A_PageWidthTooSmall
 
     }
 
@@ -48,6 +57,16 @@ public class BrailleCheck extends Check {
             case A_OmittedInBraille:
             case A_TransposedInBraille:
             case A_UnnaturalVolumeBreak:
+            case A_VolumesTooLong:
+            case A_VolumesTooShort:
+            case A_VolumesDifferTooMuch:
+            case A_PreliminaryVolumeRequired:
+            case A_PreliminaryVolumeTooShort:
+            case A_VolumeDoesntBeginWithHeading:
+            case A_OmissionsInsideVolume:
+            case A_OmissionsOutsideVolume:
+            case A_Transpositions:
+            case A_PageWidthTooSmall:
                 return Status.ALERT;
             default:
                 return null;
@@ -63,6 +82,16 @@ public class BrailleCheck extends Check {
             case A_OmittedInBraille:
             case A_TransposedInBraille:
             case A_UnnaturalVolumeBreak:
+            case A_VolumesTooLong:
+            case A_VolumesTooShort:
+            case A_VolumesDifferTooMuch:
+            case A_PreliminaryVolumeRequired:
+            case A_PreliminaryVolumeTooShort:
+            case A_VolumeDoesntBeginWithHeading:
+            case A_OmissionsInsideVolume:
+            case A_OmissionsOutsideVolume:
+            case A_Transpositions:
+            case A_PageWidthTooSmall:
                 return Category.BRAILLE;
             default:
                 return null;
@@ -74,8 +103,8 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (names.containsKey(identifier.name())) {
-            return names.getString(identifier.name());
+        } else if (bundle.containsKey("name_" + identifier.name())) {
+            return bundle.getString("name_" + identifier.name());
         } else {
             return identifier.name();
         }
@@ -86,8 +115,8 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (descriptions.containsKey(identifier.name())) {
-            return descriptions.getString(identifier.name());
+        } else if (bundle.containsKey("description_" + identifier.name())) {
+            return bundle.getString("description_" + identifier.name());
         } else {
             return identifier.name();
         }
@@ -98,8 +127,8 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (suggestions.containsKey(identifier.name())) {
-            return suggestions.getString(identifier.name());
+        } else if (bundle.containsKey("suggestion_" + identifier.name())) {
+            return bundle.getString("suggestion_" + identifier.name());
         } else {
             return identifier.name();
         }
@@ -109,5 +138,4 @@ public class BrailleCheck extends Check {
     public RepairMode getRepairMode() {
         return RepairMode.MANUAL;
     }
-
 }

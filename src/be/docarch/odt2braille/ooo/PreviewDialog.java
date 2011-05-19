@@ -202,13 +202,7 @@ public class PreviewDialog implements XItemListener,
 
         // L10N
 
-        Locale oooLocale = null;
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
+        Locale oooLocale = Locale.getDefault();
 
         L10N_windowTitle = ResourceBundle.getBundle(OOO_L10N, oooLocale).getString("previewDialogTitle");
         L10N_preliminary_section = "Preliminary Section";

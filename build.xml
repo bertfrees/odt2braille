@@ -106,22 +106,6 @@
             </copy>
 	</target>
 
-
-    <target name="-pre-uno-package">
-
-        <delete dir="${build.dir}${file.separator}${external.jar.dir}" />
-
-
-
-        <copy todir="${build.oxt.dir}${file.separator}${licenses.dir}">
-            <fileset dir="${licenses.dir}" />
-        </copy>
-
-
-
-
-    </target>
-
     <!-- rebuild extension with some fixes -->
     <target name="-post-uno-package" depends="init-target-os">
 

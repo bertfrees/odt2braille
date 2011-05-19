@@ -70,6 +70,7 @@ import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Settings.VolumeManagementMode;
+import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import org_pef_text.AbstractTable;
 import org_pef_text.TableFactory;
 import org_pef_text.TableFactory.TableType;
@@ -80,7 +81,7 @@ import org_pef_text.TableFactory.TableType;
  * <a href="http://www.daisy.org/projects/braille/braille_workarea/pef.html">.pef (portable embosser format)</a> file.
  * The conversion is done according to previously defined braille {@link Settings}.
  * <code>liblouisxml</code> is used for the actual transcription to braille.
- * A {@link Checker} checks the resulting braille document for possible accessibility issues.
+ * A {@link PostConversionBrailleChecker} checks the resulting braille document for possible accessibility issues.
  *
  * @see <a href="http://code.google.com/p/liblouisxml/"><code>liblouisxml</code></a>
  * @author Bert Frees
@@ -94,6 +95,7 @@ public class PEF implements ErrorHandler {
     private static final String TMP_NAME = Constants.TMP_PREFIX;
     private static final File TMP_DIR = Constants.getTmpDirectory();
     private static final String L10N = Constants.L10N_PATH;
+    private static final String pefNS = "http://www.daisy.org/ns/2008/pef";
 
     public enum TranscribersNote { };
     enum State {HEADER, BODY, FOOTER};
@@ -105,28 +107,13 @@ public class PEF implements ErrorHandler {
     private OdtTransformer odtTransformer = null;
     private Settings settings = null;
     private StatusIndicator statusIndicator = null;
-    private Checker checker = null;
+    private PostConversionBrailleChecker checker = null;
     private Verifier validator = null;
 
     AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
 
-
-    /**
-     * Creates a new <code>PEF</code> instance.
-     * The {@link Locale} for the user interface is set to the default value.
-     *
-     * @param flatOdtFile       The "flat XML" .odt file.
-     *                          This single file is the concatenation of all XML files in a normal .odt file.
-     * @param liblouisDirUrl    The URL of the <code>liblouis</code> executable.
-     * @param settings          The <code>Settings</code> that determine how the conversion is done.
-     * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
-     * @param checker           The <code>Checker</code> that will check the braille document for possible accessibility issues.
-     * @param odtLocale         The <code>Locale</code> for the document.
-     */
     public PEF(Settings settings,
-               LiblouisXML liblouisXML,
-               StatusIndicator statusIndicator,
-               Checker checker)
+               LiblouisXML liblouisXML)
         throws IOException,
                ParserConfigurationException,
                SAXException,
@@ -135,7 +122,7 @@ public class PEF implements ErrorHandler {
                InterruptedException,
                LiblouisXMLException {
 
-        this(settings, liblouisXML, statusIndicator, checker, Locale.getDefault());
+        this(settings, liblouisXML, null, null);
 
     }
 
@@ -147,14 +134,13 @@ public class PEF implements ErrorHandler {
      * @param liblouisDirUrl    The URL of the liblouis executable. liblouis is used for the actual transcription to braille.
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
      * @param settings          The <code>Settings</code> that determine how the conversion is done.
-     * @param checker           The <code>Checker</code> that will check the braille document for possible accessibility issues.
+     * @param checker           The <code>PostConversionBrailleChecker</code> that will check the braille document for possible accessibility issues.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
     public PEF(Settings settings,
                LiblouisXML liblouisXML,
                StatusIndicator statusIndicator,
-               Checker checker,
-               Locale oooLocale)
+               PostConversionBrailleChecker checker)
         throws IOException,
                ParserConfigurationException,
                SAXException,
@@ -167,13 +153,15 @@ public class PEF implements ErrorHandler {
         this.liblouisXML = liblouisXML;
         this.statusIndicator = statusIndicator;
         this.checker = checker;
-        
+
         settings.configureVolumes();
         odtTransformer = settings.odtTransformer;
         odtTransformer.configure(settings);
 
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
+
+        Locale oooLocale = Locale.getDefault();
 
         L10N_statusIndicatorStep = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep");
 
@@ -268,15 +256,17 @@ public class PEF implements ErrorHandler {
 
             docFactory = DocumentBuilderFactory.newInstance();
             docFactory.setValidating(false);
+            docFactory.setNamespaceAware(true);
             docBuilder = docFactory.newDocumentBuilder();
             DOMImplementation impl = docBuilder.getDOMImplementation();
 
-            document = impl.createDocument("http://www.daisy.org/ns/2008/pef", "pef", null);
+            document = impl.createDocument(pefNS, "pef", null);
             Element root = document.getDocumentElement();
+            root.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns", pefNS);
             root.setAttributeNS(null,"version","2008-1");
 
-            headElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","head");
-            metaElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","meta");
+            headElement = document.createElementNS(pefNS,"head");
+            metaElement = document.createElementNS(pefNS,"meta");
             metaElement.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:dc", "http://purl.org/dc/elements/1.1/");
             dcElement = document.createElementNS("http://purl.org/dc/elements/1.1/","dc:identifier");
             node = document.createTextNode("00001");
@@ -298,7 +288,9 @@ public class PEF implements ErrorHandler {
             bodyFile.deleteOnExit();
 
             odtTransformer.getBodyMatter(bodyFile);
-            checker.checkDaisyFile(bodyFile);
+            if (checker != null) {
+                checker.checkDaisyFile(bodyFile);
+            }
             liblouisXML.configure(bodyFile, brailleFile, false, beginPage);
             liblouisXML.run();
 
@@ -316,9 +308,11 @@ public class PEF implements ErrorHandler {
                 }
             }
 
-            statusIndicator.start();
-            statusIndicator.setSteps(steps);
-            statusIndicator.setStatus(L10N_statusIndicatorStep);
+            if (statusIndicator != null) {
+                statusIndicator.start();
+                statusIndicator.setSteps(steps);
+                statusIndicator.setStatus(L10N_statusIndicatorStep);
+            }
 
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
@@ -326,7 +320,7 @@ public class PEF implements ErrorHandler {
 
                 logger.info("Processing body of volume " + (volumeCount + 1) + " : " + volume.getType().name());
 
-                volumeElements[volumeCount] = document.createElementNS("http://www.daisy.org/ns/2008/pef","volume");
+                volumeElements[volumeCount] = document.createElementNS(pefNS, "volume");
                 volumeElements[volumeCount].setAttributeNS(null,"cols",String.valueOf(settings.getCellsPerLine()));
                 volumeElements[volumeCount].setAttributeNS(null,"rows",String.valueOf(settings.getLinesPerPage()));
                 volumeElements[volumeCount].setAttributeNS(null,"rowgap","0");
@@ -334,14 +328,14 @@ public class PEF implements ErrorHandler {
 
                 if (!(volume instanceof PreliminaryVolume)) {
 
-                    sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
+                    sectionElement = document.createElementNS(pefNS, "section");
 
                     cont = true;
                     volume.setBraillePagesStart(beginPage);
                     pageCount = 0;
                     while (cont) {
 
-                        pageElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","page");
+                        pageElement = document.createElementNS(pefNS,"page");
 
                         pageCount++;
                         lineCount = 1;
@@ -357,7 +351,7 @@ public class PEF implements ErrorHandler {
                                 cont = false;
                                 volume.setNumberOfBraillePages(pageCount);
                             }
-                            rowElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","row");
+                            rowElement = document.createElementNS(pefNS,"row");
                             node = document.createTextNode(liblouisTable.toBraille(line));
                             rowElement.appendChild(node);
                             pageElement.appendChild(rowElement);
@@ -375,7 +369,9 @@ public class PEF implements ErrorHandler {
                 }
             }
 
-            statusIndicator.increment();
+            if (statusIndicator != null) {
+                statusIndicator.increment();
+            }
 
             if (bufferedReader != null) {
                 bufferedReader.close();
@@ -538,7 +534,7 @@ public class PEF implements ErrorHandler {
                     preliminaryFile = File.createTempFile(TMP_NAME, ".daisy." + (volumeCount + 1) + ".xml", TMP_DIR);
                     preliminaryFile.deleteOnExit();
 
-                    sectionElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","section");
+                    sectionElement = document.createElementNS(pefNS,"section");
 
                     odtTransformer.getFrontMatter(preliminaryFile, volume);
                     liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getToc()?volume.getFirstBraillePage():1);
@@ -573,7 +569,9 @@ public class PEF implements ErrorHandler {
                     // Get preliminary pages
 
                     odtTransformer.getFrontMatter(preliminaryFile, volume);
-                    checker.checkDaisyFile(preliminaryFile);
+                    if (checker != null) {
+                        checker.checkDaisyFile(preliminaryFile);
+                    }
                     liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getToc()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
@@ -585,7 +583,7 @@ public class PEF implements ErrorHandler {
 
                     while (pageCount <= volume.getNumberOfPreliminaryPages()) {
 
-                        pageElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","page");
+                        pageElement = document.createElementNS(pefNS,"page");
                         lineCount = 1;
 
                         while (lineCount <= settings.getLinesPerPage()) {
@@ -595,7 +593,7 @@ public class PEF implements ErrorHandler {
                                        .replaceAll("\u00A0","\u0020")
                                        .replaceAll("\uE00F","\u002D");
                             if (IS_WINDOWS) { bufferedReader.readLine(); }
-                            rowElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","row");
+                            rowElement = document.createElementNS(pefNS,"row");
                             node = document.createTextNode(liblouisTable.toBraille(line));
                             rowElement.appendChild(node);
                             pageElement.appendChild(rowElement);
@@ -610,7 +608,9 @@ public class PEF implements ErrorHandler {
 
                     volumeElements[volumeCount].insertBefore(sectionElement, volumeElements[volumeCount].getFirstChild());
 
-                    statusIndicator.increment();
+                    if (statusIndicator != null) {
+                        statusIndicator.increment();
+                    }
 
                     if (bufferedReader != null) {
                         bufferedReader.close();
@@ -620,9 +620,11 @@ public class PEF implements ErrorHandler {
                 }
             }
 
-            checker.checkVolumes(volumes);
+            if (checker != null) {
+                checker.checkVolumes(volumes);
+            }
 
-            bodyElement = document.createElementNS("http://www.daisy.org/ns/2008/pef","body");
+            bodyElement = document.createElementNS(pefNS,"body");
 
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
                 bodyElement.appendChild(volumeElements[volumeCount]);
@@ -738,8 +740,8 @@ public class PEF implements ErrorHandler {
         Stack<File> files = new Stack<File>();
         Stack<XMLEventWriter> writers = new Stack<XMLEventWriter>();
         Stack<FileOutputStream> os = new Stack<FileOutputStream>();
-        QName volume = new QName("http://www.daisy.org/ns/2008/pef", "volume");
-        QName body = new QName("http://www.daisy.org/ns/2008/pef", "body");
+        QName volume = new QName(pefNS, "volume");
+        QName body = new QName(pefNS, "body");
         int i = 0;
         State state = State.HEADER;
         while (reader.hasNext()) {
@@ -801,14 +803,17 @@ public class PEF implements ErrorHandler {
 
     }
 
+    @Override
     public void fatalError(SAXParseException exception) throws SAXException {
         throw new SAXException(exception);
     }
 
+    @Override
     public void error(SAXParseException exception) throws SAXException {
         throw new SAXException(exception);
     }
 
+    @Override
     public void warning(SAXParseException exception) throws SAXException {
         logger.log(Level.SEVERE, null, exception);
     }

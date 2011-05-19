@@ -17,9 +17,12 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package be.docarch.odt2braille;
+package be.docarch.odt2braille.checker;
 
 import java.io.File;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -28,6 +31,14 @@ import java.util.logging.Logger;
 import java.net.MalformedURLException;
 import java.io.IOException;
 
+import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.NamespaceContext;
+import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.XPathUtils;
+import be.docarch.accessibility.ExternalChecker;
+import be.docarch.accessibility.Check;
+import be.docarch.accessibility.Report;
 
 /**
  * With this class a document can be checked for possible accessibility issues.
@@ -40,29 +51,24 @@ import java.io.IOException;
  * <li>check the volume lengths of the resulting braille document.</li>
  * </ul>
  *
- * The <code>Checker</code> entity collects all of this information and uses it to generating warnings.
+ * The <code>PostConversionBrailleChecker</code> entity collects all of this information and uses it to generating warnings.
  *
  * @author Bert Frees
  */
-public class Checker {
+public class PostConversionBrailleChecker implements ExternalChecker {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N = Constants.L10N_PATH;
 
+    private Map<BrailleCheck.ID,Check> checks;
+
     private Settings settings = null;
-    private OdtTransformer odtTransformer = null;
     private static NamespaceContext namespace = new NamespaceContext();
 
     private final static int MAX_VOLUME_LENGTH = 100;
     private final static int MIN_VOLUME_LENGTH = 70;
     private final static int MAX_VOLUME_DIFFERENCE = 20;
     
-    private boolean noPreliminaryPages = false;
-    private boolean noTitlePage = false;
-    private boolean noHeadings = false;
-    private boolean tablesWithoutHeading = false;
-    private boolean tablesWithMergedCells = false;
-    private boolean imagesWithoutTitleOrAltDescription = false;
     private boolean volumesTooLong = false;
     private boolean volumesTooShort = false;
     private boolean volumesDifferTooMuch = false;
@@ -72,7 +78,6 @@ public class Checker {
     private boolean omissionsInsideVolume = false;
     private boolean omissionsOutsideVolume = false;
     private boolean transpositions = false;
-    private boolean tocNotReplaced = false;
     private boolean pageWidthTooSmall = false;
     private boolean eightDotsNotSupported = false;
 
@@ -80,70 +85,46 @@ public class Checker {
     private String L10N_question = null;
     private String L10N_details = null;
 
-    private String L10N_noPreliminaryPages = null;
-    private String L10N_noTitlePage = null;
-    private String L10N_noHeadings = null;
-    private String L10N_tablesWithoutHeading = null;
-    private String L10N_tablesWithMergedCells = null;
-    private String L10N_imagesWithoutTitleOrAltDescription = null;
-    private String L10N_volumesTooLong = null;
-    private String L10N_volumesTooShort = null;
-    private String L10N_volumesDifferTooMuch = null;
-    private String L10N_preliminaryVolumeRequired = null;
-    private String L10N_preliminaryVolumeTooShort = null;
-    private String L10N_volumeDoesntBeginWithHeading = null;
-    private String L10N_omissionsInsideVolume = null;
-    private String L10N_omissionsOutsideVolume = null;
-    private String L10N_transpositions = null;
-    private String L10N_tocNotReplaced = null;
-    private String L10N_pageWidthTooSmall = null;
     private String L10N_eightDotsNotSupported = null;
 
     /**
-     * Creates a new <code>Checker</code> instance.
+     * Creates a new <code>PostConversionBrailleChecker</code> instance.
      *
      * @param oooLocale         The <code>Locale</code> for the user interface.
      * @param settings          The braille settings.
      */
-    public Checker(Locale oooLocale,
-                   Settings settings) {
+    public PostConversionBrailleChecker(Settings settings) {
 
         logger.entering("Checker", "<init>");
 
         this.settings = settings;
-        this.odtTransformer = settings.odtTransformer;
+        Locale oooLocale = Locale.getDefault();
+
+        checks = new HashMap<BrailleCheck.ID,Check>();
+
+        checks.put(BrailleCheck.ID.A_VolumesTooLong,               new BrailleCheck(BrailleCheck.ID.A_VolumesTooLong));
+        checks.put(BrailleCheck.ID.A_VolumesTooShort,              new BrailleCheck(BrailleCheck.ID.A_VolumesTooShort));
+        checks.put(BrailleCheck.ID.A_VolumesDifferTooMuch,         new BrailleCheck(BrailleCheck.ID.A_VolumesDifferTooMuch));
+        checks.put(BrailleCheck.ID.A_PreliminaryVolumeRequired,    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeRequired));
+        checks.put(BrailleCheck.ID.A_PreliminaryVolumeTooShort,    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeTooShort));
+        checks.put(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading, new BrailleCheck(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading));
+        checks.put(BrailleCheck.ID.A_OmissionsInsideVolume,        new BrailleCheck(BrailleCheck.ID.A_OmissionsInsideVolume));
+        checks.put(BrailleCheck.ID.A_OmissionsOutsideVolume,       new BrailleCheck(BrailleCheck.ID.A_OmissionsOutsideVolume));
+        checks.put(BrailleCheck.ID.A_Transpositions,               new BrailleCheck(BrailleCheck.ID.A_Transpositions));
+        checks.put(BrailleCheck.ID.A_PageWidthTooSmall,            new BrailleCheck(BrailleCheck.ID.A_PageWidthTooSmall));
 
         L10N_warning = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerWarning");
         L10N_question = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerQuestion");
         L10N_details = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerDetails");
 
-        L10N_noPreliminaryPages = ResourceBundle.getBundle(L10N, oooLocale).getString("noPreliminaryPagesWarning");
-        L10N_noTitlePage = ResourceBundle.getBundle(L10N, oooLocale).getString("noTitlePageWarning");
-        L10N_noHeadings = ResourceBundle.getBundle(L10N, oooLocale).getString("noHeadingsWarning");
-        L10N_tablesWithoutHeading = ResourceBundle.getBundle(L10N, oooLocale).getString("tablesWithoutHeadingWarning");
-        L10N_tablesWithMergedCells = ResourceBundle.getBundle(L10N, oooLocale).getString("tablesWithColOrRowSpanWarning");
-        L10N_imagesWithoutTitleOrAltDescription = ResourceBundle.getBundle(L10N, oooLocale).getString("imagesWithoutTitleOrAltDescriptionWarning");
-        L10N_volumesTooLong = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesTooLongWarning");
-        L10N_volumesTooShort = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesTooShortWarning");
-        L10N_volumesDifferTooMuch = ResourceBundle.getBundle(L10N, oooLocale).getString("volumesDifferTooMuchWarning");
-        L10N_preliminaryVolumeRequired = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminaryVolumeRequiredWarning");
-        L10N_preliminaryVolumeTooShort = ResourceBundle.getBundle(L10N, oooLocale).getString("preliminaryVolumeTooShortWarning");
-        L10N_volumeDoesntBeginWithHeading = ResourceBundle.getBundle(L10N, oooLocale).getString("volumeDoesntBeginWithHeadingWarning");
-        L10N_omissionsInsideVolume = ResourceBundle.getBundle(L10N, oooLocale).getString("omissionsInsideVolumeWarning");
-        L10N_omissionsOutsideVolume = ResourceBundle.getBundle(L10N, oooLocale).getString("omissionsOutsideVolumeWarning");
-        L10N_transpositions = ResourceBundle.getBundle(L10N, oooLocale).getString("transpositionsWarning");
-        L10N_tocNotReplaced = ResourceBundle.getBundle(L10N, oooLocale).getString("tocNotReplacedWarning");
-        L10N_pageWidthTooSmall = ResourceBundle.getBundle(L10N, oooLocale).getString("pageWidthTooSmallWarning");
-
         L10N_eightDotsNotSupported = (settings.getExportOrEmboss()?
                                             "The " + settings.getBrailleFileType().name() + " file format ":
                                             "The selected embosser ")
-                                     + "doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";
-        
+                                     + "doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";        
     }
 
     /**
-     * Check an intermediate daisy-like file generated by {@link OdtTransformer} for possible accessibility issues.
+     * Check an intermediate daisy-like file for possible accessibility issues.
      *
      * @param daisyFile   The daisy-like file.
      */
@@ -271,31 +252,31 @@ public class Checker {
             details += "\n \u2022 " + L10N_eightDotsNotSupported;
         }
         if (volumesTooLong) {
-            details += "\n \u2022 " + L10N_volumesTooLong;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesTooLong).getDescription();
         }
         if (volumesTooShort) {
-            details += "\n \u2022 " + L10N_volumesTooShort;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesTooShort).getDescription();
         }
         if (volumesDifferTooMuch) {
-            details += "\n \u2022 " + L10N_volumesDifferTooMuch;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesDifferTooMuch).getDescription();
         }
         if (preliminaryVolumeRequired) {
-            details += "\n \u2022 " + L10N_preliminaryVolumeRequired;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_PreliminaryVolumeRequired).getDescription();
         }
         if (preliminaryVolumeTooShort) {
-            details += "\n \u2022 " + L10N_preliminaryVolumeTooShort;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_PreliminaryVolumeTooShort).getDescription();
         }
         if (volumeDoesntBeginWithHeading) {
-            details += "\n \u2022 " + L10N_volumeDoesntBeginWithHeading;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading).getDescription();
         }
         if (omissionsInsideVolume) {
-            details += "\n \u2022 " + L10N_omissionsInsideVolume;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_OmissionsInsideVolume).getDescription();
         }
         if (omissionsOutsideVolume) {
-            details += "\n \u2022 " + L10N_omissionsOutsideVolume;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_OmissionsOutsideVolume).getDescription();
         }
         if (transpositions) {
-            details += "\n \u2022 " + L10N_transpositions;
+            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_Transpositions).getDescription();
         }
 
         if (!details.equals("")) {
@@ -303,5 +284,28 @@ public class Checker {
         } else {
             return "";
         }
+    }
+
+    @Override
+    public void setOdtFile(File file) {}
+
+    @Override
+    public String getIdentifier() {
+        return "be.docarch.odt2braille.checker.PostConversionBrailleChecker";
+    }
+
+    @Override
+    public Collection<Check> getChecks() {
+        return checks.values();
+    }
+
+    @Override
+    public Report getAccessibilityReport() {
+        return null;
+    }
+
+    @Override
+    public boolean check() {
+        return false;
     }
 }

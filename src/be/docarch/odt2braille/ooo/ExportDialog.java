@@ -52,9 +52,9 @@ import com.sun.star.beans.XPropertySet;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import org_pef_text.TableFactory.TableType;
-
 
 /**
  *
@@ -68,7 +68,6 @@ public class ExportDialog implements XItemListener,
 
     private Settings settings = null;
     private XComponentContext xContext = null;
-    private Locale oooLocale = null;
     private ProgressBar progressbar = null;
     private SettingsDialog settingsDialog = null;
 
@@ -148,13 +147,6 @@ public class ExportDialog implements XItemListener,
         this.xContext = xContext;
         this.progressbar = progressbar;
 
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
-
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/ExportDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
@@ -163,6 +155,8 @@ public class ExportDialog implements XItemListener,
         dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
+
+        Locale oooLocale = Locale.getDefault();
 
         L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportDialogTitle");
         L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportButton");
@@ -423,9 +417,7 @@ public class ExportDialog implements XItemListener,
     private void updateMultipleFilesCheckBox() throws com.sun.star.uno.Exception {
 
         if (System.getProperty("os.name").toLowerCase().contains("mac os") ||
-                (Math.max(1, settings.getNumberOfVolumes()) +
-                 settings.getNumberOfSupplements() +
-                (settings.getPreliminaryVolumeEnabled()?1:0)) < 2) {
+               settings.getVolumeManagementMode() == VolumeManagementMode.SINGLE) {
             settings.setMultipleFilesEnabled(false);
             multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
         } else {
@@ -435,6 +427,7 @@ public class ExportDialog implements XItemListener,
         multipleFilesCheckBox.setState((short)(settings.getMultipleFilesEnabled()?1:0));
     }
 
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         Object source = itemEvent.Source;
@@ -465,6 +458,7 @@ public class ExportDialog implements XItemListener,
         }
     }
 
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
         Object source = actionEvent.Source;
@@ -496,6 +490,7 @@ public class ExportDialog implements XItemListener,
     /**
      * @param event
      */
+    @Override
     public void disposing(EventObject event) {}
 
 }

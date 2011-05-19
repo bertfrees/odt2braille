@@ -65,7 +65,7 @@ import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import be.docarch.odt2braille.Checker;
+import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
 import org_pef_text.pef2text.UnsupportedWidthException;
@@ -114,10 +114,6 @@ public class UnoGUI {
     private Settings loadedSettings = null;
     private Settings changedSettings = null;
 
-    private Locale odtLocale = null;
-    private Locale oooLocale = null;
-
-
     /**
      * Configure logger and locale.
      *
@@ -151,18 +147,17 @@ public class UnoGUI {
             logFile.deleteOnExit();
             fh = new FileHandler(logFile.getAbsolutePath());
             fh.setFormatter(new SimpleFormatter());
-            Logger.getLogger("").addHandler(fh);
-            Logger.getLogger("").setLevel(Level.FINEST);
+            logger.addHandler(fh);
+            logger.setLevel(Level.FINEST);
 
-            // L10N
-
-            Locale.setDefault(Locale.ENGLISH);
-
+            // Locale
+            
             try {
-                oooLocale = new Locale(UnoUtils.getUILocale(m_xContext));
+                Locale oooLocale = new Locale(UnoUtils.getUILocale(m_xContext));
+                Locale.setDefault(oooLocale);
             } catch (com.sun.star.uno.Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
-                oooLocale = Locale.getDefault();
+                Locale.setDefault(Locale.ENGLISH);
             }
 
             logger.exiting("UnoGUI", "<init>");
@@ -186,6 +181,8 @@ public class UnoGUI {
         logger.entering("UnoGUI", "initialise");
 
         try {
+
+            Locale oooLocale = Locale.getDefault();
 
             L10N_Default_Export_Filename = ResourceBundle.getBundle(L10N, oooLocale).getString("defaultExportFilename");
             L10N_Warning_MessageBox_Title = ResourceBundle.getBundle(L10N, oooLocale).getString("warningMessageBoxTitle");
@@ -215,11 +212,8 @@ public class UnoGUI {
             progressBar.increment();
 
             // Create odtTransformer
-            OdtTransformer odtTransformer = new OdtTransformer(odtFile, progressBar, oooLocale);
+            OdtTransformer odtTransformer = new OdtTransformer(odtFile, progressBar);
             progressBar.increment();
-
-            // Locale
-            odtLocale = odtTransformer.getOdtLocale();
 
             // Set liblouis directory
             String packageLocation = UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
@@ -231,7 +225,7 @@ public class UnoGUI {
             settingsIO = new SettingsIO(m_xContext, xDesktopComponent);
 
             // Load settings
-            loadedSettings = new Settings(odtTransformer, odtLocale);
+            loadedSettings = new Settings(odtTransformer);
             progressBar.increment();
             settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
 
@@ -318,7 +312,7 @@ public class UnoGUI {
      *
      * <ul>
      * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link Checker} checks the settings and the flat .odt file, and
+     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
      *     if necessary, a first warning box with possible accessibility issues is shown.</li>
      * <li>The user selects the location of the output file in a "Save as" dialog.</li>
      * <li>The document is converted to a temporary .pef file.</li>
@@ -336,7 +330,7 @@ public class UnoGUI {
         PEF pef = null;
         File[] brailleFiles = null;
         String warning = null;
-        Checker checker = null;
+        PostConversionBrailleChecker checker = null;
 
         try {
 
@@ -372,11 +366,11 @@ public class UnoGUI {
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
-            // Checker
-            checker = new Checker(oooLocale, changedSettings);
+            // PostConversionBrailleChecker
+            checker = new PostConversionBrailleChecker(changedSettings);
 
             // Create PEF
-            pef = new PEF(changedSettings, liblouisXML, progressBar, checker, oooLocale);
+            pef = new PEF(changedSettings, liblouisXML, progressBar, checker);
 
             // Translate into braille
             if(!pef.makePEF()) {
@@ -384,7 +378,7 @@ public class UnoGUI {
                 return false;
             }
 
-            // Checker
+            // PostConversionBrailleChecker
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning
@@ -551,7 +545,7 @@ public class UnoGUI {
      *
      * <ul>
      * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link Checker} checks the settings and the flat .odt file, and
+     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
      *     if necessary, a first warning box with possible accessibility issues is shown.</li>
      * <li>Either the "Emboss" dialog or the "Emboss on Interpoint 55" is shown, depending on the selected embosser type.</li>
      * <li>The document is converted to a temporary .pef file.</li>
@@ -572,7 +566,7 @@ public class UnoGUI {
         HandlePEF handlePef = null;
         String deviceName = null;
         String warning = null;
-        Checker checker = null;
+        PostConversionBrailleChecker checker = null;
 
         try {
 
@@ -610,11 +604,11 @@ public class UnoGUI {
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
-            // Checker
-            checker = new Checker(oooLocale, changedSettings);
+            // PostConversionBrailleChecker
+            checker = new PostConversionBrailleChecker(changedSettings);
 
             // Create PEF
-            pef = new PEF(changedSettings, liblouisXML, progressBar, checker, oooLocale);
+            pef = new PEF(changedSettings, liblouisXML, progressBar, checker);
 
             // Translate into braille
             if(!pef.makePEF()) {
@@ -622,7 +616,7 @@ public class UnoGUI {
                 return false;
             }
 
-            // Checker
+            // PostConversionBrailleChecker
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning

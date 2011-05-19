@@ -226,13 +226,6 @@ public class EmbossDialog implements XItemListener,
         this.parentWindowPeer = parentWindowPeer;
         this.progressbar = progressbar;
 
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
-
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/EmbossDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
@@ -241,6 +234,8 @@ public class EmbossDialog implements XItemListener,
         dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
+
+        Locale oooLocale = Locale.getDefault();
 
         L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossDialogTitle");
         L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossButton");
@@ -308,6 +303,8 @@ public class EmbossDialog implements XItemListener,
         L10N_table.put(TableType.SV_SE_MIXED,           "Swedish (2)");
         L10N_table.put(TableType.ES_OLD,                "Spanish (Old)");
         L10N_table.put(TableType.ES_NEW,                "Spanish (New)");
+        L10N_table.put(TableType.PORTATHIEL,            "Transparent mode");
+        L10N_table.put(TableType.MIT,                   "US (MIT)");
 
         L10N_paperSize.put(PaperSize.UNDEFINED,         "-");
         L10N_paperSize.put(PaperSize.A4_LANDSCAPE,      "A4 (Landscape)");

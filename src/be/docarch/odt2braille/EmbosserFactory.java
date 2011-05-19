@@ -11,6 +11,7 @@ import org_pef_text.pef2text.LinePreamble;
 import org_pef_text.pef2text.Paper;
 import org_pef_text.pef2text.Paper.PaperSize;
 import org_pef_text.pef2text.UnsupportedPaperException;
+import org_pef_text.TableFactory.TableType;
 
 /**
  * 
@@ -148,7 +149,7 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
                             }
                             b = new ConfigurableEmbosser.Builder(os, btb.newTable())
                                 .breaks(LineBreaks.Type.IMPACTO)
-                                .padNewline(ConfigurableEmbosser.Padding.NONE)
+                                .padNewline(ConfigurableEmbosser.Padding.IMPACTO)
                                 .supportsDuplex(settings.getDuplex())
                                 .supportsAligning(true)
                                 .supports8dot(false)
@@ -159,9 +160,9 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
                             return b.build();
 
                         case PORTATHIEL_BLUE:
+
                             b = new ConfigurableEmbosser.Builder(os, btb.newTable())
-                                .breaks(LineBreaks.Type.PORTATHIEL)
-                                .padNewline(ConfigurableEmbosser.Padding.NONE)
+
                                 .supportsDuplex(settings.getDuplex())
                                 .supportsAligning(true)
                                 .supports8dot(false)
@@ -169,6 +170,19 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
                                 .setHeight(settings.getLinesInHeight())
                                 .header(getPortathielHeader(settings))
                                 .footer(new byte[]{0x1b,0x54});
+                            
+                            if (settings.getTable() == TableType.PORTATHIEL) {
+
+                                b = b.breaks(LineBreaks.Type.PORTATHIEL)
+                                     .padNewline(ConfigurableEmbosser.Padding.PORTATHIEL);
+
+                            } else {
+
+                                b = b.breaks(LineBreaks.Type.DOS)
+                                     .padNewline(ConfigurableEmbosser.Padding.NONE);
+
+                            }
+                            
                             return b.build();
 
 			case BRAILLO_200: case BRAILLO_400_S: case BRAILLO_400_SR:
@@ -427,15 +441,23 @@ public class EmbosserFactory extends org_pef_text.pef2text.EmbosserFactory {
         if (linesPerPage < 10 || linesPerPage > 31) { throw new UnsupportedPaperException("Lines per page = " + linesPerPage + ", must be in [10,31]"); }
 
         StringBuffer header = new StringBuffer();
+        byte[] bytes;
 
-        header.append(  "\u001b!TP");                                             // Transparent mode ON
+        if (settings.getTable() == TableType.PORTATHIEL) {
+            header.append("\u001b!TP");                                           // Transparent mode ON
+        } else {
+            header.append("\u001b!CS2");                                          // Character set = MIT
+        }
+
         header.append("\r\u001b!DT");  header.append(eightDots?'6':'8');          // 6 or 8 dots
         header.append("\r\u001b!DS");  header.append(duplex?'1':'0');             // Front-side or double-sided embossing
         header.append("\r\u001b!LM0");                                            // Left margin
         header.append("\r\u001b!SL1");                                            // Interline space = 1/10 inch
-        header.append("\r\u001b!PL");  header.append(toBytes(pageLength, 2));     // Page length in inches
-        header.append("\r\u001b!LP");  header.append(toBytes(linesPerPage, 2));   // Lines per page
-        header.append("\r\u001b!CL");  header.append(toBytes(charsPerLine, 2));   // Characters per line
+        header.append("\r\u001b!PL");  bytes = toBytes(pageLength, 2);
+                                       header.append((char)bytes[0]);
+                                       header.append((char)bytes[1]);             // Page length in inches
+        header.append("\r\u001b!LP");  header.append(linesPerPage);               // Lines per page
+        header.append("\r\u001b!CL");  header.append(charsPerLine);               // Characters per line
         header.append("\r\u001b!CT1");                                            // Cut off words
         header.append("\r\u001b!NI1");                                            // No indent
         header.append("\r\u001b!JB0");                                            // Jumbo mode OFF

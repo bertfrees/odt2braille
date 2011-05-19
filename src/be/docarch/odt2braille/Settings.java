@@ -1571,8 +1571,10 @@ public class Settings {
                     }
                 case IMPACTO_600:
                 case IMPACTO_TEXTO:
+                    return (table==TableType.IMPACTO);
                 case PORTATHIEL_BLUE:
-                        return (table==TableType.PORTATHIEL);
+                    return (table==TableType.PORTATHIEL ||
+                            table==TableType.MIT);
                 default:
                     return false;
 
@@ -3126,17 +3128,10 @@ public class Settings {
                 odtTransformer.configure(this);
 
                 int[] allPages = odtTransformer.extractDocumentOutline();
-
-                int min = 23;
-                int max = 35;
-                int preferred = 30;
-                int minlast = 15;
-
-                int[] optimalVolumes = computeOptimalVolumes(allPages, min, max, preferred, minlast);
-
+                int[] optimalVolumes = computeOptimalVolumes(allPages, minVolumeSize, maxVolumeSize, preferredVolumeSize, minLastVolumeSize);
                 automaticVolumes = new ArrayList<AutomaticVolume>();
-
                 AutomaticVolume v;
+
                 for (int i=0; i<optimalVolumes.length; i++) {
                     v = new AutomaticVolume(i+1, optimalVolumes[i]+1);
                     v.setTitle(capitalizeFirstLetter(L10N_volume) + " " + (i+1));
@@ -3399,14 +3394,6 @@ public class Settings {
 
     public String getDate() {
         return DATE;
-    }
-
-    public int getNumberOfVolumes() {
-        return NUMBER_OF_VOLUMES;
-    }
-
-    public int getNumberOfSupplements() {
-        return NUMBER_OF_SUPPLEMENTS;
     }
 
     public boolean getPreliminaryPagesPresent() {
@@ -3773,8 +3760,8 @@ public class Settings {
 
         switch (volumeManagementMode) {
             case MANUAL:
-                volumeCount = getNumberOfVolumes();
-                supplementCount = getNumberOfSupplements();
+                volumeCount = NUMBER_OF_VOLUMES;
+                supplementCount = NUMBER_OF_SUPPLEMENTS;
                 break;
             case SINGLE:
                 volumeCount = 1;
@@ -3784,7 +3771,7 @@ public class Settings {
                 break;
         }
 
-        volumeInfo += volumeCount + ((volumeCount>1)?L10N_volumes:L10N_volume) + ((supplementCount==0)?"":" " + L10N_and + " " +
+        volumeInfo += volumeCount + " " + ((volumeCount>1)?L10N_volumes:L10N_volume) + ((supplementCount==0)?"":" " + L10N_and + " " +
                       supplementCount + ((supplementCount>1)?L10N_supplements:L10N_supplement));
         volumeInfo += "\n@title\n@pages";
 

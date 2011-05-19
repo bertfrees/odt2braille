@@ -233,6 +233,7 @@ added:
 -borders on headings/tables/frames
 -note settings: noteref/footnotes
 -volume management settings: automatic splitting in volumes
+-setting for hyphenation: minimum length of splitted parts
 
 new tables:
 

@@ -110,14 +110,7 @@ public class PrintDialog implements XItemListener {
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
 
-        Locale oooLocale = null;
-
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
+        Locale oooLocale = Locale.getDefault();
 
         L10N_deviceLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("deviceLabel") + ":";
         L10N_printToFileLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("printToFileLabel");

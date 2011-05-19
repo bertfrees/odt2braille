@@ -65,7 +65,7 @@
         <rdf:RDF>
             <foaf:Group rdf:nodeID="assertor" >
                 <earl:mainAssertor>
-                    <earl:Software rdf:about="http://www.docarch.be/odt2braille" />
+                    <earl:Software rdf:about="http://www.docarch.be/odt2braille/checker/BrailleChecker" />
                 </earl:mainAssertor>
                 <foaf:member>
                     <foaf:Person rdf:about="http://www.docarch.be/bert" />

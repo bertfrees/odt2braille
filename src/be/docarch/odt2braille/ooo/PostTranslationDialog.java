@@ -81,13 +81,7 @@ public class PostTranslationDialog implements XActionListener {
 
         // L10JN
 
-        Locale oooLocale = null;
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
+        Locale oooLocale = Locale.getDefault();
 
         L10N_windowTitle = "Succes";
         L10N_message = "The document was succesfully translated into Braille.";

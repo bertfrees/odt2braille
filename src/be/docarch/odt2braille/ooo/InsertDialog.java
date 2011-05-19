@@ -114,12 +114,7 @@ public class InsertDialog implements XTextListener,
 
         logger.entering("InsertDialog", "<init>");
         
-        try {
-            oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            oooLocale = Locale.getDefault();
-        }
+        oooLocale = Locale.getDefault();
         
         L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("insertDialogTitle");
         L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");

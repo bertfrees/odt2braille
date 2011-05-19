@@ -120,7 +120,6 @@ public class SettingsDialog implements XItemListener,
 
     private Settings settings = null;
     private XComponentContext xContext = null;
-    private Locale oooLocale = null;
 
     private final static short GENERAL_PAGE = 1;
     private final static short LANGUAGES_PAGE = 2;
@@ -979,13 +978,6 @@ public class SettingsDialog implements XItemListener,
 
         this.xContext = xContext;
 
-        try {
-            this.oooLocale = new Locale(UnoUtils.getUILocale(xContext));
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-            this.oooLocale = Locale.getDefault();
-        }
-
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/SettingsDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
@@ -1014,7 +1006,7 @@ public class SettingsDialog implements XItemListener,
         XWindow xWindow = (XWindow) UnoRuntime.queryInterface(XWindow.class, dialogControl);
         dialogControl.createPeer(xToolkit, null);
         windowProperties.setPropertyValue("Title",
-                ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")
+                ResourceBundle.getBundle(L10N_BUNDLE, Locale.getDefault()).getString("settingsDialogTitle")
                 + "  -  Loading... please wait");
         windowProperties.setPropertyValue("Step", 100);
         xWindow.setVisible(true);
@@ -1050,6 +1042,8 @@ public class SettingsDialog implements XItemListener,
         // pagesEnabled[MATH_PAGE-1] = settings.getMathPresent();
         // pagesEnabled[TOC_PAGE-1] = settings.getPreliminaryPagesPresent();
         // pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getPreliminaryPagesPresent();
+
+        Locale oooLocale = Locale.getDefault();
 
         // Main Window
 

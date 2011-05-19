@@ -137,18 +137,24 @@ public class OdtTransformer {
     private List<ListStyle> listSettings = null;
     private List<HeadingStyle> headingSettings = null;
 
+    public OdtTransformer(File odtFile)
+                   throws IOException,
+                          TransformerConfigurationException,
+                          TransformerException,
+                          ParserConfigurationException {
+        
+        this (odtFile, null);
+    }
 
     /**
      * Creates a new <code>OdtTransformer</code> instance.
      *
      * @param odtFile           The .odt file.
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
-     * @param odtLocale         The <code>Locale</code> for the document.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
     public OdtTransformer(File odtFile,
-                          StatusIndicator statusIndicator,
-                          Locale oooLocale)
+                          StatusIndicator statusIndicator)
                    throws IOException,
                           TransformerConfigurationException,
                           TransformerException,
@@ -156,8 +162,8 @@ public class OdtTransformer {
 
         logger.entering("OdtTransformer","<init>");
 
-        this.oooLocale = oooLocale;
         this.statusIndicator = statusIndicator;
+        oooLocale = Locale.getDefault();
 
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
 
@@ -379,12 +385,16 @@ public class OdtTransformer {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
             if (firstNode != null) {
-                statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
-                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1"));
+                if (statusIndicator != null) {
+                    statusIndicator.start();
+                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
+                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1"));
+                }
                 insertPagination(contentRoot, stylesRoot, firstNode, 0, "Standard", true);
-                statusIndicator.finish(true);
-                statusIndicator.close();
+                if (statusIndicator != null) {
+                    statusIndicator.finish(true);
+                    statusIndicator.close();
+                }
             }
 
             documentSaved = false;
@@ -409,12 +419,16 @@ public class OdtTransformer {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
             if (firstNode != null) {
-                statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
-                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
+                if (statusIndicator != null) {
+                    statusIndicator.start();
+                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
+                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
+                }
                 insertHeadingNumbering(contentRoot, stylesRoot, firstNode, true);
-                statusIndicator.finish(true);
-                statusIndicator.close();
+                if (statusIndicator != null) {
+                    statusIndicator.finish(true);
+                    statusIndicator.close();
+                }
             }
 
             documentSaved = false;
@@ -442,12 +456,16 @@ public class OdtTransformer {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
             if (firstNode != null) {
-                statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
-                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
+                if (statusIndicator != null) {
+                    statusIndicator.start();
+                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
+                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
+                    }
                 insertListNumbering(contentRoot, stylesRoot, firstNode, 0, true);
-                statusIndicator.finish(true);
-                statusIndicator.close();
+                if (statusIndicator != null) {
+                    statusIndicator.finish(true);
+                    statusIndicator.close();
+                }
             }
 
             documentSaved = false;
@@ -695,8 +713,9 @@ public class OdtTransformer {
             insertAfterNode = pageNode;
             thisIsFirst = false;
 
-            statusIndicator.increment();
-
+            if (statusIndicator != null) {
+                statusIndicator.increment();
+            }
         }
 
         // Process all children
@@ -1028,8 +1047,9 @@ public class OdtTransformer {
                             // logger.info("<num> " + display + " added to heading");
                         }
 
-                        statusIndicator.increment();
-
+                        if (statusIndicator != null) {
+                            statusIndicator.increment();
+                        }
                     }
                 }
 
@@ -1176,7 +1196,10 @@ public class OdtTransformer {
 
                     id = XPathAPI.eval(node, "current()/@id[1]").str();
                     level = 1;
-                    statusIndicator.increment();
+
+                    if (statusIndicator != null) {
+                        statusIndicator.increment();
+                    }
 
                     if (linkedLists.containsKey(id)) {
 
