@@ -550,7 +550,7 @@ public class OdtTransformer {
             
             if (node.getAttributes().getNamedItem("text:style-name") != null) {
 
-                xpath = "current()/*//@style-name[1]";
+                xpath = "./*//@style-name";
                 if (XPathAPI.eval(node, xpath).bool()) {
                     styleName = XPathAPI.eval(node, xpath).str();
                 }
@@ -923,7 +923,7 @@ public class OdtTransformer {
 
                         }
 
-                        if (!XPathAPI.eval(node, "current()/ancestor::frame").bool()) {
+                        if (!XPathAPI.eval(node, "./ancestor::frame").bool()) {
                             if (outlineNumber==null) {
                                 outlineNumber = new ListNumber(outlineProperties);
                             }
@@ -1055,11 +1055,11 @@ public class OdtTransformer {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = Integer.parseInt(XPathAPI.eval(node, "count(current()/ancestor-or-self::frame)").str());
+                int depth = Integer.parseInt(XPathAPI.eval(node, "count(./ancestor-or-self::frame)").str());
 
                 // Process all heading descendants
 
-                nodes = XPathAPI.selectNodeList(node, "current()/descendant::h[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathAPI.selectNodeList(node, "./descendant::h[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -1067,7 +1067,7 @@ public class OdtTransformer {
 
                 // Process all frame descendants
 
-                nodes = XPathAPI.selectNodeList(node, "current()/descendant::frame[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathAPI.selectNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -1131,20 +1131,20 @@ public class OdtTransformer {
             nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id]");
 
             for (int i=0;i<nodes.getLength();i++) {
-                next = nodes.item(i);
 
+                next = nodes.item(i);
                 attr = next.getAttributes();
-                id = XPathAPI.eval(next, "current()/@id[1]").str();
+                id = XPathAPI.eval(next, "./@id").str();
 
                 if (attr.getNamedItem("text:style-name") != null) {
 
                     listStyleName = attr.getNamedItem("text:style-name").getNodeValue();
                     tmp = id;
 
-                    if (XPathAPI.eval(next, "current()/@continue-list[1]").bool()) {
-                        tmp = XPathAPI.eval(next, "current()/@continue-list[1]").str();
-                    } else if (XPathAPI.eval(next, "current()/@continue-numbering[1]").bool()) {
-                        if (XPathAPI.eval(next, "current()/@continue-numbering[1]").str().equals("true")) {
+                    if (XPathAPI.eval(next, "./@continue-list").bool()) {
+                        tmp = XPathAPI.eval(next, "./@continue-list").str();
+                    } else if (XPathAPI.eval(next, "./@continue-numbering").bool()) {
+                        if (XPathAPI.eval(next, "./@continue-numbering").str().equals("true")) {
                             if (prevId!=null) {
                                 tmp = prevId;
                             }
@@ -1162,12 +1162,11 @@ public class OdtTransformer {
                             tmp = linkedLists.get(linkId);
                         }
                     }
+
                     linkedLists.put(id, linkId);
-
                 }
-                next = XPathAPI.selectSingleNode(next, "current()/following::list[@id][1]");
+                
                 prevId = id;
-
             }
 
             // Process all lists[@id] outside frames
@@ -1190,11 +1189,12 @@ public class OdtTransformer {
 
             if (nodeName.equals("text:list")) {
 
-                if (XPathAPI.eval(node, "current()/@id[1]").bool()) {
+                if (XPathAPI.eval(node, "@id").bool()) {
 
                     // Main list
 
-                    id = XPathAPI.eval(node, "current()/@id[1]").str();
+                    id = XPathAPI.eval(node, "@id").str();
+
                     level = 1;
 
                     if (statusIndicator != null) {
@@ -1260,12 +1260,11 @@ public class OdtTransformer {
 
                             properties = new ListStyleProperties(listStyleName, numFormat, prefix, suffix, displayLevels, startValue);
                             listProperties.put(listStyleName,properties);
-
                         }
 
                         // Update currentnumber
 
-                        if (!XPathAPI.eval(node, "current()/ancestor::frame").bool()) {
+                        if (!XPathAPI.eval(node, "./ancestor::frame").bool()) {
                             if (!listNumber.containsKey(id)) {
                                 listNumber.put(id, new ListNumber(listProperties.get(listStyleName)));
                             }
@@ -1440,11 +1439,11 @@ public class OdtTransformer {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = Integer.parseInt(XPathAPI.eval(node, "count(current()/ancestor-or-self::frame)").str());
+                int depth = Integer.parseInt(XPathAPI.eval(node, "count(./ancestor-or-self::frame)").str());
 
                 // Process all descendants of type list[@id]
 
-                nodes = XPathAPI.selectNodeList(node, "current()/descendant::list[@id][count(ancestor::frame)=" + depth + "]");
+                nodes = XPathAPI.selectNodeList(node, "./descendant::list[@id][count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertListNumbering(contentRoot, stylesRoot, next, level, false);
@@ -1452,7 +1451,7 @@ public class OdtTransformer {
 
                 // Process all frame descendants
 
-                nodes = XPathAPI.selectNodeList(node, "current()/descendant::frame[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathAPI.selectNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertListNumbering(contentRoot, stylesRoot, next, 0, false);

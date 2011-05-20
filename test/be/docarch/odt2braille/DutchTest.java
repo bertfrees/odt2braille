@@ -1,26 +1,39 @@
 package be.docarch.odt2braille;
 
+import java.io.File;
 import org.junit.Test;
-import org.junit.Ignore;
 
 /**
  *
  * @author Bert Frees
  */
-@Ignore
-public class DutchTest extends TranslationTest {
+public class DutchTest extends Odt2BrailleTest {
 
     @Test
-    public void specialCasesTest() throws Exception {
+    public void generalTest() throws Exception {
 
-        simpleTest("dutch special cases");
+        String fileName = "dutch_general";
 
+        File correctODT = new File(resources + fileName + ".braille.odt");
+        File testODT = new File(resources + fileName + ".odt");
+
+        File correctPEF = simpleODT2PEF(correctODT);
+        File testPEF = simpleODT2PEF(testODT);
+
+        comparePEFs(correctPEF, testPEF);
     }
 
     @Test
     public void italicTest() throws Exception {
 
-        simpleTest("dutch italic");
+        String fileName = "dutch_italic";
 
+        File correctODT = new File(resources + fileName + ".braille.odt");
+        File testODT = new File(resources + fileName + ".odt");
+
+        File correctPEF = simpleODT2PEF(correctODT);
+        File testPEF = simpleODT2PEF(testODT);
+
+        comparePEFs(correctPEF, testPEF);
     }
 }

@@ -19,14 +19,12 @@ import static org.junit.Assert.assertTrue;
 @Ignore
 public abstract class Odt2BrailleTest {
 
-    protected static String pefs;
-    protected static String odts;
+    protected static String resources;
     protected static File liblouis;
 
     static {
 
         XMLUnit.setIgnoreWhitespace(true);
-
         Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
         try {
@@ -38,8 +36,7 @@ public abstract class Odt2BrailleTest {
             logger.addHandler(fh);
             logger.setLevel(Level.FINEST);
 
-            pefs = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/pef/").getFile();
-            odts = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/odt/").getFile();
+            resources = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/").getFile();
             liblouis = new File(new File(Odt2BrailleTest.class.getResource("/be").getFile())
                                         .getParentFile().getParentFile().getParent() + File.separator + "liblouis");
 
@@ -48,31 +45,29 @@ public abstract class Odt2BrailleTest {
         }
     }
 
-    static void compare(File correctPEF,
-                        File producedPEF)
-                 throws Exception{
+    protected static void comparePEFs(File correctPEF,
+                                      File testPEF)
+                               throws Exception{
 
         Diff myDiff = new Diff(new FileReader(correctPEF),
-                               new FileReader(producedPEF));
+                               new FileReader(testPEF));
 
         assertTrue("PEFs not equal\n" + myDiff, myDiff.identical());
     }
 
-    static void simpleTest(String fileName)
-                    throws Exception {
+    protected static File simpleODT2PEF(File odtFile)
+                                 throws Exception {
 
-        File odt = new File(odts + fileName + ".odt");
-        File correctPEF = new File(pefs + fileName + ".pef");
-        OdtTransformer tf = new OdtTransformer(odt);
+        OdtTransformer tf = new OdtTransformer(odtFile);
         Settings settings = new Settings(tf);
 
         settings.setBraillePageNumbers(false);
+        settings.setPageSeparator(false);
 
         LiblouisXML liblouisXML = new LiblouisXML(settings, liblouis);
         PEF pefBuilder = new PEF(settings, liblouisXML);
         pefBuilder.makePEF();
-        File producedPEF = pefBuilder.getSinglePEF();
 
-        compare(correctPEF, producedPEF);
+        return pefBuilder.getSinglePEF();
     }
 }

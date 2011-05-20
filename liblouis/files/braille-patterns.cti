@@ -1,13 +1,8 @@
 # ----------------------------------------------------------------------------------------------
-#  odt2braille - Braille authoring in OpenOffice.org.
-#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
-# ----------------------------------------------------------------------------------------------
-
-# ----------------------------------------------------------------------------------------------
 # Unicode 2800..28FF  Braille Patterns
 # ----------------------------------------------------------------------------------------------
 
-sign        \x2800  28a                  # ⠀                   BRAILLE PATTERN DOTS-0
+sign        \x2800  0                    # ⠀                   BRAILLE PATTERN DOTS-0
 sign        \x2801  1                    # ⠁                   BRAILLE PATTERN DOTS-1
 sign        \x2802  2                    # ⠂                   BRAILLE PATTERN DOTS-2
 sign        \x2803  12                   # ⠃                   BRAILLE PATTERN DOTS-12
