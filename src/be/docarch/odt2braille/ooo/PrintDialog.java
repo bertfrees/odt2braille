@@ -33,6 +33,7 @@ import com.sun.star.lang.XComponent;
 import com.sun.star.lang.EventObject;
 import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XCheckBox;
+import com.sun.star.awt.XTextComponent;
 import com.sun.star.awt.XNumericField;
 import com.sun.star.awt.XDialog;
 import com.sun.star.awt.XControlContainer;
@@ -42,28 +43,31 @@ import com.sun.star.awt.DialogProvider2;
 import com.sun.star.awt.XControl;
 import com.sun.star.awt.XFixedText;
 import com.sun.star.awt.XItemListener;
+import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.ItemEvent;
+import com.sun.star.awt.TextEvent;
 import com.sun.star.awt.XButton;
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
 import be.docarch.odt2braille.Constants;
-
+import org.daisy.braille.embosser.Embosser;
+import org.daisy.braille.embosser.EmbosserFeatures;
 
 /**
  * Show an OpenOffice.org dialog window for selecting the embosser device.
  *
  * @author   Bert Frees
  */
-public class PrintDialog implements XItemListener {
+public class PrintDialog implements XItemListener,
+                                    XTextListener {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N = Constants.OOO_L10N_PATH;
 
     private boolean printToFile = false;
-    private int numberOfCopies = 1;
-    private int maxNumberOfCopies = 1;
+    private Embosser embosser = null;
 
     private XDialog xDialog = null;
     private XControlContainer xControlContainer = null;
@@ -74,6 +78,7 @@ public class PrintDialog implements XItemListener {
     private XNumericField numberOfCopiesField = null;
     private XButton okButton = null;
     private XButton cancelButton = null;
+    private XTextComponent numberOfCopiesTextComponent = null;
 
     private XPropertySet deviceListBoxProperties = null;
     private XPropertySet numberOfCopiesFieldProperties = null;
@@ -101,10 +106,13 @@ public class PrintDialog implements XItemListener {
      *
      * @param   xContext
      */
-    public PrintDialog(XComponentContext xContext)
-                 throws com.sun.star.uno.Exception {
+    public PrintDialog(XComponentContext xContext,
+                       Embosser embosser)
+                throws com.sun.star.uno.Exception {
 
         logger.entering("PrintDialog", "<init>");
+
+        this.embosser = embosser;
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";
@@ -134,6 +142,8 @@ public class PrintDialog implements XItemListener {
                             xControlContainer.getControl(_okButton));
         cancelButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                             xControlContainer.getControl(_cancelButton));
+        numberOfCopiesTextComponent = (XTextComponent) UnoRuntime.queryInterface(XTextComponent.class,
+                            xControlContainer.getControl(_numberOfCopiesField));
 
         XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, xDialog)).getModel());
@@ -143,7 +153,14 @@ public class PrintDialog implements XItemListener {
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numberOfCopiesField)).getModel());
 
         windowProperties.setPropertyValue("Title", L10N_windowTitle);
+        
+        if (embosser.getFeature(EmbosserFeatures.NUMBER_OF_COPIES) == null) {
+            numberOfCopiesFieldProperties.setPropertyValue("Enabled", false);
+        } else {
+            numberOfCopiesFieldProperties.setPropertyValue("Enabled", true);
+        }
 
+        numberOfCopiesTextComponent.addTextListener(this);
         printToFileCheckBox.addItemListener(this);
 
     }
@@ -189,15 +206,14 @@ public class PrintDialog implements XItemListener {
 
         numberOfCopiesField.setDecimalDigits((short)0);
         numberOfCopiesField.setMin((double)1);
-        numberOfCopiesField.setMax((double)maxNumberOfCopies);
-        numberOfCopiesField.setValue((double)numberOfCopies);
+        numberOfCopiesField.setMax((double)Integer.MAX_VALUE);
+        numberOfCopiesField.setValue((double)1);
 
         updateProperties();
 
         short ret = xDialog.execute();
 
         String deviceName = deviceListBox.getSelectedItem();
-        numberOfCopies = (int)numberOfCopiesField.getValue();
 
         xComponent.dispose();
 
@@ -214,22 +230,10 @@ public class PrintDialog implements XItemListener {
 
         printToFile = (printToFileCheckBox.getState() == (short) 1);
         deviceListBoxProperties.setPropertyValue("Enabled", !printToFile);
-        numberOfCopiesFieldProperties.setPropertyValue("Enabled", maxNumberOfCopies > 1);
     }
 
     public boolean getPrintToFile() {
         return printToFile;
-    }
-
-    public int getNumberOfCopies() {
-        return numberOfCopies;
-    }
-
-    public void setMaxNumberOfCopies(int maxNumberOfCopies) {
-
-        this.maxNumberOfCopies = (int)Math.max(1, maxNumberOfCopies);
-        numberOfCopiesField.setMax((double)this.maxNumberOfCopies);
-        numberOfCopies = (int)Math.min(this.maxNumberOfCopies, numberOfCopies);
     }
 
     public void itemStateChanged(ItemEvent itemEvent) {
@@ -251,4 +255,19 @@ public class PrintDialog implements XItemListener {
      * @param event
      */
     public void disposing(EventObject event) {}
+
+    public void textChanged(TextEvent textEvent) {
+
+        Object source = textEvent.Source;
+
+        if (source.equals(numberOfCopiesTextComponent)) {
+
+            try {
+                embosser.setFeature(EmbosserFeatures.NUMBER_OF_COPIES, (int)numberOfCopiesField.getValue());
+                numberOfCopiesField.setValue((Integer)embosser.getFeature(EmbosserFeatures.NUMBER_OF_COPIES));
+            } catch (IllegalArgumentException e) {
+            } catch (ClassCastException e) {
+            }
+        }
+    }
 }

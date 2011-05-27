@@ -218,9 +218,10 @@ bugs fixed:
 embossers:
 
 - generic
-- (enabling technologies)
-- (mountbatten)
-- (viewplus)
+- cidat
+- enabling technologies
+- mountbatten
+- viewplus
 - ...
 
 changes:
@@ -240,3 +241,5 @@ new tables:
 - Serbian
 - Kurdish
 - Ethiopic
+
+updated tables => zie liblouis ?

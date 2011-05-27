@@ -24,7 +24,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import org.xml.sax.SAXException;
 import org.daisy.util.xml.validation.ValidationException;
 import javax.xml.transform.TransformerException;
@@ -32,16 +31,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.print.PrintException;
 
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
-import org_pef_text.pef2text.PEFHandler.AlignmentFallback;
-import org_pef_text.pef2text.PrinterDevice;
-import org_pef_text.pef2text.AbstractEmbosser;
-import org_pef_text.pef2text.PEFHandler;
-import org_pef_text.pef2text.PEFParser;
-import org_pef_text.pef2text.EmbosserFactoryException;
-import org_pef_text.pef2text.UnsupportedWidthException;
+import org.daisy.braille.embosser.FileFormat;
+import org.daisy.braille.embosser.Embosser;
+import org.daisy.braille.embosser.EmbosserWriter;
+import org.daisy.braille.embosser.EmbosserFeatures;
+import org.daisy.braille.facade.PEFConverterFacade;
+import org.daisy.braille.pef.PEFHandler;
+import org.daisy.paper.PageFormat;
+import org.daisy.printing.PrinterDevice;
 
+import org.daisy.braille.embosser.UnsupportedWidthException;
 
 /**
  * This class handles the processing of a .pef file.
@@ -60,7 +59,6 @@ public class HandlePEF {
     private Settings settings = null;
     private PEF pef = null;
 
-
     /**
      * Creates a new <code>HandlePEF</code> instance.
      *
@@ -74,17 +72,9 @@ public class HandlePEF {
 
         this.settings = settings;
         this.pef = pef;
-
     }
 
-    /**
-     * Convert to the Interpoint .x55 file format. Not implemented yet.
-     *
-     */
-    public void convertToX55(File output) {}
-
-
-    public File convertToSingleFile(BrailleFileType fileType)
+    public File convertToSingleFile(FileFormat format)
                              throws ParserConfigurationException,
                                     IOException,
                                     SAXException,
@@ -92,18 +82,22 @@ public class HandlePEF {
 
         logger.entering("HandlePEF", "convertToSingleFile");
 
-        File output = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase(), TMP_DIR);
+        try {
+            format.setFeature(EmbosserFeatures.TABLE, settings.getTable());
+        } catch (IllegalArgumentException e) {
+        }
+
+        File output = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
         output.deleteOnExit();
 
-        convertToFile(fileType, pef.getSinglePEF(), output);
+        convertToFile(format, pef.getSinglePEF(), output);
 
         logger.exiting("HandlePEF", "convertToSingleFile");
 
         return output;
-
     }
 
-    public File[] convertToFiles(BrailleFileType fileType)
+    public File[] convertToFiles(FileFormat format)
                           throws ParserConfigurationException,
                                  IOException,
                                  UnsupportedWidthException,
@@ -113,6 +107,17 @@ public class HandlePEF {
                                  SAXException {
 
         logger.entering("HandlePEF", "convertToFiles");
+
+        // TableCatalog uses the context class loader
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
+
+            try {
+                format.setFeature(EmbosserFeatures.TABLE, settings.getTable());
+            } catch (IllegalArgumentException e) {
+            }
+
+        } Thread.currentThread().setContextClassLoader(cl);
 
         File[] outputFiles;
         File[] pefFiles;
@@ -130,16 +135,15 @@ public class HandlePEF {
         outputFiles = new File[pefFiles.length];
         for (int i=0; i<outputFiles.length; i++) {
 
-            outputFiles[i] = File.createTempFile(TMP_NAME, "." + fileType.name().toLowerCase(), TMP_DIR);
+            outputFiles[i] = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
             outputFiles[i].deleteOnExit();
-            convertToFile(fileType, pefFiles[i], outputFiles[i]);
+            convertToFile(format, pefFiles[i], outputFiles[i]);
             
         }
 
         logger.exiting("HandlePEF", "convertToFiles");
 
         return outputFiles;
-
     }
 
     /**
@@ -148,33 +152,34 @@ public class HandlePEF {
      * @param   type    {@link BrailleFileType#BRF}, {@link BrailleFileType#BRF_INTERPOINT} or {@link BrailleFileType#BRL}.
      * @param   output  The location where the output file will be saved.
      */
-    private boolean convertToFile (BrailleFileType fileType,
-                                   File input,
-                                   File output)
-                            throws ParserConfigurationException,
-                                   IOException,
-                                   SAXException,
-                                   UnsupportedWidthException {
+    private boolean convertToFile(FileFormat format,
+                                  File input,
+                                  File output)
+                           throws ParserConfigurationException,
+                                  IOException,
+                                  SAXException,
+                                  UnsupportedWidthException {
 
         logger.entering("HandlePEF", "convertToFile");
 
-        AbstractEmbosser brailleFileExporter = new BrailleFileExporter(new FileOutputStream(output),
-                                                                       fileType,
-                                                                       settings.getTable(),
-                                                                       settings.getCellsPerLine(),
-                                                                       settings.getLinesPerPage(),
-                                                                       settings.getDuplex());
-        PEFHandler.Builder builder = new PEFHandler.Builder(brailleFileExporter)
-                  .alignmentFallback(AlignmentFallback.LEFT.name())
-                  .mirrorAlignment(false)
-                  .offset(0)
-                  .topOffset(0);
-        PEFParser.parse(input, builder.build());
+        // TableCatalog uses the context class loader
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
+
+            EmbosserWriter writer = format.newEmbosserWriter(new FileOutputStream(output));
+            PEFHandler.Builder builder = new PEFHandler.Builder(writer)
+                              .range(null)
+                              .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
+                              .offset(0)
+                              .topOffset(0);
+            PEFHandler handler = builder.build();
+            PEFConverterFacade.parsePefFile(input, handler);
+
+        } Thread.currentThread().setContextClassLoader(cl);
 
         logger.exiting("HandlePEF", "convertToFile");
 
         return true;
-
     }
 
     /**
@@ -182,67 +187,48 @@ public class HandlePEF {
      *
      * @param   output  The location where the output file will be saved.
      */
-    public boolean embossToFile(File output,
-                                int numberOfCopies)
+    public boolean embossToFile(File output)
                          throws ParserConfigurationException,
-                                EmbosserFactoryException,
                                 IOException,
                                 SAXException,
                                 UnsupportedWidthException {
 
         logger.entering("HandlePEF", "embossToFile");
 
-        EmbosserFactory ef = new EmbosserFactory(settings);
-        ef.setNumberOfCopies(numberOfCopies);
-        ef.setPageCount(getPageCount());
+        int offset = 0;
+        int topOffset = 0;
 
-        int offset;
-        int topOffset;
+        Embosser embosser = settings.getEmbosser();
 
-        switch (settings.getEmbosser()) {
-
-            /* Margins not in header (or configuration file) */
-            case NONE:
-            case INDEX_BASIC_BLUE_BAR:
-            case INDEX_BASIC_S_V2:
-            case INDEX_BASIC_D_V2:
-            case INDEX_EVEREST_D_V2:
-            case INDEX_4X4_PRO_V2:
-            case BRAILLO_200:
-            case BRAILLO_400_S:
-            case BRAILLO_400_SR:
-            case IMPACTO_600:
-            case IMPACTO_TEXTO:
-            case PORTATHIEL_BLUE:
-                offset = settings.getMarginInner();
-                topOffset = settings.getMarginTop();
-                break;
-
-            /* Margins in header (or configuration file) */
-            case INDEX_BASIC_D_V3:
-            case INDEX_EVEREST_D_V3:
-            case INDEX_4X4_PRO_V3:
-            case INDEX_4WAVES_PRO_V3:
-            case INTERPOINT_55:
-            default:
-                offset = 0;
-                topOffset = 0;
-                break;
+        if (embosser.supportsAligning()) {
+            offset = settings.getMarginInner();
+            topOffset = settings.getMarginTop();
         }
 
-        AbstractEmbosser embosserObj = ef.newEmbosser(new FileOutputStream(output));
-        PEFHandler.Builder builder = new PEFHandler.Builder(embosserObj)
-                  .range(null)
-                  .alignmentFallback(AlignmentFallback.LEFT.name())
-                  .mirrorAlignment(true)
-                  .offset(offset)
-                  .topOffset(topOffset);
-        PEFParser.parse(pef.getSinglePEF(), builder.build());
+        // TableCatalog uses the context class loader
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
+
+            try {
+                embosser.setFeature(EmbosserFeatures.TABLE, settings.getTable());
+            } catch (IllegalArgumentException e) {
+            }
+            embosser.setFeature(EmbosserFeatures.PAGE_FORMAT, new PageFormat(settings.getPaper()));
+
+            EmbosserWriter writer = embosser.newEmbosserWriter(new FileOutputStream(output));
+            PEFHandler.Builder builder = new PEFHandler.Builder(writer)
+                              .range(null)
+                              .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
+                              .offset(offset)
+                              .topOffset(topOffset);
+            PEFHandler handler = builder.build();
+            PEFConverterFacade.parsePefFile(pef.getSinglePEF(), handler);
+
+        } Thread.currentThread().setContextClassLoader(cl);
 
         logger.exiting("HandlePEF", "embossToFile");
 
         return true;
-
     }
 
     /**
@@ -254,50 +240,41 @@ public class HandlePEF {
      *
      * @param   deviceName    The name of the printer device.
      */
-    public boolean embossToDevice(String deviceName,
-                                  int numberOfCopies)
+    public boolean embossToDevice(String deviceName)
                            throws IOException,
                                   PrintException,
                                   ParserConfigurationException,
                                   SAXException,
-                                  UnsupportedWidthException,
-                                  EmbosserFactoryException {
+                                  UnsupportedWidthException {
 
         logger.entering("HandlePEF", "embossToDevice");
 
         File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
         prnFile.deleteOnExit();
-
-        if (settings.getEmbosser()==EmbosserType.INTERPOINT_55) {
-            if (!convertToFile(BrailleFileType.BRF_INTERPOINT, pef.getSinglePEF(), prnFile)) {
-                return false;
-            }
-        } else {
-            if (!embossToFile(prnFile, numberOfCopies)) {
-                return false;
-            }
-            PrinterDevice bd = new PrinterDevice(deviceName, true);
-            bd.transmit(prnFile);
+        
+        if (!embossToFile(prnFile)) {
+            return false;
         }
+        PrinterDevice bd = new PrinterDevice(deviceName, true);
+        bd.transmit(prnFile);
 
         logger.exiting("HandlePEF", "embossToDevice");
 
         return true;
-
     }
 
-    private int getPageCount() throws MalformedURLException,
-                                      IOException{
-
-        NamespaceContext namespace = new NamespaceContext();
-        File pefFile = pef.getSinglePEF();
-
-        if (settings.getDuplex()) {
-            return Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
-                    "count(//pef:page) + count(//pef:section[following::pef:section and count(pef:page) mod 2 = 1])", namespace));
-        } else {
-            return Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
-                    "count(//pef:page)", namespace));
-        }
-    }
+//    private int getPageCount() throws MalformedURLException,
+//                                      IOException{
+//
+//        NamespaceContext namespace = new NamespaceContext();
+//        File pefFile = pef.getSinglePEF();
+//
+//        if (settings.getDuplex()) {
+//            return Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
+//                    "count(//pef:page) + count(//pef:section[following::pef:section and count(pef:page) mod 2 = 1])", namespace));
+//        } else {
+//            return Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
+//                    "count(//pef:page)", namespace));
+//        }
+//    }
 }

@@ -39,9 +39,7 @@ import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Settings.PageNumberPosition;
 import be.docarch.odt2braille.Style.Alignment;
-import org_pef_text.AbstractTable;
-import org_pef_text.TableFactory;
-import org_pef_text.TableFactory.TableType;
+import org.daisy.braille.table.BrailleConverter;
 
 /**
  *
@@ -70,7 +68,7 @@ public class LiblouisXML {
 
     private List configurationList = new ArrayList();
 
-    AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
+    BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
     public LiblouisXML (Settings settings,
                         File liblouisLocation)

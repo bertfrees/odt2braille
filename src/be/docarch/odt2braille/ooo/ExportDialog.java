@@ -23,9 +23,9 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.TreeMap;
 import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collection;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -53,8 +53,8 @@ import com.sun.star.beans.XPropertySet;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.VolumeManagementMode;
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import org_pef_text.TableFactory.TableType;
+import org.daisy.braille.embosser.FileFormat;
+import org.daisy.braille.table.Table;
 
 /**
  *
@@ -71,8 +71,8 @@ public class ExportDialog implements XItemListener,
     private ProgressBar progressbar = null;
     private SettingsDialog settingsDialog = null;
 
-    private List<BrailleFileType> brailleFileTypes = null;
-    private List<TableType> tableTypes = null;
+    private List<FileFormat> brailleFileTypes = null;
+    private List<Table> tableTypes = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -132,10 +132,6 @@ public class ExportDialog implements XItemListener,
     private String L10N_numberOfLinesPerPageLabel = null;
     private String L10N_multipleFilesLabel = null;
 
-    private Map<BrailleFileType,String> L10N_brailleFile = new TreeMap();
-    private Map<TableType,String> L10N_table = new TreeMap();
-
-
     public ExportDialog(XComponentContext xContext,
                         Settings settings,
                         ProgressBar progressbar)
@@ -156,6 +152,9 @@ public class ExportDialog implements XItemListener,
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
 
+        brailleFileTypes = new ArrayList<FileFormat>();
+        tableTypes = new ArrayList<Table>();
+
         Locale oooLocale = Locale.getDefault();
 
         L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportDialogTitle");
@@ -170,24 +169,6 @@ public class ExportDialog implements XItemListener,
         L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
         L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
         L10N_multipleFilesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("multipleFilesLabel");
-
-        L10N_table.put(TableType.UNDEFINED,         "-");
-        L10N_table.put(TableType.UNICODE_BRAILLE,   "PEF (Unicode Braille)");
-        L10N_table.put(TableType.EN_US,             "US English (Uppercase)");
-        L10N_table.put(TableType.EN_GB,             "UK English (Lowercase)");
-        L10N_table.put(TableType.NL,                "Dutch");
-        L10N_table.put(TableType.DA_DK,             "Danish");
-        L10N_table.put(TableType.DE_DE,             "German");
-        L10N_table.put(TableType.IT_IT_FIRENZE,     "Italian");
-        L10N_table.put(TableType.SV_SE_CX,          "Swedish");
-        L10N_table.put(TableType.SV_SE_MIXED,       "Swedish (2)");
-        L10N_table.put(TableType.ES_OLD,            "Spanish (Old)");
-        L10N_table.put(TableType.ES_NEW,            "Spanish (New)");
-
-        L10N_brailleFile.put(BrailleFileType.NONE,  "-");
-        L10N_brailleFile.put(BrailleFileType.PEF,   "PEF (Portable Embosser Format)");
-        L10N_brailleFile.put(BrailleFileType.BRF,   "BRF (Braille Formatted)");
-        L10N_brailleFile.put(BrailleFileType.BRA,   "BRA");
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_okButton));
@@ -290,10 +271,10 @@ public class ExportDialog implements XItemListener,
 
         numberOfCellsPerLineField.setDecimalDigits((short)0);
         numberOfLinesPerPageField.setDecimalDigits((short)0);
-        numberOfCellsPerLineField.setMin((double)settings.getMinCellsPerLine());
-        numberOfLinesPerPageField.setMin((double)settings.getMinLinesPerPage());
-        numberOfCellsPerLineField.setMax((double)settings.getMaxCellsPerLine());
-        numberOfLinesPerPageField.setMax((double)settings.getMaxLinesPerPage());
+        numberOfCellsPerLineField.setMin((double)0);
+        numberOfLinesPerPageField.setMin((double)0);
+        numberOfCellsPerLineField.setMax((double)Integer.MAX_VALUE);
+        numberOfLinesPerPageField.setMax((double)Integer.MAX_VALUE);
         numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
         numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
 
@@ -315,11 +296,7 @@ public class ExportDialog implements XItemListener,
             settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
         }
         settings.setMultipleFilesEnabled(multipleFilesCheckBox.getState()==(short)1);
-        try {
-            settings.setDuplex((duplexCheckBox.getState()==(short)1));
-        } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
+        settings.setDuplex((duplexCheckBox.getState()==(short)1));
     }
 
     /**
@@ -327,8 +304,7 @@ public class ExportDialog implements XItemListener,
      *
      */
     private void updateOKButton() throws com.sun.star.uno.Exception {
-        okButtonProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=null &&
-                                                       settings.getTable()!=null);
+        okButtonProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=null);
     }
 
     /**
@@ -337,23 +313,26 @@ public class ExportDialog implements XItemListener,
      */
     private void updateBrailleFileListBox() throws com.sun.star.uno.Exception {
 
-        BrailleFileType key = null;
+        short i = 0;
+        short select = -1;
+        String selectedId = settings.getBrailleFileType().getIdentifier();
 
         brailleFileListBox.removeItemListener(this);
 
             brailleFileListBox.removeItems((short)0, Short.MAX_VALUE);
-            brailleFileTypes = settings.getSupportedBrailleFileTypes();
-            for (int i=0;i<brailleFileTypes.size();i++) {
-                key = brailleFileTypes.get(i);
-                if (L10N_brailleFile.containsKey(key)) {
-                    brailleFileListBox.addItem(L10N_brailleFile.get(key), (short)i);
-                } else {
-                    brailleFileListBox.addItem(key.name(), (short)i);
+            brailleFileTypes.clear();
+            for (FileFormat f : settings.getSupportedBrailleFileTypes()) {
+                brailleFileTypes.add(f);
+                if (f.getIdentifier().equals(selectedId)) {
+                    select = i;
                 }
+                brailleFileListBox.addItem(f.getDisplayName(), i);
+                i++;
             }
-
-            brailleFileListBox.selectItemPos((short)brailleFileTypes.indexOf(settings.getBrailleFileType()), true);
-
+            if (select>=0) {
+                brailleFileListBox.selectItemPos(select, true);
+            }
+            
         brailleFileListBox.addItemListener(this);
 
     }
@@ -364,24 +343,32 @@ public class ExportDialog implements XItemListener,
      */
     private void updateTableListBox() throws com.sun.star.uno.Exception {
 
-        TableType key;
+        short i = 0;
+        short select = -1;
+        String selectedId = "";
+        if (settings.getTable()!=null) { selectedId = settings.getTable().getIdentifier(); }
 
         tableListBox.removeItems((short)0, Short.MAX_VALUE);
-        tableTypes = settings.getSupportedTableTypes();
+        tableTypes.clear();
+        Collection<Table> supportedTables = settings.getSupportedTables();
 
-        if (tableTypes.size() > 1) {
-            tableListBoxProperties.setPropertyValue("Enabled", true);
-            for (int i=0;i<tableTypes.size();i++) {
-                key = tableTypes.get(i);
-                if (L10N_table.containsKey(key)) {
-                    tableListBox.addItem(L10N_table.get(key), (short)i);
-                } else {
-                    tableListBox.addItem(key.name(), (short)i);
-                }
-            }
-            tableListBox.selectItemPos((short)tableTypes.indexOf(settings.getTable()), true);
-        } else {
+        if (supportedTables.size()<2) {
             tableListBoxProperties.setPropertyValue("Enabled", false);
+            return;
+        } else {
+            tableListBoxProperties.setPropertyValue("Enabled", true);
+        }
+
+        for (Table t : settings.getSupportedTables()) {
+            tableTypes.add(t);
+            if (t.getIdentifier().equals(selectedId)) {
+                select = i;
+            }
+            tableListBox.addItem(t.getDisplayName(), i);
+            i++;
+        }
+        if (select>=0) {
+            tableListBox.selectItemPos(select, true);
         }
     }
 
@@ -392,19 +379,14 @@ public class ExportDialog implements XItemListener,
     private void updateDuplexCheckBox() throws com.sun.star.uno.Exception {
 
         duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported(true) &&
-                                                             settings.duplexIsSupported(false));
+        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
 
     }
 
     private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
 
         if (settings.eightDotsIsSupported()) {
-            try {
-                settings.setEightDots(true);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            } 
+            settings.setEightDots(true);
         }
 
         eightDotsCheckBox.removeItemListener(this);
@@ -451,8 +433,6 @@ public class ExportDialog implements XItemListener,
 
             }
 
-        } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-            logger.log(Level.SEVERE, null, ex);
         } catch (com.sun.star.uno.Exception ex) {
             logger.log(Level.SEVERE, null, ex);
         }

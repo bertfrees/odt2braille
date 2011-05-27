@@ -1755,6 +1755,8 @@ public class OdtTransformer {
             mainXSL.setParameter("paramHyphenationEnabled",       settings.getHyphenate());
             mainXSL.setParameter("paramKeepHardPageBreaks",       settings.getHardPageBreaks());
             mainXSL.setParameter("paramColumnDelimiter",          settings.getColumnDelimiter());
+            mainXSL.setParameter("paramNoterefSpaceBefore",       settings.getNoterefSpaceBefore());
+            mainXSL.setParameter("paramNoterefSpaceAfter",        settings.getNoterefSpaceAfter());
             mainXSL.setParameter("paramNoterefNumberFormats",     noterefNumberFormats.toArray(new String[noterefNumberFormats.size()]));
             mainXSL.setParameter("paramNoterefNumberPrefixes",    noterefNumberPrefixes.toArray(new String[noterefNumberPrefixes.size()]));
             mainXSL.setParameter("paramKeepEmptyParagraphStyles", keepEmptyParagraphStyles.toArray(new String[keepEmptyParagraphStyles.size()]));
@@ -2062,19 +2064,23 @@ public class OdtTransformer {
         return outline;
     }
 
-    public Set<String> extractSpecialNoteReferences() throws IOException  {
+    public Set<String> extractNoterefCharacters() throws IOException,
+                                                         TransformerException,
+                                                         SAXException  {
 
-        logger.entering("OdtTransformer","extractSpecialNoteReferences");
+        logger.entering("OdtTransformer","extractNoterefCharacters");
 
-        Set<String> references = new HashSet<String>();
+        parseDocument();
 
+        Set<String> characters = new HashSet<String>();
+        NodeList nodes = XPathAPI.selectNodeList(contentDoc.getDocumentElement(), "//body/text[1]//note-citation");
+        for (int i=0; i<nodes.getLength(); i++) {
+            characters.add(nodes.item(i).getNodeValue());
+        }
 
-        // ...
+        logger.exiting("OdtTransformer","extractNoterefCharacters");
 
-
-        logger.exiting("OdtTransformer","extractSpecialNoteReferences");
-
-        return references;
+        return characters;
     }
 
     private String[] extractUnicodeBlocks(File inputFile)

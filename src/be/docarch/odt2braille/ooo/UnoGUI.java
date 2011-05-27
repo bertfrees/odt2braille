@@ -64,12 +64,9 @@ import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.Volume;
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
 
-import org_pef_text.pef2text.UnsupportedWidthException;
-import org_pef_text.pef2text.EmbosserFactoryException;
+import org.daisy.braille.embosser.UnsupportedWidthException;
 import be.docarch.odt2braille.LiblouisXMLException;
 
 
@@ -366,7 +363,7 @@ public class UnoGUI {
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
-            // PostConversionBrailleChecker
+            // Checker
             checker = new PostConversionBrailleChecker(changedSettings);
 
             // Create PEF
@@ -378,7 +375,7 @@ public class UnoGUI {
                 return false;
             }
 
-            // PostConversionBrailleChecker
+            // Checker
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning
@@ -390,7 +387,8 @@ public class UnoGUI {
             }
 
             // Convert to Braille file(s)
-            if (changedSettings.getBrailleFileType() == BrailleFileType.PEF)  {
+            if (changedSettings.getBrailleFileType().getIdentifier()
+                    .equals(Settings.PEF))  {
 
                 if (changedSettings.getMultipleFilesEnabled()) {
                     brailleFiles = pef.getPEFs();
@@ -424,20 +422,20 @@ public class UnoGUI {
 
             // Show Save As... Dialog:
 
-            String brailleExt = "." + changedSettings.getBrailleFileType().name().toLowerCase();
+            String brailleExt = changedSettings.getBrailleFileType().getFileExtension();
             String fileType;
-            switch (changedSettings.getBrailleFileType()) {
-                case PEF:
-                    fileType = "Portable Embosser Format";
-                    break;
-                case BRF:
-                    fileType = "Braille Formatted";
-                    break;
-                case BRL:
-                    fileType = "MicroBraille File";
-                    break;
-                default:
-                    fileType = "";
+            
+            String id = changedSettings.getBrailleFileType().getIdentifier();
+            if (id.equals(Settings.PEF)) {
+                fileType = "Portable Embosser Format";
+            } else if (id.equals(Settings.BRF)) {
+                fileType = "Braille Formatted";
+            } else if (id.equals(Settings.BRA)) {
+                fileType = "BRA File";
+            } else if (id.equals(Settings.BRL)) {
+                fileType = "MicroBraille File";
+            } else {
+                fileType = "";
             }
 
             String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
@@ -584,7 +582,7 @@ public class UnoGUI {
             changedSettings = new Settings(loadedSettings);
 
             // Create emboss dialog
-            EmbossDialog embossDialog = new EmbossDialog(m_xContext, parentWindowPeer, changedSettings, progressBar);
+            EmbossDialog embossDialog = new EmbossDialog(m_xContext, changedSettings, progressBar);
 
             // Close progress bar
             progressBar.finish(true);
@@ -604,7 +602,7 @@ public class UnoGUI {
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
 
-            // PostConversionBrailleChecker
+            // Checker
             checker = new PostConversionBrailleChecker(changedSettings);
 
             // Create PEF
@@ -616,7 +614,7 @@ public class UnoGUI {
                 return false;
             }
 
-            // PostConversionBrailleChecker
+            // Checker
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning
@@ -644,27 +642,25 @@ public class UnoGUI {
             handlePef = new HandlePEF(pef, changedSettings);
 
             // Emboss Dialog
-            if (changedSettings.getEmbosser()==EmbosserType.INTERPOINT_55) {
+            if (changedSettings.getEmbosser().getIdentifier().equals(Settings.INTERPOINT_55)) {
 
-                // Create temporary Braille file
-                File brailleFile = File.createTempFile(TMP_NAME, ".brf", TMP_DIR);
-                brailleFile.deleteOnExit();
+                Interpoint55PrintDialog printDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, changedSettings);
 
-                Interpoint55PrintDialog interpoint55PrintDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, changedSettings);
-
-                if (!interpoint55PrintDialog.execute()) {
+                if (!printDialog.execute()) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return false;
                 }
 
-                if((brailleFile = handlePef.convertToSingleFile(BrailleFileType.BRF_INTERPOINT)) == null) {
+                File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
+                prnFile.deleteOnExit();
+                if(!handlePef.embossToFile(prnFile)) {
                     return false;
                 }
 
-                if (!interpoint55PrintDialog.getPrintToFile()) {
+                if (!printDialog.getPrintToFile()) {
 
                     // Launch Wprint 55
-                    interpoint55PrintDialog.runWPrint55(brailleFile);
+                    printDialog.runWPrint55(prnFile);
 
                 } else {
 
@@ -684,34 +680,13 @@ public class UnoGUI {
                     // Rename Braille file
                     File newFile = new File(exportUrl);
                     if (newFile.exists()) { newFile.delete(); }
-                    brailleFile.renameTo(newFile);
+                    prnFile.renameTo(newFile);
 
                 }
 
             } else {
 
-                PrintDialog printDialog = new PrintDialog(m_xContext);
-
-                switch (changedSettings.getEmbosser()) {
-
-                    case INDEX_BASIC_D_V3:
-                    case INDEX_EVEREST_D_V3:
-                    case INDEX_4X4_PRO_V3:
-                    case INDEX_4WAVES_PRO_V3:
-                        printDialog.setMaxNumberOfCopies(10000);
-                        break;
-                    case INDEX_BASIC_S_V2:
-                    case INDEX_BASIC_D_V2:
-                    case INDEX_EVEREST_D_V2:
-                    case INDEX_4X4_PRO_V2:
-                        printDialog.setMaxNumberOfCopies(999);
-                        break;
-                    case IMPACTO_600:
-                    case IMPACTO_TEXTO:
-                        printDialog.setMaxNumberOfCopies(32767);
-                    default:
-
-                }
+                PrintDialog printDialog = new PrintDialog(m_xContext, changedSettings.getEmbosser());
 
                 if ((deviceName=printDialog.execute()).equals("")) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
@@ -721,7 +696,7 @@ public class UnoGUI {
                 if (!printDialog.getPrintToFile()) {
 
                     // Print to device
-                    if(!handlePef.embossToDevice(deviceName, printDialog.getNumberOfCopies())) {
+                    if(!handlePef.embossToDevice(deviceName)) {
                         return false;
                     }
 
@@ -743,7 +718,7 @@ public class UnoGUI {
                     String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
 
                     // Print to File
-                    if(!handlePef.embossToFile(new File(exportUrl), printDialog.getNumberOfCopies())) {
+                    if(!handlePef.embossToFile(new File(exportUrl))) {
                         logger.log(Level.INFO, "Emboss to file failed");
                         return false;
                     }
@@ -753,9 +728,6 @@ public class UnoGUI {
             return true;
 
         } catch (PrintException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (EmbosserFactoryException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (MalformedURLException ex) {

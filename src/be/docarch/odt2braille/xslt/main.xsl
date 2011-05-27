@@ -70,6 +70,8 @@
         <xsl:param name="paramStairstepTableEnabled"      as="xsd:boolean"  select="false()"  />
         <xsl:param name="paramHyphenationEnabled"         as="xsd:boolean"  select="false()"  />
         <xsl:param name="paramKeepHardPageBreaks"         as="xsd:boolean"  select="false()"  />
+        <xsl:param name="paramNoterefSpaceBefore"         as="xsd:boolean"  select="false()"  />
+        <xsl:param name="paramNoterefSpaceAfter"          as="xsd:boolean"  select="false()"  />
 
         <xsl:param name="paramEllipsis"			  as="xsd:string"   select="'&#x2810;&#x2810;&#x2810;'" />
         <xsl:param name="paramDoubleDash"		  as="xsd:string"   select="'&#x2824;&#x2824;&#x2824;&#x2824;'" />
@@ -764,8 +766,16 @@ INLINE ELEMENTS
 
     <!-- NOTE REFERENCES -->
 
-    <xsl:template name="noteref">  
+    <xsl:template name="noteref">
+        <xsl:param name="space-before" select="false()" />
+        <xsl:param name="space-after"  select="true()"  />
         <dtb:noteref>
+            <xsl:if test="$space-before">
+                <xsl:attribute name="space-before" select="'true'" />
+            </xsl:if>
+            <xsl:if test="$space-after">
+                <xsl:attribute name="space-after"  select="'true'" />
+            </xsl:if>
             <xsl:variable name="note-class" select="@text:note-class" />
             <xsl:choose>
                 <xsl:when test="text:note-citation[not(@text:label)]">
@@ -811,7 +821,10 @@ INLINE ELEMENTS
 
 
     <xsl:template match="text:note">
-        <xsl:call-template name="noteref" />
+        <xsl:call-template name="noteref">
+            <xsl:with-param name="space-before" select="$paramNoterefSpaceBefore" />
+            <xsl:with-param name="space-after"  select="$paramNoterefSpaceAfter"  />
+        </xsl:call-template>
         <xsl:variable name="note-class" select="@text:note-class" />
         <xsl:if test="$note-class='endnote'">
             <xsl:call-template name="endnote" />
@@ -1791,13 +1804,13 @@ HELP TEMPLATES
 
     <xsl:template name="get-table-caption-id">
         <xsl:param name="table-name" />
-        <xsl:value-of select="$controller//ns1:table[@rdf:about=$table-name]/ns1:hasCaption[1]/@rdf:resource" />
+        <xsl:value-of select="$controller//ns1:table[@rdf:about=concat('table:/',$table-name)]/ns1:hasCaption[1]/@rdf:resource" />
     </xsl:template>
 
 
     <xsl:template name="get-frame-caption-id">
         <xsl:param name="frame-name" />
-        <xsl:value-of select="$controller//ns1:frame[@rdf:about=$frame-name]/ns1:hasCaption[1]/@rdf:resource" />
+        <xsl:value-of select="$controller//ns1:frame[@rdf:about=concat('frame:/',$frame-name)]/ns1:hasCaption[1]/@rdf:resource" />
     </xsl:template>
 
 

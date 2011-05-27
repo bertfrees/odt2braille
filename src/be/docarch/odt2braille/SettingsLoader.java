@@ -74,6 +74,8 @@ public class SettingsLoader {
     protected static String specialSymbolProperty =                "[BRL]SpecialSymbol";
     protected static String specialSymbolsCountProperty =          "[BRL]SpecialSymbolsCount";
     protected static String noterefPrefixProperty =                "[BRL]NoterefPrefix";
+    protected static String noterefSpaceBeforeProperty =           "[BRL]NoterefSpaceBefore";
+    protected static String noterefSpaceAfterProperty =            "[BRL]NoterefSpaceAfter";
     protected static String upperBorderStyleProperty =             "[BRL]UpperBorderEnabled";
     protected static String lowerBorderStyleProperty =             "[BRL]LowerBorderEnabled";
     protected static String upperBorderProperty =                  "[BRL]UpperBorder";
@@ -107,7 +109,9 @@ public class SettingsLoader {
     protected static String customPaperWidthProperty =             "[BRL]CustomPaperWidth";
     protected static String customPaperHeightProperty =            "[BRL]CustomPaperHeight";
     protected static String marginLeftProperty =                   "[BRL]MarginLeft";
+    protected static String marginRightProperty =                  "[BRL]MarginRight";
     protected static String marginTopProperty =                    "[BRL]MarginTop";
+    protected static String marginBottomProperty =                 "[BRL]MarginBottom";
     protected static String embossTableProperty =                  "[BRL]EmbossCharacterSet";
     protected static String embossNumberOfCellsPerLineProperty =   "[BRL]EmbossCellsPerLine";
     protected static String embossNumberOfLinesPerPageProperty =   "[BRL]EmbossLinesPerPage";

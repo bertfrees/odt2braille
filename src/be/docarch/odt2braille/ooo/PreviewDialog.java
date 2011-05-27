@@ -80,10 +80,9 @@ import be.docarch.odt2braille.PreliminaryVolume;
 import be.docarch.odt2braille.RomanNumbering;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import org_pef_text.AbstractTable;
-import org_pef_text.TableFactory;
 
+import org.daisy.braille.table.Table;
+import org.daisy.braille.table.BrailleConverter;
 
 /**
  *
@@ -129,7 +128,7 @@ public class PreviewDialog implements XItemListener,
     private int marginBottom;
     private boolean duplex;
     private PageNumberFormat preliminaryPageFormat;
-    private AbstractTable table;
+    private BrailleConverter table;
     private short charset;
 
     private List<Volume> volumes = null;
@@ -193,9 +192,13 @@ public class PreviewDialog implements XItemListener,
 
         volumes = settings.getVolumes();
 
-        if (settings.getBrailleFileType() == BrailleFileType.BRF ||
-            settings.getBrailleFileType() == BrailleFileType.BRA) {
-            this.table = new TableFactory().newTable(settings.getTable());
+        String id = settings.getBrailleFileType().getIdentifier();
+        if (id.equals(Settings.BRF) ||
+            id.equals(Settings.BRA)) {
+            Table t = settings.getTable();
+            if (t != null) {
+                this.table = t.newBrailleConverter();
+            }
         }
 
         FONT_DOTS = settings.getEightDots() ? FONT_8_DOT : FONT_6_DOT;
@@ -214,8 +217,11 @@ public class PreviewDialog implements XItemListener,
         docFactory.setValidating(false);
         DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
         docBuilder.setEntityResolver(new EntityResolver() {
-            public InputSource resolveEntity(java.lang.String publicId, java.lang.String systemId)
-                    throws SAXException, java.io.IOException {
+            @Override
+            public InputSource resolveEntity(String publicId,
+                                             String systemId)
+                                      throws SAXException,
+                                             IOException {
                 return new InputSource(new ByteArrayInputStream("<?xml version='1.0' encoding='UTF-8'?>".getBytes()));
             }
         });
@@ -550,6 +556,7 @@ public class PreviewDialog implements XItemListener,
 
     }
 
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
         Object source = actionEvent.Source;
@@ -637,6 +644,7 @@ public class PreviewDialog implements XItemListener,
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         Object source = itemEvent.Source;
@@ -674,6 +682,7 @@ public class PreviewDialog implements XItemListener,
         }
     }
 
+    @Override
     public void disposing(EventObject event) { // frame.dispose() veroorzaakt RuntimeException
 
 //        if (frame != null) {
@@ -681,6 +690,7 @@ public class PreviewDialog implements XItemListener,
 //        }
     }
 
+    @Override
     public void windowResized(WindowEvent event) {
 
         Rectangle windowRectangle = window.getPosSize();
@@ -700,8 +710,11 @@ public class PreviewDialog implements XItemListener,
 
     }
 
+    @Override
     public void windowMoved(WindowEvent event) {}
+    @Override
     public void windowShown(EventObject event) {}
+    @Override
     public void windowHidden(EventObject event) {}
     
 }

@@ -52,9 +52,6 @@ import org.xml.sax.ErrorHandler;
 import org.iso_relax.verifier.VerifierFactory;
 import org.iso_relax.verifier.Verifier;
 import org.apache.commons.io.IOUtils;
-import org.daisy.util.xml.catalog.CatalogEntityResolver;
-import org.daisy.util.xml.stax.StaxEntityResolver;
-//import com.sun.msv.schematron.jarv.RelamesFactoryImpl;
 import com.sun.msv.verifier.jarv.TheFactoryImpl;
 
 import java.io.IOException;
@@ -71,9 +68,9 @@ import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-import org_pef_text.AbstractTable;
-import org_pef_text.TableFactory;
-import org_pef_text.TableFactory.TableType;
+import org.daisy.braille.table.BrailleConverter;
+import org.daisy.util.xml.catalog.CatalogEntityResolver;
+import org.daisy.util.xml.stax.StaxEntityResolver;
 
 
 /**
@@ -110,7 +107,7 @@ public class PEF implements ErrorHandler {
     private PostConversionBrailleChecker checker = null;
     private Verifier validator = null;
 
-    AbstractTable liblouisTable = new TableFactory().newTable(TableType.LIBLOUIS);
+    BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
     public PEF(Settings settings,
                LiblouisXML liblouisXML)
@@ -656,7 +653,7 @@ public class PEF implements ErrorHandler {
 
     private boolean validatePEF(File pefFile)
                          throws SAXException,
-                                IOException {
+                                IOException {   // move to BrailleUtils !
 
         logger.entering("PEF", "validatePEF");
 
@@ -706,7 +703,7 @@ public class PEF implements ErrorHandler {
                                           XMLStreamException,
                                           SAXException,
                                           TransformerException,
-                                          ValidationException {
+                                          ValidationException { // move to BrailleUtils !
 
         logger.entering("PEF", "splitPEF");
 

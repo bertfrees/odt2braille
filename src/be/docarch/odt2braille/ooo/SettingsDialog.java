@@ -669,6 +669,8 @@ public class SettingsDialog implements XItemListener,
     private XNumericField notesFootnoteFirstLineField = null;
     private XNumericField notesFootnoteRunoversField = null;
     private XNumericField notesFootnoteMarginLeftRightField = null;
+    private XCheckBox notesNoterefSpaceBeforeCheckBox = null;
+    private XCheckBox notesNoterefSpaceAfterCheckBox = null;
     
     private XPropertySet notesNoterefPrefixFieldProperties = null;
     private XPropertySet notesNoterefPrefixButtonProperties = null;
@@ -690,6 +692,8 @@ public class SettingsDialog implements XItemListener,
     private static String _notesFootnoteFirstLineField = "NumericField33";
     private static String _notesFootnoteRunoversField = "NumericField34";
     private static String _notesFootnoteMarginLeftRightField = "NumericField35";
+    private static String _notesNoterefSpaceBeforeCheckBox = "CheckBox38";
+    private static String _notesNoterefSpaceAfterCheckBox = "CheckBox39";
 
     private static String _notesNoterefFormatLabel = "Label102";
     private static String _notesNoterefPrefixLabel = "Label103";
@@ -699,6 +703,8 @@ public class SettingsDialog implements XItemListener,
     private static String _notesFootnoteFirstLineLabel = "Label104";
     private static String _notesFootnoteRunoversLabel = "Label108";
     private static String _notesFootnoteMarginLeftRightLabel = "Label109";
+    private static String _notesNoterefSpaceBeforeLabel = "Label118";
+    private static String _notesNoterefSpaceAfterLabel = "Label119";
 
     private String L10N_notesNoterefLabel = null;
     private String L10N_notesNoterefFormatLabel = null;
@@ -711,6 +717,8 @@ public class SettingsDialog implements XItemListener,
     private String L10N_notesFootnoteFirstLineLabel = null;
     private String L10N_notesFootnoteRunoversLabel = null;
     private String L10N_notesFootnoteMarginLeftRightLabel = null;
+    private String L10N_notesNoterefSpaceBeforeLabel = null;
+    private String L10N_notesNoterefSpaceAfterLabel = null;
 
     // Pagenumbers Page
 
@@ -1179,6 +1187,8 @@ public class SettingsDialog implements XItemListener,
         L10N_notesNoterefPrefixLabel = "Prefix:";
         L10N_notesNoterefPrefixButton = "...";
         L10N_notesFootnoteLabel = "Footnotes";
+        L10N_notesNoterefSpaceBeforeLabel = "Space before";
+        L10N_notesNoterefSpaceAfterLabel = "Space after";
         L10N_notesFootnoteLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
         L10N_notesFootnoteLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
         L10N_notesFootnoteAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
@@ -1614,6 +1624,10 @@ public class SettingsDialog implements XItemListener,
                 dialogControlContainer.getControl(_notesFootnoteRunoversField));
         notesFootnoteMarginLeftRightField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
                 dialogControlContainer.getControl(_notesFootnoteMarginLeftRightField));
+        notesNoterefSpaceBeforeCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_notesNoterefSpaceBeforeCheckBox));
+        notesNoterefSpaceAfterCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
+                dialogControlContainer.getControl(_notesNoterefSpaceAfterCheckBox));
 
         // Pagenumbers Page
 
@@ -2012,7 +2026,6 @@ public class SettingsDialog implements XItemListener,
         setDialogValues();
         addListeners();
         setLabels();
-
         logger.exiting("SettingsDialog", "initialise");
 
     }
@@ -2525,6 +2538,11 @@ public class SettingsDialog implements XItemListener,
         xFixedText.setText(L10N_notesFootnoteRunoversLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_notesFootnoteMarginLeftRightLabel));
         xFixedText.setText(L10N_notesFootnoteMarginLeftRightLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_notesNoterefSpaceBeforeLabel));
+        xFixedText.setText(L10N_notesNoterefSpaceBeforeLabel);
+        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_notesNoterefSpaceAfterLabel));
+        xFixedText.setText(L10N_notesNoterefSpaceAfterLabel);
+
 
         // Pagenumbers Page
 
@@ -2940,7 +2958,10 @@ public class SettingsDialog implements XItemListener,
             for (int i=0; i<alignmentOptions.size(); i++) {
                 notesFootnoteAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
             }
-            
+
+            notesNoterefSpaceBeforeCheckBox.setState((short)(settings.getNoterefSpaceBefore()?1:0));
+            notesNoterefSpaceAfterCheckBox.setState((short)(settings.getNoterefSpaceAfter()?1:0));
+
             notesFootnoteFirstLineField.setDecimalDigits((short)0);
             notesFootnoteFirstLineField.setMin((double)0);
             notesFootnoteFirstLineField.setMax((double)Integer.MAX_VALUE);            
@@ -3138,6 +3159,8 @@ public class SettingsDialog implements XItemListener,
             } else if (style.getAlignment() == Alignment.CENTERED) {
                 style.setMarginLeftRight((int)notesFootnoteMarginLeftRightField.getValue());
             }
+            settings.setNoterefSpaceBefore(notesNoterefSpaceBeforeCheckBox.getState() == (short)1);
+            settings.setNoterefSpaceAfter(notesNoterefSpaceAfterCheckBox.getState() == (short)1);
         }
 
         if (pagesVisited[PAGENUMBERS_PAGE-1]) { savePageNumbersPageFieldValues(); }

@@ -118,7 +118,7 @@ public class PostConversionBrailleChecker implements ExternalChecker {
         L10N_details = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerDetails");
 
         L10N_eightDotsNotSupported = (settings.getExportOrEmboss()?
-                                            "The " + settings.getBrailleFileType().name() + " file format ":
+                                            "The " + settings.getBrailleFileType().getDisplayName() + " file format ":
                                             "The selected embosser ")
                                      + "doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";        
     }

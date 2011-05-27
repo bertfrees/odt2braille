@@ -44,7 +44,6 @@ import com.sun.star.text.XTextDocument;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.SettingsLoader;
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
 import be.docarch.odt2braille.Settings.MathType;
 import be.docarch.odt2braille.Settings.BrailleRules;
 import be.docarch.odt2braille.Settings.PageNumberFormat;
@@ -60,12 +59,12 @@ import be.docarch.odt2braille.TableStyle;
 import be.docarch.odt2braille.TocStyle;
 import be.docarch.odt2braille.CharacterStyle;
 import be.docarch.odt2braille.CharacterStyle.TypefaceOption;
-import org_pef_text.pef2text.Paper.PaperSize;
-import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
-import org_pef_text.TableFactory.TableType;
+
+import org.daisy.braille.embosser.Embosser;
+import org.daisy.braille.table.Table;
+import org.daisy.paper.Paper;
 
 import java.io.IOException;
-
 
 /**
  * This class has methods to save/load settings to/from
@@ -562,6 +561,12 @@ public class SettingsIO extends SettingsLoader {
                 loadedSettings.setNoterefNumberPrefix(format, s);
             }
         }
+        if ((b = getBooleanProperty(noterefSpaceBeforeProperty)) != null) {
+            loadedSettings.setNoterefSpaceBefore(b);
+        }
+        if ((b = getBooleanProperty(noterefSpaceAfterProperty)) != null) {
+            loadedSettings.setNoterefSpaceAfter(b);
+        }
 
         int loadedSpecialSymbolsCount = loadedSettings.getSpecialSymbolsList().size();
         int defaultSpecialSymbolsCount = loadedSpecialSymbolsCount;
@@ -786,35 +791,19 @@ public class SettingsIO extends SettingsLoader {
         loadedSettings.setExportOrEmboss(true);
 
         if ((s = getStringProperty(exportFileProperty)) != null) {
-            try {
-                loadedSettings.setBrailleFileType(BrailleFileType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid braille file type");
-            }
+            loadedSettings.setBrailleFileType(s);
         }
 
         if ((s = getStringProperty(exportTableProperty)) != null) {
-            try {
-                loadedSettings.setTable(TableType.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid tabletype");
-            }
+            loadedSettings.setTable(s);
         }
 
         if ((b = getBooleanProperty(exportDuplexProperty)) != null) {
-            try {
-                loadedSettings.setDuplex(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setDuplex(b);
         }
 
         if ((b = getBooleanProperty(exportEightDotsProperty)) != null) {
-            try {
-                loadedSettings.setEightDots(b);
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setEightDots(b);
         }
 
         if (!(d = getDoubleProperty(exportNumberOfCellsPerLineProperty)).isNaN()) {
@@ -840,16 +829,16 @@ public class SettingsIO extends SettingsLoader {
 
         Double d;
 
-        if (!(d = getDoubleProperty(embossNumberOfCellsPerLineProperty)).isNaN()) {
-            loadedSettings.setCellsPerLine(d.intValue());
-        }
-
-        if (!(d = getDoubleProperty(embossNumberOfLinesPerPageProperty)).isNaN()) {
-            loadedSettings.setLinesPerPage(d.intValue());
+        if (!(d = getDoubleProperty(marginRightProperty)).isNaN()) {
+            loadedSettings.setMarginOuter(d.intValue());
         }
 
         if (!(d = getDoubleProperty(marginLeftProperty)).isNaN()) {
             loadedSettings.setMarginInner(d.intValue());
+        }
+
+        if (!(d = getDoubleProperty(marginBottomProperty)).isNaN()) {
+            loadedSettings.setMarginBottom(d.intValue());
         }
 
         if (!(d = getDoubleProperty(marginTopProperty)).isNaN()) {
@@ -872,23 +861,11 @@ public class SettingsIO extends SettingsLoader {
         String s;
 
         if ((s = embosserSettings.getProperty(embosserProperty)) != null) {
-            try {
-                try {
-                    loadedSettings.setEmbosser(EmbosserType.valueOf(s));
-                } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                    logger.log(Level.SEVERE, null, ex);
-                }
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid embossertype");
-            }
+            loadedSettings.setEmbosser(s);
         }
 
         if ((s = embosserSettings.getProperty(saddleStitchProperty)) != null) {
-            try {
-                loadedSettings.setSaddleStitch(s.equals("true"));
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setSaddleStitch(s.equals("true"));
         }
 
         if ((s = embosserSettings.getProperty(sheetsPerQuireProperty)) != null) {
@@ -898,56 +875,38 @@ public class SettingsIO extends SettingsLoader {
                 logger.log(Level.SEVERE, null, s + " is not an integer");
             }
         }
-            
+
         if ((s = embosserSettings.getProperty(zFoldingProperty)) != null) {
-            try {
-                loadedSettings.setZFolding(s.equals("true"));
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setZFolding(s.equals("true"));
         }
 
         if ((s = embosserSettings.getProperty(embossDuplexProperty)) != null) {
-            try {
-                loadedSettings.setDuplex(s.equals("true"));
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setDuplex(s.equals("true"));
         }
 
         if ((s = embosserSettings.getProperty(embossEightDotsProperty)) != null) {
-            try {
-                loadedSettings.setEightDots(s.equals("true"));
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
+            loadedSettings.setEightDots(s.equals("true"));
         }
 
         if ((s = embosserSettings.getProperty(paperSizeProperty)) != null) {
-            try {
-                loadedSettings.setPaperSize(PaperSize.valueOf(s));
-                if (s.equals("CUSTOM")) {
-                    String s1;
-                    String s2;
-                    if ((s1 = embosserSettings.getProperty(customPaperWidthProperty)) != null &&
-                        (s2 = embosserSettings.getProperty(customPaperHeightProperty)) != null) {
-                        try {
-                            loadedSettings.setPaperSize(Integer.parseInt(s1), Integer.parseInt(s2));
-                        } catch (NumberFormatException ex) {
-                            logger.log(Level.SEVERE, null, s1 + " or " + s2 + " is not an integer");
-                        }
+            loadedSettings.setPaper(s);
+            if (s.equals(Settings.CUSTOM_PAPER)) {
+                String s1;
+                String s2;
+                if ((s1 = embosserSettings.getProperty(customPaperWidthProperty)) != null &&
+                    (s2 = embosserSettings.getProperty(customPaperHeightProperty)) != null) {
+                    try {
+                        loadedSettings.setCustomPaper(Integer.parseInt(s1), Integer.parseInt(s2));
+                    } catch (NumberFormatException ex) {
+                        logger.log(Level.SEVERE, null, s1 + " or " + s2 + " is not an integer");
                     }
                 }
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid papersize");
-            } catch (org_pef_text.pef2text.UnsupportedPaperException ex) {
-                logger.log(Level.SEVERE, null, ex);
             }
         }
 
         if ((s = embosserSettings.getProperty(embossTableProperty)) != null) {
             try {
-                loadedSettings.setTable(TableType.valueOf(s));
+                loadedSettings.setTable(s);
             } catch (IllegalArgumentException ex) {
                 logger.log(Level.SEVERE, null, s + " is no valid tabletype");
             }
@@ -982,13 +941,23 @@ public class SettingsIO extends SettingsLoader {
     }
 
     private void setProperty(Properties properties,
-                             String property,
-                             Object valueAfterChange,
-                             Object valueBeforeChange) {
+                             String key,
+                             Object after,
+                             Object before) {
 
-        if (valueAfterChange!=null) {
-            if (!valueAfterChange.equals(valueBeforeChange)) {
-                properties.setProperty(property, String.valueOf(valueAfterChange));
+        if (after!=null) {
+            if (!after.equals(before)) {
+                String value;
+                if (after instanceof Embosser) {
+                    value = ((Embosser)after).getIdentifier();
+                } else if (after instanceof Paper) {
+                    value = ((Paper)after).getIdentifier();
+                } else if (after instanceof Table) {
+                    value = ((Table)after).getIdentifier();
+                } else {
+                    value = String.valueOf(after);
+                }
+                properties.setProperty(key, value);
                 odtModified = true;
             }
         }
@@ -1312,6 +1281,13 @@ public class SettingsIO extends SettingsLoader {
                         settingsBeforeChange.getNoterefNumberPrefix(format));
         }
 
+        setProperty(noterefSpaceBeforeProperty,
+                    settingsAfterChange.getNoterefSpaceBefore(),
+                    settingsBeforeChange.getNoterefSpaceBefore());
+        setProperty(noterefSpaceAfterProperty,
+                    settingsAfterChange.getNoterefSpaceAfter(),
+                    settingsBeforeChange.getNoterefSpaceAfter());
+
         setProperty(tableOfContentTitleProperty,
                     settingsAfterChange.getTableOfContentTitle(),
                     settingsBeforeChange.getTableOfContentTitle());
@@ -1500,11 +1476,11 @@ public class SettingsIO extends SettingsLoader {
         odtModified = false;
 
         setProperty(exportFileProperty,
-                    settingsAfterChange.getBrailleFileType().name(),
-                    settingsBeforeChange.getBrailleFileType().name());
+                    settingsAfterChange.getBrailleFileType().getIdentifier(),
+                    settingsBeforeChange.getBrailleFileType().getIdentifier());
         setProperty(exportTableProperty,
-                    settingsAfterChange.getTable().name(),
-                    settingsBeforeChange.getTable().name());
+                    settingsAfterChange.getTable().getIdentifier(),
+                    settingsBeforeChange.getTable().getIdentifier());
         setProperty(exportDuplexProperty,
                     settingsAfterChange.getDuplex(),
                     settingsBeforeChange.getDuplex());
@@ -1537,18 +1513,18 @@ public class SettingsIO extends SettingsLoader {
 
         odtModified = false;
 
-        setProperty(embossNumberOfCellsPerLineProperty,
-                    settingsAfterChange.getCellsPerLine(),
-                    settingsBeforeChange.getCellsPerLine());
-        setProperty(embossNumberOfLinesPerPageProperty,
-                    settingsAfterChange.getLinesPerPage(),
-                    settingsBeforeChange.getLinesPerPage());
         setProperty(marginLeftProperty,
                     settingsAfterChange.getMarginInner(),
                     settingsBeforeChange.getMarginInner());
+        setProperty(marginRightProperty,
+                    settingsAfterChange.getMarginOuter(),
+                    settingsBeforeChange.getMarginOuter());
         setProperty(marginTopProperty,
                     settingsAfterChange.getMarginTop(),
                     settingsBeforeChange.getMarginTop());
+        setProperty(marginBottomProperty,
+                    settingsAfterChange.getMarginBottom(),
+                    settingsBeforeChange.getMarginBottom());
 
         if (odtModified) {
             xModifiable.setModified(true);
@@ -1571,8 +1547,8 @@ public class SettingsIO extends SettingsLoader {
 
         setProperty(embosserSettings,
                     embosserProperty,
-                    settingsAfterChange.getEmbosser().name(),
-                    settingsBeforeChange.getEmbosser().name());
+                    settingsAfterChange.getEmbosser(),
+                    settingsBeforeChange.getEmbosser());
         setProperty(embosserSettings,
                     saddleStitchProperty,
                     settingsAfterChange.getSaddleStitch(),
@@ -1584,15 +1560,11 @@ public class SettingsIO extends SettingsLoader {
         setProperty(embosserSettings,
                     zFoldingProperty,
                     settingsAfterChange.getZFolding(),
-                    settingsBeforeChange.getZFolding());
-        setProperty(embosserSettings,
-                    embossTableProperty,
-                    settingsAfterChange.getTable().name(),
-                    settingsBeforeChange.getTable().name());
+                    settingsBeforeChange.getZFolding());        
         setProperty(embosserSettings,
                     paperSizeProperty,
-                    settingsAfterChange.getPaperSize().name(),
-                    settingsBeforeChange.getPaperSize().name());
+                    settingsAfterChange.getPaper(),
+                    settingsBeforeChange.getPaper());
         setProperty(embosserSettings,
                     embossDuplexProperty,
                     settingsAfterChange.getDuplex(),
@@ -1601,8 +1573,12 @@ public class SettingsIO extends SettingsLoader {
                     embossEightDotsProperty,
                     settingsAfterChange.getEightDots(),
                     settingsBeforeChange.getEightDots());
-        
-        if (settingsAfterChange.getPaperSize()==PaperSize.CUSTOM) {
+        setProperty(embosserSettings,
+                    embossTableProperty,
+                    settingsAfterChange.getTable(),
+                    settingsBeforeChange.getTable());
+
+        if (settingsAfterChange.getPaper().getIdentifier().equals(Settings.CUSTOM_PAPER)) {
             setProperty(embosserSettings,
                         customPaperWidthProperty,
                         settingsAfterChange.getPaperWidth(),

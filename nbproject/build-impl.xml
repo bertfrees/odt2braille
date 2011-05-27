@@ -170,6 +170,7 @@ is divided into following sections:
         <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
         <fail unless="build.test.classes.dir">Must set build.test.classes.dir</fail>
         <fail unless="build.test.results.dir">Must set build.test.results.dir</fail>
+		<fail unless="build.test.report.dir">Must set build.test.report.dir</fail>
         <fail unless="build.classes.excludes">Must set build.classes.excludes</fail>
         <fail unless="dist.jar">Must set dist.jar</fail>
     </target>
@@ -263,6 +264,12 @@ is divided into following sections:
                     <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
                     <jvmarg line="${run.jvmargs}"/>
                 </junit>
+				<junitreport>
+					<fileset dir="${build.test.results.dir}">
+						<include name="TEST-*.xml" />
+					</fileset>
+					<report todir="${build.test.report.dir}" />
+				</junitreport>				
             </sequential>
         </macrodef>
     </target>
@@ -677,6 +684,7 @@ is divided into following sections:
             -->
     <target depends="init" if="have.tests" name="-pre-test-run">
         <mkdir dir="${build.test.results.dir}"/>
+		<mkdir dir="${build.test.report.dir}"/>
     </target>
     <target depends="init,compile-test,-pre-test-run" if="have.tests" name="-do-test-run">
         <j2seproject3:junit testincludes="**/*Test.java"/>
@@ -689,6 +697,7 @@ is divided into following sections:
     <target depends="init,compile-test,-pre-test-run,-do-test-run,test-report,-post-test-run,-test-browse" description="Run unit tests." name="test"/>
     <target depends="init" if="have.tests" name="-pre-test-run-single">
         <mkdir dir="${build.test.results.dir}"/>
+		<mkdir dir="${build.test.report.dir}"/>
     </target>
     <target depends="init,compile-test-single,-pre-test-run-single" if="have.tests" name="-do-test-run-single">
         <fail unless="test.includes">Must select some files in the IDE or set test.includes</fail>

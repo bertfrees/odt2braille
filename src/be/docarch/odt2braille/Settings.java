@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.TreeMap;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 import java.util.Map;
@@ -36,18 +37,22 @@ import java.text.SimpleDateFormat;
 
 import org.xml.sax.SAXException;
 import java.net.MalformedURLException;
+import java.util.NoSuchElementException;
 import java.io.IOException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import be.docarch.odt2braille.BrailleFileExporter.BrailleFileType;
-import org_pef_text.pef2text.Paper;
-import org_pef_text.pef2text.Paper.PaperSize;
-import org_pef_text.pef2text.EmbosserFactory.EmbosserType;
-import org_pef_text.TableFactory.TableType;
-
-import org_pef_text.pef2text.UnsupportedPaperException;
-
+import org.daisy.braille.embosser.FileFormat;
+import org.daisy.braille.embosser.Embosser;
+import org.daisy.braille.embosser.EmbosserFeatures;
+import org.daisy.braille.embosser.EmbosserCatalog;
+import org.daisy.braille.table.Table;
+import org.daisy.braille.table.TableCatalog;
+import org.daisy.paper.Paper;
+import org.daisy.paper.PageFormat;
+import org.daisy.paper.Area;
+import org.daisy.paper.PrintPage;
+import org.daisy.paper.PaperCatalog;
 
 /**
  * Collection of all braille-related settings and properties of an OpenOffice.org document.
@@ -84,12 +89,86 @@ public class Settings {
     private static String L10N_preliminary = null;
     private static String L10N_transcriptionInfo = null;
 
-    private static final BrailleFileType DEFAULT_BRAILLE_FILE_TYPE = BrailleFileType.BRF;
-    private static final TableType DEFAULT_TABLE = TableType.EN_US;
-    private static final EmbosserType DEFAULT_EMBOSSER = EmbosserType.NONE;
-    private static final PaperSize DEFAULT_PAPERSIZE = PaperSize.CUSTOM;
-    private static final MathType DEFAULT_MATH = MathType.NEMETH;
+    public static final String PEF = "be.docarch.odt2braille.PEFFileFormat";
+    public static final String BRF = "org_daisy.BrailleEditorsFileFormatProvider.FileType.BRF";
+    public static final String BRL = "org_daisy.BrailleEditorsFileFormatProvider.FileType.BRL";
+    public static final String BRA = "org_daisy.BrailleEditorsFileFormatProvider.FileType.BRA";
+
+    public static final String INTERPOINT =              "be_interpoint";
+    public static final String INDEX_BRAILLE =           "com_indexbraille";
+    public static final String BRAILLO =                 "com_braillo";
+    public static final String CIDAT =                   "es_once_cidat";
+    public static final String ENABLING_TECHNOLOGIES =   "com_brailler";
+    public static final String HARPO =                   "pl_com_harpo";
+    public static final String VIEWPLUS =                "com_viewplus";
+
+    public static final String GENERIC_EMBOSSER =        "org_daisy.GenericEmbosserProvider.EmbosserType.NONE";
+
+    public static final String INTERPOINT_55 =           "be_interpoint.InterPointEmbosserProvider.EmbosserType.INTERPOINT_55";
+    public static final String INDEX_BASIC_BLUE_BAR =    "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_BLUE_BAR";
+    public static final String INDEX_EVEREST_S_V1 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_S_V1";
+    public static final String INDEX_EVEREST_D_V1 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_D_V1";
+    public static final String INDEX_BASIC_S_V2 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_S_V2";
+    public static final String INDEX_BASIC_D_V2 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_D_V2";
+    public static final String INDEX_EVEREST_D_V2 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_D_V2";
+    public static final String INDEX_4X4_PRO_V2 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_4X4_PRO_V2";
+    public static final String INDEX_BASIC_S_V3 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_S_V3";
+    public static final String INDEX_BASIC_D_V3 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_D_V3";
+    public static final String INDEX_EVEREST_D_V3 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_D_V3";
+    public static final String INDEX_4X4_PRO_V3 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_4X4_PRO_V3";
+    public static final String INDEX_4WAVES_PRO_V3 =     "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_4WAVES_PRO_V3";
+    public static final String INDEX_BASIC_D_V4 =        "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_D_V4";
+    public static final String INDEX_EVEREST_D_V4 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_D_V4";
+    public static final String INDEX_BRAILLE_BOX_V4 =    "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BRAILLE_BOX_V4";
+    public static final String BRAILLO_200 =             "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_200";
+    public static final String BRAILLO_270 =             "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_270";
+    public static final String BRAILLO_400_S =           "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_400_S";
+    public static final String BRAILLO_400_SR =          "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_400_SR";
+    public static final String BRAILLO_440_SW_2P =       "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_440_SW_2P";
+    public static final String BRAILLO_440_SW_4P =       "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_440_SW_4P";
+    public static final String BRAILLO_440_SWSF =        "com_braillo.BrailloEmbosserProvider.EmbosserType.BRAILLO_440_SWSF";
+    public static final String IMPACTO_600 =             "es_once_cidat.CidatEmbosserProvider.EmbosserType.IMPACTO_600";
+    public static final String IMPACTO_TEXTO =           "es_once_cidat.CidatEmbosserProvider.EmbosserType.IMPACTO_TEXTO";
+    public static final String PORTATHIEL_BLUE =         "es_once_cidat.CidatEmbosserProvider.EmbosserType.PORTATHIEL_BLUE";
+    public static final String ROMEO_ATTACHE =           "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ROMEO_ATTACHE";
+    public static final String ROMEO_ATTACHE_PRO =       "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ROMEO_ATTACHE_PRO";
+    public static final String ROMEO_25 =                "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.OMEO_25";
+    public static final String ROMEO_PRO_50 =            "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ROMEO_PRO_50";
+    public static final String ROMEO_PRO_LE_NARROW =     "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ROMEO_PRO_LE_NARROW";
+    public static final String ROMEO_PRO_LE_WIDE =       "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ROMEO_PRO_LE_WIDE";
+    public static final String THOMAS =                  "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.THOMAS";
+    public static final String THOMAS_PRO =              "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.THOMAS_PRO";
+    public static final String MARATHON =                "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.MARATHON";
+    public static final String ET =                      "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.ET";
+    public static final String JULIET_PRO =              "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.JULIET_PRO";
+    public static final String JULIET_PRO_60 =           "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.JULIET_PRO_60";
+    public static final String JULIET_CLASSIC =          "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.JULIET_CLASSIC";
+    public static final String BOOKMAKER =               "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.BOOKMAKER";
+    public static final String BRAILLE_EXPRESS_100 =     "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.BRAILLE_EXPRESS_100";
+    public static final String BRAILLE_EXPRESS_150 =     "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.BRAILLE_EXPRESS_150";
+    public static final String BRAILLE_PLACE =           "com_brailler.EnablingTechnologiesEmbosserProvider.EmbosserType.BRAILLE_PLACE";
+    public static final String MOUNTBATTEN_LS =          "pl_com_harpo.HarpoEmbosserProvider.EmbosserType.MOUNTBATTEN_LS";
+    public static final String MOUNTBATTEN_PRO =         "pl_com_harpo.HarpoEmbosserProvider.EmbosserType.MOUNTBATTEN_PRO";
+    public static final String MOUNTBATTEN_WRITER_PLUS = "pl_com_harpo.HarpoEmbosserProvider.EmbosserType.MOUNTBATTEN_WRITER_PLUS";
+    public static final String PREMIER_80 =              "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.PREMIER_80";
+    public static final String PREMIER_100 =             "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.PREMIER_100";
+    public static final String ELITE_150 =               "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.ELITE_150";
+    public static final String ELITE_200 =               "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.ELITE_200";
+    public static final String PRO_GEN_II =              "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.PRO_GEN_II";
+    public static final String CUB_JR =                  "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.CUB_JR";
+    public static final String CUB =                     "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.CUB";
+    public static final String MAX =                     "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.MAX";
+    public static final String EMFUSE =                  "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMFUSE";
+    public static final String EMPRINT_SPOTDOT =         "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMPRINT_SPOTDOT";
+
+    public static final String CUSTOM_PAPER = "be.docarch.odt2braille.CustomPaperProvider.PaperSize.CUSTOM";
+
+    private static final String DEFAULT_BRAILLE_FILE_TYPE = BRF;
+    private static final String DEFAULT_EMBOSSER = GENERIC_EMBOSSER;
+    private static final String DEFAULT_PAPER = CUSTOM_PAPER;
+    private static final String DEFAULT_TABLE = null;
     private static final String DEFAULT_TRANSLATION_TABLE = "en-US";
+    private static final MathType DEFAULT_MATH = MathType.NEMETH;
     private static final int DEFAULT_GRADE = 2;
 
     // Read only properties
@@ -161,8 +240,8 @@ public class Settings {
 
     private Map<String,String> noterefNumberPrefixMap = null;
     private Map<String,String> noterefCharactersMap = null;
-//    private boolean noterefSpaceBefore = false;
-//    private boolean noterefSpaceAfter = false;
+    private boolean noterefSpaceBefore = false;
+    private boolean noterefSpaceAfter = false;
     private Style footnoteStyle = null;
 
     // Volume management
@@ -194,32 +273,27 @@ public class Settings {
 
     // Emboss & Export Settings
 
-    private EmbosserType embosser;
-    private PaperSize paperSize;
-    private TableType table;
-    private BrailleFileType brailleFileType;
+    private FileFormatCatalog fileFormatCatalog = null;
+    private EmbosserCatalog embosserCatalog = null;
+    private TableCatalog tableCatalog = null;
+    private PaperCatalog paperCatalog = null;
+
+    private Collection<String> supportedFormats = null;
+    private Collection<String> supportedEmbossers = null;
+
+    private FileFormat format = null;
+    private Embosser embosser = null;
+    private Paper paper = null;
+    private Table table = null;
 
     private boolean multipleFiles = false;
     private boolean exportOrEmboss = false;
 
-    private double cellSpacing;
-    private double lineSpacing;
-    private double cellHeight;
-    private double cellWidth;
-    private double interpointShiftX;
-    private double interpointShiftY;
-
-    private double paperWidth;
-    private double paperHeight;
-    private double maxPaperWidth;
-    private double maxPaperHeight;
-    private double minPaperWidth;
-    private double minPaperHeight;
-
-    private double pageWidth;
-    private double pageHeight;
-    private double printablePageWidth;
-    private double printablePageHeight;
+//    private double cellSpacing;
+//    private double lineSpacing;
+//    private double cellHeight;
+//    private double cellWidth;
+ 
     private double unprintableInner;
     private double unprintableOuter;
     private double unprintableTop;
@@ -314,22 +388,11 @@ public class Settings {
         this.preferredVolumeSize = copySettings.preferredVolumeSize;
         this.minSyllableLength = copySettings.minSyllableLength;
 
-        this.cellSpacing = copySettings.cellSpacing;
-        this.lineSpacing = copySettings.lineSpacing;
-        this.cellHeight = copySettings.cellHeight;
-        this.cellWidth = copySettings.cellWidth;
-        this.interpointShiftX = copySettings.interpointShiftX;
-        this.interpointShiftY = copySettings.interpointShiftY;
-        this.paperWidth = copySettings.paperWidth;
-        this.paperHeight = copySettings.paperHeight;
-        this.maxPaperWidth = copySettings.maxPaperWidth;
-        this.maxPaperHeight = copySettings.maxPaperHeight;
-        this.minPaperWidth = copySettings.minPaperWidth;
-        this.minPaperHeight = copySettings.minPaperHeight;
-        this.pageWidth = copySettings.pageWidth;
-        this.pageHeight = copySettings.pageHeight;
-        this.printablePageWidth = copySettings.printablePageWidth;
-        this.printablePageHeight = copySettings.printablePageHeight;
+//        this.cellSpacing = copySettings.cellSpacing;
+//        this.lineSpacing = copySettings.lineSpacing;
+//        this.cellHeight = copySettings.cellHeight;
+//        this.cellWidth = copySettings.cellWidth;
+        
         this.unprintableInner = copySettings.unprintableInner;
         this.unprintableOuter = copySettings.unprintableOuter;
         this.unprintableTop = copySettings.unprintableTop;
@@ -375,18 +438,14 @@ public class Settings {
         this.hyphenate = copySettings.hyphenate;
         this.zFolding = copySettings.zFolding;
         this.saddleStitch = copySettings.saddleStitch;
-//        this.noterefSpaceBefore = copySettings.noterefSpaceBefore;
-//        this.noterefSpaceAfter = copySettings.noterefSpaceAfter;
+        this.noterefSpaceBefore = copySettings.noterefSpaceBefore;
+        this.noterefSpaceAfter = copySettings.noterefSpaceAfter;
 
         this.printPageNumberAt = copySettings.printPageNumberAt;
         this.braillePageNumberAt = copySettings.braillePageNumberAt;
         this.preliminaryPageNumberFormat = copySettings.preliminaryPageNumberFormat;
         this.supplementaryPageNumberFormat = copySettings.supplementaryPageNumberFormat;
         this.brailleRules = copySettings.brailleRules;
-        this.embosser = copySettings.embosser;
-        this.paperSize = copySettings.paperSize;
-        this.table = copySettings.table;
-        this.brailleFileType = copySettings.brailleFileType;
         this.math = copySettings.math;
         this.volumeManagementMode = copySettings.volumeManagementMode;
 
@@ -455,6 +514,18 @@ public class Settings {
 
         this.supportedTranslationTablesGrades = new ArrayList<String>(copySettings.supportedTranslationTablesGrades);
         this.specialTranslationTables = new ArrayList<String>(copySettings.specialTranslationTables);
+
+        this.embosser = copySettings.embosser;
+        this.paper = copySettings.paper;
+        this.table = copySettings.table;
+        this.format = copySettings.format;
+
+        this.fileFormatCatalog = copySettings.fileFormatCatalog;
+        this.embosserCatalog = copySettings.embosserCatalog;
+        this.tableCatalog = copySettings.tableCatalog;
+        this.paperCatalog = copySettings.paperCatalog;
+        this.supportedFormats = copySettings.supportedFormats;
+        this.supportedEmbossers = copySettings.supportedEmbossers;
 
         this.rootSection = new Section(copySettings.rootSection);
         this.mainSections = this.rootSection.getChildren();
@@ -812,8 +883,8 @@ public class Settings {
         beginningBraillePageNumber = 1;        
         math = DEFAULT_MATH;
         hardPageBreaks = false;
-//        noterefSpaceBefore = true;
-//        noterefSpaceAfter = true;
+        noterefSpaceBefore = false;
+        noterefSpaceAfter = false;
         noterefCharactersMap = new TreeMap();
         noterefNumberPrefixMap = new TreeMap();
         noterefNumberPrefixMap.put("1", "");
@@ -895,26 +966,14 @@ public class Settings {
         // Emboss & export options
 
         beginningBraillePageNumber = 1;
-        maxPaperWidth = Double.MAX_VALUE;
-        maxPaperHeight = Double.MAX_VALUE;
-        minPaperWidth = 0;
-        minPaperHeight = 0;
-        paperWidth = 0;
-        paperHeight = 0;
-        pageWidth = 0;
-        pageHeight = 0;
-        printablePageWidth = 0;
-        printablePageHeight = 0;
         unprintableInner = 0;
         unprintableOuter = 0;
         unprintableTop = 0;
         unprintableBottom = 0;
-        cellSpacing = 0;
-        lineSpacing = 0;
-        cellHeight = 0;
-        cellWidth = 0;
-        interpointShiftX = 0;
-        interpointShiftY = 0;
+//        cellSpacing = 0;
+//        lineSpacing = 0;
+//        cellHeight = 0;
+//        cellWidth = 0;
         cellsInWidth = 0;
         linesInHeight = 0;
         cellsPerLine = 40;
@@ -941,10 +1000,32 @@ public class Settings {
         eightDots = false;
         duplex = true;
 
-        brailleFileType = DEFAULT_BRAILLE_FILE_TYPE;
-        embosser = DEFAULT_EMBOSSER;
-        paperSize = DEFAULT_PAPERSIZE;
-        table = DEFAULT_TABLE;
+        // Catalogs use the context class loader
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
+
+            fileFormatCatalog = new FileFormatCatalog();
+            tableCatalog = TableCatalog.newInstance();
+            embosserCatalog = EmbosserCatalog.newInstance();
+            paperCatalog = PaperCatalog.newInstance();
+
+        } Thread.currentThread().setContextClassLoader(cl);
+
+        supportedEmbossers = new ArrayList<String>();
+        supportedFormats = new ArrayList<String>();
+
+        for (Embosser e : embosserCatalog.list()) {
+            supportedEmbossers.add(e.getIdentifier());
+        }
+        for (FileFormat f : fileFormatCatalog.list()) {
+            supportedFormats.add(f.getIdentifier());
+        }
+
+        format = fileFormatCatalog.get(DEFAULT_BRAILLE_FILE_TYPE);
+        embosser = embosserCatalog.get(DEFAULT_EMBOSSER);
+        paper = paperCatalog.get(DEFAULT_PAPER);
+        table = tableCatalog.get(DEFAULT_TABLE);
+
         math = DEFAULT_MATH;
 
         setExportOrEmboss(true);
@@ -1046,9 +1127,9 @@ public class Settings {
      *
      * @return  The supported translation table codes.
      */
-    public ArrayList<String> getSupportedTranslationTables() {
+    public List<String> getSupportedTranslationTables() {
     
-        ArrayList<String> supportedTranslationTables = new ArrayList();
+        List<String> supportedTranslationTables = new ArrayList();
         String translationTable = null;
         String translationTableGrade = null;
 
@@ -1070,7 +1151,7 @@ public class Settings {
     
     }
     
-    public ArrayList<String> getSpecialTranslationTables() {
+    public List<String> getSpecialTranslationTables() {
         return new ArrayList(specialTranslationTables);
     }
 
@@ -1083,9 +1164,9 @@ public class Settings {
      * @param   language   The language code
      * @return             The supported grades.
      */
-    public ArrayList<Integer> getSupportedGrades(String language) {
+    public List<Integer> getSupportedGrades(String language) {
 
-        ArrayList<Integer> supportedGrades = new ArrayList();
+        List<Integer> supportedGrades = new ArrayList();
         String translationTableGrade = null;
         String translationTable = getTranslationTable(language);
         int grade;
@@ -1109,9 +1190,9 @@ public class Settings {
 
     }
 
-    public ArrayList<Integer> getSupportedDots(String language) {
+    public List<Integer> getSupportedDots(String language) {
 
-        ArrayList<Integer> supportedDots = new ArrayList();
+        List<Integer> supportedDots = new ArrayList();
         String translationTableGrade = null;
         String translationTable = getTranslationTable(language);
         int grade = getGrade(language);
@@ -1240,7 +1321,7 @@ public class Settings {
      *
      * @return  The language codes.
      */
-    public ArrayList<String> getLanguages() {
+    public List<String> getLanguages() {
         return new ArrayList(translationTableMap.keySet());
     }
 
@@ -1282,10 +1363,8 @@ public class Settings {
         refreshDuplex();
         refreshEightDots();
         refreshTable();
-        refreshPaperSize();
-        try {
-            refreshDimensions();
-        } catch (UnsupportedPaperException ex) {}
+        refreshPaper();
+        refreshDimensions();
 
         return true;
     }
@@ -1298,68 +1377,31 @@ public class Settings {
      * @param   embosser    An embosser type.
      * @return              <code>true</code> if the embosser type is supported, given the current settings.
      */
-    private boolean embosserIsSupported(EmbosserType embosser) {
+    private boolean embosserIsSupported(Embosser embosser) {
 
-        if (embosser == null) { return false; }
-
-        if (!exportOrEmboss) {
-            switch (embosser) {
-                case NONE:
-                case INDEX_BASIC_BLUE_BAR:
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                case INDEX_EVEREST_D_V2:
-                case INDEX_4X4_PRO_V2:
-                case INDEX_EVEREST_D_V3:
-                case INDEX_BASIC_D_V3:
-                case INDEX_4X4_PRO_V3:
-                case INDEX_4WAVES_PRO_V3:
-                case INTERPOINT_55:
-                case BRAILLO_200:
-                case BRAILLO_400_S:
-                case BRAILLO_400_SR:
-                case IMPACTO_TEXTO:
-                case IMPACTO_600:
-                case PORTATHIEL_BLUE:
-                    return true;
-                case INTERPOINT_ELEKUL_03:
-                case MOUNTBATTEN:
-                default:
-                    return false;
-            }
-        } else {
+        if (embosser == null) {
             return false;
         }
+        return supportedEmbossers.contains(embosser.getIdentifier());
     }
 
     /**
      * @return   A list of all supported embosser types, given the current settings.
      */
-    public List<EmbosserType> getSupportedEmbossers() {
-
-        EmbosserType[] allEmbosserTypes = EmbosserType.values();
-        ArrayList<EmbosserType> supportedEmbosserTypes = new ArrayList();
-
-        for (int i=0;i<allEmbosserTypes.length;i++) {
-            if (embosserIsSupported(allEmbosserTypes[i])) {
-                supportedEmbosserTypes.add(allEmbosserTypes[i]);
-            }
-        }
-        return supportedEmbosserTypes;
+    public Collection<Embosser> getSupportedEmbossers() {
+        return embosserCatalog.list();
     }
 
-    private void changeEmbosser(EmbosserType embosser) {
-
+    private void changeEmbosser(Embosser embosser) {
         this.embosser = embosser;
-
     }
 
     private void refreshEmbosser() {
 
         if (!embosserIsSupported(this.embosser)) {
-            if (getSupportedEmbossers().size() > 0) {
-                changeEmbosser(getSupportedEmbossers().get(0));
-            } else {
+            try {
+                changeEmbosser(getSupportedEmbossers().iterator().next());
+            } catch (NoSuchElementException e) {
                 changeEmbosser(null);
             }
         }
@@ -1370,83 +1412,72 @@ public class Settings {
      *
      * @param   embosser   The desired embosser type.
      */
-    public boolean setEmbosser(EmbosserType embosser)
-                        throws UnsupportedPaperException {
+    public boolean setEmbosser(Embosser embosser) {
 
         if (locked) { return false; }
 
         if (embosserIsSupported(embosser)) {
-
             changeEmbosser(embosser);
             refreshZFolding();
             refreshSaddleStitch();
             refreshDuplex();
             refreshEightDots();
             refreshTable();
-            refreshPaperSize();
+            refreshPaper();
             refreshDimensions();
-
             return true;
-        }
-        
-        return false;
-    }
-
-    /**
-     * @return  The current embosser type.
-     */
-    public EmbosserType getEmbosser() {
-        return embosser;
-    }
-
-    /**
-     * @param   fileType        A generic braille file type.
-     * @return                  <code>true</code> if the file type is supported, given the current settings.
-     */
-    private boolean brailleFileTypeIsSupported(BrailleFileType fileType) {
-
-        if (fileType == null) { return false; }
-
-        if (exportOrEmboss) {
-            switch(fileType) {
-                case PEF:
-                case BRF:
-                case BRA:
-                    return true;
-                default:
-                    return false;
-            }
         } else {
             return false;
         }
     }
 
-    /**
-     * @return   A list of all supported generic braille file types, given the current settings.
-     */
-    public ArrayList<BrailleFileType> getSupportedBrailleFileTypes() {
+    public boolean setEmbosser(String identifier) {
 
-        BrailleFileType[] allBrailleFileTypes = BrailleFileType.values();
-        ArrayList<BrailleFileType> supportedBrailleFileTypes = new ArrayList();
+        Embosser e = embosserCatalog.get(identifier);
 
-        for (int i=0;i<allBrailleFileTypes.length;i++) {
-            if (brailleFileTypeIsSupported(allBrailleFileTypes[i])) {
-                supportedBrailleFileTypes.add(allBrailleFileTypes[i]);
-            }
+        if (e != null) {
+            return setEmbosser(e);
         }
-        return supportedBrailleFileTypes;
+
+        return false;
     }
 
-    private void changeBrailleFileType(BrailleFileType brailleFileType) {
-        this.brailleFileType = brailleFileType;
+    /**
+     * @return  The current embosser
+     */
+    public Embosser getEmbosser() {
+        return embosser;
+    }
+
+    /**
+     * @param   fileType  A generic braille file type.
+     * @return            <code>true</code> if the file type is supported
+     */
+    private boolean brailleFileTypeIsSupported(FileFormat format) {
+
+        if (format == null) {
+            return false;
+        }
+        return supportedFormats.contains(format.getIdentifier());
+    }
+
+    /**
+     * @return   A list of all supported generic braille file types
+     */
+    public Collection<FileFormat> getSupportedBrailleFileTypes() {
+        return fileFormatCatalog.list();
+    }
+
+    private void changeBrailleFileType(FileFormat format) {
+        this.format = format;
     }
 
     private void refreshBrailleFileType() {
 
-        if (!brailleFileTypeIsSupported(this.brailleFileType)) {
-            if (getSupportedBrailleFileTypes().size() > 0) {
-                changeBrailleFileType(getSupportedBrailleFileTypes().get(0));
-            } else {
+        if (!brailleFileTypeIsSupported(this.format)) {
+            try {
+                changeBrailleFileType(getSupportedBrailleFileTypes().iterator().next());
+            } catch (NoSuchElementException e) {
                 changeBrailleFileType(null);
             }
         }
@@ -1457,24 +1488,32 @@ public class Settings {
      *
      * @param   brailleFileType  The desired braille file type.
      */
-    public boolean setBrailleFileType(BrailleFileType brailleFileType) {
+    public boolean setBrailleFileType(FileFormat format) {
 
         if (locked) { return false; }
 
-        if (brailleFileTypeIsSupported(brailleFileType)) {
+        if (brailleFileTypeIsSupported(format)) {
 
-            changeBrailleFileType(brailleFileType);
+            changeBrailleFileType(format);
             refreshZFolding();
             refreshSaddleStitch();
             refreshDuplex();
             refreshEightDots();
             refreshTable();
-            try { 
-                refreshDimensions();
-            } catch (UnsupportedPaperException ex) {
-            }
+            refreshDimensions();
             
             return true;
+        }
+
+        return false;
+    }
+
+    public boolean setBrailleFileType(String identifier) {
+
+        FileFormat f = fileFormatCatalog.get(identifier);
+
+        if (f != null) {
+            return setBrailleFileType(f);
         }
 
         return false;
@@ -1483,131 +1522,51 @@ public class Settings {
     /**
      * @return  The currently selected generic braille file type.
      */
-    public BrailleFileType getBrailleFileType() {
-        return brailleFileType;
+    public FileFormat getBrailleFileType() {
+        return format;
     }
 
     /**
      * @param   table   A character set.
      * @return          <code>true</code> if the character set is supported, given the current settings.
      */
-    private boolean tableIsSupported (TableType table) {
+    private boolean tableIsSupported (Table table) {
 
-        if (table == null) { return false; }
+        if (table == null) {
+            return false;
+        }
 
         if (exportOrEmboss) {
-            switch (brailleFileType) {
-
-                case PEF:
-                    return (table==TableType.UNICODE_BRAILLE);
-                case BRF:
-                    return (table==TableType.EN_US ||
-                            table==TableType.EN_GB ||
-                            table==TableType.NL ||
-                            table==TableType.EN_GB ||
-                            table==TableType.DA_DK ||
-                            table==TableType.DE_DE ||
-                            table==TableType.IT_IT_FIRENZE ||
-                            table==TableType.SV_SE_CX ||
-                            table==TableType.SV_SE_MIXED ||
-                            table==TableType.ES_OLD ||
-                            table==TableType.ES_NEW);
-                case BRA:
-                    return (table==TableType.ES_OLD ||
-                            table==TableType.ES_NEW);
-                case BRL:
-                    return (table==TableType.BRL);
-                default:
-                    return false;
-            }
-
+            return format.supportsTable(table);
         } else {
-            switch (embosser) {
-
-                case NONE:
-                    return (table==TableType.EN_US ||
-                            table==TableType.EN_GB ||
-                            table==TableType.NL ||
-                            table==TableType.EN_GB ||
-                            table==TableType.DA_DK ||
-                            table==TableType.DE_DE ||
-                            table==TableType.IT_IT_FIRENZE ||
-                            table==TableType.SV_SE_CX ||
-                            table==TableType.SV_SE_MIXED ||
-                            table==TableType.ES_OLD ||
-                            table==TableType.ES_NEW);
-                case INTERPOINT_55:
-                    return (table==TableType.EN_US);
-                case INDEX_BASIC_BLUE_BAR:
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                case INDEX_EVEREST_D_V2:
-                case INDEX_4X4_PRO_V2:
-                    if (eightDots) {
-                        return (table==TableType.INDEX_TRANSPARENT_256);
-                    } else {
-                        return (table==TableType.INDEX_TRANSPARENT);
-                    }
-                case INDEX_EVEREST_D_V3:
-                case INDEX_BASIC_D_V3:
-                case INDEX_4X4_PRO_V3:
-                case INDEX_4WAVES_PRO_V3:
-                    if (eightDots) {
-                        return (table==TableType.INDEX_TRANSPARENT_256);
-                    } else {
-                        return (table==TableType.EN_US);
-                    }
-                case BRAILLO_200:
-                case BRAILLO_400_S:
-                case BRAILLO_400_SR:
-                    switch (table) {
-                        case BRAILLO_6DOT_001_00:
-                        case BRAILLO_6DOT_044_00:
-                        case BRAILLO_6DOT_046_01:
-                        case BRAILLO_6DOT_047_01:
-                            return true;
-                        default:
-                            return false;
-                    }
-                case IMPACTO_600:
-                case IMPACTO_TEXTO:
-                    return (table==TableType.IMPACTO);
-                case PORTATHIEL_BLUE:
-                    return (table==TableType.PORTATHIEL ||
-                            table==TableType.MIT);
-                default:
-                    return false;
-
-            }
+            return embosser.supportsTable(table);            
         }
     }
 
     /**
      * @return   A list of all supported character sets, given the current settings.
      */
-    public ArrayList<TableType> getSupportedTableTypes() {
+    public Collection<Table> getSupportedTables() {
 
-        TableType[] allTableTypes = TableType.values();
-        ArrayList<TableType> supportedTableTypes = new ArrayList();
-
-        for (int i=0;i<allTableTypes.length;i++) {
-            if (tableIsSupported(allTableTypes[i])) {
-                supportedTableTypes.add(allTableTypes[i]);
+        Collection<Table> supportedTableTypes = new ArrayList();
+        for (Table tab : tableCatalog.list()) {
+            if (tableIsSupported(tab)) {
+                supportedTableTypes.add(tab);
             }
         }
         return supportedTableTypes;
     }
 
-    private void changeTable(TableType table) {
+    private void changeTable(Table table) {
         this.table = table;
     }
 
     private void refreshTable() {
 
-        if (!tableIsSupported(this.table)) {
-            if (getSupportedTableTypes().size() > 0) {
-                changeTable(getSupportedTableTypes().get(0));
-            } else {
+        if (!tableIsSupported(table)) {
+            try {
+                changeTable(getSupportedTables().iterator().next());
+            } catch (NoSuchElementException e) {
                 changeTable(null);
             }
         }
@@ -1618,7 +1577,7 @@ public class Settings {
      *
      * @param   table   The desired character set.
      */
-    public boolean setTable(TableType table) {
+    public boolean setTable(Table table) {
 
         if (locked) { return false; }
 
@@ -1630,56 +1589,46 @@ public class Settings {
         return false;
     }
 
+    public boolean setTable(String identifier) {
+
+        Table t = tableCatalog.get(identifier);
+
+        if (t != null) {
+            return setTable(t);
+        }
+
+        return false;
+    }
+
     /**
      * @return  The current character set.
      */
-    public TableType getTable() {
+    public Table getTable() {
         return table;
     }
 
-    private boolean paperSizeIsSupported (double paperWidth,
-                                          double paperHeight) {
-
-        return (paperWidth  <= maxPaperWidth)  &&
-               (paperWidth  >= minPaperWidth)  &&
-               (paperHeight <= maxPaperHeight) &&
-               (paperHeight >= minPaperHeight);
-    }
-
     /**
-     * @param   papersize   A paper size.
-     * @return              <code>true</code> if the paper size is supported, given the current settings.
+     * @param   paper   A paper size.
+     * @return          <code>true</code> if the paper size is supported, given the current settings.
      */
-    private boolean paperSizeIsSupported(PaperSize papersize) {
+    private boolean paperIsSupported(Paper paper) {
 
-        if (papersize == null) { return false; }
-        if (papersize == PaperSize.UNDEFINED) { return false; }
+        if (paper == null) {
+            return false;
+        }
+        String id = paper.getIdentifier();
 
-        if (!exportOrEmboss) {
-            switch (embosser) {
-                case NONE:
-                    return true;
-                case INDEX_BASIC_BLUE_BAR:
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                case INDEX_BASIC_D_V3:
-                    switch (papersize) {
-                        case CUSTOM:
-                        case W210MM_X_H10INCH:
-                        case W210MM_X_H11INCH:
-                        case W210MM_X_H12INCH:
-                        case W240MM_X_H12INCH:
-                        case W280MM_X_H12INCH:
-                            break;
-                        default:
-                            return false;
-                    }                  
-            }
-            if (papersize == PaperSize.CUSTOM) {
+        if (!exportOrEmboss && embosser != null) {
+            String emb = embosser.getIdentifier();
+            if (!(emb.equals(INDEX_BASIC_BLUE_BAR) ||
+                  emb.equals(INDEX_BASIC_S_V2) ||
+                  emb.equals(INDEX_BASIC_D_V2) ||
+                  emb.equals(INDEX_BASIC_S_V3) ||
+                  emb.equals(INDEX_BASIC_D_V3))
+                && id.equals(CUSTOM_PAPER)) {
                 return true;
             }
-            Paper paper = Paper.newPaper(papersize);
-            return paperSizeIsSupported(paper.getWidth(), paper.getHeight());
+            return embosser.supportsDimensions(paper);
         }
 
         return false;
@@ -1688,123 +1637,68 @@ public class Settings {
     /**
      * @return   A list of all supported paper sizes, given the current settings.
      */
-    public ArrayList<PaperSize> getSupportedPaperSizes() {
+    public Collection<Paper> getSupportedPapers() {
 
-        PaperSize[] allPaperSizes = PaperSize.values();
-        ArrayList<PaperSize> supportedPaperSizes = new ArrayList();
+        Collection<Paper> supportedPapers = new ArrayList();
 
-        for (int i=0;i<allPaperSizes.length;i++) {
-            if (paperSizeIsSupported(allPaperSizes[i])) {
-                supportedPaperSizes.add(allPaperSizes[i]);
+        for (Paper p : paperCatalog.list()) {
+            if (paperIsSupported(p)) {
+                supportedPapers.add(p);
             }
         }
-        return supportedPaperSizes;
+        return supportedPapers;
     }
 
-    private void changePaperSize(double paperWidth,
-                                 double paperHeight) {
+    private void changePaper(Paper paper) {
+
+        if (paper == null || embosser == null) {
+            this.paper = null;
+            return;
+        }
+
+        if (paper instanceof CustomPaper && !embosser.supportsDimensions(paper)) {
+            CustomPaper cp = (CustomPaper)paper;
+            for (Paper p : getSupportedPapers()) {
+                if (embosser.supportsDimensions(p)) {
+                    cp.setWidth(p.getWidth());
+                    cp.setHeight(p.getHeight());
+                    return;
+                }
+            }
+            this.paper = null;
+        } else {
+            this.paper = paper;
+        }
+    }
+
+    private void refreshPaper() {
 
         if (embosser == null) { return; }
 
-        this.paperWidth = paperWidth;
-        this.paperHeight = paperHeight;
-
-        switch (embosser) {
-            case INDEX_4X4_PRO_V2:
-            case INDEX_4X4_PRO_V3:
-                pageWidth = saddleStitch?paperHeight*0.5
-                                        :paperHeight;
-                pageHeight = paperWidth;
-                break;
-            case INTERPOINT_55:
-                pageWidth = saddleStitch?paperWidth*0.5
-                                        :paperWidth;
-                pageHeight = paperHeight;
-                break;
-            default:
-                pageWidth = paperWidth;
-                pageHeight = paperHeight;
-        }
-        
-        printablePageWidth = pageWidth;
-        printablePageHeight = pageHeight;
-        unprintableInner = 0;
-        unprintableOuter = 0;
-        unprintableTop = 0;
-        unprintableBottom = 0;
-
-        switch (embosser) {
-            case INDEX_4X4_PRO_V2:
-                printablePageHeight = Math.min(paperWidth, 248.5);
-                break;
-            case INDEX_EVEREST_D_V2:
-            case INDEX_EVEREST_D_V3:
-            case INDEX_BASIC_S_V2:
-            case INDEX_BASIC_D_V2:
-            case INDEX_BASIC_D_V3:
-            case INDEX_4WAVES_PRO_V3:
-                printablePageWidth = Math.min(paperWidth, 248.5);
-                break;
-        }
-
-        switch (embosser) {
-            case INDEX_BASIC_D_V3:
-                unprintableInner = Math.max(0, paperWidth - 276.4);
-                break;
-            case INDEX_EVEREST_D_V3:
-                unprintableInner = Math.max(0, paperWidth - 272.75);
-                break;
-        }
-
-        unprintableOuter = pageWidth - printablePageWidth - unprintableInner;
-        unprintableBottom = pageHeight - printablePageHeight - unprintableTop;
-
-    }
-
-    private void changePaperSize(PaperSize papersize) {
-
-        this.paperSize = papersize;
-
-        if (papersize != null) {
-            switch (papersize) {
-                case CUSTOM:
-                    changePaperSize(
-                            Math.min(Math.max(getPaperWidth(),  getMinPaperWidth()),  getMaxPaperWidth()),
-                            Math.min(Math.max(getPaperHeight(), getMinPaperHeight()), getMaxPaperHeight()));
-                    break;
-                default:
-                    Paper paper = Paper.newPaper(papersize);
-                    changePaperSize(paper.getWidth(), paper.getHeight());
-                    break;
+        if (!paperIsSupported(paper)) {
+            for (Paper p : getSupportedPapers()) {
+                if (embosser.supportsDimensions(p)) {
+                    changePaper(p);
+                    return;
+                }
             }
-        }
-    }
-
-    private void refreshPaperSize() {
-
-        if (!paperSizeIsSupported(this.paperSize)) {
-            if (getSupportedPaperSizes().size() > 0) {
-                changePaperSize(getSupportedPaperSizes().get(0));
-            } else {
-                changePaperSize(null);
-            }
+            changePaper(null);
         } else {
-            changePaperSize(this.paperSize);
+            changePaper(paper);
         }
     }
 
     /**
      * Update the paper size if the desired paper size is supported.
      *
-     * @param   paperSize   The desired paper size.
+     * @param   paper   The desired paper size.
      */
-    public boolean setPaperSize(PaperSize papersize)
-                         throws UnsupportedPaperException {
+    public boolean setPaper(Paper paper) {
 
         if (locked) { return false; }
 
-        if (paperSizeIsSupported(papersize)) {
-            changePaperSize(papersize);
+        if (paperIsSupported(paper)) {
+            changePaper(paper);
             refreshDimensions();
             return true;
         }
@@ -1812,16 +1706,36 @@ public class Settings {
         return false;
     }
 
-    public boolean setPaperSize(double paperWidth,
-                                double paperHeight)
-                      throws UnsupportedPaperException {
+    public boolean setPaper(String identifier) {
 
-        if (locked) { return false; }
+        Paper p = paperCatalog.get(identifier);
 
-        if ((this.paperSize == PaperSize.CUSTOM) && paperSizeIsSupported(paperWidth, paperHeight)) {
-            changePaperSize(paperWidth, paperHeight);
-            refreshDimensions();
-            return true;
+        if (p != null) {
+            return setPaper(p);
+        }
+
+        return false;
+    }
+
+    public boolean setCustomPaper(double paperWidth,
+                                  double paperHeight) {
+
+        if (locked ||
+            exportOrEmboss ||
+            embosser == null ||
+            paper == null) {
+            return false;
+        }
+
+        if (paper instanceof CustomPaper) {
+            if (embosser.supportsDimensions(new Dimensions(paperWidth, paperHeight))) {
+                CustomPaper p = (CustomPaper)paper;
+                p.setWidth(paperWidth);
+                p.setHeight(paperHeight);
+                changePaper(this.paper);
+                refreshDimensions();
+                return true;
+            }
         }
 
         return false;
@@ -1830,110 +1744,62 @@ public class Settings {
     /**
      * @return  The current paper size.
      */
-    public PaperSize getPaperSize() {
-        return paperSize;
+    public Paper getPaper() {
+        return paper;
     }
 
     public double getPaperWidth() {
-        return paperWidth;
+
+        if (paper==null) {
+            return 0;
+        } else {
+            return paper.getWidth();
+        }
     }
 
     public double getPaperHeight() {
-        return paperHeight;
-    }
 
-    public double getMaxPaperWidth() {        
-        return maxPaperWidth;
-    }
-
-    public double getMaxPaperHeight() {
-        return maxPaperHeight;
-    }
-
-    public double getMinPaperWidth() {
-        return minPaperWidth;
-    }
-
-    public double getMinPaperHeight() {
-        return minPaperHeight;
-    }
-
-    public double getPageWidth() {
-        return pageWidth;
-    }
-
-    public double getPageHeight() {
-        return pageHeight;
+        if (paper==null) {
+            return 0;
+        } else {
+            return paper.getHeight();
+        }
     }
 
     /**
      * @return   <code>true</code> if recto-verso is supported, given the current settings.
      */
-    public boolean duplexIsSupported(boolean duplex) {
+    public boolean duplexIsSupported() {
 
         if (exportOrEmboss) {
-            if (brailleFileType == null) { return false; }
-            switch (brailleFileType) {
-                case PEF:
-                    return true;
-                default:
-                    return !duplex;
-            }
+            return format.supportsDuplex();
         } else {
-            if (embosser == null) { return false; }
-            if (getSaddleStitch()) {
-                return duplex;
-            } else {
-                switch (embosser) {
-                    case NONE:
-                        return true;
-                    case INDEX_BASIC_D_V2:
-                        return !getZFolding() || duplex;
-                    case INDEX_EVEREST_D_V2:
-                    case INDEX_4X4_PRO_V2:
-                    case INDEX_EVEREST_D_V3:
-                    case INDEX_BASIC_D_V3:
-                    case INDEX_4X4_PRO_V3:
-                    case INDEX_4WAVES_PRO_V3:
-                    case BRAILLO_200:
-                    case BRAILLO_400_S:
-                    case BRAILLO_400_SR:
-                    case INTERPOINT_55:
-                    case IMPACTO_TEXTO:
-                    case IMPACTO_600:
-                        return true;
-                    case INDEX_BASIC_BLUE_BAR:
-                    case INDEX_BASIC_S_V2:
-                    case INDEX_EVEREST_S_V1:
-                    case PORTATHIEL_BLUE:
-                    default:
-                        return !duplex;
-
-                }
-            }
+            return embosser.supportsDuplex();
         }
     }
 
     private void changeDuplex(boolean duplex) {
+
         this.duplex = duplex;
+        try {
+            embosser.setFeature(EmbosserFeatures.DUPLEX, duplex);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     private void refreshDuplex() {
 
-        if (!duplexIsSupported(duplex) &&
-             duplexIsSupported(!duplex)) {
-            changeDuplex(!duplex);
+        if (duplex && !duplexIsSupported()) {
+            changeDuplex(false);
         }
     }
 
-    public boolean setDuplex(boolean duplex)
-                      throws UnsupportedPaperException {
+    public boolean setDuplex(boolean duplex) {
 
         if (locked) { return false; }
 
-        if (duplexIsSupported(duplex)) {
+        if (!duplex || duplexIsSupported()) {
             changeDuplex(duplex);
-            refreshDimensions();
             return true;
         }
 
@@ -1949,123 +1815,34 @@ public class Settings {
 
     public boolean saddleStitchIsSupported() {
 
-        if (exportOrEmboss) {
-            return false;
+        if (!exportOrEmboss && embosser.getFeature(EmbosserFeatures.SADDLE_STITCH) != null) {
+            return true;
         } else {
-            if (embosser==null) { return false; }
-            switch (embosser) {
-                case INTERPOINT_55:
-                case INDEX_4X4_PRO_V2: 
-                case INDEX_4X4_PRO_V3:
-                    return true;
-                default:
-                    return false;
-            }
+            return false;
         }
     }
     
     private void changeSaddleStitch(boolean saddleStitch) {
 
         this.saddleStitch = saddleStitch;
-
-        maxPaperWidth = Double.MAX_VALUE;
-        maxPaperHeight = Double.MAX_VALUE;
-        minPaperWidth = 50d;
-        minPaperHeight = 50d;
-
-        if (embosser!=null) {
-            switch (embosser) {
-                case INDEX_BASIC_BLUE_BAR:
-                    //minPaperWidth = ?
-                    //minPaperHeight = ?
-                    maxPaperWidth = 280d;
-                    maxPaperHeight = 12*Paper.INCH_IN_MM;
-                    break;
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                    minPaperWidth = 138d; // = 23*6
-                    minPaperHeight = 1*Paper.INCH_IN_MM;
-                    //maxPaperWidth = ?
-                    maxPaperHeight = (20+2/3)*Paper.INCH_IN_MM;
-                    break;
-                case INDEX_EVEREST_D_V2:
-                    minPaperWidth = 138d; // = 23*6
-                    minPaperHeight = 100d;
-                    //maxPaperWidth = ?
-                    maxPaperHeight = 350d;
-                    break;
-                case INDEX_4X4_PRO_V2:
-                    minPaperWidth = 100d;
-                    minPaperHeight = Math.max(110d, saddleStitch?276d:138d); // = 23*6(*2)
-                    maxPaperWidth = 297d;
-                    maxPaperHeight = 500d;
-                    break;
-                case INDEX_EVEREST_D_V3:
-                case INDEX_4X4_PRO_V3:
-                    minPaperWidth = 130d;
-                    minPaperHeight = 120d;
-                    maxPaperWidth = 297d;
-                    maxPaperHeight = 585d;
-                    break;
-                case INDEX_BASIC_D_V3:
-                    minPaperWidth = 90d;
-                    minPaperHeight = 1*Paper.INCH_IN_MM;
-                    maxPaperWidth = 295d;
-                    maxPaperHeight = 17*Paper.INCH_IN_MM;
-                    break;
-                case INDEX_4WAVES_PRO_V3:
-                    minPaperWidth = 90d;
-                    minPaperHeight = 11*Paper.INCH_IN_MM;
-                    maxPaperWidth = 295d;
-                    maxPaperHeight = 12*Paper.INCH_IN_MM;
-                    break;
-                case BRAILLO_200:
-                case BRAILLO_400_S:
-                case BRAILLO_400_SR:
-                    maxPaperWidth = 43*(6d);
-                    maxPaperHeight = 14*Paper.INCH_IN_MM;
-                    minPaperWidth = 9*(10d);
-                    minPaperHeight = 3.5*Paper.INCH_IN_MM;
-                    break;
-                case INTERPOINT_55:
-                    maxPaperHeight = 340d;
-                    //minPaperHeight = ?
-                    //maxPaperWidth = ?
-                    //maxPaperHeight = ?
-                    break;
-                case IMPACTO_TEXTO:
-                case IMPACTO_600:
-                    maxPaperWidth = 42*(0.25*Paper.INCH_IN_MM);
-                    maxPaperHeight = 13*Paper.INCH_IN_MM;
-                    minPaperWidth = 12*(0.25*Paper.INCH_IN_MM);
-                    minPaperHeight = 6*Paper.INCH_IN_MM;
-                    break;
-                case PORTATHIEL_BLUE:
-                    maxPaperWidth = 42*(0.25*Paper.INCH_IN_MM);
-                    maxPaperHeight = 13*Paper.INCH_IN_MM;
-                    minPaperWidth = 10*(0.25*Paper.INCH_IN_MM);
-                    minPaperHeight = 8*Paper.INCH_IN_MM;
-                    break;
-                case NONE:
-                default:
-            }
+        try {
+            embosser.setFeature(EmbosserFeatures.SADDLE_STITCH, saddleStitch);
+        } catch (IllegalArgumentException e) {
         }
     }
     
     private void refreshSaddleStitch() {
-
         changeSaddleStitch(saddleStitch && saddleStitchIsSupported());
     }
 
-    public boolean setSaddleStitch(boolean saddleStitch)
-                            throws UnsupportedPaperException {
+    public boolean setSaddleStitch(boolean saddleStitch) {
 
         if (locked) { return false; }
 
         if (saddleStitchIsSupported()) {
             changeSaddleStitch(saddleStitch);
             refreshDuplex();
-            refreshPaperSize();
+            refreshPaper();
             refreshDimensions();
             return true;
         }
@@ -2078,9 +1855,21 @@ public class Settings {
     }
 
     public boolean sheetsPerQuireIsSupported() {
-    
-        return (!exportOrEmboss && 
-                embosser == EmbosserType.INTERPOINT_55);
+
+        if (!exportOrEmboss && embosser.getFeature(EmbosserFeatures.PAGES_IN_QUIRE) != null) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void changeSheetsPerQuire(int sheetsPerQuire) {
+
+        this.sheetsPerQuire = sheetsPerQuire;
+        try {
+            embosser.setFeature(EmbosserFeatures.PAGES_IN_QUIRE, sheetsPerQuire);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     public boolean setSheetsPerQuire(int sheetsPerQuire) {
@@ -2088,7 +1877,7 @@ public class Settings {
         if (locked) { return false; }
 
         if (zFoldingIsSupported() && sheetsPerQuire > 0) {
-            this.sheetsPerQuire = sheetsPerQuire;
+            changeSheetsPerQuire(sheetsPerQuire);
             return true;
         }
 
@@ -2101,38 +1890,33 @@ public class Settings {
 
     public boolean zFoldingIsSupported() {
 
-        if (exportOrEmboss) {
-            return false;
+        if (!exportOrEmboss && embosser.getFeature(EmbosserFeatures.Z_FOLDING) != null) {
+            return true;
         } else {
-            if (embosser == null) { return false; }
-            switch (embosser) {
-                case INDEX_BASIC_D_V2:
-                case INDEX_BASIC_D_V3:
-                case INDEX_4WAVES_PRO_V3:
-                    return true;
-                default:
-                    return false;
-            }
+            return false;
         }
     }
 
     private void changeZFolding(boolean zFolding) {
+
         this.zFolding = zFolding;
+        try {
+            embosser.setFeature(EmbosserFeatures.Z_FOLDING, zFolding);
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     private void refreshZFolding() {
         changeZFolding(zFolding && zFoldingIsSupported());
     }
 
-    public boolean setZFolding(boolean zFolding)
-                        throws UnsupportedPaperException {
+    public boolean setZFolding(boolean zFolding) {
 
         if (locked) { return false; }
 
         if (zFoldingIsSupported()) {
             changeZFolding(zFolding);
             refreshDuplex();
-            refreshDimensions();
             return true;
         }
 
@@ -2146,101 +1930,27 @@ public class Settings {
     public boolean eightDotsIsSupported() {
 
         if (exportOrEmboss) {
-            if (brailleFileType==null) { return false; }
-            switch (brailleFileType) {
-                case PEF:
-                    return true;
-                default:
-                    return false;
-
-            }
+            return format.supports8dot();            
         } else {
-            if (embosser==null) { return false; }
-            switch (embosser) {
-                case IMPACTO_TEXTO:
-                case IMPACTO_600:
-                case PORTATHIEL_BLUE:
-                    return false;
-                    //return true;
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                case INDEX_EVEREST_D_V2:
-                case INDEX_4X4_PRO_V2:
-                case INDEX_EVEREST_D_V3:
-                case INDEX_BASIC_D_V3:
-                case INDEX_4X4_PRO_V3:
-                case INDEX_4WAVES_PRO_V3:
-                case INTERPOINT_55:
-                case INDEX_BASIC_BLUE_BAR:
-                case BRAILLO_200:
-                case BRAILLO_400_S:
-                case BRAILLO_400_SR:                
-                default:
-                    return false;
-            }
+            return embosser.supports8dot();
         }
     }
 
     private void changeEightDots(boolean eightDots) {
-
         this.eightDots = eightDots;
-
-        if (embosser==null) { return; }
-
-        cellWidth = cellSpacing = 6d;
-        cellHeight = lineSpacing = 10d;
-        interpointShiftX = 0;
-        interpointShiftY = 0;
-
-        switch (embosser) {
-            case INDEX_BASIC_BLUE_BAR:
-                cellWidth = cellSpacing = 6.1d;
-                break;
-            case INDEX_4X4_PRO_V3:
-                interpointShiftX = (2.5d)/2;
-                interpointShiftY = (2.5d)*3/2;
-            case INDEX_BASIC_S_V2:
-            case INDEX_BASIC_D_V2:
-            case INDEX_EVEREST_D_V2:
-            case INDEX_4X4_PRO_V2:
-            case INDEX_BASIC_D_V3:
-            case INDEX_EVEREST_D_V3:
-            case INDEX_4WAVES_PRO_V3:
-                cellSpacing = 6d;
-                lineSpacing = ((eightDots?3:2)+2)*(2.5d);
-                cellWidth = 2.5d;
-                cellHeight = (eightDots?3:2)*(2.5d);
-                break;
-            case IMPACTO_600:
-            case IMPACTO_TEXTO:
-            case PORTATHIEL_BLUE:
-                cellWidth = cellSpacing = 0.25*Paper.INCH_IN_MM;
-                cellHeight = lineSpacing = ((eightDots?3:2)+2)*(0.1*Paper.INCH_IN_MM);
-                break;
-            case BRAILLO_200:
-            case BRAILLO_400_S:
-            case BRAILLO_400_SR:
-            case INTERPOINT_55:
-            default:
-                cellSpacing = 6d;
-                lineSpacing = 10d;
-                break;
-        }
     }
 
     private void refreshEightDots() {
         changeEightDots(eightDots && eightDotsIsSupported());
     }
 
-    public boolean setEightDots(boolean eightDots)
-                         throws UnsupportedPaperException {
+    public boolean setEightDots(boolean eightDots) {
 
         if (locked) { return false; }
 
         if (eightDotsIsSupported()) {
             changeEightDots(eightDots);
             refreshTable();
-            refreshDimensions();
             return true;
         }
 
@@ -2251,136 +1961,75 @@ public class Settings {
         return eightDots;
     }
 
-    private void refreshDimensions() throws UnsupportedPaperException {
+    private void refreshDimensions() {
 
-        if (paperSize == null) {
+        minMarginInner = 0;
+        minMarginTop = 0;
+        minMarginOuter = 0;
+        minMarginBottom = 0;
+        maxMarginInner = 0;
+        maxMarginTop = 0;
+        maxMarginOuter = 0;
+        maxMarginBottom = 0;
 
-            maxCellsPerLine = Integer.MAX_VALUE;
-            maxLinesPerPage = Integer.MAX_VALUE;
-            maxMarginInner = Integer.MAX_VALUE;
-            maxMarginTop = Integer.MAX_VALUE;
-            maxMarginOuter = Integer.MAX_VALUE;
-            maxMarginBottom = Integer.MAX_VALUE;
-            minCellsPerLine = 1;
-            minLinesPerPage = 1;
-            minMarginInner = 0;
-            minMarginTop = 0;
-            minMarginOuter = 0;
-            minMarginBottom = 0;
+        minCellsPerLine = 1;
+        minLinesPerPage = 1;
+        maxCellsPerLine = Integer.MAX_VALUE;
+        maxLinesPerPage = Integer.MAX_VALUE;
 
-        } else {
+        unprintableInner = 0;
+        unprintableOuter = 0;
+        unprintableTop = 0;
+        unprintableBottom = 0;
+        cellsInWidth = 0;
+        linesInHeight = 0;
 
-            if (embosser == null) { return; }
+        if (paper != null && embosser != null) {
 
-            int maxCellsInWidth = Integer.MAX_VALUE;
-            int maxLinesInHeight = Integer.MAX_VALUE;
-            int minCellsInWidth = 0;
-            int minLinesInHeight = 0;
+            PageFormat inputPage = new PageFormat(paper);
+            PrintPage printPage = embosser.getPrintPage(inputPage);
+            Area printableArea = embosser.getPrintableArea(inputPage);
 
-            switch (embosser) {
-                case INDEX_BASIC_S_V2:
-                case INDEX_BASIC_D_V2:
-                case INDEX_EVEREST_D_V2:
-                case INDEX_4X4_PRO_V2:
-                    minCellsInWidth = 23;
-                case INDEX_4X4_PRO_V3:
-                case INDEX_BASIC_D_V3:
-                case INDEX_EVEREST_D_V3:
-                case INDEX_4WAVES_PRO_V3:
-                    maxCellsInWidth = 42;
-                    break;
-            }
+            unprintableInner = printableArea.getOffsetX();
+            unprintableOuter = printPage.getWidth() - printableArea.getWidth() - unprintableInner;
+            unprintableTop = printableArea.getOffsetY();
+            unprintableBottom = printPage.getHeight() - printableArea.getHeight() - unprintableTop;
 
-            printablePageWidth  = Math.min(printablePageWidth,  maxCellsInWidth  * cellSpacing);
-            printablePageHeight = Math.min(printablePageHeight, maxLinesInHeight * lineSpacing);
-            unprintableOuter = pageWidth - printablePageWidth - unprintableInner;
-            unprintableBottom = pageHeight - printablePageHeight - unprintableTop;
-            
-            cellsInWidth =  (int)Math.floor(printablePageWidth / cellSpacing);
-            linesInHeight = (int)Math.floor(printablePageHeight / lineSpacing);
-
-            if (cellsInWidth  < minCellsInWidth  ||
-                linesInHeight < minLinesInHeight ||
-                cellsInWidth  > maxCellsInWidth  ||
-                linesInHeight > maxLinesInHeight) {
-
-                throw new UnsupportedPaperException();
-            }
+            cellsInWidth = embosser.getMaxWidth(inputPage);
+            linesInHeight = embosser.getMaxHeight(inputPage);
 
             maxCellsPerLine = cellsInWidth;
             maxLinesPerPage = linesInHeight;
-            maxMarginInner = cellsInWidth;
-            maxMarginOuter = cellsInWidth;
-            maxMarginTop = linesInHeight;
-            maxMarginBottom = linesInHeight;
-            minCellsPerLine = 1;
-            minLinesPerPage = 1;
-            minMarginInner = 0;
-            minMarginOuter = 0;
-            minMarginTop = 0;
-            minMarginBottom = 0;
 
-            switch (embosser) {
-                case INDEX_4X4_PRO_V3:
-                    if (unprintableInner == 0) {
-                        minMarginInner = 1;
-                    }
-                    if (unprintableTop == 0 && duplex) {
-                        minMarginTop = 1;
-                    }
-                case INDEX_BASIC_D_V3:
-                case INDEX_EVEREST_D_V3:
-                case INDEX_4WAVES_PRO_V3:
-                    maxMarginInner = 10;
-                    maxMarginOuter = 10;
-                    maxMarginTop = 10;
-                    break;
+            if (embosser.supportsAligning()) {
+
+                maxMarginInner = cellsInWidth;
+                maxMarginOuter = cellsInWidth;
+                maxMarginTop = linesInHeight;
+                maxMarginBottom = linesInHeight;
             }
 
-            int tempMaxCellsPerLine = maxCellsPerLine;
-            int tempMaxLinesPerPage = maxLinesPerPage;
             int tempMaxMarginInner = maxMarginInner;
             int tempMaxMarginOuter = maxMarginOuter;
             int tempMaxMarginTop = maxMarginTop;
             int tempMaxMarginBottom = maxMarginBottom;
             int tempMinCellsPerLine = minCellsPerLine;
             int tempMinLinesPerPage = minLinesPerPage;
-            int tempMinMarginInner = minMarginInner;
-            int tempMinMarginOuter = minMarginOuter;
-            int tempMinMarginTop = minMarginTop;
-            int tempMinMarginBottom = minMarginBottom;
 
-            maxCellsPerLine = (int)Math.min(tempMaxCellsPerLine, cellsInWidth  - tempMinMarginInner  - tempMinMarginOuter);
-            maxMarginInner =  (int)Math.min(tempMaxMarginInner,  cellsInWidth  - tempMinCellsPerLine - tempMinMarginOuter);
-            maxMarginOuter =  (int)Math.min(tempMaxMarginOuter,  cellsInWidth  - tempMinCellsPerLine - tempMinMarginInner);
+            maxMarginInner =  (int)Math.min(tempMaxMarginInner,  cellsInWidth  - tempMinCellsPerLine);
+            maxMarginOuter =  (int)Math.min(tempMaxMarginOuter,  cellsInWidth  - tempMinCellsPerLine);
             minCellsPerLine = (int)Math.max(tempMinCellsPerLine, cellsInWidth  - tempMaxMarginInner  - tempMaxMarginOuter);
-            minMarginInner =  (int)Math.max(tempMinMarginInner,  cellsInWidth  - tempMaxCellsPerLine - tempMaxMarginOuter);
-            minMarginOuter =  (int)Math.max(tempMinMarginOuter,  cellsInWidth  - tempMaxCellsPerLine - tempMinMarginInner);
-            maxLinesPerPage = (int)Math.min(tempMaxLinesPerPage, linesInHeight - tempMinMarginTop    - tempMinMarginBottom);
-            maxMarginTop =    (int)Math.min(tempMaxMarginTop,    linesInHeight - tempMinLinesPerPage - tempMinMarginBottom);
-            maxMarginBottom = (int)Math.min(tempMaxMarginBottom, linesInHeight - tempMinLinesPerPage - tempMinMarginTop);
+            maxMarginTop =    (int)Math.min(tempMaxMarginTop,    linesInHeight - tempMinLinesPerPage);
+            maxMarginBottom = (int)Math.min(tempMaxMarginBottom, linesInHeight - tempMinLinesPerPage);
             minLinesPerPage = (int)Math.max(tempMinLinesPerPage, linesInHeight - tempMaxMarginTop    - tempMaxMarginBottom);
-            minMarginTop =    (int)Math.max(tempMinMarginTop,    linesInHeight - tempMaxLinesPerPage - tempMaxMarginBottom);
-            minMarginBottom = (int)Math.max(tempMinMarginBottom, linesInHeight - tempMaxLinesPerPage - tempMaxMarginTop);
-
-            if (minCellsPerLine > maxCellsPerLine ||
-                minLinesPerPage > maxLinesPerPage ||
-                minMarginInner  > maxMarginInner  ||
-                minMarginOuter  > maxMarginOuter  ||
-                minMarginTop    > maxMarginTop    ||
-                minMarginBottom > maxMarginBottom) {
-
-                throw new UnsupportedPaperException();
-            }
         }
 
-        setCellsPerLine(cellsPerLine);
-        setLinesPerPage(linesPerPage);
+        setMarginInner(marginInner);
+        setMarginTop(marginTop);
     }
 
     /**
-     * Set the number of cells per line to the desired value. If this is not possible, it will be set to the most nearby value.
-     * The left and right margins are updated accordingly.
+     * Set the number of cells per line to the desired value.
      *
      * @param   cells  The desired value.
      */
@@ -2403,8 +2052,7 @@ public class Settings {
     }
 
     /**
-     * Set the number of lines per page to the desired value. If this is not possible, it will be set to the most nearby value.
-     * The top and bottom margins are updated accordingly.
+     * Set the number of lines per page to the desired value.
      *
      * @param   lines  The desired value.
      */
@@ -2426,14 +2074,6 @@ public class Settings {
         return true;
     }
 
-    public int getCellsInWidth() {
-        return cellsInWidth;
-    }
-    
-    public int getLinesInHeight() {
-        return linesInHeight;
-    }
-
     /**
      * @return  The current number of cells per line.
      */
@@ -2449,38 +2089,10 @@ public class Settings {
     }
 
     /**
-     * @return  The maximum number of lines that can be fit on a page, given the current paper size.
-     */
-    public int getMaxCellsPerLine() {
-        return maxCellsPerLine;
-    }
-
-    /**
-     * @return  The maximum number of cells that can be fit on a line, given the current paper size.
-     */
-    public int getMaxLinesPerPage() {
-        return maxLinesPerPage;
-    }
-
-    /**
-     * @return  The minimum number of cells per line.
-     */
-    public int getMinCellsPerLine() {
-        return minCellsPerLine;
-    }
-
-    /**
-     * @return  The minimum number of lines per page.
-     */
-    public int getMinLinesPerPage() {
-        return minLinesPerPage;
-    }
-
-    /**
      * @return   <code>true</code> if margins are supported, given the current settings.
      */
     public boolean marginsSupported() {
-        return (paperSize!=null);
+        return (paper != null && embosser != null && embosser.supportsAligning());
     }
 
     /**
@@ -2493,13 +2105,13 @@ public class Settings {
 
         if (locked) { return false; }
 
-        if (marginsSupported()) {
+        if (paper != null && embosser != null) {
             marginInner =  Math.min(maxMarginInner,  Math.max(minMarginInner,  margin));
-            marginOuter =  Math.min(maxMarginOuter,  Math.max(minMarginOuter,  cellsInWidth - marginInner - cellsPerLine));
             cellsPerLine = Math.max(minCellsPerLine, Math.min(maxCellsPerLine, cellsInWidth - marginInner - marginOuter));
             marginOuter =  cellsInWidth - cellsPerLine - marginInner;
         } else {
             marginInner = 0;
+            marginOuter = 0;
         }
 
         return true;
@@ -2515,12 +2127,12 @@ public class Settings {
 
         if (locked) { return false; }
 
-        if (marginsSupported()) {
+        if (paper != null && embosser != null) {
             marginOuter =  Math.min(maxMarginOuter,  Math.max(minMarginOuter,  margin));
-            marginInner =  Math.min(maxMarginInner,  Math.max(minMarginInner,  cellsInWidth - marginOuter - cellsPerLine));
             cellsPerLine = Math.max(minCellsPerLine, Math.min(maxCellsPerLine, cellsInWidth - marginOuter - marginInner));
             marginInner =  cellsInWidth - cellsPerLine - marginOuter;
         } else {
+            marginInner = 0;
             marginOuter = 0;
         }
 
@@ -2537,13 +2149,13 @@ public class Settings {
 
         if (locked) { return false; }
 
-        if (marginsSupported()) {
+        if (paper != null && embosser != null) {
             marginTop =    Math.min(maxMarginTop,    Math.max(minMarginTop,    margin));
-            marginBottom = Math.min(maxMarginBottom, Math.max(minMarginBottom, linesInHeight - marginTop - linesPerPage));
             linesPerPage = Math.max(minLinesPerPage, Math.min(maxLinesPerPage, linesInHeight - marginTop - marginBottom));
             marginBottom = linesInHeight - linesPerPage - marginTop;
         } else {
             marginTop = 0;
+            marginBottom = 0;
         }
 
         return true;
@@ -2559,12 +2171,12 @@ public class Settings {
 
         if (locked) { return false; }
 
-        if (marginsSupported()) {
+        if (paper != null && embosser != null) {
             marginBottom = Math.min(maxMarginBottom, Math.max(minMarginBottom, margin));
-            marginTop =    Math.min(maxMarginTop,    Math.max(minMarginTop,    linesInHeight - marginBottom - linesPerPage));
             linesPerPage = Math.max(minLinesPerPage, Math.min(maxLinesPerPage, linesInHeight - marginBottom - marginTop));
             marginTop =    linesInHeight - linesPerPage - marginBottom;
         } else {
+            marginTop = 0;
             marginBottom = 0;
         }
 
@@ -2588,97 +2200,19 @@ public class Settings {
     }
 
     public int getMarginInnerOffset() {
-        return (int)Math.floor(unprintableInner / cellSpacing);
+        return (int)Math.floor(unprintableInner / 6d);
     }
 
     public int getMarginOuterOffset() {
-        return (int)Math.floor(unprintableOuter / cellSpacing);
+        return (int)Math.floor(unprintableOuter / 6d);
     }
 
     public int getMarginTopOffset() {
-        return (int)Math.floor(unprintableTop / lineSpacing);
+        return (int)Math.floor(unprintableTop / 10d);
     }
 
     public int getMarginBottomOffset() {
-        return (int)Math.floor(unprintableBottom / lineSpacing);
-    }
-
-    /**
-     * @return  The minimum left margin.
-     */
-    public int getMinMarginInner() {
-        return minMarginInner;
-    }
-
-    /**
-     * @return  The minimum right margin.
-     */
-    public int getMinMarginOuter() {
-        return minMarginOuter;
-    }
-
-    /**
-     * @return  The minimum top margin.
-     */
-    public int getMinMarginTop() {
-        return minMarginTop;
-    }
-
-    /**
-     * @return  The minimum bottom margin.
-     */
-    public int getMinMarginBottom() {
-        return minMarginBottom;
-    }
-
-    /**
-     * @return  The maximum left margin.
-     */
-    public int getMaxMarginInner() {
-        return maxMarginInner;
-    }
-
-    /**
-     * @return  The maximum right margin.
-     */
-    public int getMaxMarginOuter() {
-        return maxMarginOuter;
-    }
-
-    /**
-     * @return  The maximum top margin.
-     */
-    public int getMaxMarginTop() {
-        return maxMarginTop;
-    }
-
-    /**
-     * @return  The maximum bottom margin.
-     */
-    public int getMaxMarginBottom() {
-        return maxMarginBottom;
-    }
-
-    /**
-     * @return  The spacing between successive braille cells, given the current embosser type.
-     */
-    public double getCellSpacing() {
-        return cellSpacing;
-    }
-
-    /**
-     * @return  The spacing between successive braille lines, given the current embosser type.
-     */
-    public double getLineSpacing() {
-        return lineSpacing;
-    }
-
-    public double getCellWidth() {
-        return cellWidth;
-    }
-
-    public double getCellHeight() {
-        return cellHeight;
+        return (int)Math.floor(unprintableBottom / 10d);
     }
 
     /**
@@ -3477,19 +3011,19 @@ public class Settings {
         return specialSymbol;
     }
 
-    public ArrayList<ParagraphStyle> getParagraphStyles() {    
+    public List<ParagraphStyle> getParagraphStyles() {    
         return new ArrayList(paragraphStylesMap.values());
     }
 
-    public ArrayList<CharacterStyle> getCharacterStyles() {
+    public List<CharacterStyle> getCharacterStyles() {
         return new ArrayList(characterStylesMap.values());
     }
 
-    public ArrayList<HeadingStyle> getHeadingStyles() {
+    public List<HeadingStyle> getHeadingStyles() {
         return new ArrayList(headingStyles);
     }
 
-    public ArrayList<ListStyle> getListStyles() {
+    public List<ListStyle> getListStyles() {
         return new ArrayList(listStyles);
     }
 
@@ -3557,7 +3091,31 @@ public class Settings {
         return false;
     }
 
-    public boolean setNoterefNumberPrefix(String numFormat, String prefix) {
+    public boolean setNoterefSpaceBefore(boolean b) {
+
+        if (locked) { return false; }
+        noterefSpaceBefore = b;
+        return true;
+    }
+
+    public boolean getNoterefSpaceBefore() {
+        return noterefSpaceBefore;
+    }
+
+    public boolean setNoterefSpaceAfter(boolean b) {
+
+        if (locked) { return false; }
+        noterefSpaceAfter = b;
+        return true;
+    }
+
+    public boolean getNoterefSpaceAfter() {
+        return noterefSpaceAfter;
+    }
+
+    public boolean setNoterefNumberPrefix(String numFormat,
+                                          String prefix) {
+        if (locked) { return false; }
 
         if (noterefNumberPrefixMap.containsKey(numFormat) &&
             (prefix.length() == 0 ||
@@ -3613,6 +3171,8 @@ public class Settings {
             setNoterefNumberPrefix("A", "\u2814\u2814");
             setNoterefNumberPrefix("i", "\u2814\u2814\u2830");
             setNoterefNumberPrefix("I", "\u2814\u2814");
+            setNoterefSpaceBefore(true);
+            setNoterefSpaceAfter(true);
 
             for (ParagraphStyle paraStyle : getParagraphStyles()) {
                 paraStyle.setInherit(true);
