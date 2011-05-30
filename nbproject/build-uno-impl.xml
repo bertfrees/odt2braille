@@ -15,7 +15,7 @@
         <property name="build.uno.version" value="2.0.6"/>
       
         <!-- set variablers from SDK and Office -->
-        <echo message="setting up UNO environment ..."/>
+        <echo message="setting up UNO environment ..."/>		
         <property name="office.unopkg" value="${office.program.dir}${file.separator}unopkg"/>
         <property name="office.soffice" value="${office.program.dir}${file.separator}soffice"/>
         
@@ -34,7 +34,7 @@
         <property name="idl.out.rdb" value="${idl.out}/rdb"/>
         <property name="idl.rdb.name" value="types.rdb"/>
         <property name="idl.rdb.fullpath" value="${idl.out.rdb}/${idl.rdb.name}"/>
-        
+		
         <property name="images.base.dir" value="${build.dir}/img"/>
         <property name="build.registry.dir" value="${build.dir}/cpreg"/>
         
@@ -43,7 +43,7 @@
         <mkdir dir="${idl.out.rdb}"/>
         <mkdir dir="${images.base.dir}"/>
         <mkdir dir="${build.registry.dir}"/>
-
+		
         <condition property="oo.version.three">
             <equals arg1="${oo.version.number}" arg2="three"/>
         </condition>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See commented blocks below for -->
+<!-- some examples of how to customize the build. -->
+<!-- (If you delete it and reopen the project it will be recreated.) -->
+<project name="Odt2BrailleAddOn" default="default" basedir=".">
+    <description>Build the project on Windows without NetBeans.</description>
+	<import file="build.xml"/>
+		
+	<target name="-init-windows">
+		<property file="build-windows.properties"/>
+		<property file="nbproject/project.properties"/>
+		<property file="nbproject/project-uno.properties"/>
+		
+		<property name="ure.dir" value="${oo.dir}${file.separator}URE" />
+		<property name="office.program.dir" value="${oo.dir}${file.separator}program"/>
+		<property name="libs.OpenOffice.org\ 3.3.classpath" value="${ure.dir}${file.separator}java${file.separator}juh.jar;${ure.dir}${file.separator}java${file.separator}jurt.jar;${ure.dir}${file.separator}java${file.separator}ridl.jar;${oo.dir}${file.separator}Basis${file.separator}program${file.separator}classes${file.separator}unoil.jar" />
+		<property name="sdk.bin.dir" value="${sdk.dir}${file.separator}bin" />
+		<property name="ure.bin.dir" value="${ure.dir}${file.separator}bin" />
+		<property name="office.tool.path" value="${office.program.dir};${sdk.bin.dir};${oo.dir}${file.separator}Basis${file.separator}program;${ure.bin.dir}" />
+		<property name="oo.unotypes.rdb" value="-X${ure.dir}${file.separator}misc${file.separator}types.rdb" />
+		<property name="oo.offapi.rdb" value="-X${oo.dir}${file.separator}Basis${file.separator}program${file.separator}offapi.rdb" />
+	
+		<property name="external.jars" value="lib/AccessibilityCheckerAddOn.jar lib/brailleUtils-catalog-1.2.0b.jar lib/brailleUtils-core-1.2.0b.jar lib/commons-cli-1.1.jar lib/commons-io-1.4.jar lib/isorelax.jar lib/jna.jar lib/juh-2.1.0.jar lib/msv.jar lib/org.daisy.util.jar lib/pipeline.jar lib/relames.jar lib/relaxngDatatype.jar lib/saxon9he.jar lib/stax-api-1.0.1.jar lib/xalan.jar lib/xsdlib.jar" />
+	
+		<available file="${dist.dir}${file.separator}${external.jar.dir}" property="dist.lib.dir.exists"/>		
+	</target>
+	
+	<target name="-copy-lib" depends="-init-windows" unless="dist.lib.dir.exists">	
+		<copy todir="${dist.dir}">
+			<fileset dir="." includes="${external.jars}" />
+		</copy>
+	</target>
+		
+	<target name="-pre-init" depends="-init-windows,-copy-lib"/>	
+	
+</project>

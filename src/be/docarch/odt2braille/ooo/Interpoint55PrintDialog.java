@@ -25,12 +25,6 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Properties;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
-import java.io.Writer;
-import java.io.InputStreamReader;
-import java.io.FileInputStream;
-import java.io.BufferedReader;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -61,7 +55,7 @@ import com.sun.star.beans.XPropertySet;
 import java.io.IOException;
 
 import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.Settings;
+import be_interpoint.Interpoint55Embosser;
 
 /**
  * Show an OpenOffice.org dialog window for embossing with the Interpoint55 printer. With this dialog, a user can choose
@@ -84,7 +78,7 @@ public class Interpoint55PrintDialog implements XActionListener,
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N = Constants.OOO_L10N_PATH;
 
-    private Settings settings = null;
+    private Interpoint55Embosser embosser = null;
     private SettingsIO settingsIO = null;
 
     private XComponentContext xContext = null;
@@ -148,12 +142,12 @@ public class Interpoint55PrintDialog implements XActionListener,
      */
     public Interpoint55PrintDialog(XComponentContext xContext,
                                    XComponent xDesktopComponent,
-                                   Settings settings)
+                                   Interpoint55Embosser embosser)
                             throws com.sun.star.uno.Exception {
 
         logger.entering("Interpoint55PrintDialog", "<init>");
 
-        this.settings = settings;
+        this.embosser = embosser;
         this.xContext = xContext;
 
         settingsIO = new SettingsIO(xContext, xDesktopComponent);
@@ -479,57 +473,7 @@ public class Interpoint55PrintDialog implements XActionListener,
 
         logger.entering("Interpoint55PrintDialog", "overWriteIniFile");
 
-        String line = null;
-        String content = "";
-
-        FileInputStream fileInputStream = new FileInputStream(iniFile);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream,"UTF-8");
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-        while((line=bufferedReader.readLine())!=null) {
-
-            if (line.startsWith("Mode=")) {
-                line = "Mode=" +
-                       (settings.getSaddleStitch()?"4":
-                       settings.getDuplex()?"3":"1");
-            } else if (line.startsWith("MirrorMargins=")) {
-                line = "MirrorMargins=1";
-            } else if (line.startsWith("LeftMargin=")) {
-                line = "LeftMargin=" +
-                       (settings.getMarginInner());
-            } else if (line.startsWith("RightMargin=")) {
-                line = "RightMargin=" +
-                       (settings.getMarginOuter());
-            } else if (line.startsWith("TopMargin=")) {
-                line = "TopMargin=" +
-                       (settings.getMarginTop());
-            } else if (line.startsWith("CharactersPerLine")) {
-                line = "CharactersPerLine=" +
-                       (settings.getCellsPerLine());
-            } else if (line.startsWith("LinesPerPage")) {
-                line = "LinesPerPage=" +
-                       (settings.getLinesPerPage());
-            } else if (line.startsWith("MaxPagesInQuire")) {
-                line = "MaxPagesInQuire=" +
-                       (settings.getSheetsPerQuire());
-            }
-
-            content += line + System.getProperty("line.separator");
-
-        }
-
-        if (bufferedReader != null) {
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
-        }
-
-        Writer bufferedWriter = new BufferedWriter(new FileWriter(iniFile));
-        bufferedWriter.write(content);
-
-        if (bufferedWriter != null) {
-            bufferedWriter.close();
-            }
+        embosser.saveConfigurationFile(iniFile);
 
         logger.exiting("Interpoint55PrintDialog", "overWriteIniFile");
 
@@ -545,6 +489,7 @@ public class Interpoint55PrintDialog implements XActionListener,
      *
      * @param actionEvent
      */
+    @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
         try {
@@ -585,6 +530,7 @@ public class Interpoint55PrintDialog implements XActionListener,
         }
     }
 
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         Object source = itemEvent.Source;
@@ -612,6 +558,7 @@ public class Interpoint55PrintDialog implements XActionListener,
     /**
      * @param event
      */
+    @Override
     public void disposing(EventObject event) {}
 
 }

@@ -34,10 +34,8 @@ import javax.print.PrintException;
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserWriter;
-import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.facade.PEFConverterFacade;
 import org.daisy.braille.pef.PEFHandler;
-import org.daisy.paper.PageFormat;
 import org.daisy.printing.PrinterDevice;
 
 import org.daisy.braille.embosser.UnsupportedWidthException;
@@ -82,11 +80,6 @@ public class HandlePEF {
 
         logger.entering("HandlePEF", "convertToSingleFile");
 
-        try {
-            format.setFeature(EmbosserFeatures.TABLE, settings.getTable());
-        } catch (IllegalArgumentException e) {
-        }
-
         File output = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
         output.deleteOnExit();
 
@@ -107,17 +100,6 @@ public class HandlePEF {
                                  SAXException {
 
         logger.entering("HandlePEF", "convertToFiles");
-
-        // TableCatalog uses the context class loader
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
-
-            try {
-                format.setFeature(EmbosserFeatures.TABLE, settings.getTable());
-            } catch (IllegalArgumentException e) {
-            }
-
-        } Thread.currentThread().setContextClassLoader(cl);
 
         File[] outputFiles;
         File[] pefFiles;
@@ -208,12 +190,6 @@ public class HandlePEF {
         // TableCatalog uses the context class loader
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
-
-            try {
-                embosser.setFeature(EmbosserFeatures.TABLE, settings.getTable());
-            } catch (IllegalArgumentException e) {
-            }
-            embosser.setFeature(EmbosserFeatures.PAGE_FORMAT, new PageFormat(settings.getPaper()));
 
             EmbosserWriter writer = embosser.newEmbosserWriter(new FileOutputStream(output));
             PEFHandler.Builder builder = new PEFHandler.Builder(writer)

@@ -147,9 +147,9 @@
 
 # Captions
 
-	wrap-caption  div,class,caption
-	caption       caption
-	generic       &xpath(//dtb:div[@class='tn']//dtb:caption)
+    wrap-caption  div,class,caption
+    caption       caption
+    generic       &xpath(//dtb:div[@class='tn']//dtb:caption)
 
 # Lists
 	
@@ -212,10 +212,10 @@
 
 # Tables
 	
-	table table
-	pad-table &xpath(//dtb:table/dtb:div[@class='border'])
-	no thead
-	no tbody
+    table table
+    pad-table &xpath(//dtb:table/dtb:div[@class='border'])
+    no thead
+    no tbody
     tablerow tr
     lasttablerow &xpath(//dtb:tr[position()=last()])
     generic td
@@ -249,12 +249,12 @@
 
 # Textboxes
 	
-	frame div,class,frame
-	pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
+    frame div,class,frame
+    pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
 	
 # Images
 	
-	no div,class,image
+    no div,class,image
 
 # ----------------------------------------------------------------------------------------------
 # Borders (_sem.borders.sem)
@@ -289,30 +289,33 @@
 
 # Transcriber's notes
 	
-	no    div,class,tn
-	skip  &xpath(//dtb:div[@class='tn' and not(child::dtb:note)])
+    no    div,class,tn
+    skip  &xpath(//dtb:div[@class='tn' and not(child::dtb:note)])
 	
 # Note references
-# Notes
+# Foot Notes
+# End Notes
 
-	no       noteref \s,\*\s
-	no       &xpath(//dtb:note/dtb:noteref) \*\s
+    generic  noteref
+    generic  &xpath(//dtb:noteref[    @space-before='true'  and     @space-after='true' ]) \s,\*\s
+    generic  &xpath(//dtb:noteref[    @space-before='true'  and not(@space-after='true')]) \s
+    generic  &xpath(//dtb:noteref[not(@space-before='true') and     @space-after='true' ]) \*\s
 
-	footnote   note,class,footnote
-	endnote    note,class,endnote
-	para       &xpath(//dtb:div[@class='tn-page']/dtb:note)
-	trnote     &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
-	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
-	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
-	trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
+    footnote   note,class,footnote
+    endnote    note,class,endnote
+    para       &xpath(//dtb:div[@class='tn-page']/dtb:note)
+    trnote     &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
+    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
+    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
+    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
 	
 # Footers
 # Running headers
 	
 # Other
 
-	no div,class,omission
-	no div,class,transposition
-	no div,class,not-in-volume
+    no div,class,omission
+    no div,class,transposition
+    no div,class,not-in-volume
 
 # ----------------------------------------------------------------------------------------------

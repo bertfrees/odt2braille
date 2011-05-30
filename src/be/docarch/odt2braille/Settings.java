@@ -104,7 +104,7 @@ public class Settings {
 
     public static final String GENERIC_EMBOSSER =        "org_daisy.GenericEmbosserProvider.EmbosserType.NONE";
 
-    public static final String INTERPOINT_55 =           "be_interpoint.InterPointEmbosserProvider.EmbosserType.INTERPOINT_55";
+    public static final String INTERPOINT_55 =           "be_interpoint.InterpointEmbosserProvider.EmbosserType.INTERPOINT_55";
     public static final String INDEX_BASIC_BLUE_BAR =    "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_BASIC_BLUE_BAR";
     public static final String INDEX_EVEREST_S_V1 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_S_V1";
     public static final String INDEX_EVEREST_D_V1 =      "com_indexbraille.IndexEmbosserProvider.EmbosserType.INDEX_EVEREST_D_V1";
@@ -1365,7 +1365,6 @@ public class Settings {
         refreshTable();
         refreshPaper();
         refreshDimensions();
-
         return true;
     }
 
@@ -1500,8 +1499,7 @@ public class Settings {
             refreshDuplex();
             refreshEightDots();
             refreshTable();
-            refreshDimensions();
-            
+            refreshDimensions();            
             return true;
         }
 
@@ -1536,6 +1534,10 @@ public class Settings {
             return false;
         }
 
+        if (eightDots ^ table.newBrailleConverter().supportsEightDot()) {
+            return false;
+        }
+
         if (exportOrEmboss) {
             return format.supportsTable(table);
         } else {
@@ -1558,7 +1560,16 @@ public class Settings {
     }
 
     private void changeTable(Table table) {
+
         this.table = table;
+        try {            
+            if (exportOrEmboss) {
+                format.setFeature(EmbosserFeatures.TABLE, table);
+            } else {
+                embosser.setFeature(EmbosserFeatures.TABLE, table);
+            }
+        } catch (IllegalArgumentException e) {
+        }
     }
 
     private void refreshTable() {
@@ -1951,6 +1962,7 @@ public class Settings {
         if (eightDotsIsSupported()) {
             changeEightDots(eightDots);
             refreshTable();
+            refreshDimensions();
             return true;
         }
 

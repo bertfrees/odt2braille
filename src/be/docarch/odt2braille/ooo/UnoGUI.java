@@ -65,6 +65,10 @@ import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
+import org.daisy.braille.embosser.Embosser;
+import org.daisy.braille.embosser.EmbosserFeatures;
+import org.daisy.paper.PageFormat;
+import be_interpoint.Interpoint55Embosser;
 
 import org.daisy.braille.embosser.UnsupportedWidthException;
 import be.docarch.odt2braille.LiblouisXMLException;
@@ -641,10 +645,14 @@ public class UnoGUI {
             // Create EmbossPEF entity
             handlePef = new HandlePEF(pef, changedSettings);
 
-            // Emboss Dialog
-            if (changedSettings.getEmbosser().getIdentifier().equals(Settings.INTERPOINT_55)) {
+            // Load embosser with paper
+            Embosser embosser = changedSettings.getEmbosser();
+            embosser.setFeature(EmbosserFeatures.PAGE_FORMAT, new PageFormat(changedSettings.getPaper()));
 
-                Interpoint55PrintDialog printDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, changedSettings);
+            // Emboss Dialog
+            if (embosser instanceof Interpoint55Embosser) {
+
+                Interpoint55PrintDialog printDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, (Interpoint55Embosser)embosser);
 
                 if (!printDialog.execute()) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
@@ -686,7 +694,7 @@ public class UnoGUI {
 
             } else {
 
-                PrintDialog printDialog = new PrintDialog(m_xContext, changedSettings.getEmbosser());
+                PrintDialog printDialog = new PrintDialog(m_xContext, embosser);
 
                 if ((deviceName=printDialog.execute()).equals("")) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
