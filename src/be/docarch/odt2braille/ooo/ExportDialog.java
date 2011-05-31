@@ -25,7 +25,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
+import java.util.Collections;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -71,8 +72,11 @@ public class ExportDialog implements XItemListener,
     private ProgressBar progressbar = null;
     private SettingsDialog settingsDialog = null;
 
-    private List<FileFormat> brailleFileTypes = null;
-    private List<Table> tableTypes = null;
+    private List<FileFormat> fileFormatList = null;
+    private List<Table> tableList = null;
+
+    private Comparator<FileFormat> fileFormatComparator = null;
+    private Comparator<Table> tableComparator = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -152,8 +156,21 @@ public class ExportDialog implements XItemListener,
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
 
-        brailleFileTypes = new ArrayList<FileFormat>();
-        tableTypes = new ArrayList<Table>();
+        fileFormatList = new ArrayList<FileFormat>();
+        tableList = new ArrayList<Table>();
+
+        fileFormatComparator = new Comparator<FileFormat>() {
+            @Override
+            public int compare(FileFormat f1, FileFormat f2) {
+                return ((Comparable)f1.getDisplayName()).compareTo(f2.getDisplayName());
+            }
+        };
+        tableComparator = new Comparator<Table>() {
+            @Override
+            public int compare(Table t1, Table t2) {
+                return ((Comparable)t1.getDisplayName()).compareTo(t2.getDisplayName());
+            }
+        };
 
         Locale oooLocale = Locale.getDefault();
 
@@ -292,8 +309,8 @@ public class ExportDialog implements XItemListener,
 
         settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
         settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
-        if (tableTypes.size() > 1) {
-            settings.setTable(tableTypes.get(tableListBox.getSelectedItemPos()));
+        if (tableList.size() > 1) {
+            settings.setTable(tableList.get(tableListBox.getSelectedItemPos()));
         }
         settings.setMultipleFilesEnabled(multipleFilesCheckBox.getState()==(short)1);
         settings.setDuplex((duplexCheckBox.getState()==(short)1));
@@ -317,12 +334,14 @@ public class ExportDialog implements XItemListener,
         short select = -1;
         String selectedId = settings.getBrailleFileType().getIdentifier();
 
+        fileFormatList.clear();
+        fileFormatList.addAll(settings.getSupportedBrailleFileTypes());
+        Collections.sort(fileFormatList, fileFormatComparator);
+
         brailleFileListBox.removeItemListener(this);
 
             brailleFileListBox.removeItems((short)0, Short.MAX_VALUE);
-            brailleFileTypes.clear();
-            for (FileFormat f : settings.getSupportedBrailleFileTypes()) {
-                brailleFileTypes.add(f);
+            for (FileFormat f : fileFormatList) {
                 if (f.getIdentifier().equals(selectedId)) {
                     select = i;
                 }
@@ -332,9 +351,9 @@ public class ExportDialog implements XItemListener,
             if (select>=0) {
                 brailleFileListBox.selectItemPos(select, true);
             }
-            
-        brailleFileListBox.addItemListener(this);
 
+        brailleFileListBox.addItemListener(this);
+        
     }
 
     /**
@@ -348,19 +367,20 @@ public class ExportDialog implements XItemListener,
         String selectedId = "";
         if (settings.getTable()!=null) { selectedId = settings.getTable().getIdentifier(); }
 
-        tableListBox.removeItems((short)0, Short.MAX_VALUE);
-        tableTypes.clear();
-        Collection<Table> supportedTables = settings.getSupportedTables();
+        tableList.clear();
+        tableList.addAll(settings.getSupportedTables());
+        Collections.sort(tableList, tableComparator);
 
-        if (supportedTables.size()<2) {
+        tableListBox.removeItems((short)0, Short.MAX_VALUE);
+
+        if (tableList.size()<2) {
             tableListBoxProperties.setPropertyValue("Enabled", false);
             return;
         } else {
             tableListBoxProperties.setPropertyValue("Enabled", true);
         }
 
-        for (Table t : settings.getSupportedTables()) {
-            tableTypes.add(t);
+        for (Table t : tableList) {
             if (t.getIdentifier().equals(selectedId)) {
                 select = i;
             }
@@ -416,10 +436,9 @@ public class ExportDialog implements XItemListener,
 
         try {
 
-             if (source.equals(brailleFileListBox)) {
+            if (source.equals(brailleFileListBox)) {
 
-                settings.setBrailleFileType(brailleFileTypes.get(brailleFileListBox.getSelectedItemPos()));
-
+                settings.setBrailleFileType(fileFormatList.get(brailleFileListBox.getSelectedItemPos()));
                 updateTableListBox();
                 updateDuplexCheckBox();
                 updateEightDotsCheckBox();

@@ -1492,10 +1492,7 @@ public class Settings {
         if (locked) { return false; }
 
         if (brailleFileTypeIsSupported(format)) {
-
             changeBrailleFileType(format);
-            refreshZFolding();
-            refreshSaddleStitch();
             refreshDuplex();
             refreshEightDots();
             refreshTable();
@@ -1562,7 +1559,7 @@ public class Settings {
     private void changeTable(Table table) {
 
         this.table = table;
-        try {            
+        try {
             if (exportOrEmboss) {
                 format.setFeature(EmbosserFeatures.TABLE, table);
             } else {
@@ -1792,9 +1789,11 @@ public class Settings {
     private void changeDuplex(boolean duplex) {
 
         this.duplex = duplex;
-        try {
-            embosser.setFeature(EmbosserFeatures.DUPLEX, duplex);
-        } catch (IllegalArgumentException e) {
+        if (!exportOrEmboss) {
+            try {
+                embosser.setFeature(EmbosserFeatures.DUPLEX, duplex);
+            } catch (IllegalArgumentException e) {
+            }
         }
     }
 
@@ -1836,9 +1835,11 @@ public class Settings {
     private void changeSaddleStitch(boolean saddleStitch) {
 
         this.saddleStitch = saddleStitch;
-        try {
-            embosser.setFeature(EmbosserFeatures.SADDLE_STITCH, saddleStitch);
-        } catch (IllegalArgumentException e) {
+        if (!exportOrEmboss) {
+            try {
+                embosser.setFeature(EmbosserFeatures.SADDLE_STITCH, saddleStitch);
+            } catch (IllegalArgumentException e) {
+            }
         }
     }
     
@@ -1877,9 +1878,11 @@ public class Settings {
     private void changeSheetsPerQuire(int sheetsPerQuire) {
 
         this.sheetsPerQuire = sheetsPerQuire;
-        try {
-            embosser.setFeature(EmbosserFeatures.PAGES_IN_QUIRE, sheetsPerQuire);
-        } catch (IllegalArgumentException e) {
+        if (!exportOrEmboss) {
+            try {
+                embosser.setFeature(EmbosserFeatures.PAGES_IN_QUIRE, sheetsPerQuire);
+            } catch (IllegalArgumentException e) {
+            }
         }
     }
 
@@ -1911,9 +1914,11 @@ public class Settings {
     private void changeZFolding(boolean zFolding) {
 
         this.zFolding = zFolding;
-        try {
-            embosser.setFeature(EmbosserFeatures.Z_FOLDING, zFolding);
-        } catch (IllegalArgumentException e) {
+        if (!exportOrEmboss) {
+            try {
+                embosser.setFeature(EmbosserFeatures.Z_FOLDING, zFolding);
+            } catch (IllegalArgumentException e) {
+            }
         }
     }
 

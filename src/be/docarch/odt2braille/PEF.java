@@ -318,10 +318,10 @@ public class PEF implements ErrorHandler {
                 logger.info("Processing body of volume " + (volumeCount + 1) + " : " + volume.getType().name());
 
                 volumeElements[volumeCount] = document.createElementNS(pefNS, "volume");
-                volumeElements[volumeCount].setAttributeNS(null,"cols",String.valueOf(settings.getCellsPerLine()));
-                volumeElements[volumeCount].setAttributeNS(null,"rows",String.valueOf(settings.getLinesPerPage()));
-                volumeElements[volumeCount].setAttributeNS(null,"rowgap","0");
-                volumeElements[volumeCount].setAttributeNS(null,"duplex",settings.getDuplex()?"true":"false");
+                volumeElements[volumeCount].setAttributeNS(null, "cols", String.valueOf(settings.getCellsPerLine()));
+                volumeElements[volumeCount].setAttributeNS(null, "rows", String.valueOf(settings.getLinesPerPage()));
+                volumeElements[volumeCount].setAttributeNS(null, "rowgap", settings.getEightDots()?"1":"0");
+                volumeElements[volumeCount].setAttributeNS(null, "duplex", settings.getDuplex()?"true":"false");
 
                 if (!(volume instanceof PreliminaryVolume)) {
 

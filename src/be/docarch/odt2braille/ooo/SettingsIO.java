@@ -1478,9 +1478,6 @@ public class SettingsIO extends SettingsLoader {
         setProperty(exportFileProperty,
                     settingsAfterChange.getBrailleFileType().getIdentifier(),
                     settingsBeforeChange.getBrailleFileType().getIdentifier());
-        setProperty(exportTableProperty,
-                    settingsAfterChange.getTable().getIdentifier(),
-                    settingsBeforeChange.getTable().getIdentifier());
         setProperty(exportDuplexProperty,
                     settingsAfterChange.getDuplex(),
                     settingsBeforeChange.getDuplex());
@@ -1496,6 +1493,12 @@ public class SettingsIO extends SettingsLoader {
         setProperty(exportMultipleFilesProperty,
                     settingsAfterChange.getMultipleFilesEnabled(),
                     settingsBeforeChange.getMultipleFilesEnabled());
+
+        if (settingsAfterChange.getTable() != null) {
+            setProperty(exportTableProperty,
+                        settingsAfterChange.getTable().getIdentifier(),
+                        settingsBeforeChange.getTable().getIdentifier());
+        }
 
         if (odtModified) {
             xModifiable.setModified(true);

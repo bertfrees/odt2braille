@@ -27,51 +27,63 @@ public class PEFFileFormat implements FileFormat {
         };
     }
 
+    @Override
     public TableFilter getTableFilter() {
         return tableFilter;
     }
 
+    @Override
     public boolean supportsTable(Table table) {
         return getTableFilter().accept(table);
     }
 
+    @Override
     public boolean supports8dot() {
         return true;
     }
 
+    @Override
     public boolean supportsDuplex() {
         return true;
     }
 
+    @Override
     public EmbosserWriter newEmbosserWriter(OutputStream os) {
         throw new UnsupportedOperationException("Not supported because convertion of PEF to PEF is trivial.");
     }
 
+    @Override
     public String getFileExtension() {
         return ".pef";
     }
 
+    @Override
     public String getIdentifier() {
         return identifier;
     }
 
+    @Override
     public String getDisplayName() {
         return displayName;
     }
 
+    @Override
     public String getDescription() {
         return description;
     }
 
-    public Object getProperty(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public Object getFeature(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
+    @Override
     public void setFeature(String key, Object value) {
+        throw new IllegalArgumentException("Unsupported feature " + key);
+    }
+
+    @Override
+    public Object getFeature(String key) {
+        throw new IllegalArgumentException("Unsupported feature " + key);
+    }
+
+    @Override
+    public Object getProperty(String key) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

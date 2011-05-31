@@ -59,6 +59,7 @@ import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
+import be.docarch.odt2braille.PEFFileFormat;
 import be.docarch.odt2braille.LiblouisXML;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.OdtTransformer;
@@ -391,8 +392,7 @@ public class UnoGUI {
             }
 
             // Convert to Braille file(s)
-            if (changedSettings.getBrailleFileType().getIdentifier()
-                    .equals(Settings.PEF))  {
+            if (changedSettings.getBrailleFileType() instanceof PEFFileFormat)  {
 
                 if (changedSettings.getMultipleFilesEnabled()) {
                     brailleFiles = pef.getPEFs();
