@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Odt2BrailleAddOn-buildoxt" default="default" basedir=".">
+    <description>Build OXT package without NetBeans.</description>
+	<import file="build.xml"/>
+	
+	<target name="-detect-os">
+		<condition property="is.windows">
+            <os family="windows"/>
+        </condition>
+        <condition property="is.macosx">
+           <and>
+               <os family="mac"/>
+               <os family="unix"/>
+           </and>
+        </condition>
+        <condition property="is.linux">
+            <and>
+                <os family="unix"/>
+                <not><os family="mac"/></not>
+                <not><contains string="${os.name}" substring="debian" casesensitive="no"/></not>
+            </and>
+        </condition>
+        <condition property="is.debian">
+            <and>
+                <os family="unix"/>
+                <contains string="${os.name}" substring="debian" casesensitive="no"/>
+            </and>
+        </condition>
+	</target>
+	
+	<target name="-windows-properties" if="is.windows" depends="-detect-os">
+	    <property file="buildoxt.windows.properties"/>
+	</target>
+	
+	<target name="-macosx-properties" if="is.macosx" depends="-detect-os">
+	    <property file="buildoxt.macosx.properties"/>
+	</target>
+	
+	<target name="-linux-properties" if="is.linux" depends="-detect-os">
+	    <property file="buildoxt.linux.properties"/>
+	</target>
+	
+	<target name="-debian-properties" if="is.debian" depends="-detect-os">
+	    <property file="buildoxt.debian.properties"/>
+	</target>
+	
+	<target name="-init-buildoxt" depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
+	
+	    <pathconvert property="libs.OpenOffice.org 3.3.classpath">
+	        <path>
+	            <pathelement location="${java.dir}${file.separator}juh.jar"/>
+	            <pathelement location="${java.dir}${file.separator}jurt.jar"/>
+	            <pathelement location="${java.dir}${file.separator}ridl.jar"/>
+	            <pathelement location="${classes.dir}${file.separator}unoil.jar"/>
+	        </path>
+	    </pathconvert>
+	    
+	    <property file="nbproject/project.properties"/>
+		<property file="nbproject/project-uno.properties"/>
+	    
+		<property name="sdk.bin.dir"
+                  value="${sdk.dir}${file.separator}bin"/>
+		<property name="ure.bin.dir"
+                  value="${ure.dir}${file.separator}bin"/>
+		
+		<pathconvert property="office.tool.path">
+		    <path>
+	            <pathelement location="${office.program.dir}"/>
+                <pathelement location="${sdk.bin.dir}"/>
+                <pathelement location="${basis.dir}${file.separator}program"/>
+                <pathelement location="${ure.bin.dir}"/>
+            </path>
+		</pathconvert>
+
+		<pathconvert property="project.home">
+	        <path path="."/>
+	    </pathconvert>
+	
+	    <pathconvert property="classpath.relative.to.external.jar.dir" pathsep=" ">
+            <path path="${javac.classpath}"/>
+            <map from="${project.home}${file.separator}${external.jar.dir}${file.separator}" to=""/>
+        </pathconvert>
+
+        <pathconvert property="external.jars" pathsep=" ">
+            <fileset dir="${external.jar.dir}" includes="${classpath.relative.to.external.jar.dir}"/>
+            <map from="${project.home}${file.separator}" to=""/>
+        </pathconvert>
+	
+		<available file="${dist.dir}${file.separator}${external.jar.dir}" property="dist.lib.dir.exists"/>		
+	
+	</target>
+	
+	<target name="-copy-external-jars" depends="-init-buildoxt" unless="dist.lib.dir.exists">	
+		<copy todir="${dist.dir}">
+			<fileset dir="." includes="${external.jars}" />
+		</copy>
+	</target>
+		
+	<target name="-pre-init" depends="-init-buildoxt,-copy-external-jars"/>
+	
+</project>
