@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Odt2BrailleAddOn-doc" default="doc" basedir=".">
+    <description>Build user and developer documentation.</description>
+	
+	<target name="doc">
+	
+	    <property name="docbook-xsl.home" value="resources/docbook-xsl"/>
+        <property name="fop.home" value="resources/fop"/>
+        <property name="saxon.jar" value="resources/saxon/saxon.jar"/>
+        <property name="docbook2odf.home" value="resources/docbook2odf"/>
+        <property name="doc.build.dir" value="build"/>
+        
+        <taskdef name="fop"
+        		 classname="org.apache.fop.tools.anttasks.Fop">
+            <classpath>
+                <fileset dir="${fop.home}/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                <fileset dir="${fop.home}">
+                    <include name="fop.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+        
+        <macrodef name="docbook2html">
+            <attribute name="docbook"/>
+            <attribute name="html"/>
+            <sequential>
+                <java jar="${saxon.jar}" fork="yes">
+                    <arg value="-o"/>
+                    <arg value="@{html}"/>
+                    <arg value="@{docbook}"/>
+                    <arg value="${docbook-xsl.home}/html/profile-docbook.xsl"/>
+                    <arg value="param:profile.lang=en"/>
+                    <arg value="param:section.autolabel=1"/>
+                </java>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="docbook2fo">
+            <attribute name="docbook"/>
+            <attribute name="fo"/>
+            <sequential>
+                <java jar="${saxon.jar}" fork="yes">
+                    <arg value="-o"/>
+                    <arg value="@{fo}"/>
+                    <arg value="@{docbook}"/>
+                    <arg value="${docbook-xsl.home}/fo/profile-docbook.xsl"/>
+                    <arg value="param:profile.lang=en"/>
+                    <arg value="param:section.autolabel=1"/>
+                </java>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="docbook2odt">
+            <attribute name="docbook"/>
+            <attribute name="odt"/>
+            <sequential>
+            	<delete file="${docbook2odf.home}/utils/temp.xml"/>
+                <delete file="${docbook2odf.home}/utils/temp.odt"/>
+                <copy file="@{docbook}" tofile="${docbook2odf.home}/utils/temp.xml"/>
+                <exec dir="${docbook2odf.home}/utils" executable="./docbook2odf">
+                    <arg value="-o"/>
+    			    <arg value="temp.odt"/>
+                    <arg value="temp.xml"/>
+                </exec>
+                <move file="${docbook2odf.home}/utils/temp.odt" tofile="@{odt}"/>
+                <delete file="${docbook2odf.home}/utils/temp.xml"/>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="fo2pdf">
+            <attribute name="fo"/>
+            <attribute name="pdf"/>
+            <sequential>
+                <fop fofile="@{fo}"
+                     outfile="@{pdf}"/>
+            </sequential>
+        </macrodef>
+        
+        <delete dir="${doc.build.dir}"/>
+    	<mkdir dir="${doc.build.dir}"/>
+		
+        <docbook2html docbook="odt2braille-user-doc.xml"
+                      html= "${doc.build.dir}/odt2braille-user-doc.html"/>
+        <docbook2fo docbook="odt2braille-user-doc.xml"
+                    fo="${doc.build.dir}/odt2braille-user-doc.fo"/>
+        <fo2pdf fo="${doc.build.dir}/odt2braille-user-doc.fo"
+                pdf="${doc.build.dir}/odt2braille-user-doc.pdf"/>
+        <docbook2odt docbook="odt2braille-user-doc.xml"
+                     odt="${doc.build.dir}/odt2braille-user-doc.odt"/>
+
+	</target>
+	
+</project>

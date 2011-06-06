@@ -155,7 +155,8 @@ public class UnoGUI {
             // Locale
             
             try {
-                Locale oooLocale = new Locale(UnoUtils.getUILocale(m_xContext));
+                Locale oooLocale = UnoUtils.getUILocale(m_xContext);
+                logger.info("lang = " + oooLocale.getLanguage() + ", country = " + oooLocale.getCountry());
                 Locale.setDefault(oooLocale);
             } catch (com.sun.star.uno.Exception ex) {
                 logger.log(Level.SEVERE, null, ex);
@@ -417,7 +418,7 @@ public class UnoGUI {
 
             // Show post translation dialog
             PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
-            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
+            PostConversionDialog postTranslationDialog = new PostConversionDialog(m_xContext, preview);
 
             if (!postTranslationDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");
@@ -635,7 +636,7 @@ public class UnoGUI {
 
             // Show post translation dialog
             PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
-            PostTranslationDialog postTranslationDialog = new PostTranslationDialog(m_xContext, preview);
+            PostConversionDialog postTranslationDialog = new PostConversionDialog(m_xContext, preview);
 
             if (!postTranslationDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");

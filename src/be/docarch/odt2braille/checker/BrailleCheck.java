@@ -3,6 +3,8 @@ package be.docarch.odt2braille.checker;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+import java.util.MissingResourceException;
+
 import be.docarch.accessibility.Check;
 
 /**
@@ -103,9 +105,10 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (bundle.containsKey("name_" + identifier.name())) {
+        }
+        try {
             return bundle.getString("name_" + identifier.name());
-        } else {
+        } catch (MissingResourceException e) {
             return identifier.name();
         }
     }
@@ -115,9 +118,10 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (bundle.containsKey("description_" + identifier.name())) {
+        }
+        try {
             return bundle.getString("description_" + identifier.name());
-        } else {
+        } catch (MissingResourceException e) {
             return identifier.name();
         }
     }
@@ -127,15 +131,11 @@ public class BrailleCheck extends Check {
 
         if (identifier == null) {
             return null;
-        } else if (bundle.containsKey("suggestion_" + identifier.name())) {
+        }
+        try {
             return bundle.getString("suggestion_" + identifier.name());
-        } else {
+        } catch (MissingResourceException e) {
             return identifier.name();
         }
-    }
-
-    @Override
-    public RepairMode getRepairMode() {
-        return RepairMode.MANUAL;
     }
 }

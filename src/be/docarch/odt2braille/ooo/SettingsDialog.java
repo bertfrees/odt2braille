@@ -117,6 +117,7 @@ public class SettingsDialog implements XItemListener,
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
     private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+    private final static boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
 
     private Settings settings = null;
     private XComponentContext xContext = null;
@@ -164,6 +165,7 @@ public class SettingsDialog implements XItemListener,
     private List<Alignment> alignmentOptions = null;
     private List<TypefaceOption> typefaceOptions = null;
     private List<String> noterefFormats = null;
+    private List<PageNumberFormat> pageNumberFormats = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -199,9 +201,10 @@ public class SettingsDialog implements XItemListener,
     private String L10N_nextButton = null;
     private String L10N_backButton = null;
 
-    private Map<Alignment,String> L10N_alignment = new TreeMap();
-    private Map<TypefaceOption,String> L10N_typeface = new TreeMap();
-    private Map<String,String> L10N_noterefFormats = new TreeMap();
+    private Map<Alignment,String> L10N_alignment = new TreeMap<Alignment,String>();
+    private Map<TypefaceOption,String> L10N_typeface = new TreeMap<TypefaceOption,String>();
+    private Map<String,String> L10N_noterefFormats = new TreeMap<String,String>();
+    private Map<PageNumberFormat,String> L10N_pageNumberFormats = new TreeMap<PageNumberFormat,String>();
 
     // General Page
 
@@ -1035,12 +1038,20 @@ public class SettingsDialog implements XItemListener,
 
         this.settings = settings;
 
-        specialTranslationTables = settings.getSpecialTranslationTables();
-        mainTranslationTables = settings.getSupportedTranslationTables();
+        specialTranslationTables = new ArrayList<String>();
+        specialTranslationTables.addAll(settings.getSpecialTranslationTables());
+        mainTranslationTables = new ArrayList<String>();
+        mainTranslationTables.addAll(settings.getSupportedTranslationTables());
         languages = settings.getLanguages();
-        mathTypes = new ArrayList(Arrays.asList(MathType.values()));
-        alignmentOptions = new ArrayList(Arrays.asList(Alignment.values()));
-        typefaceOptions = new ArrayList(Arrays.asList(TypefaceOption.values()));
+        mathTypes = new ArrayList<MathType>(Arrays.asList(MathType.values()));
+        alignmentOptions = new ArrayList<Alignment>(Arrays.asList(Alignment.values()));
+        typefaceOptions = new ArrayList<TypefaceOption>(Arrays.asList(TypefaceOption.values()));
+        pageNumberFormats = new ArrayList<PageNumberFormat>();
+        for (PageNumberFormat format : PageNumberFormat.values()) {
+            if (settings.preliminaryPageFormatIsSupported(format)) {
+                pageNumberFormats.add(format);
+            }
+        }
 
         pagesEnabled[LANGUAGES_PAGE-1] = (languages.size() > 1);
         // pagesEnabled[PARAGRAPHS_PAGE-1] = settings.getParagraphsPresent();
@@ -1052,96 +1063,97 @@ public class SettingsDialog implements XItemListener,
         // pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getPreliminaryPagesPresent();
 
         Locale oooLocale = Locale.getDefault();
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
 
         // Main Window
 
-        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle");
-        L10N_roadmapTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsRoadmapTitle");
-        L10N_roadmapLabels[GENERAL_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("generalSettingsPageTitle");
-        L10N_roadmapLabels[LANGUAGES_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageSettingsPageTitle");
-        L10N_roadmapLabels[TYPEFACE_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("typefaceSettingsPageTitle");
-        L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphSettingsPageTitle");
-        L10N_roadmapLabels[HEADINGS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("headingSettingsPageTitle");
-        L10N_roadmapLabels[LISTS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listSettingsPageTitle");
-        L10N_roadmapLabels[TABLES_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableSettingsPageTitle");
+        L10N_windowTitle = bundle.getString("settingsDialogTitle");
+        L10N_roadmapTitle = bundle.getString("settingsRoadmapTitle");
+        L10N_roadmapLabels[GENERAL_PAGE-1] = bundle.getString("generalSettingsPageTitle");
+        L10N_roadmapLabels[LANGUAGES_PAGE-1] = bundle.getString("languageSettingsPageTitle");
+        L10N_roadmapLabels[TYPEFACE_PAGE-1] = bundle.getString("typefaceSettingsPageTitle");
+        L10N_roadmapLabels[PARAGRAPHS_PAGE-1] = bundle.getString("paragraphSettingsPageTitle");
+        L10N_roadmapLabels[HEADINGS_PAGE-1] = bundle.getString("headingSettingsPageTitle");
+        L10N_roadmapLabels[LISTS_PAGE-1] = bundle.getString("listSettingsPageTitle");
+        L10N_roadmapLabels[TABLES_PAGE-1] = bundle.getString("tableSettingsPageTitle");
         L10N_roadmapLabels[NOTES_PAGE-1] = "Notes";
-        L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pagenumberSettingsPageTitle");
+        L10N_roadmapLabels[PAGENUMBERS_PAGE-1] = bundle.getString("pagenumberSettingsPageTitle");
         L10N_roadmapLabels[VOLUME_MANAGEMENT_PAGE-1] = "Volume Management";
-        L10N_roadmapLabels[TOC_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsSettingsPageTitle");
-        L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsSettingsPageTitle");
-        L10N_roadmapLabels[MATH_PAGE-1] = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("mathSettingsPageTitle");
+        L10N_roadmapLabels[TOC_PAGE-1] = bundle.getString("tableOfContentsSettingsPageTitle");
+        L10N_roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = bundle.getString("specialSymbolsSettingsPageTitle");
+        L10N_roadmapLabels[MATH_PAGE-1] = bundle.getString("mathSettingsPageTitle");
 
-        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saveButton");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
-        L10N_backButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("backButton");
-        L10N_nextButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("nextButton");
+        L10N_okButton = bundle.getString("saveButton");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_backButton = bundle.getString("backButton");
+        L10N_nextButton = bundle.getString("nextButton");
 
         // General Page
 
-        L10N_creatorLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("creatorLabel") + ":";
-        L10N_mainTranslationTableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageLabel") + ":";
-        L10N_mainGradeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("gradeLabel") + ":";
-        L10N_mainEightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("useEightDotsLabel");
-        L10N_transcribersNotesPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("transcribersNotesPageLabel");
-        L10N_transcriptionInfoLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("transcriptionInfoLabel");
-        L10N_volumeInfoLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("volumeInfoLabel");
-        L10N_preliminaryVolumeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("preliminaryVolumeLabel");
-        L10N_hyphenateLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("hyphenateLabel");
-        L10N_hardPageBreaksLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("hardPageBreaksLabel");
-        L10N_transcriptionInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
-        L10N_volumeInfoStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphStyleLabel") + ":";
+        L10N_creatorLabel = bundle.getString("creatorLabel") + ":";
+        L10N_mainTranslationTableLabel = bundle.getString("languageLabel") + ":";
+        L10N_mainGradeLabel = bundle.getString("gradeLabel") + ":";
+        L10N_mainEightDotsLabel = bundle.getString("useEightDotsLabel");
+        L10N_transcribersNotesPageLabel = bundle.getString("transcribersNotesPageLabel");
+        L10N_transcriptionInfoLabel = bundle.getString("transcriptionInfoLabel");
+        L10N_volumeInfoLabel = bundle.getString("volumeInfoLabel");
+        L10N_preliminaryVolumeLabel = bundle.getString("preliminaryVolumeLabel");
+        L10N_hyphenateLabel = bundle.getString("hyphenateLabel");
+        L10N_hardPageBreaksLabel = bundle.getString("hardPageBreaksLabel");
+        L10N_transcriptionInfoStyleLabel = bundle.getString("paragraphStyleLabel") + ":";
+        L10N_volumeInfoStyleLabel = bundle.getString("paragraphStyleLabel") + ":";
         L10N_minSyllableLengthLabel = "Don't break words into parts smaller than:";
 
         // Languages Page
 
-        L10N_translationTableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("languageLabel") + ":";
-        L10N_gradeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("gradeLabel") + ":";
-        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("useEightDotsLabel");
+        L10N_translationTableLabel = bundle.getString("languageLabel") + ":";
+        L10N_gradeLabel = bundle.getString("gradeLabel") + ":";
+        L10N_eightDotsLabel = bundle.getString("useEightDotsLabel");
 
         // Typeface Page
 
-        L10N_characterStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("styleLabel");
-        L10N_characterInheritLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inheritLabel") + ":";
-        L10N_characterBoldfaceLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterBoldfaceLabel");
-        L10N_characterItalicLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterItalicLabel");
-        L10N_characterUnderlineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterUnderlineLabel");
-        L10N_characterCapitalsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("characterCapitalsLabel");
+        L10N_characterStyleLabel = bundle.getString("styleLabel");
+        L10N_characterInheritLabel = bundle.getString("inheritLabel") + ":";
+        L10N_characterBoldfaceLabel = bundle.getString("characterBoldfaceLabel");
+        L10N_characterItalicLabel = bundle.getString("characterItalicLabel");
+        L10N_characterUnderlineLabel = bundle.getString("characterUnderlineLabel");
+        L10N_characterCapitalsLabel = bundle.getString("characterCapitalsLabel");
 
         // Paragraphs Page
 
-        L10N_paragraphStyleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("styleLabel");
-        L10N_paragraphInheritLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inheritLabel") + ":";
-        L10N_paragraphAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
-        L10N_paragraphFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_paragraphRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_paragraphMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_paragraphLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
-        L10N_paragraphLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
-        L10N_paragraphKeepEmptyLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paragraphKeepEmptyLabel");
-        L10N_paragraphKeepWithNextLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("keepWithNextLabel");
-        L10N_paragraphDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("dontSplitLabel");
-        L10N_paragraphWidowControlLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("widowControlLabel") + ":";
-        L10N_paragraphOrphanControlLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("orphanControlLabel") + ":";
+        L10N_paragraphStyleLabel = bundle.getString("styleLabel");
+        L10N_paragraphInheritLabel = bundle.getString("inheritLabel") + ":";
+        L10N_paragraphAlignmentLabel = bundle.getString("alignmentLabel") + ":";
+        L10N_paragraphFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_paragraphRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_paragraphMarginLeftRightLabel = bundle.getString("centeredMarginLabel") + ":";
+        L10N_paragraphLinesAboveLabel = bundle.getString("linesAboveLabel") + ":";
+        L10N_paragraphLinesBelowLabel = bundle.getString("linesBelowLabel") + ":";
+        L10N_paragraphKeepEmptyLabel = bundle.getString("paragraphKeepEmptyLabel");
+        L10N_paragraphKeepWithNextLabel = bundle.getString("keepWithNextLabel");
+        L10N_paragraphDontSplitLabel = bundle.getString("dontSplitLabel");
+        L10N_paragraphWidowControlLabel = bundle.getString("widowControlLabel") + ":";
+        L10N_paragraphOrphanControlLabel = bundle.getString("orphanControlLabel") + ":";
         L10N_paragraphIndentsLabel = "Alignment & Indents";
-        L10N_paragraphSpacingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("spacingLabel");
+        L10N_paragraphSpacingLabel = bundle.getString("spacingLabel");
         L10N_paragraphTextFlowLabel = "Text Flow";
 
         // Headings Page
 
-        L10N_headingLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
-        L10N_headingAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
-        L10N_headingFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_headingRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_headingMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_headingLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
-        L10N_headingLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
-        L10N_headingNewBraillePageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("headingNewBraillePageLabel");
-        L10N_headingKeepWithNextLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("keepWithNextLabel");
-        L10N_headingDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("dontSplitLabel");
+        L10N_headingLevelLabel = bundle.getString("levelLabel");
+        L10N_headingAlignmentLabel = bundle.getString("alignmentLabel") + ":";
+        L10N_headingFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_headingRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_headingMarginLeftRightLabel = bundle.getString("centeredMarginLabel") + ":";
+        L10N_headingLinesAboveLabel = bundle.getString("linesAboveLabel") + ":";
+        L10N_headingLinesBelowLabel = bundle.getString("linesBelowLabel") + ":";
+        L10N_headingNewBraillePageLabel = bundle.getString("headingNewBraillePageLabel");
+        L10N_headingKeepWithNextLabel = bundle.getString("keepWithNextLabel");
+        L10N_headingDontSplitLabel = bundle.getString("dontSplitLabel");
         L10N_headingUpperBorderPaddingLabel = "Padding:";
         L10N_headingLowerBorderPaddingLabel = "Padding:";
         L10N_headingIndentsLabel = "Alignment & Indents";
-        L10N_headingSpacingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("spacingLabel");
+        L10N_headingSpacingLabel = bundle.getString("spacingLabel");
         L10N_headingTextFlowLabel = "Text Flow";
         L10N_headingBordersLabel = "Borders";
         L10N_headingUpperBorderLabel = "Top:";
@@ -1149,35 +1161,35 @@ public class SettingsDialog implements XItemListener,
 
         // Lists Page
 
-        L10N_listLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesAboveLabel") + ":";
-        L10N_listLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesBelowLabel") + ":";
-        L10N_listLinesBetweenLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listLinesBetweenLabel") + ":";
-        L10N_listLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
-        L10N_listAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
-        L10N_listFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_listRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_listMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_listPrefixLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listPrefixLabel") + ":";
-        L10N_listDontSplitLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listDontSplitLabel");
-        L10N_listDontSplitItemsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("listDontSplitItemsLabel");
+        L10N_listLinesAboveLabel = bundle.getString("listLinesAboveLabel") + ":";
+        L10N_listLinesBelowLabel = bundle.getString("listLinesBelowLabel") + ":";
+        L10N_listLinesBetweenLabel = bundle.getString("listLinesBetweenLabel") + ":";
+        L10N_listLevelLabel = bundle.getString("levelLabel");
+        L10N_listAlignmentLabel = bundle.getString("alignmentLabel") + ":";
+        L10N_listFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_listRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_listMarginLeftRightLabel = bundle.getString("centeredMarginLabel") + ":";
+        L10N_listPrefixLabel = bundle.getString("listPrefixLabel") + ":";
+        L10N_listDontSplitLabel = bundle.getString("listDontSplitLabel");
+        L10N_listDontSplitItemsLabel = bundle.getString("listDontSplitItemsLabel");
         L10N_listPrefixButton = "...";
 
         // Tables Page
 
-        L10N_tableSimpleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("simpleTableLabel");
-        L10N_tableStairstepLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("stairstepTableLabel");
-        L10N_tableLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
-        L10N_tableLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
-        L10N_tableLinesBetweenLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLinesBetweenLabel") + ":";
-        L10N_tableColumnLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("columnLabel");
-        L10N_tableAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
-        L10N_tableFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_tableRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_tableMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
-        L10N_tableColumnDelimiterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("columnDelimiterLabel") + ":";
+        L10N_tableSimpleLabel = bundle.getString("simpleTableLabel");
+        L10N_tableStairstepLabel = bundle.getString("stairstepTableLabel");
+        L10N_tableLinesAboveLabel = bundle.getString("linesAboveLabel") + ":";
+        L10N_tableLinesBelowLabel = bundle.getString("linesBelowLabel") + ":";
+        L10N_tableLinesBetweenLabel = bundle.getString("tableLinesBetweenLabel") + ":";
+        L10N_tableColumnLabel = bundle.getString("columnLabel");
+        L10N_tableAlignmentLabel = bundle.getString("alignmentLabel") + ":";
+        L10N_tableFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_tableRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_tableMarginLeftRightLabel = bundle.getString("centeredMarginLabel") + ":";
+        L10N_tableColumnDelimiterLabel = bundle.getString("columnDelimiterLabel") + ":";
         L10N_tableIndentsLabel = "Alignment & Indents";
-        L10N_tableSpacingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("spacingLabel");
-        L10N_tableDontSplitRowsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableDontSplitRowsLabel");
+        L10N_tableSpacingLabel = bundle.getString("spacingLabel");
+        L10N_tableDontSplitRowsLabel = bundle.getString("tableDontSplitRowsLabel");
         L10N_tableColumnDelimiterButton = "...";
 
         // Notes Page
@@ -1189,29 +1201,29 @@ public class SettingsDialog implements XItemListener,
         L10N_notesFootnoteLabel = "Footnotes";
         L10N_notesNoterefSpaceBeforeLabel = "Space before";
         L10N_notesNoterefSpaceAfterLabel = "Space after";
-        L10N_notesFootnoteLinesAboveLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesAboveLabel") + ":";
-        L10N_notesFootnoteLinesBelowLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("linesBelowLabel") + ":";
-        L10N_notesFootnoteAlignmentLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("alignmentLabel") + ":";
-        L10N_notesFootnoteFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_notesFootnoteRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_notesFootnoteMarginLeftRightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("centeredMarginLabel") + ":";
+        L10N_notesFootnoteLinesAboveLabel = bundle.getString("linesAboveLabel") + ":";
+        L10N_notesFootnoteLinesBelowLabel = bundle.getString("linesBelowLabel") + ":";
+        L10N_notesFootnoteAlignmentLabel = bundle.getString("alignmentLabel") + ":";
+        L10N_notesFootnoteFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_notesFootnoteRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_notesFootnoteMarginLeftRightLabel = bundle.getString("centeredMarginLabel") + ":";
 
         // Pagenumbers Page
 
-        L10N_braillePageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("braillePageNumbersLabel");
-        L10N_preliminaryPageNumberFormatLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("preliminaryPageNumberFormatLabel") + ":";
-        L10N_beginningBraillePageNumberLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("beginningBraillePageNumberLabel") + ":";
-        L10N_printPageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("printPageNumbersLabel");
-        L10N_printPageNumberRangeLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("printPageNumberRangeLabel");
-        L10N_continuePagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("continuePagesLabel");
-        L10N_pageSeparatorLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pageSeparatorLabel");
-        L10N_pageSeparatorNumberLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("pageSeparatorNumberLabel");
-        L10N_ignoreEmptyPagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("ignoreEmptyPagesLabel");
-        L10N_mergeUnnumberedPagesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("mergeUnnumberedPagesLabel");
-        L10N_numbersAtTopOnSepLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numbersAtTopOnSepLineLabel");
-        L10N_numbersAtBottomOnSepLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numbersAtBottomOnSepLineLabel");
-        L10N_top = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top");
-        L10N_bottom = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom");
+        L10N_braillePageNumbersLabel = bundle.getString("braillePageNumbersLabel");
+        L10N_preliminaryPageNumberFormatLabel = bundle.getString("preliminaryPageNumberFormatLabel") + ":";
+        L10N_beginningBraillePageNumberLabel = bundle.getString("beginningBraillePageNumberLabel") + ":";
+        L10N_printPageNumbersLabel = bundle.getString("printPageNumbersLabel");
+        L10N_printPageNumberRangeLabel = bundle.getString("printPageNumberRangeLabel");
+        L10N_continuePagesLabel = bundle.getString("continuePagesLabel");
+        L10N_pageSeparatorLabel = bundle.getString("pageSeparatorLabel");
+        L10N_pageSeparatorNumberLabel = bundle.getString("pageSeparatorNumberLabel");
+        L10N_ignoreEmptyPagesLabel = bundle.getString("ignoreEmptyPagesLabel");
+        L10N_mergeUnnumberedPagesLabel = bundle.getString("mergeUnnumberedPagesLabel");
+        L10N_numbersAtTopOnSepLineLabel = bundle.getString("numbersAtTopOnSepLineLabel");
+        L10N_numbersAtBottomOnSepLineLabel = bundle.getString("numbersAtBottomOnSepLineLabel");
+        L10N_top = bundle.getString("top");
+        L10N_bottom = bundle.getString("bottom");
 
         // Volume Management Page
 
@@ -1225,32 +1237,32 @@ public class SettingsDialog implements XItemListener,
 
         // Table of Contents Page
 
-        L10N_tableOfContentsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsLabel");
-        L10N_tableOfContentsTitleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsTitleLabel") + ":";
-        L10N_tableOfContentsLevelLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("levelLabel");
-        L10N_tableOfContentsFirstLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("firstLineLabel") + ":";
-        L10N_tableOfContentsRunoversLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("runoversLabel") + ":";
-        L10N_tableOfContentsLineFillLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("lineFillSymbolLabel") + ":";
-        L10N_tableOfContentsPrintPageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsPrintPageNumbersLabel");
-        L10N_tableOfContentsBraillePageNumbersLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableOfContentsBraillePageNumbersLabel");
+        L10N_tableOfContentsLabel = bundle.getString("tableOfContentsLabel");
+        L10N_tableOfContentsTitleLabel = bundle.getString("tableOfContentsTitleLabel") + ":";
+        L10N_tableOfContentsLevelLabel = bundle.getString("levelLabel");
+        L10N_tableOfContentsFirstLineLabel = bundle.getString("firstLineLabel") + ":";
+        L10N_tableOfContentsRunoversLabel = bundle.getString("runoversLabel") + ":";
+        L10N_tableOfContentsLineFillLabel = bundle.getString("lineFillSymbolLabel") + ":";
+        L10N_tableOfContentsPrintPageNumbersLabel = bundle.getString("tableOfContentsPrintPageNumbersLabel");
+        L10N_tableOfContentsBraillePageNumbersLabel = bundle.getString("tableOfContentsBraillePageNumbersLabel");
         L10N_tableOfContentsUptoLevelLabel = "Evaluate up to level:";
         L10N_tableOfContentsIndentsLabel = "Alignment & Indents";
 
         // Special Symbols Page
         
-        L10N_specialSymbolsListLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsListLabel");
-        L10N_specialSymbolsListTitleLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsListTitleLabel") + ":";
-        L10N_specialSymbolsSymbolLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsSymbolLabel") + ":";
-        L10N_specialSymbolsDescriptionLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsDescriptionLabel") + ":";
-        L10N_specialSymbolsMode0Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode0Label");
-        L10N_specialSymbolsMode1Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode1Label");
-        L10N_specialSymbolsMode2Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode2Label");
-        L10N_specialSymbolsMode3Label = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsMode3Label");
-        L10N_specialSymbolsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("specialSymbolsLabel");
+        L10N_specialSymbolsListLabel = bundle.getString("specialSymbolsListLabel");
+        L10N_specialSymbolsListTitleLabel = bundle.getString("specialSymbolsListTitleLabel") + ":";
+        L10N_specialSymbolsSymbolLabel = bundle.getString("specialSymbolsSymbolLabel") + ":";
+        L10N_specialSymbolsDescriptionLabel = bundle.getString("specialSymbolsDescriptionLabel") + ":";
+        L10N_specialSymbolsMode0Label = bundle.getString("specialSymbolsMode0Label");
+        L10N_specialSymbolsMode1Label = bundle.getString("specialSymbolsMode1Label");
+        L10N_specialSymbolsMode2Label = bundle.getString("specialSymbolsMode2Label");
+        L10N_specialSymbolsMode3Label = bundle.getString("specialSymbolsMode3Label");
+        L10N_specialSymbolsLabel = bundle.getString("specialSymbolsLabel");
 
         // Mathematics Page
 
-        L10N_mathLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("formulasLabel") + ":";
+        L10N_mathLabel = bundle.getString("formulasLabel") + ":";
 
         L10N_math.put(MathType.NEMETH,    "Nemeth");
         L10N_math.put(MathType.UKMATHS,   "UK Maths");
@@ -1265,13 +1277,13 @@ public class SettingsDialog implements XItemListener,
         L10N_grades.put(3, "Grade 3");
         L10N_grades.put(4, "Grade 4");
 
-        L10N_alignment.put(Alignment.LEFT,     ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("left"));
-        L10N_alignment.put(Alignment.CENTERED, ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("center"));
-        L10N_alignment.put(Alignment.RIGHT,    ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("right"));
+        L10N_alignment.put(Alignment.LEFT,     bundle.getString("left"));
+        L10N_alignment.put(Alignment.CENTERED, bundle.getString("center"));
+        L10N_alignment.put(Alignment.RIGHT,    bundle.getString("right"));
 
-        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("followPrint"));
-        L10N_typeface.put(TypefaceOption.YES,          ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("yes"));
-        L10N_typeface.put(TypefaceOption.NO,           ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("no"));
+        L10N_typeface.put(TypefaceOption.FOLLOW_PRINT, bundle.getString("followPrint"));
+        L10N_typeface.put(TypefaceOption.YES,          bundle.getString("yes"));
+        L10N_typeface.put(TypefaceOption.NO,           bundle.getString("no"));
         
         L10N_noterefFormats.put("1", "1, 2, 3,\u2026");
         L10N_noterefFormats.put("A", "A, B, C,\u2026");
@@ -1279,20 +1291,24 @@ public class SettingsDialog implements XItemListener,
         L10N_noterefFormats.put("i", "i, ii, iii,\u2026");
         L10N_noterefFormats.put("I", "I, II, III,\u2026");
 
-        String key = null;
+        L10N_pageNumberFormats.put(PageNumberFormat.BLANK,      "");
+        L10N_pageNumberFormats.put(PageNumberFormat.NORMAL,     "1,2,3,\u2026");
+        L10N_pageNumberFormats.put(PageNumberFormat.P,          "p1,p2,p3,\u2026");
+        L10N_pageNumberFormats.put(PageNumberFormat.S,          "s1,s2,s3,\u2026");
+        L10N_pageNumberFormats.put(PageNumberFormat.ROMAN,      "i,ii,iii,\u2026");
+        L10N_pageNumberFormats.put(PageNumberFormat.ROMANCAPS,  "I,II,III,\u2026");
+
         String value = null;
         Set treeSet = null;
 
         languages.remove(settings.getMainLanguage());
-        for (int i=0;i<languages.size();i++) {
-            key = languages.get(i);
+        for (String key : languages) {
             value = (new Locale(key.substring(0,key.indexOf("-")),key.substring(key.indexOf("-")+1,key.length()))).getDisplayName(oooLocale);
             L10N_languages.put(key, value);
         }
 
-        for (int i=0;i<mainTranslationTables.size();i++) {
-            key = mainTranslationTables.get(i);
-            value = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("language_" + key);
+        for (String key : mainTranslationTables) {
+            value = bundle.getString("language_" + key);
             L10N_translationTables.put(key, value);
         }
 
@@ -1316,9 +1332,8 @@ public class SettingsDialog implements XItemListener,
             mainTranslationTables.add(((Map.Entry<String,String>)i.next()).getKey());
         }
 
-        for (int i=0;i<specialTranslationTables.size();i++) {
-            key = specialTranslationTables.get(i);
-            value = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("language_" + key);
+        for (String key : specialTranslationTables) {
+            value = bundle.getString("language_" + key);
             L10N_translationTables.put(key, value);
         }
 
@@ -2715,7 +2730,7 @@ public class SettingsDialog implements XItemListener,
             minSyllableLengthField.setMin((double)1);
             minSyllableLengthField.setMax((double)Integer.MAX_VALUE);
             minSyllableLengthField.setValue((double)settings.getMinSyllableLength());
-            minSyllableLengthFieldProperties.setPropertyValue("Enabled", IS_WINDOWS);
+            minSyllableLengthFieldProperties.setPropertyValue("Enabled", IS_WINDOWS || IS_MAC_OS);
 
             updateMainTranslationTableListBox();
             updateMainGradeListBox();
@@ -2753,10 +2768,11 @@ public class SettingsDialog implements XItemListener,
             characterStyleListBox.selectItemPos((short) selectedCharacterStylePos, true);
 
             for (int i=0; i<typefaceOptions.size(); i++) {
-                characterBoldfaceListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
-                characterItalicListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
-                characterUnderlineListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
-                characterCapitalsListBox.addItem(L10N_typeface.get(typefaceOptions.get(i)), (short)i);
+                String l10n = L10N_typeface.get(typefaceOptions.get(i));
+                characterBoldfaceListBox.addItem(l10n, (short)i);
+                characterItalicListBox.addItem(l10n, (short)i);
+                characterUnderlineListBox.addItem(l10n, (short)i);
+                characterCapitalsListBox.addItem(l10n, (short)i);
             }
 
             characterParentFieldProperties.setPropertyValue("Enabled", false);
@@ -2949,12 +2965,12 @@ public class SettingsDialog implements XItemListener,
         
         if (pagesEnabled[NOTES_PAGE-1]) {
         
-            selectedNoterefFormatPos = 0;            
+            selectedNoterefFormatPos = 0;
             for (int i=0; i<noterefFormats.size(); i++) {
                 notesNoterefFormatListBox.addItem(L10N_noterefFormats.get(noterefFormats.get(i)), (short)i);
             }
             notesNoterefFormatListBox.selectItemPos((short)selectedNoterefFormatPos, true);
-            
+
             for (int i=0; i<alignmentOptions.size(); i++) {
                 notesFootnoteAlignmentListBox.addItem(L10N_alignment.get(alignmentOptions.get(i)), (short)i);
             }
@@ -2991,8 +3007,11 @@ public class SettingsDialog implements XItemListener,
 
             braillePageNumberAtListBox.addItem(L10N_top, (short)0);
             braillePageNumberAtListBox.addItem(L10N_bottom, (short)1);
-            preliminaryPageNumberFormatListBox.addItem("p1,p2,p3,...", (short)0);
-            preliminaryPageNumberFormatListBox.addItem("i,ii,iii,...", (short)1);
+
+            for (int i=0; i<pageNumberFormats.size(); i++) {
+                preliminaryPageNumberFormatListBox.addItem(L10N_pageNumberFormats.get(pageNumberFormats.get(i)), (short)i);
+            }
+
             beginningBraillePageNumberField.setDecimalDigits((short)0);
             beginningBraillePageNumberField.setMin((double)1);
             beginningBraillePageNumberField.setMax((double)Integer.MAX_VALUE);
@@ -3675,7 +3694,7 @@ public class SettingsDialog implements XItemListener,
 
         braillePageNumbersCheckBox.setState((short)(settings.getBraillePageNumbers()?1:0));
         braillePageNumberAtListBox.selectItemPos((short)((settings.getBraillePageNumberAt() == PageNumberPosition.TOP_RIGHT)?0:1), true);
-        preliminaryPageNumberFormatListBox.selectItemPos((short)((settings.getPreliminaryPageFormat() == PageNumberFormat.P)?0:1), true);
+        preliminaryPageNumberFormatListBox.selectItemPos((short)(pageNumberFormats.indexOf(settings.getPreliminaryPageFormat())), true);
         printPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbers()?1:0));
         printPageNumberAtListBox .selectItemPos((short)((settings.getPrintPageNumberAt() == PageNumberPosition.TOP_RIGHT)?0:1), true);
         printPageNumberRangeCheckBox.setState((short)(settings.getPrintPageNumberRange()?1:0));
@@ -3691,8 +3710,7 @@ public class SettingsDialog implements XItemListener,
 
     private void savePageNumbersPageFieldValues() {
 
-        settings.setPreliminaryPageFormat(((preliminaryPageNumberFormatListBox.getSelectedItemPos() == (short)0)?
-            PageNumberFormat.P:PageNumberFormat.ROMAN));
+        settings.setPreliminaryPageFormat(pageNumberFormats.get(preliminaryPageNumberFormatListBox.getSelectedItemPos()));
         settings.setBeginningBraillePageNumber((int)beginningBraillePageNumberField.getValue());
         settings.setContinuePages(continuePagesCheckBox.getState() == (short) 1);
         settings.setPageSeparatorNumber(pageSeparatorNumberCheckBox.getState() == (short) 1);
@@ -3778,7 +3796,8 @@ public class SettingsDialog implements XItemListener,
     private void updateMainGradeListBox() {
 
         mainGradeListBox.removeItems((short)0, Short.MAX_VALUE);
-        List<Integer> supportedGrades = settings.getSupportedGrades(settings.getMainLanguage());
+        List<Integer> supportedGrades = new ArrayList<Integer>();
+        supportedGrades.addAll(settings.getSupportedGrades(settings.getMainLanguage()));
         for (int i=0;i<supportedGrades.size();i++) {
             mainGradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
@@ -3810,7 +3829,8 @@ public class SettingsDialog implements XItemListener,
     private void updateGradeListBox() {
 
         gradeListBox.removeItems((short)0, Short.MAX_VALUE);
-        List<Integer> supportedGrades = settings.getSupportedGrades(languages.get(selectedLanguagePos));
+        List<Integer> supportedGrades = new ArrayList<Integer>();
+        supportedGrades.addAll(settings.getSupportedGrades(languages.get(selectedLanguagePos)));
         for (int i=0;i<supportedGrades.size();i++) {
             gradeListBox.addItem(L10N_grades.get(supportedGrades.get(i)), (short)i);
         }
@@ -3939,8 +3959,9 @@ public class SettingsDialog implements XItemListener,
                             updateMainGradeListBox();
                             updateMainEightDotsCheckBox();
                         } else if (source.equals(mainGradeListBox)) {
-                            settings.setGrade(settings.getSupportedGrades(
-                                    settings.getMainLanguage()).get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
+                            List<Integer> supportedGrades = new ArrayList<Integer>();
+                            supportedGrades.addAll(settings.getSupportedGrades(settings.getMainLanguage()));
+                            settings.setGrade(supportedGrades.get((int)mainGradeListBox.getSelectedItemPos()),settings.getMainLanguage());
                             updateMainEightDotsCheckBox();
                         }
 
@@ -3958,8 +3979,9 @@ public class SettingsDialog implements XItemListener,
                             updateGradeListBox();
                             updateEightDotsCheckBox();
                         } else if (source.equals(gradeListBox)) {
-                            settings.setGrade(settings.getSupportedGrades(
-                                    languages.get(selectedLanguagePos)).get((int)gradeListBox.getSelectedItemPos()),languages.get(selectedLanguagePos));
+                            List<Integer> supportedGrades = new ArrayList<Integer>();
+                            supportedGrades.addAll(settings.getSupportedGrades(languages.get(selectedLanguagePos)));
+                            settings.setGrade(supportedGrades.get((int)gradeListBox.getSelectedItemPos()),languages.get(selectedLanguagePos));
                             updateEightDotsCheckBox();
                         } else if (source.equals(eightDotsCheckBox)) {
                             settings.setDots((eightDotsCheckBox.getState()==(short)1)?8:6, languages.get(selectedLanguagePos));

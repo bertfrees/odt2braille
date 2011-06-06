@@ -850,7 +850,7 @@ compileConfig (FileInfo * nested)
 	      "6", "computerCoded", "7", "contents", "8", NULL
 	    };
 	    static const char *pageNumFormats[] = {
-	      "normal", "0", "blank", "1", "p", "2", "roman", "3", NULL
+	      "normal", "0", "blank", "1", "p", "2", "roman", "3", "romancaps", "4", NULL
 	    };
 	    StyleType *style;
 	    sem_act styleAction;

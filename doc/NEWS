@@ -1,0 +1,245 @@
+=============================
+Version 0.0.1 - 02/07/2010
+=============================
+
+Features:
+
+
+* Translate OpenOffice.org Writer documents in various languages to Braille.
+* Supported languages are: Arabic, Bulgarian, Tibetan, Welsh, Czech, Danish, Esperanto, Spanish, 
+  Estonian, Finnish, Irish, Scottish Gaelic, Modern Hebrew, Hindi, Croatian, Hungarian, Armenian, 
+  Icelandic, Italian, Lithuanian, Latvian, Maltese, Norwegian, Polish, Portugese, Romanian, Russian,
+  Slovak, Slovene, Swedish, Turkish, Vietnamese, German, Greek, Koine Greek, English, French, Dutch and Chinese.
+* Contracted or uncontracted Braille.
+* Support for multi-language documents.
+* Export the Braille document to a computer file (.brf or .pef) or emboss the document on 
+  a variety of Braille printers. 
+* Supported printers are: the Interpoint 55 from Interpoint NV, the Everest V2, Basic V2, Everest V3 and Basic-D V3 
+  from Index Braille, and the Braillo 200, 400S and 400SR from Braillo Norway AS.
+* The Braille-output is highly configurable through user preferences.
+* Adjust the Braille layout of most common document units: paragraphs, headings, lists, tables, table of contents.
+* Other units are processed as well, but are not configurable: textboxes, captions, image (descriptions), 
+  footnotes, endnoted, bibliographies, ... 
+* Determine how pages are numbered.
+* Translate formula's into Braille math (Nemeth, UK maths, Marburg or Woluwe math).
+* Automatic generation of some preliminary pages: a title page, a list of special symbols, 
+  a transcriber's notes page and a table of contents.
+* Split Braille documents into multiple volumes.
+* Transcribe according to formal Braille rules (BANA, ...).
+* Save Braille settings.
+* Insert Braille characters directly with the 6 key entry mode (keys S, D, F, J, K and L).
+* Users are notified in time of structure problems that could lead to unwanted artifacts in the Braille output.
+
+
+Localization:
+
+
+* English
+* Dutch
+
+
+=============================
+Version 0.0.2 - 31/08/2010
+=============================
+
+Changes:
+
+
+* The single "Braille" menu is replaced with items in the "File" menu and the "Insert" menu.
+
+
+Added features:
+
+
+* The document can contain every unicode character.
+* The list of special symbols can be fully customized.
+* Hyphenation dictionaries for automatic breaking of words (supported languages are: German, Dutch, US-English, UK-English, Spanish, French, Italian, Norwegian, Polish, Portuguese, Swedish, Turkish, Irish, Hungarian, Croatian, Czech and Icelandic)
+* Export to BRA file format (.bra). Choose between old and new Spanish Braille.
+* Preview the Braille output before embossing.
+* Print page range information on the title page.
+
+
+Translation tables:
+
+
+* New: Catalan
+* New: Danish grade 2
+* New: Portuguese grade 2
+* Spanish translation tables are revised
+* Some small updates in other translation tables
+
+
+Fixed bugs:
+
+
+* Hyperlink bug fix (hyperlinks were sometimes not rendered)
+* Bug 3043068: error when trying to install the extension on Windows XP
+* Some other small bug fixes
+
+
+Localisation:
+
+
+* French
+* Catalan
+* Spanish
+* Portuguese (Portugal)
+* Portuguese (Brazil)
+* Slovenian
+* German
+* Norwegian (Bokmål)
+
+
+=============================
+Version 0.0.3
+=============================
+
+Changes:
+
+
+* The Braille preview window has been improved. You can now switch view between dots and text.
+
+
+New features:
+
+
+* Support for 8-dot Braille
+* Dedicated odt2braille fonts (6-dot and 8-dot)
+* Split exported Braille (BRF/PEF/BRA) into multiple files (one for each volume)
+* New embosser: Index Basic "Blue-Bar"
+* Speed optimalisations
+* New user preferences:
+** Paragraph styles
+** Character styles
+** Right justification
+** More table of contents settings
+** Begin headings on a new Braille page
+** Left/right margin for centered headings
+** Keep empty paragraphs
+
+
+Translation tables:
+
+
+* New: Indian languages (Assamese, Bengali, Khasi, Manipuri, Munda, Old Newari, Santali, Awadhi, Bihari, Braj Bashha, Gondi, Konkani, Kurukh, Marathi, Marwari, Nepali, Pali, Sanskrit, Sindhi, Gujarati, Panjabi, Kannada, Malayalam, Oriya, Dravidian, Tamil, Telugu)
+* New: Greek within Spanish/Catalan text
+* Icelandic,
+* Polish,
+* Slovene,
+* Dutch and
+* French tables have been revised
+* Woluwe math has been improved
+
+
+Fixed bugs:
+
+
+* Footnotes in lists were not rendered
+* A paragraph that was split over a print page was split in braille, even if no separator line was rendered
+* PEF output is now validated after export
+* Table of contents bug fixes
+* Some other small bug fixes
+
+
+Localisation:
+
+
+* Italian
+
+
+
+=============================
+Version 0.1.0
+=============================
+
+Changes/Updates:
+
+
+* Improved handling of notes (note references with special number formats)
+* odt2braille fonts: updated (version 1.2)
+
+
+New features:
+
+* New embossers:
+** Index Basic-S V2
+** Index 4X4 Pro V2
+** Index 4X4 Pro V3
+** Index 4Waves Pro V3
+
+* New user preferences:
+** Volume info / transcription info:
+*** Use paragraph style
+** Paragraphs / headings:
+*** Keep with next
+*** Don't split
+*** Orphan control
+** Lists:
+*** Don't split list
+*** Don't split items
+** Tables:
+*** Don't split rows
+	
+* New embossing options:
+** Number of copies
+** Magazine style
+** Z-Folding
+
+
+Translation tables:
+
+
+* Woluwe math improved
+
+
+Fixed bugs:
+
+
+* Some list numbering bugs
+* Page numbering bug
+* Custom paper format
+
+
+Localisation:
+
+
+* Swedish
+
+
+=============================
+Version 0.1.1
+=============================
+
+bugs fixed:
+
+-Math
+-Multiple files checkbox
+
+embossers:
+
+- generic
+- cidat
+- enabling technologies
+- mountbatten
+- viewplus
+- ...
+
+changes:
+
+-headings: tot level 10
+-table of contents: upto level 1..10
+
+added:
+
+-borders on headings/tables/frames
+-note settings: noteref/footnotes
+-volume management settings: automatic splitting in volumes
+-setting for hyphenation: minimum length of splitted parts
+
+new tables:
+
+- Serbian
+- Kurdish
+- Ethiopic
+
+updated tables => zie liblouis ?

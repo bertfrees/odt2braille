@@ -778,6 +778,7 @@ insert_text (xmlNode * node)
 }
 
 static char *makeRomanNumber (int n);
+static char *makeRomanCapsNumber (int n);
 
 static int
 getBraillePageString (void)
@@ -804,6 +805,11 @@ getBraillePageString (void)
     case roman:
       strcpy (brlPageString, LETSIGN);
       strcat (brlPageString, makeRomanNumber (ud->braille_page_number));
+      translationLength = strlen (brlPageString);
+      break;
+    case romancaps:
+      strcpy (brlPageString, LETSIGN);
+      strcat (brlPageString, makeRomanCapsNumber (ud->braille_page_number));
       translationLength = strlen (brlPageString);
       break;
     }
@@ -861,6 +867,56 @@ makeRomanNumber (int n)
     "vii",
     "viii",
     "ix"
+  };
+  if (n <= 0 || n > 1000)
+    return NULL;
+  romNum[0] = 0;
+  strcat (romNum, hundreds[n / 100]);
+  strcat (romNum, tens[(n / 10) % 10]);
+  strcat (romNum, units[n % 10]);
+  return romNum;
+}
+
+static char *
+makeRomanCapsNumber (int n)
+{
+  static char romNum[40];
+  static const char *hundreds[] = {
+    "",
+    "C",
+    "CC",
+    "CCC",
+    "CD",
+    "D",
+    "DC",
+    "DCC",
+    "DCCC",
+    "CM",
+    "M"
+  };
+  static const char *tens[] = {
+    "",
+    "X",
+    "XX",
+    "XXX",
+    "XL",
+    "L",
+    "LX",
+    "LXX",
+    "LXXX",
+    "XC"
+  };
+  static const char *units[] = {
+    "",
+    "I",
+    "II",
+    "III",
+    "IV",
+    "V",
+    "VI",
+    "VII",
+    "VIII",
+    "IX"
   };
   if (n <= 0 || n > 1000)
     return NULL;

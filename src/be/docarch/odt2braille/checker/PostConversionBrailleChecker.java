@@ -36,9 +36,8 @@ import be.docarch.odt2braille.NamespaceContext;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.XPathUtils;
-import be.docarch.accessibility.ExternalChecker;
+import be.docarch.accessibility.Checker;
 import be.docarch.accessibility.Check;
-import be.docarch.accessibility.Report;
 
 /**
  * With this class a document can be checked for possible accessibility issues.
@@ -55,7 +54,7 @@ import be.docarch.accessibility.Report;
  *
  * @author Bert Frees
  */
-public class PostConversionBrailleChecker implements ExternalChecker {
+public class PostConversionBrailleChecker implements Checker {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N = Constants.L10N_PATH;
@@ -287,9 +286,6 @@ public class PostConversionBrailleChecker implements ExternalChecker {
     }
 
     @Override
-    public void setOdtFile(File file) {}
-
-    @Override
     public String getIdentifier() {
         return "be.docarch.odt2braille.checker.PostConversionBrailleChecker";
     }
@@ -297,15 +293,5 @@ public class PostConversionBrailleChecker implements ExternalChecker {
     @Override
     public Collection<Check> getChecks() {
         return checks.values();
-    }
-
-    @Override
-    public Report getAccessibilityReport() {
-        return null;
-    }
-
-    @Override
-    public boolean check() {
-        return false;
     }
 }

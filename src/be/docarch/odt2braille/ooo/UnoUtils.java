@@ -34,12 +34,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
-
+import java.util.Locale;
 
 /**
  * This class was taken from com.versusoft.packages.ooo
  *
  * @author Vincent Spiewak
+ *         minor changes by Bert Frees
  */
 public class UnoUtils {
 
@@ -104,7 +105,7 @@ public class UnoUtils {
         return tmpUrl;
     }
 
-    public static String getUILocale(XComponentContext xContext) throws com.sun.star.uno.Exception {
+    public static Locale getUILocale(XComponentContext xContext) throws com.sun.star.uno.Exception {
 
         XMultiComponentFactory serviceManager = xContext.getServiceManager();
        // create the provider
@@ -122,7 +123,14 @@ public class UnoUtils {
         XInterface xViewRoot = (XInterface) xProvider.createInstanceWithArguments(sReadOnlyView, aArguments);
         XNameAccess xProperties = (XNameAccess) UnoRuntime.queryInterface(XNameAccess.class, xViewRoot);
 
-        return (String) xProperties.getByName("ooLocale");
+        String ooLocale = (String) xProperties.getByName("ooLocale");
 
+        if (ooLocale.contains("-")) {
+            int hyphenIndex = ooLocale.indexOf("-");
+            return new Locale(ooLocale.substring(0,hyphenIndex),
+                              ooLocale.substring(hyphenIndex+1));
+        } else {
+            return new Locale(ooLocale);
+        }
     }
 }

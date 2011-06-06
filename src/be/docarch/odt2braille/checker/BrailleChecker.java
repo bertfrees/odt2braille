@@ -1,7 +1,6 @@
 package be.docarch.odt2braille.checker;
 
 import java.io.File;
-import java.util.Locale;
 import java.util.Date;
 import java.util.Collection;
 import java.util.Map;
@@ -15,13 +14,12 @@ import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.TransformerFactoryImpl;
 
 import be.docarch.accessibility.Check;
-import be.docarch.accessibility.ExternalChecker;
+import be.docarch.accessibility.RemoteRunnableChecker;
 import be.docarch.accessibility.Report;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Volume;
-import be.docarch.odt2braille.StatusIndicator;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -33,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  * @author Bert Frees
  */
-public class BrailleChecker implements ExternalChecker {
+public class BrailleChecker implements RemoteRunnableChecker {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
@@ -94,7 +92,7 @@ public class BrailleChecker implements ExternalChecker {
     }
 
     @Override
-    public boolean check() {
+    public boolean run() {
 
         if (odtFile == null) { return false; }
 

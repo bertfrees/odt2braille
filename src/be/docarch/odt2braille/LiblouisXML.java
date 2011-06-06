@@ -518,7 +518,8 @@ public class LiblouisXML {
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
         configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(settings.getCellsPerLine()));
         configurationList.add("-C" + "linesPerPage="                 + Integer.toString(settings.getLinesPerPage()));
-        configurationList.add("-C" + "minSyllableLength="            + Integer.toString(settings.getMinSyllableLength()));
+        if (IS_WINDOWS)
+            configurationList.add("-C" + "minSyllableLength="        + Integer.toString(settings.getMinSyllableLength()));
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));
         configurationList.add("-C" + "pageSeparator="                + (settings.getPageSeparator()?"yes":"no"));

@@ -63,7 +63,7 @@ public class Settings {
 
     public static enum MathType { NEMETH, UKMATHS, MARBURG, WISKUNDE };
     public static enum BrailleRules { CUSTOM, BANA };
-    public static enum PageNumberFormat { NORMAL, ROMAN, P, S, BLANK };
+    public static enum PageNumberFormat { NORMAL, ROMAN, ROMANCAPS, P, S, BLANK };
     public static enum PageNumberPosition { TOP_LEFT, TOP_RIGHT, TOP_CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_CENTER };
     public static enum VolumeManagementMode { SINGLE, MANUAL, AUTOMATIC };
 
@@ -71,6 +71,7 @@ public class Settings {
     private final static NamespaceContext namespace = new NamespaceContext();
     private final static String L10N = Constants.L10N_PATH;
     private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
+    private final static boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
 
     public final OdtTransformer odtTransformer;
 
@@ -161,7 +162,7 @@ public class Settings {
     public static final String EMFUSE =                  "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMFUSE";
     public static final String EMPRINT_SPOTDOT =         "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMPRINT_SPOTDOT";
 
-    public static final String CUSTOM_PAPER = "be.docarch.odt2braille.CustomPaperProvider.PaperSize.CUSTOM";
+    public static final String CUSTOM_PAPER =            "be.docarch.odt2braille.CustomPaperProvider.PaperSize.CUSTOM";
 
     private static final String DEFAULT_BRAILLE_FILE_TYPE = BRF;
     private static final String DEFAULT_EMBOSSER = GENERIC_EMBOSSER;
@@ -198,7 +199,7 @@ public class Settings {
     private boolean hyphenate = false;
     private boolean hardPageBreaks = false;
 
-    private int minSyllableLength;
+    private int minSyllableLength = 2;
 
     // Page Numbers Settings
 
@@ -338,8 +339,8 @@ public class Settings {
     private TocStyle tocStyle;
     private ParagraphStyle volumeInfoStyle;
     private ParagraphStyle transcriptionInfoStyle;
-    private List<String> supportedTranslationTablesGrades;
-    private List<String> specialTranslationTables;
+    private Collection<String> supportedTranslationTablesGrades;
+    private Collection<String> specialTranslationTables;
     
 
     /**
@@ -783,7 +784,6 @@ public class Settings {
         transcriptionInfoEnabled = false;
 
         setHyphenate(false);
-        setMinSyllableLength(2);
         setVolumeInfoStyle(paragraphStylesMap.get("Standard"));
         setTranscriptionInfoStyle(paragraphStylesMap.get("Standard"));
 
@@ -1053,7 +1053,7 @@ public class Settings {
      */
     private String computeTranslationTable(String language) {
 
-        List<String> supportedTranslationTables = getSupportedTranslationTables();
+        Collection<String> supportedTranslationTables = getSupportedTranslationTables();
         String ret = null;
 
         if (specialTranslationTables.contains(language)) {
@@ -1065,19 +1065,15 @@ public class Settings {
             if (pos > 0) {
                 language = language.substring(0,pos);
             }
-
-            String temp;
-            for (int i=0;i<supportedTranslationTables.size();i++) {
-                temp = supportedTranslationTables.get(i);
-                if ((temp + "-").indexOf(language + "-") == 0) {
-                    ret = temp;
+            for (String s : supportedTranslationTables) {
+                if ((s + "-").indexOf(language + "-") == 0) {
+                    ret = s;
                     break;
                 }
             }
         }
 
-        return ret;
-    
+        return ret;    
     }
 
     /**
@@ -1093,7 +1089,7 @@ public class Settings {
      */
     private int computeGrade(int grade, String language) {
 
-        List<Integer> supportedGrades = getSupportedGrades(language);
+        Collection<Integer> supportedGrades = getSupportedGrades(language);
         
         if (supportedGrades.isEmpty())       { return -1;    }
         if (supportedGrades.contains(grade)) { return grade; }
@@ -1104,17 +1100,17 @@ public class Settings {
             }
         }
 
-        return supportedGrades.get(0);
+        return supportedGrades.iterator().next();
     
     }
 
     private int computeDots(int dots, String language) {
 
-        List<Integer> supportedDots = getSupportedDots(language);
+        Collection<Integer> supportedDots = getSupportedDots(language);
 
         if (supportedDots.isEmpty())      { return -1;   }
         if (supportedDots.contains(dots)) { return dots; }
-        return supportedDots.get(0);
+        return supportedDots.iterator().next();
 
     }
 
@@ -1127,20 +1123,13 @@ public class Settings {
      *
      * @return  The supported translation table codes.
      */
-    public List<String> getSupportedTranslationTables() {
+    public Collection<String> getSupportedTranslationTables() {
     
         List<String> supportedTranslationTables = new ArrayList();
-        String translationTable = null;
-        String translationTableGrade = null;
 
-        for (int i=0;i<supportedTranslationTablesGrades.size();i++) {
-
-            translationTableGrade = supportedTranslationTablesGrades.get(i);
-
+        for (String translationTableGrade : supportedTranslationTablesGrades) {
             if (translationTableGrade.matches("[a-z]+(-[A-Z]+)?-g[0-9](-8d)?")) {
-
-                translationTable = translationTableGrade.substring(0,translationTableGrade.lastIndexOf("-g"));
-
+                String translationTable = translationTableGrade.substring(0,translationTableGrade.lastIndexOf("-g"));
                 if (!supportedTranslationTables.contains(translationTable)) {
                     supportedTranslationTables.add(translationTable);
                 }
@@ -1151,7 +1140,7 @@ public class Settings {
     
     }
     
-    public List<String> getSpecialTranslationTables() {
+    public Collection<String> getSpecialTranslationTables() {
         return new ArrayList(specialTranslationTables);
     }
 
@@ -1164,21 +1153,16 @@ public class Settings {
      * @param   language   The language code
      * @return             The supported grades.
      */
-    public List<Integer> getSupportedGrades(String language) {
+    public Collection<Integer> getSupportedGrades(String language) {
 
-        List<Integer> supportedGrades = new ArrayList();
-        String translationTableGrade = null;
+        Collection<Integer> supportedGrades = new ArrayList();
         String translationTable = getTranslationTable(language);
-        int grade;
 
         if (!specialTranslationTables.contains(translationTable)) {
-            for (int i=0;i<supportedTranslationTablesGrades.size();i++) {
-
-                translationTableGrade = supportedTranslationTablesGrades.get(i);
-
+            for (String translationTableGrade : supportedTranslationTablesGrades) {
                 if (translationTableGrade.matches(translationTable + "-g[0-9](-8d)?")) {
                     int start = translationTableGrade.lastIndexOf("-g") + 2;
-                    grade = Integer.parseInt(translationTableGrade.substring(start, start + 1));
+                    int grade = Integer.parseInt(translationTableGrade.substring(start, start + 1));
                     if (!supportedGrades.contains(grade)) {
                         supportedGrades.add(grade);
                     }
@@ -1187,21 +1171,17 @@ public class Settings {
         }
 
         return supportedGrades;
-
+        
     }
 
-    public List<Integer> getSupportedDots(String language) {
+    public Collection<Integer> getSupportedDots(String language) {
 
         List<Integer> supportedDots = new ArrayList();
-        String translationTableGrade = null;
         String translationTable = getTranslationTable(language);
         int grade = getGrade(language);
 
         if (!specialTranslationTables.contains(translationTable)) {
-            for (int i=0;i<supportedTranslationTablesGrades.size();i++) {
-
-                translationTableGrade = supportedTranslationTablesGrades.get(i);
-
+            for (String translationTableGrade : supportedTranslationTablesGrades) {
                 if (translationTableGrade.matches(translationTable + "-g" + grade + "(-8d)?")) {
                     if (translationTableGrade.equals(translationTable + "-g" + grade + "-8d")) {
                         supportedDots.add(8);
@@ -2390,10 +2370,17 @@ public class Settings {
         return true;
     }
 
+    public boolean preliminaryPageFormatIsSupported(PageNumberFormat format) {
+
+        return (format == PageNumberFormat.P ||
+                format == PageNumberFormat.ROMAN ||
+               (format == PageNumberFormat.ROMANCAPS && IS_WINDOWS));
+    }
+
     public boolean setPreliminaryPageFormat(PageNumberFormat format) {
 
         if (locked) { return false; }
-        if (format == PageNumberFormat.P || format == PageNumberFormat.ROMAN ) {
+        if (preliminaryPageFormatIsSupported(format)) {
             this.preliminaryPageNumberFormat = format;
         }
         return true;
@@ -2529,12 +2516,11 @@ public class Settings {
     public boolean setMinSyllableLength(int length) {
 
         if (locked) { return false; }
-        if (!IS_WINDOWS) {
-            minSyllableLength = 2;
-            return false;
+        if (IS_WINDOWS || IS_MAC_OS) {
+            minSyllableLength = Math.max(1, length);
+            return true;
         }
-        minSyllableLength = Math.max(1, length);
-        return true;
+        return false;
     }
 
     public int getMinSyllableLength() {
