@@ -28,6 +28,7 @@
         
         <utf8-to-ascii dir="be/docarch/odt2braille/l10n"/>
         <utf8-to-ascii dir="be/docarch/odt2braille/ooo/l10n"/>
+		<utf8-to-ascii dir="be/docarch/odt2braille/checker/l10n"/>
 
 	</target>
 </project>
