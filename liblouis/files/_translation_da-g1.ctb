@@ -1,2 +1,0 @@
-always \s 	0	#Blank represented by a blank braille cell
-always \t	0	#Ensures tab is a blank cell
