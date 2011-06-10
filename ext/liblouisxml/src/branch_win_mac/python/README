@@ -1,0 +1,82 @@
+========
+LouisXML
+========
+
+Introduction
+============
+
+Welcome to louisxml, a set of python bindings for liblouisxml. These bindings
+intend to provide you with complete access of the liblouisxml API from python.
+The bindings try and follow the liblouisxml API as closely as possible only
+making alterations where it makes it simpler in python.
+
+License
+=======
+
+LouisXML is copyright (C) 2009 Michael Whapples and is made available under
+the artistic 2.0 license. The full text of the license can be found in the
+file LICENSE.
+
+Installation
+============
+
+You have a few options for installing LouisXML, installing a precompiled
+version or compiling from source.
+
+-------------------------------------
+Installing precompiled binary package
+-------------------------------------
+
+Prerequesites
+-------------
+
+To install you will need a version of `python <http://www.python.org>`_.
+Should you be using python 2.5 or below then you will need to also install
+`PyICU <http://pyicu.osafoundation.org>`_. If you use python 2.6 or above then
+you will not need PyICU, python alone will be enough.
+
+Retrieving and installing LouisXML
+----------------------------------
+
+For any official precompiled binary releases of LouisXML you should look on
+the `python package index <http://pypi.python.org/pypi/louisxml>`_.
+Select the binary package for your system if one exists and install it as you
+would install any python binary package of that sort. For windows this
+should be as simple as running the file you download and following the on-screen instructions.
+
+If you use Linux or another unix system then you should also check your
+distribution's package system.
+
+----------------------
+Installing from source
+----------------------
+
+Prerequesites
+-------------
+
+LouisXML is written using cython, but to save you the hastle of installing
+the C code has been provided. You will only need `cython 
+<http://www.cython.org>`_ if you intend to modify the original source.
+
+Also you will need `python <http://www.python.org>`_ and if using python
+2.5 or earlier you will also need `PyICU <http://pyicu.osafoundation.org>`_.
+Please remember that some systems such as Debian linux package header
+files in a separate package so you will also need the python development
+package in those cases.
+
+Retrieving source and installing
+--------------------------------
+
+Retrieve the source package from the `python package index 
+<http://pypi.python.org/pypi/louisxml>`_. Decompress the archive and change
+to the directory created and run the command ``python setup.py install``.
+If you do decide to alter the source code, we have also provided the file
+setup_cython.py which will also run cython (NOTE: make sure you have cython
+installed if running this file).
+
+Providing feedback
+==================
+
+Feedback would be welcome on these bindings, so if you have any then
+please report it to mwhapples@users.berlios.de.
+

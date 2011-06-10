@@ -1,0 +1,25 @@
+Version
+*******
+
+Linux
+=====
+
+ = version 1.1.0
+ 
+  => source: * http://brailleutils.googlecode.com/svn/branches/release_1.1/
+             * ./src/release_1.1/
+ 
+
+Windows/Mac
+===========
+ 
+ = latest build
+ 
+  => source: * http://brailleutils.googlecode.com/svn/trunk/braille/
+             * ./src/latest/
+
+
+Build instructions
+******************
+ 
+ ...

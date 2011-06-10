@@ -1,0 +1,109 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0250..02AF  IPA Extensions
+# ----------------------------------------------------------------------------------------------
+
+lowercase   \x0250        4-1                 ɐ                   LATIN SMALL LETTER TURNED A
+lowercase   \x0251        4-1                 ɑ                   LATIN SMALL LETTER ALPHA
+lowercase   \x0252        4-1                 ɒ                   LATIN SMALL LETTER TURNED ALPHA
+#           \x0253                            ɓ                   LATIN SMALL LETTER B WITH HOOK
+#           \x0254                            ɔ                   LATIN SMALL LETTER OPEN O
+lowercase   \x0255        4-14                ɕ                   LATIN SMALL LETTER C WITH CURL
+#           \x0256                            ɖ                   LATIN SMALL LETTER D WITH TAIL
+#           \x0257                            ɗ                   LATIN SMALL LETTER D WITH HOOK
+lowercase   \x0258        4-15                ɘ                   LATIN SMALL LETTER REVERSED E
+#           \x0259                            ə                   LATIN SMALL LETTER SCHWA
+lowercase   \x025A        4-15                ɚ                   LATIN SMALL LETTER SCHWA WITH HOOK
+#           \x025B                            ɛ                   LATIN SMALL LETTER OPEN E
+lowercase   \x025C        4-15                ɜ                   LATIN SMALL LETTER REVERSED OPEN E
+lowercase   \x025D        4-15                ɝ                   LATIN SMALL LETTER REVERSED OPEN E WITH HOOK
+lowercase   \x025E        4-15                ɞ                   LATIN SMALL LETTER CLOSED REVERSED OPEN E
+lowercase   \x025F        4-245               ɟ                   LATIN SMALL LETTER DOTLESS J WITH STROKE
+#           \x0260                            ɠ                   LATIN SMALL LETTER G WITH HOOK
+lowercase   \x0261        4-1245              ɡ                   LATIN SMALL LETTER SCRIPT G
+letter      \x0262        1456                ɢ                   LATIN LETTER SMALL CAPITAL G
+#           \x0263                            ɣ                   LATIN SMALL LETTER GAMMA
+lowercase   \x0264        4-135               ɤ                   LATIN SMALL LETTER RAMS HORN
+lowercase   \x0265        4-125               ɥ                   LATIN SMALL LETTER TURNED H
+lowercase   \x0266        4-125               ɦ                   LATIN SMALL LETTER H WITH HOOK
+lowercase   \x0267        4-125               ɧ                   LATIN SMALL LETTER HENG WITH HOOK
+#           \x0268                            ɨ                   LATIN SMALL LETTER I WITH STROKE
+#           \x0269                            ɩ                   LATIN SMALL LETTER IOTA
+letter      \x026A        1456                ɪ                   LATIN LETTER SMALL CAPITAL I
+lowercase   \x026B        4-123               ɫ                   LATIN SMALL LETTER L WITH MIDDLE TILDE
+lowercase   \x026C        4-123               ɬ                   LATIN SMALL LETTER L WITH BELT
+lowercase   \x026D        4-123               ɭ                   LATIN SMALL LETTER L WITH RETROFLEX HOOK
+lowercase   \x026E        4-123               ɮ                   LATIN SMALL LETTER LEZH
+#           \x026F                            ɯ                   LATIN SMALL LETTER TURNED M
+lowercase   \x0270        4-134               ɰ                   LATIN SMALL LETTER TURNED M WITH LONG LEG
+lowercase   \x0271        4-134               ɱ                   LATIN SMALL LETTER M WITH HOOK
+#           \x0272                            ɲ                   LATIN SMALL LETTER N WITH LEFT HOOK
+lowercase   \x0273        4-1345              ɳ                   LATIN SMALL LETTER N WITH RETROFLEX HOOK
+letter      \x0274        1456                ɴ                   LATIN LETTER SMALL CAPITAL N
+#           \x0275                            ɵ                   LATIN SMALL LETTER BARRED O
+letter      \x0276        1456                ɶ                   LATIN LETTER SMALL CAPITAL OE
+lowercase   \x0277        4-135               ɷ                   LATIN SMALL LETTER CLOSED OMEGA
+lowercase   \x0278        4-124               ɸ                   LATIN SMALL LETTER PHI
+lowercase   \x0279        4-1235              ɹ                   LATIN SMALL LETTER TURNED R
+lowercase   \x027A        4-1235              ɺ                   LATIN SMALL LETTER TURNED R WITH LONG LEG
+lowercase   \x027B        4-1235              ɻ                   LATIN SMALL LETTER TURNED R WITH HOOK
+lowercase   \x027C        4-1235              ɼ                   LATIN SMALL LETTER R WITH LONG LEG
+lowercase   \x027D        4-1235              ɽ                   LATIN SMALL LETTER R WITH TAIL
+lowercase   \x027E        4-1235              ɾ                   LATIN SMALL LETTER R WITH FISHHOOK
+lowercase   \x027F        4-1235              ɿ                   LATIN SMALL LETTER REVERSED R WITH FISHHOOK
+letter      \x0280        1456                ʀ                   LATIN LETTER SMALL CAPITAL R
+letter      \x0281        1456                ʁ                   LATIN LETTER SMALL CAPITAL INVERTED R
+lowercase   \x0282        4-234               ʂ                   LATIN SMALL LETTER S WITH HOOK
+#           \x0283                            ʃ                   LATIN SMALL LETTER ESH
+lowercase   \x0284        4-245               ʄ                   LATIN SMALL LETTER DOTLESS J WITH STROKE AND HOOK
+lowercase   \x0285        4-234               ʅ                   LATIN SMALL LETTER SQUAT REVERSED ESH
+lowercase   \x0286        4-234               ʆ                   LATIN SMALL LETTER ESH WITH CURL
+lowercase   \x0287        4-2345              ʇ                   LATIN SMALL LETTER TURNED T
+#           \x0288                            ʈ                   LATIN SMALL LETTER T WITH RETROFLEX HOOK
+lowercase   \x0289        4-136               ʉ                   LATIN SMALL LETTER U BAR
+#           \x028A                            ʊ                   LATIN SMALL LETTER UPSILON
+#           \x028B                            ʋ                   LATIN SMALL LETTER V WITH HOOK
+lowercase   \x028C        4-1236              ʌ                   LATIN SMALL LETTER TURNED V
+lowercase   \x028D        4-2456              ʍ                   LATIN SMALL LETTER TURNED W
+lowercase   \x028E        4-13456             ʎ                   LATIN SMALL LETTER TURNED Y
+letter      \x028F        1456                ʏ                   LATIN LETTER SMALL CAPITAL Y
+lowercase   \x0290        4-1356              ʐ                   LATIN SMALL LETTER Z WITH RETROFLEX HOOK
+lowercase   \x0291        4-1356              ʑ                   LATIN SMALL LETTER Z WITH CURL
+#           \x0292                            ʒ                   LATIN SMALL LETTER EZH
+lowercase   \x0293        4-1356              ʓ                   LATIN SMALL LETTER EZH WITH CURL
+letter      \x0294        1456                ʔ                   LATIN LETTER GLOTTAL STOP
+letter      \x0295        1456                ʕ                   LATIN LETTER PHARYNGEAL VOICED FRICATIVE
+letter      \x0296        1456                ʖ                   LATIN LETTER INVERTED GLOTTAL STOP
+letter      \x0297        1456                ʗ                   LATIN LETTER STRETCHED C
+letter      \x0298        1456                ʘ                   LATIN LETTER BILABIAL CLICK
+letter      \x0299        1456                ʙ                   LATIN LETTER SMALL CAPITAL B
+lowercase   \x029A        4-15                ʚ                   LATIN SMALL LETTER CLOSED OPEN E
+letter      \x029B        1456                ʛ                   LATIN LETTER SMALL CAPITAL G WITH HOOK
+letter      \x029C        1456                ʜ                   LATIN LETTER SMALL CAPITAL H
+lowercase   \x029D        4-245               ʝ                   LATIN SMALL LETTER J WITH CROSSED-TAIL
+lowercase   \x029E        4-13                ʞ                   LATIN SMALL LETTER TURNED K
+letter      \x029F        1456                ʟ                   LATIN LETTER SMALL CAPITAL L
+lowercase   \x02A0        4-12345             ʠ                   LATIN SMALL LETTER Q WITH HOOK
+letter      \x02A1        1456                ʡ                   LATIN LETTER GLOTTAL STOP WITH STROKE
+letter      \x02A2        1456                ʢ                   LATIN LETTER REVERSED GLOTTAL STOP WITH STROKE
+lowercase   \x02A3        4-145               ʣ                   LATIN SMALL LETTER DZ DIGRAPH
+lowercase   \x02A4        4-145               ʤ                   LATIN SMALL LETTER DEZH DIGRAPH
+lowercase   \x02A5        4-145               ʥ                   LATIN SMALL LETTER DZ DIGRAPH WITH CURL
+lowercase   \x02A6        4-2345              ʦ                   LATIN SMALL LETTER TS DIGRAPH
+lowercase   \x02A7        4-2345              ʧ                   LATIN SMALL LETTER TESH DIGRAPH
+lowercase   \x02A8        4-2345              ʨ                   LATIN SMALL LETTER TC DIGRAPH WITH CURL
+lowercase   \x02A9        4-124               ʩ                   LATIN SMALL LETTER FENG DIGRAPH
+lowercase   \x02AA        4-123               ʪ                   LATIN SMALL LETTER LS DIGRAPH
+lowercase   \x02AB        4-123               ʫ                   LATIN SMALL LETTER LZ DIGRAPH
+letter      \x02AC        1456                ʬ                   LATIN LETTER BILABIAL PERCUSSIVE
+letter      \x02AD        1456                ʭ                   LATIN LETTER BIDENTAL PERCUSSIVE
+letter      \x02AE        1456                ʮ                   LATIN SMALL LETTER TURNED H WITH FISHHOOK
+letter      \x02AF        1456                ʯ                   LATIN SMALL LETTER TURNED H WITH FISHHOOK AND TAIL
+
+
+# ----------------------------------------------------------------------------------------------
+

@@ -1,0 +1,109 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 30A0..30FF  Katakana
+# ----------------------------------------------------------------------------------------------
+
+sign        \x30A0  1456                 # ゠
+sign        \x30A1  1456                 # ァ
+sign        \x30A2  1456                 # ア
+sign        \x30A3  1456                 # ィ
+sign        \x30A4  1456                 # イ
+sign        \x30A5  1456                 # ゥ
+sign        \x30A6  1456                 # ウ
+sign        \x30A7  1456                 # ェ
+sign        \x30A8  1456                 # エ
+sign        \x30A9  1456                 # ォ
+sign        \x30AA  1456                 # オ
+sign        \x30AB  1456                 # カ
+sign        \x30AC  1456                 # ガ
+sign        \x30AD  1456                 # キ
+sign        \x30AE  1456                 # ギ
+sign        \x30AF  1456                 # ク
+sign        \x30B0  1456                 # グ
+sign        \x30B1  1456                 # ケ
+sign        \x30B2  1456                 # ゲ
+sign        \x30B3  1456                 # コ
+sign        \x30B4  1456                 # ゴ
+sign        \x30B5  1456                 # サ
+sign        \x30B6  1456                 # ザ
+sign        \x30B7  1456                 # シ
+sign        \x30B8  1456                 # ジ
+sign        \x30B9  1456                 # ス
+sign        \x30BA  1456                 # ズ
+sign        \x30BB  1456                 # セ
+sign        \x30BC  1456                 # ゼ
+sign        \x30BD  1456                 # ソ
+sign        \x30BE  1456                 # ゾ
+sign        \x30BF  1456                 # タ
+sign        \x30C0  1456                 # ダ
+sign        \x30C1  1456                 # チ
+sign        \x30C2  1456                 # ヂ
+sign        \x30C3  1456                 # ッ
+sign        \x30C4  1456                 # ツ
+sign        \x30C5  1456                 # ヅ
+sign        \x30C6  1456                 # テ
+sign        \x30C7  1456                 # デ
+sign        \x30C8  1456                 # ト
+sign        \x30C9  1456                 # ド
+sign        \x30CA  1456                 # ナ
+sign        \x30CB  1456                 # ニ
+sign        \x30CC  1456                 # ヌ
+sign        \x30CD  1456                 # ネ
+sign        \x30CE  1456                 # ノ
+sign        \x30CF  1456                 # ハ
+sign        \x30D0  1456                 # バ
+sign        \x30D1  1456                 # パ
+sign        \x30D2  1456                 # ヒ
+sign        \x30D3  1456                 # ビ
+sign        \x30D4  1456                 # ピ
+sign        \x30D5  1456                 # フ
+sign        \x30D6  1456                 # ブ
+sign        \x30D7  1456                 # プ
+sign        \x30D8  1456                 # ヘ
+sign        \x30D9  1456                 # ベ
+sign        \x30DA  1456                 # ペ
+sign        \x30DB  1456                 # ホ
+sign        \x30DC  1456                 # ボ
+sign        \x30DD  1456                 # ポ
+sign        \x30DE  1456                 # マ
+sign        \x30DF  1456                 # ミ
+sign        \x30E0  1456                 # ム
+sign        \x30E1  1456                 # メ
+sign        \x30E2  1456                 # モ
+sign        \x30E3  1456                 # ャ
+sign        \x30E4  1456                 # ヤ
+sign        \x30E5  1456                 # ュ
+sign        \x30E6  1456                 # ユ
+sign        \x30E7  1456                 # ョ
+sign        \x30E8  1456                 # ヨ
+sign        \x30E9  1456                 # ラ
+sign        \x30EA  1456                 # リ
+sign        \x30EB  1456                 # ル
+sign        \x30EC  1456                 # レ
+sign        \x30ED  1456                 # ロ
+sign        \x30EE  1456                 # ヮ
+sign        \x30EF  1456                 # ワ
+sign        \x30F0  1456                 # ヰ
+sign        \x30F1  1456                 # ヱ
+sign        \x30F2  1456                 # ヲ
+sign        \x30F3  1456                 # ン
+sign        \x30F4  1456                 # ヴ
+sign        \x30F5  1456                 # ヵ
+sign        \x30F6  1456                 # ヶ
+sign        \x30F7  1456                 # ヷ
+sign        \x30F8  1456                 # ヸ
+sign        \x30F9  1456                 # ヹ
+sign        \x30FA  1456                 # ヺ
+sign        \x30FB  1456                 # ・
+sign        \x30FC  1456                 # ー
+sign        \x30FD  1456                 # ヽ
+sign        \x30FE  1456                 # ヾ
+sign        \x30FF  1456                 # ヿ
+
+
+# ----------------------------------------------------------------------------------------------
+

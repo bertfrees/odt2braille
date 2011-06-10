@@ -1,0 +1,160 @@
+include countries.cti
+
+
+# Braille indicators
+numsign 3456  number sign, just a dots operand
+capsign 46
+
+largesign \x00C0 4-1      [C0] upper a grave
+largesign \x00E0   4-1      [E0] lower a grave
+largesign \x00C1 4-1      [C1] upper a acute
+largesign \x00E1   4-1      [E1] lower a acute
+largesign \x00C2 4-1      [C2] upper a circumflex
+largesign \x00E2   4-1      [E2] lower a circumflex
+largesign \x00C3 4-1      [C3] upper a tilde
+largesign \x00E3   4-1      [E3] lower a tilde
+largesign \x00C4 4-1      [C4] upper a dieresis
+largesign \x00E4   4-1      [E4] lower a dieresis
+
+largesign \x00C5 4-1      [C5] upper a ring
+largesign \x00E5   4-1      [E5] lower a ring
+
+largesign \x00C6 1-15     [C6] upper ae
+largesign \x00E6   1-15			[E6] lower ae
+
+largesign \x00C7 4-14     [C7] upper c cedilla
+largesign \x00E7   4-14     [E7] lower c cedilla
+
+largesign \x00C8 4-15     [C8] upper e grave
+largesign \x00E8   4-15     [E8] lower e grave
+
+largesign \x00C9 4-15     [C9] upper e acute
+largesign \x00E9   4-15     [E9] lower e acute
+
+largesign \x00CA 4-15     [CA] upper e circumflex
+largesign \x00EA   4-15     [EA] lower e circumflex
+
+largesign \x00CB 4-15     [CB] upper e dieresis
+largesign \x00EB   4-15     [EB] lower e dieresis
+
+largesign \x00CC 4-24     [CC] upper i grave
+largesign \x00EC   4-24     [EC] lower i grave
+
+largesign \x00CD 4-24     [CD] upper i acute
+largesign \x00ED   4-24     [ED] lower i acute
+
+largesign \x00CE 4-24     [CE] upper i circumflex
+largesign \x00EE   4-24     [EE] lower i circumflex
+
+largesign \x00CF 4-24     [CF] upper i dieresis
+largesign \x00EF   4-24     [EF] lower i dieresis
+
+largesign \x00D0 4-15     [D0] upper eth
+largesign \x00F0   4-15     [F0] lower eth
+
+largesign \x00D1 4-1345   [D1] upper n tilde
+largesign \x00F1   4-1345   [F1] lower n tilde
+
+largesign \x00D2 4-135    [D2] upper o grave
+largesign \x00F2   4-135    [F2] lower o grave
+
+largesign \x00D3 4-135    [D3] upper o acute
+largesign \x00F3   4-135    [F3] lower o acute
+
+largesign \x00D4 4-135    [D4] upper o circumflex
+largesign \x00F4   4-135    [F4] lower o circumflex
+
+largesign \x00D5 4-135    [D5] upper o tilde
+largesign \x00F5   4-135    [F5] lower o tilde
+
+largesign \x00D6 4-135    [D6] upper o dieresis
+largesign \x00F6   4-135			[F6] lower o dieresis
+
+largesign \x00D8 4-135    [D8] upper o slash
+largesign \x00f8   4-135    [F8] lower o slash
+
+largesign \x00D9 4-136    [D9] upper u grave
+largesign \x00F9   4-136    [F9] lower u grave
+
+largesign \x00DA 4-136    [DA] upper u acute
+largesign \x00FA   4-136    [FA] lower u acute
+
+largesign \x00DB 4-136    [DB] upper u circumflex
+largesign \x00FB   4-136    [FB] lower u circumflex
+
+largesign \x00DC 4-136    [DC] upper u dieresis
+largesign \x00FC   4-136    [FC] lower u dieresis
+
+largesign \x00DD 4-13456  [DD] upper y acute
+largesign \x00FD   4-13456  [FD] lower y acute
+
+largesign \x00DE 4-2345   [DE] upper t horn
+largesign \x00FE   4-2345   [FE] lower t horn
+
+largesign \x00DF 234-234 (DF) lower ss
+
+largesign \x0174 4-2456 lower w circumflex
+largesign \x0175 4-2456 upper w circumflex
+
+letter \x0176 4-13456 upper y circumflex
+letter \x0177 4-13456 lower y circumflex
+
+largesign \x0178 4-13456 upper y with dieresis
+largesign \x00FF 4-13456 lower y with dieresis
+
+largesign \x1EF2 4-13456 upper y with grave
+largesign \x1EF3 4-13456 lower y with grave
+
+# punctuation
+prepunc ( 236
+postpunc ) 356
+begword ` 6-236
+prepunc " 2356
+postpunc " 2356
+prepunc ' 6-236
+postpunc ' 356-3
+always # 456-1456
+midnum , 2
+postpunc , 2
+decpoint . 256
+midnum - 36
+hyphen - 36
+#capsnocont
+postpunc . 256
+postpunc ; 23
+midnum : 25
+postpunc : 25
+postpunc ! 235
+midnum / 34
+always / 34
+always < 5-13
+always > 46-2
+endnum % 123456
+midnum ^ 45
+always ^ 45
+always ~ 456-45
+always & 12346
+midnum * 35
+midnum + 235
+always * 35-35
+midword \x2019 3	# stupid smart apostrophe
+always [ 156
+always ] 146
+always { 56-236
+always } 56-356
+prepunc ` 6-236
+always @ 4-1-2345
+always \\ 456-16
+always | 456-1256
+repeated \s 0
+repeated \t 0
+always \s-\s 36-36
+always ... 3-3-3
+always .\s.\s. 3-3-3 . . .
+begnum $ 46
+always $ 4-256
+endword (s) 2356-234-2356
+postpunc \x00B2 45-23-456
+always \x00B2 45-23
+always \x00B2 45-25
+always \x00BA 56-145-1245

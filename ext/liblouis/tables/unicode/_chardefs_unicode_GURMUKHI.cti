@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0A00..0A7F  Gurmukhi
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0A00  1456                 # ਀
+sign        \x0A01  1456                 # ਁ
+sign        \x0A02  1456                 # ਂ
+sign        \x0A03  1456                 # ਃ
+sign        \x0A04  1456                 # ਄
+sign        \x0A05  1456                 # ਅ
+sign        \x0A06  1456                 # ਆ
+sign        \x0A07  1456                 # ਇ
+sign        \x0A08  1456                 # ਈ
+sign        \x0A09  1456                 # ਉ
+sign        \x0A0A  1456                 # ਊ
+sign        \x0A0B  1456                 # ਋
+sign        \x0A0C  1456                 # ਌
+sign        \x0A0D  1456                 # ਍
+sign        \x0A0E  1456                 # ਎
+sign        \x0A0F  1456                 # ਏ
+sign        \x0A10  1456                 # ਐ
+sign        \x0A11  1456                 # ਑
+sign        \x0A12  1456                 # ਒
+sign        \x0A13  1456                 # ਓ
+sign        \x0A14  1456                 # ਔ
+sign        \x0A15  1456                 # ਕ
+sign        \x0A16  1456                 # ਖ
+sign        \x0A17  1456                 # ਗ
+sign        \x0A18  1456                 # ਘ
+sign        \x0A19  1456                 # ਙ
+sign        \x0A1A  1456                 # ਚ
+sign        \x0A1B  1456                 # ਛ
+sign        \x0A1C  1456                 # ਜ
+sign        \x0A1D  1456                 # ਝ
+sign        \x0A1E  1456                 # ਞ
+sign        \x0A1F  1456                 # ਟ
+sign        \x0A20  1456                 # ਠ
+sign        \x0A21  1456                 # ਡ
+sign        \x0A22  1456                 # ਢ
+sign        \x0A23  1456                 # ਣ
+sign        \x0A24  1456                 # ਤ
+sign        \x0A25  1456                 # ਥ
+sign        \x0A26  1456                 # ਦ
+sign        \x0A27  1456                 # ਧ
+sign        \x0A28  1456                 # ਨ
+sign        \x0A29  1456                 # ਩
+sign        \x0A2A  1456                 # ਪ
+sign        \x0A2B  1456                 # ਫ
+sign        \x0A2C  1456                 # ਬ
+sign        \x0A2D  1456                 # ਭ
+sign        \x0A2E  1456                 # ਮ
+sign        \x0A2F  1456                 # ਯ
+sign        \x0A30  1456                 # ਰ
+sign        \x0A31  1456                 # ਱
+sign        \x0A32  1456                 # ਲ
+sign        \x0A33  1456                 # ਲ਼
+sign        \x0A34  1456                 # ਴
+sign        \x0A35  1456                 # ਵ
+sign        \x0A36  1456                 # ਸ਼
+sign        \x0A37  1456                 # ਷
+sign        \x0A38  1456                 # ਸ
+sign        \x0A39  1456                 # ਹ
+sign        \x0A3A  1456                 # ਺
+sign        \x0A3B  1456                 # ਻
+sign        \x0A3C  1456                 # ਼
+sign        \x0A3D  1456                 # ਽
+sign        \x0A3E  1456                 # ਾ
+sign        \x0A3F  1456                 # ਿ
+sign        \x0A40  1456                 # ੀ
+sign        \x0A41  1456                 # ੁ
+sign        \x0A42  1456                 # ੂ
+sign        \x0A43  1456                 # ੃
+sign        \x0A44  1456                 # ੄
+sign        \x0A45  1456                 # ੅
+sign        \x0A46  1456                 # ੆
+sign        \x0A47  1456                 # ੇ
+sign        \x0A48  1456                 # ੈ
+sign        \x0A49  1456                 # ੉
+sign        \x0A4A  1456                 # ੊
+sign        \x0A4B  1456                 # ੋ
+sign        \x0A4C  1456                 # ੌ
+sign        \x0A4D  1456                 # ੍
+sign        \x0A4E  1456                 # ੎
+sign        \x0A4F  1456                 # ੏
+sign        \x0A50  1456                 # ੐
+sign        \x0A51  1456                 # ੑ
+sign        \x0A52  1456                 # ੒
+sign        \x0A53  1456                 # ੓
+sign        \x0A54  1456                 # ੔
+sign        \x0A55  1456                 # ੕
+sign        \x0A56  1456                 # ੖
+sign        \x0A57  1456                 # ੗
+sign        \x0A58  1456                 # ੘
+sign        \x0A59  1456                 # ਖ਼
+sign        \x0A5A  1456                 # ਗ਼
+sign        \x0A5B  1456                 # ਜ਼
+sign        \x0A5C  1456                 # ੜ
+sign        \x0A5D  1456                 # ੝
+sign        \x0A5E  1456                 # ਫ਼
+sign        \x0A5F  1456                 # ੟
+sign        \x0A60  1456                 # ੠
+sign        \x0A61  1456                 # ੡
+sign        \x0A62  1456                 # ੢
+sign        \x0A63  1456                 # ੣
+sign        \x0A64  1456                 # ੤
+sign        \x0A65  1456                 # ੥
+sign        \x0A66  1456                 # ੦
+sign        \x0A67  1456                 # ੧
+sign        \x0A68  1456                 # ੨
+sign        \x0A69  1456                 # ੩
+sign        \x0A6A  1456                 # ੪
+sign        \x0A6B  1456                 # ੫
+sign        \x0A6C  1456                 # ੬
+sign        \x0A6D  1456                 # ੭
+sign        \x0A6E  1456                 # ੮
+sign        \x0A6F  1456                 # ੯
+sign        \x0A70  1456                 # ੰ
+sign        \x0A71  1456                 # ੱ
+sign        \x0A72  1456                 # ੲ
+sign        \x0A73  1456                 # ੳ
+sign        \x0A74  1456                 # ੴ
+sign        \x0A75  1456                 # ੵ
+sign        \x0A76  1456                 # ੶
+sign        \x0A77  1456                 # ੷
+sign        \x0A78  1456                 # ੸
+sign        \x0A79  1456                 # ੹
+sign        \x0A7A  1456                 # ੺
+sign        \x0A7B  1456                 # ੻
+sign        \x0A7C  1456                 # ੼
+sign        \x0A7D  1456                 # ੽
+sign        \x0A7E  1456                 # ੾
+sign        \x0A7F  1456                 # ੿
+
+
+# ----------------------------------------------------------------------------------------------
+

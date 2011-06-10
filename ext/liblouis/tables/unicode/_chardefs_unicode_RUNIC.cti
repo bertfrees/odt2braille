@@ -1,0 +1,109 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 16A0..16FF  Runic
+# ----------------------------------------------------------------------------------------------
+
+sign        \x16A0  1456                 # ᚠ
+sign        \x16A1  1456                 # ᚡ
+sign        \x16A2  1456                 # ᚢ
+sign        \x16A3  1456                 # ᚣ
+sign        \x16A4  1456                 # ᚤ
+sign        \x16A5  1456                 # ᚥ
+sign        \x16A6  1456                 # ᚦ
+sign        \x16A7  1456                 # ᚧ
+sign        \x16A8  1456                 # ᚨ
+sign        \x16A9  1456                 # ᚩ
+sign        \x16AA  1456                 # ᚪ
+sign        \x16AB  1456                 # ᚫ
+sign        \x16AC  1456                 # ᚬ
+sign        \x16AD  1456                 # ᚭ
+sign        \x16AE  1456                 # ᚮ
+sign        \x16AF  1456                 # ᚯ
+sign        \x16B0  1456                 # ᚰ
+sign        \x16B1  1456                 # ᚱ
+sign        \x16B2  1456                 # ᚲ
+sign        \x16B3  1456                 # ᚳ
+sign        \x16B4  1456                 # ᚴ
+sign        \x16B5  1456                 # ᚵ
+sign        \x16B6  1456                 # ᚶ
+sign        \x16B7  1456                 # ᚷ
+sign        \x16B8  1456                 # ᚸ
+sign        \x16B9  1456                 # ᚹ
+sign        \x16BA  1456                 # ᚺ
+sign        \x16BB  1456                 # ᚻ
+sign        \x16BC  1456                 # ᚼ
+sign        \x16BD  1456                 # ᚽ
+sign        \x16BE  1456                 # ᚾ
+sign        \x16BF  1456                 # ᚿ
+sign        \x16C0  1456                 # ᛀ
+sign        \x16C1  1456                 # ᛁ
+sign        \x16C2  1456                 # ᛂ
+sign        \x16C3  1456                 # ᛃ
+sign        \x16C4  1456                 # ᛄ
+sign        \x16C5  1456                 # ᛅ
+sign        \x16C6  1456                 # ᛆ
+sign        \x16C7  1456                 # ᛇ
+sign        \x16C8  1456                 # ᛈ
+sign        \x16C9  1456                 # ᛉ
+sign        \x16CA  1456                 # ᛊ
+sign        \x16CB  1456                 # ᛋ
+sign        \x16CC  1456                 # ᛌ
+sign        \x16CD  1456                 # ᛍ
+sign        \x16CE  1456                 # ᛎ
+sign        \x16CF  1456                 # ᛏ
+sign        \x16D0  1456                 # ᛐ
+sign        \x16D1  1456                 # ᛑ
+sign        \x16D2  1456                 # ᛒ
+sign        \x16D3  1456                 # ᛓ
+sign        \x16D4  1456                 # ᛔ
+sign        \x16D5  1456                 # ᛕ
+sign        \x16D6  1456                 # ᛖ
+sign        \x16D7  1456                 # ᛗ
+sign        \x16D8  1456                 # ᛘ
+sign        \x16D9  1456                 # ᛙ
+sign        \x16DA  1456                 # ᛚ
+sign        \x16DB  1456                 # ᛛ
+sign        \x16DC  1456                 # ᛜ
+sign        \x16DD  1456                 # ᛝ
+sign        \x16DE  1456                 # ᛞ
+sign        \x16DF  1456                 # ᛟ
+sign        \x16E0  1456                 # ᛠ
+sign        \x16E1  1456                 # ᛡ
+sign        \x16E2  1456                 # ᛢ
+sign        \x16E3  1456                 # ᛣ
+sign        \x16E4  1456                 # ᛤ
+sign        \x16E5  1456                 # ᛥ
+sign        \x16E6  1456                 # ᛦ
+sign        \x16E7  1456                 # ᛧ
+sign        \x16E8  1456                 # ᛨ
+sign        \x16E9  1456                 # ᛩ
+sign        \x16EA  1456                 # ᛪ
+sign        \x16EB  1456                 # ᛫
+sign        \x16EC  1456                 # ᛬
+sign        \x16ED  1456                 # ᛭
+sign        \x16EE  1456                 # ᛮ
+sign        \x16EF  1456                 # ᛯ
+sign        \x16F0  1456                 # ᛰ
+sign        \x16F1  1456                 # ᛱ
+sign        \x16F2  1456                 # ᛲ
+sign        \x16F3  1456                 # ᛳ
+sign        \x16F4  1456                 # ᛴ
+sign        \x16F5  1456                 # ᛵ
+sign        \x16F6  1456                 # ᛶ
+sign        \x16F7  1456                 # ᛷ
+sign        \x16F8  1456                 # ᛸ
+sign        \x16F9  1456                 # ᛹
+sign        \x16FA  1456                 # ᛺
+sign        \x16FB  1456                 # ᛻
+sign        \x16FC  1456                 # ᛼
+sign        \x16FD  1456                 # ᛽
+sign        \x16FE  1456                 # ᛾
+sign        \x16FF  1456                 # ᛿
+
+
+# ----------------------------------------------------------------------------------------------
+

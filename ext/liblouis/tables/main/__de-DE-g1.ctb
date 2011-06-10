@@ -1,0 +1,17 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+include _display.dis
+include _chardefs_de-DE.cti
+include _chardefs.cti
+include _chardefs_de-DE.cti
+include _translation.ctb
+include _translation_de-DE-g0.ctb
+include _translation_de-DE-g1.ctb
+include _hyphenation_de-DE.dic
+include _exactdots.ctb
+include _correct.ctb
+
+# ----------------------------------------------------------------------------------------------

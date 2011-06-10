@@ -1,0 +1,27 @@
+Version
+*******
+
+ = version 2.3.0
+ 
+  => source: * http://liblouis.googlecode.com/svn/tags/liblouis_2_3_0/
+             * ./src/release_2.3/
+
+Translation tables
+******************
+ 
+  => ./tables/
+
+
+Build instructions
+******************
+
+Windows
+=======
+
+ ...
+ 
+
+Mac OS
+======
+
+ ...

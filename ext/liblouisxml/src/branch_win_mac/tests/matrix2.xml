@@ -1,0 +1,63 @@
+<math display='block'>
+ <semantics>
+  <mrow>
+   <mrow><mo>(</mo>
+    <mrow>
+     <mtable>
+      <mtr>
+       <mtd>
+        <mrow>
+         <msub>
+          <mi>a</mi>
+          <mrow>
+           <mn>11</mn>
+          </mrow>
+         </msub>
+
+        </mrow>
+       </mtd>
+       <mtd>
+        <mrow>
+         <msub>
+          <mi>a</mi>
+          <mrow>
+           <mn>12</mn>
+          </mrow>
+         </msub>
+
+        </mrow>
+       </mtd>
+      </mtr>
+      <mtr>
+       <mtd>
+        <mrow>
+         <msub>
+          <mi>a</mi>
+          <mrow>
+           <mn>21</mn>
+          </mrow>
+         </msub>
+
+        </mrow>
+       </mtd>
+       <mtd>
+        <mrow>
+         <msub>
+          <mi>a</mi>
+          <mrow>
+           <mn>22</mn>
+          </mrow>
+         </msub>
+
+        </mrow>
+       </mtd>
+      </mtr>
+
+     </mtable>
+    </mrow>
+   <mo>)</mo></mrow>
+  </mrow>
+ <annotation encoding='MathType-MTEF'>
+ </annotation>
+ </semantics>
+</math>

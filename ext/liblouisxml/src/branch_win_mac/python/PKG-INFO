@@ -1,0 +1,24 @@
+Metadata-Version: 1.0
+Name: louisxml
+Version: 1.1
+Summary: Python interface for liblouisxml
+Home-page: http://pypi.python.org/pypi/louisxml
+Author: Michael Whapples
+Author-email: mwhapples@users.berlios.de
+License: UNKNOWN
+Description: 
+        Python interface for liblouisxml
+        =======================================
+        
+        This is a set of python bindings for the liblouisxml Braille translation
+        library. It aims to try and keep to the liblouisxml API, only
+        changing things where it makes more sense and is simpler for use in
+        python.
+        
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: License :: OSI Approved :: Artistic License
+Classifier: Intended Audience :: Developers
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: Microsoft

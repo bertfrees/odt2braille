@@ -1,0 +1,22 @@
+#
+# 	SERBIAN
+#	=======
+# 	Authors:	Peter Engström, Index Braille <peter.engstrom@indexbraille.com>
+#				Monk Jeremiah, Manastir Decani <visokidecani@gmail.com>
+#
+# 	Date: 		Note:
+#	2011-03-28	Initial release
+#
+# ---------------------------------------------------------------------------------------
+
+include _display.dis
+include _chardefs_sr.cti
+include _chardefs.cti
+include _chardefs_sr.cti
+include _translation.ctb
+include _translation_sr-g1.ctb
+#include _hyphenation_sr.dic
+include _exactdots.ctb
+include _correct.ctb
+
+# ---------------------------------------------------------------------------------------

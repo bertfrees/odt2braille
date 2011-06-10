@@ -1,0 +1,141 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 0E00..0E7F  Thai
+# ----------------------------------------------------------------------------------------------
+
+sign        \x0E00  1456                 # ฀
+sign        \x0E01  1456                 # ก
+sign        \x0E02  1456                 # ข
+sign        \x0E03  1456                 # ฃ
+sign        \x0E04  1456                 # ค
+sign        \x0E05  1456                 # ฅ
+sign        \x0E06  1456                 # ฆ
+sign        \x0E07  1456                 # ง
+sign        \x0E08  1456                 # จ
+sign        \x0E09  1456                 # ฉ
+sign        \x0E0A  1456                 # ช
+sign        \x0E0B  1456                 # ซ
+sign        \x0E0C  1456                 # ฌ
+sign        \x0E0D  1456                 # ญ
+sign        \x0E0E  1456                 # ฎ
+sign        \x0E0F  1456                 # ฏ
+sign        \x0E10  1456                 # ฐ
+sign        \x0E11  1456                 # ฑ
+sign        \x0E12  1456                 # ฒ
+sign        \x0E13  1456                 # ณ
+sign        \x0E14  1456                 # ด
+sign        \x0E15  1456                 # ต
+sign        \x0E16  1456                 # ถ
+sign        \x0E17  1456                 # ท
+sign        \x0E18  1456                 # ธ
+sign        \x0E19  1456                 # น
+sign        \x0E1A  1456                 # บ
+sign        \x0E1B  1456                 # ป
+sign        \x0E1C  1456                 # ผ
+sign        \x0E1D  1456                 # ฝ
+sign        \x0E1E  1456                 # พ
+sign        \x0E1F  1456                 # ฟ
+sign        \x0E20  1456                 # ภ
+sign        \x0E21  1456                 # ม
+sign        \x0E22  1456                 # ย
+sign        \x0E23  1456                 # ร
+sign        \x0E24  1456                 # ฤ
+sign        \x0E25  1456                 # ล
+sign        \x0E26  1456                 # ฦ
+sign        \x0E27  1456                 # ว
+sign        \x0E28  1456                 # ศ
+sign        \x0E29  1456                 # ษ
+sign        \x0E2A  1456                 # ส
+sign        \x0E2B  1456                 # ห
+sign        \x0E2C  1456                 # ฬ
+sign        \x0E2D  1456                 # อ
+sign        \x0E2E  1456                 # ฮ
+sign        \x0E2F  1456                 # ฯ
+sign        \x0E30  1456                 # ะ
+sign        \x0E31  1456                 # ั
+sign        \x0E32  1456                 # า
+sign        \x0E33  1456                 # ำ
+sign        \x0E34  1456                 # ิ
+sign        \x0E35  1456                 # ี
+sign        \x0E36  1456                 # ึ
+sign        \x0E37  1456                 # ื
+sign        \x0E38  1456                 # ุ
+sign        \x0E39  1456                 # ู
+sign        \x0E3A  1456                 # ฺ
+sign        \x0E3B  1456                 # ฻
+sign        \x0E3C  1456                 # ฼
+sign        \x0E3D  1456                 # ฽
+sign        \x0E3E  1456                 # ฾
+sign        \x0E3F  1456                 # ฿
+sign        \x0E40  1456                 # เ
+sign        \x0E41  1456                 # แ
+sign        \x0E42  1456                 # โ
+sign        \x0E43  1456                 # ใ
+sign        \x0E44  1456                 # ไ
+sign        \x0E45  1456                 # ๅ
+sign        \x0E46  1456                 # ๆ
+sign        \x0E47  1456                 # ็
+sign        \x0E48  1456                 # ่
+sign        \x0E49  1456                 # ้
+sign        \x0E4A  1456                 # ๊
+sign        \x0E4B  1456                 # ๋
+sign        \x0E4C  1456                 # ์
+sign        \x0E4D  1456                 # ํ
+sign        \x0E4E  1456                 # ๎
+sign        \x0E4F  1456                 # ๏
+sign        \x0E50  1456                 # ๐
+sign        \x0E51  1456                 # ๑
+sign        \x0E52  1456                 # ๒
+sign        \x0E53  1456                 # ๓
+sign        \x0E54  1456                 # ๔
+sign        \x0E55  1456                 # ๕
+sign        \x0E56  1456                 # ๖
+sign        \x0E57  1456                 # ๗
+sign        \x0E58  1456                 # ๘
+sign        \x0E59  1456                 # ๙
+sign        \x0E5A  1456                 # ๚
+sign        \x0E5B  1456                 # ๛
+sign        \x0E5C  1456                 # ๜
+sign        \x0E5D  1456                 # ๝
+sign        \x0E5E  1456                 # ๞
+sign        \x0E5F  1456                 # ๟
+sign        \x0E60  1456                 # ๠
+sign        \x0E61  1456                 # ๡
+sign        \x0E62  1456                 # ๢
+sign        \x0E63  1456                 # ๣
+sign        \x0E64  1456                 # ๤
+sign        \x0E65  1456                 # ๥
+sign        \x0E66  1456                 # ๦
+sign        \x0E67  1456                 # ๧
+sign        \x0E68  1456                 # ๨
+sign        \x0E69  1456                 # ๩
+sign        \x0E6A  1456                 # ๪
+sign        \x0E6B  1456                 # ๫
+sign        \x0E6C  1456                 # ๬
+sign        \x0E6D  1456                 # ๭
+sign        \x0E6E  1456                 # ๮
+sign        \x0E6F  1456                 # ๯
+sign        \x0E70  1456                 # ๰
+sign        \x0E71  1456                 # ๱
+sign        \x0E72  1456                 # ๲
+sign        \x0E73  1456                 # ๳
+sign        \x0E74  1456                 # ๴
+sign        \x0E75  1456                 # ๵
+sign        \x0E76  1456                 # ๶
+sign        \x0E77  1456                 # ๷
+sign        \x0E78  1456                 # ๸
+sign        \x0E79  1456                 # ๹
+sign        \x0E7A  1456                 # ๺
+sign        \x0E7B  1456                 # ๻
+sign        \x0E7C  1456                 # ๼
+sign        \x0E7D  1456                 # ๽
+sign        \x0E7E  1456                 # ๾
+sign        \x0E7F  1456                 # ๿
+
+
+# ----------------------------------------------------------------------------------------------
+

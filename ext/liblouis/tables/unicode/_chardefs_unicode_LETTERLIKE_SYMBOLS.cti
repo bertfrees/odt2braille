@@ -1,0 +1,93 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2100..214F  Letterlike Symbols
+# ----------------------------------------------------------------------------------------------
+
+sign        \x2100        1456                ℀                   ACCOUNT OF
+sign        \x2101        1456                ℁                   ADDRESSED TO THE SUBJECT
+sign        \x2102        1456                ℂ                   DOUBLE-STRUCK CAPITAL C
+sign        \x2103        1456                ℃                   DEGREE CELSIUS
+sign        \x2104        1456                ℄                   CENTRE LINE SYMBOL
+sign        \x2105        1456                ℅                   CARE OF
+sign        \x2106        1456                ℆                   CADA UNA
+sign        \x2107        1456                ℇ                   EULER CONSTANT
+sign        \x2108        1456                ℈                   SCRUPLE
+sign        \x2109        1456                ℉                   DEGREE FAHRENHEIT
+sign        \x210A        1456                ℊ                   SCRIPT SMALL G
+sign        \x210B        1456                ℋ                   SCRIPT CAPITAL H
+sign        \x210C        1456                ℌ                   BLACK-LETTER CAPITAL H
+sign        \x210D        1456                ℍ                   DOUBLE-STRUCK CAPITAL H
+sign        \x210E        1456                ℎ                   PLANCK CONSTANT
+sign        \x210F        1456                ℏ                   PLANCK CONSTANT OVER TWO PI
+sign        \x2110        1456                ℐ                   SCRIPT CAPITAL I
+sign        \x2111        1456                ℑ                   BLACK-LETTER CAPITAL I
+sign        \x2112        1456                ℒ                   SCRIPT CAPITAL L
+sign        \x2113        1456                ℓ                   SCRIPT SMALL L
+sign        \x2114        1456                ℔                   L B BAR SYMBOL
+sign        \x2115        1456                ℕ                   DOUBLE-STRUCK CAPITAL N
+sign        \x2116        1456                №                   NUMERO SIGN
+sign        \x2117        1456                ℗                   SOUND RECORDING COPYRIGHT
+sign        \x2118        1456                ℘                   SCRIPT CAPITAL P
+sign        \x2119        1456                ℙ                   DOUBLE-STRUCK CAPITAL P
+sign        \x211A        1456                ℚ                   DOUBLE-STRUCK CAPITAL Q
+sign        \x211B        1456                ℛ                   SCRIPT CAPITAL R
+sign        \x211C        1456                ℜ                   BLACK-LETTER CAPITAL R
+sign        \x211D        1456                ℝ                   DOUBLE-STRUCK CAPITAL R
+sign        \x211E        1456                ℞                   PRESCRIPTION TAKE
+sign        \x211F        1456                ℟                   RESPONSE
+sign        \x2120        1456                ℠                   SERVICE MARK
+sign        \x2121        1456                ℡                   TELEPHONE SIGN
+sign        \x2122        1456                ™                   TRADE MARK SIGN
+sign        \x2123        1456                ℣                   VERSICLE
+sign        \x2124        1456                ℤ                   DOUBLE-STRUCK CAPITAL Z
+sign        \x2125        1456                ℥                   OUNCE SIGN
+sign        \x2126        1456                Ω                   OHM SIGN
+sign        \x2127        1456                ℧                   INVERTED OHM SIGN
+sign        \x2128        1456                ℨ                   BLACK-LETTER CAPITAL Z
+sign        \x2129        1456                ℩                   TURNED GREEK SMALL LETTER IOTA
+sign        \x212A        1456                K                   KELVIN SIGN
+sign        \x212B        1456                Å                   ANGSTROM SIGN
+sign        \x212C        1456                ℬ                   SCRIPT CAPITAL B
+sign        \x212D        1456                ℭ                   BLACK-LETTER CAPITAL C
+sign        \x212E        1456                ℮                   ESTIMATED SYMBOL
+sign        \x212F        1456                ℯ                   SCRIPT SMALL E
+sign        \x2130        1456                ℰ                   SCRIPT CAPITAL E
+sign        \x2131        1456                ℱ                   SCRIPT CAPITAL F
+sign        \x2132        1456                Ⅎ                   TURNED CAPITAL F
+sign        \x2133        1456                ℳ                   SCRIPT CAPITAL M
+sign        \x2134        1456                ℴ                   SCRIPT SMALL O
+sign        \x2135        1456                ℵ                   ALEF SYMBOL
+sign        \x2136        1456                ℶ                   BET SYMBOL
+sign        \x2137        1456                ℷ                   GIMEL SYMBOL
+sign        \x2138        1456                ℸ                   DALET SYMBOL
+sign        \x2139        1456                ℹ                   INFORMATION SOURCE
+sign        \x213A        1456                ℺                   ROTATED CAPITAL Q
+sign        \x213B        1456                ℻                   FACSIMILE SIGN
+sign        \x213C        1456                ℼ                   DOUBLE-STRUCK SMALL PI
+sign        \x213D        1456                ℽ                   DOUBLE-STRUCK SMALL GAMMA
+sign        \x213E        1456                ℾ                   DOUBLE-STRUCK CAPITAL GAMMA
+sign        \x213F        1456                ℿ                   DOUBLE-STRUCK CAPITAL PI
+sign        \x2140        1456                ⅀                   DOUBLE-STRUCK N-ARY SUMMATION
+sign        \x2141        1456                ⅁                   TURNED SANS-SERIF CAPITAL G
+sign        \x2142        1456                ⅂                   TURNED SANS-SERIF CAPITAL L
+sign        \x2143        1456                ⅃                   REVERSED SANS-SERIF CAPITAL L
+sign        \x2144        1456                ⅄                   TURNED SANS-SERIF CAPITAL Y
+sign        \x2145        1456                ⅅ                   DOUBLE-STRUCK ITALIC CAPITAL D
+sign        \x2146        1456                ⅆ                   DOUBLE-STRUCK ITALIC SMALL D
+sign        \x2147        1456                ⅇ                   DOUBLE-STRUCK ITALIC SMALL E
+sign        \x2148        1456                ⅈ                   DOUBLE-STRUCK ITALIC SMALL I
+sign        \x2149        1456                ⅉ                   DOUBLE-STRUCK ITALIC SMALL J
+sign        \x214A        1456                ⅊                   PROPERTY LINE
+sign        \x214B        1456                ⅋                   TURNED AMPERSAND
+sign        \x214C        1456                ⅌                   PER SIGN
+sign        \x214D        1456                ⅍                   AKTIESELSKAB
+sign        \x214E        1456                ⅎ                   TURNED SMALL F
+sign        \x214F        1456                ⅏                   SYMBOL FOR SAMARITAN SOURCE
+
+
+# ----------------------------------------------------------------------------------------------
+

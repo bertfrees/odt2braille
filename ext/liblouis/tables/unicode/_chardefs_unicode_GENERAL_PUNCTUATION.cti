@@ -1,0 +1,125 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2000..206F  General Punctuation
+# ----------------------------------------------------------------------------------------------
+
+sign        \x2000        1456                                    EN QUAD
+sign        \x2001        1456                                    EM QUAD
+sign        \x2002        1456                                    EN SPACE
+sign        \x2003        1456                                    EM SPACE
+sign        \x2004        1456                                    THREE-PER-EM SPACE
+sign        \x2005        1456                                    FOUR-PER-EM SPACE
+sign        \x2006        1456                                    SIX-PER-EM SPACE
+sign        \x2007        1456                                    FIGURE SPACE
+sign        \x2008        1456                                    PUNCTUATION SPACE
+sign        \x2009        1456                                    THIN SPACE
+sign        \x200A        1456                                    HAIR SPACE
+sign        \x200B        1456                ​                   ZERO WIDTH SPACE
+sign        \x200C        1456                ‌                   ZERO WIDTH NON-JOINER
+sign        \x200D        1456                ‍                   ZERO WIDTH JOINER
+sign        \x200E        1456                ‎                   LEFT-TO-RIGHT MARK
+sign        \x200F        1456                ‏                   RIGHT-TO-LEFT MARK
+sign        \x2010        36                  ‐                   HYPHEN
+punctuation \x2011        36                  ‑                   NON-BREAKING HYPHEN
+sign        \x2012        1456                ‒                   FIGURE DASH
+punctuation \x2013        36-36               –                   EN DASH
+punctuation \x2014        36-36               —                   EM DASH
+sign        \x2015        1456                ―                   HORIZONTAL BAR
+sign        \x2016        1456                ‖                   DOUBLE VERTICAL LINE
+sign        \x2017        1456                ‗                   DOUBLE LOW LINE
+punctuation \x2018        6-236               ‘                   LEFT SINGLE QUOTATION MARK
+punctuation \x2019        3                   ’                   RIGHT SINGLE QUOTATION MARK
+sign        \x201A        1456                ‚                   SINGLE LOW-9 QUOTATION MARK
+sign        \x201B        1456                ‛                   SINGLE HIGH-REVERSED-9 QUOTATION MARK
+punctuation \x201C        236                 “                   LEFT DOUBLE QUOTATION MARK
+punctuation \x201D        356                 ”                   RIGHT DOUBLE QUOTATION MARK
+sign        \x201E        236                 „                   DOUBLE LOW-9 QUOTATION MARK
+sign        \x201F        356                 ‟                   DOUBLE HIGH-REVERSED-9 QUOTATION MARK
+sign        \x2020        1456                †                   DAGGER
+sign        \x2021        1456                ‡                   DOUBLE DAGGER
+sign        \x2022        1456                •                   BULLET
+sign        \x2023        1456                ‣                   TRIANGULAR BULLET
+sign        \x2024        1456                ․                   ONE DOT LEADER
+sign        \x2025        1456                ‥                   TWO DOT LEADER
+punctuation \x2026        3                   …                   HORIZONTAL ELLIPSIS
+sign        \x2027        1456                ‧                   HYPHENATION POINT
+sign        \x2028        1456                                    LINE SEPARATOR
+sign        \x2029        1456                                    PARAGRAPH SEPARATOR
+sign        \x202A        1456                ‪                   LEFT-TO-RIGHT EMBEDDING
+sign        \x202B        1456                ‫                   RIGHT-TO-LEFT EMBEDDING
+sign        \x202C        1456                                    POP DIRECTIONAL FORMATTING
+sign        \x202D        1456                                    LEFT-TO-RIGHT OVERRIDE
+sign        \x202E        1456                                    RIGHT-TO-LEFT OVERRIDE
+sign        \x202F        1456                                    NARROW NO-BREAK SPACE
+sign        \x2030        1456                ‰                   PER MILLE SIGN
+sign        \x2031        1456                ‱                   PER TEN THOUSAND SIGN
+sign        \x2032        1456                ′                   PRIME
+sign        \x2033        1456                ″                   DOUBLE PRIME
+sign        \x2034        1456                ‴                   TRIPLE PRIME
+sign        \x2035        1456                ‵                   REVERSED PRIME
+sign        \x2036        1456                ‶                   REVERSED DOUBLE PRIME
+sign        \x2037        1456                ‷                   REVERSED TRIPLE PRIME
+sign        \x2038        1456                ‸                   CARET
+sign        \x2039        1456                ‹                   SINGLE LEFT-POINTING ANGLE QUOTATION MARK
+sign        \x203A        1456                ›                   SINGLE RIGHT-POINTING ANGLE QUOTATION MARK
+sign        \x203B        1456                ※                   REFERENCE MARK
+sign        \x203C        1456                ‼                   DOUBLE EXCLAMATION MARK
+sign        \x203D        1456                ‽                   INTERROBANG
+sign        \x203E        1456                ‾                   OVERLINE
+sign        \x203F        1456                ‿                   UNDERTIE
+sign        \x2040        1456                ⁀                   CHARACTER TIE
+sign        \x2041        1456                ⁁                   CARET INSERTION POINT
+sign        \x2042        1456                ⁂                   ASTERISM
+sign        \x2043        1456                ⁃                   HYPHEN BULLET
+sign        \x2044        1456                ⁄                   FRACTION SLASH
+sign        \x2045        1456                ⁅                   LEFT SQUARE BRACKET WITH QUILL
+sign        \x2046        1456                ⁆                   RIGHT SQUARE BRACKET WITH QUILL
+sign        \x2047        1456                ⁇                   DOUBLE QUESTION MARK
+sign        \x2048        1456                ⁈                   QUESTION EXCLAMATION MARK
+sign        \x2049        1456                ⁉                   EXCLAMATION QUESTION MARK
+sign        \x204A        1456                ⁊                   TIRONIAN SIGN ET
+sign        \x204B        1456                ⁋                   REVERSED PILCROW SIGN
+sign        \x204C        1456                ⁌                   BLACK LEFTWARDS BULLET
+sign        \x204D        1456                ⁍                   BLACK RIGHTWARDS BULLET
+sign        \x204E        1456                ⁎                   LOW ASTERISK
+sign        \x204F        1456                ⁏                   REVERSED SEMICOLON
+sign        \x2050        1456                ⁐                   CLOSE UP
+sign        \x2051        1456                ⁑                   TWO ASTERISKS ALIGNED VERTICALLY
+sign        \x2052        1456                ⁒                   COMMERCIAL MINUS SIGN
+sign        \x2053        1456                ⁓                   SWUNG DASH
+sign        \x2054        1456                ⁔                   INVERTED UNDERTIE
+sign        \x2055        1456                ⁕                   FLOWER PUNCTUATION MARK
+sign        \x2056        1456                ⁖                   THREE DOT PUNCTUATION
+sign        \x2057        1456                ⁗                   QUADRUPLE PRIME
+sign        \x2058        1456                ⁘                   FOUR DOT PUNCTUATION
+sign        \x2059        1456                ⁙                   FIVE DOT PUNCTUATION
+sign        \x205A        1456                ⁚                   TWO DOT PUNCTUATION
+sign        \x205B        1456                ⁛                   FOUR DOT MARK
+sign        \x205C        1456                ⁜                   DOTTED CROSS
+sign        \x205D        1456                ⁝                   TRICOLON
+sign        \x205E        1456                ⁞                   VERTICAL FOUR DOTS
+sign        \x205F        1456                                    MEDIUM MATHEMATICAL SPACE
+sign        \x2060        1456                                    WORD JOINER
+sign        \x2061        1456                                    FUNCTION APPLICATION
+sign        \x2062        1456                                    INVISIBLE TIMES
+sign        \x2063        1456                                    INVISIBLE SEPARATOR
+sign        \x2064        1456                                    INVISIBLE PLUS
+sign        \x2065        1456                ⁥
+sign        \x2066        1456                ⁦
+sign        \x2067        1456                ⁧
+sign        \x2068        1456                ⁨
+sign        \x2069        1456                ⁩
+sign        \x206A        1456                ⁪                   INHIBIT SYMMETRIC SWAPPING
+sign        \x206B        1456                ⁫                   ACTIVATE SYMMETRIC SWAPPING
+sign        \x206C        1456                ⁬                   INHIBIT ARABIC FORM SHAPING
+sign        \x206D        1456                ⁭                   ACTIVATE ARABIC FORM SHAPING
+sign        \x206E        1456                ⁮                   NATIONAL DIGIT SHAPES
+sign        \x206F        1456                ⁯                   NOMINAL DIGIT SHAPES
+
+
+# ----------------------------------------------------------------------------------------------
+

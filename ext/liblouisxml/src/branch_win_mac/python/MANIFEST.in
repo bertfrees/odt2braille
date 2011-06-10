@@ -1,0 +1,2 @@
+include setup_cython.py LICENSE MANIFEST.in
+include louisxml.pyx louisxml.pxd

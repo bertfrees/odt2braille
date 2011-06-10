@@ -86,28 +86,74 @@
         </condition>
     </target>
 
-	<!-- copy windows binaries -->
-	<target name="-copy-bin-win" if="target.is.windows">	
-            <copy file="${liblouis.bin.win.dir}${file.separator}xml2brl.exe" todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}" />
-            <copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.win.dir}">
-                <fileset dir="${liblouis.bin.win.dir}">
-                    <filename name="*.dll"/>
-                </fileset>
-            </copy>
-	</target>
+    <!-- copy windows binaries -->
+    <target name="-copy-bin-win" if="target.is.windows">
+        <copy todir="${build.dir}${file.separator}liblouis${file.separator}bin${file.separator}win">
+            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
+                <filename name="*.dll"/>
+            </fileset>
+            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
+                <filename name="*.dll"/>
+            </fileset>
+            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
+                <patternset>
+                    <include name="*.dll"/>
+                    <include name="*.exe"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
 	
-	<!-- copy mac os binaries -->	
-	<target name="-copy-bin-mac" if="target.is.macosx">	
-            <copy file="${liblouis.bin.mac.dir}${file.separator}xml2brl" todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}" />
-            <copy todir="${build.oxt.dir}${file.separator}${liblouis.bin.mac.dir}">
-                <fileset dir="${liblouis.bin.mac.dir}">
-                    <filename name="*.dylib"/>
-                </fileset>
-            </copy>
-	</target>
+    <!-- copy mac os binaries -->
+    <target name="-copy-bin-mac" if="target.is.macosx">
+        <copy todir="${build.dir}${file.separator}liblouis${file.separator}bin${file.separator}mac">
+            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
+                <filename name="*.dylib"/>
+            </fileset>
+            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
+                <filename name="*.dylib"/>
+            </fileset>
+            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
+                <patternset>
+                    <include name="*.dylib"/>
+                    <include name="xml2brl"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+
+
+    <!-- make liblouis folder -->
+    <target name="-post-compile" depends="-prompt-target-os">
+        <delete dir="${build.dir}${file.separator}liblouis" />
+        <mkdir dir="${build.dir}${file.separator}liblouis" />
+        <!-- files directory -->
+        <copy todir="${build.dir}${file.separator}liblouis${file.separator}files"
+              flatten="true">
+            <fileset dir="ext${file.separator}liblouis${file.separator}tables">
+                <patternset>
+                    <include name="**/*.ctb"/>
+                    <include name="**/*.cti"/>
+                    <include name="**/*.utb"/>
+                    <include name="**/*.dis"/>
+                    <include name="**/*.dic"/>
+                </patternset>
+            </fileset>
+            <fileset dir="ext${file.separator}liblouisxml${file.separator}lbx_files">
+                <patternset>
+                    <include name="**/*.cfg"/>
+                    <include name="**/*.sem"/>
+                </patternset>
+            </fileset>
+        </copy>
+        <!-- bin directory -->
+        <antcall target="-copy-bin-win"/>
+        <antcall target="-copy-bin-mac"/>
+    </target>
+
 
     <!-- rebuild extension with some fixes -->
-    <target name="-post-uno-package" depends="-prompt-target-os">
+    <target name="-post-uno-package">
 
         <echo message="post uno packaging" />
 
@@ -120,16 +166,12 @@
         <copy todir="${build.oxt.dir}${file.separator}${templates.dir}">
             <fileset dir="${templates.dir}" />
         </copy>
-		
+
         <!-- add liblouis folder -->
-        <mkdir dir="${build.oxt.dir}${file.separator}${liblouis.dir}" />
-        <copy todir="${build.oxt.dir}${file.separator}${liblouis.files.dir}">
-            <fileset dir="${liblouis.files.dir}" />
+        <copy todir="${build.oxt.dir}${file.separator}liblouis">
+            <fileset dir="${build.dir}${file.separator}liblouis" />
         </copy>
-        
-        <antcall target="-copy-bin-win"/>
-        <antcall target="-copy-bin-mac"/>
-		
+
         <!-- add settings folder -->
         <copy todir="${build.oxt.dir}${file.separator}${settings.dir}">
             <fileset dir="${settings.dir}" />

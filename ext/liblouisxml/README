@@ -1,0 +1,44 @@
+Version
+*******
+
+Linux
+=====
+
+ = version 2.4.0
+ 
+  => source: * http://liblouisxml.googlecode.com/svn/tags/liblouisxml_2_4_0/
+             * ./src/release_2.4/
+ 
+
+Windows/Mac
+===========
+ 
+ = version 2.4.0
+ + handling of soft hyphens (Windows/Mac)
+ + use of back translation table for hyphenation (Windows/Mac)
+ + setting for minimum syllable length (Windows/Mac)
+    (see http://code.google.com/p/liblouisutdml/source/detail?r=1917792c971779e02a0cdc6e5de2460fc3137688)
+ + roman caps (Windows)
+ 
+  => source: ./src/branch_win_mac/
+
+
+Configuration & semantic action files
+*************************************
+
+  => ./lbx_files/
+
+
+Build instructions
+******************
+
+Windows
+=======
+
+ ...
+ 
+
+Mac OS
+======
+
+ ...

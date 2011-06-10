@@ -1,0 +1,16 @@
+document html
+math math \*\x00a0
+mn mn
+mi mi
+matrix mtable
+mtd mtd \*\x001b
+mtr mtr ^(,\*\x001b
+no mrow
+no semantics
+no msub
+no mo
+no annotation
+no math,display
+no annotation,encoding
+no annotation,encoding,MathType-MTEF
+no math,display,block
