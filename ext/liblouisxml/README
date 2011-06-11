@@ -1,13 +1,13 @@
-Version
-*******
+Source code
+***********
 
 Linux
 =====
 
  = version 2.4.0
  
-  => source: * http://liblouisxml.googlecode.com/svn/tags/liblouisxml_2_4_0/
-             * ./src/release_2.4/
+ => http://liblouisxml.googlecode.com/svn/tags/liblouisxml_2_4_0
+ => %ODT2BRAILLE_HOME%/ext/liblouisxml/src/release_2.4
  
 
 Windows/Mac
@@ -20,25 +20,84 @@ Windows/Mac
     (see http://code.google.com/p/liblouisutdml/source/detail?r=1917792c971779e02a0cdc6e5de2460fc3137688)
  + roman caps (Windows)
  
-  => source: ./src/branch_win_mac/
+ => %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac
 
 
 Configuration & semantic action files
 *************************************
 
-  => ./lbx_files/
+ => %ODT2BRAILLE_HOME%/ext/liblouisxml/lbx_files
 
 
 Build instructions
 ******************
 
-Windows
-=======
+Linux
+=====
 
- ...
+ - in the project's root directory, run:
+  * ./autogen.sh
+  * ./configure
+  * make
+  * sudo make install
+
+
+Windows (CodeBlocks)
+====================
+
+ 1.
+  - create a new dynamic linked library project: liblouisxml
+  - delete main.c & main.h
+  - add files:
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/liblouisxml
+  - linker settings:
+   * %ODT2BRAILLE_HOME%/ext/libxml2/bin/libxml2.dll.a
+   * %ODT2BRAILLE_HOME%/ext/liblouis/bin/liblouis.a
+  - search directories (Compiler):
+   * %ODT2BRAILLE_HOME%/ext/libxml2/include/libxml
+   * %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3/liblouis
+  - build
+  - copy to %ODT2BRAILLE_HOME%/ext/liblouisxml/bin:
+   * liblouisxml.dll
+   * liblouisxml.a
+   * liblouisxml.def
  
+ 2.
+  - create a new dynamix linked library project: xml2brl
+  - delete main.c & main.h
+  - add files:
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/tools/xml2brl.c
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/gnulib
+  - linker settings:
+   * %ODT2BRAILLE_HOME%/ext/libxml2/bin/libxml2.dll.a
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/liblouisxml.a
+   * %ODT2BRAILLE_HOME%/ext/liblouis/bin/liblouis.a
+  - search directories (Compiler)
+   * %ODT2BRAILLE_HOME%/ext/libxml2/include/libxml
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/liblouisxml
+   * %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3/liblouis
+  - build
+  - copy to %ODT2BRAILLE_HOME%/ext/liblouisxml/bin:
+   * xml2brl.exe
+
 
 Mac OS
 ======
 
- ...
+ - liblouis & libxml2 must be installed
+ - in the project's root directory, run:
+  * ./autogen.sh
+  * ./configure
+  * make
+  * sudo make install
+ - copy to %ODT2BRAILLE_HOME%/ext/liblouisxml/bin:
+  * /usr/local/lib/liblouisxml.1.dylib
+  * /usr/local/bin/xml2brl
+ - copy to %ODT2BRAILLE_HOME%/ext/libxml2/bin:
+  * /usr/lib/libxml2.2.dylib
+ - run %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/install_name_tool.sh
+ - check links with otool:
+  * otool -L %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/liblouisxml.1.dylib
+  * otool -L %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/xml2brl
+
+

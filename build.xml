@@ -68,6 +68,85 @@
     nbproject/build-impl.xml file. 
 
     -->
+    
+	<!-- initialise -->
+	<target name="-pre-init" depends="-init-build,-copy-external-jars"/>
+	
+	
+	<target name="-init-build"
+            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
+	
+	    <pathconvert property="libs.OpenOffice.org 3.3.classpath">
+	        <path>
+	            <pathelement location="${java.dir}${file.separator}juh.jar"/>
+	            <pathelement location="${java.dir}${file.separator}jurt.jar"/>
+	            <pathelement location="${java.dir}${file.separator}ridl.jar"/>
+	            <pathelement location="${classes.dir}${file.separator}unoil.jar"/>
+	        </path>
+	    </pathconvert>
+
+	    <property file="nbproject/project.properties"/>
+		<property file="nbproject/project-uno.properties"/>
+	    
+		<property name="sdk.bin.dir"
+                  value="${sdk.dir}${file.separator}bin"/>
+		<property name="ure.bin.dir"
+                  value="${ure.dir}${file.separator}bin"/>
+		
+		<pathconvert property="office.tool.path">
+		    <path>
+	            <pathelement location="${office.program.dir}"/>
+                <pathelement location="${sdk.bin.dir}"/>
+                <pathelement location="${basis.dir}${file.separator}program"/>
+                <pathelement location="${ure.bin.dir}"/>
+            </path>
+		</pathconvert>
+        
+        <pathconvert property="project.home">
+	        <path path="."/>
+	    </pathconvert>
+		
+		<pathconvert property="external.jars" pathsep=" " dirsep="/">
+		    <path path="${javac.classpath}"/>
+		    <firstmatchmapper>
+		        <chainedmapper>
+		            <globmapper from="${project.home}${file.separator}*" to="*"/>
+                    <flattenmapper/>
+                    <globmapper from="*" to="lib/*"/>
+                </chainedmapper>
+                <globmapper from="*juh.jar" to=""/>
+	            <globmapper from="*jurt.jar" to=""/>
+	            <globmapper from="*ridl.jar" to=""/>
+	            <globmapper from="*unoil.jar" to=""/>
+                <globmapper from="/*" to="file:///*"/>
+	            <globmapper from="*" to="file:///*"/>
+            </firstmatchmapper>
+		</pathconvert>
+	
+		<available file="${dist.dir}${file.separator}${external.jar.dir}"
+                   property="external.jar.dir.exists"/>
+        <available file="${dist.dir}${file.separator}liblouis"
+                   property="dist.liblouis.dir.exists"/>
+	</target>
+	
+	
+	<!-- load platform dependent properties -->
+    <target name="-windows-properties" if="is.windows" depends="-detect-os">
+	    <property file="build.windows.properties"/>
+	</target>
+	
+	<target name="-macosx-properties" if="is.macosx" depends="-detect-os">
+	    <property file="build.macosx.properties"/>
+	</target>
+	
+	<target name="-linux-properties" if="is.linux" depends="-detect-os">
+	    <property file="build.linux.properties"/>
+	</target>
+	
+	<target name="-debian-properties" if="is.debian" depends="-detect-os">
+	    <property file="build.debian.properties"/>
+	</target>
+	
 
     <!-- ask target.os as an input -->
     <target name="-prompt-target-os">
@@ -85,50 +164,58 @@
             <equals arg1="${target.os}" arg2="linux_x86"/>
         </condition>
     </target>
+    
+    <!-- detect os -->
+    <target name="-detect-os">
+		<condition property="is.windows">
+            <os family="windows"/>
+        </condition>
+        <condition property="is.macosx">
+           <and>
+               <os family="mac"/>
+               <os family="unix"/>
+           </and>
+        </condition>
+        <condition property="is.linux">
+            <and>
+                <os family="unix"/>
+                <not><os family="mac"/></not>
+                <not><contains string="${os.name}" substring="debian" casesensitive="no"/></not>
+            </and>
+        </condition>
+        <condition property="is.debian">
+            <and>
+                <os family="unix"/>
+                <contains string="${os.name}" substring="debian" casesensitive="no"/>
+            </and>
+        </condition>
+	</target>
 
-    <!-- copy windows binaries -->
-    <target name="-copy-bin-win" if="target.is.windows">
-        <copy todir="${build.dir}${file.separator}liblouis${file.separator}bin${file.separator}win">
-            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
-                <filename name="*.dll"/>
-            </fileset>
-            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
-                <filename name="*.dll"/>
-            </fileset>
-            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
-                <patternset>
-                    <include name="*.dll"/>
-                    <include name="*.exe"/>
-                </patternset>
-            </fileset>
-        </copy>
-    </target>
-	
-    <!-- copy mac os binaries -->
-    <target name="-copy-bin-mac" if="target.is.macosx">
-        <copy todir="${build.dir}${file.separator}liblouis${file.separator}bin${file.separator}mac">
-            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
-                <filename name="*.dylib"/>
-            </fileset>
-            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
-                <filename name="*.dylib"/>
-            </fileset>
-            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
-                <patternset>
-                    <include name="*.dylib"/>
-                    <include name="xml2brl"/>
-                </patternset>
-            </fileset>
-        </copy>
-    </target>
+
+    <!-- make external jars folder -->
+    <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">	
+		<pathconvert property="javac.classpath.space.sep" pathsep=" ">
+			<path path="${javac.classpath}"/>
+			<map from="${project.home}${file.separator}" to=""/>
+		</pathconvert>
+		<mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
+		<copy todir="${dist.dir}${file.separator}${external.jar.dir}" flatten="true">
+			<fileset dir="." includes="${javac.classpath.space.sep}" />
+		</copy>
+	</target>
 
 
     <!-- make liblouis folder -->
-    <target name="-post-compile" depends="-prompt-target-os">
-        <delete dir="${build.dir}${file.separator}liblouis" />
-        <mkdir dir="${build.dir}${file.separator}liblouis" />
-        <!-- files directory -->
-        <copy todir="${build.dir}${file.separator}liblouis${file.separator}files"
+    <target name="-post-compile" unless="dist.liblouis.dir.exists">
+        <mkdir dir="${dist.dir}${file.separator}liblouis" />
+        <antcall target="-copy-liblouis-files"/>
+        <antcall target="-copy-liblouis-bin"/>
+    </target>
+    
+    
+    <!-- copy liblouis files -->
+    <target name="-copy-liblouis-files">
+        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}files"
               flatten="true">
             <fileset dir="ext${file.separator}liblouis${file.separator}tables">
                 <patternset>
@@ -146,16 +233,53 @@
                 </patternset>
             </fileset>
         </copy>
-        <!-- bin directory -->
-        <antcall target="-copy-bin-win"/>
-        <antcall target="-copy-bin-mac"/>
+    </target>
+    
+
+    <!-- copy liblouis binaries -->
+    <target name="-copy-liblouis-bin"
+            depends="-prompt-target-os,-copy-liblouis-bin-win,-copy-liblouis-bin-mac"/>
+            
+    
+    <!-- copy windows binaries -->
+    <target name="-copy-liblouis-bin-win" if="target.is.windows">
+        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin${file.separator}win">
+            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
+                <filename name="*.dll"/>
+            </fileset>
+            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
+                <filename name="*.dll"/>
+            </fileset>
+            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
+                <patternset>
+                    <include name="*.dll"/>
+                    <include name="*.exe"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+	
+    <!-- copy mac os binaries -->
+    <target name="-copy-liblouis-bin-mac" if="target.is.macosx">
+        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin${file.separator}mac">
+            <fileset dir="ext${file.separator}liblouis${file.separator}bin">
+                <filename name="*.dylib"/>
+            </fileset>
+            <fileset dir="ext${file.separator}libxml2${file.separator}bin">
+                <filename name="*.dylib"/>
+            </fileset>
+            <fileset dir="ext${file.separator}liblouisxml${file.separator}bin">
+                <patternset>
+                    <include name="*.dylib"/>
+                    <include name="xml2brl"/>
+                </patternset>
+            </fileset>
+        </copy>
     </target>
 
 
     <!-- rebuild extension with some fixes -->
     <target name="-post-uno-package">
-
-        <echo message="post uno packaging" />
 
         <!-- unzip extension in a clean dir -->
         <delete dir="${build.oxt.dir}" />
@@ -169,7 +293,7 @@
 
         <!-- add liblouis folder -->
         <copy todir="${build.oxt.dir}${file.separator}liblouis">
-            <fileset dir="${build.dir}${file.separator}liblouis" />
+            <fileset dir="${dist.dir}${file.separator}liblouis" />
         </copy>
 
         <!-- add settings folder -->

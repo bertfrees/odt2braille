@@ -1,27 +1,54 @@
-Version
-*******
+Source code
+***********
 
  = version 2.3.0
  
-  => source: * http://liblouis.googlecode.com/svn/tags/liblouis_2_3_0/
-             * ./src/release_2.3/
+ => http://liblouis.googlecode.com/svn/tags/liblouis_2_3_0
+ => %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3
 
 Translation tables
 ******************
  
-  => ./tables/
+ => %ODT2BRAILLE_HOME%/ext/liblouis/tables
 
 
 Build instructions
 ******************
 
-Windows
-=======
+Linux
+=====
 
- ...
- 
+ - in the project's root directory, run:
+  * ./autogen.sh
+  * ./configure
+  * make
+  * sudo make install
+
+
+Windows (CodeBlocks)
+====================
+
+ - ./configure (on Linux)
+ - create a new dynamic linked library project: liblouis
+ - delete main.c & main.h
+ - add files:
+  * %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3/liblouis
+ - build
+ - copy to %ODT2BRAILLE_HOME%/ext/liblouis/bin:
+  * liblouis.dll
+  * liblouis.a
+  * liblouis.def 
+
 
 Mac OS
 ======
 
- ...
+ - in project's root directory, run:
+  * ./autogen.sh
+  * ./configure
+  * make
+  * sudo make install
+ - copy to %ODT2BRAILLE_HOME%/ext/liblouis/bin:
+  * /usr/local/lib/liblouis.2.dylib
+
+
