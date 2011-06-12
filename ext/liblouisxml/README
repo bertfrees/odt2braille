@@ -67,7 +67,7 @@ Windows (CodeBlocks)
   - delete main.c & main.h
   - add files:
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/tools/xml2brl.c
-   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/gnulib
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/gnulib (except getopt.c & getopt1.c)
   - linker settings:
    * %ODT2BRAILLE_HOME%/ext/libxml2/bin/libxml2.dll.a
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/liblouisxml.a

@@ -38,7 +38,7 @@ public abstract class Odt2BrailleTest {
 
             resources = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/").getFile();
             liblouis = new File(new File(Odt2BrailleTest.class.getResource("/be").getFile())
-                                        .getParentFile().getParentFile().getParent() + File.separator + "build" + File.separator + "liblouis");
+                                        .getParentFile().getParentFile().getParent() + File.separator + "dist" + File.separator + "liblouis");
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);

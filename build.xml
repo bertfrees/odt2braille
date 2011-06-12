@@ -2,77 +2,25 @@
 <!-- You may freely edit this file. See commented blocks below for -->
 <!-- some examples of how to customize the build. -->
 <!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="Odt2BrailleAddOn" default="default" basedir=".">
+<project name="odt2braille" default="jar" basedir=".">
     <description>Builds, tests, and runs the project extension project.</description>
     <import file="nbproject/build-uno-impl.xml"/>
-    <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. They are: 
-
-      -pre-init:                 called before initialization of project properties
-      -post-init:                called after initialization of project properties
-      -pre-compile:              called before javac compilation
-      -post-compile:             called after javac compilation
-      -pre-compile-single:       called before javac compilation of single file
-      -post-compile-single:      called after javac compilation of single file
-      -pre-compile-test:         called before javac compilation of JUnit tests
-      -post-compile-test:        called after javac compilation of JUnit tests
-      -pre-compile-test-single:  called before javac compilation of single JUnit test
-      -post-compile-test-single: called after javac compilation of single JUunit test
-      -pre-jar:                  called before JAR building
-      -post-jar:                 called after JAR building
-      -pre-uno-package:          called before OXT creation
-      -post-uno-package:         called after OXT creation
-      -post-clean:               called after cleaning build products
-
-    (Targets beginning with '-' are not intended to be called on their own.)
-
-    Example of inserting an obfuscator after compilation could look like this:
-
-        <target name="-post-compile">
-            <obfuscate>
-                <fileset dir="${build.classes.dir}"/>
-            </obfuscate>
-        </target>
-
-    For list of available properties check the imported 
-    nbproject/build-impl.xml file. 
-
-
-    Another way to customize the build is by overriding existing main targets.
-    The targets of interest are: 
-
-      -init-macrodef-javac:     defines macro for javac compilation
-      -init-macrodef-junit:     defines macro for junit execution
-      -init-macrodef-debug:     defines macro for class debugging
-      -init-macrodef-java:      defines macro for class execution
-      -do-jar-with-manifest:    JAR building (if you are using a manifest)
-      -do-jar-without-manifest: JAR building (if you are not using a manifest)
-      run:                      execution of project 
-      -javadoc-build:           Javadoc generation
-      test-report:              JUnit report generation
-
-    An example of overriding the target for project execution could look like this:
-
-        <target name="run" depends="TypeBrowser2-impl.jar">
-            <exec dir="bin" executable="launcher.exe">
-                <arg file="${dist.jar}"/>
-            </exec>
-        </target>
-
-    Notice that the overridden target depends on the jar target and not only on 
-    the compile target as the regular run target does. Again, for a list of available 
-    properties which you can use, check the target you are overriding in the
-    nbproject/build-impl.xml file. 
-
-    -->
+    <tstamp>
+		<format property="ISO-TODAY" pattern="yyyy-MM-dd"/>
+	</tstamp>
     
-	<!-- initialise -->
+    <property name="project-name" value="odt2braille"/>
+    <property name="release-version" value="0.1.1.rc10"/>
+
+
+	<!-- override targets -->
 	<target name="-pre-init" depends="-init-build,-copy-external-jars"/>
+	<target name="-pre-compile" depends="-make-liblouis-dir,-build-core"/>
+	<target name="-post-uno-package" depends="-rebuild-extension"/>
 	
 	
+	<!-- initialise -->
 	<target name="-init-build"
             depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
 	
@@ -85,9 +33,16 @@
 	        </path>
 	    </pathconvert>
 
+        <!-- don't compile core but include jar in classpath -->
+        <mkdir dir="build/empty"/>
+        <property name="src.core.dir" value="build/empty"/>
+        <property name="core.jar" value="odt2braille-core.jar"/>
+        <property name="dist.core.jar" value="dist${file.separator}${core.jar}"/>
+        <property name="extend.javac.classpath" value=":${dist.core.jar}"/>
+
 	    <property file="nbproject/project.properties"/>
 		<property file="nbproject/project-uno.properties"/>
-	    
+		
 		<property name="sdk.bin.dir"
                   value="${sdk.dir}${file.separator}bin"/>
 		<property name="ure.bin.dir"
@@ -106,18 +61,27 @@
 	        <path path="."/>
 	    </pathconvert>
 		
-		<pathconvert property="external.jars" pathsep=" " dirsep="/">
+		<pathconvert property="core.classpath">
 		    <path path="${javac.classpath}"/>
 		    <firstmatchmapper>
+		        <globmapper from="*${core.jar}" to=""/>
+		        <globmapper from="*juh.jar"     to=""/>
+	            <globmapper from="*jurt.jar"    to=""/>
+	            <globmapper from="*ridl.jar"    to=""/>
+	            <globmapper from="*unoil.jar"   to=""/>
+	            <identitymapper/>
+		    </firstmatchmapper>
+		</pathconvert>
+		
+		<pathconvert property="external.jars" pathsep=" " dirsep="/">
+		    <path path="${core.classpath}:${dist.core.jar}"/>
+		    <firstmatchmapper>
+		        <globmapper from="${project.home}${file.separator}${dist.core.jar}" to="${core.jar}"/>
 		        <chainedmapper>
 		            <globmapper from="${project.home}${file.separator}*" to="*"/>
                     <flattenmapper/>
                     <globmapper from="*" to="lib/*"/>
                 </chainedmapper>
-                <globmapper from="*juh.jar" to=""/>
-	            <globmapper from="*jurt.jar" to=""/>
-	            <globmapper from="*ridl.jar" to=""/>
-	            <globmapper from="*unoil.jar" to=""/>
                 <globmapper from="/*" to="file:///*"/>
 	            <globmapper from="*" to="file:///*"/>
             </firstmatchmapper>
@@ -165,6 +129,7 @@
         </condition>
     </target>
     
+    
     <!-- detect os -->
     <target name="-detect-os">
 		<condition property="is.windows">
@@ -194,19 +159,19 @@
 
     <!-- make external jars folder -->
     <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">	
-		<pathconvert property="javac.classpath.space.sep" pathsep=" ">
-			<path path="${javac.classpath}"/>
+		<pathconvert property="core.classpath.space.sep" pathsep=" ">
+			<path path="${core.classpath}"/>
 			<map from="${project.home}${file.separator}" to=""/>
 		</pathconvert>
 		<mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
 		<copy todir="${dist.dir}${file.separator}${external.jar.dir}" flatten="true">
-			<fileset dir="." includes="${javac.classpath.space.sep}" />
+			<fileset dir="." includes="${core.classpath.space.sep}"/>
 		</copy>
 	</target>
 
 
     <!-- make liblouis folder -->
-    <target name="-post-compile" unless="dist.liblouis.dir.exists">
+    <target name="-make-liblouis-dir" unless="dist.liblouis.dir.exists">
         <mkdir dir="${dist.dir}${file.separator}liblouis" />
         <antcall target="-copy-liblouis-files"/>
         <antcall target="-copy-liblouis-bin"/>
@@ -259,6 +224,7 @@
         </copy>
     </target>
 	
+	
     <!-- copy mac os binaries -->
     <target name="-copy-liblouis-bin-mac" if="target.is.macosx">
         <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin${file.separator}mac">
@@ -278,14 +244,58 @@
     </target>
 
 
+    <!-- build core jar -->
+    <target name="-build-core">
+        <property name="core.build.dir" value="${build.dir}/core-classes"/>
+        <property name="core.src.dir" value="core"/>
+        <delete dir="${core.build.dir}"/>
+    	<mkdir dir="${core.build.dir}"/>
+        
+        <!-- compile -->
+        <javac srcdir="${core.src.dir}" destdir="${core.build.dir}"
+               includeantruntime="false" debug="true" encoding="UTF-8"
+               source="${javac.source}" target="${javac.target}"
+               includes="**" excludes="">
+			<classpath>
+				<path path="${core.classpath}"/>
+			</classpath>
+        </javac>
+        
+        <copy todir="${core.build.dir}">
+            <fileset dir="${core.src.dir}">
+                <patternset>
+		            <include name="META-INF/**/*.*"/>
+                    <include name="**/*.properties"/>
+                    <include name="**/*.xsl"/>
+                    <include name="**/*.xml"/>
+                    <include name="**/*.rng"/>
+		            <exclude name="**/*.java"/>
+                </patternset>
+            </fileset>
+        </copy>
+        
+        <!-- build jar -->
+        <jar destfile="${dist.core.jar}">
+    		<fileset dir="${core.build.dir}"/>
+    		<manifest>
+    			<attribute name="Built-By" value="${user.name}"/>
+    			<attribute name="Built-On" value="${ISO-TODAY}"/>
+    			<attribute name="Implementation-Title" value="${project.name}"/>
+    			<attribute name="Implementation-Version" value="${release-version}"/>
+    			<attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
+    		</manifest>
+    	</jar>
+    </target>
+    
+
     <!-- rebuild extension with some fixes -->
-    <target name="-post-uno-package">
+    <target name="-rebuild-extension">
 
         <!-- unzip extension in a clean dir -->
         <delete dir="${build.oxt.dir}" />
         <mkdir dir="${build.oxt.dir}" />
         <unzip src="${uno.package.name}" dest="${build.oxt.dir}" />
-
+  
         <!-- add templates folder -->
         <copy todir="${build.oxt.dir}${file.separator}${templates.dir}">
             <fileset dir="${templates.dir}" />
@@ -316,7 +326,7 @@
         <!-- zip the new extension addon -->
         <delete file="${uno.package.name}" />
 
-        <zip destfile="${project.dir}${file.separator}${dist.dir}${file.separator}${project.name}.oxt"
+        <zip destfile="${uno.package.name}"
              basedir="${build.oxt.dir}" />
              
     </target>

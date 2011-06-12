@@ -23,6 +23,7 @@ Build instructions
 ******************
  
  - run ant in the project's root directory
- - the jars are created in ant-build/output:
-  * brailleUtils-core
-  * brailleUtils-catalog
+ - the jars are created in ant-build/output/dist:
+  * brailleUtils-core-1.2.0b
+  * brailleUtils-catalog-1.2.0b
+ - copy these jars to %ODT2BRAILLE_HOME%/lib
