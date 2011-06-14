@@ -23,11 +23,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.util.Stack;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,43 +32,26 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLEventFactory;
-import javax.xml.stream.XMLEventReader;
-import javax.xml.stream.XMLEventWriter;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.events.XMLEvent;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
 import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.ProcessingInstruction;
-import org.xml.sax.ErrorHandler;
-import org.iso_relax.verifier.VerifierFactory;
-import org.iso_relax.verifier.Verifier;
 import org.apache.commons.io.IOUtils;
-import com.sun.msv.verifier.jarv.TheFactoryImpl;
 
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import org.xml.sax.SAXException;
-
-import org.xml.sax.SAXParseException;
-import org.daisy.util.xml.catalog.CatalogExceptionNotRecoverable;
-import org.daisy.util.xml.validation.ValidationException;
+import java.net.MalformedURLException;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import org.xml.sax.SAXException;
 
 import be.docarch.odt2braille.Settings.VolumeManagementMode;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import org.daisy.braille.table.BrailleConverter;
-import org.daisy.util.xml.catalog.CatalogEntityResolver;
-import org.daisy.util.xml.stax.StaxEntityResolver;
-
+import org.daisy.braille.pef.PEFValidator;
+import org.daisy.braille.pef.PEFFileSplitter;
+import org.daisy.validator.ValidatorFactory;
+import org.daisy.validator.Validator;
 
 /**
  * This class provides a way to convert a flat .odt file to a
@@ -83,7 +63,7 @@ import org.daisy.util.xml.stax.StaxEntityResolver;
  * @see <a href="http://code.google.com/p/liblouisxml/"><code>liblouisxml</code></a>
  * @author Bert Frees
  */
-public class PEF implements ErrorHandler {
+public class PEF {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static NamespaceContext namespace = new NamespaceContext();
@@ -97,27 +77,20 @@ public class PEF implements ErrorHandler {
     public enum TranscribersNote { };
     enum State {HEADER, BODY, FOOTER};
 
-    private static String L10N_statusIndicatorStep = null;
-
     private File pefFile;
     private LiblouisXML liblouisXML = null;
     private OdtTransformer odtTransformer = null;
     private Settings settings = null;
     private StatusIndicator statusIndicator = null;
     private PostConversionBrailleChecker checker = null;
-    private Verifier validator = null;
+    private Validator validator = null;
 
     BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
     public PEF(Settings settings,
                LiblouisXML liblouisXML)
         throws IOException,
-               ParserConfigurationException,
-               SAXException,
-               TransformerConfigurationException,
-               TransformerException,
-               InterruptedException,
-               LiblouisXMLException {
+               TransformerException {
 
         this(settings, liblouisXML, null, null);
 
@@ -139,9 +112,6 @@ public class PEF implements ErrorHandler {
                StatusIndicator statusIndicator,
                PostConversionBrailleChecker checker)
         throws IOException,
-               ParserConfigurationException,
-               SAXException,
-               TransformerConfigurationException,
                TransformerException {
 
         logger.entering("PEF", "<init>");
@@ -158,10 +128,6 @@ public class PEF implements ErrorHandler {
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
 
-        Locale oooLocale = Locale.getDefault();
-
-        L10N_statusIndicatorStep = ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep");
-
         // odtTransformer preProcessing
         odtTransformer.ensureMetadataReferences();
         odtTransformer.makeControlFlow();
@@ -170,21 +136,16 @@ public class PEF implements ErrorHandler {
         liblouisXML.createStylesFiles();
 
         // Validator
-        try {
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
-            VerifierFactory factory = new TheFactoryImpl();    
-            validator = factory.newVerifier(getClass().getResource("/be/docarch/odt2braille/pef-2008-1.rng").openStream());
-            validator.setErrorHandler(this);
+            ValidatorFactory factory = ValidatorFactory.newInstance();
+            validator = factory.newValidator(PEFValidator.class.getCanonicalName());
+            validator.setFeature(PEFValidator.FEATURE_MODE, PEFValidator.Mode.LIGHT_MODE);
 
-            // VerifierFactory factory = new RelamesFactoryImpl();
-            // validator = factory2.newVerifier(getClass().getResource("/be/docarch/odt2braille/pef-2008-1.rng").openStream());
-            // validator.setErrorHandler(this);
+        } Thread.currentThread().setContextClassLoader(cl);
 
-            logger.exiting("PEF", "<init>");
-
-        } catch (Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
+        logger.exiting("PEF", "<init>");
     }
 
     /**
@@ -205,11 +166,9 @@ public class PEF implements ErrorHandler {
 
     public boolean makePEF() throws IOException,
                                     ParserConfigurationException,
-                                    TransformerConfigurationException,
                                     TransformerException,
                                     InterruptedException,
                                     SAXException,
-                                    ValidationException,
                                     LiblouisXMLException {
 
         logger.entering("PEF", "makePEF");
@@ -308,7 +267,7 @@ public class PEF implements ErrorHandler {
             if (statusIndicator != null) {
                 statusIndicator.start();
                 statusIndicator.setSteps(steps);
-                statusIndicator.setStatus(L10N_statusIndicatorStep);
+                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, statusIndicator.getPreferredLocale()).getString("statusIndicatorStep"));
             }
 
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
@@ -632,7 +591,7 @@ public class PEF implements ErrorHandler {
             document.insertBefore((ProcessingInstruction)document.createProcessingInstruction(
                     "xml-stylesheet","type='text/css' href='pef.css'"), document.getFirstChild());
 
-            OdtUtils.saveDOM(document, pefFile.getAbsolutePath());
+            OdtUtils.saveDOM(document, pefFile);
 
             logger.exiting("PEF","makePEF");
 
@@ -652,16 +611,26 @@ public class PEF implements ErrorHandler {
     }
 
     private boolean validatePEF(File pefFile)
-                         throws SAXException,
-                                IOException {   // move to BrailleUtils !
+                         throws IOException,
+                                MalformedURLException {
 
         logger.entering("PEF", "validatePEF");
 
-        if (validator.verify(pefFile)) {
+        if (validator.validate(pefFile.toURI().toURL())) {
+
             logger.info("pef valid");
             return true;
+
         } else {
-            logger.info("pef invalid");
+
+            String message = "pef invalid!\nMessages returned by the validator:\n";
+            InputStreamReader report = new InputStreamReader(validator.getReportStream());
+            int c;
+            while ((c = report.read()) != -1) {
+                message += (char)c;
+            }
+            logger.log(Level.SEVERE, message);
+
             return false;
         }
     }
@@ -673,21 +642,16 @@ public class PEF implements ErrorHandler {
         return pefFile;
     }
 
-    public File[] getPEFs() throws FileNotFoundException,
-                                   IOException,
-                                   XMLStreamException,
-                                   SAXException,
-                                   TransformerException,
-                                   ValidationException {
+    public File[] getPEFs() {
 
         logger.entering("PEF", "getPEFs");
 
         if (settings.getVolumeManagementMode() == VolumeManagementMode.SINGLE) {
             return new File[] { pefFile };
         } else {
-            Stack<File> pefFiles = splitPEF();
+            File[] pefFiles = splitPEF();
             if (pefFiles != null) {
-                return pefFiles.toArray(new File[pefFiles.size()]);
+                return pefFiles;
             } else {
                 return null;
             }
@@ -696,122 +660,23 @@ public class PEF implements ErrorHandler {
 
     /*
      * Split a single PEF file into several files, one file per volume.
-     * This code was partly taken from org_pef_pefFileSplitter.PEFFileSplitter (DAISY Pipeline)
      */
-    private Stack<File> splitPEF() throws FileNotFoundException,
-                                          IOException,
-                                          XMLStreamException,
-                                          SAXException,
-                                          TransformerException,
-                                          ValidationException { // move to BrailleUtils !
+    private File[] splitPEF() {
 
         logger.entering("PEF", "splitPEF");
 
-        File directory = pefFile.getParentFile();
-        String inputName = pefFile.getName();
-        String inputExt = ".pef";
-        int index = inputName.lastIndexOf('.');
-        if (index >= 0) {
-            if (index < inputName.length()) {
-                inputExt = inputName.substring(index);
-            }
-            inputName = inputName.substring(0, index);
-        }
-        String prefix = inputName;
-        String postfix = inputExt;
-        XMLInputFactory inFactory = XMLInputFactory.newInstance();
-	inFactory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
-        inFactory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, Boolean.TRUE);
-        inFactory.setProperty(XMLInputFactory.SUPPORT_DTD, Boolean.TRUE);
-        inFactory.setProperty(XMLInputFactory.IS_SUPPORTING_EXTERNAL_ENTITIES, Boolean.TRUE);
-        try {
-            inFactory.setXMLResolver(new StaxEntityResolver(CatalogEntityResolver.getInstance()));
-        } catch (CatalogExceptionNotRecoverable ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-        FileInputStream is = new FileInputStream(pefFile);
-        XMLOutputFactory outputFactory = XMLOutputFactory.newInstance();
-        XMLEventReader reader = inFactory.createXMLEventReader(is, "UTF-8");
-        XMLEventFactory eventFactory = XMLEventFactory.newInstance();
-        ArrayList<XMLEvent> header = new ArrayList<XMLEvent>();
-        Stack<File> files = new Stack<File>();
-        Stack<XMLEventWriter> writers = new Stack<XMLEventWriter>();
-        Stack<FileOutputStream> os = new Stack<FileOutputStream>();
-        QName volume = new QName(pefNS, "volume");
-        QName body = new QName(pefNS, "body");
-        int i = 0;
-        State state = State.HEADER;
-        while (reader.hasNext()) {
-            XMLEvent event = reader.nextEvent();
-            if (event.getEventType()==XMLStreamConstants.START_ELEMENT
-                    && volume.equals(event.asStartElement().getName())) {
-                state = State.BODY;
-                i++;
-                files.push(new File(directory, prefix + "-" + i + postfix));
-                os.push(new FileOutputStream(files.peek()));
-                writers.push(outputFactory.createXMLEventWriter(os.peek(), "UTF-8"));
-                boolean ident = false;
-                QName dcIdentifier = new QName("http://purl.org/dc/elements/1.1/", "identifier");
-                for (XMLEvent e : header) {
-                    if (e.getEventType()==XMLStreamConstants.START_ELEMENT &&
-                            dcIdentifier.equals(e.asStartElement().getName())) {
-                        ident = true;
-                        writers.peek().add(e);
-                    } else if (ident==true && e.getEventType()==XMLStreamConstants.CHARACTERS) {
-                        ident = false;
-                        XMLEvent e2 = eventFactory.createCharacters(e.asCharacters().getData()+"-"+i);
-                        writers.peek().add(e2);
-                    } else {
-                        writers.peek().add(e);
-                    }
-                }
-            } else if (event.getEventType()==XMLStreamConstants.END_ELEMENT
-                        && body.equals(event.asEndElement().getName())) {
-                state = State.FOOTER;
-            }
-            switch (state) {
-                case HEADER:
-                    header.add(event);
-                    break;
-                case BODY:
-                    writers.peek().add(event);
-                    break;
-                case FOOTER:
-                    for (XMLEventWriter w : writers) {
-                        w.add(event);
-                    }
-                    break;
-            }
-        }
-        for (XMLEventWriter w : writers) {
-            w.close();
-        }
-        for (FileOutputStream s : os) {
-            s.close();
-        }        
-        is.close();
-        for (File f : files) {
-            if (!validatePEF(f)) {
-                return null;
-            }
-        }
+        File input = pefFile;
+        File output = new File(input.getAbsolutePath() + "-split");
+        output.mkdir();
 
-        return files;
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
-    }
+            PEFFileSplitter splitter = new PEFFileSplitter();
+            splitter.split(input, output);
 
-    @Override
-    public void fatalError(SAXParseException exception) throws SAXException {
-        throw new SAXException(exception);
-    }
+        } Thread.currentThread().setContextClassLoader(cl);
 
-    @Override
-    public void error(SAXParseException exception) throws SAXException {
-        throw new SAXException(exception);
-    }
-
-    @Override
-    public void warning(SAXParseException exception) throws SAXException {
-        logger.log(Level.SEVERE, null, exception);
+        return output.listFiles();
     }
 }

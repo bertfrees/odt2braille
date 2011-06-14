@@ -172,20 +172,24 @@ public class ExportDialog implements XItemListener,
             }
         };
 
-        Locale oooLocale = Locale.getDefault();
+        Locale oooLocale;
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
 
-        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportDialogTitle");
-        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("exportButton");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
-        L10N_settingsButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")+ "\u2026";
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
 
-        L10N_brailleFileLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("brailleFileLabel") + ":";
-        L10N_tableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLabel") + ":";
-        L10N_duplexLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("duplexLabel");
-        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("eightDotsLabel");
-        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_multipleFilesLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("multipleFilesLabel");
+        L10N_windowTitle = bundle.getString("exportDialogTitle");
+        L10N_okButton = bundle.getString("exportButton");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_settingsButton = bundle.getString("settingsDialogTitle")+ "\u2026";
+
+        L10N_brailleFileLabel = bundle.getString("brailleFileLabel") + ":";
+        L10N_tableLabel = bundle.getString("tableLabel") + ":";
+        L10N_duplexLabel = bundle.getString("duplexLabel");
+        L10N_eightDotsLabel = bundle.getString("eightDotsLabel");
+        L10N_numberOfCellsPerLineLabel = bundle.getString("numberOfCellsPerLineLabel") + ":";
+        L10N_numberOfLinesPerPageLabel = bundle.getString("numberOfLinesPerPageLabel") + ":";
+        L10N_multipleFilesLabel = bundle.getString("multipleFilesLabel");
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_okButton));

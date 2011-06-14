@@ -118,14 +118,17 @@ public class PrintDialog implements XItemListener,
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
 
-        Locale oooLocale = Locale.getDefault();
+        Locale oooLocale;
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
 
-        L10N_deviceLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("deviceLabel") + ":";
-        L10N_printToFileLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("printToFileLabel");
+        L10N_deviceLabel = bundle.getString("deviceLabel") + ":";
+        L10N_printToFileLabel = bundle.getString("printToFileLabel");
         L10N_numberOfCopiesLabel = "Number of copies:";
-        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
-        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("embossDialogTitle");
+        L10N_okButton = bundle.getString("embossButton");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_windowTitle = bundle.getString("embossDialogTitle");
 
         xDialog = xDialogProvider.createDialog(dialogUrl);
 
@@ -236,6 +239,7 @@ public class PrintDialog implements XItemListener,
         return printToFile;
     }
 
+    @Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         Object source = itemEvent.Source;
@@ -254,8 +258,10 @@ public class PrintDialog implements XItemListener,
     /**
      * @param event
      */
+    @Override
     public void disposing(EventObject event) {}
 
+    @Override
     public void textChanged(TextEvent textEvent) {
 
         Object source = textEvent.Source;

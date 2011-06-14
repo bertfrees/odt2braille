@@ -32,7 +32,6 @@ import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertyContainer;
 import com.sun.star.beans.XPropertySetInfo;
 import com.sun.star.beans.XPropertySet;
-import com.sun.star.util.XModifiable;
 import com.sun.star.uno.AnyConverter;
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -83,12 +82,11 @@ public class SettingsIO extends SettingsLoader {
     private XComponentContext xContext = null;
     private String packageLocation = null;
 
-    private boolean odtModified = false;
+    private boolean modified = false;
 
     private XPropertyContainer xPropCont = null;
     private XPropertySet xPropSet = null;
     private XPropertySetInfo xPropSetInfo = null;
-    private XModifiable xModifiable = null;
 
     private final static short OPTIONAL = (short) 256;
 
@@ -112,7 +110,6 @@ public class SettingsIO extends SettingsLoader {
         XDocumentPropertiesSupplier xDocInfoSuppl = (XDocumentPropertiesSupplier) UnoRuntime.queryInterface(XDocumentPropertiesSupplier.class, xTextDoc);
         XDocumentProperties xDocProps = xDocInfoSuppl.getDocumentProperties();
 
-        xModifiable = (XModifiable)UnoRuntime.queryInterface(XModifiable.class, xDesktopComponent);
         xPropCont = xDocProps.getUserDefinedProperties();
         xPropSet = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, xPropCont);
         xPropSetInfo = xPropSet.getPropertySetInfo();
@@ -935,7 +932,7 @@ public class SettingsIO extends SettingsLoader {
                 } else {
                     xPropSet.setPropertyValue(property,valueAfterChange);
                 }
-                odtModified = true;
+                modified = true;
             }
         }
     }
@@ -958,7 +955,7 @@ public class SettingsIO extends SettingsLoader {
                     value = String.valueOf(after);
                 }
                 properties.setProperty(key, value);
-                odtModified = true;
+                modified = true;
             }
         }
     }
@@ -969,14 +966,16 @@ public class SettingsIO extends SettingsLoader {
      *
      * @param   settingsAfterChange     The new settings.
      * @param   settingsBeforeChange    The old settings.
+     *
+     * @return  Returns <code>true</code> if one or more settings were modified
      */
-    public void saveBrailleSettingsToDocument (Settings settingsAfterChange,
-                                               Settings settingsBeforeChange)
-                                        throws com.sun.star.uno.Exception {
+    public boolean saveBrailleSettingsToDocument(Settings settingsAfterChange,
+                                                 Settings settingsBeforeChange)
+                                          throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "saveBrailleSettingsToDocument");
 
-        odtModified = false;
+        modified = false;
 
         List<String> languages = settingsAfterChange.getLanguages();
         List<SpecialSymbol> specialSymbolsAfterChange = settingsAfterChange.getSpecialSymbolsList();
@@ -1459,21 +1458,23 @@ public class SettingsIO extends SettingsLoader {
                     settingsAfterChange.getBrailleRules().name(),
                     settingsBeforeChange.getBrailleRules().name());
 
-        if (odtModified) {
-            xModifiable.setModified(true);
-        }
 
         logger.exiting("SettingsIO", "saveBrailleSettingsToDocument");
 
+        return modified;
     }
 
-    public void saveExportSettingsToDocument (Settings settingsAfterChange,
-                                              Settings settingsBeforeChange)
-                                       throws com.sun.star.uno.Exception {
+    /**
+     *
+     * @return  Returns <code>true</code> if one or more settings were modified
+     */
+    public boolean saveExportSettingsToDocument(Settings settingsAfterChange,
+                                                Settings settingsBeforeChange)
+                                         throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "saveExportToDocument");
 
-        odtModified = false;
+        modified = false;
 
         setProperty(exportFileProperty,
                     settingsAfterChange.getBrailleFileType().getIdentifier(),
@@ -1500,21 +1501,22 @@ public class SettingsIO extends SettingsLoader {
                         settingsBeforeChange.getTable().getIdentifier());
         }
 
-        if (odtModified) {
-            xModifiable.setModified(true);
-        }
-
         logger.exiting("SettingsIO", "saveExportToDocument");
 
+        return modified;
     }
 
-    public void saveEmbossSettingsToDocument (Settings settingsAfterChange,
-                                              Settings settingsBeforeChange)
-                                       throws com.sun.star.uno.Exception {
+    /**
+     *
+     * @return  Returns <code>true</code> if one or more settings were modified
+     */
+    public boolean saveEmbossSettingsToDocument(Settings settingsAfterChange,
+                                                Settings settingsBeforeChange)
+                                         throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "saveEmbossSettingsToDocument");
 
-        odtModified = false;
+        modified = false;
 
         setProperty(marginLeftProperty,
                     settingsAfterChange.getMarginInner(),
@@ -1529,24 +1531,19 @@ public class SettingsIO extends SettingsLoader {
                     settingsAfterChange.getMarginBottom(),
                     settingsBeforeChange.getMarginBottom());
 
-        if (odtModified) {
-            xModifiable.setModified(true);
-        }
-
         logger.exiting("SettingsIO", "saveEmbossSettingsToDocument");
 
+        return modified;
     }
 
-    public void saveEmbossSettingsToOpenOffice (Settings settingsAfterChange,
-                                                Settings settingsBeforeChange)
-                                         throws IOException,
-                                                com.sun.star.uno.Exception {
+    public boolean saveEmbossSettingsToOpenOffice(Settings settingsAfterChange,
+                                                  Settings settingsBeforeChange)
+                                           throws IOException,
+                                                  com.sun.star.uno.Exception {
 
         logger.entering("SettingsIO", "saveEmbossSettingsToOpenOffice");
 
         Properties embosserSettings = loadSettingsFromOpenOffice("embosser");
-
-        odtModified = false;
 
         setProperty(embosserSettings,
                     embosserProperty,
@@ -1592,12 +1589,13 @@ public class SettingsIO extends SettingsLoader {
                         settingsBeforeChange.getPaperHeight());
         }
 
-        if (odtModified) {
+        if (modified) {
             saveSettingsToOpenOffice("embosser", embosserSettings);
-            xModifiable.setModified(true);
         }
 
         logger.exiting("SettingsIO", "saveEmbossSettingsToOpenOffice");
+
+        return modified;
     }
 
     /**

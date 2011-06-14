@@ -215,7 +215,7 @@ public class OdtUtils {
         logger.fine("done");
     }
 
-    public static boolean saveDOM(Document doc, String filename) {
+    public static boolean saveDOM(Document doc, File file) {
         boolean save = false;
         try {
 
@@ -225,7 +225,7 @@ public class OdtUtils {
 
             transformer.setOutputProperty(OutputKeys.INDENT, "no");
 
-            StreamResult result = new StreamResult(filename);
+            StreamResult result = new StreamResult(file);
             DOMSource source = new DOMSource(doc);
             transformer.transform(source, result);
 

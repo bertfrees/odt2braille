@@ -22,10 +22,9 @@ package be.docarch.odt2braille.checker;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
 import java.net.MalformedURLException;
@@ -36,8 +35,8 @@ import be.docarch.odt2braille.NamespaceContext;
 import be.docarch.odt2braille.Settings;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.XPathUtils;
-import be.docarch.accessibility.Checker;
-import be.docarch.accessibility.Check;
+//import be.docarch.accessibility.Checker;
+//import be.docarch.accessibility.Check;
 
 /**
  * With this class a document can be checked for possible accessibility issues.
@@ -54,12 +53,13 @@ import be.docarch.accessibility.Check;
  *
  * @author Bert Frees
  */
-public class PostConversionBrailleChecker implements Checker {
+public class PostConversionBrailleChecker /* implements Checker */ {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
-    private final static String L10N = Constants.L10N_PATH;
 
-    private Map<BrailleCheck.ID,Check> checks;
+    private Map<BrailleCheck.ID,BrailleCheck> checks;
+
+    private Collection<BrailleCheck> detectedIssues;
 
     private Settings settings = null;
     private static NamespaceContext namespace = new NamespaceContext();
@@ -67,24 +67,6 @@ public class PostConversionBrailleChecker implements Checker {
     private final static int MAX_VOLUME_LENGTH = 100;
     private final static int MIN_VOLUME_LENGTH = 70;
     private final static int MAX_VOLUME_DIFFERENCE = 20;
-    
-    private boolean volumesTooLong = false;
-    private boolean volumesTooShort = false;
-    private boolean volumesDifferTooMuch = false;
-    private boolean preliminaryVolumeRequired = false;
-    private boolean preliminaryVolumeTooShort = false;
-    private boolean volumeDoesntBeginWithHeading = false;
-    private boolean omissionsInsideVolume = false;
-    private boolean omissionsOutsideVolume = false;
-    private boolean transpositions = false;
-    private boolean pageWidthTooSmall = false;
-    private boolean eightDotsNotSupported = false;
-
-    private String L10N_warning = null;
-    private String L10N_question = null;
-    private String L10N_details = null;
-
-    private String L10N_eightDotsNotSupported = null;
 
     /**
      * Creates a new <code>PostConversionBrailleChecker</code> instance.
@@ -94,12 +76,11 @@ public class PostConversionBrailleChecker implements Checker {
      */
     public PostConversionBrailleChecker(Settings settings) {
 
-        logger.entering("Checker", "<init>");
+        logger.entering("PostConversionBrailleChecker", "<init>");
 
         this.settings = settings;
-        Locale oooLocale = Locale.getDefault();
 
-        checks = new HashMap<BrailleCheck.ID,Check>();
+        checks = new HashMap<BrailleCheck.ID,BrailleCheck>();
 
         checks.put(BrailleCheck.ID.A_VolumesTooLong,               new BrailleCheck(BrailleCheck.ID.A_VolumesTooLong));
         checks.put(BrailleCheck.ID.A_VolumesTooShort,              new BrailleCheck(BrailleCheck.ID.A_VolumesTooShort));
@@ -111,15 +92,11 @@ public class PostConversionBrailleChecker implements Checker {
         checks.put(BrailleCheck.ID.A_OmissionsOutsideVolume,       new BrailleCheck(BrailleCheck.ID.A_OmissionsOutsideVolume));
         checks.put(BrailleCheck.ID.A_Transpositions,               new BrailleCheck(BrailleCheck.ID.A_Transpositions));
         checks.put(BrailleCheck.ID.A_PageWidthTooSmall,            new BrailleCheck(BrailleCheck.ID.A_PageWidthTooSmall));
+        checks.put(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot,   new BrailleCheck(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
+        checks.put(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot, new BrailleCheck(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot));
 
-        L10N_warning = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerWarning");
-        L10N_question = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerQuestion");
-        L10N_details = ResourceBundle.getBundle(L10N, oooLocale).getString("checkerDetails");
+        detectedIssues = new HashSet<BrailleCheck>();
 
-        L10N_eightDotsNotSupported = (settings.getExportOrEmboss()?
-                                            "The " + settings.getBrailleFileType().getDisplayName() + " file format ":
-                                            "The selected embosser ")
-                                     + "doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";        
     }
 
     /**
@@ -131,19 +108,19 @@ public class PostConversionBrailleChecker implements Checker {
                         throws MalformedURLException,
                                IOException {
 
-        logger.entering("Checker", "checkDaisyFile");
+        logger.entering("PostConversionBrailleChecker", "checkDaisyFile");
 
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='omission' and not(ancestor::dtb:div[@class='notInVolume'])]", namespace)) {
-            omissionsInsideVolume = true;
+            detectedIssues.add(checks.get(BrailleCheck.ID.A_OmissionsInsideVolume));
         }
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='notInVolume']//dtb:div[@class='omission']", namespace)) {
-            omissionsOutsideVolume = true;
+            detectedIssues.add(checks.get(BrailleCheck.ID.A_OmissionsOutsideVolume));
         }
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='transposition']", namespace)) {
-            transpositions = true;
+            detectedIssues.add(checks.get(BrailleCheck.ID.A_Transpositions));
         }
     }
 
@@ -157,12 +134,19 @@ public class PostConversionBrailleChecker implements Checker {
                       throws MalformedURLException,
                              IOException {
 
-        logger.entering("Checker","checkPefFile");
+        logger.entering("PostConversionBrailleChecker","checkPefFile");
 
         if (!settings.getEightDots()) {
-            if (Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
-                    "max(distinct-values(string-to-codepoints(string(/pef:pef/pef:body))))", namespace)) > 0x283F) {
-                eightDotsNotSupported = true;
+            try {
+                if (Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
+                        "max(distinct-values(string-to-codepoints(string(/pef:pef/pef:body))))", namespace)) > 0x283F) {
+                    if (settings.getExportOrEmboss()) {
+                        detectedIssues.add(checks.get(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot));
+                    } else {
+                        detectedIssues.add(checks.get(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
+                    }
+                }
+            } catch (Exception e) {
             }
         }
     }
@@ -179,7 +163,7 @@ public class PostConversionBrailleChecker implements Checker {
      */
     public void checkVolumes(List<Volume> volumes) {
 
-        logger.entering("Checker", "checkVolumes");
+        logger.entering("PostConversionBrailleChecker", "checkVolumes");
 
 //        int bodyRectoVersoPageCount = 0;
 //        int preliminaryRectoVersoPageCount = 0;
@@ -236,62 +220,17 @@ public class PostConversionBrailleChecker implements Checker {
 //        }
     }
 
-    /**
-     * Generate warning.
-     *
-     * @return      The warning, or an empty String if no issues were detected.
-     */
-    public String getWarning() {
-
-        logger.entering("Checker", "getWarning");
-
-        String details = "";
-
-        if (eightDotsNotSupported) {
-            details += "\n \u2022 " + L10N_eightDotsNotSupported;
-        }
-        if (volumesTooLong) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesTooLong).getDescription();
-        }
-        if (volumesTooShort) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesTooShort).getDescription();
-        }
-        if (volumesDifferTooMuch) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumesDifferTooMuch).getDescription();
-        }
-        if (preliminaryVolumeRequired) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_PreliminaryVolumeRequired).getDescription();
-        }
-        if (preliminaryVolumeTooShort) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_PreliminaryVolumeTooShort).getDescription();
-        }
-        if (volumeDoesntBeginWithHeading) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading).getDescription();
-        }
-        if (omissionsInsideVolume) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_OmissionsInsideVolume).getDescription();
-        }
-        if (omissionsOutsideVolume) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_OmissionsOutsideVolume).getDescription();
-        }
-        if (transpositions) {
-            details += "\n \u2022 " + checks.get(BrailleCheck.ID.A_Transpositions).getDescription();
-        }
-
-        if (!details.equals("")) {
-            return L10N_warning + "\n\n" + L10N_details + ": \n" + details + "\n\n" + L10N_question;
-        } else {
-            return "";
-        }
-    }
-
-    @Override
+  //@Override
     public String getIdentifier() {
-        return "be.docarch.odt2braille.checker.PostConversionBrailleChecker";
+        return "http://docarch.be/odt2braille/checker/PostConversionBrailleChecker";
     }
 
-    @Override
+ /* @Override
     public Collection<Check> getChecks() {
         return checks.values();
+    } */
+    
+    public Collection<BrailleCheck> getDetectedIssues() {
+        return detectedIssues;
     }
 }

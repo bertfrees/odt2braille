@@ -81,12 +81,15 @@ public class PostConversionDialog implements XActionListener {
 
         // L10JN
 
-        Locale oooLocale = Locale.getDefault();
+        Locale oooLocale;
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
 
         L10N_windowTitle = "Succes";
         L10N_message = "The document was succesfully translated into Braille.";
-        L10N_previewButton = ResourceBundle.getBundle(L10N, oooLocale).getString("previewButton");
-        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("continueButton");
+        L10N_previewButton = bundle.getString("previewButton");
+        L10N_okButton = bundle.getString("continueButton");
 
         // Make dialog
 

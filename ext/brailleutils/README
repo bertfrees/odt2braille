@@ -16,7 +16,7 @@ Windows/Mac
  = latest build
  
  => http://brailleutils.googlecode.com/svn/trunk/braille
- => %ODT2BRAILLE_HOME%/ext/brailleutils/src/latest
+ => %ODT2BRAILLE_HOME%/ext/brailleutils/src/latest/braille
 
 
 Build instructions

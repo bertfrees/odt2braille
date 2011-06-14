@@ -157,16 +157,20 @@ public class Interpoint55PrintDialog implements XActionListener,
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         XMultiComponentFactory xMCF = xContext.getServiceManager();
 
-        Locale oooLocale = Locale.getDefault();
+        Locale oooLocale;
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
 
-        L10N_wp55Label = ResourceBundle.getBundle(L10N, oooLocale).getString("wp55Label") + ":";
-        L10N_iniLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("iniLabel") + ":";
-        L10N_overWriteLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("overWriteLabel");
-        L10N_printToFileLabel = ResourceBundle.getBundle(L10N, oooLocale).getString("printToFileLabel");
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
+
+        L10N_wp55Label = bundle.getString("wp55Label") + ":";
+        L10N_iniLabel = bundle.getString("iniLabel") + ":";
+        L10N_overWriteLabel = bundle.getString("overWriteLabel");
+        L10N_printToFileLabel = bundle.getString("printToFileLabel");
         L10N_searchWp55Button = "...";
-        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
-        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("interpoint55EmbossDialogTitle");
+        L10N_okButton = bundle.getString("embossButton");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_windowTitle = bundle.getString("interpoint55EmbossDialogTitle");
 
         xFolderPicker = (XFolderPicker) UnoRuntime.queryInterface(XFolderPicker.class,
                 xMCF.createInstanceWithContext("com.sun.star.ui.dialogs.FolderPicker", xContext));
@@ -404,7 +408,8 @@ public class Interpoint55PrintDialog implements XActionListener,
      * @return          <code>true</code> if the specified wprint55 program is executable.
      */
     private boolean checkWp55FolderUrl() {
-        return wp55File.canExecute();
+        return wp55File.exists();
+      //return wp55File.canExecute();
     }
 
     /**

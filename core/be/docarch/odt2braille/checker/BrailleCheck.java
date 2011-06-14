@@ -5,16 +5,15 @@ import java.util.ResourceBundle;
 
 import java.util.MissingResourceException;
 
-import be.docarch.accessibility.Check;
+//import be.docarch.accessibility.Check;
 
 /**
  *
  * @author Bert Frees
  */
-public class BrailleCheck extends Check {
+public class BrailleCheck /* extends Check */ {
 
-    private static Locale locale = Locale.getDefault();
-    private static ResourceBundle bundle = ResourceBundle.getBundle("be/docarch/odt2braille/checker/l10n/Bundle", locale);
+    private static String L10N = "be/docarch/odt2braille/checker/l10n/Bundle";
 
     public static enum ID {
 
@@ -35,7 +34,10 @@ public class BrailleCheck extends Check {
         A_OmissionsInsideVolume,
         A_OmissionsOutsideVolume,
         A_Transpositions,
-        A_PageWidthTooSmall
+        A_PageWidthTooSmall,
+
+        A_EmbosserDoesNotSupport8Dot,
+        A_FileFormatDoesNotSupport8Dot
 
     }
 
@@ -45,12 +47,12 @@ public class BrailleCheck extends Check {
         this.identifier = identifier;
     }
 
-    @Override
+  //@Override
     public String getIdentifier() {
         return identifier.name();
     }
 
-    @Override
+ /* @Override
     public Status getStatus() {
 
         switch (identifier) {
@@ -69,6 +71,8 @@ public class BrailleCheck extends Check {
             case A_OmissionsOutsideVolume:
             case A_Transpositions:
             case A_PageWidthTooSmall:
+            case A_EmbosserDoesNotSupport8Dot:
+            case A_FileFormatDoesNotSupport8Dot:
                 return Status.ALERT;
             default:
                 return null;
@@ -94,6 +98,8 @@ public class BrailleCheck extends Check {
             case A_OmissionsOutsideVolume:
             case A_Transpositions:
             case A_PageWidthTooSmall:
+            case A_EmbosserDoesNotSupport8Dot:
+            case A_FileFormatDoesNotSupport8Dot:
                 return Category.BRAILLE;
             default:
                 return null;
@@ -101,41 +107,57 @@ public class BrailleCheck extends Check {
     }
 
     @Override
-    public String getName() {
+    public String getName(Locale locale) {
 
         if (identifier == null) {
             return null;
         }
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("name_" + identifier.name());
         } catch (MissingResourceException e) {
-            return identifier.name();
+            switch (identifier) {
+                case A_EmbosserDoesNotSupport8Dot:
+                case A_FileFormatDoesNotSupport8Dot:
+                    return "8-dot Braille not supported";
+                default:
+                    return identifier.name();
+            }
         }
-    }
+    } */
 
-    @Override
-    public String getDescription() {
+  //@Override
+    public String getDescription(Locale locale) {
 
         if (identifier == null) {
             return null;
         }
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("description_" + identifier.name());
         } catch (MissingResourceException e) {
-            return identifier.name();
+            switch (identifier) {
+                case A_EmbosserDoesNotSupport8Dot:
+                    return "The selected embosser doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";
+                case A_FileFormatDoesNotSupport8Dot:
+                    return "The selected file format doesn't support 8-dot Braille. Dots 7 and 8 will be ignored.";
+                default:
+                    return "";
+            }
         }
     }
 
-    @Override
-    public String getSuggestion() {
+ /* @Override
+    public String getSuggestion(Locale locale) {
 
         if (identifier == null) {
             return null;
         }
         try {
+            ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("suggestion_" + identifier.name());
         } catch (MissingResourceException e) {
-            return identifier.name();
+            return "";
         }
-    }
+    } */
 }

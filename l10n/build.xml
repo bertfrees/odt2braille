@@ -8,27 +8,28 @@
 		<property name="native2ascii.executable" value="${jdk.home}/bin/native2ascii"/>
 	
         <macrodef name="utf8-to-ascii">
+                <attribute name="path"/>
         	<attribute name="dir"/>
             <sequential>
                 <delete>
-                    <fileset dir="../src/@{dir}" includes="*.properties"/>
+                    <fileset dir="../@{dir}/@{path}" includes="*.properties"/>
                 </delete>
                 <apply executable="${native2ascii.executable}"
-                       dest="../src/@{dir}"
+                       dest="../@{dir}/@{path}"
                        parallel="false">
                     <arg value="-encoding"/>
                     <arg value="utf-8"/>
                     <srcfile/>
                     <targetfile/>
-                    <fileset dir="@{dir}" includes="*.utf.properties"/>
+                    <fileset dir="@{path}" includes="*.utf.properties"/>
                     <mapper type="glob" from="*.utf.properties" to="*.properties"/>
                 </apply>
             </sequential>
         </macrodef>
         
-        <utf8-to-ascii dir="be/docarch/odt2braille/l10n"/>
-        <utf8-to-ascii dir="be/docarch/odt2braille/ooo/l10n"/>
-		<utf8-to-ascii dir="be/docarch/odt2braille/checker/l10n"/>
+        <utf8-to-ascii path="be/docarch/odt2braille/l10n" dir="core"/>
+        <utf8-to-ascii path="be/docarch/odt2braille/ooo/l10n" dir="addon"/>
+        <utf8-to-ascii path="be/docarch/odt2braille/checker/l10n" dir="core"/>
 
 	</target>
 </project>

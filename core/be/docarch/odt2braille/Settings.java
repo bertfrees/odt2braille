@@ -330,8 +330,10 @@ public class Settings {
 
     // Various
 
-    private Map<String,ParagraphStyle> paragraphStylesMap;
-    private Map<String,CharacterStyle> characterStylesMap;
+    private Map<String,ParagraphStyle> paragraphStyles;
+    private Map<String,CharacterStyle> characterStyles;
+  //private Map<String,TableStyle> tableStyles;           // default + self defined table styles (because there is no such thing as table styles in OOo)
+  //private Map<String,TableStyle> tableStylesMap;        // map each table name <-> table style
     private List<HeadingStyle> headingStyles;
     private List<ListStyle> listStyles;
     private TableStyle tableStyle;
@@ -457,29 +459,29 @@ public class Settings {
         this.gradeMap = new TreeMap(copySettings.gradeMap);
         this.dotsMap = new TreeMap(copySettings.dotsMap);
 
-        this.paragraphStylesMap = new TreeMap<String,ParagraphStyle>();
-        for (ParagraphStyle copyParagraphStyle: copySettings.paragraphStylesMap.values()) {
-            this.paragraphStylesMap.put(copyParagraphStyle.getName(), new ParagraphStyle(copyParagraphStyle));
+        this.paragraphStyles = new TreeMap<String,ParagraphStyle>();
+        for (ParagraphStyle copyParagraphStyle: copySettings.paragraphStyles.values()) {
+            this.paragraphStyles.put(copyParagraphStyle.getName(), new ParagraphStyle(copyParagraphStyle));
         }
         ParagraphStyle copyParagraphStyle = null;
-        for (ParagraphStyle paragraphStyle: this.paragraphStylesMap.values()) {
-            copyParagraphStyle = copySettings.paragraphStylesMap.get(paragraphStyle.getName());
+        for (ParagraphStyle paragraphStyle: this.paragraphStyles.values()) {
+            copyParagraphStyle = copySettings.paragraphStyles.get(paragraphStyle.getName());
             if (copyParagraphStyle != null) {
                 if (copyParagraphStyle.getParentStyle() != null) {
-                    paragraphStyle.setParentStyle(paragraphStylesMap.get(copyParagraphStyle.getParentStyle().getName()));
+                    paragraphStyle.setParentStyle(paragraphStyles.get(copyParagraphStyle.getParentStyle().getName()));
                 }
             }
         }
-        this.characterStylesMap = new TreeMap<String,CharacterStyle>();
-        for (CharacterStyle copyCharacterStyle: copySettings.characterStylesMap.values()) {
-            this.characterStylesMap.put(copyCharacterStyle.getName(), new CharacterStyle(copyCharacterStyle));
+        this.characterStyles = new TreeMap<String,CharacterStyle>();
+        for (CharacterStyle copyCharacterStyle: copySettings.characterStyles.values()) {
+            this.characterStyles.put(copyCharacterStyle.getName(), new CharacterStyle(copyCharacterStyle));
         }
         CharacterStyle copyCharacterStyle = null;
-        for (CharacterStyle characterStyle: this.characterStylesMap.values()) {
-            copyCharacterStyle = copySettings.characterStylesMap.get(characterStyle.getName());
+        for (CharacterStyle characterStyle: this.characterStyles.values()) {
+            copyCharacterStyle = copySettings.characterStyles.get(characterStyle.getName());
             if (copyCharacterStyle != null) {
                 if (copyCharacterStyle.getParentStyle() != null) {
-                    characterStyle.setParentStyle(characterStylesMap.get(copyCharacterStyle.getParentStyle().getName()));
+                    characterStyle.setParentStyle(characterStyles.get(copyCharacterStyle.getParentStyle().getName()));
                 }
             }
         }
@@ -509,8 +511,8 @@ public class Settings {
         this.tableStyle = new TableStyle(copySettings.tableStyle);
         this.frameStyle = new FrameStyle(copySettings.frameStyle);
         this.tocStyle = new TocStyle(copySettings.tocStyle);
-        this.volumeInfoStyle = this.paragraphStylesMap.get(copySettings.volumeInfoStyle.getName());
-        this.transcriptionInfoStyle = this.paragraphStylesMap.get(copySettings.transcriptionInfoStyle.getName());
+        this.volumeInfoStyle = this.paragraphStyles.get(copySettings.volumeInfoStyle.getName());
+        this.transcriptionInfoStyle = this.paragraphStyles.get(copySettings.transcriptionInfoStyle.getName());
         this.footnoteStyle = new Style(copySettings.footnoteStyle);
 
         this.supportedTranslationTablesGrades = new ArrayList<String>(copySettings.supportedTranslationTablesGrades);
@@ -570,7 +572,7 @@ public class Settings {
                     TransformerConfigurationException,
                     TransformerException {
 
-        this(odtTransformer, Locale.getDefault());
+        this(odtTransformer, Locale.ENGLISH);
         
     }
 
@@ -740,8 +742,14 @@ public class Settings {
 
         // Styles
 
-        paragraphStylesMap = new TreeMap<String,ParagraphStyle>(odtTransformer.extractParagraphStyles());
-        characterStylesMap = new TreeMap<String,CharacterStyle>(odtTransformer.extractCharacterStyles());
+        paragraphStyles = new TreeMap<String,ParagraphStyle>();
+        for (ParagraphStyle style : odtTransformer.extractParagraphStyles()) {
+            paragraphStyles.put(style.getName(), style);
+        }
+        characterStyles = new TreeMap<String,CharacterStyle>();
+        for (CharacterStyle style : odtTransformer.extractCharacterStyles()) {
+            characterStyles.put(style.getName(), style);
+        }
         headingStyles = new ArrayList<HeadingStyle>();
         for (int i=1; i<=10; i++) {
             headingStyles.add(new HeadingStyle(i));
@@ -784,8 +792,8 @@ public class Settings {
         transcriptionInfoEnabled = false;
 
         setHyphenate(false);
-        setVolumeInfoStyle(paragraphStylesMap.get("Standard"));
-        setTranscriptionInfoStyle(paragraphStylesMap.get("Standard"));
+        setVolumeInfoStyle(paragraphStyles.get("Standard"));
+        setTranscriptionInfoStyle(paragraphStyles.get("Standard"));
 
         singleVolume = new SingleVolume();
         singleVolume.setTitle("(Single volume)");
@@ -2769,6 +2777,10 @@ public class Settings {
         return frontMatterSection;
     }
 
+    public Section getRearMatterSection() { // TODO
+        return null;
+    }
+
     public Section getTitlePageSection() {
         return titlePageSection;
     }
@@ -2826,10 +2838,14 @@ public class Settings {
         return true;
     }
 
+    public boolean setRearMatterSection(Section section) { // TODO
+        return false;
+    }
+
     public boolean setTranscribersNotesPageEnabled(boolean b) {
 
         if (locked) { return false; }
-        transcribersNotesPageEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
+        transcribersNotesPageEnabled = b && getFrontMatterPresent(); // TODO: remove "&& getFrontMatterPresent()"
         return true;
     }
 
@@ -2840,7 +2856,7 @@ public class Settings {
     public boolean setSpecialSymbolsListEnabled(boolean b) {
 
         if (locked) { return false; }
-        specialSymbolsListEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
+        specialSymbolsListEnabled = b && getFrontMatterPresent(); // TODO: remove "&& getFrontMatterPresent()"
         return true;
     }
 
@@ -2851,7 +2867,7 @@ public class Settings {
     public boolean setTableOfContentEnabled(boolean b) {
 
         if (locked) { return false; }
-        tableOfContentEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
+        tableOfContentEnabled = b && getFrontMatterPresent(); // TODO: remove "&& getFrontMatterPresent()"
         return true;
     }
 
@@ -2884,7 +2900,7 @@ public class Settings {
     public boolean setPreliminaryVolumeEnabled(boolean b) {
 
         if (locked) { return false; }
-        preliminaryVolumeEnabled = b && getPreliminaryPagesPresent(); // TODO: remove "&& getPreliminaryPagesPresent()"
+        preliminaryVolumeEnabled = b && getFrontMatterPresent(); // TODO: remove "&& getFrontMatterPresent()"
         return true;
     }
 
@@ -2933,7 +2949,7 @@ public class Settings {
         return DATE;
     }
 
-    public boolean getPreliminaryPagesPresent() {
+    public boolean getFrontMatterPresent() {
         return getFrontMatterSection() != null;
     }
 
@@ -3015,11 +3031,11 @@ public class Settings {
     }
 
     public List<ParagraphStyle> getParagraphStyles() {    
-        return new ArrayList(paragraphStylesMap.values());
+        return new ArrayList(paragraphStyles.values());
     }
 
     public List<CharacterStyle> getCharacterStyles() {
-        return new ArrayList(characterStylesMap.values());
+        return new ArrayList(characterStyles.values());
     }
 
     public List<HeadingStyle> getHeadingStyles() {
@@ -3057,7 +3073,7 @@ public class Settings {
     public boolean setVolumeInfoStyle(ParagraphStyle volumeInfoStyle) {
 
         if (volumeInfoStyle != null) {
-            if (paragraphStylesMap.containsValue(volumeInfoStyle)) {
+            if (paragraphStyles.containsValue(volumeInfoStyle)) {
                 this.volumeInfoStyle = volumeInfoStyle;
                 return true;
             }
@@ -3068,7 +3084,7 @@ public class Settings {
     public boolean setTranscriptionInfoStyle(ParagraphStyle transcriptionInfoStyle) {
 
         if (transcriptionInfoStyle != null) {
-            if (paragraphStylesMap.containsValue(transcriptionInfoStyle)) {
+            if (paragraphStyles.containsValue(transcriptionInfoStyle)) {
                 this.transcriptionInfoStyle = transcriptionInfoStyle;
                 return true;
             }
@@ -3078,8 +3094,8 @@ public class Settings {
     
     public boolean setVolumeInfoStyle(String volumeInfoStyle) {
         
-        if (paragraphStylesMap.containsKey(volumeInfoStyle)) {
-            this.volumeInfoStyle = paragraphStylesMap.get(volumeInfoStyle);
+        if (paragraphStyles.containsKey(volumeInfoStyle)) {
+            this.volumeInfoStyle = paragraphStyles.get(volumeInfoStyle);
             return true;
         }    
         return false;
@@ -3087,8 +3103,8 @@ public class Settings {
 
     public boolean setTranscriptionInfoStyle(String transcriptionInfoStyle) {
 
-        if (paragraphStylesMap.containsKey(transcriptionInfoStyle)) {
-            this.transcriptionInfoStyle = paragraphStylesMap.get(transcriptionInfoStyle);
+        if (paragraphStyles.containsKey(transcriptionInfoStyle)) {
+            this.transcriptionInfoStyle = paragraphStyles.get(transcriptionInfoStyle);
             return true;
         }
         return false;
@@ -3342,7 +3358,7 @@ public class Settings {
         for (Volume v : getVolumes()) {
             volumeCount++;
             v.setToc(getTableOfContentEnabled());
-            v.setFrontMatter(getPreliminaryPagesPresent());
+            v.setFrontMatter(getFrontMatterPresent());
             v.setTranscribersNotesPage(getTranscribersNotesPageEnabled());
             v.setSpecialSymbolsList(getSpecialSymbolsListEnabled());
             if (volumeCount==1) {

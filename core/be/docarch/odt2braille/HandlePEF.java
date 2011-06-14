@@ -25,10 +25,7 @@ import java.io.FileOutputStream;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
-import org.daisy.util.xml.validation.ValidationException;
-import javax.xml.transform.TransformerException;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
 import javax.print.PrintException;
 
 import org.daisy.braille.embosser.FileFormat;
@@ -94,9 +91,6 @@ public class HandlePEF {
                           throws ParserConfigurationException,
                                  IOException,
                                  UnsupportedWidthException,
-                                 XMLStreamException,
-                                 TransformerException,
-                                 ValidationException,
                                  SAXException {
 
         logger.entering("HandlePEF", "convertToFiles");

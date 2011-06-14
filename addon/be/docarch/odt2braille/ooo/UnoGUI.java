@@ -20,6 +20,7 @@
 package be.docarch.odt2braille.ooo;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -45,9 +46,9 @@ import com.sun.star.awt.XWindowPeer;
 import com.sun.star.awt.XWindow;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.text.XTextViewCursorSupplier;
+import com.sun.star.util.XModifiable;
 
 import org.xml.sax.SAXException;
-import org.daisy.util.xml.validation.ValidationException;
 import java.io.IOException;
 import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
@@ -56,6 +57,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import com.sun.star.beans.PropertyVetoException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
@@ -66,6 +68,8 @@ import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.HandlePEF;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
+import be.docarch.odt2braille.ooo.checker.BrailleCheckerDialog;
+import be.docarch.odt2braille.ooo.checker.ReportWriter;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.paper.PageFormat;
@@ -73,7 +77,6 @@ import be_interpoint.Interpoint55Embosser;
 
 import org.daisy.braille.embosser.UnsupportedWidthException;
 import be.docarch.odt2braille.LiblouisXMLException;
-
 
 /**
  * The <code>changeSettings</code>, <code>exportBraille</code> and <code>embossBraille</code> methods
@@ -91,7 +94,6 @@ public class UnoGUI {
     private static final String L10N = Constants.OOO_L10N_PATH;
 
     private static String L10N_Default_Export_Filename = null;
-    private static String L10N_Warning_MessageBox_Title = null;
     private static String L10N_Exception_MessageBox_Title = null;
     private static String L10N_Unexpected_Exception_Message = null;
 
@@ -104,9 +106,11 @@ public class UnoGUI {
     private XWindow parentWindow = null;
     private XWindowPeer parentWindowPeer = null;
     private XComponent xDesktopComponent = null;
+    private XModifiable xModifiable = null;
 
     private Handler fh = null;
     private File logFile = null;
+    private Locale oooLocale = null;
 
     private File liblouisLocation = null;
 
@@ -131,18 +135,24 @@ public class UnoGUI {
 
             this.m_xContext = m_xContext;
             this.m_xFrame = m_xFrame;
-            this.xMCF = (XMultiComponentFactory)UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
+            xMCF = (XMultiComponentFactory)UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
             Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
             XDesktop xDesktop = (XDesktop)UnoRuntime.queryInterface(XDesktop.class, desktop);
-            this.xDesktopComponent = (XComponent)xDesktop.getCurrentComponent();
+            xDesktopComponent = (XComponent)xDesktop.getCurrentComponent();
+            xModifiable = (XModifiable)UnoRuntime.queryInterface(XModifiable.class, xDesktop.getCurrentComponent());
 
             // Query Uno Object
             xDoc = (XModel) UnoRuntime.queryInterface(XModel.class, m_xFrame.getController().getModel());
             parentWindow = xDoc.getCurrentController().getFrame().getContainerWindow();
             parentWindowPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, parentWindow);
 
+            // Locale
+            try { oooLocale = UnoUtils.getUILocale(m_xContext); } catch (Exception e) {
+                  oooLocale = Locale.ENGLISH; }
+            logger.info("Locale: " + oooLocale.toString());
+
             // Create progress bar
-            progressBar = new ProgressBar(m_xFrame);
+            progressBar = new ProgressBar(m_xFrame, oooLocale);
 
             // Configuring logger
             logFile = File.createTempFile(TMP_NAME, ".log", TMP_DIR);
@@ -151,17 +161,6 @@ public class UnoGUI {
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.FINEST);
-
-            // Locale
-            
-            try {
-                Locale oooLocale = UnoUtils.getUILocale(m_xContext);
-                logger.info("lang = " + oooLocale.getLanguage() + ", country = " + oooLocale.getCountry());
-                Locale.setDefault(oooLocale);
-            } catch (com.sun.star.uno.Exception ex) {
-                logger.log(Level.SEVERE, null, ex);
-                Locale.setDefault(Locale.ENGLISH);
-            }
 
             logger.exiting("UnoGUI", "<init>");
 
@@ -185,12 +184,11 @@ public class UnoGUI {
 
         try {
 
-            Locale oooLocale = Locale.getDefault();
-
-            L10N_Default_Export_Filename = ResourceBundle.getBundle(L10N, oooLocale).getString("defaultExportFilename");
-            L10N_Warning_MessageBox_Title = ResourceBundle.getBundle(L10N, oooLocale).getString("warningMessageBoxTitle");
-            L10N_Exception_MessageBox_Title = ResourceBundle.getBundle(L10N, oooLocale).getString("exceptionMessageBoxTitle");
-            L10N_Unexpected_Exception_Message = ResourceBundle.getBundle(L10N, oooLocale).getString("unexpectedExceptionMessage");
+            ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
+            
+            L10N_Default_Export_Filename = bundle.getString("defaultExportFilename");
+            L10N_Exception_MessageBox_Title = bundle.getString("exceptionMessageBoxTitle");
+            L10N_Unexpected_Exception_Message = bundle.getString("unexpectedExceptionMessage");
 
             exportFilename = L10N_Default_Export_Filename;
             for (PropertyValue prop: xDoc.getArgs()) {
@@ -291,7 +289,12 @@ public class UnoGUI {
                 return false;
             }
 
-            settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
+            if (settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings)) {
+                try {
+                    xModifiable.setModified(true);
+                } catch (PropertyVetoException e) { // read-only
+                }
+            }
 
             logger.exiting("UnoGUI", "changeSettings");
 
@@ -332,7 +335,6 @@ public class UnoGUI {
 
         PEF pef = null;
         File[] brailleFiles = null;
-        String warning = null;
         PostConversionBrailleChecker checker = null;
 
         try {
@@ -363,8 +365,19 @@ public class UnoGUI {
             }
 
             // Save settings
-            settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
-            settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings);
+            boolean settingsModified = false;
+            if (settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings)) {
+                settingsModified = true;
+            }
+            if (settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings)) {
+                settingsModified = true;
+            }
+            if (settingsModified) {
+                try {
+                    xModifiable.setModified(true);
+                } catch (PropertyVetoException e) { // read-only
+                }
+            }
 
             // Create LiblouisXML
             LiblouisXML liblouisXML = new LiblouisXML(changedSettings, liblouisLocation);
@@ -385,11 +398,21 @@ public class UnoGUI {
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning
-            if (!(warning = checker.getWarning()).equals("")) {
-                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on warning");
-                    return false;
+            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, m_xContext, parentWindowPeer);
+            boolean cancel = !checkerDialog.execute();
+
+            // Store checker report
+            ReportWriter reportWriter = new ReportWriter(checker, m_xContext, xDesktopComponent);
+            if (reportWriter.write()) {
+                try {
+                    xModifiable.setModified(true);
+                } catch (PropertyVetoException e) { // read-only
                 }
+            }
+
+            if (cancel) {
+                logger.log(Level.INFO, "User cancelled export on warning");
+                return false;
             }
 
             // Convert to Braille file(s)
@@ -418,9 +441,9 @@ public class UnoGUI {
 
             // Show post translation dialog
             PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
-            PostConversionDialog postTranslationDialog = new PostConversionDialog(m_xContext, preview);
+            PostConversionDialog postConversionDialog = new PostConversionDialog(m_xContext, preview);
 
-            if (!postTranslationDialog.execute()) {
+            if (!postConversionDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");
                 return false;
             }
@@ -477,13 +500,14 @@ public class UnoGUI {
                     return false;
                 }
 
+                DecimalFormat format = new DecimalFormat();
+                format.setMaximumFractionDigits(0);
+                format.setMinimumIntegerDigits(1+(int)Math.floor(Math.log10(volumes.size())));
+
                 for (int i=0; i<brailleFiles.length; i++) {
-
-                    newFile = new File(newFolder.getAbsolutePath() + fileSeparator + fileName + "." + (i+1) + brailleExt);
-
+                    newFile = new File(newFolder.getAbsolutePath() + fileSeparator + fileName + "." + format.format(i+1) + brailleExt);
                     if (newFile.exists()) { newFile.delete(); }
                     brailleFiles[i].renameTo(newFile);
-
                 }
 
             } else {
@@ -531,12 +555,6 @@ public class UnoGUI {
         } catch (LiblouisXMLException ex) {
             handleUnexpectedException(ex);
             return false;
-        } catch (XMLStreamException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (ValidationException ex) {
-            handleUnexpectedException(ex);
-            return false;
         } catch (RuntimeException ex) {
             handleUnexpectedException(ex);
             return false;
@@ -568,7 +586,6 @@ public class UnoGUI {
         PEF pef = null;
         HandlePEF handlePef = null;
         String deviceName = null;
-        String warning = null;
         PostConversionBrailleChecker checker = null;
 
         try {
@@ -623,11 +640,11 @@ public class UnoGUI {
             checker.checkPefFile(pef.getSinglePEF());
 
             // Show warning
-            if (!(warning = checker.getWarning()).equals("")) {
-                if (UnoAwtUtils.showYesNoWarningMessageBox(parentWindowPeer, L10N_Warning_MessageBox_Title, warning + "\n\n") == (short) 3) {
-                    logger.log(Level.INFO, "User cancelled export on warning");
-                    return false;
-                }
+            
+            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, m_xContext, parentWindowPeer);
+            if (!checkerDialog.execute()) {
+                logger.log(Level.INFO, "User cancelled export on warning");
+                return false;
             }
 
             // Close progress bar
@@ -636,9 +653,9 @@ public class UnoGUI {
 
             // Show post translation dialog
             PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings);
-            PostConversionDialog postTranslationDialog = new PostConversionDialog(m_xContext, preview);
+            PostConversionDialog postConversionDialog = new PostConversionDialog(m_xContext, preview);
 
-            if (!postTranslationDialog.execute()) {
+            if (!postConversionDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");
                 return false;
             }
@@ -767,9 +784,6 @@ public class UnoGUI {
             handleUnexpectedException(ex);
             return false;
         } catch (LiblouisXMLException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (ValidationException ex) {
             handleUnexpectedException(ex);
             return false;
         } catch (RuntimeException ex) {

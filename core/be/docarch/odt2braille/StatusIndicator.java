@@ -19,6 +19,8 @@
 
 package be.docarch.odt2braille;
 
+import java.util.Locale;
+
 /**
  * Indicate the status and progress of a process.
  * Known extension: <code>be.docarch.odt2braille.ooo.ProgressBar</code>
@@ -107,5 +109,9 @@ public class StatusIndicator {
      */
     public boolean close() {
         return true;
+    }
+
+    public Locale getPreferredLocale() {
+        return Locale.ENGLISH;
     }
 }

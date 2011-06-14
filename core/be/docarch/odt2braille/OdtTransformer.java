@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.util.TreeMap;
 import java.util.Map;
+import java.util.Collection;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
@@ -163,7 +164,9 @@ public class OdtTransformer {
         logger.entering("OdtTransformer","<init>");
 
         this.statusIndicator = statusIndicator;
-        oooLocale = Locale.getDefault();
+        if (statusIndicator != null) {
+            oooLocale = statusIndicator.getPreferredLocale();
+        }
 
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
 
@@ -252,7 +255,7 @@ public class OdtTransformer {
         if (!documentSaved) {
 
             if (contentDoc != null) {
-                OdtUtils.saveDOM(contentDoc, odtContentFile.getAbsolutePath());
+                OdtUtils.saveDOM(contentDoc, odtContentFile);
             }
             documentParsed = true;
             documentSaved = true;
@@ -1850,7 +1853,7 @@ public class OdtTransformer {
 
     }
 
-    public TreeMap<String,ParagraphStyle> extractParagraphStyles() throws IOException,
+    public Collection<ParagraphStyle> extractParagraphStyles() throws IOException,
                                                                       TransformerConfigurationException,
                                                                       TransformerException {
         logger.entering("OdtTransformer","extractParagraphStyles");
@@ -1916,13 +1919,13 @@ public class OdtTransformer {
 
         logger.exiting("OdtTransformer","extractParagraphStyles");
 
-        return styles;
+        return styles.values();
 
     }
 
-    public TreeMap<String,CharacterStyle> extractCharacterStyles() throws IOException,
-                                                                          TransformerConfigurationException,
-                                                                          TransformerException {
+    public Collection<CharacterStyle> extractCharacterStyles() throws IOException,
+                                                                      TransformerConfigurationException,
+                                                                      TransformerException {
         logger.entering("OdtTransformer","extractCharacterStyles");
 
         if (usedStylesFile == null) {
@@ -1985,7 +1988,7 @@ public class OdtTransformer {
 
         logger.exiting("OdtTransformer","extractCharacterStyles");
         
-        return styles;
+        return styles.values();
     
     }
 

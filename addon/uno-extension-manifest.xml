@@ -8,4 +8,6 @@
                        manifest:full-path="Addons.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="ProtocolHandler.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.executable"
+                       manifest:full-path="liblouis/bin/mac/xml2brl"/>
 </manifest:manifest>

@@ -19,6 +19,8 @@
 
 package be.docarch.odt2braille.ooo;
 
+import java.util.Locale;
+
 import com.sun.star.task.XStatusIndicator;
 import com.sun.star.task.XStatusIndicatorFactory;
 import com.sun.star.uno.UnoRuntime;
@@ -37,7 +39,7 @@ public class ProgressBar extends StatusIndicator {
 
     private XStatusIndicatorFactory xStatusIndicatorFactory = null;
     private XStatusIndicator xStatusIndicator = null;
-
+    private Locale locale = null;
 
     /**
      * An <code>XStatusIndicator</code> element is created.
@@ -45,10 +47,11 @@ public class ProgressBar extends StatusIndicator {
      * @param   xFrame
      * @see     XStatusIndicator
      */
-    public ProgressBar (XFrame xFrame) {
-
+    public ProgressBar (XFrame xFrame,
+                        Locale locale) {
         super();
 
+        this.locale = locale;
         // Init Status Indicator
         xStatusIndicatorFactory = (XStatusIndicatorFactory) UnoRuntime.queryInterface(XStatusIndicatorFactory.class, xFrame);
         xStatusIndicator = xStatusIndicatorFactory.createStatusIndicator();
@@ -118,5 +121,15 @@ public class ProgressBar extends StatusIndicator {
         xStatusIndicator.end();
         return true;
 
+    }
+
+    @Override
+    public Locale getPreferredLocale() {
+
+        if (locale != null) {
+            return locale;
+        } else {
+            return super.getPreferredLocale();
+        }
     }
 }

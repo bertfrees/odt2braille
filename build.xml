@@ -5,33 +5,44 @@
 <project name="odt2braille" default="jar" basedir=".">
     <description>Builds, tests, and runs the project extension project.</description>
     <import file="nbproject/build-uno-impl.xml"/>
+    <fail message="Please build using Ant 1.8.0 or higher.">
+        <condition>
+            <not>
+                <antversion atleast="1.8.0"/>
+            </not>
+        </condition>
+    </fail>
 
     <tstamp>
-		<format property="ISO-TODAY" pattern="yyyy-MM-dd"/>
-	</tstamp>
+        <format property="ISO-TODAY" pattern="yyyy-MM-dd"/>
+    </tstamp>
     
     <property name="project-name" value="odt2braille"/>
     <property name="release-version" value="0.1.1.rc10"/>
 
 
-	<!-- override targets -->
-	<target name="-pre-init" depends="-init-build,-copy-external-jars"/>
-	<target name="-pre-compile" depends="-make-liblouis-dir,-build-core"/>
-	<target name="-post-uno-package" depends="-rebuild-extension"/>
-	
-	
-	<!-- initialise -->
-	<target name="-init-build"
-            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
-	
-	    <pathconvert property="libs.OpenOffice.org 3.3.classpath">
-	        <path>
-	            <pathelement location="${java.dir}${file.separator}juh.jar"/>
-	            <pathelement location="${java.dir}${file.separator}jurt.jar"/>
-	            <pathelement location="${java.dir}${file.separator}ridl.jar"/>
-	            <pathelement location="${classes.dir}${file.separator}unoil.jar"/>
-	        </path>
-	    </pathconvert>
+    <!-- override targets -->
+    <target name="-pre-init" depends="-init-build,-copy-external-jars"/>
+    <target name="-pre-compile" depends="-make-liblouis-dir,-build-core"/>
+    <target name="-post-uno-package" depends="-rebuild-extension"/>
+
+    <!-- override -post-test-run -->
+    <target depends="init,compile-test,-pre-test-run,-do-test-run,-test-html-report" if="have.tests" name="-post-test-run">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+
+    <!-- initialise -->
+    <target name="-init-build"
+        depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
+
+        <pathconvert property="libs.OpenOffice.org 3.3.classpath">
+            <path>
+                <pathelement location="${java.dir}${file.separator}juh.jar"/>
+                <pathelement location="${java.dir}${file.separator}jurt.jar"/>
+                <pathelement location="${java.dir}${file.separator}ridl.jar"/>
+                <pathelement location="${classes.dir}${file.separator}unoil.jar"/>
+            </path>
+        </pathconvert>
 
         <!-- don't compile core but include jar in classpath -->
         <mkdir dir="build/empty"/>
@@ -40,77 +51,77 @@
         <property name="dist.core.jar" value="dist${file.separator}${core.jar}"/>
         <property name="extend.javac.classpath" value=":${dist.core.jar}"/>
 
-	    <property file="nbproject/project.properties"/>
-		<property file="nbproject/project-uno.properties"/>
-		
-		<property name="sdk.bin.dir"
+        <property file="nbproject/project.properties"/>
+        <property file="nbproject/project-uno.properties"/>
+
+        <property name="sdk.bin.dir"
                   value="${sdk.dir}${file.separator}bin"/>
-		<property name="ure.bin.dir"
+        <property name="ure.bin.dir"
                   value="${ure.dir}${file.separator}bin"/>
-		
-		<pathconvert property="office.tool.path">
-		    <path>
-	            <pathelement location="${office.program.dir}"/>
+
+        <pathconvert property="office.tool.path">
+            <path>
+                <pathelement location="${office.program.dir}"/>
                 <pathelement location="${sdk.bin.dir}"/>
                 <pathelement location="${basis.dir}${file.separator}program"/>
                 <pathelement location="${ure.bin.dir}"/>
             </path>
-		</pathconvert>
-        
+        </pathconvert>
+
         <pathconvert property="project.home">
-	        <path path="."/>
-	    </pathconvert>
-		
-		<pathconvert property="core.classpath">
-		    <path path="${javac.classpath}"/>
-		    <firstmatchmapper>
-		        <globmapper from="*${core.jar}" to=""/>
-		        <globmapper from="*juh.jar"     to=""/>
-	            <globmapper from="*jurt.jar"    to=""/>
-	            <globmapper from="*ridl.jar"    to=""/>
-	            <globmapper from="*unoil.jar"   to=""/>
-	            <identitymapper/>
-		    </firstmatchmapper>
-		</pathconvert>
-		
-		<pathconvert property="external.jars" pathsep=" " dirsep="/">
-		    <path path="${core.classpath}:${dist.core.jar}"/>
-		    <firstmatchmapper>
-		        <globmapper from="${project.home}${file.separator}${dist.core.jar}" to="${core.jar}"/>
-		        <chainedmapper>
-		            <globmapper from="${project.home}${file.separator}*" to="*"/>
+            <path path="."/>
+        </pathconvert>
+
+        <pathconvert property="core.classpath">
+            <path path="${javac.classpath}"/>
+            <firstmatchmapper>
+                <globmapper from="*${core.jar}" to=""/>
+                <globmapper from="*juh.jar"     to=""/>
+            <globmapper from="*jurt.jar"    to=""/>
+            <globmapper from="*ridl.jar"    to=""/>
+            <globmapper from="*unoil.jar"   to=""/>
+            <identitymapper/>
+            </firstmatchmapper>
+        </pathconvert>
+
+        <pathconvert property="external.jars" pathsep=" " dirsep="/">
+            <path path="${core.classpath}:${dist.core.jar}"/>
+            <firstmatchmapper>
+                <globmapper from="${project.home}${file.separator}${dist.core.jar}" to="${core.jar}"/>
+                <chainedmapper>
+                    <globmapper from="${project.home}${file.separator}*" to="*"/>
                     <flattenmapper/>
                     <globmapper from="*" to="lib/*"/>
                 </chainedmapper>
                 <globmapper from="/*" to="file:///*"/>
-	            <globmapper from="*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
             </firstmatchmapper>
-		</pathconvert>
-	
-		<available file="${dist.dir}${file.separator}${external.jar.dir}"
+        </pathconvert>
+
+        <available file="${dist.dir}${file.separator}${external.jar.dir}"
                    property="external.jar.dir.exists"/>
         <available file="${dist.dir}${file.separator}liblouis"
                    property="dist.liblouis.dir.exists"/>
-	</target>
+    </target>
 	
 	
-	<!-- load platform dependent properties -->
+    <!-- load platform dependent properties -->
     <target name="-windows-properties" if="is.windows" depends="-detect-os">
-	    <property file="build.windows.properties"/>
-	</target>
-	
-	<target name="-macosx-properties" if="is.macosx" depends="-detect-os">
-	    <property file="build.macosx.properties"/>
-	</target>
-	
-	<target name="-linux-properties" if="is.linux" depends="-detect-os">
-	    <property file="build.linux.properties"/>
-	</target>
-	
-	<target name="-debian-properties" if="is.debian" depends="-detect-os">
-	    <property file="build.debian.properties"/>
-	</target>
-	
+        <property file="build.windows.properties"/>
+    </target>
+
+    <target name="-macosx-properties" if="is.macosx" depends="-detect-os">
+        <property file="build.macosx.properties"/>
+    </target>
+
+    <target name="-linux-properties" if="is.linux" depends="-detect-os">
+        <property file="build.linux.properties"/>
+    </target>
+
+    <target name="-debian-properties" if="is.debian" depends="-detect-os">
+        <property file="build.debian.properties"/>
+    </target>
+
 
     <!-- ask target.os as an input -->
     <target name="-prompt-target-os">
@@ -132,7 +143,7 @@
     
     <!-- detect os -->
     <target name="-detect-os">
-		<condition property="is.windows">
+        <condition property="is.windows">
             <os family="windows"/>
         </condition>
         <condition property="is.macosx">
@@ -154,20 +165,20 @@
                 <contains string="${os.name}" substring="debian" casesensitive="no"/>
             </and>
         </condition>
-	</target>
+    </target>
 
 
     <!-- make external jars folder -->
-    <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">	
-		<pathconvert property="core.classpath.space.sep" pathsep=" ">
-			<path path="${core.classpath}"/>
-			<map from="${project.home}${file.separator}" to=""/>
-		</pathconvert>
-		<mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
-		<copy todir="${dist.dir}${file.separator}${external.jar.dir}" flatten="true">
-			<fileset dir="." includes="${core.classpath.space.sep}"/>
-		</copy>
-	</target>
+    <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">
+        <pathconvert property="core.classpath.space.sep" pathsep=" ">
+            <path path="${core.classpath}"/>
+            <map from="${project.home}${file.separator}" to=""/>
+        </pathconvert>
+        <mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
+        <copy todir="${dist.dir}${file.separator}${external.jar.dir}" flatten="true">
+            <fileset dir="." includes="${core.classpath.space.sep}"/>
+        </copy>
+    </target>
 
 
     <!-- make liblouis folder -->
@@ -256,34 +267,34 @@
                includeantruntime="false" debug="true" encoding="UTF-8"
                source="${javac.source}" target="${javac.target}"
                includes="**" excludes="">
-			<classpath>
-				<path path="${core.classpath}"/>
-			</classpath>
+            <classpath>
+                <path path="${core.classpath}"/>
+            </classpath>
         </javac>
         
         <copy todir="${core.build.dir}">
             <fileset dir="${core.src.dir}">
                 <patternset>
-		            <include name="META-INF/**/*.*"/>
+                    <include name="META-INF/**/*.*"/>
                     <include name="**/*.properties"/>
                     <include name="**/*.xsl"/>
                     <include name="**/*.xml"/>
                     <include name="**/*.rng"/>
-		            <exclude name="**/*.java"/>
+                    <exclude name="**/*.java"/>
                 </patternset>
             </fileset>
         </copy>
         
         <!-- build jar -->
         <jar destfile="${dist.core.jar}">
-    		<fileset dir="${core.build.dir}"/>
-    		<manifest>
-    			<attribute name="Built-By" value="${user.name}"/>
-    			<attribute name="Built-On" value="${ISO-TODAY}"/>
-    			<attribute name="Implementation-Title" value="${project.name}"/>
-    			<attribute name="Implementation-Version" value="${release-version}"/>
-    			<attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
-    		</manifest>
+            <fileset dir="${core.build.dir}"/>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Built-On" value="${ISO-TODAY}"/>
+                <attribute name="Implementation-Title" value="${project.name}"/>
+                <attribute name="Implementation-Version" value="${release-version}"/>
+                <attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
+            </manifest>
     	</jar>
     </target>
     
@@ -327,7 +338,21 @@
         <delete file="${uno.package.name}" />
 
         <zip destfile="${uno.package.name}"
-             basedir="${build.oxt.dir}" />
-             
+             basedir="${build.oxt.dir}" />		
+		
     </target>
+	
+	
+	<!-- make html report from test results -->
+    <target name="-test-html-report">
+        <delete dir="${build.test.report.dir}"/>
+        <mkdir dir="${build.test.report.dir}"/>
+        <junitreport todir="${build.test.report.dir}">
+            <fileset dir="${build.test.results.dir}">
+                <include name="TEST-*.xml" />
+            </fileset>
+            <report todir="${build.test.report.dir}" />
+        </junitreport>	
+    </target>
+	
 </project>

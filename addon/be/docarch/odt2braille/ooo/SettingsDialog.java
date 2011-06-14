@@ -121,6 +121,8 @@ public class SettingsDialog implements XItemListener,
 
     private Settings settings = null;
     private XComponentContext xContext = null;
+    private Locale oooLocale = null;
+    private ResourceBundle bundle = null;
 
     private final static short GENERAL_PAGE = 1;
     private final static short LANGUAGES_PAGE = 2;
@@ -998,6 +1000,11 @@ public class SettingsDialog implements XItemListener,
         dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
 
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
+
+        bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
+
         logger.exiting("SettingsDialog", "<init>");
 
     }
@@ -1016,9 +1023,8 @@ public class SettingsDialog implements XItemListener,
         XToolkit xToolkit = (XToolkit) UnoRuntime.queryInterface(XToolkit.class, xMCF.createInstanceWithContext("com.sun.star.awt.Toolkit", xContext));
         XWindow xWindow = (XWindow) UnoRuntime.queryInterface(XWindow.class, dialogControl);
         dialogControl.createPeer(xToolkit, null);
-        windowProperties.setPropertyValue("Title",
-                ResourceBundle.getBundle(L10N_BUNDLE, Locale.getDefault()).getString("settingsDialogTitle")
-                + "  -  Loading... please wait");
+        windowProperties.setPropertyValue("Title", bundle.getString("settingsDialogTitle")
+                                              + "  -  Loading... please wait");
         windowProperties.setPropertyValue("Step", 100);
         xWindow.setVisible(true);
 
@@ -1059,11 +1065,8 @@ public class SettingsDialog implements XItemListener,
         // pagesEnabled[LISTS_PAGE-1] = settings.getListsPresent();
         // pagesEnabled[TABLES_PAGE-1] = settings.getTablesPresent();
         // pagesEnabled[MATH_PAGE-1] = settings.getMathPresent();
-        // pagesEnabled[TOC_PAGE-1] = settings.getPreliminaryPagesPresent();
-        // pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getPreliminaryPagesPresent();
-
-        Locale oooLocale = Locale.getDefault();
-        ResourceBundle bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
+        // pagesEnabled[TOC_PAGE-1] = settings.getFrontMatterPresent();
+        // pagesEnabled[SPECIAL_SYMBOLS_PAGE-1] = settings.getFrontMatterPresent();
 
         // Main Window
 
@@ -2701,8 +2704,8 @@ public class SettingsDialog implements XItemListener,
 
         if (pagesEnabled[GENERAL_PAGE-1]) {
 
-            transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
-            preliminaryVolumeCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
+            transcribersNotesPageCheckBoxProperties.setPropertyValue("Enabled", settings.getFrontMatterPresent()); // TODO: always enable checkbox
+            preliminaryVolumeCheckBoxProperties.setPropertyValue("Enabled", settings.getFrontMatterPresent()); // TODO: always enable checkbox
             transcriptionInfoCheckBoxProperties.setPropertyValue("Enabled", settings.getTranscriptionInfoAvailable());
             volumeInfoCheckBoxProperties.setPropertyValue("Enabled", settings.getVolumeInfoAvailable());
 
@@ -3066,7 +3069,7 @@ public class SettingsDialog implements XItemListener,
             currentTableOfContentsLevel = 1;
 
             tableOfContentsCheckBox.setState((short)(settings.getTableOfContentEnabled()?1:0));
-            tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
+            tableOfContentsCheckBoxProperties.setPropertyValue("Enabled", settings.getFrontMatterPresent()); // TODO: always enable checkbox
             tableOfContentsTitleField.setText(settings.getTableOfContentTitle());
             tableOfContentsLineFillField.setText(String.valueOf(settings.getLineFillSymbol()));
             tableOfContentsPrintPageNumbersCheckBox.setState((short)(settings.getPrintPageNumbersInToc()?1:0));
@@ -3096,7 +3099,7 @@ public class SettingsDialog implements XItemListener,
 
             selectedSpecialSymbolPos = 0;
 
-            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.getPreliminaryPagesPresent()); // TODO: always enable checkbox
+            specialSymbolsListCheckBoxProperties.setPropertyValue("Enabled", settings.getFrontMatterPresent()); // TODO: always enable checkbox
             specialSymbolsListField.setText(settings.getSpecialSymbolsListTitle());
             specialSymbolsListCheckBox.setState((short)(settings.getSpecialSymbolsListEnabled()?1:0));
 
@@ -3404,7 +3407,7 @@ public class SettingsDialog implements XItemListener,
         braillePageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana);
         braillePageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers());
         preliminaryPageNumberFormatListBoxProperties.setPropertyValue("Enabled", !bana && settings.getBraillePageNumbers()
-                                                                                       && settings.getPreliminaryPagesPresent()); // TODO: remove "&& settings.getPreliminaryPagesPresent()"
+                                                                                       && settings.getFrontMatterPresent()); // TODO: remove "&& settings.getFrontMatterPresent()"
         beginningBraillePageNumberFieldProperties.setPropertyValue("Enabled", settings.getBraillePageNumbers());
         printPageNumbersCheckBoxProperties.setPropertyValue("Enabled", !bana && settings.getPageNumbersPresent());
         printPageNumberAtListBoxProperties.setPropertyValue("Enabled", !bana && settings.getPrintPageNumbers());

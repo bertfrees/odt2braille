@@ -283,30 +283,34 @@ public class EmbossDialog implements XItemListener,
             }
         };
 
-        Locale oooLocale = Locale.getDefault();
+        Locale oooLocale;
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
 
-        L10N_windowTitle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossDialogTitle");
-        L10N_okButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embossButton");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("cancelButton");
-        L10N_settingsButton = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("settingsDialogTitle")+ "\u2026";
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
 
-        L10N_embosserLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("embosserLabel") + ":";
-        L10N_tableLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("tableLabel") + ":";
-        L10N_paperLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperSizeLabel") + ":";
-        L10N_paperWidthLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperWidthLabel") + ":";
-        L10N_paperHeightLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("paperHeightLabel") + ":";
-        L10N_duplexLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("duplexLabel");
-        L10N_eightDotsLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("eightDotsLabel");
-        L10N_numberOfCellsPerLineLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("numberOfLinesPerPageLabel") + ":";
-        L10N_marginLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("marginLabel") + ":";
-        L10N_marginInnerLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("inner") + ":";
-        L10N_marginOuterLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("outer") + ":";
-        L10N_marginTopLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("top") + ":";
-        L10N_marginBottomLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("bottom") + ":";
-        L10N_zFoldingLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("zFoldingLabel");
-        L10N_saddleStitchLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("saddleStitchLabel");
-        L10N_sheetsPerQuireLabel = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale).getString("sheetsPerQuireLabel") + ":";
+        L10N_windowTitle = bundle.getString("embossDialogTitle");
+        L10N_okButton = bundle.getString("embossButton");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_settingsButton = bundle.getString("settingsDialogTitle")+ "\u2026";
+
+        L10N_embosserLabel = bundle.getString("embosserLabel") + ":";
+        L10N_tableLabel = bundle.getString("tableLabel") + ":";
+        L10N_paperLabel = bundle.getString("paperSizeLabel") + ":";
+        L10N_paperWidthLabel = bundle.getString("paperWidthLabel") + ":";
+        L10N_paperHeightLabel = bundle.getString("paperHeightLabel") + ":";
+        L10N_duplexLabel = bundle.getString("duplexLabel");
+        L10N_eightDotsLabel = bundle.getString("eightDotsLabel");
+        L10N_numberOfCellsPerLineLabel = bundle.getString("numberOfCellsPerLineLabel") + ":";
+        L10N_numberOfLinesPerPageLabel = bundle.getString("numberOfLinesPerPageLabel") + ":";
+        L10N_marginLabel = bundle.getString("marginLabel") + ":";
+        L10N_marginInnerLabel = bundle.getString("inner") + ":";
+        L10N_marginOuterLabel = bundle.getString("outer") + ":";
+        L10N_marginTopLabel = bundle.getString("top") + ":";
+        L10N_marginBottomLabel = bundle.getString("bottom") + ":";
+        L10N_zFoldingLabel = bundle.getString("zFoldingLabel");
+        L10N_saddleStitchLabel = bundle.getString("saddleStitchLabel");
+        L10N_sheetsPerQuireLabel = bundle.getString("sheetsPerQuireLabel") + ":";
 
         okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
                 dialogControlContainer.getControl(_okButton));

@@ -102,9 +102,6 @@ public class InsertDialog implements XTextListener,
 
         xText = xViewCursor.getText();
         xTextCursor = xText.createTextCursorByRange(xViewCursor.getStart());
-
-        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("closeButton");
-        L10N_okButton = ResourceBundle.getBundle(L10N, oooLocale).getString("insertButton");
         nextButtonProperties.setPropertyValue("Enabled", true);
         nextButton.addActionListener(this);
     }
@@ -114,10 +111,15 @@ public class InsertDialog implements XTextListener,
 
         logger.entering("InsertDialog", "<init>");
         
-        oooLocale = Locale.getDefault();
+        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+              oooLocale = Locale.ENGLISH; }
+
+        ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
         
-        L10N_windowTitle = ResourceBundle.getBundle(L10N, oooLocale).getString("insertDialogTitle");
-        L10N_cancelButton = ResourceBundle.getBundle(L10N, oooLocale).getString("cancelButton");
+        L10N_windowTitle = bundle.getString("insertDialogTitle");
+        L10N_cancelButton = bundle.getString("cancelButton");
+        L10N_cancelButton = bundle.getString("closeButton");
+        L10N_okButton = bundle.getString("insertButton");
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/InsertDialog.xdl";
