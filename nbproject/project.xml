@@ -7,11 +7,11 @@
             <minimum-ant-version>1.7.0</minimum-ant-version>
             <explicit-platform explicit-source-supported="true"/>
             <source-roots>
-                <root id="src.dir"/>
-                <root id="src.core.dir"/>
+                <root id="src.dir" name="addon"/>
+                <root id="src.core.dir" name="core"/>
             </source-roots>
             <test-roots>
-                <root id="test.src.dir"/>
+                <root id="test.src.dir" name="test"/>
             </test-roots>
         </data>
         <references xmlns="http://www.netbeans.org/ns/ant-project-references/1"/>

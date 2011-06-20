@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Odt2BrailleAddOn-l10n" default="l10n" basedir=".">
+<project name="odt2braille-l10n" default="l10n" basedir=".">
     <description>Convert UTF-8 encoded properties files into ASCII encoded files.</description>
 	
 	<target name="l10n">

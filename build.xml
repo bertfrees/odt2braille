@@ -1,98 +1,116 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- You may freely edit this file. See commented blocks below for -->
-<!-- some examples of how to customize the build. -->
-<!-- (If you delete it and reopen the project it will be recreated.) -->
-<project name="odt2braille" default="jar" basedir=".">
+<project name="odt2braille" default="jar" basedir="."
+         xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3">
+         
     <description>Builds, tests, and runs the project extension project.</description>
-    <import file="nbproject/build-uno-impl.xml"/>
+
     <fail message="Please build using Ant 1.8.0 or higher.">
-        <condition>
-            <not>
-                <antversion atleast="1.8.0"/>
-            </not>
-        </condition>
+        <condition><not><antversion atleast="1.8.0"/></not></condition>
     </fail>
 
-    <tstamp>
-        <format property="ISO-TODAY" pattern="yyyy-MM-dd"/>
-    </tstamp>
+    <tstamp><format property="ISO-TODAY" pattern="yyyy-MM-dd"/></tstamp>
     
     <property name="project-name" value="odt2braille"/>
     <property name="release-version" value="0.1.1.rc10"/>
 
+	
+<!--
+  /- ===========================================================================
+  /- MAIN TARGETS                                                           
+  /- ===========================================================================
+  /-->
+  
+  
+    <target name="uno-package"
+            description="Create UNO extension package"
+            depends="addon-jar,images,registry,-delete-uno-package,-pre-uno-package,-do-uno-package,-post-uno-package"/>
+    
+    <target name="uno-run"
+	        description="Run UNO extension package in OpenOffice.org"
+	        depends="uno-package,-run-oo"/>
+    
+    <target name="addon-jar"
+            description="Build Addon jar"
+            depends="-uno-project-init,uno-idl-compile,-jar-idl-types,compile,-pre-jar,-do-openoffice-manifest,-post-jar,-do-addon-jar" />
+            
+    <target name="core-jar"
+            description="Build Core jar" />
+   
+    <target name="tools-jar"
+            description="Build Tools jar" />
+	
+	<target name="jar"
+	        depends="core-jar" />
+	
+    <target name="javadoc"
+            description="Build Javadoc"
+            depends="init,-javadoc-build" />
+    
+    <target name="test"
+            description="Run unit tests"
+            depends="init,compile-test,-pre-test-run,-do-test-run,-test-report,-post-test-run" />
 
-    <!-- override targets -->
+    <target name="compile"
+            description="Compile project"
+            depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" />
+	
+			
+<!--
+  /- ===========================================================================
+  /- OVERRIDE TARGETS                                                           
+  /- ===========================================================================
+  /-->
+  
+  
     <target name="-pre-init" depends="-init-build,-copy-external-jars"/>
     <target name="-pre-compile" depends="-make-liblouis-dir,-build-core"/>
     <target name="-post-uno-package" depends="-rebuild-extension"/>
-
-    <!-- override -post-test-run -->
-    <target depends="init,compile-test,-pre-test-run,-do-test-run,-test-html-report" if="have.tests" name="-post-test-run">
-        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
-    </target>
-
+    <target name="-profile-post-init"/>
+    <target name="-profile-pre-init"/>
+    <target name="-post-init"/>
+    <target name="-pre-uno-package"/>
+    <target name="-post-compile"/>
+    <target name="-post-jar"/>
+    <target name="-pre-jar"/>
+    <target name="-post-compile-test"/>
+    <target name="-pre-compile-test"/>
+    <target name="-post-clean"/>
+  
+  
+<!-- =========================================================================== -->
+  
+    
     <!-- initialise -->
     <target name="-init-build"
-        depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
+            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
 
-        <pathconvert property="libs.OpenOffice.org 3.3.classpath">
-            <path>
-                <pathelement location="${java.dir}${file.separator}juh.jar"/>
-                <pathelement location="${java.dir}${file.separator}jurt.jar"/>
-                <pathelement location="${java.dir}${file.separator}ridl.jar"/>
-                <pathelement location="${classes.dir}${file.separator}unoil.jar"/>
-            </path>
-        </pathconvert>
-
-        <!-- don't compile core but include jar in classpath -->
-        <mkdir dir="build/empty"/>
-        <property name="src.core.dir" value="build/empty"/>
-        <property name="core.jar" value="odt2braille-core.jar"/>
-        <property name="dist.core.jar" value="dist${file.separator}${core.jar}"/>
-        <property name="extend.javac.classpath" value=":${dist.core.jar}"/>
-
-        <property file="nbproject/project.properties"/>
-        <property file="nbproject/project-uno.properties"/>
-
-        <property name="sdk.bin.dir"
-                  value="${sdk.dir}${file.separator}bin"/>
-        <property name="ure.bin.dir"
-                  value="${ure.dir}${file.separator}bin"/>
-
-        <pathconvert property="office.tool.path">
-            <path>
-                <pathelement location="${office.program.dir}"/>
-                <pathelement location="${sdk.bin.dir}"/>
-                <pathelement location="${basis.dir}${file.separator}program"/>
-                <pathelement location="${ure.bin.dir}"/>
-            </path>
-        </pathconvert>
-
+        <property file="build.properties"/>
+		
         <pathconvert property="project.home">
             <path path="."/>
         </pathconvert>
-
-        <pathconvert property="core.classpath">
-            <path path="${javac.classpath}"/>
+		
+		<pathconvert property="core.deploy.dir">
+            <path path="${dist.dir}/${external.jar.dir}"/>
+        </pathconvert>
+		
+        <pathconvert property="core.classpath.attribute" pathsep=" " dirsep="/">
+            <path path="${javac.core.classpath}"/>
             <firstmatchmapper>
-                <globmapper from="*${core.jar}" to=""/>
-                <globmapper from="*juh.jar"     to=""/>
-            <globmapper from="*jurt.jar"    to=""/>
-            <globmapper from="*ridl.jar"    to=""/>
-            <globmapper from="*unoil.jar"   to=""/>
-            <identitymapper/>
+                <chainedmapper>
+                    <globmapper from="${project.home}/*" to="*" handledirsep="yes" />
+                    <flattenmapper/>
+                </chainedmapper>
+                <globmapper from="${core.deploy.dir}/*" to="*"/>
+                <globmapper from="/*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
             </firstmatchmapper>
         </pathconvert>
-
-        <pathconvert property="external.jars" pathsep=" " dirsep="/">
-            <path path="${core.classpath}:${dist.core.jar}"/>
+		
+        <pathconvert property="addon.classpath.attribute" pathsep=" " dirsep="/">
+            <path path="${core.deploy.dir}/${core.jar}"/>
             <firstmatchmapper>
-                <globmapper from="${project.home}${file.separator}${dist.core.jar}" to="${core.jar}"/>
-                <chainedmapper>
-                    <globmapper from="${project.home}${file.separator}*" to="*"/>
-                    <flattenmapper/>
-                    <globmapper from="*" to="lib/*"/>
-                </chainedmapper>
+                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
                 <globmapper from="/*" to="file:///*"/>
                 <globmapper from="*" to="file:///*"/>
             </firstmatchmapper>
@@ -171,7 +189,7 @@
     <!-- make external jars folder -->
     <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">
         <pathconvert property="core.classpath.space.sep" pathsep=" ">
-            <path path="${core.classpath}"/>
+            <path path="${javac.core.classpath}"/>
             <map from="${project.home}${file.separator}" to=""/>
         </pathconvert>
         <mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
@@ -257,23 +275,21 @@
 
     <!-- build core jar -->
     <target name="-build-core">
-        <property name="core.build.dir" value="${build.dir}/core-classes"/>
-        <property name="core.src.dir" value="core"/>
-        <delete dir="${core.build.dir}"/>
-    	<mkdir dir="${core.build.dir}"/>
+        <delete dir="${build.core.classes.dir}"/>
+    	<mkdir dir="${build.core.classes.dir}"/>
         
         <!-- compile -->
-        <javac srcdir="${core.src.dir}" destdir="${core.build.dir}"
+        <javac srcdir="${src.core.dir}" destdir="${build.core.classes.dir}"
                includeantruntime="false" debug="true" encoding="UTF-8"
                source="${javac.source}" target="${javac.target}"
                includes="**" excludes="">
             <classpath>
-                <path path="${core.classpath}"/>
+                <path path="${javac.core.classpath}"/>
             </classpath>
         </javac>
         
-        <copy todir="${core.build.dir}">
-            <fileset dir="${core.src.dir}">
+        <copy todir="${build.core.classes.dir}">
+            <fileset dir="${src.core.dir}">
                 <patternset>
                     <include name="META-INF/**/*.*"/>
                     <include name="**/*.properties"/>
@@ -286,14 +302,16 @@
         </copy>
         
         <!-- build jar -->
+		<delete file="${dist.core.jar}"/>
         <jar destfile="${dist.core.jar}">
-            <fileset dir="${core.build.dir}"/>
+            <fileset dir="${build.core.classes.dir}"/>
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Built-On" value="${ISO-TODAY}"/>
                 <attribute name="Implementation-Title" value="${project.name}"/>
                 <attribute name="Implementation-Version" value="${release-version}"/>
                 <attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
+                <attribute name="Class-Path" value="${core.classpath.attribute}"/>
             </manifest>
     	</jar>
     </target>
@@ -330,7 +348,7 @@
         <!-- specify target in description.xml -->
         <delete file="${build.oxt.dir}${file.separator}description.xml" />
         <filter token="platform-oxt" value="${target.os}"/>
-        <copy file="${src.dir}${file.separator}description.xml"
+        <copy file="${src.addon.dir}${file.separator}description.xml"
               tofile="${build.oxt.dir}${file.separator}description.xml"
               filtering="true" />
 
@@ -341,10 +359,631 @@
              basedir="${build.oxt.dir}" />		
 		
     </target>
+    
+  
+<!--
+  /- ===========================================================================
+  /- BUILD_UNO_IMPL.XML                                                       
+  /- ===========================================================================
+  /-->
+
+    
+    <target name="-uno-project-init" depends="-do-init">
+    
+        <property name="build.uno.version" value="2.0.6"/>
+      
+        <property name="office.unopkg" value="${office.program.dir}${file.separator}unopkg"/>
+        <property name="office.soffice" value="${office.program.dir}${file.separator}soffice"/>
+        
+        <property name="sdk.idl.dir" location="${oo.sdk.dir}${file.separator}idl"/> 
+        <property name="sdk.idlc" value="${sdk.bin.dir}${file.separator}idlc"/>
+        <property name="sdk.regmerge" value="${ure.bin.dir}${file.separator}regmerge"/>
+        <property name="sdk.javamaker" value="${sdk.bin.dir}${file.separator}javamaker"/>
+
+        <dirname property="project.dir" file="build.xml"/>       
+        <property name="uno.package.name" value="${project.dir}${file.separator}${dist.dir}${file.separator}${project.name}.oxt"/>
+        <property name="src.addon.dir.absolute" value="${project.dir}${file.separator}${src.addon.dir}"/>
+
+        <property name="idl.out" value="${project.dir}${file.separator}${build.dir}${file.separator}idl"/>
+        <property name="idl.classes.dir" value="${project.dir}${file.separator}${build.addon.classes.dir}"/>
+        <property name="idl.out.urd" value="${idl.out}/urd"/>
+        <property name="idl.out.rdb" value="${idl.out}/rdb"/>
+        <property name="idl.rdb.name" value="types.rdb"/>
+        <property name="idl.rdb.fullpath" value="${idl.out.rdb}/${idl.rdb.name}"/>
+		
+        <property name="images.base.dir" value="${build.dir}/img"/>
+        <property name="build.registry.dir" value="${build.dir}/cpreg"/>
+        
+        <mkdir dir="${idl.out}"/>
+        <mkdir dir="${idl.out.urd}"/>
+        <mkdir dir="${idl.out.rdb}"/>
+        <mkdir dir="${images.base.dir}"/>
+        <mkdir dir="${build.registry.dir}"/>
+		
+        <condition property="oo.version.three">
+            <equals arg1="${oo.version.number}" arg2="three"/>
+        </condition>
+    </target>
+
+    <!-- handle images -->
+    <target name="-uno-images-condition" description="check images" depends="-uno-project-init">
+        <available file="${images.dir}" type="dir" property="images.required"/>
+    </target>    
+    
+    <target name="images" description="copy images" depends="-uno-images-condition" if="images.required">
+        <mkdir dir="${images.base.dir}/${images.dir}"/>
+        <copy todir="${images.base.dir}/${images.dir}">
+            <fileset dir="${images.dir}"/>
+        </copy>
+    </target>
+
+    <!-- handle xcu/xcs files with package names -->    
+    <target name="-uno-registryfiles-condition" description="check xcu and xcs files" depends="-uno-project-init">
+        <available file="${registry.dir}" type="dir" property="xcuxcs.required"/>
+    </target>    
+    
+    <target name="registry" description="copy registry files" depends="-uno-registryfiles-condition" if="xcuxcs.required">
+        <mkdir dir="${build.registry.dir}/${registry.dir}"/>
+        <copy todir="${build.registry.dir}/${registry.dir}">
+            <fileset dir="${registry.dir}" includes="**/*.xcu,**/*.xcs"/>
+        </copy>
+    </target>
+    
+    <target name="-uno-idl-idlc-condition" description="check idlc dependencies" depends="-uno-project-init">
+        <uptodate property="idlc.notRequired" targetfile ="${build.dir}/idlc.compile">
+           <srcfiles dir= "${src.addon.dir}" includes="**/*.idl"/>
+        </uptodate>
+    </target>    
+   
+    <!-- compile UNO idl files: execution -->
+    <target name="-uno-idl-idlc" description="Compile the IDL Conditionally" depends="-uno-idl-idlc-condition" unless="idlc.notRequired">
+        <apply executable="${sdk.idlc}" dir="${office.program.dir}" failonerror="true">
+            <env key="PATH" path="${office.tool.path}"/>
+            <env key="LD_LIBRARY_PATH" path="${office.tool.path}"/> 
+            <env key="DYLD_LIBRARY_PATH" path="${office.tool.path}"/>
+            <arg value="-C"/>
+            <arg value="-O"/>
+            <arg value="${idl.out.urd}"/>
+            <arg value="-I"/>
+            <arg value="${src.addon.dir.absolute}"/>
+            <arg value="-I"/> 
+            <arg value="${sdk.idl.dir}"/> 
+            <fileset dir="${src.addon.dir}" includes="**/*.idl" casesensitive="yes" id="idl.list.id"/>
+        </apply>
+        <!-- list for copying idl files in own jar -->
+        <property name="idl.file" refid="idl.list.id"/>
+        <propertyfile file="${idl.out}/idl_list.properties">
+            <entry key="idl.file.list" value="${idl.file}"/>
+        </propertyfile>
+        <replace file="${idl.out}/idl_list.properties" token=".idl" value=".class"/>
+        <replace file="${idl.out}/idl_list.properties" token=";" value=","/>
+    </target>
+
+    <!-- merge urd files: execution -->
+    <target name="-uno-idl-regmerge" description="Merge urd Files Conditionally" depends="-uno-idl-idlc,-uno-idl-idlc-condition" unless="idlc.notRequired">
+        <!-- to only extract the new files, delete the old rdb -->
+        <delete file="${idl.rdb.fullpath}"/>        
+        <apply executable="${sdk.regmerge}" dir="${office.program.dir}" failonerror="true">
+            <env key="PATH" path="${office.tool.path}"/>
+            <env key="LD_LIBRARY_PATH" path="${office.tool.path}"/>
+            <env key="DYLD_LIBRARY_PATH" path="${office.tool.path}"/> 
+            <arg file="${idl.rdb.fullpath}"/>
+            <arg value="/UCR"/>
+            <fileset dir="${idl.out.urd}" includes="**/*.urd" casesensitive="yes"/>
+        </apply>
+    </target>
+
+    <!-- should javamaker be executed -->
+    <target name="-uno-idl-javamaker-condition" description="check if rdb was created" depends="-uno-idl-regmerge,-uno-idl-idlc-condition">
+        <available file="${idl.rdb.name}" filepath="${idl.out.rdb}" property="javamaker.Required"/>
+    </target>
+    
+    <!-- generate Java class files from type library: execution -->
+    <target name="-uno-idl-javamaker" depends="-uno-idl-regmerge,-uno-idl-idlc-condition,-uno-idl-javamaker-condition" if="javamaker.Required" unless="idlc.notRequired">
+        <echo message="generating java class files from rdb..."/>
+        <exec executable="${sdk.javamaker}" dir="${office.program.dir}" failonerror="true">
+            <env key="PATH" path="${office.tool.path}"/>                
+            <env key="LD_LIBRARY_PATH" path="${office.tool.path}"/>
+            <env key="DYLD_LIBRARY_PATH" path="${office.tool.path}"/> 
+            <arg value="-BUCR"/>
+            <arg value="-O"/>
+            <arg value="${idl.classes.dir}"/>
+            <arg file="${idl.rdb.fullpath}"/>
+            <arg value="${oo.unotypes.rdb}"/>
+            <arg value="${oo.offapi.rdb}"/>
+        </exec>
+    </target>
+
+    <target name="-uno-idl-result" depends="-uno-idl-javamaker">
+        <touch file="${build.dir}/idlc.compile"/>
+        <echo message="build UNO idl files finished"/>
+    </target>
+ 
+    <!-- the main target, called in recursive builds -->
+    <target name="uno-idl-compile" description="Compiles UNO idl files" depends="-uno-idl-result"/>
+
+    <target name="-jar-idl-types" depends="-do-uno-types" unless="no.idl.files">
+        <mkdir dir="${dist.dir}"/>
+        <jar basedir="${build.addon.classes.dir}" compress="true" jarfile="${dist.dir}/${idl_types.jar}" includes="${idl.file.list}">
+            <manifest>
+                <attribute name="UNO-Type-Path" value="&lt;&gt;"/>
+            </manifest>
+        </jar>
+    </target>
+
+	<target name="-do-addon-jar">
+        <jar basedir="${build.addon.classes.dir}"
+             compress="true"
+             filesonly="true"
+             manifest="${build.dir}/MANIFEST.MF"
+             jarfile="${dist.addon.jar}"
+             excludes="**/*.xml,**/*.txt,${idl.file.list},${build.classes.excludes}"/>
+    </target>
 	
-	
-	<!-- make html report from test results -->
-    <target name="-test-html-report">
+    <target name="-do-openoffice-manifest" depends="-do-registration,-do-class-path"/>
+    
+    <!-- enter the class path with external jars -->
+    <target name="-do-class-path">
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <attribute name="Class-Path" value="${addon.classpath.attribute}"/>
+        </manifest>
+    </target>
+    
+    <!-- enter idl type definitions -->
+    <target name="-do-uno-types" depends="-do-empty-unopath,-do-idl-unopath"/>
+    <target name="-do-idl-unopath" depends="-check-uno-types" if="own.idl.files">
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <attribute name="UNO-Type-Path" value="${idl_types.jar}"/> 
+        </manifest>            
+    </target>
+    <target name="-do-empty-unopath" depends="-check-uno-types" if="no.idl.files">
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <attribute name="UNO-Type-Path" value=""/> 
+        </manifest>            
+    </target>
+    <target name="-check-uno-types">
+        <property file="${idl.out}/idl_list.properties"/>
+        <condition property="no.idl.files">
+            <equals arg1="${idl.file.list}" arg2="" trim="true"/>
+        </condition>
+        <condition property="own.idl.files">
+            <not>
+                <istrue value="${no.idl.files}"/>
+            </not>
+        </condition>
+    </target>
+    
+    <!-- enter the registration classes. Do nothing when the project is old -->
+    <target name="-do-registration" depends="-do-central-registration" 
+                if="new.project.registration">
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <section name="${slash.registration.class}"> 
+                <attribute name="RegistrationClasses" value="${registration.classname}"/>
+            </section>
+        </manifest>
+    </target>
+    
+    <!-- enter the registration class name. Do nothing when the project is old -->
+    <target name="-do-central-registration" depends="-do-old-project-registration" if="new.project.registration">
+        <property name="regclass.properties" value="${build.dir}/regclass.properties"/>
+        <propertyfile file="${regclass.properties}">
+            <entry key="dot.registration" value="${slash.registration.class}"/>
+        </propertyfile>
+        <replace file="${regclass.properties}" token=".class" value=""/>
+        <replace file="${regclass.properties}" token="/" value="."/>
+        <property file="${regclass.properties}"/>
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <attribute name="RegistrationClassName" value="${dot.registration}"/>
+        </manifest>
+    </target>
+    
+    <!-- Do the registration for older projects without a central registration class -->
+    <target name="-do-old-project-registration" depends="-check-for-old-project" if="old.project.registration">
+        <manifest file="${build.dir}/MANIFEST.MF" mode="update">
+            <attribute name="RegistrationClassName" value="${registration.classname}"/>
+        </manifest>
+    </target>
+    <target name="-check-for-old-project">
+        <!-- central registration class in project -->
+        <fileset id="registration.class.name" dir="${build.addon.classes.dir}">
+            <patternset>
+                <include name="**/CentralRegistrationClass.class"/>
+            </patternset>
+        </fileset>
+        <property name="systemslash.registration.class" refid="registration.class.name"/>
+        <!-- make forward slash from backslash on Windows -->
+        <property name="regclass.properties" value="${build.dir}/regclass.properties"/>
+        <propertyfile file="${regclass.properties}">
+            <entry key="slash.registration.class" value="${systemslash.registration.class}"/>
+        </propertyfile>
+        <replace file="${regclass.properties}" token="\\" value="/"/>
+        <property file="${regclass.properties}"/>
+        <!-- now slash is ok -->
+        <condition property="old.project.registration">
+            <equals trim="true" arg1="${slash.registration.class}" arg2=""/>
+        </condition>
+        <condition property="new.project.registration">
+            <isfalse value="${old.project.registration}"/>
+        </condition>
+    </target>
+    
+    <target name="-delete-uno-package">
+        <delete failonerror="false" file="${uno.package.name}"/>
+    </target>
+
+    <target name="-license-exists">
+        <available file="${project.dir}/${licenses.dir}" type="dir" property="do.license"/>
+    </target>
+    
+    <!-- test for licenses dir is necessary because zipfileset fails if dir not there -->
+    <target name="-uno-package-with-license" depends="-license-exists" if="do.license">
+        <zip update="true" destfile="${uno.package.name}">
+            <zipfileset dir="${project.dir}/${licenses.dir}" includes="**" casesensitive="yes" prefix="${licenses.dir}"/>
+        </zip>
+    </target>
+
+    <target name="-description-exists">
+        <available file="${project.dir}/${description.dir}" type="dir" property="do.description"/>
+    </target>
+    
+    <!-- test for description dir is necessary because zipfileset fails if dir not there -->
+    <target name="-uno-package-with-description" depends="-description-exists" if="do.description">
+        <zip update="true" destfile="${uno.package.name}">
+            <zipfileset dir="${project.dir}/${description.dir}" includes="**" casesensitive="yes" prefix="${description.dir}"/>
+        </zip>
+    </target>
+
+    <target name="-help-exists">
+        <available file="${project.dir}/${help.dir}" type="dir" property="do.help"/>
+    </target>
+    
+    <!-- test for help dir is necessary because zipfileset fails if dir not there -->
+    <target name="-uno-package-with-help" depends="-help-exists" if="do.help">
+        <zip update="true" destfile="${uno.package.name}">
+            <zipfileset dir="${help.dir}" includes="${help.content.extensions}" prefix="${help.dir}"/>
+        </zip>
+    </target>    
+ 
+    <target name="-dialogs-exists">
+        <available file="${project.dir}/${dialogs.dir}" type="dir" property="do.dialogs"/>
+    </target>
+    
+    <!-- test for dialogs dir is necessary because zipfileset fails if dir not there -->
+    <target name="-uno-package-with-dialogs" depends="-dialogs-exists" if="do.dialogs">
+        <zip update="true" destfile="${uno.package.name}">
+            <zipfileset dir="${dialogs.dir}" includes="${dialog.content.extensions}" prefix="dialogs"/>
+        </zip>
+    </target>   
+    
+    <target name="-do-uno-package"
+	        description="Creates UNO extension pacakge"
+			depends="-uno-package-with-license,-uno-package-with-help,-uno-package-with-dialogs,-uno-package-with-description">
+        <zip update="true" destfile="${uno.package.name}">
+            <fileset dir="${src.addon.dir}" includes="${manifest.package.extensions}" casesensitive="yes"/>
+            <fileset dir="${build.registry.dir}" casesensitive="yes"/>
+            <fileset dir="${src.addon.dir}" includes="description.xml" casesensitive="yes"/>
+            <fileset dir="${dist.dir}" includes="**/*.jar" casesensitive="yes"/>
+            <fileset dir="${images.base.dir}" includes="**" casesensitive="yes"/>
+            <fileset dir="${idl.out.rdb}" includes="**/*.rdb" casesensitive="yes"/>
+            <zipfileset dir="${src.addon.dir}" includes="uno-extension-manifest.xml" fullpath="META-INF/manifest.xml"/>
+        </zip>
+    </target>
+
+    <!-- subtargets for different office versions -->
+    <target name="-run-oo">
+        <echo message="${office.unopkg} gui -f ${uno.package.name}"/>
+        <exec dir="${office.program.dir}" executable="${office.unopkg}" failonerror="true">
+            <arg value="gui"/>
+            <arg value="-f"/>
+            <arg file="${uno.package.name}"/>
+        </exec>
+        <echo message="${office.soffice}"/>
+        <exec executable="${office.soffice}" dir="${office.program.dir}" failonerror="true">
+            <arg value="${office.startup.options}"/>
+        </exec>
+    </target>
+    
+    
+<!--
+  /- ===========================================================================
+  /- BUILD_IMPL.XML                                                             
+  /- ===========================================================================
+  /-->
+
+    
+    <target depends="-pre-init" name="-do-init">
+       
+        <property name="run.jvmargs" value=""/>
+        <property name="javac.compilerargs" value=""/>
+        <property name="work.dir" value="${basedir}"/>
+        <condition property="no.deps">
+            <and>
+                <istrue value="${no.dependencies}"/>
+            </and>
+        </condition>
+        <property name="javac.debug" value="true"/>
+        <property name="application.args" value=""/>
+        <property name="source.encoding" value="${file.encoding}"/>
+        <property name="runtime.encoding" value="${source.encoding}"/>
+        <condition property="javadoc.encoding.used" value="${javadoc.encoding}">
+            <and>
+                <isset property="javadoc.encoding"/>
+                <not>
+                    <equals arg1="${javadoc.encoding}" arg2=""/>
+                </not>
+            </and>
+        </condition>
+        <property name="javadoc.encoding.used" value="${source.encoding}"/>
+        <property name="includes" value="**"/>
+        <property name="excludes" value=""/>
+        <property name="do.depend" value="false"/>
+        <condition property="do.depend.true">
+            <istrue value="${do.depend}"/>
+        </condition>
+        <path id="endorsed.classpath.path" path="${endorsed.classpath}"/>
+        <condition else="" property="endorsed.classpath.cmd.line.arg" value="-Xbootclasspath/p:'${toString:endorsed.classpath.path}'">
+            <length length="0" string="${endorsed.classpath}" when="greater"/>
+        </condition>
+        <condition else="false" property="jdkBug6558476">
+            <and>
+                <matches pattern="1\.[56]" string="${java.specification.version}"/>
+                <not>
+                    <os family="unix"/>
+                </not>
+            </and>
+        </condition>
+        <property name="javac.fork" value="${jdkBug6558476}"/>
+        <property name="jar.index" value="false"/>
+        <property name="jar.index.metainf" value="${jar.index}"/>
+        <available file="${meta.inf.dir}/persistence.xml" property="has.persistence.xml"/>
+    </target>
+    
+    <target depends="-pre-init,-do-init" name="-init-check">
+        <fail unless="src.addon.dir">Must set src.addon.dir</fail>
+        <fail unless="test.src.dir">Must set test.src.dir</fail>
+        <fail unless="build.dir">Must set build.dir</fail>
+        <fail unless="dist.dir">Must set dist.dir</fail>
+        <fail unless="build.addon.classes.dir">Must set build.addon.classes.dir</fail>
+        <fail unless="dist.javadoc.dir">Must set dist.javadoc.dir</fail>
+        <fail unless="build.test.classes.dir">Must set build.test.classes.dir</fail>
+        <fail unless="build.test.results.dir">Must set build.test.results.dir</fail>
+        <fail unless="build.classes.excludes">Must set build.classes.excludes</fail>
+        <fail unless="dist.addon.jar">Must set dist.addon.jar</fail>
+    </target>
+    
+    <target name="-init-macrodef-javac">
+        
+        <macrodef name="javac" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${src.addon.dir}" name="srcdir"/>
+            <attribute default="${build.addon.classes.dir}" name="destdir"/>
+            <attribute default="${javac.addon.classpath}" name="classpath"/>
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="${javac.debug}" name="debug"/>
+            <attribute default="${empty.dir}" name="sourcepath"/>
+            <attribute default="${empty.dir}" name="gensrcdir"/>
+            <element name="customize" optional="true"/>
+            <sequential>
+                <property location="${build.dir}/empty" name="empty.dir"/>
+                <mkdir dir="${empty.dir}"/>
+                <javac debug="@{debug}" deprecation="${javac.deprecation}" destdir="@{destdir}" encoding="${source.encoding}" excludes="@{excludes}" fork="${javac.fork}" includeantruntime="false" includes="@{includes}" source="${javac.source}" sourcepath="@{sourcepath}" srcdir="@{srcdir}" target="${javac.target}" tempdir="${java.io.tmpdir}">
+                    <src>
+                        <dirset dir="@{gensrcdir}" erroronmissingdir="false">
+                            <include name="*"/>
+                        </dirset>
+                    </src>
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                    <compilerarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <compilerarg line="${javac.compilerargs}"/>
+                    <customize/>
+                </javac>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="depend" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${src.addon.dir}" name="srcdir"/>
+            <attribute default="${build.addon.classes.dir}" name="destdir"/>
+            <attribute default="${javac.addon.classpath}" name="classpath"/>
+            <sequential>
+                <depend cache="${build.dir}/depcache" destdir="@{destdir}" excludes="${excludes}" includes="${includes}" srcdir="@{srcdir}">
+                    <classpath>
+                        <path path="@{classpath}"/>
+                    </classpath>
+                </depend>
+            </sequential>
+        </macrodef>
+        
+        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${build.addon.classes.dir}" name="destdir"/>
+            <sequential>
+                <fail unless="javac.includes">Must set javac.includes</fail>
+                <pathconvert pathsep="${line.separator}" property="javac.includes.binary">
+                    <path>
+                        <filelist dir="@{destdir}" files="${javac.includes}"/>
+                    </path>
+                    <globmapper from="*.java" to="*.class"/>
+                </pathconvert>
+                <tempfile deleteonexit="true" property="javac.includesfile.binary"/>
+                <echo file="${javac.includesfile.binary}" message="${javac.includes.binary}"/>
+                <delete>
+                    <files includesfile="${javac.includesfile.binary}"/>
+                </delete>
+                <delete>
+                    <fileset file="${javac.includesfile.binary}"/>
+                </delete>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    <target name="-init-macrodef-junit">
+        <macrodef name="junit" uri="http://www.netbeans.org/ns/j2se-project/3">
+            <attribute default="${includes}" name="includes"/>
+            <attribute default="${excludes}" name="excludes"/>
+            <attribute default="**" name="testincludes"/>
+            <sequential>
+                <property name="junit.forkmode" value="perTest"/>
+                <junit dir="${work.dir}" errorproperty="tests.failed" failureproperty="tests.failed" fork="true" forkmode="${junit.forkmode}" showoutput="true" tempdir="${build.dir}">
+                    <batchtest todir="${build.test.results.dir}">
+                        <fileset dir="${test.src.dir}" excludes="@{excludes},${excludes}" includes="@{includes}">
+                            <filename name="@{testincludes}"/>
+                        </fileset>
+                    </batchtest>
+                    <classpath>
+                        <path path="${run.test.classpath}"/>
+                    </classpath>
+                    <syspropertyset>
+                        <propertyref prefix="test-sys-prop."/>
+                        <mapper from="test-sys-prop.*" to="*" type="glob"/>
+                    </syspropertyset>
+                    <formatter type="brief" usefile="false"/>
+                    <formatter type="xml"/>
+                    <jvmarg line="${endorsed.classpath.cmd.line.arg}"/>
+                    <jvmarg value="-ea"/>
+                    <jvmarg line="${run.jvmargs}"/>
+                </junit>
+            </sequential>
+        </macrodef>
+    </target>
+   
+    <target name="init" depends="-pre-init,-do-init,-post-init,-init-check,-init-macrodef-javac,-init-macrodef-junit"/>
+
+    <!--
+                ===================
+                COMPILATION SECTION
+                ===================
+            -->
+
+    <target name="-deps-jar-init" unless="built-jar.properties">
+        <property location="${build.dir}/built-jar.properties" name="built-jar.properties"/>
+        <delete file="${built-jar.properties}" quiet="true"/>
+    </target>
+    <target if="already.built.jar.${basedir}" name="-warn-already-built-jar">
+        <echo level="warn" message="Cycle detected: Odt2BrailleAddOn was already built"/>
+    </target>
+    <target depends="init,-deps-jar-init" name="deps-jar" unless="no.deps">
+        <mkdir dir="${build.dir}"/>
+        <touch file="${built-jar.properties}" verbose="false"/>
+        <property file="${built-jar.properties}" prefix="already.built.jar."/>
+        <antcall target="-warn-already-built-jar"/>
+        <propertyfile file="${built-jar.properties}">
+            <entry key="${basedir}" value=""/>
+        </propertyfile>
+    </target>
+    <target depends="init,-check-automatic-build,-clean-after-automatic-build" name="-verify-automatic-build"/>
+    <target depends="init" name="-check-automatic-build">
+        <available file="${build.addon.classes.dir}/.netbeans_automatic_build" property="netbeans.automatic.build"/>
+    </target>
+    <target depends="init" if="netbeans.automatic.build" name="-clean-after-automatic-build">
+        <antcall target="clean"/>
+    </target>
+    <target depends="init,deps-jar" name="-pre-pre-compile">
+        <mkdir dir="${build.addon.classes.dir}"/>
+    </target>
+
+    <target if="do.depend.true" name="-compile-depend">
+        <pathconvert property="build.generated.subdirs">
+            <dirset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+                <include name="*"/>
+            </dirset>
+        </pathconvert>
+        <j2seproject3:depend srcdir="${src.addon.dir}:${build.generated.subdirs}"/>
+    </target>
+    <target depends="init,deps-jar,-pre-pre-compile,-pre-compile, -copy-persistence-xml,-compile-depend" name="-do-compile">
+        <j2seproject3:javac gensrcdir="${build.generated.sources.dir}"/>
+        <copy todir="${build.addon.classes.dir}">
+            <fileset dir="${src.addon.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+        </copy>
+    </target>
+    <target if="has.persistence.xml" name="-copy-persistence-xml">
+        <mkdir dir="${build.addon.classes.dir}/META-INF"/>
+        <copy todir="${build.addon.classes.dir}/META-INF">
+            <fileset dir="${meta.inf.dir}" includes="persistence.xml"/>
+        </copy>
+    </target>
+
+    <!--
+                ===============
+                JAVADOC SECTION
+                ===============
+            -->
+
+    <target depends="init" name="-javadoc-build">
+        <mkdir dir="${dist.javadoc.dir}"/>
+        <javadoc additionalparam="${javadoc.additionalparam}" author="${javadoc.author}" charset="UTF-8" destdir="${dist.javadoc.dir}" docencoding="UTF-8" encoding="${javadoc.encoding.used}" failonerror="true" noindex="${javadoc.noindex}" nonavbar="${javadoc.nonavbar}" notree="${javadoc.notree}" private="${javadoc.private}" source="${javac.source}" splitindex="${javadoc.splitindex}" use="${javadoc.use}" useexternalfile="true" version="${javadoc.version}" windowtitle="${javadoc.windowtitle}">
+            <classpath>
+                <path path="${javac.addon.classpath}"/>
+            </classpath>
+            <fileset dir="${src.addon.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.core.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${src.tools.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+                <include name="**/*.java"/>
+            </fileset>
+        </javadoc>
+        <copy todir="${dist.javadoc.dir}">
+            <fileset dir="${src.addon.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/doc-files/**"/>
+            </fileset>
+            <fileset dir="${src.core.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/doc-files/**"/>
+            </fileset>
+            <fileset dir="${src.tools.dir}" excludes="${excludes}" includes="${includes}">
+                <filename name="**/*.java"/>
+            </fileset>
+            <fileset dir="${build.generated.sources.dir}" erroronmissingdir="false">
+                <include name="**/doc-files/**"/>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!--
+                =========================
+                JUNIT COMPILATION SECTION
+                =========================
+            -->
+
+    <target depends="init,compile" name="-pre-pre-compile-test">
+        <mkdir dir="${build.test.classes.dir}"/>
+    </target>
+
+    <target if="do.depend.true" name="-compile-test-depend">
+        <j2seproject3:depend classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
+    </target>
+    <target depends="init,deps-jar,compile,-pre-pre-compile-test,-pre-compile-test,-compile-test-depend" name="-do-compile-test">
+        <j2seproject3:javac classpath="${javac.test.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
+        <copy todir="${build.test.classes.dir}">
+            <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
+        </copy>
+    </target>
+
+    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test,-do-compile-test,-post-compile-test" name="compile-test"/>
+
+    <!--
+                =======================
+                JUNIT EXECUTION SECTION
+                =======================
+            -->
+
+    <target depends="init" name="-pre-test-run">
+        <mkdir dir="${build.test.results.dir}"/>
+    </target>
+    <target depends="init,compile-test,-pre-test-run" name="-do-test-run">
+        <j2seproject3:junit testincludes="**/*Test.java"/>
+    </target>
+    <target depends="init,compile-test,-pre-test-run,-do-test-run" name="-post-test-run">
+        <fail if="tests.failed" unless="ignore.failing.tests">Some tests failed; see details above.</fail>
+    </target>
+    
+    <!-- make html report from test results -->
+    <target depends="init" name="-test-report">
         <delete dir="${build.test.report.dir}"/>
         <mkdir dir="${build.test.report.dir}"/>
         <junitreport todir="${build.test.report.dir}">
@@ -353,6 +992,51 @@
             </fileset>
             <report todir="${build.test.report.dir}" />
         </junitreport>	
+    </target>
+
+    <!--
+                ===============
+                CLEANUP SECTION
+                ===============
+            -->
+            
+    <target name="-deps-clean-init" unless="built-clean.properties">
+        <property location="${build.dir}/built-clean.properties" name="built-clean.properties"/>
+        <delete file="${built-clean.properties}" quiet="true"/>
+    </target>
+    <target if="already.built.clean.${basedir}" name="-warn-already-built-clean">
+        <echo level="warn" message="Cycle detected: Odt2BrailleAddOn was already built"/>
+    </target>
+    <target depends="init,-deps-clean-init" name="deps-clean" unless="no.deps">
+        <mkdir dir="${build.dir}"/>
+        <touch file="${built-clean.properties}" verbose="false"/>
+        <property file="${built-clean.properties}" prefix="already.built.clean."/>
+        <antcall target="-warn-already-built-clean"/>
+        <propertyfile file="${built-clean.properties}">
+            <entry key="${basedir}" value=""/>
+        </propertyfile>
+    </target>
+    <target depends="init" name="-do-clean">
+        <delete dir="${build.dir}"/>
+        <delete dir="${dist.dir}" followsymlinks="false" includeemptydirs="true"/>
+    </target>
+
+    <target depends="init,deps-clean,-do-clean,-post-clean" description="Clean build products." name="clean"/>
+    <target name="-check-call-dep">
+        <property file="${call.built.properties}" prefix="already.built."/>
+        <condition property="should.call.dep">
+            <not>
+                <isset property="already.built.${call.subproject}"/>
+            </not>
+        </condition>
+    </target>
+    <target depends="-check-call-dep" if="should.call.dep" name="-maybe-call-dep">
+        <ant antfile="${call.script}" inheritall="false" target="${call.target}">
+            <propertyset>
+                <propertyref prefix="transfer."/>
+                <mapper from="transfer.*" to="*" type="glob"/>
+            </propertyset>
+        </ant>
     </target>
 	
 </project>

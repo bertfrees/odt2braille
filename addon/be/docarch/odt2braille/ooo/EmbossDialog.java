@@ -25,6 +25,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.util.Collections;
 
@@ -78,6 +80,10 @@ public class EmbossDialog implements XItemListener,
                                      XFocusListener,
                                      XSpinListener {
 
+    private enum EmbosserStatus {  ALPHA,
+                                   BETA,
+                                   STABLE  };
+
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
@@ -93,6 +99,8 @@ public class EmbossDialog implements XItemListener,
     private Comparator<Embosser> embosserComparator = null;
     private Comparator<Table> tableComparator = null;
     private Comparator<Paper> paperComparator = null;
+
+    private Map<String,EmbosserStatus> embosserStatus = null;
 
     private XDialog dialog = null;
     private XControlContainer dialogControlContainer = null;
@@ -114,6 +122,8 @@ public class EmbossDialog implements XItemListener,
     private XPropertySet okButtonProperties = null;
     private XPropertySet windowProperties = null;
     private String L10N_windowTitle = null;
+
+    private String warningImageUrl = null;
 
     private XListBox embosserListBox = null;
     private XListBox tableListBox = null;
@@ -164,6 +174,7 @@ public class EmbossDialog implements XItemListener,
     private XPropertySet zFoldingCheckBoxProperties = null;
     private XPropertySet saddleStitchCheckBoxProperties = null;
     private XPropertySet sheetsPerQuireFieldProperties = null;
+    private XPropertySet warningImageControlProperties = null;
 
     private static String _embosserListBox = "ListBox2";
     private static String _tableListBox = "ListBox3";
@@ -183,6 +194,7 @@ public class EmbossDialog implements XItemListener,
     private static String _zFoldingCheckBox = "CheckBox2";
     private static String _saddleStitchCheckBox = "CheckBox4";
     private static String _sheetsPerQuireField = "NumericField9";
+    private static String _warningImageControl = "ImageControl1";
 
     private static String _embosserLabel = "Label2";
     private static String _tableLabel = "Label3";
@@ -233,6 +245,7 @@ public class EmbossDialog implements XItemListener,
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/EmbossDialog.xdl";
+        warningImageUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/images/warning_20x20.png";
         XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
         dialog = xDialogProvider.createDialog(dialogUrl);
         dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
@@ -245,7 +258,7 @@ public class EmbossDialog implements XItemListener,
         paperList = new ArrayList<Paper>();
         
         embosserComparator = new Comparator<Embosser>() {
-            @Override
+          //@Override
             public int compare(Embosser e1, Embosser e2) {
                 String id1 = e1.getIdentifier();
                 String id2 = e2.getIdentifier();
@@ -261,13 +274,13 @@ public class EmbossDialog implements XItemListener,
             }
         };
         tableComparator = new Comparator<Table>() {
-            @Override
+          //@Override
             public int compare(Table t1, Table t2) {
                 return ((Comparable)t1.getDisplayName()).compareTo(t2.getDisplayName());
             }
         };
         paperComparator = new Comparator<Paper>() {
-            @Override
+          //@Override
             public int compare(Paper p1, Paper p2) {
                 String id1 = p1.getIdentifier();
                 String id2 = p2.getIdentifier();
@@ -282,6 +295,20 @@ public class EmbossDialog implements XItemListener,
                 }
             }
         };
+
+        embosserStatus = new HashMap<String,EmbosserStatus>();
+        for (Embosser e : settings.getSupportedEmbossers()) {
+            String id = e.getIdentifier();
+            if (id.startsWith(Settings.INTERPOINT) ||
+                id.startsWith(Settings.BRAILLO)||
+                id.equals(Settings.GENERIC_EMBOSSER)) {
+                embosserStatus.put(id, EmbosserStatus.STABLE);
+            } else if (id.startsWith(Settings.INDEX_BRAILLE)) {
+                embosserStatus.put(id, EmbosserStatus.BETA);
+            } else {
+                embosserStatus.put(id, EmbosserStatus.ALPHA);
+            }
+        }
 
         Locale oooLocale;
         try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
@@ -412,6 +439,11 @@ public class EmbossDialog implements XItemListener,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, saddleStitchCheckBox)).getModel());
         sheetsPerQuireFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, sheetsPerQuireField)).getModel());
+
+        XControl warningImageControl = (XControl) UnoRuntime.queryInterface(XControl.class,
+                dialogControlContainer.getControl(_warningImageControl));
+        warningImageControlProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, warningImageControl)).getModel());
 
         setDialogValues();
         addListeners();
@@ -557,6 +589,7 @@ public class EmbossDialog implements XItemListener,
         sheetsPerQuireField.setValue((double)settings.getSheetsPerQuire());
 
         updateEmbosserListBox();
+        updateWarningImage();
         updateSaddleStitchCheckBox();
         updateZFoldingCheckBox();
         updateDuplexCheckBox();
@@ -608,7 +641,17 @@ public class EmbossDialog implements XItemListener,
                 if (e.getIdentifier().equals(selectedId)) {
                     select = i;
                 }
-                embosserListBox.addItem(e.getDisplayName(), i);
+                switch (embosserStatus.get(e.getIdentifier())) {
+                    case ALPHA:
+                        embosserListBox.addItem(e.getDisplayName() + " (alpha)", i);
+                        break;
+                    case BETA:
+                        embosserListBox.addItem(e.getDisplayName() + " (beta)", i);
+                        break;
+                    case STABLE:
+                    default:
+                        embosserListBox.addItem(e.getDisplayName(), i);
+                }
                 i++;
             }
             if (select>=0) {
@@ -616,6 +659,19 @@ public class EmbossDialog implements XItemListener,
             }
 
         embosserListBox.addItemListener(this);
+    }
+
+    private void updateWarningImage() throws com.sun.star.uno.Exception {
+
+        switch (embosserStatus.get(settings.getEmbosser().getIdentifier())) {
+            case ALPHA:
+            case BETA:
+                warningImageControlProperties.setPropertyValue("ImageURL", warningImageUrl);
+                break;
+            case STABLE:
+            default:
+                warningImageControlProperties.setPropertyValue("ImageURL", "");
+        }
     }
 
     /**
@@ -788,7 +844,7 @@ public class EmbossDialog implements XItemListener,
 
     }
 
-    @Override
+  //@Override
     public void itemStateChanged(ItemEvent itemEvent) {
 
         logger.entering("EmbossDialog", "itemStateChanged");
@@ -801,6 +857,7 @@ public class EmbossDialog implements XItemListener,
 
                 settings.setEmbosser(embosserList.get(embosserListBox.getSelectedItemPos()));
 
+                updateWarningImage();
                 updateSaddleStitchCheckBox();
                 updateZFoldingCheckBox();
                 updateDuplexCheckBox();
@@ -858,7 +915,7 @@ public class EmbossDialog implements XItemListener,
         }
     }
 
-    @Override
+  //@Override
     public void actionPerformed(ActionEvent actionEvent) {
 
         logger.entering("EmbossDialog", "actionPerformed");
@@ -893,7 +950,7 @@ public class EmbossDialog implements XItemListener,
      *
      * @param textEvent
      */
-    @Override
+  //@Override
     public void textChanged(TextEvent textEvent) {
 
         logger.entering("EmbossDialog", "textChanged");
@@ -932,7 +989,7 @@ public class EmbossDialog implements XItemListener,
         }
     }
 
-    @Override
+  //@Override
     public void focusLost(FocusEvent focusEvent) {
 
         logger.entering("EmbossDialog", "focusLost");
@@ -953,7 +1010,7 @@ public class EmbossDialog implements XItemListener,
         }
     }
 
-    @Override
+  //@Override
     public void focusGained(FocusEvent focusEvent) {}
 
     private void spin(SpinEvent spinEvent) {
@@ -976,25 +1033,25 @@ public class EmbossDialog implements XItemListener,
         }
     }
 
-    @Override
+  //@Override
     public void up(SpinEvent spinEvent) {
         spin(spinEvent);
     }
 
-    @Override
+  //@Override
     public void down(SpinEvent spinEvent) {
         spin(spinEvent);
     }
 
-    @Override
+  //@Override
     public void first(SpinEvent spinEvent) {}
 
-    @Override
+  //@Override
     public void last(SpinEvent spinEvent) {}
 
     /**
      * @param event
      */
-    @Override
+  //@Override
     public void disposing(EventObject event) {}
 }

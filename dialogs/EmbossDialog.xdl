@@ -3,6 +3,7 @@
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog1" dlg:left="297" dlg:top="103" dlg:width="185" dlg:height="301" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0"/>
+  <dlg:style dlg:style-id="1" dlg:border="none"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:id="CommandButton1" dlg:tab-index="17" dlg:left="35" dlg:top="282" dlg:width="47" dlg:height="12" dlg:button-type="cancel" dlg:grab-focus="false"/>
@@ -44,5 +45,6 @@
   <dlg:text dlg:id="Label16" dlg:tab-index="36" dlg:left="25" dlg:top="81" dlg:width="144" dlg:height="10" dlg:value="Label16"/>
   <dlg:numericfield dlg:style-id="0" dlg:id="NumericField9" dlg:tab-index="37" dlg:left="135" dlg:top="93" dlg:width="32" dlg:height="11" dlg:strict-format="true" dlg:spin="true"/>
   <dlg:text dlg:id="Label17" dlg:tab-index="38" dlg:left="44" dlg:top="95" dlg:width="90" dlg:height="10" dlg:value="Label17"/>
+  <dlg:img dlg:style-id="1" dlg:id="ImageControl1" dlg:tab-index="39" dlg:left="21" dlg:top="24" dlg:width="10" dlg:height="10"/>
  </dlg:bulletinboard>
 </dlg:window>

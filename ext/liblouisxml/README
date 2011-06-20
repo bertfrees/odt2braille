@@ -54,7 +54,7 @@ Windows (CodeBlocks)
    * %ODT2BRAILLE_HOME%/ext/libxml2/bin/libxml2.dll.a
    * %ODT2BRAILLE_HOME%/ext/liblouis/bin/liblouis.a
   - search directories (Compiler):
-   * %ODT2BRAILLE_HOME%/ext/libxml2/include/libxml
+   * %ODT2BRAILLE_HOME%/ext/libxml2/include
    * %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3/liblouis
   - build
   - copy to %ODT2BRAILLE_HOME%/ext/liblouisxml/bin:
@@ -63,8 +63,11 @@ Windows (CodeBlocks)
    * liblouisxml.def
  
  2.
-  - create a new dynamix linked library project: xml2brl
+  - create a new dynamic linked library project: xml2brl
   - delete main.c & main.h
+  - edit %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/liblouisxml/config.h:
+   * HAVE_DECL_PROGRAM_INVOCATION_NAME 0
+   * HAVE_DECL_PROGRAM_INVOCATION_SHORT_NAME 0
   - add files:
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/tools/xml2brl.c
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/gnulib (except getopt.c & getopt1.c)
@@ -73,9 +76,10 @@ Windows (CodeBlocks)
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/bin/liblouisxml.a
    * %ODT2BRAILLE_HOME%/ext/liblouis/bin/liblouis.a
   - search directories (Compiler)
-   * %ODT2BRAILLE_HOME%/ext/libxml2/include/libxml
+   * %ODT2BRAILLE_HOME%/ext/libxml2/include
    * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/liblouisxml
    * %ODT2BRAILLE_HOME%/ext/liblouis/src/release_2.3/liblouis
+   * %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac/gnulib
   - build
   - copy to %ODT2BRAILLE_HOME%/ext/liblouisxml/bin:
    * xml2brl.exe
