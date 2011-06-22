@@ -332,11 +332,10 @@ public class Settings {
 
     private Map<String,ParagraphStyle> paragraphStyles;
     private Map<String,CharacterStyle> characterStyles;
-  //private Map<String,TableStyle> tableStyles;           // default + self defined table styles (because there is no such thing as table styles in OOo)
-  //private Map<String,TableStyle> tableStylesMap;        // map each table name <-> table style
+    private Map<String,TableStyle> tableStyles;
+    private Map<String,TableStyle> tableStylesMap;
     private List<HeadingStyle> headingStyles;
     private List<ListStyle> listStyles;
-    private TableStyle tableStyle;
     private FrameStyle frameStyle;
     private TocStyle tocStyle;
     private ParagraphStyle volumeInfoStyle;
@@ -390,11 +389,6 @@ public class Settings {
         this.minLastVolumeSize = copySettings.minLastVolumeSize;
         this.preferredVolumeSize = copySettings.preferredVolumeSize;
         this.minSyllableLength = copySettings.minSyllableLength;
-
-//        this.cellSpacing = copySettings.cellSpacing;
-//        this.lineSpacing = copySettings.lineSpacing;
-//        this.cellHeight = copySettings.cellHeight;
-//        this.cellWidth = copySettings.cellWidth;
         
         this.unprintableInner = copySettings.unprintableInner;
         this.unprintableOuter = copySettings.unprintableOuter;
@@ -508,7 +502,15 @@ public class Settings {
             }
         }
 
-        this.tableStyle = new TableStyle(copySettings.tableStyle);
+        this.tableStyles = new TreeMap<String,TableStyle>();
+        for (TableStyle copyTableStyle: copySettings.tableStyles.values()) {
+            this.tableStyles.put(copyTableStyle.getName(), new TableStyle(copyTableStyle));
+        }
+        this.tableStylesMap = new TreeMap<String,TableStyle>();
+        for (String tableName : copySettings.tableStylesMap.keySet()) {
+            this.tableStylesMap.put(tableName, this.tableStyles.get(copySettings.tableStylesMap.get(tableName).getName()));
+        }
+
         this.frameStyle = new FrameStyle(copySettings.frameStyle);
         this.tocStyle = new TocStyle(copySettings.tocStyle);
         this.volumeInfoStyle = this.paragraphStyles.get(copySettings.volumeInfoStyle.getName());
@@ -765,12 +767,17 @@ public class Settings {
             listStyles.add(listStyle);
             parentLevel = listStyle;
         }
-        tableStyle = new TableStyle();
+        TableStyle defaultTableStyle = new TableStyle("Default");
+        tableStyles = new TreeMap<String,TableStyle>();
+        tableStyles.put(defaultTableStyle.getName(), defaultTableStyle);
+        
+        tableStylesMap = new TreeMap<String,TableStyle>();
+
         frameStyle = new FrameStyle();
         tocStyle = new TocStyle();
         setVolumeInfoStyle("Standard");
         setTranscriptionInfoStyle("Standard");
-        footnoteStyle = new Style();
+        footnoteStyle = new Style();        
 
         // Settings
 
@@ -792,8 +799,8 @@ public class Settings {
         transcriptionInfoEnabled = false;
 
         setHyphenate(false);
-        setVolumeInfoStyle(paragraphStyles.get("Standard"));
-        setTranscriptionInfoStyle(paragraphStyles.get("Standard"));
+        setVolumeInfoStyle("Standard");
+        setTranscriptionInfoStyle("Standard");
 
         singleVolume = new SingleVolume();
         singleVolume.setTitle("(Single volume)");
@@ -978,10 +985,6 @@ public class Settings {
         unprintableOuter = 0;
         unprintableTop = 0;
         unprintableBottom = 0;
-//        cellSpacing = 0;
-//        lineSpacing = 0;
-//        cellHeight = 0;
-//        cellWidth = 0;
         cellsInWidth = 0;
         linesInHeight = 0;
         cellsPerLine = 40;
@@ -1620,7 +1623,8 @@ public class Settings {
                   emb.equals(INDEX_BASIC_S_V2) ||
                   emb.equals(INDEX_BASIC_D_V2) ||
                   emb.equals(INDEX_BASIC_S_V3) ||
-                  emb.equals(INDEX_BASIC_D_V3))
+                  emb.equals(INDEX_BASIC_D_V3) ||
+                  emb.equals(INDEX_BASIC_D_V4))
                 && id.equals(CUSTOM_PAPER)) {
                 return true;
             }
@@ -2218,54 +2222,6 @@ public class Settings {
 
     public int getMarginBottomOffset() {
         return (int)Math.floor(unprintableBottom / 10d);
-    }
-
-    /**
-     * @param stairstep
-     */
-    public boolean setStairstepTable(boolean stairstep) {
-
-        if (locked) { return false; }
-        tableStyle.setStairstepTable(stairstep);
-        return true;
-    }
-
-    /**
-     * @return
-     */
-    public boolean stairstepTableIsEnabled() {
-        return tableStyle.getStairstepTable();
-    }
-
-    /**
-     * @param delimiter
-     */
-    public boolean setColumnDelimiter(String delimiter) {
-        
-        if (locked) { return false; }        
-        tableStyle.setColumnDelimiter(delimiter);
-        return true;
-    }
-
-    /**
-     * @return
-     */
-    public String getColumnDelimiter() {
-        return tableStyle.getColumnDelimiter();
-    }
-
-    /**
-     * @param   symbol
-     * @return  <code>true</code> if lineFillSymbol is in [U+2801,U+283F].
-     */
-    public boolean setLineFillSymbol(char symbol) {
-
-        if (locked) { return false; }
-        return tocStyle.setLineFillSymbol(symbol);
-    }
-
-    public char getLineFillSymbol() {
-        return tocStyle.getLineFillSymbol();
     }
 
     public boolean setMath(MathType math) {
@@ -3038,16 +2994,20 @@ public class Settings {
         return new ArrayList(characterStyles.values());
     }
 
+    public List<TableStyle> getTableStyles() {
+        return new ArrayList(tableStyles.values());
+    }
+
+//    public TableStyle getTableStyle(String tableName) {
+//        return tableStylesMap.get(tableName);
+//    }
+
     public List<HeadingStyle> getHeadingStyles() {
         return new ArrayList(headingStyles);
     }
 
     public List<ListStyle> getListStyles() {
         return new ArrayList(listStyles);
-    }
-
-    public TableStyle getTableStyle() {
-        return tableStyle;
     }
 
     public FrameStyle getFrameStyle() {
@@ -3070,39 +3030,30 @@ public class Settings {
         return transcriptionInfoStyle;
     }
 
-    public boolean setVolumeInfoStyle(ParagraphStyle volumeInfoStyle) {
+    public boolean setTableStyle(String tableName,
+                                 String tableStyle) {
 
-        if (volumeInfoStyle != null) {
-            if (paragraphStyles.containsValue(volumeInfoStyle)) {
-                this.volumeInfoStyle = volumeInfoStyle;
-                return true;
-            }
+        if (locked) { return false; }
+        if (tableStylesMap.containsKey(tableStyle)) {
+            tableStyles.put(tableName, tableStylesMap.get(tableStyle));
+            return true;
         }
         return false;
     }
 
-    public boolean setTranscriptionInfoStyle(ParagraphStyle transcriptionInfoStyle) {
-
-        if (transcriptionInfoStyle != null) {
-            if (paragraphStyles.containsValue(transcriptionInfoStyle)) {
-                this.transcriptionInfoStyle = transcriptionInfoStyle;
-                return true;
-            }
-        }
-        return false;
-    }
-    
     public boolean setVolumeInfoStyle(String volumeInfoStyle) {
-        
+
+        if (locked) { return false; }
         if (paragraphStyles.containsKey(volumeInfoStyle)) {
             this.volumeInfoStyle = paragraphStyles.get(volumeInfoStyle);
             return true;
-        }    
+        }
         return false;
     }
 
     public boolean setTranscriptionInfoStyle(String transcriptionInfoStyle) {
 
+        if (locked) { return false; }
         if (paragraphStyles.containsKey(transcriptionInfoStyle)) {
             this.transcriptionInfoStyle = paragraphStyles.get(transcriptionInfoStyle);
             return true;
@@ -3184,7 +3135,7 @@ public class Settings {
             setPrintPageNumberAt(PageNumberPosition.TOP_RIGHT);
             setBraillePageNumberAt(PageNumberPosition.BOTTOM_RIGHT);
             setPreliminaryPageFormat(PageNumberFormat.P);
-            setLineFillSymbol('\u2804');
+            getTocStyle().setLineFillSymbol('\u2804');
             setNoterefNumberPrefix("1", "\u2814\u2814");
             setNoterefNumberPrefix("a", "\u2814\u2814\u2830");
             setNoterefNumberPrefix("A", "\u2814\u2814");
@@ -3269,15 +3220,7 @@ public class Settings {
                 listStyle.setPrefix("");
             }
 
-            Style style = null;
-            for (int i=1;i<=10;i++) {
-                style = tableStyle.getColumn(i);
-                if (style != null) {
-                    style.setAlignment(Style.Alignment.LEFT);
-                    style.setFirstLine(2*i-2);
-                    style.setRunovers(2*i-2);
-                }
-            }
+            TableStyle tableStyle = tableStyles.get("Default");
 
             tableStyle.setLinesAbove(0);
             tableStyle.setLinesBelow(0);
@@ -3289,6 +3232,9 @@ public class Settings {
             tableStyle.setPaddingBelow(0);
             tableStyle.setLinesBetween(0);
             tableStyle.setStairstepTable(true);
+            tableStyle.setFirstLine(0);
+            tableStyle.setRunovers(0);
+            tableStyle.setIndentPerColumn(2);
 
             frameStyle.setLinesAbove(0);
             frameStyle.setLinesBelow(0);
@@ -3299,11 +3245,12 @@ public class Settings {
             frameStyle.setPaddingAbove(0);
             frameStyle.setPaddingBelow(0);
 
+            Style tocLevelStyle = null;
             for (int i=1;i<=10;i++) {
-                style = tocStyle.getLevel(i);
-                if (style != null) {
-                    style.setFirstLine(2*i-2);
-                    style.setRunovers(2*i+2);
+                tocLevelStyle = tocStyle.getLevel(i);
+                if (tocLevelStyle != null) {
+                    tocLevelStyle.setFirstLine(2*i-2);
+                    tocLevelStyle.setRunovers(2*i+2);
                 }
             }
 

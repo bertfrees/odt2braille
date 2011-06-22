@@ -1702,6 +1702,9 @@ public class OdtTransformer {
             List<String> noterefNumberFormats = settings.getNoterefNumberFormats();
             List<String> noterefNumberPrefixes = new ArrayList<String>();
 
+            TableStyle tableStyle = settings.getTableStyles().get(0);
+            TocStyle tocStyle = settings.getTocStyle();
+
             for (Iterator<ParagraphStyle> i = settings.getParagraphStyles().iterator(); i.hasNext();) {
 
                 ParagraphStyle style = i.next();
@@ -1754,18 +1757,24 @@ public class OdtTransformer {
             mainXSL.setParameter("controller-url",                controllerFile.toURI());
 
             mainXSL.setParameter("paramVolumeManagementMode",     settings.getVolumeManagementMode().name());
-            mainXSL.setParameter("paramStairstepTableEnabled",    settings.stairstepTableIsEnabled());
             mainXSL.setParameter("paramHyphenationEnabled",       settings.getHyphenate());
             mainXSL.setParameter("paramKeepHardPageBreaks",       settings.getHardPageBreaks());
-            mainXSL.setParameter("paramColumnDelimiter",          settings.getColumnDelimiter());
             mainXSL.setParameter("paramNoterefSpaceBefore",       settings.getNoterefSpaceBefore());
             mainXSL.setParameter("paramNoterefSpaceAfter",        settings.getNoterefSpaceAfter());
             mainXSL.setParameter("paramNoterefNumberFormats",     noterefNumberFormats.toArray(new String[noterefNumberFormats.size()]));
             mainXSL.setParameter("paramNoterefNumberPrefixes",    noterefNumberPrefixes.toArray(new String[noterefNumberPrefixes.size()]));
             mainXSL.setParameter("paramKeepEmptyParagraphStyles", keepEmptyParagraphStyles.toArray(new String[keepEmptyParagraphStyles.size()]));
-            mainXSL.setParameter("paramTocUptoLevel",             settings.getTocStyle().getUptoLevel());
-            mainXSL.setParameter("paramTableUpperBorder",         settings.getTableStyle().getUpperBorder());
-            mainXSL.setParameter("paramTableLowerBorder",         settings.getTableStyle().getLowerBorder());
+            mainXSL.setParameter("paramTocUptoLevel",             tocStyle.getUptoLevel());
+            mainXSL.setParameter("paramTableUpperBorder",         tableStyle.getUpperBorder());
+            mainXSL.setParameter("paramTableLowerBorder",         tableStyle.getLowerBorder());
+            mainXSL.setParameter("paramStairstepTableEnabled",    tableStyle.getStairstepTable());
+            mainXSL.setParameter("paramColumnDelimiter",          tableStyle.getColumnDelimiter());
+            mainXSL.setParameter("paramColumnHeadings",           tableStyle.getColumnHeadings());
+            mainXSL.setParameter("paramRowHeadings",              tableStyle.getRowHeadings());
+            mainXSL.setParameter("paramTableHeadingSuffix",       tableStyle.getHeadingSuffix());
+            mainXSL.setParameter("paramRepeatTableHeading",       tableStyle.getRepeatHeading());
+            mainXSL.setParameter("paramMirrorTable",              tableStyle.getMirrorTable());
+
             mainXSL.setParameter("paramFrameUpperBorder",         settings.getFrameStyle().getUpperBorder());
             mainXSL.setParameter("paramFrameLowerBorder",         settings.getFrameStyle().getLowerBorder());
             mainXSL.setParameter("paramHeadingUpperBorder",       headingUpperBorder.toArray(new Boolean[headingUpperBorder.size()]));
@@ -2067,6 +2076,12 @@ public class OdtTransformer {
         return outline;
     }
 
+ /* public Set<String> extractTableNames() {
+
+
+
+    } */
+    
     public Set<String> extractNoterefCharacters() throws IOException,
                                                          TransformerException,
                                                          SAXException  {
@@ -2086,7 +2101,7 @@ public class OdtTransformer {
         return characters;
     }
 
-    private String[] extractUnicodeBlocks(File inputFile)
+ /* private String[] extractUnicodeBlocks(File inputFile)
                                    throws IOException,
                                           TransformerConfigurationException,
                                           TransformerException {
@@ -2116,7 +2131,7 @@ public class OdtTransformer {
 
         return unicodeBlocks;
 
-    }
+    } */
 
     public File getOdtContentFile() {
         return odtContentFile;

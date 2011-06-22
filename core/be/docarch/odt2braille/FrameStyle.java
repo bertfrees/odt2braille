@@ -26,12 +26,12 @@ package be.docarch.odt2braille;
  */
 public class FrameStyle extends Style {
 
-    protected int paddingAbove;
-    protected int paddingBelow;
-    protected boolean upperBorder;
-    protected boolean lowerBorder;
-    protected char upperBorderStyle;
-    protected char lowerBorderStyle;
+    private int paddingAbove;
+    private int paddingBelow;
+    private boolean upperBorder;
+    private boolean lowerBorder;
+    private char upperBorderStyle;
+    private char lowerBorderStyle;
 
     public FrameStyle(FrameStyle copyStyle) {
     

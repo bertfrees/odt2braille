@@ -195,8 +195,8 @@ public class LiblouisXML {
               + "linesAfter "      + paraStyle.getLinesBelow() + sep
               + "keepWithNext "    + (paraStyle.getKeepWithNext()?"yes":"no") + sep
               + "dontSplit "       + (paraStyle.getDontSplit()?"yes":"no") + sep
-              // + "widowControl "    + (paraStyle.widowControlEnabled?paraStyle.getWidowControl():0) + sep
-              + "orphanControl "   + (paraStyle.orphanControlEnabled?paraStyle.getOrphanControl():0) + sep;
+           // + "widowControl "    + (paraStyle.getWidowControlEnabled()?paraStyle.getWidowControl():0) + sep
+              + "orphanControl "   + (paraStyle.getOrphanControlEnabled()?paraStyle.getOrphanControl():0) + sep;
             bufferedWriter.write("style wrap-paragraph_" + paraStyle.getName() + sep + s);
 
         }
@@ -241,8 +241,7 @@ public class LiblouisXML {
             s += "linesAfter "     + listStyle.getLinesBetween() + sep;
             bufferedWriter.write("style li" + level + sep + s);
             s = "leftMargin "      + listStyle.getRunovers() + sep
-              + "centeredMargin "  + listStyle.getMarginLeftRight() + sep
-              + "format "          + alignmentMap.get(listStyle.getAlignment()) + sep;
+              + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
             bufferedWriter.write("style listpara" + level + sep + s);
             s += "firstLineIndent " + (listStyle.getFirstLine() - listStyle.getRunovers()) + sep;
             bufferedWriter.write("style firstlistpara" + level + sep + s);
@@ -262,7 +261,7 @@ public class LiblouisXML {
 
         // Tables
 
-        TableStyle tableStyle = settings.getTableStyle();
+        TableStyle tableStyle = settings.getTableStyles().get(0);
 
         s = "linesBefore " + tableStyle.getLinesAbove() + sep
           + "linesAfter "  + tableStyle.getLinesBelow() + sep;
@@ -271,19 +270,17 @@ public class LiblouisXML {
           + "linesAfter "  + (tableStyle.getLowerBorder()?tableStyle.getPaddingBelow():0) + sep;
         bufferedWriter.write("style pad-table" + sep + s);
 
-        if (settings.stairstepTableIsEnabled()) {
+        if (tableStyle.getStairstepTable()) {
+
+            int firstLine = tableStyle.getFirstLine();
+            int runovers = tableStyle.getRunovers();
+            int indentPerColumn = tableStyle.getIndentPerColumn();
 
             for (int i=1;i<=10;i++) {
-
-                style = tableStyle.getColumn(i);
-                if (style!= null) {
-
-                    s = "firstLineIndent " + (style.getFirstLine() - style.getRunovers()) + sep
-                      + "leftMargin "      + style.getRunovers() + sep
-                      + "centeredMargin "  + style.getMarginLeftRight() + sep
-                      + "format "          + alignmentMap.get(style.getAlignment()) + sep;
-                    bufferedWriter.write("style tablecolumn" + i + sep + s);
-                }
+                s = "firstLineIndent " + (firstLine - runovers) + sep
+                  + "leftMargin "      + runovers + (i-1)*indentPerColumn + sep
+                  + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
+                bufferedWriter.write("style tablecolumn" + i + sep + s);
             }
 
             s = "";
@@ -292,8 +289,7 @@ public class LiblouisXML {
 
             s = "firstLineIndent " + (tableStyle.getFirstLine() - tableStyle.getRunovers()) + sep
               + "leftMargin "      + tableStyle.getRunovers() + sep
-              + "centeredMargin "  + tableStyle.getMarginLeftRight() + sep
-              + "format "          + alignmentMap.get(tableStyle.getAlignment()) + sep;
+              + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
         }
 
         s += "dontSplit "  + (tableStyle.getDontSplitRows()?"yes":"no") + sep;
@@ -504,7 +500,7 @@ public class LiblouisXML {
                                "_sem_paragraphs.sem," +
                                "_sem_borders.sem," +
                               (extractpprangemode?"_sem_extractpprangemode.sem,":"") +
-                              (settings.stairstepTableIsEnabled()?"_sem_stairsteptable.sem,":"") +
+                              (settings.getTableStyles().get(0).getStairstepTable()?"_sem_stairsteptable.sem,":"") +
                               "_sem_" + math + ".sem";
         String mathTable = "__" + math + ".ctb";
         String editTables = "_edit_" + math + ".ctb";
@@ -522,8 +518,8 @@ public class LiblouisXML {
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
         configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(settings.getCellsPerLine()));
         configurationList.add("-C" + "linesPerPage="                 + Integer.toString(settings.getLinesPerPage()));
-        if (IS_WINDOWS)
-            configurationList.add("-C" + "minSyllableLength="        + Integer.toString(settings.getMinSyllableLength()));
+        if (IS_WINDOWS) {
+            configurationList.add("-C" + "minSyllableLength="        + Integer.toString(settings.getMinSyllableLength())); }
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));
         configurationList.add("-C" + "pageSeparator="                + (settings.getPageSeparator()?"yes":"no"));
@@ -538,7 +534,7 @@ public class LiblouisXML {
         configurationList.add("-C" + "braillePageNumberAt="          + ((settings.getBraillePageNumberAt() == PageNumberPosition.TOP_RIGHT)?"top":"bottom"));
         configurationList.add("-C" + "printPageNumbersInContents="   + (settings.getPrintPageNumbersInToc()?"yes":"no"));
         configurationList.add("-C" + "braillePageNumbersInContents=" + (settings.getBraillePageNumbersInToc()?"yes":"no"));
-        configurationList.add("-C" + "lineFill="                     + liblouisTable.toText(String.valueOf(settings.getLineFillSymbol())));
+        configurationList.add("-C" + "lineFill="                     + liblouisTable.toText(String.valueOf(settings.getTocStyle().getLineFillSymbol())));
 
         configurationList.add(inputFile.getAbsolutePath());
         configurationList.add(outputFile.getAbsolutePath());

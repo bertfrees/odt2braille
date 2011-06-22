@@ -26,16 +26,16 @@ package be.docarch.odt2braille;
  */
 public class ParagraphStyle extends Style {
 
-    protected String displayName;
-    protected ParagraphStyle parentStyle;
-    protected boolean inherit;
-    protected boolean automatic;
-    protected boolean keepEmptyParagraphs;
-    protected boolean keepWithNext;
-    protected boolean widowControlEnabled;
-    protected boolean orphanControlEnabled;
-    protected int widowControl;
-    protected int orphanControl;
+    private String displayName;
+    private ParagraphStyle parentStyle;
+    private boolean inherit;
+    private boolean automatic;
+    private boolean keepEmptyParagraphs;
+    private boolean keepWithNext;
+    private boolean widowControlEnabled;
+    private boolean orphanControlEnabled;
+    private int widowControl;
+    private int orphanControl;
 
 
     public ParagraphStyle(ParagraphStyle copyStyle) {

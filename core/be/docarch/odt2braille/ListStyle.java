@@ -26,11 +26,11 @@ package be.docarch.odt2braille;
  */
 public class ListStyle extends Style {
 
-    protected int level;
-    protected ListStyle parentLevel;
-    protected boolean dontSplitItems;
-    protected String prefix;
-    protected int linesBetween;
+    private int level;
+    private ListStyle parentLevel;
+    private boolean dontSplitItems;
+    private String prefix;
+    private int linesBetween;
 
 
     public ListStyle(ListStyle copyStyle) {

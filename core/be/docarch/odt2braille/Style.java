@@ -37,7 +37,6 @@ public class Style implements Comparable {
     protected int linesAbove;
     protected int linesBelow;
 
-
     public Style(Style copyStyle) {
     
         this.name = copyStyle.name;

@@ -212,7 +212,7 @@ public class SettingsIO extends SettingsLoader {
         List<CharacterStyle> characterStyles = loadedSettings.getCharacterStyles();
         List<HeadingStyle> headingStyles = loadedSettings.getHeadingStyles();
         List<ListStyle> listStyles = loadedSettings.getListStyles();
-        TableStyle tableStyle = loadedSettings.getTableStyle();
+        TableStyle tableStyle = loadedSettings.getTableStyles().get(0);
         TocStyle tocStyle = loadedSettings.getTocStyle();
         Style footnoteStyle = loadedSettings.getFootnoteStyle();
         ParagraphStyle paraStyle = null;
@@ -439,69 +439,46 @@ public class SettingsIO extends SettingsLoader {
         }
 
         if ((b = getBooleanProperty(stairstepTableProperty)) != null) {
-            loadedSettings.setStairstepTable(b);
-        }
-        if ((s = getStringProperty(columnDelimiterProperty)) != null) {
-            loadedSettings.setColumnDelimiter(s);
+            tableStyle.setStairstepTable(b);
         }
         if ((b = getBooleanProperty(dontSplitTableRowsProperty)) != null) {
             tableStyle.setDontSplitRows(b);
+        }
+        if ((b = getBooleanProperty(mirrorTableProperty)) != null) {
+            tableStyle.setMirrorTable(b);
+        }
+        if ((b = getBooleanProperty(columnHeadingsProperty)) != null) {
+            tableStyle.setColumnHeadings(b);
+        }
+        if ((b = getBooleanProperty(rowHeadingsProperty)) != null) {
+            tableStyle.setRowHeadings(b);
+        }
+        if ((b = getBooleanProperty(repeatHeadingsProperty)) != null) {
+            tableStyle.setRepeatHeading(b);
+        }
+        if ((s = getStringProperty(columnDelimiterProperty)) != null) {
+            tableStyle.setColumnDelimiter(s);
+        }
+        if ((s = getStringProperty(tableHeadingSuffixProperty)) != null) {
+            tableStyle.setHeadingSuffix(s);
+        }
+        if (!((d = getDoubleProperty(indentPerColumnProperty)).isNaN())) {
+            tableStyle.setIndentPerColumn(d.intValue());
         }
         if (!((d = getDoubleProperty(linesBetweenProperty + "_table")).isNaN())) {
             tableStyle.setLinesBetween(d.intValue());
         }
         if (!(d = getDoubleProperty(firstLineProperty + "_table")).isNaN()) {
-            listStyle.setFirstLine(d.intValue());
+            tableStyle.setFirstLine(d.intValue());
         }
         if (!((d = getDoubleProperty(runoversProperty + "_table")).isNaN())) {
-            listStyle.setRunovers(d.intValue());
-        }
-        if (!((d = getDoubleProperty(marginLeftRightProperty + "_table")).isNaN())) {
-            listStyle.setMarginLeftRight(d.intValue());
+            tableStyle.setRunovers(d.intValue());
         }
         if (!((d = getDoubleProperty(linesAboveProperty + "_table")).isNaN())) {
-            listStyle.setLinesAbove(d.intValue());
+            tableStyle.setLinesAbove(d.intValue());
         }
         if (!((d = getDoubleProperty(linesBelowProperty + "_table")).isNaN())) {
-            listStyle.setLinesBelow(d.intValue());
-        }
-        if ((s = getStringProperty(alignmentProperty + "_table")) != null) {
-            try {
-                listStyle.setAlignment(Alignment.valueOf(s));
-            } catch (IllegalArgumentException ex) {
-                logger.log(Level.SEVERE, null, s + " is no valid alignment option");
-            }
-        }
-
-        for (int column=1;column<=10;column++) {
-
-            style = tableStyle.getColumn(column);
-
-            if (style!= null) {
-
-                if (!(d = getDoubleProperty(firstLineProperty + "_table_" + column)).isNaN()) {
-                    style.setFirstLine(d.intValue());
-                }
-                if (!((d = getDoubleProperty(runoversProperty + "_table_" + column)).isNaN())) {
-                    style.setRunovers(d.intValue());
-                }
-                if (!((d = getDoubleProperty(marginLeftRightProperty + "_table_" + column)).isNaN())) {
-                    style.setMarginLeftRight(d.intValue());
-                }
-                if (!((d = getDoubleProperty(linesAboveProperty + "_table_" + column)).isNaN())) {
-                    style.setLinesAbove(d.intValue());
-                }
-                if (!((d = getDoubleProperty(linesBelowProperty + "_table_" + column)).isNaN())) {
-                    style.setLinesBelow(d.intValue());
-                }
-                if ((s = getStringProperty(alignmentProperty + "_table_" + column)) != null) {
-                    try {
-                        style.setAlignment(Alignment.valueOf(s));
-                    } catch (IllegalArgumentException ex) {
-                        logger.log(Level.SEVERE, null, s + " is no valid alignment option");
-                    }
-                }
-            }
+            tableStyle.setLinesBelow(d.intValue());
         }
 
         if ((s = getStringProperty(tableOfContentTitleProperty)) != null) {
@@ -509,7 +486,7 @@ public class SettingsIO extends SettingsLoader {
         }
         if ((s = getStringProperty(lineFillSymbolProperty)) != null) {
             if (s.length()==1) {
-                loadedSettings.setLineFillSymbol(s.charAt(0));
+                loadedSettings.getTocStyle().setLineFillSymbol(s.charAt(0));
             }
         }
         if (!(d = getDoubleProperty(tableOfContentLevelProperty)).isNaN()) {
@@ -988,8 +965,8 @@ public class SettingsIO extends SettingsLoader {
         List<HeadingStyle> headingStylesBeforeChange = settingsBeforeChange.getHeadingStyles();
         List<ListStyle> listStylesBeforeChange = settingsBeforeChange.getListStyles();
         List<ListStyle> listStylesAfterChange = settingsAfterChange.getListStyles();
-        TableStyle tableStyleBeforeChange = settingsBeforeChange.getTableStyle();
-        TableStyle tableStyleAfterChange = settingsAfterChange.getTableStyle();
+        TableStyle tableStyleBeforeChange = settingsBeforeChange.getTableStyles().get(0);
+        TableStyle tableStyleAfterChange = settingsAfterChange.getTableStyles().get(0);
         TocStyle tocStyleBeforeChange = settingsBeforeChange.getTocStyle();
         TocStyle tocStyleAfterChange = settingsAfterChange.getTocStyle();
         Style footnoteStyleBeforeChange = settingsBeforeChange.getFootnoteStyle();
@@ -1197,26 +1174,38 @@ public class SettingsIO extends SettingsLoader {
         }
 
         setProperty(stairstepTableProperty,
-                    settingsAfterChange.stairstepTableIsEnabled(),
-                    settingsBeforeChange.stairstepTableIsEnabled());
-        setProperty(columnDelimiterProperty,
-                    settingsAfterChange.getColumnDelimiter(),
-                    settingsBeforeChange.getColumnDelimiter());
+                    tableStyleAfterChange.getStairstepTable(),
+                    tableStyleBeforeChange.getStairstepTable());
         setProperty(dontSplitTableRowsProperty,
                     tableStyleAfterChange.getDontSplitRows(),
                     tableStyleBeforeChange.getDontSplitRows());
-        setProperty(alignmentProperty + "_table",
-                    tableStyleAfterChange.getAlignment().name(),
-                    tableStyleBeforeChange.getAlignment().name());
+        setProperty(mirrorTableProperty,
+                    tableStyleAfterChange.getMirrorTable(),
+                    tableStyleBeforeChange.getMirrorTable());
+        setProperty(columnHeadingsProperty,
+                    tableStyleAfterChange.getColumnHeadings(),
+                    tableStyleBeforeChange.getColumnHeadings());
+        setProperty(rowHeadingsProperty,
+                    tableStyleAfterChange.getRowHeadings(),
+                    tableStyleBeforeChange.getRowHeadings());
+        setProperty(repeatHeadingsProperty,
+                    tableStyleAfterChange.getRepeatHeading(),
+                    tableStyleBeforeChange.getRepeatHeading());
+        setProperty(columnDelimiterProperty,
+                    tableStyleAfterChange.getColumnDelimiter(),
+                    tableStyleBeforeChange.getColumnDelimiter());
+        setProperty(tableHeadingSuffixProperty,
+                    tableStyleAfterChange.getHeadingSuffix(),
+                    tableStyleBeforeChange.getHeadingSuffix());
+        setProperty(indentPerColumnProperty,
+                    tableStyleAfterChange.getIndentPerColumn(),
+                    tableStyleBeforeChange.getIndentPerColumn());
         setProperty(firstLineProperty + "_table",
                     tableStyleAfterChange.getFirstLine(),
                     tableStyleBeforeChange.getFirstLine());
         setProperty(runoversProperty + "_table",
                     tableStyleAfterChange.getRunovers(),
                     tableStyleBeforeChange.getRunovers());
-        setProperty(marginLeftRightProperty + "_table",
-                    tableStyleAfterChange.getMarginLeftRight(),
-                    tableStyleBeforeChange.getMarginLeftRight());
         setProperty(linesAboveProperty + "_table",
                     tableStyleAfterChange.getLinesAbove(),
                     tableStyleBeforeChange.getLinesAbove());
@@ -1226,34 +1215,6 @@ public class SettingsIO extends SettingsLoader {
         setProperty(linesBetweenProperty + "_table",
                     tableStyleAfterChange.getLinesBetween(),
                     tableStyleBeforeChange.getLinesBetween());
-
-        for (int column=1;column<=10;column++) {
-
-            styleAfterChange = tableStyleAfterChange.getColumn(column);
-            styleBeforeChange = tableStyleBeforeChange.getColumn(column);
-
-            if (styleAfterChange!= null && styleBeforeChange!=null) {
-
-                setProperty(alignmentProperty + "_table_" + column,
-                            styleAfterChange.getAlignment().name(),
-                            styleBeforeChange.getAlignment().name());
-                setProperty(firstLineProperty + "_table_" + column,
-                            styleAfterChange.getFirstLine(),
-                            styleBeforeChange.getFirstLine());
-                setProperty(runoversProperty + "_table_" + column,
-                            styleAfterChange.getRunovers(),
-                            styleBeforeChange.getRunovers());
-                setProperty(marginLeftRightProperty + "_table_" + column,
-                            styleAfterChange.getMarginLeftRight(),
-                            styleBeforeChange.getMarginLeftRight());
-                setProperty(linesAboveProperty + "_table_" + column,
-                            styleAfterChange.getLinesAbove(),
-                            styleBeforeChange.getLinesAbove());
-                setProperty(linesBelowProperty + "_table_" + column,
-                            styleAfterChange.getLinesBelow(),
-                            styleBeforeChange.getLinesBelow());
-            }
-        }
 
         setProperty(alignmentProperty + "_footnote",
                     footnoteStyleAfterChange.getAlignment().name(),
@@ -1291,8 +1252,8 @@ public class SettingsIO extends SettingsLoader {
                     settingsAfterChange.getTableOfContentTitle(),
                     settingsBeforeChange.getTableOfContentTitle());
         setProperty(lineFillSymbolProperty,
-                    String.valueOf(settingsAfterChange.getLineFillSymbol()),
-                    String.valueOf(settingsBeforeChange.getLineFillSymbol()));
+                    String.valueOf(settingsAfterChange.getTocStyle().getLineFillSymbol()),
+                    String.valueOf(settingsBeforeChange.getTocStyle().getLineFillSymbol()));
         setProperty(tableOfContentLevelProperty,
                     tocStyleAfterChange.getUptoLevel(),
                     tocStyleBeforeChange.getUptoLevel());

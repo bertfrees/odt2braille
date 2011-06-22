@@ -20,7 +20,7 @@ public class TablesTest extends Odt2BrailleTest {
 
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
-        settings.getTableStyle().setStairstepTable(true);
+        settings.getTableStyles().get(0).setStairstepTable(true);
 
         LiblouisXML liblouisXML = new LiblouisXML(settings, liblouis);
         PEF pefBuilder = new PEF(settings, liblouisXML);
@@ -42,7 +42,7 @@ public class TablesTest extends Odt2BrailleTest {
 
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
-        settings.getTableStyle().setStairstepTable(false);
+        settings.getTableStyles().get(0).setStairstepTable(false);
 
         LiblouisXML liblouisXML = new LiblouisXML(settings, liblouis);
         PEF pefBuilder = new PEF(settings, liblouisXML);

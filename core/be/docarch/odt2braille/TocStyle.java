@@ -28,12 +28,12 @@ public class TocStyle extends Style {
 
     private static final int LEVELS = 10;
 
-    protected boolean printPageNumbers;
-    protected boolean braillePageNumbers;
-    protected char lineFillSymbol;
-    protected Style[] levels;
-    protected int uptoLevel;
-    protected int linesBetween;
+    private boolean printPageNumbers;
+    private boolean braillePageNumbers;
+    private char lineFillSymbol;
+    private Style[] levels;
+    private int uptoLevel;
+    private int linesBetween;
 
     public TocStyle(TocStyle copyStyle) {
     
@@ -63,24 +63,19 @@ public class TocStyle extends Style {
         linesBetween = 0;
     }
 
-    public char    getLineFillSymbol     ()          { return lineFillSymbol; }
-    public boolean getBraillePageNumbers ()          { return braillePageNumbers; }
-    public boolean getPrintPageNumbers   ()          { return printPageNumbers; }
-    public Style   getLevel              (int index) { return (index <= levels.length && index > 0)?levels[index-1]:null; }
-    public int     getUptoLevel          ()          { return uptoLevel; }
-    public int     getLinesBetween       ()          { return linesBetween; }
+    public char    getLineFillSymbol()        { return lineFillSymbol; }
+    public boolean getBraillePageNumbers ()   { return braillePageNumbers; }
+    public boolean getPrintPageNumbers()      { return printPageNumbers; }
+    public Style   getLevel(int index)        { return (index <= levels.length && index > 0)?levels[index-1]:null; }
+    public int     getUptoLevel()             { return uptoLevel; }
+    public int     getLinesBetween()          { return linesBetween; }
 
     public void    setBraillePageNumbers (boolean numbers)     { this.braillePageNumbers = numbers; }
     public void    setPrintPageNumbers   (boolean numbers)     { this.printPageNumbers = numbers; }
     public void    setUptoLevel          (int level)           { if (level >= 1 && level <=LEVELS) { uptoLevel = level; }}
     public void    setLinesBetween       (int linesBetween)    { if (linesBetween >= 0) { this.linesBetween = linesBetween; }}
-    public boolean setLineFillSymbol     (char lineFillSymbol) {
-        if (lineFillSymbol > 0x2800 &&
-            lineFillSymbol < 0x2840) {
-            this.lineFillSymbol = lineFillSymbol;
-            return true;
-        } else {
-            return false;
-        }
-    }    
+    public boolean setLineFillSymbol     (char lineFillSymbol) { if (lineFillSymbol > 0x2800 &&
+                                                                     lineFillSymbol < 0x2840) { this.lineFillSymbol = lineFillSymbol;
+                                                                                                return true; }
+                                                                 else                         { return false; }}
 }

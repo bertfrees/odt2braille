@@ -89,8 +89,8 @@
         <pathconvert property="project.home">
             <path path="."/>
         </pathconvert>
-		
-		<pathconvert property="core.deploy.dir">
+
+        <pathconvert property="core.deploy.dir">
             <path path="${dist.dir}/${external.jar.dir}"/>
         </pathconvert>
 		

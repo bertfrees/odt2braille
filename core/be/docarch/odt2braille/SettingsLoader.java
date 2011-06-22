@@ -88,6 +88,12 @@ public class SettingsLoader {
     protected static String maxVolumeSizeProperty =                "[BRL]MaximumVolumeSize";
     protected static String minLastVolumeSizeProperty =            "[BRL]MinimumLastVolumeSize";
     protected static String minSyllableLengthProperty =            "[BRL]MinimumSyllableLength";
+    protected static String tableHeadingSuffixProperty =           "[BRL]TableHeadingSuffix";
+    protected static String indentPerColumnProperty =              "[BRL]IndentPerColumn";
+    protected static String mirrorTableProperty =                  "[BRL]MirrorTable";
+    protected static String columnHeadingsProperty =               "[BRL]ColumnHeadings";
+    protected static String rowHeadingsProperty =                  "[BRL]RowHeadings";
+    protected static String repeatHeadingsProperty =               "[BRL]RepeatHeadings";
 
     // Export settings
 
