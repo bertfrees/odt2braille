@@ -20,225 +20,236 @@
 package be.docarch.odt2braille.ooo;
 
 import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collections;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.lang.XComponent;
-import com.sun.star.lang.EventObject;
-import com.sun.star.awt.XItemListener;
-import com.sun.star.awt.ItemEvent;
-import com.sun.star.awt.XListBox;
 import com.sun.star.awt.XDialog;
 import com.sun.star.awt.XControlContainer;
 import com.sun.star.awt.PushButtonType;
 import com.sun.star.awt.XControl;
-import com.sun.star.awt.XFixedText;
-import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.ActionEvent;
-import com.sun.star.awt.XButton;
-import com.sun.star.awt.XNumericField;
-import com.sun.star.awt.XCheckBox;
 import com.sun.star.awt.XDialogProvider2;
 import com.sun.star.awt.DialogProvider2;
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
+import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.PropertyVetoException;
+
 import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.Settings;
-import be.docarch.odt2braille.Settings.VolumeManagementMode;
-import org.daisy.braille.embosser.FileFormat;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
+import be.docarch.odt2braille.ooo.dialog.*;
 import org.daisy.braille.table.Table;
+import org.daisy.braille.embosser.FileFormat;
 
 /**
  *
  * @author   Bert Frees
  */
-public class ExportDialog implements XItemListener,
-                                     XActionListener {
+public class ExportDialog {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
-    private Settings settings = null;
-    private XComponentContext xContext = null;
-    private ProgressBar progressbar = null;
-    private SettingsDialog settingsDialog = null;
+    private final Configuration settings;
+    private final XComponentContext context;
+    private final ProgressBar progressbar;
+    private final XDialog dialog;
+    private final XComponent component;
+    private final XControl control;
+    private SettingsDialog settingsDialog;
 
-    private List<FileFormat> fileFormatList = null;
-    private List<Table> tableList = null;
 
-    private Comparator<FileFormat> fileFormatComparator = null;
-    private Comparator<Table> tableComparator = null;
+    /* BUTTONS */
 
-    private XDialog dialog = null;
-    private XControlContainer dialogControlContainer = null;
-    private XComponent dialogComponent = null;
-    private XControl dialogControl = null;
+    private final Button okButton;
+    private final Button cancelButton;
+    private final Button settingsButton;
 
-    private XButton okButton = null;
-    private XButton cancelButton = null;
-    private XButton settingsButton = null;
+    /* FIELDS & CONTROLS */
 
-    private static String _okButton = "CommandButton2";
-    private static String _cancelButton = "CommandButton1";
-    private static String _settingsButton = "CommandButton3";
+    private final ListBox<FileFormat> fileFormatListBox;
+    private final ListBox<Table> charSetListBox;
+    private final CheckBox duplexCheckBox;
+    private final CheckBox eightDotsCheckBox;
+    private final CheckBox multipleFilesCheckBox;
+    private final NumericSettingControl columnsField;
+    private final NumericSettingControl rowsField;
 
-    private String L10N_okButton = null;
-    private String L10N_cancelButton = null;
-    private String L10N_settingsButton = null;
+    /* LABELS */
 
-    private XPropertySet okButtonProperties = null;
-    private XPropertySet windowProperties = null;
-    private String L10N_windowTitle = null;
-    
-    private XListBox brailleFileListBox = null;
-    private XListBox tableListBox = null;
-    private XCheckBox duplexCheckBox = null;
-    private XCheckBox eightDotsCheckBox = null;
-    private XNumericField numberOfCellsPerLineField = null;
-    private XNumericField numberOfLinesPerPageField = null;
-    private XCheckBox multipleFilesCheckBox = null;
+    private final Label fileFormatLabel;
+    private final Label charSetLabel;
+    private final Label duplexLabel;
+    private final Label eightDotsLabel;
+    private final Label multipleFilesLabel;
+    private final Label columnsLabel;
+    private final Label rowsLabel;
 
-    private XPropertySet tableListBoxProperties = null;
-    private XPropertySet duplexCheckBoxProperties = null;
-    private XPropertySet eightDotsCheckBoxProperties = null;
-    private XPropertySet multipleFilesCheckBoxProperties = null;
 
-    private static String _brailleFileListBox = "ListBox2";
-    private static String _tableListBox = "ListBox3";
-    private static String _duplexCheckBox = "CheckBox1";
-    private static String _eightDotsCheckBox = "CheckBox2";
-    private static String _numberOfCellsPerLineField = "NumericField3";
-    private static String _numberOfLinesPerPageField = "NumericField4";
-    private static String _multipleFilesCheckBox = "CheckBox3";
-
-    private static String _brailleFileLabel = "Label2";
-    private static String _tableLabel = "Label3";
-    private static String _duplexLabel = "Label8";
-    private static String _eightDotsLabel = "Label1";
-    private static String _numberOfCellsPerLineLabel = "Label6";
-    private static String _numberOfLinesPerPageLabel = "Label7";
-    private static String _multipleFilesLabel = "Label4";
-
-    private String L10N_brailleFileLabel = null;
-    private String L10N_tableLabel = null;
-    private String L10N_duplexLabel = null;
-    private String L10N_eightDotsLabel = null;
-    private String L10N_numberOfCellsPerLineLabel = null;
-    private String L10N_numberOfLinesPerPageLabel = null;
-    private String L10N_multipleFilesLabel = null;
-
-    public ExportDialog(XComponentContext xContext,
-                        Settings settings,
-                        ProgressBar progressbar)
+    public ExportDialog(XComponentContext ctxt,
+                        ExportConfiguration exportSettings,
+                        Configuration cfg,
+                        ProgressBar pb)
                  throws com.sun.star.uno.Exception {
 
         logger.entering("ExportDialog", "<init>");
 
-        this.settings = settings;
-        this.xContext = xContext;
-        this.progressbar = progressbar;
+        this.settings = cfg;
+        this.context = ctxt;
+        this.progressbar = pb;
 
-        XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
+        XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(context);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/ExportDialog.xdl";
-        XDialogProvider2 xDialogProvider = DialogProvider2.create(xContext);
+        XDialogProvider2 xDialogProvider = DialogProvider2.create(context);
         dialog = xDialogProvider.createDialog(dialogUrl);
-        dialogControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
-        dialogComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
-        dialogControl = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
-        windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, dialogControl.getModel());
-
-        fileFormatList = new ArrayList<FileFormat>();
-        tableList = new ArrayList<Table>();
-
-        fileFormatComparator = new Comparator<FileFormat>() {
-            @Override
-            public int compare(FileFormat f1, FileFormat f2) {
-                return ((Comparable)f1.getDisplayName()).compareTo(f2.getDisplayName());
-            }
-        };
-        tableComparator = new Comparator<Table>() {
-            @Override
-            public int compare(Table t1, Table t2) {
-                return ((Comparable)t1.getDisplayName()).compareTo(t2.getDisplayName());
-            }
-        };
+        XControlContainer container = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
+        component = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
+        control = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
+        XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, control.getModel());
 
         Locale oooLocale;
-        try { oooLocale = UnoUtils.getUILocale(xContext); } catch (Exception e) {
+        try { oooLocale = UnoUtils.getUILocale(context); } catch (Exception e) {
               oooLocale = Locale.ENGLISH; }
 
         ResourceBundle bundle = ResourceBundle.getBundle(L10N_BUNDLE, oooLocale);
 
-        L10N_windowTitle = bundle.getString("exportDialogTitle");
-        L10N_okButton = bundle.getString("exportButton");
-        L10N_cancelButton = bundle.getString("cancelButton");
-        L10N_settingsButton = bundle.getString("settingsDialogTitle")+ "\u2026";
+        windowProperties.setPropertyValue("Title", bundle.getString("exportDialogTitle"));
 
-        L10N_brailleFileLabel = bundle.getString("brailleFileLabel") + ":";
-        L10N_tableLabel = bundle.getString("tableLabel") + ":";
-        L10N_duplexLabel = bundle.getString("duplexLabel");
-        L10N_eightDotsLabel = bundle.getString("eightDotsLabel");
-        L10N_numberOfCellsPerLineLabel = bundle.getString("numberOfCellsPerLineLabel") + ":";
-        L10N_numberOfLinesPerPageLabel = bundle.getString("numberOfLinesPerPageLabel") + ":";
-        L10N_multipleFilesLabel = bundle.getString("multipleFilesLabel");
+        /* DIALOG ELEMENTS */
 
-        okButton = (XButton) UnoRuntime.queryInterface(XButton.class,
-                dialogControlContainer.getControl(_okButton));
-        cancelButton = (XButton) UnoRuntime.queryInterface(XButton.class,
-                dialogControlContainer.getControl(_cancelButton));
-        settingsButton = (XButton) UnoRuntime.queryInterface(XButton.class,
-                dialogControlContainer.getControl(_settingsButton));
+        okButton = new Button(container.getControl("CommandButton2"),
+                              bundle.getString("exportButton")) {
+            public void actionPerformed(ActionEvent event) {}
+        };
 
-        brailleFileListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_brailleFileListBox));
-        tableListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                dialogControlContainer.getControl(_tableListBox));
-        duplexCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_duplexCheckBox));
-        eightDotsCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_eightDotsCheckBox));
-        numberOfCellsPerLineField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_numberOfCellsPerLineField));
-        numberOfLinesPerPageField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
-                dialogControlContainer.getControl(_numberOfLinesPerPageField));
-        multipleFilesCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
-                dialogControlContainer.getControl(_multipleFilesCheckBox));
+        cancelButton = new Button(container.getControl("CommandButton1"),
+                                  bundle.getString("cancelButton")) {
+            public void actionPerformed(ActionEvent event) {}
+        };
 
-        okButtonProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, okButton)).getModel());
-        tableListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, tableListBox)).getModel());
-        duplexCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, duplexCheckBox)).getModel());
-        eightDotsCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, eightDotsCheckBox)).getModel());
-        multipleFilesCheckBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, multipleFilesCheckBox)).getModel());
+        settingsButton = new Button(container.getControl("CommandButton3"),
+                                    bundle.getString("settingsDialogTitle") + "\u2026") {
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                if (event.Source.equals(button)) {
+                    try {
+                        if (settingsDialog == null) {
+                            progressbar.start();
+                            progressbar.setSteps(SettingsDialog.getSteps());
+                            progressbar.setStatus("Loading settings...");
+                            settingsDialog = new SettingsDialog(context, settings, progressbar);
+                            progressbar.finish(true);
+                            progressbar.close();
+                        }
+                        settingsDialog.execute();
+                    } catch (com.sun.star.uno.Exception e) {
+                    }
+                }
+            }
+        };
 
-        setDialogValues();
-        addListeners();
-        setLabels();
+        fileFormatListBox = new ListBox<FileFormat>(container.getControl("ListBox2")) {
+            @Override
+            protected String getDisplayValue(FileFormat f) {
+                return f.getDisplayName();
+            }
+        };
+
+        charSetListBox = new ListBox<Table>(container.getControl("ListBox3")) {
+            @Override
+            protected String getDisplayValue(Table t) {
+                return t.getDisplayName();
+            }
+
+            @Override
+            public void update() {
+                if (property.options().size() > 1) {
+                    super.update();
+                } else {
+                    options.clear();
+                    listbox.removeItems((short)0, Short.MAX_VALUE);
+                }
+            }
+
+            @Override
+            public void updateProperties() {
+                if (property.options().size() > 1) {
+                    super.updateProperties();
+                } else {
+                    try {
+                        propertySet.setPropertyValue("Enabled", false);
+                    } catch (UnknownPropertyException e) {
+                    } catch (PropertyVetoException e) {
+                    } catch (IllegalArgumentException e) {
+                    } catch (WrappedTargetException e) {
+                    }
+                }
+            }
+        };
+
+        duplexCheckBox = new CheckBox(container.getControl("CheckBox1"));
+
+        eightDotsCheckBox = new CheckBox(container.getControl("CheckBox2"));
+
+        multipleFilesCheckBox = new CheckBox(container.getControl("CheckBox3"));
+
+        columnsField = new NumericSettingControl(container.getControl("NumericField3"));
+
+        rowsField = new NumericSettingControl(container.getControl("NumericField4"));
+
+
+        /* LABELS */
+
+        fileFormatLabel = new Label(container.getControl("Label2"),
+                                    bundle.getString("brailleFileLabel") + ":");
+
+        charSetLabel = new Label(container.getControl("Label3"),
+                                 bundle.getString("tableLabel") + ":");
+
+        duplexLabel = new Label(container.getControl("Label8"),
+                                bundle.getString("duplexLabel"));
+
+        eightDotsLabel = new Label(container.getControl("Label1"),
+                                   bundle.getString("eightDotsLabel"));
+
+        multipleFilesLabel = new Label(container.getControl("Label4"),
+                                       bundle.getString("multipleFilesLabel"));
+
+        columnsLabel = new Label(container.getControl("Label6"),
+                                 bundle.getString("numberOfCellsPerLineLabel") + ":");
+
+        rowsLabel = new Label(container.getControl("Label7"),
+                              bundle.getString("numberOfLinesPerPageLabel") + ":");
+
+        /* INITIALIZE */
+
+        fileFormatListBox.link(exportSettings.fileFormat);
+        charSetListBox.link(exportSettings.charSet);
+        duplexCheckBox.link(exportSettings.duplex);
+        eightDotsCheckBox.link(exportSettings.eightDots);
+        multipleFilesCheckBox.link(exportSettings.multipleFiles);
+        columnsField.link(exportSettings.columns);
+        rowsField.link(exportSettings.rows);
+
+        okButton.updateProperties();
+        cancelButton.updateProperties();
+        settingsButton.updateProperties();
 
         logger.exiting("ExportDialog", "<init>");
 
     }
 
-    private void addListeners() {
-        
-        brailleFileListBox.addItemListener(this);
-        eightDotsCheckBox.addItemListener(this);
-        settingsButton.addActionListener(this);
-
-    }
+    /******************/
+    /* EXECUTE DIALOG */
+    /******************/
 
     public boolean execute() throws com.sun.star.uno.Exception {
 
@@ -246,8 +257,7 @@ public class ExportDialog implements XItemListener,
 
         short ret = dialog.execute();
 
-        getDialogValues();
-        dialogComponent.dispose();
+        component.dispose();
 
         if (settingsDialog != null) {
             settingsDialog.dispose();
@@ -261,239 +271,4 @@ public class ExportDialog implements XItemListener,
             return false;
         }
     }
-
-    private void setLabels() throws com.sun.star.uno.Exception {
-
-        XFixedText xFixedText = null;
-
-        windowProperties.setPropertyValue("Title", L10N_windowTitle);
-        okButton.setLabel(L10N_okButton);
-        cancelButton.setLabel(L10N_cancelButton);
-        settingsButton.setLabel(L10N_settingsButton);
-
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_brailleFileLabel));
-        xFixedText.setText(L10N_brailleFileLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_tableLabel));
-        xFixedText.setText(L10N_tableLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_duplexLabel));
-        xFixedText.setText(L10N_duplexLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_eightDotsLabel));
-        xFixedText.setText(L10N_eightDotsLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfCellsPerLineLabel));
-        xFixedText.setText(L10N_numberOfCellsPerLineLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_numberOfLinesPerPageLabel));
-        xFixedText.setText(L10N_numberOfLinesPerPageLabel);
-        xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,dialogControlContainer.getControl(_multipleFilesLabel));
-        xFixedText.setText(L10N_multipleFilesLabel);
-
-    }
-
-    private void setDialogValues() throws com.sun.star.uno.Exception {
-
-        numberOfCellsPerLineField.setDecimalDigits((short)0);
-        numberOfLinesPerPageField.setDecimalDigits((short)0);
-        numberOfCellsPerLineField.setMin((double)0);
-        numberOfLinesPerPageField.setMin((double)0);
-        numberOfCellsPerLineField.setMax((double)Integer.MAX_VALUE);
-        numberOfLinesPerPageField.setMax((double)Integer.MAX_VALUE);
-        numberOfCellsPerLineField.setValue((double)settings.getCellsPerLine());
-        numberOfLinesPerPageField.setValue((double)settings.getLinesPerPage());
-
-        updateMultipleFilesCheckBox();
-
-        updateBrailleFileListBox();
-        updateDuplexCheckBox();
-        updateEightDotsCheckBox();
-        updateTableListBox();
-        updateOKButton();
-
-    }
-
-    private void getDialogValues() {
-
-        settings.setCellsPerLine((int)numberOfCellsPerLineField.getValue());
-        settings.setLinesPerPage((int)numberOfLinesPerPageField.getValue());
-        if (tableList.size() > 1) {
-            settings.setTable(tableList.get(tableListBox.getSelectedItemPos()));
-        }
-        settings.setMultipleFilesEnabled(multipleFilesCheckBox.getState()==(short)1);
-        settings.setDuplex((duplexCheckBox.getState()==(short)1));
-    }
-
-    /**
-     * Update the state of the OK button (enabled or disabled).
-     *
-     */
-    private void updateOKButton() throws com.sun.star.uno.Exception {
-        okButtonProperties.setPropertyValue("Enabled", settings.getBrailleFileType()!=null);
-    }
-
-    /**
-     * Update the list of available generic braille files in the 'Braille file' listbox and select the correct item.
-     *
-     */
-    private void updateBrailleFileListBox() throws com.sun.star.uno.Exception {
-
-        short i = 0;
-        short select = -1;
-        String selectedId = settings.getBrailleFileType().getIdentifier();
-
-        fileFormatList.clear();
-        fileFormatList.addAll(settings.getSupportedBrailleFileTypes());
-        Collections.sort(fileFormatList, fileFormatComparator);
-
-        brailleFileListBox.removeItemListener(this);
-
-            brailleFileListBox.removeItems((short)0, Short.MAX_VALUE);
-            for (FileFormat f : fileFormatList) {
-                if (f.getIdentifier().equals(selectedId)) {
-                    select = i;
-                }
-                brailleFileListBox.addItem(f.getDisplayName(), i);
-                i++;
-            }
-            if (select>=0) {
-                brailleFileListBox.selectItemPos(select, true);
-            }
-
-        brailleFileListBox.addItemListener(this);
-        
-    }
-
-    /**
-     * Update the list of available character sets in the 'Character set' listbox and select the correct item.
-     *
-     */
-    private void updateTableListBox() throws com.sun.star.uno.Exception {
-
-        short i = 0;
-        short select = -1;
-        String selectedId = "";
-        if (settings.getTable()!=null) { selectedId = settings.getTable().getIdentifier(); }
-
-        tableList.clear();
-        tableList.addAll(settings.getSupportedTables());
-        Collections.sort(tableList, tableComparator);
-
-        tableListBox.removeItems((short)0, Short.MAX_VALUE);
-
-        if (tableList.size()<2) {
-            tableListBoxProperties.setPropertyValue("Enabled", false);
-            return;
-        } else {
-            tableListBoxProperties.setPropertyValue("Enabled", true);
-        }
-
-        for (Table t : tableList) {
-            if (t.getIdentifier().equals(selectedId)) {
-                select = i;
-            }
-            tableListBox.addItem(t.getDisplayName(), i);
-            i++;
-        }
-        if (select>=0) {
-            tableListBox.selectItemPos(select, true);
-        }
-    }
-
-    /**
-     * Update the 'Recto-verso' checkbox.
-     *
-     */
-    private void updateDuplexCheckBox() throws com.sun.star.uno.Exception {
-
-        duplexCheckBox.setState((short)(settings.getDuplex()?1:0));
-        duplexCheckBoxProperties.setPropertyValue("Enabled", settings.duplexIsSupported());
-
-    }
-
-    private void updateEightDotsCheckBox() throws com.sun.star.uno.Exception {
-
-        if (settings.eightDotsIsSupported()) {
-            settings.setEightDots(true);
-        }
-
-        eightDotsCheckBox.removeItemListener(this);
-            eightDotsCheckBox.setState((short)(settings.getEightDots()?1:0));
-            eightDotsCheckBoxProperties.setPropertyValue("Enabled", settings.eightDotsIsSupported());
-        eightDotsCheckBox.addItemListener(this);
-
-    }
-
-    private void updateMultipleFilesCheckBox() throws com.sun.star.uno.Exception {
-
-        if (System.getProperty("os.name").toLowerCase().contains("mac os") ||
-               settings.getVolumeManagementMode() == VolumeManagementMode.SINGLE) {
-            settings.setMultipleFilesEnabled(false);
-            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", false);
-        } else {
-            multipleFilesCheckBoxProperties.setPropertyValue("Enabled", true);
-        }
-
-        multipleFilesCheckBox.setState((short)(settings.getMultipleFilesEnabled()?1:0));
-    }
-
-    @Override
-    public void itemStateChanged(ItemEvent itemEvent) {
-
-        Object source = itemEvent.Source;
-
-        try {
-
-            if (source.equals(brailleFileListBox)) {
-
-                settings.setBrailleFileType(fileFormatList.get(brailleFileListBox.getSelectedItemPos()));
-                updateTableListBox();
-                updateDuplexCheckBox();
-                updateEightDotsCheckBox();
-                updateOKButton();
-
-            } else if (source.equals(eightDotsCheckBox)) {
-
-                settings.setEightDots((eightDotsCheckBox.getState()==(short)1));
-
-                updateTableListBox();
-
-            }
-
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-
-        Object source = actionEvent.Source;
-
-        try {
-
-            if (source.equals(settingsButton)) {
-
-                if (settingsDialog == null) {
-                    settingsDialog = new SettingsDialog(xContext);
-                    progressbar.start();
-                    progressbar.setSteps(1);
-                    progressbar.setStatus("Loading settings...");
-                    settingsDialog.initialise(settings, progressbar);
-                    progressbar.finish(true);
-                    progressbar.close();
-                }
-
-                settingsDialog.execute();
-
-                updateMultipleFilesCheckBox();
-
-            }
-        } catch (com.sun.star.uno.Exception ex) {
-            logger.log(Level.SEVERE, null, ex);
-        }
-    }
-
-    /**
-     * @param event
-     */
-    @Override
-    public void disposing(EventObject event) {}
-
 }

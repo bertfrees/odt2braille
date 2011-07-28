@@ -1,0 +1,153 @@
+<!DOCTYPE article
+  PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+  "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<article>
+ <articleinfo>
+  <title lang="en">Developer Guide</title>
+  <title lang="nl"></title>
+  
+  <copyright>
+   <year>2010</year>
+   <year>2011</year>
+   <holder>
+    <ulink url="http://www.docarch.be">DocArch</ulink>
+   </holder>
+  </copyright>
+  <legalnotice lang="en">
+   <para>This program is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</para>
+   <para>This program is distributed in the hope that it will be useful, but <emphasis role="sc">without any warranty</emphasis>; without even the implied warranty of <emphasis role="sc">merchantability</emphasis> or <emphasis role="sc">fitness for a particular purpose</emphasis>. See the GNU Lesser General Public License for more details.</para>
+   <para>You should have received a copy of the GNU Lesser General Public License along with this program. If not, see <ulink url="http://www.gnu.org/licenses">http://www.gnu.org/licenses</ulink>.</para>
+  </legalnotice>
+ </articleinfo>
+ 
+ <section id="hacking">
+  <title lang="en">Hacking</title>
+  
+  <section id="system-requirements">
+   <title lang="en">System Requirements</title>
+   
+   <para lang="en">In order to hack odt2braille, you will need</para>
+   <itemizedlist>
+    <listitem>
+     <para lang="en"><ulink url="http://download.openoffice.org/other.html">OpenOffice.org 3</ulink> or <ulink url="http://www.libreoffice.org/download/">LibreOffice 3</ulink>,</para>
+    </listitem>
+	<listitem>
+     <para lang="en"><ulink url="http://ant.apache.org/bindownload.cgi">Apache Ant</ulink>,</para>
+	</listitem>
+    <listitem>
+     <para lang="en"><ulink url="http://subversion.apache.org">Subversion</ulink></para>
+	</listitem>
+   </itemizedlist>
+   <para lang="en">Optionally, you can install the <ulink url="http://download.openoffice.org/sdk/index.html">OpenOffice.org Software Development kit</ulink>. The OpenOffice.org SDK is an add-on for OpenOffice.org. It provides the necessary tools and documentation for programming the OpenOffice.org APIs and creating own extensions. The version of OpenOffice.org SDK should be equal or lower than the version of OpenOffice.org.</para>
+   <para lang="en">odt2braille was developed in <ulink url="http://netbeans.org/downloads/">NetBeans</ulink>, but you can hack the code in any IDE you are more comfortable with.</para>
+  </section>
+  
+  <section id="checkout-code">
+   <title lang="en">Checkout Code</title>
+   
+   <para lang="en">The source code is available on Sourceforge and can be downloaded directly into NetBeans as follows:</para>
+   <itemizedlist>
+    <listitem>
+     <para lang="en">[<emphasis>Team - Subversion - Checkout</emphasis>]</para>
+    </listitem>
+	<listitem>
+     <para lang="en"><emphasis>Repository URL</emphasis>: "https://odt2braille.svn.sourceforge.net/svnroot/odt2braille".</para>
+	</listitem>
+	<listitem>
+     <para lang="en">Leave <emphasis>"User"</emphasis> and <emphasis>"Password"</emphasis> fields blank.</para>
+	</listitem>
+	<listitem>
+     <para lang="en"><emphasis>Next ></emphasis></para>
+	</listitem>
+    <listitem>
+     <para lang="en"><emphasis>Repository Folders</emphasis>: "trunk"</para>
+	</listitem>
+	<listitem>
+     <para lang="en">Check <emphasis>"Scan for NetBeans Projects after checkout"</emphasis>.</para>
+	</listitem>
+	<listitem>
+     <para lang="en"><emphasis>Finish</emphasis></para>
+	</listitem>
+   </itemizedlist>
+   
+   <para lang="en">The code can also be downloaded without NetBeans:</para>
+   <para><code>svn checkout https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/trunk path/to/odt2braille/folder/</code></para>
+   <para lang="en">To check out a lightweight version (only the odt2braille code and not the external libraries):</para>
+   <para><code>svn checkout https://odt2braille.svn.sourceforge.net/svnroot/odt2braille/trunk path/to/odt2braille/folder/ --ignore-externals</code></para>   
+   
+  </section>
+  
+  <section id="building">
+   <title lang="en">Building</title>
+   
+   <para lang="en">The project is build with Apache Ant. First <code>cd</code> to the odt2braille home directory. Before building you should edit the file <code>build.&lt;platform&gt;.properties</code>. The following targets are available:</para>
+   <itemizedlist>
+	<listitem>
+     <para><code>ant uno-package</code> : package the extension file (.oxt)</para>
+	</listitem>
+	<listitem>
+     <para><code>ant uno-run</code> : package the extension file (.oxt) and run it in OpenOffice.org.</para>
+	</listitem>
+	<listitem>
+     <para><code>ant addon-jar</code> : build the extension jar</para>
+	</listitem>
+	<listitem>
+     <para><code>ant core-jar</code> : build the odt2braille core jar</para>
+	</listitem>
+	<listitem>
+     <para><code>ant javadoc</code> : build the javadoc documentation</para>
+	</listitem>
+	<listitem>
+     <para><code>ant text</code> : test the odt2braille core</para>
+	</listitem>
+   </itemizedlist>
+  </section>
+ </section>
+ 
+<section id="project-overview">
+  <title lang="en">Project Overview</title>
+ 
+  <section id="addon">
+   <title lang="en">Addon</title>   
+   <para lang="en">The addon package (be.docarch.odt2braille.ooo) is the OpenOffice.org extension. It makes extensive use of the OpenOffice.org UNO API. It takes care of the graphical user interface (menu's, dialogs, progress bars, etc.) and allows for loading settings from and saving settings to OpenOffice.org or the OpenOffice.org Writer document.</para>
+  </section>
+  
+  <section id="core">
+   <title lang="en">Core</title>   
+   <para lang="en">The odt2braille core package (be.docarch.odt2braille) takes care of the actual document processing. It enables the conversion of an ODT file to a <ulink url="http://www.daisy.org/projects/braille/braille_workarea/pef.html">PEF (Portable Embosser Format)</ulink> file. Furthermore, this PEF file can be converted to a variety of other generic braille formats, or it can be converted to an embosser-specific braille file (and optionally sent to an embosser device). The braille transcription is powered by liblouisxml, and for the PEF processing, odt2braille uses the BrailleUtils library.</para>
+  </section>
+  
+  <section id="libraries">
+   <title lang="en">External Libraries</title>
+   
+    <section id="liblouisxml">
+     <title lang="en">liblouisxml</title>
+   
+     <para lang="en"><ulink url="http://liblouisxml.googlecode.com">liblouisxml</ulink> is the heart of the braille transcription. It is an open-source library intended to provide complete Braille transcription services for XML documents. Liblouisxml is built on top of <ulink url="http://liblouis.googlecode.com">liblouis</ulink>, its translation engine. The translation is driven through text based translation tables which define the translation rules. The formatting of braille is defined in semantic mappings that define how a specific XML input tag is to be rendered in the Braille output.</para>
+	 <para lang="en">For more information about the translation tables and configuration files, and how to download and compile liblouis/liblouisxml, please read <code>ext/liblouis/README</code> and <code>ext/liblouisxml/README</code>.</para>
+	 <para lang="en">Links:</para>
+	 <itemizedlist>
+	 <listitem>
+      <para><ulink url="http://liblouisxml.googlecode.com/svn/documentation/liblouisxml.html">liblouisxml manual</ulink></para>
+     </listitem>
+	 <listitem>
+      <para><ulink url="http://liblouis.googlecode.com/svn/documentation/liblouis.html">libouis manual</ulink></para>
+	 </listitem>
+    </itemizedlist>
+   </section>
+   
+   <section id="brailleutils">
+    <title lang="en">BrailleUtils</title>
+   
+    <para lang="en">BrailleUtils provides a cross platform API for embossing and converting braille in PEF-format.</para>
+	<para lang="en">For more information about how to download and compile BrailleUtils, please read <code>ext/brailleutils/README</code></para>
+	<para lang="en">Links:</para>
+	 <itemizedlist>
+	 <listitem>
+      <para><ulink url="http://code.google.com/p/brailleutils/">BrailleUtils website</ulink></para>
+     </listitem>
+    </itemizedlist>
+   </section>   
+  </section>  
+ </section> 
+</article>

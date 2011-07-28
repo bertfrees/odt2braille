@@ -1,5 +1,7 @@
 package be.docarch.odt2braille;
 
+import be.docarch.odt2braille.setup.Configuration;
+
 
 /**
  *
@@ -124,7 +126,7 @@ public class SettingsLoader {
     protected static String embossDuplexProperty =                 "[BRL]EmbossRectoVerso";
     protected static String embossEightDotsProperty =              "[BRL]EmbossEightDots";
 
-    public void loadVolumeSettings(Settings loadedSettings) {
+    public void loadVolumeSettings(Configuration loadedSettings) {
 
 
 

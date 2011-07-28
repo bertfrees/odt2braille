@@ -45,14 +45,55 @@
                     indent="no"
                     omit-xml-declaration="no"/>
 
-        <xsl:param name="paramFrontMatterSection"      as="xsd:string"   />
-        <xsl:param name="paramExtFrontMatterSection"   as="xsd:string"   />
-        <xsl:param name="paramTitlePageSection"        as="xsd:string"   />
-        <xsl:param name="paramVolumeSections"          as="xsd:string*"  />
+        <xsl:param name="paramFrontMatterSection"       as="xsd:string"   />
+        <xsl:param name="paramRepeatFrontMatterSection" as="xsd:string"   />
+        <xsl:param name="paramTitlePageSection"         as="xsd:string"   />
+        <xsl:param name="paramRearMatterSection"        as="xsd:string"   />
+        <xsl:param name="paramVolumeSections"           as="xsd:string*"  />
 
         <xsl:param    name="styles-url"       as="xsd:string" />
         <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
         <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
+
+        <!-- Frontmatter -->
+        <xsl:variable name="frontmatter" as="element()*"
+                      select="//text:section[@text:name=$paramFrontMatterSection]"/>
+
+        <!-- Repeated frontmatter -->
+        <xsl:variable name="repeat-frontmatter" as="element()*">
+            <xsl:choose>
+                <xsl:when test="$paramFrontMatterSection = $paramRepeatFrontMatterSection">
+                    <xsl:sequence select="$frontmatter"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$frontmatter/descendant::text:section[@text:name=$paramRepeatFrontMatterSection]"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <!-- Title page -->
+        <xsl:variable name="title-page" as="element()*">
+            <xsl:choose>
+                <xsl:when test="$paramFrontMatterSection = $paramTitlePageSection">
+                    <xsl:sequence select="$frontmatter"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="$frontmatter/descendant::text:section[@text:name=$paramTitlePageSection]"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
+
+        <!-- Rearmatter -->
+        <xsl:variable name="rearmatter" as="element()*">
+            <xsl:choose>
+                <xsl:when test="$frontmatter">
+                    <xsl:sequence select="$frontmatter/following::text:section[@text:name=$paramRearMatterSection]"/>
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:sequence select="//text:section[@text:name=$paramRearMatterSection]"/>
+                </xsl:otherwise>
+            </xsl:choose>
+        </xsl:variable>
 
         <xsl:include href="common-templates.xsl" />
 
@@ -70,33 +111,48 @@
     
     <xsl:template match="text:section">
         <xsl:variable name="section-name" select="@text:name" />
+        <xsl:if test="$frontmatter[@name=$section-name]">
+            <ns1:frontmatter>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:frontmatter>
+        </xsl:if>
+        <xsl:if test="$repeat-frontmatter[@name=$section-name]">
+            <ns1:repeat-frontmatter>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:repeat-frontmatter>
+        </xsl:if>
+        <xsl:if test="$title-page[@name=$section-name]">
+            <ns1:titlepage>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:titlepage>
+        </xsl:if>
+        <xsl:if test="$rearmatter[@name=$section-name]">
+            <ns1:rearmatter>
+                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+            </ns1:rearmatter>
+        </xsl:if>
         <xsl:variable name="i" as="xsd:integer">
             <xsl:call-template name="get-volume-index">
                 <xsl:with-param name="section-name" select="$section-name" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:if test="$i>0">
-            <ns1:volume>
-                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:volume>
-        </xsl:if>
-        <xsl:if test="$section-name=$paramFrontMatterSection">
-            <ns1:basic-frontmatter>
-                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:basic-frontmatter>
-        </xsl:if>
-        <xsl:if test="$section-name=$paramExtFrontMatterSection and
-                      descendant::text:section[@text:name=$paramFrontMatterSection]">
-            <ns1:ext-frontmatter>
-                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:ext-frontmatter>
-        </xsl:if>
-        <xsl:if test="$section-name=$paramTitlePageSection and
-                      (ancestor::text:section[@text:name=$paramFrontMatterSection]
-                        or self::text:section[@text:name=$paramFrontMatterSection])">
-            <ns1:titlepage>
-                <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:titlepage>
+            <xsl:choose>
+                <xsl:when test="$frontmatter[@name=$section-name]"/>
+                <xsl:when test="$repeat-frontmatter[@name=$section-name]"/>
+                <xsl:when test="$title-page[@name=$section-name]"/>
+                <xsl:when test="$rearmatter[@name=$section-name]"/>
+                <xsl:when test="$frontmatter/descendant::text:section[@name=$section-name]"/>
+                <xsl:when test="$frontmatter/preceding::text:section[@name=$section-name]"/>
+                <xsl:when test="$frontmatter/ancestor::text:section[@name=$section-name]"/>
+                <xsl:when test="$rearmatter/ancestor::text:section[@name=$section-name]"/>
+                <xsl:when test="$rearmatter/following::text:section[@name=$section-name]"/>
+                <xsl:otherwise>
+                    <ns1:volume>
+                        <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
+                    </ns1:volume>
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:if>
     </xsl:template>
 

@@ -45,8 +45,14 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
 
-import be.docarch.odt2braille.Settings.VolumeManagementMode;
+import be.docarch.odt2braille.setup.SpecialSymbol;
+import be.docarch.odt2braille.setup.PEFConfiguration;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.Configuration.VolumeManagementMode;
+import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
+
 import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.pef.PEFValidator;
 import org.daisy.braille.pef.PEFFileSplitter;
@@ -56,7 +62,7 @@ import org.daisy.validator.Validator;
 /**
  * This class provides a way to convert a flat .odt file to a
  * <a href="http://www.daisy.org/projects/braille/braille_workarea/pef.html">.pef (portable embosser format)</a> file.
- * The conversion is done according to previously defined braille {@link Settings}.
+ * The conversion is done according to previously defined braille {@link Configuration}.
  * <code>liblouisxml</code> is used for the actual transcription to braille.
  * A {@link PostConversionBrailleChecker} checks the resulting braille document for possible accessibility issues.
  *
@@ -68,31 +74,32 @@ public class PEF {
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static NamespaceContext namespace = new NamespaceContext();
 
+    private static final BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
+
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private static final String TMP_NAME = Constants.TMP_PREFIX;
     private static final File TMP_DIR = Constants.getTmpDirectory();
     private static final String L10N = Constants.L10N_PATH;
     private static final String pefNS = "http://www.daisy.org/ns/2008/pef";
 
-    public enum TranscribersNote { };
-    enum State {HEADER, BODY, FOOTER};
+    private final File pefFile;
+    private final LiblouisXML liblouisXML;
+    private final OdtTransformer odtTransformer;
+    private final Configuration settings;
+    private final PEFConfiguration pefSettings;
+    private final StatusIndicator statusIndicator;
+    private final PostConversionBrailleChecker checker;
+    private final Validator validator;
 
-    private File pefFile;
-    private LiblouisXML liblouisXML = null;
-    private OdtTransformer odtTransformer = null;
-    private Settings settings = null;
-    private StatusIndicator statusIndicator = null;
-    private PostConversionBrailleChecker checker = null;
-    private Validator validator = null;
+    private final List<Volume> volumes;
 
-    BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
-
-    public PEF(Settings settings,
+    public PEF(Configuration settings,
+               PEFConfiguration pefSettings,
                LiblouisXML liblouisXML)
         throws IOException,
                TransformerException {
 
-        this(settings, liblouisXML, null, null);
+        this(settings, pefSettings, liblouisXML, null, null);
 
     }
 
@@ -103,11 +110,12 @@ public class PEF {
      *                          This single file is the concatenation of all XML files in a normal .odt file.
      * @param liblouisDirUrl    The URL of the liblouis executable. liblouis is used for the actual transcription to braille.
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
-     * @param settings          The <code>Settings</code> that determine how the conversion is done.
+     * @param settings          The <code>Configuration</code> that determine how the conversion is done.
      * @param checker           The <code>PostConversionBrailleChecker</code> that will check the braille document for possible accessibility issues.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
-    public PEF(Settings settings,
+    public PEF(Configuration settings,
+               PEFConfiguration pefSettings,
                LiblouisXML liblouisXML,
                StatusIndicator statusIndicator,
                PostConversionBrailleChecker checker)
@@ -117,20 +125,60 @@ public class PEF {
         logger.entering("PEF", "<init>");
 
         this.settings = settings;
+        this.pefSettings = pefSettings;
         this.liblouisXML = liblouisXML;
         this.statusIndicator = statusIndicator;
         this.checker = checker;
 
-        settings.configureVolumes();
-        odtTransformer = settings.odtTransformer;
-        odtTransformer.configure(settings);
-
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
 
-        // odtTransformer preProcessing
+        odtTransformer = settings.odtTransformer;
+        odtTransformer.configure(settings);
         odtTransformer.ensureMetadataReferences();
         odtTransformer.makeControlFlow();
+
+        volumes = new ArrayList<Volume>();
+
+        if (settings.getPreliminaryVolumeEnabled()) {
+            volumes.add(new PreliminaryVolume(settings.getPreliminaryVolume()));
+        }
+        switch (settings.getBodyMatterMode()) {
+            case SINGLE:
+                volumes.add(new Volume(settings.getBodyMatterVolume()));
+                break;
+            case AUTOMATIC:
+                volumes.addAll(VolumeSplitter.splitBodyMatterVolume(settings));
+                break;
+        }
+        for (Configuration.SectionVolume volume : settings.getSectionVolumeList().values()) {
+            volumes.add(new Volume(volume, volume.getSection()));
+        }
+        if (settings.getRearMatterSection() != null &&
+            settings.getRearMatterMode() == VolumeManagementMode.SINGLE) {
+            volumes.add(new Volume(settings.getRearMatterVolume()));
+        }
+
+        int i = 1;
+        for (Volume v : volumes) {
+            String title = v.getTitle();
+            if (title.contains("@i")) {
+                v.setTitle(title.replaceFirst("@i", String.valueOf(i)));
+                i++;
+            }
+        }
+        for (Volume v : volumes) {
+            if (v.getFrontMatter()) {
+                v.setExtendedFrontMatter(true);
+                break;
+            }
+        }
+        for (Volume v : volumes) {
+            if (v.getTableOfContent()) {
+                v.setExtendedTableOfContent(true);
+                break;
+            }
+        }
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
@@ -148,12 +196,18 @@ public class PEF {
         logger.exiting("PEF", "<init>");
     }
 
+
+    public List<Volume> getVolumes() {
+        return volumes;
+    }
+
+
     /**
      * Converts the flat .odt filt to a .pef file according to the braille settings.
      *
      * This function
      * <ul>
-     * <li>uses {@link OdtTransformer} to convert the .odt file to multiple DAISY-like xml files,</li>
+     * <li>uses {@link ODTTransformer} to convert the .odt file to multiple DAISY-like xml files,</li>
      * <li>uses {@link LiblouisXML} to translate these files into braille, and</li>
      * <li>recombines these braille files into one single .pef file.</li>
      * </ul>
@@ -200,9 +254,11 @@ public class PEF {
         Volume volume;
         File bodyFile;
         File preliminaryFile;
-        List<SpecialSymbol> specialSymbolsList = settings.getSpecialSymbolsList();
 
-        List<Volume>volumes = settings.getVolumes();
+        String volumeInfo = capitalizeFirstLetter(
+                ResourceBundle.getBundle(L10N, settings.mainLocale).getString("in")) + " " + volumes.size() + " " +
+                ResourceBundle.getBundle(L10N, settings.mainLocale).getString((volumes.size()>1) ? "volumes" : "volume") + "\n@title\n@pages";
+
         volumeElements = new Element[volumes.size()];
 
         File brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
@@ -257,9 +313,9 @@ public class PEF {
             int steps = 1;
             for (Volume v : volumes) {
                 if (v.getFrontMatter() ||
-                    v.getToc() ||
-                    v.getTranscribersNotesPage() ||
-                    v.getSpecialSymbolsList()) {
+                    v.getTableOfContent() ||
+                    v.getTranscribersNotesPageEnabled() ||
+                    v.getSpecialSymbolListEnabled()) {
                     steps++;
                 }
             }
@@ -270,17 +326,22 @@ public class PEF {
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, statusIndicator.getPreferredLocale()).getString("statusIndicatorStep"));
             }
 
+            int columns = pefSettings.getColumns();
+            int rows = pefSettings.getRows();
+            boolean eightDots = pefSettings.getEightDots();
+            boolean duplex = pefSettings.getDuplex();
+
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
                 volume = volumes.get(volumeCount);
 
-                logger.info("Processing body of volume " + (volumeCount + 1) + " : " + volume.getType().name());
+                logger.info("Processing body of volume " + (volumeCount + 1) + " : " + volume.getTitle());
 
                 volumeElements[volumeCount] = document.createElementNS(pefNS, "volume");
-                volumeElements[volumeCount].setAttributeNS(null, "cols", String.valueOf(settings.getCellsPerLine()));
-                volumeElements[volumeCount].setAttributeNS(null, "rows", String.valueOf(settings.getLinesPerPage()));
-                volumeElements[volumeCount].setAttributeNS(null, "rowgap", settings.getEightDots()?"1":"0");
-                volumeElements[volumeCount].setAttributeNS(null, "duplex", settings.getDuplex()?"true":"false");
+                volumeElements[volumeCount].setAttributeNS(null, "cols", String.valueOf(columns));
+                volumeElements[volumeCount].setAttributeNS(null, "rows", String.valueOf(rows));
+                volumeElements[volumeCount].setAttributeNS(null, "rowgap", eightDots?"1":"0");
+                volumeElements[volumeCount].setAttributeNS(null, "duplex", duplex?"true":"false");
 
                 if (!(volume instanceof PreliminaryVolume)) {
 
@@ -295,7 +356,7 @@ public class PEF {
 
                         pageCount++;
                         lineCount = 1;
-                        while (lineCount <= settings.getLinesPerPage()) {
+                        while (lineCount <= rows) {
 
                             line = bufferedReader.readLine();
                             line = line.replaceAll("\u2800","\u0020")
@@ -342,11 +403,11 @@ public class PEF {
                 volume = volumes.get(volumeCount);
 
                 if (volume.getFrontMatter() ||
-                    volume.getToc() ||
-                    volume.getTranscribersNotesPage() ||
-                    volume.getSpecialSymbolsList()) {
+                    volume.getTableOfContent() ||
+                    volume.getTranscribersNotesPageEnabled() ||
+                    volume.getSpecialSymbolListEnabled()) {
 
-                    logger.log(Level.INFO, "Processing preliminary pages of volume " + (volumeCount + 1) + " : " + volume.getType().name());
+                    logger.log(Level.INFO, "Processing preliminary pages of volume " + (volumeCount + 1) + " : " + volume.getTitle());
 
                     // Print page range
 
@@ -355,11 +416,8 @@ public class PEF {
                         !(volume instanceof PreliminaryVolume)) {
 
                         String volumeNode = "dtb:volume";
-                        if (volume instanceof SectionVolume) {
-                            volumeNode += "[@id='" + ((SectionVolume)volume).getSectionName()  + "']";
-                        } else if (volume instanceof AutomaticVolume) {
-                            volumeNode += "[@id='" + ((AutomaticVolume)volume).getIdentifier() + "']";
-                        }
+                        String id = volume.getIdentifier();
+                        if (id != null) { volumeNode += "[@id='" + id  + "']"; }
 
                         String s;
                         if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
@@ -398,91 +456,72 @@ public class PEF {
 
                     // Determine which symbols to display in list of special symbols
 
-                    if (volume.getSpecialSymbolsList()) {
+                    if (volume.getSpecialSymbolListEnabled()) {
 
-                        ArrayList<Boolean> specialSymbolsPresent = new ArrayList();
-                        boolean specialSymbolPresent;
+                        List<SpecialSymbol> specialSymbols = new ArrayList();
 
                         String volumeNode = "dtb:volume";
-                        if (volume instanceof SectionVolume) {
-                            volumeNode += "[@id='" + ((SectionVolume)volume).getSectionName()  + "']";
-                        } else if (volume instanceof AutomaticVolume) {
-                            volumeNode += "[@id='" + ((AutomaticVolume)volume).getIdentifier() + "']";
-                        }
+                        String id = volume.getIdentifier();
+                        if (id != null) { volumeNode += "[@id='" + id  + "']"; }
 
-                        for (int i=0; i<specialSymbolsList.size(); i++) {
+                        for (SpecialSymbol symbol : settings.getSpecialSymbolList().values()) {
 
-                            specialSymbolPresent = false;
-
-                            switch (specialSymbolsList.get(i).getMode()) {
+                            switch (symbol.getMode()) {
                                 case NEVER:
                                     break;
                                 case ALWAYS:
-                                    specialSymbolPresent = true;
+                                    specialSymbols.add(symbol);
                                     break;
                                 case FIRST_VOLUME:
-                                    if (volumeCount == 0) { specialSymbolPresent = true; }
+                                    if (volumeCount == 0) { specialSymbols.add(symbol); }
                                     break;
                                 case IF_PRESENT_IN_VOLUME:
                                     if (!(volume instanceof PreliminaryVolume)) {
-                                        switch (specialSymbolsList.get(i).getType()) {
+                                        switch (symbol.getType()) {
                                             case NOTE_REFERENCE_INDICATOR:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//" + volumeNode + "//dtb:note[@class='footnote' or @class='endnote']",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" + volumeNode + "//dtb:note[@class='footnote' or @class='endnote']",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             case TRANSCRIBERS_NOTE_INDICATOR:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//" + volumeNode + "//dtb:div[@class='tn']/dtb:note",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" + volumeNode + "//dtb:div[@class='tn']/dtb:note",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             case ITALIC_INDICATOR:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//" + volumeNode + "//dtb:em[not(@class='reset')]",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" + volumeNode + "//dtb:em[not(@class='reset')]",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             case BOLDFACE_INDICATOR:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//" + volumeNode + "//dtb:strong[not(@class='reset')]",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" + volumeNode + "//dtb:strong[not(@class='reset')]",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             case ELLIPSIS:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                    "//" + volumeNode + "//dtb:flag[@class='ellipsis']",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" + volumeNode + "//dtb:flag[@class='ellipsis']",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             case DOUBLE_DASH:
-                                                specialSymbolPresent = XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
-                                                   "//" +  volumeNode + "//dtb:flag[@class='double-dash']",namespace);
+                                                if (XPathUtils.evaluateBoolean(bodyFile.toURL().openStream(),
+                                                        "//" +  volumeNode + "//dtb:flag[@class='double-dash']",namespace)) {
+                                                    specialSymbols.add(symbol);
+                                                }
                                                 break;
                                             default:
                                         }
                                     }
                                     break;
                             }
-
-                            specialSymbolsPresent.add(specialSymbolPresent);
                         }
 
-                        volume.setSpecialSymbolsPresent(specialSymbolsPresent);
-                    }
-
-                    // Determine which notes to display on transcriber's note page
-
-                    if (volume.getTranscribersNotesPage()) {
-
-                        TranscribersNote[] transcribersNoteValues = TranscribersNote.values();
-                        ArrayList<Boolean> transcribersNotesEnabled = new ArrayList();
-                        boolean transcribersNoteEnabled;
-
-                        for (int i=0;i <transcribersNoteValues.length; i++) {
-
-                            transcribersNoteEnabled = false;
-
-                            switch (transcribersNoteValues[i]) {
-                                default:
-                                    transcribersNoteEnabled = false;
-                            }
-
-                            transcribersNotesEnabled.add(transcribersNoteEnabled);
-                        }
-
-                        volume.setTranscribersNotesEnabled(transcribersNotesEnabled);
+                        volume.setSpecialSymbols(specialSymbols);
                     }
 
                     // Extract preliminary page range
@@ -492,8 +531,8 @@ public class PEF {
 
                     sectionElement = document.createElementNS(pefNS,"section");
 
-                    odtTransformer.getFrontMatter(preliminaryFile, volume);
-                    liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getToc()?volume.getFirstBraillePage():1);
+                    odtTransformer.getFrontMatter(preliminaryFile, volume, volumeInfo);
+                    liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
                     fileInputStream = new FileInputStream(brailleFile);
@@ -508,7 +547,7 @@ public class PEF {
                         if (ch=='\f') {
                             pageCount ++;
                         } else {
-                            if (volume.getToc()) {
+                            if (volume.getTableOfContent()) {
                                 pageCount --;
                             }
                             break;
@@ -524,11 +563,11 @@ public class PEF {
 
                     // Get preliminary pages
 
-                    odtTransformer.getFrontMatter(preliminaryFile, volume);
+                    odtTransformer.getFrontMatter(preliminaryFile, volume, volumeInfo);
                     if (checker != null) {
                         checker.checkDaisyFile(preliminaryFile);
                     }
-                    liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getToc()?volume.getFirstBraillePage():1);
+                    liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
                     fileInputStream = new FileInputStream(brailleFile);
@@ -542,7 +581,7 @@ public class PEF {
                         pageElement = document.createElementNS(pefNS,"page");
                         lineCount = 1;
 
-                        while (lineCount <= settings.getLinesPerPage()) {
+                        while (lineCount <= rows) {
 
                             line = bufferedReader.readLine();
                             line = line.replaceAll("\u2800","\u0020")
@@ -646,15 +685,11 @@ public class PEF {
 
         logger.entering("PEF", "getPEFs");
 
-        if (settings.getVolumeManagementMode() == VolumeManagementMode.SINGLE) {
-            return new File[] { pefFile };
+        File[] pefFiles = splitPEF();
+        if (pefFiles != null) {
+            return pefFiles;
         } else {
-            File[] pefFiles = splitPEF();
-            if (pefFiles != null) {
-                return pefFiles;
-            } else {
-                return null;
-            }
+            return null;
         }
     }
 
@@ -679,4 +714,9 @@ public class PEF {
 
         return output.listFiles();
     }
+
+    private String capitalizeFirstLetter(String in) {
+        return in.substring(0,1).toUpperCase() + in.substring(1);
+    }
+    
 }

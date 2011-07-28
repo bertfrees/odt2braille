@@ -18,7 +18,7 @@ import net.sf.saxon.TransformerFactoryImpl;
 //import be.docarch.accessibility.Report;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.OdtTransformer;
-import be.docarch.odt2braille.Settings;
+import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.Volume;
 
 import java.io.IOException;
@@ -54,20 +54,14 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
                     new StreamSource(getClass().getResource(Constants.XSLT_PATH + "earl.xsl").toString()));
 
             earlXSL.setParameter("paramNoBrailleToc",         "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoBrailleToc.name());
-            earlXSL.setParameter("paramNotInBrailleVolume",   "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NotInBrailleVolume.name());
-            earlXSL.setParameter("paramOmittedInBraille",     "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_OmittedInBraille.name());
-            earlXSL.setParameter("paramTransposedInBraille",  "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_TransposedInBraille.name());
-            earlXSL.setParameter("paramUnnaturalVolumeBreak", "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_UnnaturalVolumeBreak.name());
+            earlXSL.setParameter("paramOmittedCaption",       "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_OmittedCaption.name());
 
             earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
             earlReport.deleteOnExit();
 
             checks = new HashMap<String,BrailleCheck>();
             checks.put(BrailleCheck.ID.A_NoBrailleToc.name(),         new BrailleCheck(BrailleCheck.ID.A_NoBrailleToc));
-            checks.put(BrailleCheck.ID.A_NotInBrailleVolume.name(),   new BrailleCheck(BrailleCheck.ID.A_NotInBrailleVolume));
-            checks.put(BrailleCheck.ID.A_OmittedInBraille.name(),     new BrailleCheck(BrailleCheck.ID.A_OmittedInBraille));
-            checks.put(BrailleCheck.ID.A_TransposedInBraille.name(),  new BrailleCheck(BrailleCheck.ID.A_TransposedInBraille));
-            checks.put(BrailleCheck.ID.A_UnnaturalVolumeBreak.name(), new BrailleCheck(BrailleCheck.ID.A_UnnaturalVolumeBreak));
+            checks.put(BrailleCheck.ID.A_OmittedCaption.name(),       new BrailleCheck(BrailleCheck.ID.A_OmittedCaption));
 
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
@@ -102,8 +96,8 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
 
         try {
 
-            OdtTransformer odtTransformer = new OdtTransformer(odtFile);
-            Settings settings = new Settings(odtTransformer);
+            ODTTransformer odtTransformer = new ODTTransformer(odtFile);
+            Configuration settings = new Configuration(odtTransformer);
 
               // TODO: load settings from odt-file
 

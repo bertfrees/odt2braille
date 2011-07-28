@@ -11,34 +11,33 @@
 
 # General
 
-	namespaces dtb=http://www.daisy.org/z3986/2005/dtbook/,math=http://www.w3.org/1998/Math/MathML
-	document dtbook
-	skip head
-	no book
-	no rearmatter
-	generic a
-	no bodymatter
-	preliminary frontmatter
-    no basic-frontmatter
-    no ext-frontmatter
-	skip flag
+    namespaces dtb=http://www.daisy.org/z3986/2005/dtbook/,math=http://www.w3.org/1998/Math/MathML
+    document dtbook
+    skip head
+    no book
+    generic a
+    preliminary frontmatter
+    no bodymatter
+    no rearmatter
+    skip flag
 	
 # Volumes
 
-	generic       &xpath(//dtb:volume[not(position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]))]) \*@e
-	newPageBefore &xpath(//dtb:volume[    position()>1 or (position()=1 and preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])]) ]) \*@e
+    newPageBefore volume \*@e
+    generic       &xpath(//dtb:volume[not(preceding::dtb:volume) and not(preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*@e
 	
 # Special Typefaces
 # Languages
 # Spans
 
-	boldx       strong
-	italicx     em
-	changetable span,lang
-	no          span,class,lang-wrap
-	italicx	    &xpath(//dtb:span[@lang and @special='true']/dtb:span[@class='lang-wrap'])
-	generic     span,class,unspaced
-	no          span,class,spaced
+    boldx       strong
+    italicx     em
+    changetable span,lang
+    no          span,class,lang-wrap
+    italicx	&xpath(//dtb:span[@lang and @special='true']/dtb:span[@class='lang-wrap'])
+    generic     span,class,unspaced
+    no          span,class,spaced
+    no          span
 	
 # Softreturns
 # Blank lines
@@ -132,7 +131,7 @@
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note]//*[self::dtb:p or self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10])
 
 # ----------------------------------------------------------------------------------------------
-# Paragraph styles (_paragraphs.sem)
+# Paragraph styles (_sem_paragraphs.sem)
 
 #   paragraph_Standard       &xpath(//dtb:paragraph[@style='Standard' and not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)]/dtb:p)
 #   wrap-paragraph_Standard  &xpath(//dtb:paragraph[@style='Standard' and not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)])
@@ -222,7 +221,7 @@
     generic th
 
 # ----------------------------------------------------------------------------------------------
-# Stairstep table (_stairsteptable.sem)
+# Stairstep table (_sem_stairsteptable.sem)
 #
 #	tablecolumn1  &xpath(//dtb:tr/dtb:td[1])
 #	tablecolumn2  &xpath(//dtb:tr/dtb:td[2])
@@ -246,25 +245,14 @@
 #	tablecolumn10 &xpath(//dtb:tr/dtb:th[position()>9])
 #
 # ----------------------------------------------------------------------------------------------
+# Borders (_sem_borders.sem)
 
-# Textboxes
-	
-    frame div,class,frame
-    pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
-	
-# Images
-	
-    no div,class,image
+    boxline &xpath(//dtb:table//dtb:hr[preceding-sibling::*[1][self::dtb:thead]])                                     3
 
-# ----------------------------------------------------------------------------------------------
-# Borders (_sem.borders.sem)
-
-    boxline &xpath(//dtb:table//dtb:hr[preceding-sibling::*[1][self::dtb:thead]]) 		                          3
-
-#   boxline &xpath(//dtb:table/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) 				  ?
-#   boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) 				  ?	
-#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]]) 	  ?
-#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) 	  ?
+#	boxline &xpath(//dtb:table/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]])                   ?
+#	boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]])                   ?
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]])     ?
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]])     ?
 #	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h1]]])  ?
 #	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h2]]])  ?
 #	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h3]]])  ?
@@ -287,11 +275,26 @@
 #	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h10]]]) ?
 # ----------------------------------------------------------------------------------------------
 
+# Textboxes
+
+    frame div,class,frame
+    pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
+
+# Pictures
+
+    picture div,class,image
+    picturenote &xpath(//dtb:div[@class='image']/dtb:div[@class='tn']/dtb:note)
+
 # Transcriber's notes
 	
-    no    div,class,tn
-    skip  &xpath(//dtb:div[@class='tn' and not(child::dtb:note)])
-	
+    no      div,class,tn
+    skip    &xpath(//dtb:div[@class='tn' and not(child::dtb:note)])
+    trnote  &xpath(//*[not(self::dtb:div[@class='image'])]/dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
+    trnote  &xpath(//*[not(self::dtb:div[@class='image'])]/dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note)                    \x2820\x2804,\*\x2820\x2804
+    trnote  &xpath(//*[not(self::dtb:div[@class='image'])]/dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1])      \x2820\x2804
+    trnote  &xpath(//*[not(self::dtb:div[@class='image'])]/dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()])              \*\x2820\x2804
+    para    &xpath(//dtb:div[@class='tn-page']/dtb:note)
+
 # Note references
 # Foot Notes
 # End Notes
@@ -303,11 +306,6 @@
 
     footnote   note,class,footnote
     endnote    note,class,endnote
-    para       &xpath(//dtb:div[@class='tn-page']/dtb:note)
-    trnote     &xpath(//dtb:div[@class='tn']/dtb:note[position()>1 and position()<last()])
-    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)=1)]/dtb:note) \x2820\x2804,\*\x2820\x2804
-    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=1]) \x2820\x2804
-    trnote     &xpath(//dtb:div[@class='tn' and (count(child::dtb:note)>1)]/dtb:note[position()=last()]) \*\x2820\x2804
 	
 # Footers
 # Running headers

@@ -45,10 +45,7 @@
                     omit-xml-declaration="no"/>
 
         <xsl:param    name="paramNoBrailleToc"           as="xsd:string" />
-        <xsl:param    name="paramNotInBrailleVolume"     as="xsd:string" />
-        <xsl:param    name="paramOmittedInBraille"       as="xsd:string" />
-        <xsl:param    name="paramTransposedInBraille"    as="xsd:string" />
-        <xsl:param    name="paramUnnaturalVolumeBreak"   as="xsd:string" />
+        <xsl:param    name="paramOmittedCaption"         as="xsd:string" />
 
         <xsl:param    name="paramTimestamp"              as="xsd:string" />
         <xsl:param    name="paramTocEnabled"             as="xsd:boolean" />
@@ -97,7 +94,7 @@
             </xsl:if>
 
             <earl:TestCase>
-                <xsl:attribute name="rdf:about" select="$paramOmittedInBraille"/>
+                <xsl:attribute name="rdf:about" select="$paramOmittedCaption"/>
             </earl:TestCase>
             <xsl:apply-templates select="//ns2:caption"/>
         </rdf:RDF>
@@ -118,7 +115,7 @@
                     </ns3:paragraph>
                 </earl:subject>
                 <earl:test>
-                    <xsl:attribute name="rdf:resource" select="$paramOmittedInBraille" />
+                    <xsl:attribute name="rdf:resource" select="$paramOmittedCaption" />
                 </earl:test>
                 <earl:result>
                     <earl:TestResult>

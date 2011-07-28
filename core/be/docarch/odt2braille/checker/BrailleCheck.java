@@ -18,22 +18,17 @@ public class BrailleCheck /* extends Check */ {
     public static enum ID {
 
         A_NoBrailleToc,
-        A_NotInBrailleVolume,       // ***
-        A_OmittedInBraille,         // voor captions: ok
-        A_TransposedInBraille,      // ***
         A_UnnaturalVolumeBreak,      // *** info pas beschikbaar na split-volumes.xsl
-
-        // Table or image without caption ?
-
         A_VolumesTooLong,
         A_VolumesTooShort,
         A_VolumesDifferTooMuch,
         A_PreliminaryVolumeRequired,
         A_PreliminaryVolumeTooShort,
         A_VolumeDoesntBeginWithHeading,
-        A_OmissionsInsideVolume,
-        A_OmissionsOutsideVolume,
-        A_Transpositions,
+        A_OmittedInBraille,
+        A_OmittedCaption,
+        A_NotInBrailleVolume,
+        A_TransposedInBraille,
         A_PageWidthTooSmall,
 
         A_EmbosserDoesNotSupport8Dot,

@@ -1,19 +1,10 @@
 package be.docarch.odt2braille;
 
-/**
- *
- * @author Bert Frees
- */
+import be.docarch.odt2braille.setup.Configuration;
+
 public class PreliminaryVolume extends Volume {
 
-    public PreliminaryVolume() {
-        super(Volume.Type.PRELIMINARY);
-        setExtFrontMatter(true);
-        setExtToc(true);
-    }
-
-    public PreliminaryVolume(PreliminaryVolume copyVolume) {
-        this();
-        copyVolume(copyVolume);
+    public PreliminaryVolume(Configuration.Volume settings) {
+        super(settings);
     }
 }

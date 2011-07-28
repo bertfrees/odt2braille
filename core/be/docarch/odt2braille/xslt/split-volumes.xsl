@@ -45,6 +45,8 @@
         <xsl:param name="paramFrontMatterEnabled"             as="xsd:boolean"  select="false()" />
             <xsl:param name="paramExtendedFront"              as="xsd:boolean"  select="false()" />
 
+        <xsl:param name="paramRearMatterEnabled"              as="xsd:boolean"  select="false()" />
+
         <xsl:param name="paramTableOfContentEnabled"          as="xsd:boolean"  select="false()" />
             <xsl:param name="paramExtendedToc"                as="xsd:boolean"  select="false()" />
             <xsl:param name="paramTableOfContentTitle"        as="xsd:string"   select="'TABLE OF CONTENTS'" />
@@ -90,16 +92,16 @@
                     <xsl:variable name="front" as="element()">
                         <xsl:choose>
                             <xsl:when test="$paramExtendedFront">
-                                <xsl:sequence select=".//dtb:ext-frontmatter"/>
+                                <xsl:sequence select="."/>
                             </xsl:when>
                             <xsl:otherwise>
-                                <xsl:sequence select=".//dtb:basic-frontmatter"/>
+                                <xsl:sequence select=".//dtb:repeat-frontmatter"/>
                             </xsl:otherwise>
                         </xsl:choose>
                     </xsl:variable>
 
                     <!-- Frontmatter -->
-                    <xsl:apply-templates select="$front"/>
+                    <xsl:apply-templates select="$front/*"/>
 
                     <!-- Notesection -->
                     <xsl:variable name="endnotes" as="element()*">
@@ -158,6 +160,27 @@
         </xsl:choose>
     </xsl:template>
 
+    <!-- REARMATTER -->
+
+    <xsl:template match="dtb:rearmatter">
+        <xsl:choose>
+            <xsl:when test="(($paramRearMatterEnabled or $paramTableOfContentEnabled)
+                                    and $paramAllVolumes)
+                                or ($paramTableOfContentEnabled and $paramExtendedToc)">
+                <xsl:copy>
+                    <xsl:apply-templates select="dtb:volume"/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:when test="($paramRearMatterEnabled or $paramTableOfContentEnabled)
+                                and string-length($paramVolumeId) > 0">
+                <xsl:copy>
+                    <xsl:apply-templates select="dtb:volume[@id=$paramVolumeId]"/>
+                </xsl:copy>
+            </xsl:when>
+            <xsl:otherwise />
+        </xsl:choose>
+    </xsl:template>
+
     <!-- VOLUME -->
 
     <xsl:template match="dtb:volume">
@@ -170,7 +193,7 @@
             <xsl:apply-templates select="@*" />
 
             <!-- Omitted content -->
-            <xsl:if test="omitted-preceding-siblings">
+            <xsl:if test="$omitted-preceding-siblings">
                 <dtb:div class="not-in-volume">
                     <xsl:apply-templates select="$omitted-preceding-siblings"/>
                 </dtb:div>

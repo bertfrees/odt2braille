@@ -79,7 +79,7 @@ public class Interpoint55PrintDialog implements XActionListener,
     private final static String L10N = Constants.OOO_L10N_PATH;
 
     private Interpoint55Embosser embosser = null;
-    private SettingsIO settingsIO = null;
+  //private SettingsIO settingsIO = null;
 
     private XComponentContext xContext = null;
 
@@ -150,7 +150,7 @@ public class Interpoint55PrintDialog implements XActionListener,
         this.embosser = embosser;
         this.xContext = xContext;
 
-        settingsIO = new SettingsIO(xContext, xDesktopComponent);
+      //settingsIO = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/Interpoint55PrintDialog.xdl";
@@ -368,7 +368,8 @@ public class Interpoint55PrintDialog implements XActionListener,
     private void loadEmbossSettings() throws IOException {
 
         
-        Properties interpoint55Settings = settingsIO.loadSettingsFromOpenOffice("interpoint55");
+      //Properties interpoint55Settings = settingsIO.loadSettingsFromOpenOffice("interpoint55");
+        Properties interpoint55Settings = new Properties();
 
         String s = null;
 
@@ -398,7 +399,7 @@ public class Interpoint55PrintDialog implements XActionListener,
             interpoint55Settings.setProperty("iniFile",      iniFileName);
             interpoint55Settings.setProperty("overWriteIni", overWriteIniFile?"1":"0");
 
-            settingsIO.saveSettingsToOpenOffice("interpoint55", interpoint55Settings);
+          //settingsIO.saveSettingsToOpenOffice("interpoint55", interpoint55Settings);
 
         }
     }

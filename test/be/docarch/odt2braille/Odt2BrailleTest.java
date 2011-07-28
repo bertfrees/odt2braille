@@ -12,6 +12,9 @@ import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Ignore;
 import static org.junit.Assert.assertTrue;
 
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
+
 /**
  *
  * @author Bert Frees
@@ -20,7 +23,6 @@ import static org.junit.Assert.assertTrue;
 public abstract class Odt2BrailleTest {
 
     protected static String resources;
-    protected static File liblouis;
 
     static {
 
@@ -30,14 +32,15 @@ public abstract class Odt2BrailleTest {
         try {
 
             File logFile = File.createTempFile(Constants.TMP_PREFIX, ".log", Constants.getTmpDirectory());
-            logFile.deleteOnExit();
+          //logFile.deleteOnExit();
             Handler fh = new FileHandler(logFile.getAbsolutePath());
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.FINEST);
 
             resources = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/").getFile();
-            liblouis = new File("dist" + File.separator + "liblouis");
+
+            ODT2PEFConverter.setLiblouisLocation(new File("dist" + File.separator + "liblouis"));
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
@@ -58,14 +61,14 @@ public abstract class Odt2BrailleTest {
                                  throws Exception {
 
         OdtTransformer tf = new OdtTransformer(odtFile);
-        Settings settings = new Settings(tf);
+        Configuration.setTransformer(tf);
+        Configuration settings = Configuration.newInstance();
+        ExportConfiguration exportSettings = new ExportConfiguration();
 
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
 
-        LiblouisXML liblouisXML = new LiblouisXML(settings, liblouis);
-        PEF pefBuilder = new PEF(settings, liblouisXML);
-        pefBuilder.makePEF();
+        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
 
         return pefBuilder.getSinglePEF();
     }

@@ -31,15 +31,17 @@
     
     <target name="addon-jar"
             description="Build Addon jar"
-            depends="-uno-project-init,uno-idl-compile,-jar-idl-types,compile,-pre-jar,-do-openoffice-manifest,-post-jar,-do-addon-jar" />
+            depends="-uno-project-init,uno-idl-compile,-jar-idl-types,core-jar,compile,-pre-jar,-do-openoffice-manifest,-post-jar,-do-addon-jar" />
             
     <target name="core-jar"
-            description="Build Core jar" />
+            description="Build Core jar"
+			depends="init,-make-liblouis-dir,-build-core" />
    
     <target name="tools-jar"
             description="Build Tools jar" />
 	
 	<target name="jar"
+			description="Default target: Build Core jar"
 	        depends="core-jar" />
 	
     <target name="javadoc"
@@ -48,7 +50,7 @@
     
     <target name="test"
             description="Run unit tests"
-            depends="init,compile-test,-pre-test-run,-do-test-run,-test-report,-post-test-run" />
+            depends="init,-make-liblouis-dir,compile-test,-pre-test-run,-do-test-run,-test-report,-post-test-run" />
 
     <target name="compile"
             description="Compile project"
@@ -63,7 +65,7 @@
   
   
     <target name="-pre-init" depends="-init-build,-copy-external-jars"/>
-    <target name="-pre-compile" depends="-make-liblouis-dir,-build-core"/>
+    <target name="-pre-compile"/>
     <target name="-post-uno-package" depends="-rebuild-extension"/>
     <target name="-profile-post-init"/>
     <target name="-profile-pre-init"/>
@@ -82,7 +84,7 @@
     
     <!-- initialise -->
     <target name="-init-build"
-            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
+            depends="-windows-properties,-macosx-properties,-linux-properties">
 
         <property file="build.properties"/>
 		
@@ -136,10 +138,6 @@
         <property file="build.linux.properties"/>
     </target>
 
-    <target name="-debian-properties" if="is.debian" depends="-detect-os">
-        <property file="build.debian.properties"/>
-    </target>
-
 
     <!-- ask target.os as an input -->
     <target name="-prompt-target-os">
@@ -174,13 +172,6 @@
             <and>
                 <os family="unix"/>
                 <not><os family="mac"/></not>
-                <not><contains string="${os.name}" substring="debian" casesensitive="no"/></not>
-            </and>
-        </condition>
-        <condition property="is.debian">
-            <and>
-                <os family="unix"/>
-                <contains string="${os.name}" substring="debian" casesensitive="no"/>
             </and>
         </condition>
     </target>
@@ -272,13 +263,10 @@
         </copy>
     </target>
 
-
-    <!-- build core jar -->
-    <target name="-build-core">
+    <!-- compile core -->
+    <target name="-compile-core" depends="-init-build">
         <delete dir="${build.core.classes.dir}"/>
     	<mkdir dir="${build.core.classes.dir}"/>
-        
-        <!-- compile -->
         <javac srcdir="${src.core.dir}" destdir="${build.core.classes.dir}"
                includeantruntime="false" debug="true" encoding="UTF-8"
                source="${javac.source}" target="${javac.target}"
@@ -287,8 +275,7 @@
                 <path path="${javac.core.classpath}"/>
             </classpath>
         </javac>
-        
-        <copy todir="${build.core.classes.dir}">
+		<copy todir="${build.core.classes.dir}">
             <fileset dir="${src.core.dir}">
                 <patternset>
                     <include name="META-INF/**/*.*"/>
@@ -300,8 +287,10 @@
                 </patternset>
             </fileset>
         </copy>
-        
-        <!-- build jar -->
+    </target>
+    
+    <!-- build core jar -->
+    <target name="-build-core" depends="-compile-core">
 		<delete file="${dist.core.jar}"/>
         <jar destfile="${dist.core.jar}">
             <fileset dir="${build.core.classes.dir}"/>
@@ -950,21 +939,21 @@
                 =========================
             -->
 
-    <target depends="init,compile" name="-pre-pre-compile-test">
+    <target depends="init,-compile-core" name="-pre-pre-compile-test">
         <mkdir dir="${build.test.classes.dir}"/>
     </target>
 
     <target if="do.depend.true" name="-compile-test-depend">
         <j2seproject3:depend classpath="${javac.test.classpath}" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
     </target>
-    <target depends="init,deps-jar,compile,-pre-pre-compile-test,-pre-compile-test,-compile-test-depend" name="-do-compile-test">
+    <target depends="init,-compile-core,-pre-pre-compile-test,-pre-compile-test,-compile-test-depend" name="-do-compile-test">
         <j2seproject3:javac classpath="${javac.test.classpath}" debug="true" destdir="${build.test.classes.dir}" srcdir="${test.src.dir}"/>
         <copy todir="${build.test.classes.dir}">
             <fileset dir="${test.src.dir}" excludes="${build.classes.excludes},${excludes}" includes="${includes}"/>
         </copy>
     </target>
 
-    <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test,-do-compile-test,-post-compile-test" name="compile-test"/>
+    <target depends="init,-compile-core,-pre-pre-compile-test,-pre-compile-test,-do-compile-test,-post-compile-test" name="compile-test"/>
 
     <!--
                 =======================

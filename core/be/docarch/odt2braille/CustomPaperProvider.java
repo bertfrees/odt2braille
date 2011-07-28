@@ -11,9 +11,7 @@ import org.daisy.paper.PaperProvider;
  */
 public class CustomPaperProvider implements PaperProvider {
 
-    enum PaperSize {
-        CUSTOM
-    };
+    enum PaperSize { CUSTOM };
 
     private final ArrayList<Paper> papers;
 

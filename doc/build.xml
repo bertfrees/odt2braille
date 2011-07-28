@@ -1,10 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Odt2BrailleAddOn-doc" default="doc" basedir=".">
+<project name="Odt2BrailleAddOn-doc" basedir=".">
     <description>Build user and developer documentation.</description>
 	
-	<target name="doc">
+	<!-- USER DOCUMENTATION -->
+	<target name="user-doc" depends="-init">		
+        <docbook2html docbook="odt2braille-user-doc.xml"
+                      html= "${doc.build.dir}/odt2braille-user-doc.html"/>
+        <docbook2fo docbook="odt2braille-user-doc.xml"
+                    fo="${doc.build.dir}/odt2braille-user-doc.fo"/>
+        <fo2pdf fo="${doc.build.dir}/odt2braille-user-doc.fo"
+                pdf="${doc.build.dir}/odt2braille-user-doc.pdf"/>
+   <!-- <docbook2odt docbook="odt2braille-user-doc.xml"
+                     odt="${doc.build.dir}/odt2braille-user-doc.odt"/> -->
+	</target>
+				
+    <!-- DEVELOPER DOCUMENTATION -->
+	<target name="dev-doc" depends="-init">		
+		<docbook2html docbook="odt2braille-dev-doc.xml"
+                      html= "${doc.build.dir}/odt2braille-dev-doc.html"/>
+	</target>
 	
-	    <property name="docbook-xsl.home" value="resources/docbook-xsl"/>
+	<target name="-init">
+	
+		<property name="docbook-xsl.home" value="resources/docbook-xsl"/>
         <property name="fop.home" value="resources/fop"/>
         <property name="saxon.jar" value="resources/saxon/saxon.jar"/>
         <property name="docbook2odf.home" value="resources/docbook2odf"/>
@@ -80,16 +98,7 @@
         
         <delete dir="${doc.build.dir}"/>
     	<mkdir dir="${doc.build.dir}"/>
-		
-        <docbook2html docbook="odt2braille-user-doc.xml"
-                      html= "${doc.build.dir}/odt2braille-user-doc.html"/>
-        <docbook2fo docbook="odt2braille-user-doc.xml"
-                    fo="${doc.build.dir}/odt2braille-user-doc.fo"/>
-        <fo2pdf fo="${doc.build.dir}/odt2braille-user-doc.fo"
-                pdf="${doc.build.dir}/odt2braille-user-doc.pdf"/>
-        <docbook2odt docbook="odt2braille-user-doc.xml"
-                     odt="${doc.build.dir}/odt2braille-user-doc.odt"/>
-
+	
 	</target>
 	
 </project>

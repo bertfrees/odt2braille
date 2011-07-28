@@ -63,7 +63,8 @@
 
         <!-- XSLT Parameters  -->
 
-        <xsl:param name="paramVolumeManagementMode"       as="xsd:string"   select="'SINGLE'"  />
+        <xsl:param name="paramBodyMatterMode"             as="xsd:string"   select="'SINGLE'"  />
+        <xsl:param name="paramRearMatterMode"             as="xsd:string"   select="'SINGLE'"  />
 
         <xsl:param name="paramColumnDelimiter"            as="xsd:string"   select='"&#x2830;"' />
         <xsl:param name="paramTableHeadingSuffix"         as="xsd:string"   select='"&#x2812;"' />
@@ -71,6 +72,9 @@
         <xsl:param name="paramDoubleDash"		  as="xsd:string"   select="'&#x2824;&#x2824;&#x2824;&#x2824;'" />
         <xsl:param name="paramEllipsisDots"		  as="xsd:string"   select="'(5, 5, 5)'" />
         <xsl:param name="paramDoubleDashDots"		  as="xsd:string"   select="'(36, 36, 36, 36)'" />
+        <xsl:param name="paramPictureDescriptionPrefix"   as="xsd:string"   select="'Picture description:'"/>
+        <xsl:param name="paramPictureOpeningMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
+        <xsl:param name="paramPictureClosingMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
 
         <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberPrefixes"      as="xsd:string*"  />
@@ -146,11 +150,11 @@ DOCUMENT ROOT
                 <dtb:frontmatter>                    
                     <xsl:variable name="frontmatter-section" as="xsd:string">
                         <xsl:call-template name="get-frontmatter-section" />
-                    </xsl:variable>                    
+                    </xsl:variable>
                     <xsl:if test="string-length($frontmatter-section)>0">
                         <xsl:apply-templates mode="toplevel"
                                              select="$body/office:text//text:section[@text:name=$frontmatter-section][1]">
-                            <xsl:with-param name="frontmatter" select="true()" />
+                            <xsl:with-param name="frontmatter-mode" select="true()" />
                         </xsl:apply-templates>
                     </xsl:if>
                 </dtb:frontmatter>
@@ -158,24 +162,45 @@ DOCUMENT ROOT
                 <!-- BODYMATTER -->
                 <dtb:bodymatter>
                     <xsl:choose>
-                        <xsl:when test="$paramVolumeManagementMode='SINGLE' or
-                                        $paramVolumeManagementMode='AUTOMATIC'">
+                        <xsl:when test="$paramBodyMatterMode='SINGLE' or
+                                        $paramBodyMatterMode='AUTOMATIC'">
                             <dtb:volume>
                                 <xsl:apply-templates mode="toplevel"
-                                                     select="$body/office:text/text:sequence-decls/following-sibling::*">
-                                    <xsl:with-param name="volume" select="true()" />
-                                </xsl:apply-templates>
+                                                     select="$body/office:text/text:sequence-decls/following-sibling::*"/>
                             </dtb:volume>
                         </xsl:when>
-                        <xsl:when test="$paramVolumeManagementMode='MANUAL'">
+                        <xsl:when test="$paramBodyMatterMode='MANUAL'">
                             <xsl:apply-templates mode="toplevel"
-                                                 select="$body/office:text/text:sequence-decls/following-sibling::*">
-                                <xsl:with-param name="volume" select="true()" />
-                            </xsl:apply-templates>
+                                                 select="$body/office:text/text:sequence-decls/following-sibling::*"/>
                         </xsl:when>
                         <xsl:otherwise />
                     </xsl:choose>
                 </dtb:bodymatter>
+
+                <!-- REARMATTER -->
+                <dtb:rearmatter>
+                    <xsl:variable name="rearmatter-section" as="xsd:string"
+                                  select="substring-after(string($controller//ns1:rearmatter/@rdf:about), 'section:/')"/>
+                    <xsl:if test="string-length($rearmatter-section)>0">
+                        <xsl:choose>
+                            <xsl:when test="$paramRearMatterMode='SINGLE'">
+                                <dtb:volume>
+                                    <xsl:apply-templates mode="toplevel"
+                                                         select="$body/office:text//text:section[@text:name=$rearmatter-section][1]">
+                                        <xsl:with-param name="rearmatter-mode" select="true()" />
+                                    </xsl:apply-templates>
+                                </dtb:volume>
+                            </xsl:when>
+                            <xsl:when test="$paramRearMatterMode='MANUAL'">
+                                <xsl:apply-templates mode="toplevel"
+                                                     select="$body/office:text//text:section[@text:name=$rearmatter-section][1]">
+                                    <xsl:with-param name="rearmatter-mode" select="true()" />
+                                </xsl:apply-templates>
+                            </xsl:when>
+                            <xsl:otherwise />
+                        </xsl:choose>
+                    </xsl:if>
+                </dtb:rearmatter>
             </dtb:book>
         </dtb:dtbook>
 
@@ -190,12 +215,11 @@ TOP LEVEL
     -->
 
     <xsl:template match="*|@*" name="toplevel" mode="toplevel">
-        <xsl:param name="volume"       as="xsd:boolean" select="false()" />
-        <xsl:param name="frontmatter"  as="xsd:boolean" select="false()" />
-        <xsl:param name="omissions"    as="xsd:boolean" select="true()"  />
-        <xsl:param name="pagenumbers"  as="xsd:boolean" select="true()"  />
+        <xsl:param name="frontmatter-mode" as="xsd:boolean" select="false()" />
+        <xsl:param name="rearmatter-mode"  as="xsd:boolean" select="false()" />
+        <xsl:param name="omissions"        as="xsd:boolean" select="true()"  />
+        <xsl:param name="pagenumbers"      as="xsd:boolean" select="true()"  />
 
-        <xsl:variable name="render"    as="xsd:boolean" select="$volume or $frontmatter" />
         <xsl:choose>
 
             <!-- PAGENUMBER -->
@@ -204,119 +228,28 @@ TOP LEVEL
             </xsl:when>
 
             <!-- HEADING -->
-            <xsl:when test="$render and name(current())='text:h'">
+            <xsl:when test="name(current())='text:h'">
                 <xsl:call-template name="heading" />
             </xsl:when>
 
             <!-- PARAGRAPH -->
-            <xsl:when test="$render and name(current())='text:p'">
+            <xsl:when test="name(current())='text:p'">
                 <xsl:call-template name="para" />
             </xsl:when>
 
             <!-- LIST -->
-            <xsl:when test="$render and name(current())='text:list'">
+            <xsl:when test="name(current())='text:list'">
                 <xsl:call-template name="list"/>
             </xsl:when>
 
             <!-- TABLE -->
-            <xsl:when test="$render and name(current())='table:table'">
+            <xsl:when test="name(current())='table:table'">
                 <xsl:call-template name="table"/>
             </xsl:when>
             
             <!-- BIBLIOGRAPHY -->
-            <xsl:when test="$render and name(current())='text:bibliography'">
+            <xsl:when test="name(current())='text:bibliography'">
                 <xsl:call-template name="bibliography" />
-            </xsl:when>
-
-            <!-- SECTIONS -->
-            <xsl:when test="name(current())='text:section'">                
-                <xsl:variable name="section-name" select="@text:name" />
-                <xsl:variable name="frontmatter-section" as="xsd:string">
-                    <xsl:call-template name="get-frontmatter-section"/>
-                </xsl:variable>
-                <xsl:choose>
-                    
-                    <!-- NOT RENDERED FRONTMATTER -->
-                    <xsl:when test="$section-name=$frontmatter-section and not($frontmatter)">
-                        <xsl:if test="$pagenumbers">
-                            <xsl:apply-templates select="current()/descendant::pagenum" />
-                        </xsl:if>
-                    </xsl:when>
-
-                    <!-- NOT RENDERED SECTION -->
-                    <xsl:when test="not($render)">
-                        <xsl:apply-templates select="current()/child::*" mode="toplevel">
-                            <xsl:with-param name="omissions"   select="$omissions"   />
-                            <xsl:with-param name="pagenumbers" select="$pagenumbers" />
-                        </xsl:apply-templates>
-                    </xsl:when>
-
-                    <!-- VOLUME -->
-                    <xsl:when test="$paramVolumeManagementMode='MANUAL' and
-                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:volume>
-                            <xsl:attribute name="id" select="$section-name" />
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="volume"              select="true()"  />
-                                <xsl:with-param name="without-notesection" select="true()"  />
-                            </xsl:call-template>
-                        </dtb:volume>
-                    </xsl:when>
-
-                    <!-- EXTENDED FRONTMATTER -->
-                    <xsl:when test="$frontmatter and
-                                    $controller//ns1:ext-frontmatter[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:ext-frontmatter>
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="frontmatter"         select="true()"   />
-                                <xsl:with-param name="without-notesection" select="true()"  />
-                            </xsl:call-template>
-                        </dtb:ext-frontmatter>
-                    </xsl:when>
-
-                    <!-- FRONTMATTER = TITLE PAGE -->
-                    <xsl:when test="$frontmatter and
-                                    $controller//ns1:basic-frontmatter[@rdf:about=concat('section:/', $section-name)] and
-                                    $controller//ns1:titlepage        [@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:basic-frontmatter>
-                            <dtb:titlepage>
-                                <xsl:call-template name="section">
-                                    <xsl:with-param name="frontmatter"         select="true()"   />
-                                    <xsl:with-param name="without-notesection" select="true()"  />
-                                </xsl:call-template>
-                            </dtb:titlepage>
-                        </dtb:basic-frontmatter>
-                    </xsl:when>
-
-                    <!-- FRONTMATTER -->
-                    <xsl:when test="$frontmatter and
-                                    $controller//ns1:basic-frontmatter[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:basic-frontmatter>
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="frontmatter"         select="true()"   />
-                                <xsl:with-param name="without-notesection" select="true()"  />
-                            </xsl:call-template>
-                        </dtb:basic-frontmatter>
-                    </xsl:when>
-
-                    <!-- TITLE PAGE -->
-                    <xsl:when test="$frontmatter and
-                                    $controller//ns1:titlepage[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:titlepage>
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="frontmatter" select="true()"   />
-                            </xsl:call-template>
-                        </dtb:titlepage>
-                    </xsl:when>
-
-                    <!-- OTHER SECTION -->
-                    <xsl:when test="$render">
-                        <xsl:call-template name="section">
-                            <xsl:with-param name="volume"      select="$volume"      />
-                            <xsl:with-param name="frontmatter" select="$frontmatter" />
-                        </xsl:call-template>
-                    </xsl:when>
-                </xsl:choose>
             </xsl:when>
 
             <!-- TABLE OF CONTENT -->
@@ -329,12 +262,110 @@ TOP LEVEL
                 </xsl:if>
             </xsl:when>
 
-            <!-- OMIT EMPTY PARAGRAPH -->
-            <xsl:when test="name(current())='text:p' and not(string(current()) or count(current()/node()) > 0)">
-                <!-- no omission flag -->
+            <!-- SECTIONS -->
+            <xsl:when test="name(current())='text:section'">                
+                <xsl:variable name="section-name" select="@text:name" />
+                <xsl:variable name="frontmatter-section" as="xsd:string">
+                    <xsl:call-template name="get-frontmatter-section"/>
+                </xsl:variable>
+                <xsl:choose>
+                    
+                    <!-- NOT RENDERED FRONTMATTER -->
+                    <xsl:when test="$section-name=$frontmatter-section and not($frontmatter-mode)">
+                        <xsl:if test="$pagenumbers">
+                            <xsl:apply-templates select="current()/descendant::pagenum" />
+                        </xsl:if>
+                    </xsl:when>
+
+                    <!-- REPEATED FRONTMATTER = TITLE PAGE -->
+                    <xsl:when test="$frontmatter-mode and
+                                    $controller//ns1:repeat-frontmatter[@rdf:about=concat('section:/', $section-name)] and
+                                    $controller//ns1:titlepage         [@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:repeat-frontmatter>
+                            <dtb:titlepage>
+                                <xsl:call-template name="section">
+                                    <xsl:with-param name="frontmatter-mode"    select="true()"   />
+                                    <xsl:with-param name="without-notesection" select="true()"  />
+                                </xsl:call-template>
+                            </dtb:titlepage>
+                        </dtb:repeat-frontmatter>
+                    </xsl:when>
+
+                    <!-- REPEATED FRONTMATTER -->
+                    <xsl:when test="$frontmatter-mode and
+                                    $controller//ns1:repeat-frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:repeat-frontmatter>
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="frontmatter-mode"    select="true()"  />
+                                <xsl:with-param name="without-notesection" select="true()"  />
+                            </xsl:call-template>
+                        </dtb:repeat-frontmatter>
+                    </xsl:when>
+
+                    <!-- TITLE PAGE -->
+                    <xsl:when test="$frontmatter-mode and
+                                    $controller//ns1:titlepage[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:titlepage>
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="frontmatter-mode" select="true()"   />
+                            </xsl:call-template>
+                        </dtb:titlepage>
+                    </xsl:when>
+
+                    <!-- FRONTMATTER -->
+                    <xsl:when test="$frontmatter-mode and
+                                    $controller//ns1:frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                        <xsl:call-template name="section">
+                            <xsl:with-param name="frontmatter-mode"    select="true()"   />
+                            <xsl:with-param name="without-notesection" select="true()"  />
+                        </xsl:call-template>
+                    </xsl:when>
+
+                    <!-- NOT RENDERED REARMATTER -->
+                    <xsl:when test="$controller//ns1:rearmatter[@rdf:about=concat('section:/', $section-name)]
+                                    and not($rearmatter-mode)"/>
+
+                    <!-- REARMATTER -->
+                    <xsl:when test="$controller//ns1:rearmatter[@rdf:about=concat('section:/', $section-name)]">
+                        <xsl:call-template name="section">
+                            <xsl:with-param name="rearmatter-mode"  select="true()" />
+                        </xsl:call-template>
+                    </xsl:when>
+
+                    <!-- VOLUME IN REARMATTER -->
+                    <xsl:when test="$rearmatter-mode and
+                                    $paramRearMatterMode='MANUAL' and
+                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:volume>
+                            <xsl:attribute name="id" select="$section-name" />
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="without-notesection" select="true()" />
+                            </xsl:call-template>
+                        </dtb:volume>
+                    </xsl:when>
+
+                    <!-- VOLUME IN BODYMATTER -->
+                    <xsl:when test="$paramBodyMatterMode='MANUAL' and
+                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
+                        <dtb:volume>
+                            <xsl:attribute name="id" select="$section-name" />
+                            <xsl:call-template name="section">
+                                <xsl:with-param name="without-notesection" select="true()" />
+                            </xsl:call-template>
+                        </dtb:volume>
+                    </xsl:when>
+
+                    <!-- OTHER SECTION -->
+                    <xsl:otherwise>
+                        <xsl:call-template name="section">
+                            <xsl:with-param name="frontmatter-mode" select="$frontmatter-mode" />
+                            <xsl:with-param name="rearmatter-mode"  select="$rearmatter-mode" />
+                        </xsl:call-template>
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:when>
 
-            <!-- OTHER OMISSIONS -->
+            <!-- OMISSIONS -->
             <xsl:otherwise>
                 <xsl:if test="$omissions">
                     <dtb:div class="omission" />
@@ -350,8 +381,8 @@ TOP LEVEL
     <!-- SECTIONS -->
 
     <xsl:template name="section">
-        <xsl:param    name="volume"              select="false()" as="xsd:boolean" />
-        <xsl:param    name="frontmatter"         select="false()" as="xsd:boolean" />
+        <xsl:param    name="frontmatter-mode"    select="false()" as="xsd:boolean" />
+        <xsl:param    name="rearmatter-mode"     select="false()" as="xsd:boolean" />
         <xsl:param    name="without-notesection" select="false()" as="xsd:boolean" />
 
         <xsl:variable name="style-name"    select="@text:style-name" />
@@ -362,10 +393,10 @@ TOP LEVEL
 
         <xsl:if test="not(string-length($frontmatter-section)>0 and
                           $section-name=$frontmatter-section    and
-                          not($frontmatter))">
+                          not($frontmatter-mode))">
             <xsl:apply-templates mode="toplevel" select="child::*">
-                <xsl:with-param name="frontmatter" select="$frontmatter" />
-                <xsl:with-param name="volume"      select="$volume"      />
+                <xsl:with-param name="frontmatter-mode" select="$frontmatter-mode" />
+                <xsl:with-param name="rearmatter-mode"  select="$rearmatter-mode" />
             </xsl:apply-templates>
         </xsl:if>
 
@@ -948,7 +979,7 @@ BLOCK ELEMENTS
     <!-- PARAGRAPHS -->
 
     <xsl:template match="text:p">
-        <xsl:param name="specialtypeface"  as="xsd:boolean" select="false()" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="true()" />
         <xsl:param name="caption"          as="xsd:boolean" select="false()" />
         <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
         <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
@@ -966,7 +997,7 @@ BLOCK ELEMENTS
     </xsl:template>
 
     <xsl:template name="para">
-        <xsl:param name="specialtypeface"  as="xsd:boolean" select="false()" />
+        <xsl:param name="specialtypeface"  as="xsd:boolean" select="true()" />
         <xsl:param name="caption"          as="xsd:boolean" select="false()" />
         <xsl:param name="notes"            as="xsd:boolean" select="true()"  />
         <xsl:param name="frames"           as="xsd:boolean" select="true()"  />
@@ -1550,57 +1581,91 @@ BLOCK ELEMENTS
 
                 <!-- Image -->
                 <xsl:when test="current()/child::draw:image">
-                    <dtb:div class="image">
-                        <dtb:div class="tn">
+
+                    <xsl:variable name="caption" as="element()*">
+                        <xsl:if test="$caption-id">
+                            <xsl:apply-templates select="$body//text:p[@xml:id=$caption-id][1]">
+                                <xsl:with-param name="caption" select="true()" />
+                                <xsl:with-param name="frames" select="false()" />
+                                <xsl:with-param name="notes" select="false()" />
+                                <xsl:with-param name="specialtypeface" select="false()" />
+                            </xsl:apply-templates>
+                        </xsl:if>
+                    </xsl:variable>
+
+                    <xsl:variable name="description" as="element()*">
+                        <xsl:if test="svg:title">
+                            <dtb:span>
+                                <xsl:apply-templates select="svg:title/text()" mode="convert-breaks" />
+                            </dtb:span>
+                        </xsl:if>
+                        <xsl:if test="svg:desc">
+                            <dtb:span>
+                                <xsl:apply-templates select="svg:desc/text()" mode="convert-breaks" />
+                            </dtb:span>
+                        </xsl:if>
+                    </xsl:variable>
+
+                    <!-- Ignore images without a caption or description -->
+                    <xsl:if test="$caption or $description">
+
+                        <!-- Collect notes -->
+                        <xsl:variable name="notes" as="element()*">
 
                             <!-- Transposition notification -->
                             <xsl:if test="$transposed">
                                 <dtb:note>
-                                    <xsl:value-of select='"The image below was transposed from it&apos;s original location."' />
+                                    <dtb:span>
+                                        <xsl:value-of select='"The picture below was transposed from it&apos;s original location."' />
+                                    </dtb:span>
                                 </dtb:note>
                             </xsl:if>
 
                             <!-- Caption -->
-                            <xsl:if test="$caption-id">
-                                <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
-                                <xsl:if test="$caption" >
-                                    <dtb:note>
-                                        <xsl:apply-templates select="$caption">
-                                            <xsl:with-param name="caption" select="true()" />
-                                            <xsl:with-param name="frames" select="false()" />
-                                            <xsl:with-param name="notes" select="false()" />
-                                            <xsl:with-param name="specialtypeface" select="false()" />
-                                        </xsl:apply-templates>
-                                    </dtb:note>
-                                </xsl:if>
-                            </xsl:if>
-
-                            <!-- Not reproduced note -->
-                            <dtb:note>
-                                <xsl:value-of select="'This image is not reproduced in Braille.'" />
-                            </dtb:note>
-
-                            <!-- Title -->
-                            <xsl:if test="svg:title">
+                            <xsl:if test="$caption">
                                 <dtb:note>
-                                    <dtb:span class="spaced">
-                                        <xsl:value-of select="'Title:'" />
-                                    </dtb:span>
-                                    <xsl:apply-templates select="svg:title/text()" mode="convert-breaks" />
+                                    <xsl:sequence select="$caption"/>
                                 </dtb:note>
                             </xsl:if>
 
                             <!-- Description -->
-                            <xsl:if test="svg:desc">
+                            <xsl:for-each select="$description">
+                                <xsl:variable name="i" select="position()"/>
                                 <dtb:note>
-                                    <dtb:span class="spaced">
-                                        <xsl:value-of select="'Description:'" />
-                                    </dtb:span>
-                                    <xsl:apply-templates select="svg:desc/text()" mode="convert-breaks" />
+                                    <xsl:if test="$i=1 and string-length($paramPictureDescriptionPrefix)>0">
+                                        <dtb:span class="unspaced">
+                                            <xsl:value-of select="$paramPictureDescriptionPrefix" />
+                                        </dtb:span>
+                                    </xsl:if>
+                                    <xsl:sequence select="."/>
                                 </dtb:note>
-                            </xsl:if>
+                            </xsl:for-each>
+                        </xsl:variable>
+
+                        <dtb:div class="image">
+                            <dtb:div class="tn">
+                                <xsl:for-each select="$notes">
+                                    <xsl:copy>
+                                        
+                                        <!-- Add opening mark -->
+                                        <xsl:if test="position() = 1">
+                                            <dtb:span class="unspaced">
+                                                <xsl:value-of select="$paramPictureOpeningMark" />
+                                            </dtb:span>
+                                        </xsl:if>
+                                        <xsl:sequence select="child::*"/>
+                                        
+                                        <!-- Add closing mark -->
+                                        <xsl:if test="position() = last()">
+                                            <dtb:span class="unspaced">
+                                                <xsl:value-of select="$paramPictureClosingMark" />
+                                            </dtb:span>
+                                        </xsl:if>
+                                    </xsl:copy>
+                                </xsl:for-each>
+                            </dtb:div>
                         </dtb:div>
-                    </dtb:div>
+                    </xsl:if>
 
                     <!-- Footnotes in caption -->
                     <xsl:if test="$caption-id">
@@ -1872,20 +1937,15 @@ HELP TEMPLATES
 
     <xsl:template name="get-frontmatter-section">
         <xsl:choose>
-            <!-- EXTENDED FRONT -->
-            <xsl:when test="$controller//ns1:ext-frontmatter">
-                <xsl:value-of select="substring-after(string($controller//ns1:ext-frontmatter/@rdf:about), 'section:/')" />
-            </xsl:when>
-
-            <!-- BASIC FRONT -->
-            <xsl:when test="$controller//ns1:basic-frontmatter">
-                <xsl:value-of select="substring-after(string($controller//ns1:basic-frontmatter/@rdf:about), 'section:/')" />
+            <xsl:when test="$controller//ns1:frontmatter">
+                <xsl:value-of select="substring-after(string($controller//ns1:frontmatter/@rdf:about), 'section:/')" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="''" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+    
 
     <xsl:template name="flatten-table-header-rows">
         <xsl:param name="table"/>

@@ -4,7 +4,7 @@ import org.daisy.paper.Paper;
 import org.daisy.factory.AbstractFactory;
 
 public class CustomPaper extends AbstractFactory
-                      implements Paper {
+                         implements Paper {
 
     private double width;
     private double height;

@@ -37,8 +37,21 @@ import java.io.IOException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
-import be.docarch.odt2braille.Settings.PageNumberPosition;
-import be.docarch.odt2braille.Style.Alignment;
+import be.docarch.odt2braille.setup.SettingMap;
+import be.docarch.odt2braille.setup.PEFConfiguration;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.Configuration.PageNumberPosition;
+import be.docarch.odt2braille.setup.TranslationTable;
+import be.docarch.odt2braille.setup.style.ListStyle;
+import be.docarch.odt2braille.setup.style.TocStyle;
+import be.docarch.odt2braille.setup.style.ParagraphStyle;
+import be.docarch.odt2braille.setup.style.HeadingStyle;
+import be.docarch.odt2braille.setup.style.TableStyle;
+import be.docarch.odt2braille.setup.style.FrameStyle;
+import be.docarch.odt2braille.setup.style.PictureStyle;
+import be.docarch.odt2braille.setup.style.FootnoteStyle;
+import be.docarch.odt2braille.setup.style.Style;
+import be.docarch.odt2braille.setup.style.Style.Alignment;
 import org.daisy.braille.table.BrailleConverter;
 
 /**
@@ -64,13 +77,15 @@ public class LiblouisXML {
     private File paragraphsFile = null;
     private File bordersFile = null;
 
-    private Settings settings = null;
+    private Configuration settings = null;
+    private PEFConfiguration pefSettings = null;
 
     private List configurationList = new ArrayList();
 
     BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
-    public LiblouisXML (Settings settings,
+    public LiblouisXML (Configuration settings,
+                        PEFConfiguration pefSettings,
                         File liblouisLocation)
                  throws IOException,
                         InterruptedException,
@@ -79,6 +94,7 @@ public class LiblouisXML {
         logger.entering("LiblouisXML", "<init>");
 
         this.settings = settings;
+        this.pefSettings = pefSettings;
         try {
             this.liblouisPath = liblouisLocation.getAbsolutePath();
         } catch (NullPointerException e) {
@@ -165,7 +181,6 @@ public class LiblouisXML {
         File newBordersFile = File.createTempFile(TMP_NAME, ".borders.sem", TMP_DIR);
         String sep = System.getProperty("line.separator");
         String s = null;
-        Style style = null;
         Writer bufferedWriter = null;
         Map<Alignment,String> alignmentMap = new TreeMap();
 
@@ -182,7 +197,7 @@ public class LiblouisXML {
 
         // Paragraphs
 
-        for (ParagraphStyle paraStyle : settings.getParagraphStyles()) {
+        for (ParagraphStyle paraStyle : settings.getParagraphStyles().values()) {
 
             s = "firstLineIndent " + (paraStyle.getFirstLine() - paraStyle.getRunovers()) + sep
               + "leftMargin "      + paraStyle.getRunovers() + sep
@@ -190,20 +205,20 @@ public class LiblouisXML {
               + "linesBefore "     + 0 + sep
               + "linesAfter "      + 0 + sep
               + "format "          + alignmentMap.get(paraStyle.getAlignment()) + sep;
-            bufferedWriter.write("style paragraph_" + paraStyle.getName() + sep + s);
+            bufferedWriter.write("style paragraph_" + paraStyle.getID() + sep + s);
             s = "linesBefore "     + paraStyle.getLinesAbove() + sep
               + "linesAfter "      + paraStyle.getLinesBelow() + sep
               + "keepWithNext "    + (paraStyle.getKeepWithNext()?"yes":"no") + sep
               + "dontSplit "       + (paraStyle.getDontSplit()?"yes":"no") + sep
            // + "widowControl "    + (paraStyle.getWidowControlEnabled()?paraStyle.getWidowControl():0) + sep
               + "orphanControl "   + (paraStyle.getOrphanControlEnabled()?paraStyle.getOrphanControl():0) + sep;
-            bufferedWriter.write("style wrap-paragraph_" + paraStyle.getName() + sep + s);
+            bufferedWriter.write("style wrap-paragraph_" + paraStyle.getID() + sep + s);
 
         }
 
         // Headings
 
-        for (HeadingStyle headStyle : settings.getHeadingStyles()) {
+        for (HeadingStyle headStyle : settings.getHeadingStyles().values()) {
 
             int level = headStyle.getLevel();
 
@@ -220,31 +235,29 @@ public class LiblouisXML {
               + "keepWithNext "    + (headStyle.getKeepWithNext()?"yes":"no") + sep
               + "dontSplit "       + (headStyle.getDontSplit()?"yes":"no") + sep;
             bufferedWriter.write("style wrap-heading" + level + sep + s);
-            s = "linesBefore "     + (headStyle.getUpperBorder()?headStyle.getPaddingAbove():0) + sep
-              + "linesAfter "      + (headStyle.getLowerBorder()?headStyle.getPaddingBelow():0) + sep;
+            s = "linesBefore "     + (headStyle.getUpperBorderEnabled()?headStyle.getPaddingAbove():0) + sep
+              + "linesAfter "      + (headStyle.getLowerBorderEnabled()?headStyle.getPaddingBelow():0) + sep;
             bufferedWriter.write("style pad-heading" + level + sep + s);
 
         }
 
         // Lists
 
-        for (ListStyle listStyle : settings.getListStyles()) {
-
-            int level = listStyle.getLevel();
+        for (ListStyle listStyle : settings.getListStyles().values()) {
 
             s = "linesBefore "     + listStyle.getLinesAbove() + sep
               + "linesAfter "      + listStyle.getLinesBelow() + sep
               + "dontSplit "       + (listStyle.getDontSplit()?"yes":"no") + sep;
-            bufferedWriter.write("style list" + level + sep + s);
+            bufferedWriter.write("style list" + listStyle.level + sep + s);
             s = "dontSplit "       + (listStyle.getDontSplitItems()?"yes":"no") + sep;
-            bufferedWriter.write("style lastli" + level + sep + s);
+            bufferedWriter.write("style lastli" + listStyle.level + sep + s);
             s += "linesAfter "     + listStyle.getLinesBetween() + sep;
-            bufferedWriter.write("style li" + level + sep + s);
+            bufferedWriter.write("style li" + listStyle.level + sep + s);
             s = "leftMargin "      + listStyle.getRunovers() + sep
               + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
-            bufferedWriter.write("style listpara" + level + sep + s);
+            bufferedWriter.write("style listpara" + listStyle.level + sep + s);
             s += "firstLineIndent " + (listStyle.getFirstLine() - listStyle.getRunovers()) + sep;
-            bufferedWriter.write("style firstlistpara" + level + sep + s);
+            bufferedWriter.write("style firstlistpara" + listStyle.level + sep + s);
 
         }
 
@@ -255,22 +268,22 @@ public class LiblouisXML {
         s = "linesBefore " + frameStyle.getLinesAbove() + sep
           + "linesAfter "  + frameStyle.getLinesBelow() + sep;
         bufferedWriter.write("style frame" + sep + s);
-        s = "linesBefore " + (frameStyle.getUpperBorder()?frameStyle.getPaddingAbove():0) + sep
-          + "linesAfter "  + (frameStyle.getLowerBorder()?frameStyle.getPaddingBelow():0) + sep;
+        s = "linesBefore " + (frameStyle.getUpperBorderEnabled()?frameStyle.getPaddingAbove():0) + sep
+          + "linesAfter "  + (frameStyle.getLowerBorderEnabled()?frameStyle.getPaddingBelow():0) + sep;
         bufferedWriter.write("style pad-frame" + sep + s);
 
         // Tables
 
-        TableStyle tableStyle = settings.getTableStyles().get(0);
+        TableStyle tableStyle = settings.getTableStyles().get("Default");
 
         s = "linesBefore " + tableStyle.getLinesAbove() + sep
           + "linesAfter "  + tableStyle.getLinesBelow() + sep;
         bufferedWriter.write("style table" + sep + s);
-        s = "linesBefore " + (tableStyle.getUpperBorder()?tableStyle.getPaddingAbove():0) + sep
-          + "linesAfter "  + (tableStyle.getLowerBorder()?tableStyle.getPaddingBelow():0) + sep;
+        s = "linesBefore " + (tableStyle.getUpperBorderEnabled()?tableStyle.getPaddingAbove():0) + sep
+          + "linesAfter "  + (tableStyle.getLowerBorderEnabled()?tableStyle.getPaddingBelow():0) + sep;
         bufferedWriter.write("style pad-table" + sep + s);
 
-        if (tableStyle.getStairstepTable()) {
+        if (tableStyle.getStairstepEnabled()) {
 
             int firstLine = tableStyle.getFirstLine();
             int runovers = tableStyle.getRunovers();
@@ -302,11 +315,11 @@ public class LiblouisXML {
         bufferedWriter.write("style document"    + sep + "braillePageNumberFormat " +
                 (settings.getBraillePageNumbers()?"normal":"blank")  + sep);
         bufferedWriter.write("style preliminary" + sep + "braillePageNumberFormat " +
-                (settings.getBraillePageNumbers()?settings.getPreliminaryPageFormat().name().toLowerCase():"blank")  + sep);
+                (settings.getBraillePageNumbers()?settings.getPreliminaryPageNumberFormat().name().toLowerCase():"blank")  + sep);
 
         // Table of contents
 
-        HeadingStyle contentsHeader = settings.getHeadingStyles().get(0);
+        HeadingStyle contentsHeader = settings.getHeadingStyles().get(1);
 
         s = "firstLineIndent " + (contentsHeader.getFirstLine() - contentsHeader.getRunovers()) + sep
           + "leftMargin "      + contentsHeader.getRunovers() + sep
@@ -317,20 +330,21 @@ public class LiblouisXML {
         bufferedWriter.write("style contentsheader" + sep + s);
 
         TocStyle tocStyle = settings.getTocStyle();
+        SettingMap<Integer,TocStyle.TocLevelStyle> levels = tocStyle.getLevels();
 
         for (int i=1;i<=10;i++) {
-
-            style = tocStyle.getLevel(i);
-
-            s = "firstLineIndent " + (style.getFirstLine() - style.getRunovers()) + sep
-              + "leftMargin "      + style.getRunovers() + sep
-              + "format "          + "contents" + sep;
-            bufferedWriter.write("style contents" + i + sep + s);
+            TocStyle.TocLevelStyle style = levels.get(i);
+            if (style!=null) {
+                s = "firstLineIndent " + (style.getFirstLine() - style.getRunovers()) + sep
+                  + "leftMargin "      + style.getRunovers() + sep
+                  + "format "          + "contents" + sep;
+                bufferedWriter.write("style contents" + i + sep + s);
+            }
         }
 
         // Footnotes
 
-        Style footnoteStyle = settings.getFootnoteStyle();
+        FootnoteStyle footnoteStyle = settings.getFootnoteStyle();
 
         s = "linesBefore "     + footnoteStyle.getLinesAbove() + sep
           + "linesAfter "      + footnoteStyle.getLinesBelow() + sep
@@ -340,6 +354,19 @@ public class LiblouisXML {
           + "format "          + alignmentMap.get(footnoteStyle.getAlignment()) + sep;
         bufferedWriter.write("style footnote" + sep + s);
 
+        // Pictures
+
+        PictureStyle pictureStyle = settings.getPictureStyle();
+
+        s = "linesBefore "     + pictureStyle.getLinesAbove() + sep
+          + "linesAfter "      + pictureStyle.getLinesBelow() + sep;
+        bufferedWriter.write("style picture" + sep + s);
+
+        s = "firstLineIndent " + (pictureStyle.getFirstLine() - pictureStyle.getRunovers()) + sep
+          + "leftMargin "      + pictureStyle.getRunovers() + sep
+          + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
+        bufferedWriter.write("style picturenote" + sep + s);
+        
         bufferedWriter.close();
         if (stylesFile.exists()) { stylesFile.delete(); }
         newStylesFile.renameTo(stylesFile);
@@ -353,19 +380,19 @@ public class LiblouisXML {
 
         String styleName = null;
         String xpath = null;
-        for (ParagraphStyle paraStyle : settings.getParagraphStyles()) {
-            styleName = paraStyle.getName();
+        for (ParagraphStyle paraStyle : settings.getParagraphStyles().values()) {
+            styleName = paraStyle.getID();
             xpath = "//dtb:paragraph[@style='" + styleName + "' and " +
                     "not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)]";
             bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
             bufferedWriter.write("wrap-paragraph_" + styleName + " &xpath(" + xpath + ")" + sep);
         }
 
-        styleName = settings.getTranscriptionInfoStyle().getName();
+        styleName = settings.getTranscriptionInfoStyle().getID();
         xpath = "//dtb:div[@class='transcription-info']";
         bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
         bufferedWriter.write("wrap-paragraph_" + styleName + " &xpath(" + xpath + ")" + sep);
-        styleName = settings.getVolumeInfoStyle().getName();
+        styleName = settings.getVolumeInfoStyle().getID();
         xpath = "//dtb:div[@class='volume-info']";
         bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
         bufferedWriter.write("wrap-paragraph_" + styleName + " &xpath(" + xpath + ")" + sep);
@@ -390,7 +417,7 @@ public class LiblouisXML {
         bufferedWriter.write("boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]]) "
                 + liblouisTable.toText(String.valueOf(frameStyle.getLowerBorderStyle())) + sep);
 
-        for (HeadingStyle headStyle : settings.getHeadingStyles()) {
+        for (HeadingStyle headStyle : settings.getHeadingStyles().values()) {
             bufferedWriter.write("boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h"
                     + headStyle.getLevel() + "]]]) " + liblouisTable.toText(String.valueOf(headStyle.getUpperBorderStyle())) + sep);
             bufferedWriter.write("boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h"
@@ -488,19 +515,16 @@ public class LiblouisXML {
 
         configurationList.clear();
 
-        String math = settings.getMath().name().toLowerCase();
-        String table = settings.getTranslationTable(settings.getMainLanguage());
-        int grade = settings.getGrade(settings.getMainLanguage());
-        boolean eightDots = (settings.getDots(settings.getMainLanguage())==8);
-
-        String translationTable = "__" + table + "-g" + grade + (eightDots?"-8d":"") + ".ctb";
-        String backTranslationTable = "__" + table + "-g" + grade + (eightDots?"-8d":"") + (table.equals("nl-BE")?"-back":"") + ".ctb";
+        String math = settings.getMathCode().name().toLowerCase();
+        TranslationTable t = settings.getTranslationTables().get(settings.mainLocale);
+        String translationTable = "__" + t.getID() + ".ctb";
+        String backTranslationTable = "__" + t.getID() + (t.getLocale().equals("nl-BE")?"-back":"") + ".ctb";
         String configFiles = liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_main.cfg," + "_cfg_styles.cfg";
         String semanticFiles = "_sem_main.sem," +
                                "_sem_paragraphs.sem," +
                                "_sem_borders.sem," +
                               (extractpprangemode?"_sem_extractpprangemode.sem,":"") +
-                              (settings.getTableStyles().get(0).getStairstepTable()?"_sem_stairsteptable.sem,":"") +
+                              (settings.getTableStyles().get("Default").getStairstepEnabled()?"_sem_stairsteptable.sem,":"") +
                               "_sem_" + math + ".sem";
         String mathTable = "__" + math + ".ctb";
         String editTables = "_edit_" + math + ".ctb";
@@ -516,9 +540,9 @@ public class LiblouisXML {
         configurationList.add("-C" + "mathexprTable="                + mathTable);
         configurationList.add("-C" + "editTable="                    + editTables);
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
-        configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(settings.getCellsPerLine()));
-        configurationList.add("-C" + "linesPerPage="                 + Integer.toString(settings.getLinesPerPage()));
-        if (IS_WINDOWS) {
+        configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(pefSettings.getColumns()));
+        configurationList.add("-C" + "linesPerPage="                 + Integer.toString(pefSettings.getRows()));
+        if (settings.minSyllableLength.enabled()) {
             configurationList.add("-C" + "minSyllableLength="        + Integer.toString(settings.getMinSyllableLength())); }
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));
@@ -527,13 +551,13 @@ public class LiblouisXML {
         configurationList.add("-C" + "ignoreEmptyPages="             + (settings.getIgnoreEmptyPages()?"yes":"no"));
         configurationList.add("-C" + "continuePages="                + (settings.getContinuePages()?"yes":"no"));
         configurationList.add("-C" + "mergeUnnumberedPages="         + (settings.getMergeUnnumberedPages()?"yes":"no"));
-        configurationList.add("-C" + "pageNumberTopSeparateLine="    + (settings.getPageNumberAtTopOnSeparateLine()?"yes":"no"));
-        configurationList.add("-C" + "pageNumberBottomSeparateLine=" + (settings.getPageNumberAtBottomOnSeparateLine()?"yes":"no"));
+        configurationList.add("-C" + "pageNumberTopSeparateLine="    + (settings.getPageNumberLineAtTop()?"yes":"no"));
+        configurationList.add("-C" + "pageNumberBottomSeparateLine=" + (settings.getPageNumberLineAtBottom()?"yes":"no"));
         configurationList.add("-C" + "printPageNumberRange="         + (settings.getPrintPageNumberRange()?"yes":"no"));
-        configurationList.add("-C" + "printPageNumberAt="            + ((settings.getPrintPageNumberAt() == PageNumberPosition.TOP_RIGHT)?"top":"bottom"));
-        configurationList.add("-C" + "braillePageNumberAt="          + ((settings.getBraillePageNumberAt() == PageNumberPosition.TOP_RIGHT)?"top":"bottom"));
-        configurationList.add("-C" + "printPageNumbersInContents="   + (settings.getPrintPageNumbersInToc()?"yes":"no"));
-        configurationList.add("-C" + "braillePageNumbersInContents=" + (settings.getBraillePageNumbersInToc()?"yes":"no"));
+        configurationList.add("-C" + "printPageNumberAt="            + ((settings.getPrintPageNumberPosition() == PageNumberPosition.TOP_RIGHT)?"top":"bottom"));
+        configurationList.add("-C" + "braillePageNumberAt="          + ((settings.getBraillePageNumberPosition() == PageNumberPosition.TOP_RIGHT)?"top":"bottom"));
+        configurationList.add("-C" + "printPageNumbersInContents="   + (settings.getTocStyle().getPrintPageNumbers()?"yes":"no"));
+        configurationList.add("-C" + "braillePageNumbersInContents=" + (settings.getTocStyle().getBraillePageNumbers()?"yes":"no"));
         configurationList.add("-C" + "lineFill="                     + liblouisTable.toText(String.valueOf(settings.getTocStyle().getLineFillSymbol())));
 
         configurationList.add(inputFile.getAbsolutePath());
@@ -541,5 +565,14 @@ public class LiblouisXML {
 
         logger.exiting("LiblouisXML","configure");
 
+    }
+
+    private String unicodeCodePointNotation(String s) {
+
+        StringBuffer sb = new StringBuffer();
+        for (int i=0; i<s.length(); i++) {
+            sb.append("\\x" + Integer.toHexString((Character.codePointAt(s, i) & 0xFFFF) | 0x10000).substring(1));
+        }
+        return sb.toString();
     }
 }

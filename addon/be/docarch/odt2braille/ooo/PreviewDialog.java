@@ -78,8 +78,11 @@ import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.PreliminaryVolume;
 import be.docarch.odt2braille.RomanNumbering;
-import be.docarch.odt2braille.Settings;
-import be.docarch.odt2braille.Settings.PageNumberFormat;
+import be.docarch.odt2braille.setup.PEFConfiguration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
+import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.Configuration.PageNumberFormat;
 
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.BrailleConverter;
@@ -172,7 +175,8 @@ public class PreviewDialog implements XItemListener,
 
     public PreviewDialog(XComponentContext xContext,
                          PEF pef,
-                         Settings settings)
+                         Configuration settings,
+                         PEFConfiguration pefSettings)
                   throws ParserConfigurationException,
                          SAXException,
                          IOException {
@@ -181,27 +185,42 @@ public class PreviewDialog implements XItemListener,
 
         this.xContext = xContext;
         this.fontSize = DEFAULT_FONT_SIZE;
-        this.cellsPerLine = settings.getCellsPerLine();
-        this.linesPerPage = settings.getLinesPerPage();
-        this.marginInner = settings.getMarginInner();
-        this.marginOuter = settings.getMarginOuter();
-        this.marginTop = settings.getMarginTop();
-        this.marginBottom = settings.getMarginBottom();
-        this.duplex = settings.getDuplex();
-        this.preliminaryPageFormat = settings.getPreliminaryPageFormat();
 
-        volumes = settings.getVolumes();
+        cellsPerLine = pefSettings.getColumns();
+        linesPerPage = pefSettings.getRows();
 
-        String id = settings.getBrailleFileType().getIdentifier();
-        if (id.equals(Settings.BRF) ||
-            id.equals(Settings.BRA)) {
-            Table t = settings.getTable();
-            if (t != null) {
-                this.table = t.newBrailleConverter();
+        duplex = pefSettings.getDuplex();
+        FONT_DOTS = pefSettings.getEightDots() ? FONT_8_DOT : FONT_6_DOT;
+
+        marginInner = 0;
+        marginOuter = 0;
+        marginTop = 0;
+        marginBottom = 0;
+
+        if (pefSettings instanceof ExportConfiguration) {
+
+            String id = ((ExportConfiguration)pefSettings).getFileFormat().getIdentifier();
+            if (id.equals(ExportConfiguration.BRF) ||
+                id.equals(ExportConfiguration.BRA)) {
+                Table t = ((ExportConfiguration)pefSettings).getCharSet();
+                if (t != null) {
+                    table = t.newBrailleConverter();
+                }
             }
+
+        } else if (pefSettings instanceof EmbossConfiguration) {
+
+            EmbossConfiguration.MarginSettings margins = ((EmbossConfiguration)pefSettings).getMargins();
+
+            marginInner = margins.getInner();
+            marginOuter = margins.getOuter();
+            marginTop = margins.getTop();
+            marginBottom = margins.getBottom();
         }
 
-        FONT_DOTS = settings.getEightDots() ? FONT_8_DOT : FONT_6_DOT;
+        preliminaryPageFormat = settings.getPreliminaryPageNumberFormat();
+
+        volumes = pef.getVolumes();
 
         // L10N
 
@@ -302,8 +321,9 @@ public class PreviewDialog implements XItemListener,
         decreaseFontSizeButtonProperties.setPropertyValue("Label", "-");
         
         font = (FontDescriptor)AnyConverter.toObject(FontDescriptor.class, previewFieldProperties.getPropertyValue("FontDescriptor"));
-        font.Name   = FONT_DOTS;
         font.Height = fontSize;
+        previewFieldProperties.setPropertyValue("FontDescriptor", font);
+        font.Name   = FONT_DOTS;
         previewFieldProperties.setPropertyValue("FontDescriptor", font);
 
         logger.exiting("PreviewDialog", "buildDialog");

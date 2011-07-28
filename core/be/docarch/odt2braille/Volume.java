@@ -19,149 +19,99 @@
 
 package be.docarch.odt2braille;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.SpecialSymbol;
 
 /**
  *
- * @author freesb
+ * @author Bert Frees
  */
-public abstract class Volume {
+public class Volume {
 
-    public enum Type { PRELIMINARY,
-                       NORMAL,
-                       SUPPLEMENTARY};
+    private enum FrontMatterMode { EXTENDED, BASIC, NONE }
+    private enum TableOfContentMode { EXTENDED, BASIC, NONE }
 
-    private static boolean frontMatterAvailable = false;
-    private static boolean extFrontMatterAvailable = false;
-
-    private static List<Volume> volumes = new ArrayList<Volume>();
-
-    protected Type type;
     private String title;
+
+    private final String identifier;
+    private FrontMatterMode frontMatterMode;
+    private TableOfContentMode tableOfContentMode;
+    private final boolean transcribersNotesPageEnabled;
+    private final boolean specialSymbolListEnabled;
+
     private int braillePagesStart;
     private int numberOfBraillePages;
     private int numberOfPreliminaryPages;
-    private boolean frontMatter;
-    private boolean extFrontMatter;
-    private boolean transcribersNotesPage;
-    private boolean specialSymbolsList;
-    private boolean toc;
-    private boolean extToc;
     private String firstPrintPage;
     private String lastPrintPage;
-    private List<Boolean> specialSymbolsPresent;
-    private List<Boolean> transcribersNotesEnabled;
+    
+    private List<SpecialSymbol> specialSymbols;
+    private List<String> transcribersNotes;
 
-    public static void init() {
-        volumes.clear();
+    public Volume(Configuration.Volume settings) {
+        this(settings, null);
     }
 
-    public void copyVolume(Volume copyVolume) {
+    public Volume(Configuration.Volume settings,
+                  String id) {
 
-        this.title = new String(copyVolume.title);
-        this.braillePagesStart = copyVolume.braillePagesStart;
-        this.numberOfBraillePages = copyVolume.numberOfBraillePages;
-        this.numberOfPreliminaryPages = copyVolume.numberOfPreliminaryPages;
-        this.frontMatter = copyVolume.frontMatter;
-        this.extFrontMatter = copyVolume.extFrontMatter;
-        this.transcribersNotesPage = copyVolume.transcribersNotesPage;
-        this.specialSymbolsList = copyVolume.specialSymbolsList;
-        this.toc = copyVolume.toc;
-        this.extToc = copyVolume.extToc;
-        this.firstPrintPage = null;
-        this.lastPrintPage = null;
-        this.specialSymbolsPresent = null;
-        this.transcribersNotesEnabled = null;
+        title = settings.getTitle();
+        identifier = id;
 
-        if (copyVolume.firstPrintPage != null)           { this.firstPrintPage = new String(copyVolume.firstPrintPage); }
-        if (copyVolume.lastPrintPage != null)            { this.lastPrintPage = new String(copyVolume.lastPrintPage); }
-        if (copyVolume.specialSymbolsPresent != null)    { this.specialSymbolsPresent = new ArrayList(copyVolume.specialSymbolsPresent); }
-        if (copyVolume.transcribersNotesEnabled != null) { this.transcribersNotesEnabled = new ArrayList(copyVolume.transcribersNotesEnabled); }
+        frontMatterMode = settings.getFrontMatter() ? FrontMatterMode.BASIC : FrontMatterMode.NONE;
+        tableOfContentMode = settings.getTableOfContent() ? TableOfContentMode.BASIC : TableOfContentMode.NONE;
+        transcribersNotesPageEnabled = settings.getTranscribersNotesPage();
+        specialSymbolListEnabled = settings.getSpecialSymbolList();
+
+        braillePagesStart = 1;
+        numberOfBraillePages = 0;
+        numberOfPreliminaryPages = 0;
+        firstPrintPage = null;
+        lastPrintPage = null;
         
-        volumes.add(this);
     }
 
-    public Volume(Type type) {
+    public void setTitle                    (String value)              { title = value; }
+    public void setBraillePagesStart        (int value)                 { braillePagesStart = value; }
+    public void setNumberOfBraillePages     (int value)                 { numberOfBraillePages = value; }
+    public void setNumberOfPreliminaryPages (int value)                 { numberOfPreliminaryPages = value; }
+    public void setFirstPrintPage           (String value)              { firstPrintPage = value; }
+    public void setLastPrintPage            (String value)              { lastPrintPage = value; }
+    public void setSpecialSymbols           (List<SpecialSymbol> value) { specialSymbols = value; }
+    public void setTranscribersNotes        (List<String> value)        { transcribersNotes = value; }
 
-        this.type = type;
-
-        this.title = "";
-        this.braillePagesStart = 1;
-        this.numberOfBraillePages = 0;
-        this.numberOfPreliminaryPages = 0;
-        this.frontMatter = false;
-        this.extFrontMatter = false;
-        this.toc = false;
-        this.extToc = false;
-        this.transcribersNotesPage = false;
-        this.specialSymbolsList = false;
-        this.firstPrintPage = null;
-        this.lastPrintPage = null;
-        this.specialSymbolsPresent = null;
-        this.transcribersNotesEnabled = null;
-
-        setFrontMatter(true);
-        setToc(true);
-
-        volumes.add(this);
-    }
-
-    public static void setFrontMatterAvailable(boolean frontMatterAvailable) {
-
-        Volume.frontMatterAvailable = frontMatterAvailable;
-        for (Volume volume : volumes) {
-            volume.setFrontMatter(volume.frontMatter);
-        }
-        setExtFrontMatterAvailable(extFrontMatterAvailable);
-    }
-
-    public static void setExtFrontMatterAvailable(boolean extFrontMatterAvailable) {
-
-        Volume.extFrontMatterAvailable = extFrontMatterAvailable && frontMatterAvailable;
-        for (Volume volume : volumes) {
-            volume.setExtFrontMatter(volume.extFrontMatter);
+    public void setExtendedFrontMatter(boolean value) { 
+        if (value && frontMatterMode == FrontMatterMode.BASIC) {
+            frontMatterMode = FrontMatterMode.EXTENDED;
+        } else if (!value && frontMatterMode == FrontMatterMode.EXTENDED) {
+            frontMatterMode = FrontMatterMode.BASIC;
         }
     }
 
-    public void setTitle                    (String title)                  { this.title = title; }
-    public void setFrontMatter              (boolean frontMatter)           { this.frontMatter = (frontMatterAvailable && frontMatter) || (type == Type.PRELIMINARY);
-                                                                              setExtFrontMatter(extFrontMatter); }
-    public void setExtFrontMatter           (boolean extFrontMatter)        { this.extFrontMatter = extFrontMatterAvailable && extFrontMatter && frontMatter; }
-    public void setTranscribersNotesPage    (boolean transcribersNotesPage) { this.transcribersNotesPage = transcribersNotesPage; }
-    public void setSpecialSymbolsList       (boolean specialSymbolsList)    { this.specialSymbolsList = specialSymbolsList; }
-    public void setToc                      (boolean toc)                   { this.toc = toc;
-                                                                              setExtToc(extToc); }
-    public void setExtToc                   (boolean extToc)                { this.extToc = extToc && toc; }
-    public void setBraillePagesStart        (int braillePagesStart)         { this.braillePagesStart = braillePagesStart; }
-    public void setNumberOfBraillePages     (int numberOfBraillePages)      { this.numberOfBraillePages = numberOfBraillePages; }
-    public void setNumberOfPreliminaryPages (int number)                    { this.numberOfPreliminaryPages = number; }
-    public void setFirstPrintPage           (String firstPrintPage)         { this.firstPrintPage = firstPrintPage; }
-    public void setLastPrintPage            (String lastPrintPage)          { this.lastPrintPage = lastPrintPage; }
-
-    public void setSpecialSymbolsPresent(List<Boolean> specialSymbolsPresent) {
-        this.specialSymbolsPresent = new ArrayList(specialSymbolsPresent);
+    public void setExtendedTableOfContent(boolean value) {
+        if (value && tableOfContentMode == TableOfContentMode.BASIC) {
+            tableOfContentMode = TableOfContentMode.EXTENDED;
+        } else if (!value && tableOfContentMode == TableOfContentMode.EXTENDED) {
+            tableOfContentMode = TableOfContentMode.BASIC;
+        }
     }
 
-    public void setTranscribersNotesEnabled(List<Boolean> transcribersNotesEnabled) {
-        this.transcribersNotesEnabled = new ArrayList(transcribersNotesEnabled);
-    }
-
-    public Type            getType()                      { return type; }
-    public String          getTitle()                     { return title; }
-    public boolean         getFrontMatter()               { return frontMatter; }
-    public boolean         getExtFrontMatter()            { return extFrontMatter; }
-    public boolean         getToc()                       { return toc; }
-    public boolean         getExtToc()                    { return extToc; }
-    public boolean         getTranscribersNotesPage()     { return transcribersNotesPage; }
-    public boolean         getSpecialSymbolsList()        { return specialSymbolsList; }
-    public int             getFirstBraillePage()          { return braillePagesStart; }
-    public int             getLastBraillePage()           { return braillePagesStart + numberOfBraillePages - 1; }
-    public int             getNumberOfPreliminaryPages()  { return numberOfPreliminaryPages; }
-    public String          getFirstPrintPage()            { return firstPrintPage; }
-    public String          getLastPrintPage()             { return lastPrintPage; }
-    public List<Boolean>   getSpecialSymbolsPresent()     { return specialSymbolsPresent; }
-    public List<Boolean>   getTranscribersNotesEnabled()  { return transcribersNotesEnabled; }
+    public String              getTitle()                        { return title; }
+    public String              getIdentifier()                   { return identifier; }
+    public boolean             getFrontMatter()                  { return frontMatterMode != FrontMatterMode.NONE; }
+    public boolean             getExtendedFrontMatter()          { return frontMatterMode == FrontMatterMode.EXTENDED; }
+    public boolean             getTableOfContent()               { return tableOfContentMode != TableOfContentMode.NONE; }
+    public boolean             getExtendedTableOfContent()       { return tableOfContentMode == TableOfContentMode.EXTENDED; }
+    public boolean             getTranscribersNotesPageEnabled() { return transcribersNotesPageEnabled; }
+    public boolean             getSpecialSymbolListEnabled()     { return specialSymbolListEnabled; }
+    public int                 getFirstBraillePage()             { return braillePagesStart; }
+    public int                 getLastBraillePage()              { return braillePagesStart + numberOfBraillePages - 1; }
+    public int                 getNumberOfPreliminaryPages()     { return numberOfPreliminaryPages; }
+    public String              getFirstPrintPage()               { return firstPrintPage; }
+    public String              getLastPrintPage()                { return lastPrintPage; }
+    public List<SpecialSymbol> getSpecialSymbols()               { return specialSymbols; }
+    public List<String>        getTranscribersNotes()            { return transcribersNotes; }
 
 }
