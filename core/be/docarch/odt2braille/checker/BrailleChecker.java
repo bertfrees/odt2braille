@@ -96,7 +96,7 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
 
         try {
 
-            ODTTransformer odtTransformer = new ODTTransformer(odtFile);
+            OdtTransformer odtTransformer = new OdtTransformer(odtFile);
             Configuration settings = new Configuration(odtTransformer);
 
               // TODO: load settings from odt-file

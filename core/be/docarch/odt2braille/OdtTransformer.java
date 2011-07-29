@@ -78,7 +78,7 @@ import be.docarch.odt2braille.setup.style.CharacterStyle.TypefaceOption;
  * Note that, although it looks like a DAISY xml file, it is not, and would not validate.
  *
  * The actual transformation is done with XSLT.
- * In addition to XSLT, <code>ODTTransformer</code> also has a supporting {@link #preProcessing} method.
+ * In addition to XSLT, <code>OdtTransformer</code> also has a supporting {@link #preProcessing} method.
  * Thanks to this preprocessing the XSL transform is considerably simplified.
  * On the other hand, <code>preProcessing</code> is rather slow because it uses DOM (performance should be improved in the future).
  *
@@ -158,7 +158,7 @@ public class OdtTransformer {
     }
 
     /**
-     * Creates a new <code>ODTTransformer</code> instance.
+     * Creates a new <code>OdtTransformer</code> instance.
      *
      * @param odtFile           The .odt file.
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.

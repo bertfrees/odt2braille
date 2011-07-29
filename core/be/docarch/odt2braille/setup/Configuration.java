@@ -706,7 +706,7 @@ public class Configuration implements Serializable {
 
     private class MinSyllableLengthSetting extends Setting<Integer> {
 
-        private boolean enabled = IS_WINDOWS || IS_MAC_OS;
+        private final boolean enabled = IS_WINDOWS || IS_MAC_OS;
         private int number = 2;
 
         public boolean accept(Integer value) {

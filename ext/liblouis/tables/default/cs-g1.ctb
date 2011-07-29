@@ -1,0 +1,15 @@
+#--------------------------------------------------------------------------------
+#
+#  Czech Braille
+#
+#     Created and maintained by Bert Frees <bertfrees@gmail.com>
+#                               Jan Halousek <merit@login.cz>
+#
+#     Based on the official Czech Braille Standard
+# -------------------------------------------------------------------------------
+
+include cs-chardefs.cti
+include braille-patterns.cti
+include cs-translation.ctb
+
+# -------------------------------------------------------------------------------

@@ -260,6 +260,7 @@ public class EmbossConfiguration implements Serializable,
         embosser.addListener(rows);
         eightDots.addListener(charSet);
         saddleStitch.addListener(paper);
+        saddleStitch.addListener(margins);
         saddleStitch.addListener(sheetsPerQuire);
         paper.addListener(margins);
         paper.addListener(columns);
@@ -588,7 +589,9 @@ public class EmbossConfiguration implements Serializable,
     }
 
     public abstract class MarginSetting extends DependentNumberSetting {
-
+      //protected int min = 0;
+      //protected int max = 0;
+        protected double unprintable = 0;
         public abstract int getOffset();
         protected boolean enabled = false;
         @Override
@@ -597,7 +600,6 @@ public class EmbossConfiguration implements Serializable,
 
     public class MarginSettings implements Dependent,
                                            Serializable {
-
         /************/
         /* SETTINGS */
         /************/
@@ -624,11 +626,9 @@ public class EmbossConfiguration implements Serializable,
         /***********/
         /* PRIVATE */
         /***********/
-        
-        private double unprintableInner = 0;
-        private double unprintableOuter = 0;
-        private double unprintableTop = 0;
-        private double unprintableBottom = 0;
+
+        private PrintPage printPage;
+        private Area printableArea;
 
         private int maxMarginInner = 0;
         private int maxMarginOuter = 0;
@@ -671,79 +671,75 @@ public class EmbossConfiguration implements Serializable,
         /*****************/
         
         private class InnerMarginSetting extends MarginSetting {
-            @Override
             public boolean accept(Integer value) {
                 return (value >= minMarginInner && value <= maxMarginInner);
             }
             @Override
             public boolean refresh() {
-                boolean refreshed = false;
-                if (getEmbosser().supportsAligning() != enabled) { refreshed = true; }
                 enabled = getEmbosser().supportsAligning();
-                if (update(Math.min(maxMarginInner, Math.max(minMarginInner, get())))) { refreshed = true; }
-                return refreshed;
+                double newUnprintable = printableArea.getOffsetX();
+                boolean update = update(Math.min(maxMarginInner, Math.max(minMarginInner, get())));
+                boolean updateUnprintable = (unprintable != newUnprintable);
+                unprintable = newUnprintable;
+                return updateUnprintable || update;
             }
-            @Override
             public int getOffset() {
-                return (int)Math.floor(unprintableInner / 6d);
+                return (int)Math.floor(unprintable / 6d);
             }
         };
 
         private class OuterMarginSetting extends MarginSetting {
-            @Override
             public boolean accept(Integer value) {
                 return (value >= minMarginOuter && value <= maxMarginOuter);
             }
             @Override
             public boolean refresh() {
-                boolean refreshed = false;
-                if (getEmbosser().supportsAligning() != enabled) { refreshed = true; }
                 enabled = getEmbosser().supportsAligning();
-                update(Math.min(maxMarginOuter, Math.max(minMarginOuter, get())));
-                return refreshed;
+                double newUnprintable = printPage.getWidth() - printableArea.getWidth() - printableArea.getOffsetX();
+                boolean update = update(Math.min(maxMarginOuter, Math.max(minMarginOuter, get())));
+                boolean updateUnprintable = (unprintable != newUnprintable);
+                unprintable = newUnprintable;
+                return updateUnprintable || update;
             }
-            @Override
             public int getOffset() {
-                return (int)Math.floor(unprintableOuter / 6d);
+                return (int)Math.floor(unprintable / 6d);
             }
         };
 
         private class TopMarginSetting extends MarginSetting {
-            @Override
             public boolean accept(Integer value) {
                 return (value >= minMarginTop && value <= maxMarginTop);
             }
             @Override
             public boolean refresh() {
-                boolean refreshed = false;
-                if (getEmbosser().supportsAligning() != enabled) { refreshed = true; }
                 enabled = getEmbosser().supportsAligning();
-                update(Math.min(maxMarginTop, Math.max(minMarginTop, get())));
-                return refreshed;
+                double newUnprintable = printableArea.getOffsetY();
+                boolean update = update(Math.min(maxMarginTop, Math.max(minMarginTop, get())));
+                boolean updateUnprintable = (unprintable != newUnprintable);
+                unprintable = newUnprintable;
+                return updateUnprintable || update;
             }
 
-            @Override
             public int getOffset() {
-                return (int)Math.floor(unprintableTop / 10d);
+                return (int)Math.floor(unprintable / 10d);
             }
         };
 
         private class BottomMarginSetting extends MarginSetting {
-            @Override
             public boolean accept(Integer value) {
                 return (value >= minMarginBottom && value <= maxMarginBottom);
             }
             @Override
             public boolean refresh() {
-                boolean refreshed = false;
-                if (getEmbosser().supportsAligning() != enabled) { refreshed = true; }
                 enabled = getEmbosser().supportsAligning();
-                update(Math.min(maxMarginBottom, Math.max(minMarginBottom, get())));
-                return refreshed;
+                double newUnprintable = printPage.getHeight() - printableArea.getHeight() - printableArea.getOffsetY();
+                boolean update = update(Math.min(maxMarginBottom, Math.max(minMarginBottom, get())));
+                boolean updateUnprintable = (unprintable != newUnprintable);
+                unprintable = newUnprintable;
+                return updateUnprintable || update;
             }
-            @Override
             public int getOffset() {
-                return (int)Math.floor(unprintableBottom / 10d);
+                return (int)Math.floor(unprintable / 10d);
             }
         };
 
@@ -762,13 +758,8 @@ public class EmbossConfiguration implements Serializable,
             Embosser embosser = getEmbosser();
 
             PageFormat inputPage = new PageFormat(paper);
-            PrintPage printPage = embosser.getPrintPage(inputPage);
-            Area printableArea = embosser.getPrintableArea(inputPage);
-
-            unprintableInner = printableArea.getOffsetX();
-            unprintableOuter = printPage.getWidth() - printableArea.getWidth() - unprintableInner;
-            unprintableTop = printableArea.getOffsetY();
-            unprintableBottom = printPage.getHeight() - printableArea.getHeight() - unprintableTop;
+            printPage = embosser.getPrintPage(inputPage);
+            printableArea = embosser.getPrintableArea(inputPage);
 
             int cellsInWidth = getEmbosser().getMaxWidth(inputPage);
             int linesInHeight = getEmbosser().getMaxHeight(inputPage);
@@ -791,8 +782,8 @@ public class EmbossConfiguration implements Serializable,
             maxMarginInner =  (int)Math.min(tempMaxMarginInner,  cellsInWidth  - tempMinCellsPerLine);
             maxMarginOuter =  (int)Math.min(tempMaxMarginOuter,  cellsInWidth  - tempMinCellsPerLine);
             maxMarginTop =    (int)Math.min(tempMaxMarginTop,    linesInHeight - tempMinLinesPerPage);
-            maxMarginBottom = (int)Math.min(tempMaxMarginBottom, linesInHeight - tempMinLinesPerPage);         
-            
+            maxMarginBottom = (int)Math.min(tempMaxMarginBottom, linesInHeight - tempMinLinesPerPage);
+
             inner.fireEvent(inner.refresh(), true);
             outer.fireEvent(outer.refresh(), true);
             top.fireEvent(top.refresh(), true);
@@ -804,7 +795,6 @@ public class EmbossConfiguration implements Serializable,
         public void propertyUpdated(PropertyEvent event) {
             if (event.ValueChanged) { refresh(); }
         }
-        
     }
 
     public class ColumnsProperty extends Property<Integer>

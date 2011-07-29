@@ -111,22 +111,22 @@
     
     <xsl:template match="text:section">
         <xsl:variable name="section-name" select="@text:name" />
-        <xsl:if test="$frontmatter[@name=$section-name]">
+        <xsl:if test="$frontmatter[@text:name=$section-name]">
             <ns1:frontmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
             </ns1:frontmatter>
         </xsl:if>
-        <xsl:if test="$repeat-frontmatter[@name=$section-name]">
+        <xsl:if test="$repeat-frontmatter[@text:name=$section-name]">
             <ns1:repeat-frontmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
             </ns1:repeat-frontmatter>
         </xsl:if>
-        <xsl:if test="$title-page[@name=$section-name]">
+        <xsl:if test="$title-page[@text:name=$section-name]">
             <ns1:titlepage>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
             </ns1:titlepage>
         </xsl:if>
-        <xsl:if test="$rearmatter[@name=$section-name]">
+        <xsl:if test="$rearmatter[@text:name=$section-name]">
             <ns1:rearmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
             </ns1:rearmatter>
@@ -138,15 +138,15 @@
         </xsl:variable>
         <xsl:if test="$i>0">
             <xsl:choose>
-                <xsl:when test="$frontmatter[@name=$section-name]"/>
-                <xsl:when test="$repeat-frontmatter[@name=$section-name]"/>
-                <xsl:when test="$title-page[@name=$section-name]"/>
-                <xsl:when test="$rearmatter[@name=$section-name]"/>
-                <xsl:when test="$frontmatter/descendant::text:section[@name=$section-name]"/>
-                <xsl:when test="$frontmatter/preceding::text:section[@name=$section-name]"/>
-                <xsl:when test="$frontmatter/ancestor::text:section[@name=$section-name]"/>
-                <xsl:when test="$rearmatter/ancestor::text:section[@name=$section-name]"/>
-                <xsl:when test="$rearmatter/following::text:section[@name=$section-name]"/>
+                <xsl:when test="$frontmatter[@text:name=$section-name]"/>
+                <xsl:when test="$repeat-frontmatter[@text:name=$section-name]"/>
+                <xsl:when test="$title-page[@text:name=$section-name]"/>
+                <xsl:when test="$rearmatter[@text:name=$section-name]"/>
+                <xsl:when test="$frontmatter/descendant::text:section[@text:name=$section-name]"/>
+                <xsl:when test="$frontmatter/preceding::text:section[@text:name=$section-name]"/>
+                <xsl:when test="$frontmatter/ancestor::text:section[@text:name=$section-name]"/>
+                <xsl:when test="$rearmatter/ancestor::text:section[@text:name=$section-name]"/>
+                <xsl:when test="$rearmatter/following::text:section[@text:name=$section-name]"/>
                 <xsl:otherwise>
                     <ns1:volume>
                         <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />

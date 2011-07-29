@@ -207,7 +207,7 @@ public class PEF {
      *
      * This function
      * <ul>
-     * <li>uses {@link ODTTransformer} to convert the .odt file to multiple DAISY-like xml files,</li>
+     * <li>uses {@link OdtTransformer} to convert the .odt file to multiple DAISY-like xml files,</li>
      * <li>uses {@link LiblouisXML} to translate these files into braille, and</li>
      * <li>recombines these braille files into one single .pef file.</li>
      * </ul>

@@ -11,9 +11,17 @@ public class ConfigurationDecoder {
      */
     public static Object readObject(InputStream input) {
 
+        Object object;
         BufferedInputStream bis = new BufferedInputStream(input);
-        XMLDecoder xmlDecoder = new XMLDecoder(bis);
 
-        return xmlDecoder.readObject();        
+        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(Configuration.class.getClassLoader()); {
+
+            XMLDecoder xmlDecoder = new XMLDecoder(bis);
+            object = xmlDecoder.readObject();
+            
+        } Thread.currentThread().setContextClassLoader(cl);
+
+        return object;
     }
 }

@@ -9,18 +9,17 @@ import java.beans.Statement;
 import java.beans.IntrospectionException;
 import java.lang.reflect.Method;
 
-import be.docarch.odt2braille.setup.Configuration.SectionVolume;
-import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.style.*;
 import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
+import be.docarch.odt2braille.setup.Configuration.SectionVolume;
+import be.docarch.odt2braille.setup.Configuration.Volume;
+import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
 
 
 public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
     @Override
     protected Expression instantiate(Object oldInstance, Encoder out) {
-
-        System.out.println("instantiate " + oldInstance.getClass());
 
         if (oldInstance instanceof Configuration) {
 
@@ -41,8 +40,6 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
     @Override
     protected void initialize(Class type, Object oldInstance, Object newInstance, Encoder out) {
-
-        System.out.println("initialize " + type);
 
         try {
 
@@ -85,7 +82,7 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                         if (!(key instanceof String || key instanceof Integer)) {
                             out.writeExpression(instantiate(key, out));
                         }
-                        out.writeExpression(new Expression(oldValue, oldInstance, "get", new Object[]{key}));
+                        out.writeExpression(new Expression(oldValue, oldInstance, "get", new Object[]{key})); // niet uitgevoerd indien nieuw element = oud element !!
                     }
                 }
 
@@ -102,7 +99,7 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                         out.writeStatement(new Statement(oldInstance, "clear", new Object[]{}));
                     }
                     for (Object oldObject : oldList) {
-                        out.writeExpression(new Expression(oldObject, oldInstance, "add", new Object[]{}));
+                        out.writeExpression(new Expression(oldObject, oldInstance, "add", new Object[]{})); // niet uitgevoerd indien nieuw element = oud element !!
                     }
                 }
             }
@@ -129,8 +126,6 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
             propertyDescriptorsMap.put(Configuration.class, new PropertyDescriptor[] {
 
                 new PropertyDescriptor("translationTables",           Configuration.class, "getTranslationTables",   null),
-                new PropertyDescriptor("embossConfiguration",         Configuration.class, "getEmbossConfiguration", null),
-                new PropertyDescriptor("exportConfiguration",         Configuration.class, "getExportConfiguration", null),
                 new PropertyDescriptor("mathCode",                    Configuration.class),
                 new PropertyDescriptor("printPageNumbers",            Configuration.class),
                 new PropertyDescriptor("braillePageNumbers",          Configuration.class),
@@ -364,6 +359,14 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
             propertyDescriptorsMap.put(TranslationTable.class, new PropertyDescriptor[] {
 
                 new PropertyDescriptor("id", TranslationTable.class, "getID", "setID")
+            });
+
+            propertyDescriptorsMap.put(MarginSettings.class, new PropertyDescriptor[] {
+
+                new PropertyDescriptor("inner",  MarginSettings.class),
+                new PropertyDescriptor("outer",  MarginSettings.class),
+                new PropertyDescriptor("top",    MarginSettings.class),
+                new PropertyDescriptor("bottom", MarginSettings.class),
             });
             
         } catch (IntrospectionException e) {

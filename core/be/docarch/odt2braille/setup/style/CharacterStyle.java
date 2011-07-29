@@ -103,6 +103,7 @@ public class CharacterStyle extends Style {
 
         /* INITIALIZATION */
 
+        displayName.set(id);
         inherit.set(true);
         italic.set(TypefaceOption.FOLLOW_PRINT);
         boldface.set(TypefaceOption.FOLLOW_PRINT);

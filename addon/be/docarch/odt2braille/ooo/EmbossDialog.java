@@ -316,6 +316,7 @@ public class EmbossDialog {
             public void update() {
                 numericField.setValue(property.getWidth() / paperWidthUnitListBox.getConvertFactor());
                 numericField.setDecimalDigits((short)(paperWidthUnitListBox.getConvertFactor() == 1 ? 0 : 2));
+                updateProperties();
             }
         };
 
@@ -327,6 +328,7 @@ public class EmbossDialog {
             public void update() {
                 numericField.setValue(property.getHeight() / paperHeightUnitListBox.getConvertFactor());
                 numericField.setDecimalDigits((short)(paperHeightUnitListBox.getConvertFactor() == 1 ? 0 : 2));
+                updateProperties();
             }
         };
 
@@ -556,6 +558,7 @@ public class EmbossDialog {
         public MarginControl(XControl control,
                              EmbossConfiguration.MarginSetting marginSetting) {
             super(control);
+            this.marginSetting = marginSetting;
             link(marginSetting);
         }
         @Override

@@ -20,6 +20,12 @@
 package be.docarch.odt2braille.ooo;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
@@ -47,16 +53,29 @@ import com.sun.star.awt.XWindow;
 import com.sun.star.text.XTextViewCursor;
 import com.sun.star.text.XTextViewCursorSupplier;
 import com.sun.star.util.XModifiable;
+import com.sun.star.container.XEnumeration;
+import com.sun.star.rdf.XResource;
+import com.sun.star.rdf.Statement;
+import com.sun.star.rdf.XURI;
+import com.sun.star.rdf.URIs;
+import com.sun.star.rdf.URI;
+import com.sun.star.rdf.Literal;
+import com.sun.star.rdf.XLiteral;
+import com.sun.star.rdf.XDocumentMetadataAccess;
+import com.sun.star.rdf.XRepository;
+import com.sun.star.rdf.XNamedGraph;
 
 import org.xml.sax.SAXException;
 import java.io.IOException;
-import java.io.FileNotFoundException;
-import java.net.MalformedURLException;
-import javax.print.PrintException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import com.sun.star.beans.PropertyVetoException;
+import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.container.ElementExistException;
+import com.sun.star.container.NoSuchElementException;
+import com.sun.star.rdf.RepositoryException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
@@ -65,6 +84,8 @@ import be.docarch.odt2braille.ODT2PEFConverter;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.setup.ConfigurationDecoder;
+import be.docarch.odt2braille.setup.ConfigurationEncoder;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.PefHandler;
 import be.docarch.odt2braille.Volume;
@@ -75,10 +96,6 @@ import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.paper.PageFormat;
 import be_interpoint.Interpoint55Embosser;
-
-import be.docarch.odt2braille.ConversionException;
-import be.docarch.odt2braille.LiblouisXMLException;
-import org.daisy.braille.embosser.UnsupportedWidthException;
 
 /**
  * The <code>changeSettings</code>, <code>exportBraille</code> and <code>embossBraille</code> methods
@@ -94,37 +111,31 @@ public class UnoGUI {
     private static final String FLAT_XML_FILTER_NAME = "writer8";
     private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String L10N = Constants.OOO_L10N_PATH;
+    private static final String META_FILE = "meta/odt2braille/configuration.rdf";
 
-    private static String L10N_Default_Export_Filename = null;
-    private static String L10N_Exception_MessageBox_Title = null;
-    private static String L10N_Unexpected_Exception_Message = null;
+    private XURI CONFIGURATION_GENERAL;
+    private XURI CONFIGURATION_EXPORT;
 
-    private String exportFilename = null;
+    private String L10N_Exception_MessageBox_Title;
+    private String L10N_Unexpected_Exception_Message;
 
-    private XMultiComponentFactory xMCF = null;
-    private XComponentContext m_xContext = null;
-    private XFrame m_xFrame = null;
-    private XModel xDoc = null;
-    private XWindow parentWindow = null;
-    private XWindowPeer parentWindowPeer = null;
-    private XComponent xDesktopComponent = null;
-    private XModifiable xModifiable = null;
+    private String exportFilename;
+    private String packageLocation;
 
-    private Handler fh = null;
-    private File logFile = null;
-    private Locale oooLocale = null;
+    private XMultiComponentFactory xMCF;
+    private XComponentContext xContext;
+    private XFrame xFrame;
+    private XWindowPeer parentWindowPeer;
+    private XComponent xDesktopComponent;
+    private XModifiable xModifiable;
+    private XDocumentMetadataAccess xDMA;
+    private XRepository xRepository;
+    private XNamedGraph metadataGraph;
 
-    private ProgressBar progressBar = null;
+    private Handler fh;
+    private File logFile;
+    private Locale oooLocale;
 
-    private Configuration loadedSettings = null;
-    private Configuration changedSettings = null;
-
-    /**
-     * Configure logger and locale.
-     *
-     * @param   m_xContext
-     * @param   m_xFrame
-     */
     public UnoGUI(XComponentContext m_xContext,
                   XFrame m_xFrame) {
 
@@ -132,26 +143,29 @@ public class UnoGUI {
 
         try {
 
-            this.m_xContext = m_xContext;
-            this.m_xFrame = m_xFrame;
+            xContext = m_xContext;
+            xFrame = m_xFrame;
             xMCF = (XMultiComponentFactory)UnoRuntime.queryInterface(XMultiComponentFactory.class, m_xContext.getServiceManager());
             Object desktop = xMCF.createInstanceWithContext("com.sun.star.frame.Desktop", m_xContext);
             XDesktop xDesktop = (XDesktop)UnoRuntime.queryInterface(XDesktop.class, desktop);
             xDesktopComponent = (XComponent)xDesktop.getCurrentComponent();
             xModifiable = (XModifiable)UnoRuntime.queryInterface(XModifiable.class, xDesktop.getCurrentComponent());
 
-            // Query Uno Object
-            xDoc = (XModel) UnoRuntime.queryInterface(XModel.class, m_xFrame.getController().getModel());
-            parentWindow = xDoc.getCurrentController().getFrame().getContainerWindow();
+            XModel xModel = (XModel) UnoRuntime.queryInterface(XModel.class, xFrame.getController().getModel());
+            XWindow parentWindow = xModel.getCurrentController().getFrame().getContainerWindow();
             parentWindowPeer = (XWindowPeer) UnoRuntime.queryInterface(XWindowPeer.class, parentWindow);
+            xDMA = (XDocumentMetadataAccess)UnoRuntime.queryInterface(XDocumentMetadataAccess.class, xModel);
+            xRepository = xDMA.getRDFRepository();
 
-            // Locale
-            try { oooLocale = UnoUtils.getUILocale(m_xContext); } catch (Exception e) {
-                  oooLocale = Locale.ENGLISH; }
-            logger.info("Locale: " + oooLocale.toString());
+            XURI CONFIGURATION = URI.create(xContext, "http://www.docarch.be/odt2braille#Configuration");
+            CONFIGURATION_GENERAL = URI.create(xContext, "http://www.docarch.be/odt2braille/general-configuration");
+            CONFIGURATION_EXPORT = URI.create(xContext, "http://www.docarch.be/odt2braille/export-configuration");
 
-            // Create progress bar
-            progressBar = new ProgressBar(m_xFrame, oooLocale);
+            try {
+                metadataGraph = xRepository.getGraph(xDMA.addMetadataFile(META_FILE, new XURI[]{CONFIGURATION}));
+            } catch (ElementExistException e) {
+                metadataGraph = xRepository.getGraph(URI.create(xContext, xDMA.getNamespace() + META_FILE));
+            }
 
             // Configuring logger
             logFile = File.createTempFile(TMP_NAME, ".log", TMP_DIR);
@@ -160,6 +174,30 @@ public class UnoGUI {
             fh.setFormatter(new SimpleFormatter());
             logger.addHandler(fh);
             logger.setLevel(Level.FINEST);
+
+            // Locale
+            try { oooLocale = UnoUtils.getUILocale(m_xContext); } catch (Exception e) {
+                  oooLocale = Locale.ENGLISH; }
+            logger.info("Locale: " + oooLocale.toString());
+
+            ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
+
+            L10N_Exception_MessageBox_Title = bundle.getString("exceptionMessageBoxTitle");
+            L10N_Unexpected_Exception_Message = bundle.getString("unexpectedExceptionMessage");
+
+            // Export file name
+            for (PropertyValue prop: xModel.getArgs()) {
+                if (prop.Name.equals("Title")) {
+                    exportFilename = (String)AnyConverter.toString(prop.Value);
+                    break;
+                }
+            }
+
+            // Set liblouis directory
+            packageLocation = UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
+                                        .getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/", m_xContext);
+
+            ODT2PEFConverter.setLiblouisLocation(new File(packageLocation + File.separator + "liblouis"));
 
             logger.exiting("UnoGUI", "<init>");
 
@@ -173,142 +211,65 @@ public class UnoGUI {
     }
 
     /**
-     * The OpenOffice.org Writer document is exported as an .odt file and converted to a "flat XML" .odt file
-     * (a single file that is the concatenation of all XML files in a normal .odt file).
-     *
-     */
-    private void initialise () {
-
-        logger.entering("UnoGUI", "initialise");
-
-        try {
-
-            ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
-            
-            L10N_Default_Export_Filename = bundle.getString("defaultExportFilename");
-            L10N_Exception_MessageBox_Title = bundle.getString("exceptionMessageBoxTitle");
-            L10N_Unexpected_Exception_Message = bundle.getString("unexpectedExceptionMessage");
-
-            exportFilename = L10N_Default_Export_Filename;
-            for (PropertyValue prop: xDoc.getArgs()) {
-                if (prop.Name.equals("Title")) {
-                    exportFilename = (String)AnyConverter.toString(prop.Value);
-                    break;
-                }
-            }
-
-            // Export in ODT Format
-            File odtFile = File.createTempFile(TMP_NAME, ".odt", TMP_DIR);
-            odtFile.deleteOnExit();
-            String odtUnoUrl = UnoUtils.createUnoFileURL(odtFile.getAbsolutePath(), m_xContext);
-            PropertyValue[] conversionProperties = new PropertyValue[1];
-            conversionProperties[0] = new PropertyValue();
-            conversionProperties[0].Name = "FilterName";
-
-            conversionProperties[0].Value = FLAT_XML_FILTER_NAME;
-            XStorable storable = (XStorable) UnoRuntime.queryInterface(
-                    XStorable.class, m_xFrame.getController().getModel());
-            storable.storeToURL(odtUnoUrl, conversionProperties);
-            progressBar.increment();
-
-            // Create odtTransformer
-            OdtTransformer odtTransformer = new OdtTransformer(odtFile, progressBar);
-            progressBar.increment();
-
-            // Set liblouis directory
-            String packageLocation = UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
-                                        .getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/", m_xContext);
-
-            ODT2PEFConverter.setLiblouisLocation(new File(packageLocation + File.separator + "liblouis"));
-
-            // Create new settingsIO
-          //settingsIO = new SettingsIO(m_xContext, xDesktopComponent);
-
-            // Load settings
-            Configuration.setTransformer(odtTransformer);
-            loadedSettings = Configuration.newInstance();
-            progressBar.increment();
-          //settingsIO.loadBrailleSettingsFromDocument(loadedSettings);
-
-            logger.exiting("UnoGUI", "initialise");
-
-        } catch (ParserConfigurationException ex) {
-            handleUnexpectedException(ex);
-        } catch (IOException ex) {
-            handleUnexpectedException(ex);
-        } catch (SAXException ex) {
-            handleUnexpectedException(ex);
-        } catch (com.sun.star.uno.Exception ex) {
-            handleUnexpectedException(ex);
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-        } catch (TransformerConfigurationException ex) {
-            handleUnexpectedException(ex);
-        } catch (TransformerException ex) {
-            handleUnexpectedException(ex);
-        } catch (Exception ex) {
-            handleUnexpectedException(ex);
-        }
-    }
-
-    /**
      * Overwrite the default settings with settings loaded from the OpenOffice.org Writer document,
      * execute the "Braille Configuration" dialog that enables users to change these settings
      * and store the new settings if the user confirms.
      *
      * @return          <code>true</code> if the new settings were succesfully saved.
      */
-    public boolean changeSettings() {
+    public void changeSettings() {
 
         logger.entering("UnoGUI", "changeSettings");
 
-        SettingsDialog settingsDialog = null;
+        SettingsDialog dialog = null;
+        Configuration config = null;
+        ProgressBar progressBar = null;
 
         try {
 
-            // Start progressbar
+            // Start progress bar
+            progressBar = new ProgressBar(xFrame, oooLocale);
             progressBar.start();
             progressBar.setSteps(3 + SettingsDialog.getSteps());
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            initialise();
-          //changedSettings = new Configuration(loadedSettings);
-            changedSettings = loadedSettings;
+            config = loadConfiguration(progressBar);
 
             // Create dialog
-            settingsDialog = new SettingsDialog(m_xContext, changedSettings, progressBar);
+            dialog = new SettingsDialog(xContext, config, progressBar);
 
             // Close progress bar
             progressBar.finish(true);
             progressBar.close();
 
             // Raise dialog
-            if (!settingsDialog.execute()) {
+            if (!dialog.execute()) {
                 logger.log(Level.INFO, "User cancelled settings dialog");
-                return false;
+                return;
             }
 
-//            if (settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings)) {
-//                try {
-//                    xModifiable.setModified(true);
-//                } catch (PropertyVetoException e) { // read-only
-//                }
-//            }
+            // Save settings
+            saveConfiguration(config);
 
             logger.exiting("UnoGUI", "changeSettings");
 
-            return true;
-
-        } catch (com.sun.star.uno.Exception ex) {
+        } catch (Exception ex) {
             handleUnexpectedException(ex);
-            return false;
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-            return false;
         } finally {
-            if (settingsDialog != null) {
-                settingsDialog.dispose();
+            if (dialog != null) {
+                dialog.dispose();
+            }
+            if (progressBar != null) {
+                progressBar.close();
+            }
+            if (config != null) {
+                if (config.odtTransformer != null) {
+                    try {
+                        config.odtTransformer.close();
+                    } catch (IOException e) {
+                    }
+                }
             }
         }
     }
@@ -329,70 +290,57 @@ public class UnoGUI {
      * @return          <code>true</code> if the document is succesfully exported to a braille file,
      *                  <code>false</code> if the user aborts the process at any time.
      */
-    public boolean exportBraille () {
+    public void exportBraille () {
 
         logger.entering("UnoGUI", "exportBraille");
 
         File[] brailleFiles = null;
-        PostConversionBrailleChecker checker = null;
+        Configuration config = null;
+        ProgressBar progressBar = null;
 
         try {
 
             // Start progress bar
+            progressBar = new ProgressBar(xFrame, oooLocale);
             progressBar.start();
             progressBar.setSteps(3);
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            initialise();
+            config = loadConfiguration(progressBar);
 
             // Load export settings
-          //settingsIO.loadExportSettingsFromDocument(loadedSettings);
-          //changedSettings = new Configuration(loadedSettings);
-            changedSettings = loadedSettings;
-
-            ExportConfiguration exportSettings = new ExportConfiguration();
+            ExportConfiguration exportSettings = loadExportConfiguration();
 
             // Create export dialog
-            ExportDialog exportDialog = new ExportDialog(m_xContext, exportSettings, changedSettings, progressBar);
+            ExportDialog dialog = new ExportDialog(xContext, exportSettings, config, progressBar);
 
             // Close progress bar
             progressBar.finish(true);
             progressBar.close();
 
             // Execute export dialog
-            if (!exportDialog.execute()) {
+            if (!dialog.execute()) {
                 logger.log(Level.INFO, "User cancelled export dialog");
-                return false;
+                return;
             }
 
             // Save settings
-//            boolean settingsModified = false;
-//            if (settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings)) {
-//                settingsModified = true;
-//            }
-//            if (settingsIO.saveExportSettingsToDocument(changedSettings, loadedSettings)) {
-//                settingsModified = true;
-//            }
-//            if (settingsModified) {
-//                try {
-//                    xModifiable.setModified(true);
-//                } catch (PropertyVetoException e) { // read-only
-//                }
-//            }
-
+            saveConfiguration(config);
+            saveExportConfiguration(exportSettings);
+            
             // Checker
-            checker = new PostConversionBrailleChecker();
+            PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
 
             // Convert to PEF
-            PEF pef = ODT2PEFConverter.convert(changedSettings, exportSettings, checker, progressBar);
+            PEF pef = ODT2PEFConverter.convert(config, exportSettings, checker, progressBar);
 
             // Show warning
-            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, m_xContext, parentWindowPeer);
+            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
             boolean cancel = !checkerDialog.execute();
 
             // Store checker report
-            ReportWriter reportWriter = new ReportWriter(checker, m_xContext, xDesktopComponent);
+            ReportWriter reportWriter = new ReportWriter(checker, xContext, xDesktopComponent);
             if (reportWriter.write()) {
                 try {
                     xModifiable.setModified(true);
@@ -402,7 +350,7 @@ public class UnoGUI {
 
             if (cancel) {
                 logger.log(Level.INFO, "User cancelled export on warning");
-                return false;
+                return;
             }
 
             // Convert to Braille file(s)
@@ -432,19 +380,17 @@ public class UnoGUI {
             progressBar.close();
 
             // Show post translation dialog
-            PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings, exportSettings);
-            PostConversionDialog postConversionDialog = new PostConversionDialog(m_xContext, preview);
+            PreviewDialog preview = new PreviewDialog(xContext, pef, config, exportSettings);
+            PostConversionDialog postConversionDialog = new PostConversionDialog(xContext, preview);
 
             if (!postConversionDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");
-                return false;
+                return;
             }
 
             // Show Save As... Dialog:
-
             String brailleExt = exportSettings.getFileFormat().getFileExtension();
-            String fileType;
-            
+            String fileType;            
             String id = exportSettings.getFileFormat().getIdentifier();
             if (id.equals(ExportConfiguration.PEF)) {
                 fileType = "Portable Embosser Format";
@@ -458,15 +404,14 @@ public class UnoGUI {
                 fileType = "";
             }
 
-            String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
+            String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, xContext);
             if (exportUnoUrl.length() < 1) {
                 logger.log(Level.INFO, "User cancelled save as dialog");
-                return false;
+                return;
             }
-            String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+            String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, xContext);
 
             // Rename Braille file(s)
-
             if (brailleFiles.length > 1) {
 
                 File newFile;
@@ -485,7 +430,6 @@ public class UnoGUI {
 
                 if (brailleFiles.length != volumes.size()) {
                     logger.log(Level.INFO, "The number of brailleFiles is not equals to the number of volumes");
-                    return false;
                 }
 
                 DecimalFormat format = new DecimalFormat();
@@ -504,52 +448,24 @@ public class UnoGUI {
                 File newFile = new File(exportUrl);
                 if (newFile.exists()) { newFile.delete(); }
                 brailleFiles[0].renameTo(newFile);
-
             }
 
             logger.exiting("UnoGUI", "exportBraille");
 
-            return true;
-
-        } catch (com.sun.star.uno.Exception ex) {
+        } catch (Exception ex) {
             handleUnexpectedException(ex);
-            return false;
-        } catch (MalformedURLException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (FileNotFoundException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (IOException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (ParserConfigurationException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (SAXException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (TransformerConfigurationException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (TransformerException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (InterruptedException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (UnsupportedWidthException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (LiblouisXMLException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (ConversionException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-            return false;
+        } finally {
+            if (progressBar != null) {
+                progressBar.close();
+            }
+            if (config != null) {
+                if (config.odtTransformer != null) {
+                    try {
+                        config.odtTransformer.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
         }
     }
 
@@ -571,35 +487,29 @@ public class UnoGUI {
      * @return          <code>true</code> if the document is succesfully printed on a braille embosser,
      *                  <code>false</code> if the user aborts the process at any time.
      */
-    public boolean embossBraille () {
+    public void embossBraille () {
 
         logger.entering("UnoGUI", "embossBraille");
 
-        PefHandler handlePef = null;
-        String deviceName = null;
-        PostConversionBrailleChecker checker = null;
+        Configuration config = null;
+        ProgressBar progressBar = null;
 
         try {
 
             // Start progress bar
+            progressBar = new ProgressBar(xFrame, oooLocale);
             progressBar.start();
             progressBar.setSteps(3);
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            initialise();
+            config = loadConfiguration(progressBar);
 
             // Load emboss settings
-          //settingsIO.loadEmbossSettingsFromOpenOffice(loadedSettings);
-          //settingsIO.loadEmbossSettingsFromDocument(loadedSettings);
-          //changedSettings = new Configuration(loadedSettings);
-          //loadedSettings.setExportOrEmboss(false);
-            changedSettings = loadedSettings;
-
-            EmbossConfiguration embossSettings = new EmbossConfiguration();
+            EmbossConfiguration embossSettings = loadEmbossConfiguration();
 
             // Create emboss dialog
-            EmbossDialog embossDialog = new EmbossDialog(m_xContext, embossSettings, changedSettings, progressBar);
+            EmbossDialog embossDialog = new EmbossDialog(xContext, embossSettings, config, progressBar);
 
             // Close progress bar
             progressBar.finish(true);
@@ -608,25 +518,24 @@ public class UnoGUI {
             // Execute emboss dialog
             if (!embossDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled emboss dialog");
-                return false;
+                return;
             }
 
             // Save settings
-          //settingsIO.saveBrailleSettingsToDocument(changedSettings, loadedSettings);
-          //settingsIO.saveEmbossSettingsToDocument(changedSettings, loadedSettings);
-          //settingsIO.saveEmbossSettingsToOpenOffice(changedSettings, loadedSettings);
+            saveConfiguration(config);
+            saveEmbossConfiguration(embossSettings);
 
             // Checker
-            checker = new PostConversionBrailleChecker();
+            PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
 
             // Convert to PEF
-            PEF pef = ODT2PEFConverter.convert(changedSettings, embossSettings, checker, progressBar);
+            PEF pef = ODT2PEFConverter.convert(config, embossSettings, checker, progressBar);
 
             // Show warning            
-            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, m_xContext, parentWindowPeer);
+            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
             if (!checkerDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled export on warning");
-                return false;
+                return;
             }
 
             // Close progress bar
@@ -634,16 +543,16 @@ public class UnoGUI {
             progressBar.close();
 
             // Show post translation dialog
-            PreviewDialog preview = new PreviewDialog(m_xContext, pef, changedSettings, embossSettings);
-            PostConversionDialog postConversionDialog = new PostConversionDialog(m_xContext, preview);
+            PreviewDialog preview = new PreviewDialog(xContext, pef, config, embossSettings);
+            PostConversionDialog postConversionDialog = new PostConversionDialog(xContext, preview);
 
             if (!postConversionDialog.execute()) {
                 logger.log(Level.INFO, "User cancelled post translation dialog");
-                return false;
+                return;
             }
 
             // Create EmbossPEF entity
-            handlePef = new PefHandler(pef);
+            PefHandler handlePef = new PefHandler(pef);
 
             // Load embosser with paper
             Embosser embosser = embossSettings.getEmbosser();
@@ -652,17 +561,17 @@ public class UnoGUI {
             // Emboss Dialog
             if (embosser instanceof Interpoint55Embosser) {
 
-                Interpoint55PrintDialog printDialog = new Interpoint55PrintDialog(m_xContext, xDesktopComponent, (Interpoint55Embosser)embosser);
+                Interpoint55PrintDialog printDialog = new Interpoint55PrintDialog(xContext, xDesktopComponent, (Interpoint55Embosser)embosser);
 
                 if (!printDialog.execute()) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
-                    return false;
+                    return;
                 }
 
                 File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
                 prnFile.deleteOnExit();
-                if(!handlePef.embossToFile(prnFile, embossSettings)) {
-                    return false;
+                if (!handlePef.embossToFile(prnFile, embossSettings)) {
+                    return;
                 }
 
                 if (!printDialog.getPrintToFile()) {
@@ -678,12 +587,12 @@ public class UnoGUI {
 
                     // Show Save As... Dialog:
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
-                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
+                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, xContext);
                     if (exportUnoUrl.length() < 1) {
                         logger.log(Level.INFO, "User cancelled save as dialog");
-                        return false;
+                        return;
                     }
-                    String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+                    String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, xContext);
 
                     // Rename Braille file
                     File newFile = new File(exportUrl);
@@ -694,18 +603,19 @@ public class UnoGUI {
 
             } else {
 
-                PrintDialog printDialog = new PrintDialog(m_xContext, embosser);
+                PrintDialog printDialog = new PrintDialog(xContext, embosser);
+                String deviceName = printDialog.execute();
 
-                if ((deviceName=printDialog.execute()).equals("")) {
+                if (deviceName.equals("")) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
-                    return false;
+                    return;
                 }
 
                 if (!printDialog.getPrintToFile()) {
 
                     // Print to device
                     if(!handlePef.embossToDevice(deviceName, embossSettings)) {
-                        return false;
+                        return;
                     }
 
                 } else {
@@ -715,66 +625,42 @@ public class UnoGUI {
 
                     // Show Save As... Dialog:
                     logger.entering("UnoAwtUtils", "showSaveAsDialog");
-                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, m_xContext);
+                    String exportUnoUrl = UnoAwtUtils.showSaveAsDialog(exportFilename, fileType, "*" + brailleExt, xContext);
                     if (exportUnoUrl.length() < 1) {
                         logger.log(Level.INFO, "User cancelled save as dialog");
-                        return false;
+                        return;
                     }
                     if (!exportUnoUrl.endsWith(brailleExt)) {
                         exportUnoUrl = exportUnoUrl.concat(brailleExt);
                     }
-                    String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, m_xContext);
+                    String exportUrl = UnoUtils.UnoURLtoURL(exportUnoUrl, xContext);
 
                     // Print to File
                     if(!handlePef.embossToFile(new File(exportUrl), embossSettings)) {
                         logger.log(Level.INFO, "Emboss to file failed");
-                        return false;
+                        return;
                     }
                 }
             }
 
-            return true;
-
-        } catch (PrintException ex) {
+        } catch (Exception ex) {
             handleUnexpectedException(ex);
-            return false;
-        } catch (MalformedURLException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (IOException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (ParserConfigurationException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (SAXException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (TransformerConfigurationException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (TransformerException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (InterruptedException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (com.sun.star.uno.Exception ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (UnsupportedWidthException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (LiblouisXMLException ex) {
-            handleUnexpectedException(ex);
-            return false;
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-            return false;
+        } finally {
+            if (progressBar != null) {
+                progressBar.close();
+            }
+            if (config != null) {
+                if (config.odtTransformer != null) {
+                    try {
+                        config.odtTransformer.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
         }
     }
 
-    public boolean sixKeyEntryMode (){
+    public void sixKeyEntryMode (){
 
         logger.entering("UnoGUI", "sixKeyEntryMode");
 
@@ -786,23 +672,17 @@ public class UnoGUI {
                                                            XTextViewCursorSupplier.class, xController);
             XTextViewCursor xViewCursor = xViewCursorSupplier.getViewCursor();
 
-            SixKeyEntryDialog dialog = new SixKeyEntryDialog(m_xContext, m_xFrame, xViewCursor);
+            SixKeyEntryDialog dialog = new SixKeyEntryDialog(xContext, xFrame, xViewCursor);
             dialog.execute();
 
             logger.exiting("UnoGUI", "sixKeyEntryMode");
 
-            return true;
-
-        } catch (com.sun.star.uno.Exception ex) {
+        } catch (Exception ex) {
             handleUnexpectedException(ex);
-            return false;
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-            return false;
         }
     }
 
-    public boolean insertBraille () {
+    public void insertBraille () {
 
         logger.entering("UnoGUI", "insertBraille");
 
@@ -815,21 +695,181 @@ public class UnoGUI {
             XTextViewCursor xViewCursor = xViewCursorSupplier.getViewCursor();
 
             // Create dialog
-
-            InsertDialog dialog = new InsertDialog(m_xContext, xViewCursor);
+            InsertDialog dialog = new InsertDialog(xContext, xViewCursor);
             dialog.execute();
 
             logger.exiting("UnoGUI", "insertBraille");
 
-            return true;
-
-        } catch (com.sun.star.uno.Exception ex) {
+        } catch (Exception ex) {
             handleUnexpectedException(ex);
-            return false;
-        } catch (RuntimeException ex) {
-            handleUnexpectedException(ex);
-            return false;
         }
+    }
+
+    private EmbossConfiguration loadEmbossConfiguration() {
+
+        try {
+
+            InputStream input = new FileInputStream(
+                    new File(packageLocation + "/settings/embosser.xml"));
+            return (EmbossConfiguration)ConfigurationDecoder.readObject(input);
+
+        } catch (Exception e) {
+            return new EmbossConfiguration();
+        }
+    }
+
+    private void saveEmbossConfiguration(EmbossConfiguration config) {
+
+        try {
+
+            OutputStream output = new FileOutputStream(
+                    new File(packageLocation + "/settings/embosser.xml"));
+            ConfigurationEncoder.writeObject(config, output);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+
+    private Configuration loadConfiguration(ProgressBar progressBar)
+                                     throws ParserConfigurationException,
+                                            IOException,
+                                            SAXException,
+                                            TransformerConfigurationException,
+                                            TransformerException,
+                                            com.sun.star.uno.Exception,
+                                            Exception {
+
+        logger.entering("UnoGUI", "initialise");
+
+        // Export in ODT Format
+        File odtFile = File.createTempFile(TMP_NAME, ".odt", TMP_DIR);
+        odtFile.deleteOnExit();
+        String odtUnoUrl = UnoUtils.createUnoFileURL(odtFile.getAbsolutePath(), xContext);
+        PropertyValue[] conversionProperties = new PropertyValue[1];
+        conversionProperties[0] = new PropertyValue();
+        conversionProperties[0].Name = "FilterName";
+
+        conversionProperties[0].Value = FLAT_XML_FILTER_NAME;
+        XStorable storable = (XStorable) UnoRuntime.queryInterface(
+                XStorable.class, xFrame.getController().getModel());
+        storable.storeToURL(odtUnoUrl, conversionProperties);
+
+        progressBar.increment();
+
+        // Create ODT Transformer
+        OdtTransformer odtTransformer = new OdtTransformer(odtFile, progressBar);
+
+        progressBar.increment();
+
+        // Load settings
+        Configuration.setTransformer(odtTransformer);
+        Configuration settings = null;
+
+        try {
+            
+            XResource document = getDocumentNode();
+            XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_GENERAL, null);
+            if (statements.hasMoreElements()) {
+                 String xml = ((Statement)statements.nextElement()).Object.getStringValue();
+                 InputStream input = new ByteArrayInputStream(xml.getBytes());
+                 settings = (Configuration)ConfigurationDecoder.readObject(input);
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+        
+        if (settings == null) { settings = Configuration.newInstance(); }
+
+        progressBar.increment();
+
+        logger.exiting("UnoGUI", "initialise");
+
+        return settings;
+    }
+
+    private void saveConfiguration(Configuration config) {
+
+        try {
+
+            OutputStream output = new ByteArrayOutputStream();
+            ConfigurationEncoder.writeObject(config, output);
+            String xml = output.toString().replaceFirst("<\\?xml.*?\\?>", "");
+
+            XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
+            XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);
+            XResource document = getDocumentNode();
+
+            metadataGraph.removeStatements(document, CONFIGURATION_GENERAL, null);
+            metadataGraph.addStatement(document, CONFIGURATION_GENERAL, configuration);
+
+            xModifiable.setModified(true);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+
+    private ExportConfiguration loadExportConfiguration() {
+
+        try {
+
+            XResource document = getDocumentNode();
+            XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_EXPORT, null);
+            if (statements.hasMoreElements()) {
+                 String xml = ((Statement)statements.nextElement()).Object.getStringValue();
+                 InputStream input = new ByteArrayInputStream(xml.getBytes());
+                 return (ExportConfiguration)ConfigurationDecoder.readObject(input);
+            }
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+
+        return new ExportConfiguration();
+    }
+
+    private void saveExportConfiguration(ExportConfiguration config) {
+
+        try {
+
+            OutputStream output = new ByteArrayOutputStream();
+            ConfigurationEncoder.writeObject(config, output);
+            String xml = output.toString().replaceFirst("<\\?xml.*?\\?>", "");
+
+            XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
+            XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);
+            XResource document = getDocumentNode();
+
+            metadataGraph.removeStatements(document, CONFIGURATION_EXPORT, null);
+            metadataGraph.addStatement(document, CONFIGURATION_EXPORT, configuration);
+
+            xModifiable.setModified(true);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+
+    private XResource getDocumentNode() throws IllegalArgumentException,
+                                               NoSuchElementException,
+                                               RepositoryException,
+                                               WrappedTargetException {
+
+        XURI RDF_TYPE = URI.createKnown(xContext, URIs.RDF_TYPE);
+        XURI PKG_DOCUMENT = URI.createKnown(xContext, URIs.PKG_DOCUMENT);
+
+        XResource document;
+        XEnumeration statements = metadataGraph.getStatements(null, RDF_TYPE, PKG_DOCUMENT);
+        if (statements.hasMoreElements()) {
+            document = ((Statement)statements.nextElement()).Subject;
+        } else {
+            document = xRepository.createBlankNode();
+            metadataGraph.addStatement(document, RDF_TYPE, PKG_DOCUMENT);
+        }
+
+        return document;
     }
 
     /**
@@ -849,18 +889,7 @@ public class UnoGUI {
     /**
      * Flush and close the logfile handler.
      */
-    public void clean () {
-        if (progressBar != null) {
-            progressBar.close();
-        }
-        if (loadedSettings != null) {
-            if (loadedSettings.odtTransformer != null) {
-                try {
-                    loadedSettings.odtTransformer.close();
-                } catch (IOException e) {
-                }
-            }
-        }
+    public void cleanLogger () {
         if (fh != null) {
             fh.flush();
             fh.close();

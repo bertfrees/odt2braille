@@ -122,49 +122,30 @@ public class LiblouisXML {
 
         } else {
 
-            Runtime runtime = Runtime.getRuntime();
-            Process process = null;
+            liblouisxmlExec = "xml2brl";
+
             InputStream stdout = null;
             InputStreamReader isr = null;
-            BufferedReader br = null;
-            process = runtime.exec(new String[]{"xml2brl", "--version"});
-            if (process.waitFor() == 0) {
-                stdout = process.getInputStream();
-                isr = new InputStreamReader(stdout);
-                br = new BufferedReader(isr);
-                String r;
-                if ((r = br.readLine()) != null) {
-                    try {
-                        int i,j,k,l;
+            Process process = Runtime.getRuntime().exec(new String[]{"xml2brl", "--version"});
+
+            try {
+                if (process.waitFor() == 0) {
+                    stdout = process.getInputStream();
+                    isr = new InputStreamReader(stdout);
+                    BufferedReader br = new BufferedReader(isr);
+                    String r;
+                    if ((r = br.readLine()) != null) {
                         String version = r.substring(r.lastIndexOf(' ') + 1);
-                        String versionAtLeast = LIBLOUISXML_VERSION_ATLEAST;
-                        while (true) {
-                            i = version.indexOf('.');
-                            j = versionAtLeast.indexOf('.');
-                            if (i<0 || j<0) {
-                                break;
-                            } else {
-                                k = Integer.parseInt(version.substring(0, i));
-                                l = Integer.parseInt(versionAtLeast.substring(0, j));
-                                if (k < l) {
-                                    break;
-                                } else if (k > l) {
-                                    liblouisxmlExec = "xml2brl";
-                                    break;
-                                }
-                            }
-                            version = version.substring(i + 1);
-                            versionAtLeast = versionAtLeast.substring(j + 1);
+                        if (compareVersions(version, LIBLOUISXML_VERSION_ATLEAST) < 0) {
+                            throw new LiblouisXMLException("liblouisxml " + LIBLOUISXML_VERSION_ATLEAST + " not installed");
                         }
-                    } catch (Exception e) {}
+                    }
                 }
-            }
-            if (isr != null) {
-                isr.close();
-                stdout.close();
-            }
-            if (liblouisxmlExec == null) {
-                throw new LiblouisXMLException("liblouisxml " + LIBLOUISXML_VERSION_ATLEAST + " not installed");
+            } finally {
+                if (isr != null) {
+                    isr.close();
+                    stdout.close();
+                }
             }
         }
 
@@ -458,7 +439,7 @@ public class LiblouisXML {
 
         message = "liblouisxml:  ";
         for (i=0;i<exec_cmd.length;i++) {
-            message += "\n               " + exec_cmd[i];
+            message += "\n" + exec_cmd[i] + " \\";
         }
 
         logger.log(Level.INFO,message);
@@ -567,12 +548,29 @@ public class LiblouisXML {
 
     }
 
-    private String unicodeCodePointNotation(String s) {
+    private static String unicodeCodePointNotation(String s) {
 
         StringBuffer sb = new StringBuffer();
         for (int i=0; i<s.length(); i++) {
             sb.append("\\x" + Integer.toHexString((Character.codePointAt(s, i) & 0xFFFF) | 0x10000).substring(1));
         }
         return sb.toString();
+    }
+
+    private static int compareVersions(String v1, String v2) {
+
+        int i1 = v1.indexOf('.');
+        int i2 = v2.indexOf('.');
+
+        if (i1<0) { return (i2<0) ? 0 : -1; }
+        if (i2<0) { return (i1<0) ? 0 : 1; }
+
+        int p1 = Integer.parseInt(v1.substring(0, i1));
+        int p2 = Integer.parseInt(v2.substring(0, i2));
+
+        if (p1 > p2) { return 1; }
+        if (p1 < p2) { return -1; }
+
+        return compareVersions(v1.substring(i1 + 1), v2 = v2.substring(i2 + 1));
     }
 }

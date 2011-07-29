@@ -10,7 +10,7 @@ import com.sun.star.awt.XTextListener;
 import be.docarch.odt2braille.setup.Setting;
 
 public class NumericSettingControl extends SettingControl<Setting<Integer>>
-                         implements XTextListener {
+                                implements XTextListener {
 
     protected final XNumericField numericField;
     private final XTextComponent textComponent;

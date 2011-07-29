@@ -602,7 +602,7 @@ public class SettingsDialog {
 
     private final TextSettingControl specialSymbolsListTitleField;
     private final SpecialSymbolListBox specialSymbolsListBox;
-    private final TextSettingControl specialSymbolsSymbolField;
+    private final TextPropertyField specialSymbolsSymbolField;
     private final TextSettingButton specialSymbolsSymbolButton;
     private final TextSettingControl specialSymbolsDescriptionField;
     private final RadioButton<SpecialSymbol.Mode> specialSymbolsMode0RadioButton;
@@ -2729,7 +2729,8 @@ public class SettingsDialog {
                                                          container.getControl("CommandButton10"),
                                                          container.getControl("CommandButton12"));
         
-        specialSymbolsSymbolField = new TextSettingControl(container.getControl("TextField8")) {
+        specialSymbolsSymbolField = new TextPropertyField(container.getControl("TextField8")) {
+            @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == specialSymbolsListBox) {
                     SpecialSymbol s = specialSymbolsListBox.getSelectedItem();
@@ -2745,6 +2746,11 @@ public class SettingsDialog {
                     SpecialSymbol s = specialSymbolsListBox.getSelectedItem();
                     link(s != null ? s.symbol : null);
                 }
+            }
+            @Override
+            public void actionPerformed(ActionEvent event) {
+                super.actionPerformed(event);
+                specialSymbolsListBox.update();
             }
         };
 

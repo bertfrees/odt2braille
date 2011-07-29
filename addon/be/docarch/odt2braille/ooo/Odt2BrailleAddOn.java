@@ -151,7 +151,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
                      unoGui.changeSettings();
                  } finally {
-                     unoGui.clean();
+                     unoGui.cleanLogger();
                  }
 
                  return;
@@ -165,7 +165,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
                      unoGui.exportBraille();
                  } finally {
-                     unoGui.clean();
+                     unoGui.cleanLogger();
                  }
 
                  return;
@@ -179,7 +179,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
                      unoGui.embossBraille();
                  } finally {
-                     unoGui.clean();
+                     unoGui.cleanLogger();
                  }
 
                  return;
@@ -193,7 +193,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
                      unoGui.insertBraille();
                  } finally {
-                     unoGui.clean();
+                     unoGui.cleanLogger();
                  }
 
                  return;
@@ -207,7 +207,7 @@ public final class Odt2BrailleAddOn extends WeakBase
                      unoGui = new UnoGUI(m_xContext, m_xFrame);
                      unoGui.sixKeyEntryMode();
                  } finally {
-                     unoGui.clean();
+                     unoGui.cleanLogger();
                  }
 
                  return;
