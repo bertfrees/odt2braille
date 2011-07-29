@@ -89,6 +89,7 @@ import be.docarch.odt2braille.setup.ConfigurationEncoder;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.PefHandler;
 import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.LiblouisXMLException;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import be.docarch.odt2braille.ooo.checker.BrailleCheckerDialog;
 import be.docarch.odt2braille.ooo.checker.ReportWriter;
@@ -878,11 +879,13 @@ public class UnoGUI {
      *
      * @param   ex     The exception
      */
-    private void handleUnexpectedException (Exception ex) {
+    private void handleUnexpectedException(Exception e) {
 
-        logger.log(Level.SEVERE, null, ex);
-        UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title,
-                L10N_Unexpected_Exception_Message + ": " + logFile.getAbsolutePath());
+        logger.log(Level.SEVERE, null, e);
+
+        String message = L10N_Unexpected_Exception_Message + ": " + logFile.getAbsolutePath();
+        if (e instanceof LiblouisXMLException) { message = e.getMessage(); }
+        UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title, message);
 
     }
 

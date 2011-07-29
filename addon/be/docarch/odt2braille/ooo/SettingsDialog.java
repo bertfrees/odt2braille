@@ -142,7 +142,7 @@ public class SettingsDialog {
     private final Button cancelButton;
     private final NavigationButton backButton;
     private final NavigationButton nextButton;
-    private final FormattingRulesListBox formattingRulesListBox;
+    private final FormattingRulesButton formattingRulesListBox;
 
     /****************/
     /* GENERAL PAGE */
@@ -811,7 +811,8 @@ public class SettingsDialog {
 
         /* CONTROLS */
 
-        formattingRulesListBox = new FormattingRulesListBox(container.getControl("ListBox19"));
+        formattingRulesListBox = new FormattingRulesButton(container.getControl("CommandButton21"),
+                                                           container.getControl("ListBox19"));
 
         /* INITIALIZATION */
 
@@ -820,8 +821,6 @@ public class SettingsDialog {
 
         roadmap.addListener(backButton);
         roadmap.addListener(nextButton);
-        roadmap.listen(true);
-        formattingRulesListBox.listen(true);
 
         pb.increment();
 
@@ -2946,6 +2945,7 @@ public class SettingsDialog {
             windowProperties.setPropertyValue("Step", 0);
             setPage(GENERAL_PAGE);
             windowProperties.setPropertyValue("Step", getPage());
+            broadcaster.addItemListener(this);
 
         }
         public void itemStateChanged(ItemEvent event) {
@@ -2979,13 +2979,6 @@ public class SettingsDialog {
         public int getPage() { return page; }
         public void addListener(XItemListener listener) {
             broadcaster.addItemListener(listener);
-        }
-        public void listen(boolean onOff) {
-            if (onOff) {
-                broadcaster.addItemListener(this);
-            } else {
-                broadcaster.removeItemListener(this);
-            }
         }
         public void disposing(com.sun.star.lang.EventObject object) {}
     }
@@ -3045,28 +3038,25 @@ public class SettingsDialog {
         }
     };
 
-    private class FormattingRulesListBox implements DialogElement,
-                                                    XItemListener {
-        private XListBox listbox;
-        private FormattingRules banaRules;
+    private class FormattingRulesButton implements DialogElement,
+                                                   XActionListener {
+        private final XListBox listbox;
+        private final XButton button;
+        private final List<FormattingRules> rulesList = new ArrayList<FormattingRules>();
 
-        public FormattingRulesListBox(XControl control) {
-            listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, control);
-            listbox.addItem("Custom", (short)0);
+        public FormattingRulesButton(XControl buttonControl,
+                                     XControl listboxControl) {
+            listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, listboxControl);
+            button = (XButton)UnoRuntime.queryInterface(XButton.class, buttonControl);
+            rulesList.add(new BANAFormattingRules());
             listbox.addItem("BANA", (short)1);
             listbox.selectItemPos((short)0, true);
-            banaRules = new BANAFormattingRules();
+            button.setLabel("Apply...");
+            button.addActionListener(this);
         }
-        public void itemStateChanged(ItemEvent event) {
-            if (listbox.getSelectedItemPos()==(short)1) {
-                banaRules.applyTo(settings);
-            }
-        }
-        public void listen(boolean onOff) {
-            if (onOff) {
-                listbox.addItemListener(this);
-            } else {
-                listbox.removeItemListener(this);
+        public void actionPerformed(ActionEvent event) {
+            if (event.Source == button) {
+                rulesList.get((int)listbox.getSelectedItemPos()).applyTo(settings);
             }
         }
         public void disposing(com.sun.star.lang.EventObject object) {}

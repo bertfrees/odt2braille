@@ -967,6 +967,7 @@ public class Configuration implements Serializable {
         public ParagraphStyleMap(Collection<ParagraphStyle> styles) {
             for (ParagraphStyle style : styles) {
                 map.put(style.getID(), style);
+                style.setInherit(true);
             }
         }
 
@@ -983,6 +984,7 @@ public class Configuration implements Serializable {
         public CharacterStyleMap(Collection<CharacterStyle> styles) {
             for (CharacterStyle style : styles) {
                 map.put(style.getID(), style);
+                style.setInherit(true);
             }
         }
 

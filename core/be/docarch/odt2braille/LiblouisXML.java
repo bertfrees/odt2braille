@@ -89,7 +89,7 @@ public class LiblouisXML {
                         File liblouisLocation)
                  throws IOException,
                         InterruptedException,
-                        LiblouisXMLException {
+                        LiblouisXMLInstallationException {
 
         logger.entering("LiblouisXML", "<init>");
 
@@ -98,7 +98,7 @@ public class LiblouisXML {
         try {
             this.liblouisPath = liblouisLocation.getAbsolutePath();
         } catch (NullPointerException e) {
-            throw new LiblouisXMLException("Could not find liblouis directory");
+            throw new LiblouisXMLInstallationException("Could not find liblouis directory");
         }
 
         stylesFile = new File(liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_styles.cfg");
@@ -137,7 +137,7 @@ public class LiblouisXML {
                     if ((r = br.readLine()) != null) {
                         String version = r.substring(r.lastIndexOf(' ') + 1);
                         if (compareVersions(version, LIBLOUISXML_VERSION_ATLEAST) < 0) {
-                            throw new LiblouisXMLException("liblouisxml " + LIBLOUISXML_VERSION_ATLEAST + " not installed");
+                            throw new LiblouisXMLInstallationException("liblouisxml " + LIBLOUISXML_VERSION_ATLEAST + " not installed");
                         }
                     }
                 }

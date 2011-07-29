@@ -100,8 +100,8 @@
   <dlg:numericfield dlg:style-id="0" dlg:id="NumericField24" dlg:tab-index="100" dlg:left="236" dlg:top="140" dlg:width="24" dlg:height="12" dlg:page="13" dlg:spin="true"/>
   <dlg:text dlg:id="Label56" dlg:tab-index="159" dlg:left="103" dlg:top="113" dlg:width="111" dlg:height="10" dlg:page="13" dlg:value="Label56" dlg:multiline="true"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox18" dlg:tab-index="98" dlg:left="218" dlg:top="112" dlg:width="42" dlg:height="12" dlg:page="13" dlg:spin="true"/>
-  <dlg:fixedline dlg:id="FixedLine3" dlg:tab-index="160" dlg:left="86" dlg:top="15" dlg:width="184" dlg:height="1"/>
-  <dlg:menulist dlg:style-id="0" dlg:id="ListBox19" dlg:tab-index="1" dlg:left="207" dlg:top="2" dlg:width="62" dlg:height="11" dlg:spin="true" dlg:linecount="10"/>
+  <dlg:fixedline dlg:id="FixedLine3" dlg:tab-index="160" dlg:left="86" dlg:top="16" dlg:width="184" dlg:height="1"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox19" dlg:tab-index="1" dlg:left="159" dlg:top="2" dlg:width="62" dlg:height="12" dlg:spin="true" dlg:linecount="10"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox20" dlg:tab-index="80" dlg:left="215" dlg:top="37" dlg:width="45" dlg:height="12" dlg:page="10" dlg:spin="true"/>
   <dlg:text dlg:id="Label55" dlg:tab-index="161" dlg:left="103" dlg:top="39" dlg:width="109" dlg:height="11" dlg:page="10" dlg:value="Label55" dlg:multiline="true"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox21" dlg:tab-index="79" dlg:left="215" dlg:top="24" dlg:width="45" dlg:height="12" dlg:page="10" dlg:spin="true"/>
@@ -338,23 +338,24 @@
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox47" dlg:tab-index="315" dlg:left="104" dlg:top="54" dlg:width="9" dlg:height="10" dlg:page="11" dlg:checked="false"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox24" dlg:tab-index="316" dlg:left="192" dlg:top="209" dlg:width="68" dlg:height="12" dlg:page="11" dlg:spin="true"/>
   <dlg:text dlg:id="Label132" dlg:tab-index="317" dlg:left="115" dlg:top="210" dlg:width="75" dlg:height="10" dlg:page="11" dlg:value="Label132" dlg:multiline="true"/>
-  <dlg:menulist dlg:style-id="0" dlg:id="ListBox32" dlg:tab-index="318" dlg:left="110" dlg:top="57" dlg:width="66" dlg:height="59" dlg:page="12"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="319" dlg:left="96" dlg:top="88" dlg:width="11" dlg:height="12" dlg:page="12" dlg:value="-"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton20" dlg:tab-index="320" dlg:left="96" dlg:top="73" dlg:width="11" dlg:height="12" dlg:page="12" dlg:value="+"/>
+  <dlg:menulist dlg:style-id="0" dlg:id="ListBox32" dlg:tab-index="318" dlg:left="110" dlg:top="57" dlg:width="66" dlg:height="71" dlg:page="12"/>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="319" dlg:left="96" dlg:top="94" dlg:width="11" dlg:height="12" dlg:page="12" dlg:value="-"/>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton20" dlg:tab-index="320" dlg:left="96" dlg:top="79" dlg:width="11" dlg:height="12" dlg:page="12" dlg:value="+"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox33" dlg:tab-index="321" dlg:left="188" dlg:top="100" dlg:width="72" dlg:height="12" dlg:page="12" dlg:spin="true"/>
   <dlg:text dlg:id="Label134" dlg:tab-index="322" dlg:left="183" dlg:top="88" dlg:width="85" dlg:height="10" dlg:page="12" dlg:value="Label134" dlg:multiline="true"/>
   <dlg:text dlg:id="Label135" dlg:tab-index="323" dlg:left="183" dlg:top="59" dlg:width="83" dlg:height="10" dlg:page="12" dlg:value="Label135" dlg:multiline="true"/>
   <dlg:textfield dlg:style-id="0" dlg:id="TextField19" dlg:tab-index="324" dlg:left="188" dlg:top="71" dlg:width="72" dlg:height="12" dlg:page="12"/>
-  <dlg:checkbox dlg:id="CheckBox48" dlg:tab-index="325" dlg:left="105" dlg:top="125" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
-  <dlg:text dlg:id="Label136" dlg:tab-index="326" dlg:left="117" dlg:top="124" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label136" dlg:multiline="true"/>
-  <dlg:checkbox dlg:id="CheckBox49" dlg:tab-index="327" dlg:left="105" dlg:top="138" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
-  <dlg:text dlg:id="Label137" dlg:tab-index="328" dlg:left="117" dlg:top="137" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label137" dlg:multiline="true"/>
-  <dlg:checkbox dlg:id="CheckBox50" dlg:tab-index="329" dlg:left="105" dlg:top="151" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
-  <dlg:text dlg:id="Label138" dlg:tab-index="330" dlg:left="117" dlg:top="150" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label138" dlg:multiline="true"/>
-  <dlg:checkbox dlg:id="CheckBox51" dlg:tab-index="331" dlg:left="105" dlg:top="164" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
-  <dlg:text dlg:id="Label139" dlg:tab-index="332" dlg:left="117" dlg:top="163" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label139" dlg:multiline="true"/>
+  <dlg:checkbox dlg:id="CheckBox48" dlg:tab-index="325" dlg:left="105" dlg:top="139" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label136" dlg:tab-index="326" dlg:left="117" dlg:top="138" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label136" dlg:multiline="true"/>
+  <dlg:checkbox dlg:id="CheckBox49" dlg:tab-index="327" dlg:left="105" dlg:top="152" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label137" dlg:tab-index="328" dlg:left="117" dlg:top="151" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label137" dlg:multiline="true"/>
+  <dlg:checkbox dlg:id="CheckBox50" dlg:tab-index="329" dlg:left="105" dlg:top="165" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label138" dlg:tab-index="330" dlg:left="117" dlg:top="164" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label138" dlg:multiline="true"/>
+  <dlg:checkbox dlg:id="CheckBox51" dlg:tab-index="331" dlg:left="105" dlg:top="178" dlg:width="8" dlg:height="8" dlg:page="12" dlg:checked="false"/>
+  <dlg:text dlg:id="Label139" dlg:tab-index="332" dlg:left="117" dlg:top="177" dlg:width="142" dlg:height="10" dlg:page="12" dlg:value="Label139" dlg:multiline="true"/>
   <dlg:fixedline dlg:id="FixedLine29" dlg:tab-index="333" dlg:left="89" dlg:top="41" dlg:width="181" dlg:height="10" dlg:page="12"/>
   <dlg:text dlg:id="Label11" dlg:tab-index="335" dlg:left="103" dlg:top="26" dlg:width="163" dlg:height="10" dlg:page="12" dlg:value="Label11" dlg:multiline="true"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox8" dlg:tab-index="334" dlg:left="91" dlg:top="27" dlg:width="9" dlg:height="9" dlg:page="12" dlg:checked="false"/>
+  <dlg:button dlg:id="CommandButton21" dlg:tab-index="336" dlg:left="223" dlg:top="2" dlg:width="44" dlg:height="12"/>
  </dlg:bulletinboard>
 </dlg:window>
