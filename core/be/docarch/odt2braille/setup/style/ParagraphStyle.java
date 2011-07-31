@@ -177,17 +177,17 @@ public class ParagraphStyle extends Style {
 
         widowControlEnabled = new InheritableYesNoSetting() {
             public Boolean getInheritedValue() { return getParentStyle().getWidowControlEnabled(); }
+            public boolean accept(Boolean value) { return !value; }
+        };
+
+        orphanControlEnabled = new InheritableYesNoSetting() {
+            public Boolean getInheritedValue() { return getParentStyle().getOrphanControlEnabled(); }
             public boolean accept(Boolean value) { return true; }
             @Override
             public boolean enabled() {
                 if (getDontSplit()) { return false; }
                 return super.enabled();
             }
-        };
-
-        orphanControlEnabled = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getOrphanControlEnabled(); }
-            public boolean accept(Boolean value) { return !value; }
         };
 
         widowControl = new InheritableNumberSetting() {

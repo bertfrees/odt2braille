@@ -38,7 +38,8 @@
 			depends="init,-make-liblouis-dir,-build-core" />
    
     <target name="tools-jar"
-            description="Build Tools jar" />
+            description="Build Tools jar"
+            depends="core-jar,-build-tools"/>
 	
 	<target name="jar"
 			description="Default target: Build Core jar"
@@ -110,6 +111,15 @@
         </pathconvert>
 		
         <pathconvert property="addon.classpath.attribute" pathsep=" " dirsep="/">
+            <path path="${core.deploy.dir}/${core.jar}"/>
+            <firstmatchmapper>
+                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
+                <globmapper from="/*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
+            </firstmatchmapper>
+        </pathconvert>
+        
+        <pathconvert property="tools.classpath.attribute" pathsep=" " dirsep="/">
             <path path="${core.deploy.dir}/${core.jar}"/>
             <firstmatchmapper>
                 <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
@@ -305,6 +315,47 @@
     	</jar>
     </target>
     
+    <!-- compile tools -->
+    <target name="-compile-tools" depends="-init-build">
+        <delete dir="${build.tools.classes.dir}"/>
+    	<mkdir dir="${build.tools.classes.dir}"/>
+        <javac srcdir="${src.tools.dir}" destdir="${build.tools.classes.dir}"
+               includeantruntime="false" debug="true" encoding="UTF-8"
+               source="${javac.source}" target="${javac.target}"
+               includes="**" excludes="">
+            <classpath>
+                <path path="${javac.tools.classpath}"/>
+            </classpath>
+        </javac>
+		<copy todir="${build.tools.classes.dir}">
+            <fileset dir="${src.tools.dir}">
+                <patternset>
+                    <include name="META-INF/**/*.*"/>
+                    <include name="**/*.properties"/>
+                    <include name="**/*.xsl"/>
+                    <include name="**/*.xml"/>
+                    <include name="**/*.rng"/>
+                    <exclude name="**/*.java"/>
+                </patternset>
+            </fileset>
+        </copy>
+    </target>
+    
+    <!-- build core jar -->
+    <target name="-build-tools" depends="-compile-tools">
+		<delete file="${dist.tools.jar}"/>
+        <jar destfile="${dist.tools.jar}">
+            <fileset dir="${build.tools.classes.dir}"/>
+            <manifest>
+                <attribute name="Built-By" value="${user.name}"/>
+                <attribute name="Built-On" value="${ISO-TODAY}"/>
+                <attribute name="Implementation-Title" value="${project.name}-tools"/>
+                <attribute name="Implementation-Version" value="${release-version}"/>
+                <attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
+                <attribute name="Class-Path" value="${tools.classpath.attribute}"/>
+            </manifest>
+    	</jar>
+    </target>
 
     <!-- rebuild extension with some fixes -->
     <target name="-rebuild-extension">

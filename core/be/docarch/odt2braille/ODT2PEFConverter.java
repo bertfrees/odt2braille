@@ -32,11 +32,15 @@ public class ODT2PEFConverter {
                               MalformedURLException,
                               IOException,
                               ParserConfigurationException,
-                              SAXException {
+                              SAXException,
+                              ConversionException {
 
 
         // Create LiblouisXML
-        if (liblouisLocation == null) { return null; }
+        if (liblouisLocation == null) {
+            throw new ConversionException("LiblouisXML location not set");
+        }
+        
         LiblouisXML liblouisXML = new LiblouisXML(configuration, pefConfiguration, liblouisLocation);
 
         // Create PEF
@@ -45,7 +49,7 @@ public class ODT2PEFConverter {
         // Convert
         if(!pef.makePEF()) {
             if (indicator != null) { indicator.finish(false); }
-            return null;
+            throw new ConversionException("Conversion exception");
         }
 
         // Check PEF file
