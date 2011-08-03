@@ -36,11 +36,11 @@ public class ODT2PEFConverter {
                               ConversionException {
 
 
-        // Create LiblouisXML
         if (liblouisLocation == null) {
-            throw new ConversionException("LiblouisXML location not set");
+            throw new ConversionException("liblouis location not set");
         }
-        
+
+        // Create LiblouisXML
         LiblouisXML liblouisXML = new LiblouisXML(configuration, pefConfiguration, liblouisLocation);
 
         // Create PEF

@@ -111,8 +111,7 @@ public class Odt2Braille extends Task {
         }
         
         public void setProperty(String property) {
-            Map<String,PropertyDescriptor> m = BeanInfo.getPropertyDescriptors(objectType);
-            PropertyDescriptor desc = m.get(property);
+            PropertyDescriptor desc = BeanInfo.getPropertyDescriptor(objectType, property);
             if (desc == null) { throw new BuildException("Property '" + property + "' not supported by " + objectType.getCanonicalName()); }
             method = desc.getReadMethod();
             type = method.getReturnType().getClass();
@@ -143,8 +142,7 @@ public class Odt2Braille extends Task {
         };
         
         public void setProperty(String property) {
-            Map<String,PropertyDescriptor> m = BeanInfo.getPropertyDescriptors(objectType);
-            PropertyDescriptor desc = m.get(property);
+            PropertyDescriptor desc = BeanInfo.getPropertyDescriptor(objectType, property);
             if (desc == null) { throw new BuildException("Property '" + property + "' not supported by " + objectType.getCanonicalName()); }
             method = desc.getWriteMethod();
             if (method == null) { throw new BuildException("Property '" + property + "' is read-only"); }

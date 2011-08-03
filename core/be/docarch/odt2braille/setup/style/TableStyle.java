@@ -215,8 +215,12 @@ public class TableStyle extends Style {
 
         displayName.set(name);
         columnDelimiter.set("\u2830");
+        stairstepEnabled.set(true);
         indentPerColumn.set(2);
+        stairstepEnabled.set(false);
         headingSuffix.set("\u2812");
+        upperBorderEnabled.set(true);
+        lowerBorderEnabled.set(true);
         upperBorderStyle.set('\u2836');
         lowerBorderStyle.set('\u281b');
         headingBorderStyle.set('\u2812');

@@ -72,18 +72,27 @@ public class Configuration implements Serializable {
     /********************/
 
     private static OdtTransformer transformer = null;
+    private static File tablesFolder = null;
 
     public static void setTransformer(OdtTransformer transformer) {
         Configuration.transformer = transformer;
+    }
+
+    public static void setTablesFolder(File folder) {
+        Configuration.tablesFolder = folder;
     }
 
     public static Configuration newInstance() throws IOException,
                                                      SAXException,
                                                      Exception {
         if (transformer == null) {
-            throw new Exception("Exception: transformer is not set!");
+            throw new Exception("Exception: transformer is not set");
+        }
+        if (tablesFolder == null) {
+            throw new Exception("Exception: liblouis location is not set!");
         }
 
+        TranslationTable.setTablesFolder(tablesFolder);
         return new Configuration(transformer);
     }
 
@@ -297,9 +306,9 @@ public class Configuration implements Serializable {
     private Map<String,SectionVolume> volumeSectionsMap;
 
 
-    /***********************/
-    /* PRIVATE CONSTRUCTOR */
-    /***********************/
+    /***************/
+    /* CONSTRUCTOR */
+    /***************/
     
     public Configuration(OdtTransformer transformer)
                   throws IOException,

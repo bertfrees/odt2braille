@@ -470,6 +470,46 @@
         <xsl:value-of select="boolean($styles/text:notes-configuration[@text:note-class=$note-class]/@style:num-letter-sync='true')" />
     </xsl:template>
 
+    <xsl:template name="first-index-of">
+        <xsl:param name="array"/>
+        <xsl:param name="value"/>
+        <xsl:variable name="occurences" as="xsd:integer*">
+            <xsl:for-each select="$array">
+                <xsl:if test=".=$value">
+                    <xsl:sequence select="position()" />
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$occurences[1]">
+                <xsl:value-of select="$occurences[1]" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="-1" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="array-contains-value">
+        <xsl:param name="array"/>
+        <xsl:param name="value"/>
+        <xsl:variable name="index">
+            <xsl:call-template name="first-index-of">
+                <xsl:with-param name="array" select="$array"/>
+                <xsl:with-param name="value" select="$value"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$index = -1">
+                <xsl:value-of select="false()" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="true()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:function name="num:integer-to-letter" as="xsd:string">
         <xsl:param name="i"               as="xsd:integer" />
         <xsl:param name="num-letter-sync" as="xsd:boolean" />

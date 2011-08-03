@@ -42,7 +42,6 @@ public class ParagraphStyle extends Style {
 
     private final Setting<String> displayName;
     private final Setting<ParagraphStyle> parentStyle;
-    private final Setting<Boolean> automatic;
 
     public final DependentYesNoSetting inherit;
 
@@ -65,7 +64,6 @@ public class ParagraphStyle extends Style {
     public String         getID()                   { return id; }
     public String         getDisplayName()          { return displayName.get(); }
     public ParagraphStyle getParentStyle()          { return parentStyle.get(); }
-    public boolean        getAutomatic()            { return automatic.get(); }
     public boolean        getInherit()              { return inherit.get(); }
     public Alignment      getAlignment()            { return alignment.get(); }
     public int            getFirstLine()            { return firstLine.get(); }
@@ -85,7 +83,6 @@ public class ParagraphStyle extends Style {
 
     public void setDisplayName          (String value)         { displayName.set(value); }
     public void setParentStyle          (ParagraphStyle value) { parentStyle.set(value); }
-    public void setAutomatic            (boolean value)        { automatic.set(value); }
     public void setInherit              (boolean value)        { inherit.set(value); }
     public void setAlignment            (Alignment value)      { alignment.set(value); }
     public void setFirstLine            (int value)            { firstLine.set(value); }
@@ -110,7 +107,6 @@ public class ParagraphStyle extends Style {
 
         displayName = new TextSetting();
         parentStyle = new ParentStyleSetting();
-        automatic = new YesNoSetting();
 
         inherit = new DependentYesNoSetting() {
             public boolean accept(Boolean value) { return !value || getParentStyle() != null; }
@@ -373,7 +369,6 @@ public class ParagraphStyle extends Style {
         return this.id.equals(that.id) &&
                this.displayName.equals(that.displayName) &&
                this.parentStyle.equals(that.parentStyle) &&
-               this.automatic.equals(that.automatic) &&
                this.inherit.equals(that.inherit) &&
                this.alignment.equals(that.alignment) &&
                this.firstLine.equals(that.firstLine) &&
@@ -396,7 +391,6 @@ public class ParagraphStyle extends Style {
         hash = 11 * hash + id.hashCode();
         hash = 11 * hash + displayName.hashCode();
         hash = 11 * hash + parentStyle.hashCode();
-        hash = 11 * hash + automatic.hashCode();
         hash = 11 * hash + inherit.hashCode();
         hash = 11 * hash + alignment.hashCode();
         hash = 11 * hash + firstLine.hashCode();

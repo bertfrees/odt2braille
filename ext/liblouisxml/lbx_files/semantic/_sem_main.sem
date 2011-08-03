@@ -34,7 +34,6 @@
     italicx     em
     changetable span,lang
     no          span,class,lang-wrap
-    italicx	&xpath(//dtb:span[@lang and @special='true']/dtb:span[@class='lang-wrap'])
     generic     span,class,unspaced
     no          span,class,spaced
     no          span

@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Collection;
 import java.util.EventObject;
 
+import java.util.MissingResourceException;
 import java.util.NoSuchElementException;
 
 import com.sun.star.uno.XComponentContext;
@@ -708,7 +709,11 @@ public class SettingsDialog {
         L10N_pageNumberPositions.put(PageNumberPosition.BOTTOM_RIGHT, bundle.getString("bottom"));
 
         for (String locale : settings.getTranslationTables().get(settings.mainLocale).locale.options()) {
-            L10N_translationTables.put(locale, bundle.getString("language_" + locale));
+            try {
+                L10N_translationTables.put(locale, bundle.getString("language_" + locale));
+            } catch (MissingResourceException e) {
+                L10N_translationTables.put(locale, locale);
+            }
         }
 
         for (Locale locale : settings.getTranslationTables().keys()) {
@@ -1976,7 +1981,7 @@ public class SettingsDialog {
                                             bundle.getString("tableDontSplitRowsLabel"));
 
         tableColumnHeadingsLabel = new Label(container.getControl("Label120"),
-                                             "Column heading in first row");
+                                             "Column headings in first row");
 
         tableRowHeadingsLabel = new Label(container.getControl("Label50"),
                                           "Row headings in first column");

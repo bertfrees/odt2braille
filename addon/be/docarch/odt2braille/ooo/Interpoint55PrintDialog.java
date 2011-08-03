@@ -25,6 +25,7 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Properties;
 import java.io.File;
+import java.io.FilenameFilter;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -567,4 +568,32 @@ public class Interpoint55PrintDialog implements XActionListener,
     @Override
     public void disposing(EventObject event) {}
 
+    /**
+     * Implementation of <code>FilenameFilter</code>.
+     * Is used to filter an array of files. Only those files that end with '.ini' are accepted.
+     *
+     * @see         FilenameFilter
+     * @author      Bert Frees
+     */
+    private static class IniFilter implements FilenameFilter {
+
+        private static final String extension = "ini";
+
+        /**
+         * Creates a new <code>IniFilter</code> instance.
+         *
+         */
+        public IniFilter() {}
+
+        /**
+         * @param   directory   Not used
+         * @param   filename    The name of a file.
+         * @return          <code>true</code> if the filename ends with '.ini'
+         */
+        public boolean accept(File directory,
+                              String filename) {
+
+            return filename.endsWith('.' + extension);
+        }
+    }
 }

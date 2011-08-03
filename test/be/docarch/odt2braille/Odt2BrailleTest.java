@@ -40,6 +40,7 @@ public abstract class Odt2BrailleTest {
 
             resources = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/").getFile();
 
+            Configuration.setTablesFolder(new File("dist" + File.separator + "liblouis" + File.separator + "files"));
             ODT2PEFConverter.setLiblouisLocation(new File("dist" + File.separator + "liblouis"));
 
         } catch (Exception e) {

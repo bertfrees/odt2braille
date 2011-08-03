@@ -62,7 +62,7 @@ public class LiblouisXML {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
-    private final static String FILE_SEPARATOR = System.getProperty("file.separator");
+    private final static String FILE_SEPARATOR = File.separator;
     private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private final static boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
     private static final String LIBLOUISXML_EXEC_NAME = "xml2brl";
@@ -180,21 +180,23 @@ public class LiblouisXML {
 
         for (ParagraphStyle paraStyle : settings.getParagraphStyles().values()) {
 
-            s = "firstLineIndent " + (paraStyle.getFirstLine() - paraStyle.getRunovers()) + sep
-              + "leftMargin "      + paraStyle.getRunovers() + sep
-              + "centeredMargin "  + paraStyle.getMarginLeftRight() + sep
-              + "linesBefore "     + 0 + sep
-              + "linesAfter "      + 0 + sep
-              + "format "          + alignmentMap.get(paraStyle.getAlignment()) + sep;
-            bufferedWriter.write("style paragraph_" + paraStyle.getID() + sep + s);
-            s = "linesBefore "     + paraStyle.getLinesAbove() + sep
-              + "linesAfter "      + paraStyle.getLinesBelow() + sep
-              + "keepWithNext "    + (paraStyle.getKeepWithNext()?"yes":"no") + sep
-              + "dontSplit "       + (paraStyle.getDontSplit()?"yes":"no") + sep
-           // + "widowControl "    + (paraStyle.getWidowControlEnabled()?paraStyle.getWidowControl():0) + sep
-              + "orphanControl "   + (paraStyle.getOrphanControlEnabled()?paraStyle.getOrphanControl():0) + sep;
-            bufferedWriter.write("style wrap-paragraph_" + paraStyle.getID() + sep + s);
+            if (!paraStyle.getInherit()) {
 
+                s = "firstLineIndent " + (paraStyle.getFirstLine() - paraStyle.getRunovers()) + sep
+                  + "leftMargin "      + paraStyle.getRunovers() + sep
+                  + "centeredMargin "  + paraStyle.getMarginLeftRight() + sep
+                  + "linesBefore "     + 0 + sep
+                  + "linesAfter "      + 0 + sep
+                  + "format "          + alignmentMap.get(paraStyle.getAlignment()) + sep;
+                bufferedWriter.write("style paragraph_" + paraStyle.getID() + sep + s);
+                s = "linesBefore "     + paraStyle.getLinesAbove() + sep
+                  + "linesAfter "      + paraStyle.getLinesBelow() + sep
+                  + "keepWithNext "    + (paraStyle.getKeepWithNext()?"yes":"no") + sep
+                  + "dontSplit "       + (paraStyle.getDontSplit()?"yes":"no") + sep
+               // + "widowControl "    + (paraStyle.getWidowControlEnabled()?paraStyle.getWidowControl():0) + sep
+                  + "orphanControl "   + (paraStyle.getOrphanControlEnabled()?paraStyle.getOrphanControl():0) + sep;
+                bufferedWriter.write("style wrap-paragraph_" + paraStyle.getID() + sep + s);
+            }
         }
 
         // Headings
@@ -272,7 +274,7 @@ public class LiblouisXML {
 
             for (int i=1;i<=10;i++) {
                 s = "firstLineIndent " + (firstLine - runovers) + sep
-                  + "leftMargin "      + runovers + (i-1)*indentPerColumn + sep
+                  + "leftMargin "      + (runovers + (i-1)*indentPerColumn) + sep
                   + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
                 bufferedWriter.write("style tablecolumn" + i + sep + s);
             }
@@ -362,11 +364,13 @@ public class LiblouisXML {
         String styleName = null;
         String xpath = null;
         for (ParagraphStyle paraStyle : settings.getParagraphStyles().values()) {
-            styleName = paraStyle.getID();
-            xpath = "//dtb:paragraph[@style='" + styleName + "' and " +
-                    "not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)]";
-            bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
-            bufferedWriter.write("wrap-paragraph_" + styleName + " &xpath(" + xpath + ")" + sep);
+            if (!paraStyle.getInherit()) {
+                styleName = paraStyle.getID();
+                xpath = "//dtb:paragraph[@style='" + styleName + "' and " +
+                        "not(ancestor::dtb:th or ancestor::dtb:td or ancestor::dtb:note or ancestor::dtb:li)]";
+                bufferedWriter.write("paragraph_" + styleName + " &xpath(" + xpath + "/dtb:p)" + sep);
+                bufferedWriter.write("wrap-paragraph_" + styleName + " &xpath(" + xpath + ")" + sep);
+            }
         }
 
         styleName = settings.getTranscriptionInfoStyle().getID();

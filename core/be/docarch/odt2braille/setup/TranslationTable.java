@@ -1,5 +1,7 @@
 package be.docarch.odt2braille.setup;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Locale;
@@ -36,101 +38,24 @@ public class TranslationTable implements Serializable {
 
     private static final String DEFAULT_LOCALE = "en-US";
 
+    private static final FilenameFilter filter = new TranslationTableFilter();
+
     private static final Collection<String> options = new HashSet<String>();
     private static final Collection<String> localeOptions = new HashSet<String>();
 
-    private static final String[] optionsArray = {
-
-          /* "ar-g0",     */  "ar-g1",
-             "as-g0",
-             "awa-g0",
-             "bg-g0",
-             "bh-g0",
-             "bn-g0",
-             "bo-g0",
-             "bra-g0",
-                              "ca-g1",
-                              "ckb-g1",
-          /* "cs-g0",     */  "cs-g1",
-          /* "cy-g0",     */  "cy-g1",      "cy-g2",
-          /* "da-g0-8d",  */  "da-g1-8d",   "da-g2-8d",
-             "de-DE-g0",      "de-DE-g1",   "de-DE-g2",
-             "de-CH-g0",      "de-CH-g1",   "de-CH-g2",
-             "dra-g0",
-          /* "el-GR-g0",  */  "el-GR-g1",
-             "el-LLX-g0",
-          /* "en-US-g0",  */  "en-US-g1",   "en-US-g2",
-          /* "en-GB-g0",  */  "en-GB-g1",   "en-GB-g2",
-             "en-CA-g0",
-          /* "en-UEB-g0", */  "en-UEB-g1",  "en-UEB-g2",
-             "eo-g0",
-                              "es-g1",
-             "et-g0",
-             "fi-g0-8d",
-                              "fr-BFU-g1",  "fr-BFU-g2",
-                              "fr-BFU-g1-8d",
-          /* "fr-FR-g0",      "fr-FR-g1",   "fr-FR-g2", */
-          /* "fr-CA-g0",      "fr-CA-g1",   "fr-CA-g2", */
-             "ga-g0",
-             "gd-g0",
-                              "gez-g1",
-             "gon-g0",
-             "gu-g0",
-             "he-g0",
-          /* "hi-g0",     */  "hi-g1",
-             "hr-g0",
-             "hu-g0-8d",
-             "hy-g0",
-          /* "is-g0",     */  "is-g1",
-          /* "it-g0",     */  "it-g1",
-             "kha-g0",
-             "kn-g0",
-             "kok-g0",
-             "kru-g0",
-             "lt-g0",
-          /* "lv-g0",     */  "lv-g1",
-             "ml-g0",
-             "mni-g0",
-             "mr-g0",
-             "mt-g0",
-             "mun-g0",
-             "mwr-g0",
-             "ne-g0",
-             "new-g0",
-          /* "nl-NL-g0",  */  "nl-NL-g1",
-          /* "nl-BE-g0",  */  "nl-BE-g1",
-             "no-g0",         "no-g1",      "no-g2",       "no-g3",
-             "or-g0",
-             "pa-g0",
-             "pi-g0",
-          /* "pl-g0",     */  "pl-g1",
-          /* "pt-g0",     */  "pt-g1",      "pt-g2",
-             "ro-g0",
-          /* "ru-g0",     */  "ru-g1",
-             "sa-g0",
-             "sat-g0",
-             "sd-g0",
-          /* "sk-g0",     */  "sk-g1",
-          /* "sl-g0",     */  "sl-g1",
-                              "sr-g1",
-          /* "sv-g0",     */  "sv-g1",      "sv-g2",
-             "ta-g0",
-             "te-g0",
-             "tr-g0",
-             "vi-g0",
-             "zh-HK-g0",
-             "zh-TW-g0"   };
-
-    static {
-        for (String option : optionsArray) {
-            if (option.matches("[a-z]+(-[A-Z]+)?-g[0-9](-8d)?")) {
-                options.add(option);
-                localeOptions.add(option.substring(0,option.lastIndexOf("-g")));
+    protected static void setTablesFolder(File folder) throws Exception {
+        for (String table : folder.list(filter)) {
+            if (table.matches("__[a-z]+(-[A-Z]+)?-g[0-9](-8d)?\\.ctb")) {
+                options.add(table.substring(2, table.lastIndexOf(".ctb")));
+                localeOptions.add(table.substring(2,table.lastIndexOf("-g")));
             }
         }
+        if (options.size() == 0) {
+            throw new Exception("Folder doesn't contain any tables");
+        }
     }
-
    
+
     protected TranslationTable(Locale loc) {
 
         /***********************
@@ -228,12 +153,13 @@ public class TranslationTable implements Serializable {
         public void refreshOptions() {
             options.clear();
             String locale = getLocale();
-            for (String option : optionsArray) {
+            for (String option : TranslationTable.options) {
                 if (option.matches(locale + "-g[0-9](-8d)?")) {
                     int i = option.lastIndexOf("-g") + 2;
                     options.add(Integer.parseInt(option.substring(i,i+1)));
                 }
             }
+            if (options.size() > 1) { options.remove(0); }
         }
     };
 
@@ -267,7 +193,7 @@ public class TranslationTable implements Serializable {
             options.clear();
             String locale = getLocale();
             int grade = getGrade();
-            for (String option : optionsArray) {
+            for (String option : TranslationTable.options) {
                 if (option.equals(locale + "-g" + grade)) {
                     options.add(Dots.SIXDOTS);
                 } else if (option.equals(locale + "-g" + grade + "-8d")) {
@@ -312,5 +238,20 @@ public class TranslationTable implements Serializable {
             }
         }
         return DEFAULT_LOCALE;
+    }
+    
+    /******************/
+    /* FILENAMEFILTER */
+    /******************/
+
+    private static class TranslationTableFilter implements FilenameFilter {
+
+        private static final String regex = "__[a-z]+(-[A-Z]+)?-g[0-9](-8d)?\\.ctb";
+
+        public boolean accept(File directory,
+                              String filename) {
+
+            return filename.matches(regex);
+        }
     }
 }

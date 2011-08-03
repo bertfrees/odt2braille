@@ -38,8 +38,8 @@ uplow       \x0057\x0077  12356,12356         Ww                  LATIN CAPITAL 
 uplow       \x0058\x0078  1346,1346           Xx                  LATIN CAPITAL LETTER X - LATIN SMALL LETTER X
 uplow       \x0059\x0079  13456,13456         Yy                  LATIN CAPITAL LETTER Y - LATIN SMALL LETTER Y
 uplow       \x005A\x007A  1356,1356           Zz                  LATIN CAPITAL LETTER Z - LATIN SMALL LETTER Z
-uplow       \x00C1\x00E1  16,16               Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
 
+uplow       \x00C1\x00E1  16,16               Áá                  LATIN CAPITAL LETTER A WITH ACUTE - LATIN SMALL LETTER A WITH ACUTE
 uplow       \x00C9\x00E9  345,345             Éé                  LATIN CAPITAL LETTER E WITH ACUTE - LATIN SMALL LETTER E WITH ACUTE
 uplow       \x00CD\x00ED  34,34               Íí                  LATIN CAPITAL LETTER I WITH ACUTE - LATIN SMALL LETTER I WITH ACUTE
 uplow       \x00D3\x00F3  246,246             Óó                  LATIN CAPITAL LETTER O WITH ACUTE - LATIN SMALL LETTER O WITH ACUTE
@@ -48,6 +48,7 @@ uplow       \x00DD\x00FD  12346,12346         Ýý                  LATIN CAPITA
 uplow       \x010C\x010D  146,146             Čč                  LATIN CAPITAL LETTER C WITH CARON - LATIN SMALL LETTER C WITH CARON
 uplow       \x010E\x010F  1456,1456           Ďď                  LATIN CAPITAL LETTER D WITH CARON - LATIN SMALL LETTER D WITH CARON
 uplow       \x011A\x011B  126,126             Ěě                  LATIN CAPITAL LETTER E WITH CARON - LATIN SMALL LETTER E WITH CARON
+uplow       \x013D\x013E  123456,123456       Ľľ                  LATIN CAPITAL LETTER L WITH CARON - LATIN SMALL LETTER L WITH CARON
 uplow       \x0147\x0148  1246,1246           Ňň                  LATIN CAPITAL LETTER N WITH CARON - LATIN SMALL LETTER N WITH CARON
 uplow       \x0158\x0159  2456,2456           Řř                  LATIN CAPITAL LETTER R WITH CARON - LATIN SMALL LETTER R WITH CARON
 uplow       \x0160\x0161  156,156             Šš                  LATIN CAPITAL LETTER S WITH CARON - LATIN SMALL LETTER S WITH CARON
@@ -69,6 +70,7 @@ space       \x0020        0                                       SPACE
 
 punctuation \x0021        235                 !                   EXCLAMATION MARK
 punctuation \x0022        2356                "                   QUOTATION MARK
+sign        \x0023        3456                #                   NUMBER SIGN
 punctuation \x0027        4                   '                   APOSTROPHE
 punctuation \x0028        236                 (                   LEFT PARENTHESIS
 punctuation \x0029        356                 )                   RIGHT PARENTHESIS
@@ -94,6 +96,7 @@ math        \x003C        126                 <                   LESS-THAN SIGN
 math        \x003D        2356                =                   EQUALS SIGN
 math        \x003E        345                 >                   GREATER-THAN SIGN
 punctuation \x003F        26                  ?                   QUESTION MARK
+punctuation \x0060        4                   `                   GRAVE ACCENT
 sign        \x007C        456                 |                   VERTICAL LINE
 
 
@@ -103,9 +106,29 @@ sign        \x007C        456                 |                   VERTICAL LINE
 
 space       \x00A0        a                                       NO-BREAK SPACE
 punctuation \x00AD        36                  ­                   SOFT HYPHEN
+sign        \x00B4        4                   ´                   ACUTE ACCENT
 math        \x00D7        35                  ×                   MULTIPLICATION SIGN
 math        \x00F7        25                  ÷                   DIVISION SIGN
 
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 2000..206F  General Punctuation
+# ----------------------------------------------------------------------------------------------
+
+punctuation \x2010        36                  ‐                   HYPHEN
+punctuation \x2011        36                  ‑                   NON-BREAKING HYPHEN
+punctuation \x2012        36                  ‒                   FIGURE DASH
+punctuation \x2013        36                  –                   EN DASH
+punctuation \x2014        36                  —                   EM DASH
+punctuation \x2015        36                  ―                   HORIZONTAL BAR
+punctuation \x2018        4                   ‘                   LEFT SINGLE QUOTATION MARK
+punctuation \x2019        4                   ’                   RIGHT SINGLE QUOTATION MARK
+punctuation \x201A        4                   ‚                   SINGLE LOW-9 QUOTATION MARK
+punctuation \x201B        4                   ‛                   SINGLE HIGH-REVERSED-9 QUOTATION MARK
+punctuation \x201C        2356                “                   LEFT DOUBLE QUOTATION MARK
+punctuation \x201D        2356                ”                   RIGHT DOUBLE QUOTATION MARK
+punctuation \x201E        2356                „                   DOUBLE LOW-9 QUOTATION MARK
+punctuation \x201F        2356                ‟                   DOUBLE HIGH-REVERSED-9 QUOTATION MARK
 
 
 # ==============================================================================================
@@ -116,7 +139,6 @@ math        \x00F7        25                  ÷                   DIVISION SIGN
 # Unicode 0000..007F  C0 Controls and Basic Latin
 # ----------------------------------------------------------------------------------------------
 
-sign        \x0023        6-3456              #                   NUMBER SIGN
 sign        \x0024        3456-1246           $                   DOLLAR SIGN
 math        \x0025        3456-1234           %                   PERCENT SIGN
 sign        \x0026        3456-12346          &                   AMPERSAND
@@ -126,7 +148,6 @@ sign        \x005C        3456-1256           \                   REVERSE SOLIDU
 punctuation \x005D        6-356               ]                   RIGHT SQUARE BRACKET
 sign        \x005E        6-45                ^                   CIRCUMFLEX ACCENT
 sign        \x005F        6-36                _                   LOW LINE
-punctuation \x0060        45-4                `                   GRAVE ACCENT
 math        \x007B        45-236              {                   LEFT CURLY BRACKET
 math        \x007D        45-356              }                   RIGHT CURLY BRACKET
 math        \x007E        6-5                 ~                   TILDE
@@ -137,7 +158,7 @@ math        \x007E        6-5                 ~                   TILDE
 # ----------------------------------------------------------------------------------------------
 
 sign        \x0080        15-136-1235-135     €                   <control> - ANSI: EURO-CURRENCY SIGN - MACROMAN: A DIAERESIS
-sign        \x00B0        345-234             °                   DEGREE SIGN
+sign        \x00B0        3456-234            °                   DEGREE SIGN
 sign        \x00B5        4-134               µ                   MICRO SIGN
 math        \x00B9        34-1                ¹                   SUPERSCRIPT ONE
 uplow       \x00C4\x00E4  1-15,1-15           Ää                  LATIN CAPITAL LETTER A WITH DIAERESIS - LATIN SMALL LETTER A WITH DIAERESIS

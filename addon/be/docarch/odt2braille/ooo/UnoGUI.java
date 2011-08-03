@@ -113,6 +113,7 @@ public class UnoGUI {
     private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String L10N = Constants.OOO_L10N_PATH;
     private static final String META_FILE = "meta/odt2braille/configuration.rdf";
+    private static final String RDF_ENCODING = "UTF-8";
 
     private XURI CONFIGURATION_GENERAL;
     private XURI CONFIGURATION_EXPORT;
@@ -198,6 +199,7 @@ public class UnoGUI {
             packageLocation = UnoUtils.UnoURLtoURL(PackageInformationProvider.get(m_xContext)
                                         .getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/", m_xContext);
 
+            Configuration.setTablesFolder(new File(packageLocation + File.separator + "liblouis" + File.separator + "files"));
             ODT2PEFConverter.setLiblouisLocation(new File(packageLocation + File.separator + "liblouis"));
 
             logger.exiting("UnoGUI", "<init>");
@@ -773,7 +775,7 @@ public class UnoGUI {
             XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_GENERAL, null);
             if (statements.hasMoreElements()) {
                  String xml = ((Statement)statements.nextElement()).Object.getStringValue();
-                 InputStream input = new ByteArrayInputStream(xml.getBytes());
+                 InputStream input = new ByteArrayInputStream(xml.getBytes(RDF_ENCODING));
                  settings = (Configuration)ConfigurationDecoder.readObject(input);
             }
 
@@ -794,9 +796,9 @@ public class UnoGUI {
 
         try {
 
-            OutputStream output = new ByteArrayOutputStream();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
             ConfigurationEncoder.writeObject(config, output);
-            String xml = output.toString().replaceFirst("<\\?xml.*?\\?>", "");
+            String xml = output.toString(RDF_ENCODING).replaceFirst("<\\?xml.*?\\?>", "");
 
             XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
             XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);
@@ -820,7 +822,7 @@ public class UnoGUI {
             XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_EXPORT, null);
             if (statements.hasMoreElements()) {
                  String xml = ((Statement)statements.nextElement()).Object.getStringValue();
-                 InputStream input = new ByteArrayInputStream(xml.getBytes());
+                 InputStream input = new ByteArrayInputStream(xml.getBytes(RDF_ENCODING));
                  return (ExportConfiguration)ConfigurationDecoder.readObject(input);
             }
 
@@ -835,9 +837,9 @@ public class UnoGUI {
 
         try {
 
-            OutputStream output = new ByteArrayOutputStream();
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
             ConfigurationEncoder.writeObject(config, output);
-            String xml = output.toString().replaceFirst("<\\?xml.*?\\?>", "");
+            String xml = output.toString(RDF_ENCODING).replaceFirst("<\\?xml.*?\\?>", "");
 
             XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
             XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);

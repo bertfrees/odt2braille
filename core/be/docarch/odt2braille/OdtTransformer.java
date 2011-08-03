@@ -1695,6 +1695,7 @@ public class OdtTransformer {
             List<String> translationTables = new ArrayList<String>();
             List<Integer> grades = new ArrayList<Integer>();
             List<Boolean> eightDots = new ArrayList<Boolean>();
+            List<String> configuredParagraphStyles = new ArrayList<String>();
             List<String> keepEmptyParagraphStyles = new ArrayList<String>();
             List<String> characterStyles = new ArrayList<String>();
             List<Boolean> boldface = new ArrayList<Boolean>();
@@ -1716,8 +1717,11 @@ public class OdtTransformer {
             TocStyle tocStyle = settings.getTocStyle();
 
             for (ParagraphStyle style : settings.getParagraphStyles().values()) {
-                if (style.getKeepEmptyParagraphs()) {
-                    keepEmptyParagraphStyles.add(style.getID());
+                if (!style.getInherit()) {
+                    configuredParagraphStyles.add(style.getID());
+                    if (style.getKeepEmptyParagraphs()) {
+                        keepEmptyParagraphStyles.add(style.getID());
+                    }
                 }
             }
 
@@ -1764,36 +1768,37 @@ public class OdtTransformer {
 
             // Set parameters
             
-            mainXSL.setParameter("styles-url",                    odtStylesFile.toURI());
-            mainXSL.setParameter("controller-url",                controllerFile.toURI());
+            mainXSL.setParameter("styles-url",                     odtStylesFile.toURI());
+            mainXSL.setParameter("controller-url",                 controllerFile.toURI());
 
-            mainXSL.setParameter("paramBodyMatterMode",           settings.getBodyMatterMode().name());
-            mainXSL.setParameter("paramRearMatterMode",           settings.getRearMatterMode().name());
-            mainXSL.setParameter("paramHyphenationEnabled",       settings.getHyphenate());
-            mainXSL.setParameter("paramKeepHardPageBreaks",       settings.getHardPageBreaks());
-            mainXSL.setParameter("paramNoterefSpaceBefore",       noterefFormats.get("1").getSpaceBefore());
-            mainXSL.setParameter("paramNoterefSpaceAfter",        noterefFormats.get("1").getSpaceAfter());
-            mainXSL.setParameter("paramNoterefNumberFormats",     noterefNumberFormats.toArray(new String[noterefNumberFormats.size()]));
-            mainXSL.setParameter("paramNoterefNumberPrefixes",    noterefNumberPrefixes.toArray(new String[noterefNumberPrefixes.size()]));
-            mainXSL.setParameter("paramKeepEmptyParagraphStyles", keepEmptyParagraphStyles.toArray(new String[keepEmptyParagraphStyles.size()]));
-            mainXSL.setParameter("paramTocUptoLevel",             tocStyle.getEvaluateUptoLevel());
-            mainXSL.setParameter("paramTableUpperBorder",         tableStyle.getUpperBorderEnabled());
-            mainXSL.setParameter("paramTableLowerBorder",         tableStyle.getLowerBorderEnabled());
-            mainXSL.setParameter("paramStairstepTableEnabled",    tableStyle.getStairstepEnabled());
-            mainXSL.setParameter("paramColumnDelimiter",          tableStyle.getColumnDelimiter());
-            mainXSL.setParameter("paramColumnHeadings",           tableStyle.getColumnHeadings());
-            mainXSL.setParameter("paramRowHeadings",              tableStyle.getRowHeadings());
-            mainXSL.setParameter("paramTableHeadingSuffix",       tableStyle.getHeadingSuffix());
-            mainXSL.setParameter("paramRepeatTableHeading",       tableStyle.getRepeatHeading());
-            mainXSL.setParameter("paramMirrorTable",              tableStyle.getMirrorTable());
-            mainXSL.setParameter("paramPictureDescriptionPrefix", pictureStyle.getDescriptionPrefix());
-            mainXSL.setParameter("paramPictureOpeningMarkPrefix", pictureStyle.getOpeningMark());
-            mainXSL.setParameter("paramPictureClosingMarkPrefix", pictureStyle.getClosingMark());
+            mainXSL.setParameter("paramBodyMatterMode",            settings.getBodyMatterMode().name());
+            mainXSL.setParameter("paramRearMatterMode",            settings.getRearMatterMode().name());
+            mainXSL.setParameter("paramHyphenationEnabled",        settings.getHyphenate());
+            mainXSL.setParameter("paramKeepHardPageBreaks",        settings.getHardPageBreaks());
+            mainXSL.setParameter("paramNoterefSpaceBefore",        noterefFormats.get("1").getSpaceBefore());
+            mainXSL.setParameter("paramNoterefSpaceAfter",         noterefFormats.get("1").getSpaceAfter());
+            mainXSL.setParameter("paramNoterefNumberFormats",      noterefNumberFormats.toArray(new String[noterefNumberFormats.size()]));
+            mainXSL.setParameter("paramNoterefNumberPrefixes",     noterefNumberPrefixes.toArray(new String[noterefNumberPrefixes.size()]));
+            mainXSL.setParameter("paramConfiguredParagraphStyles", configuredParagraphStyles.toArray(new String[configuredParagraphStyles.size()]));
+            mainXSL.setParameter("paramKeepEmptyParagraphStyles",  keepEmptyParagraphStyles.toArray(new String[keepEmptyParagraphStyles.size()]));
+            mainXSL.setParameter("paramTocUptoLevel",              tocStyle.getEvaluateUptoLevel());
+            mainXSL.setParameter("paramTableUpperBorder",          tableStyle.getUpperBorderEnabled());
+            mainXSL.setParameter("paramTableLowerBorder",          tableStyle.getLowerBorderEnabled());
+            mainXSL.setParameter("paramStairstepTableEnabled",     tableStyle.getStairstepEnabled());
+            mainXSL.setParameter("paramColumnDelimiter",           tableStyle.getColumnDelimiter());
+            mainXSL.setParameter("paramColumnHeadings",            tableStyle.getColumnHeadings());
+            mainXSL.setParameter("paramRowHeadings",               tableStyle.getRowHeadings());
+            mainXSL.setParameter("paramTableHeadingSuffix",        tableStyle.getHeadingSuffix());
+            mainXSL.setParameter("paramRepeatTableHeading",        tableStyle.getRepeatHeading());
+            mainXSL.setParameter("paramMirrorTable",               tableStyle.getMirrorTable());
+            mainXSL.setParameter("paramPictureDescriptionPrefix",  pictureStyle.getDescriptionPrefix());
+            mainXSL.setParameter("paramPictureOpeningMarkPrefix",  pictureStyle.getOpeningMark());
+            mainXSL.setParameter("paramPictureClosingMarkPrefix",  pictureStyle.getClosingMark());
 
-            mainXSL.setParameter("paramFrameUpperBorder",         settings.getFrameStyle().getUpperBorderEnabled());
-            mainXSL.setParameter("paramFrameLowerBorder",         settings.getFrameStyle().getLowerBorderEnabled());
-            mainXSL.setParameter("paramHeadingUpperBorder",       headingUpperBorder.toArray(new Boolean[headingUpperBorder.size()]));
-            mainXSL.setParameter("paramHeadingLowerBorder",       headingLowerBorder.toArray(new Boolean[headingLowerBorder.size()]));
+            mainXSL.setParameter("paramFrameUpperBorder",          settings.getFrameStyle().getUpperBorderEnabled());
+            mainXSL.setParameter("paramFrameLowerBorder",          settings.getFrameStyle().getLowerBorderEnabled());
+            mainXSL.setParameter("paramHeadingUpperBorder",        headingUpperBorder.toArray(new Boolean[headingUpperBorder.size()]));
+            mainXSL.setParameter("paramHeadingLowerBorder",        headingLowerBorder.toArray(new Boolean[headingLowerBorder.size()]));
 
             languagesAndTypefaceXSL.setParameter("paramLanguages",            languages.toArray(new String[languages.size()]));
             languagesAndTypefaceXSL.setParameter("paramTranslationTables",    translationTables.toArray(new String[translationTables.size()]));
@@ -1929,15 +1934,13 @@ public class OdtTransformer {
                                   "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
                 automatic = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
                                   "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@automatic", namespace);
-                style = new ParagraphStyle(name);
-                if (displayName.length()>0)     { style.setDisplayName(displayName); }
-                if (parentStyleName.length()>0) { parents.put(name, parentStyleName); }
-                if (automatic) { style.setAutomatic(true); }
-                styles.put(name, style);
 
-            }
-            if (styles.containsKey("Contents_20_Heading")) {
-                styles.remove("Contents_20_Heading");
+                if (!automatic) {
+                    style = new ParagraphStyle(name);
+                    if (displayName.length()>0)     { style.setDisplayName(displayName); }
+                    if (parentStyleName.length()>0) { parents.put(name, parentStyleName); }
+                    styles.put(name, style);
+                }
             }
             if (!styles.containsKey("Standard")) {
                 styles.put("Standard", new ParagraphStyle("Standard"));

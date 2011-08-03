@@ -156,22 +156,12 @@
             </xsl:variable>
             <xsl:choose>
                 <xsl:when test="not($lang=$main-lang)">
-                    <xsl:variable name="lang-is-special" as="xsd:boolean">
-                        <xsl:call-template name="lang-is-special">
-                            <xsl:with-param name="lang" select="$lang" />
-                        </xsl:call-template>
-                    </xsl:variable>
                     <dtb:span>
                         <xsl:attribute name="lang">
                             <xsl:text>__</xsl:text>
                             <xsl:value-of select="$lang" />
                             <xsl:text>.ctb</xsl:text>
                         </xsl:attribute>
-                        <xsl:if test="$lang-is-special">
-                            <xsl:attribute name="special">
-                                <xsl:value-of select="'true'" />
-                            </xsl:attribute>
-                        </xsl:if>
                         <dtb:span class="lang-wrap">
                             <xsl:call-template name="scan-lang">
                                 <xsl:with-param name="node" select="$node" />
@@ -358,22 +348,10 @@
 
     <xsl:template name="get-language-index">
         <xsl:param name="language" />
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$paramLanguages">
-                <xsl:variable name="i" select="position()" />
-                <xsl:if test="$paramLanguages[$i]=$language">
-                    <xsl:sequence select="$i" />
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:value-of select="$occurences[1]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="-1" />
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:call-template name="first-index-of">
+            <xsl:with-param name="array" select="$paramLanguages"/>
+            <xsl:with-param name="value" select="$language"/>
+        </xsl:call-template>
     </xsl:template>
 
 
@@ -412,87 +390,56 @@
         </xsl:choose>
     </xsl:template>
 
-
-    <xsl:template name="lang-is-special">
-        <xsl:param name="lang" />
-        <xsl:choose>
-            <xsl:when test="$lang='el-es'">
-                <xsl:value-of select="true()" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="false()" />
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-
-
     <xsl:template name="get-typeface">
         <xsl:param name="node" />
-        <xsl:variable name="lang">
-            <xsl:call-template name="get-lang">
-                <xsl:with-param name="node" select="$node" />
-            </xsl:call-template>
+        <xsl:variable name="style" as="xsd:string">
+            <xsl:choose>
+                <xsl:when test="$node/ancestor::dtb:span[@style]">
+                    <xsl:value-of select="$node/ancestor::dtb:span[@style][1]/@style" />
+                </xsl:when>
+                <xsl:otherwise>
+                    <xsl:value-of select="'Default'" />
+                </xsl:otherwise>
+            </xsl:choose>
         </xsl:variable>
-        <xsl:variable name="lang-is-special" as="xsd:boolean">
-            <xsl:call-template name="lang-is-special">
-                <xsl:with-param name="lang" select="$lang" />
+        <xsl:variable name="char-style-index" as="xsd:integer">
+            <xsl:call-template name="get-char-style-index">
+                <xsl:with-param name="style" select="$style" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$lang-is-special">
-                <xsl:value-of select="'none'" />
+            <xsl:when test="(not($char-style-index>0)
+                             or ($char-style-index>0 and $paramBoldfaceFollowPrint[$char-style-index]))
+                        and (count($node/ancestor::dtb:span[@font-weight='bold'  ][1]/ancestor::*)
+                           > count($node/ancestor::dtb:span[@font-weight='normal'][1]/ancestor::*))">
+                <xsl:value-of select="'strong'" />
+            </xsl:when>
+            <xsl:when test="$char-style-index>0 and not($paramBoldfaceFollowPrint[$char-style-index])
+                                           and $paramBoldface[$char-style-index]">
+                <xsl:value-of select="'strong'" />
+            </xsl:when>
+            <xsl:when test="(not($char-style-index>0)
+                             or ($char-style-index>0 and $paramItalicFollowPrint[$char-style-index]))
+                        and (count($node/ancestor::dtb:span[@font-style='italic'][1]/ancestor::*)
+                           > count($node/ancestor::dtb:span[@font-style='normal'][1]/ancestor::*))">
+                <xsl:value-of select="'em'" />
+            </xsl:when>
+            <xsl:when test="$char-style-index>0 and not($paramItalicFollowPrint[$char-style-index])
+                                           and $paramItalic[$char-style-index]">
+                <xsl:value-of select="'em'" />
+            </xsl:when>
+            <xsl:when test="(not($char-style-index>0)
+                             or ($char-style-index>0 and $paramUnderlineFollowPrint[$char-style-index]))
+                        and (count($node/ancestor::dtb:span[@underline-style][not(@underline-style='none')][1]/ancestor::*)
+                           > count($node/ancestor::dtb:span                  [    @underline-style='none' ][1]/ancestor::*))">
+                <xsl:value-of select="'em'" />
+            </xsl:when>
+            <xsl:when test="$char-style-index>0 and not($paramUnderlineFollowPrint[$char-style-index])
+                                           and $paramUnderline[$char-style-index]">
+                <xsl:value-of select="'em'" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="style" as="xsd:string">
-                    <xsl:choose>
-                        <xsl:when test="$node/ancestor::dtb:span[@style]">
-                            <xsl:value-of select="$node/ancestor::dtb:span[@style][1]/@style" />
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="'Default'" />
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
-                <xsl:variable name="char-style-index" as="xsd:integer">
-                    <xsl:call-template name="get-char-style-index">
-                        <xsl:with-param name="style" select="$style" />
-                    </xsl:call-template>
-                </xsl:variable>
-                <xsl:choose>
-                    <xsl:when test="(not($char-style-index>0)
-                                     or ($char-style-index>0 and $paramBoldfaceFollowPrint[$char-style-index]))
-                                and (count($node/ancestor::dtb:span[@font-weight='bold'  ][1]/ancestor::*)
-                                   > count($node/ancestor::dtb:span[@font-weight='normal'][1]/ancestor::*))">
-                        <xsl:value-of select="'strong'" />
-                    </xsl:when>
-                    <xsl:when test="$char-style-index>0 and not($paramBoldfaceFollowPrint[$char-style-index])
-                                                   and $paramBoldface[$char-style-index]">
-                        <xsl:value-of select="'strong'" />
-                    </xsl:when>
-                    <xsl:when test="(not($char-style-index>0)
-                                     or ($char-style-index>0 and $paramItalicFollowPrint[$char-style-index]))
-                                and (count($node/ancestor::dtb:span[@font-style='italic'][1]/ancestor::*)
-                                   > count($node/ancestor::dtb:span[@font-style='normal'][1]/ancestor::*))">
-                        <xsl:value-of select="'em'" />
-                    </xsl:when>
-                    <xsl:when test="$char-style-index>0 and not($paramItalicFollowPrint[$char-style-index])
-                                                   and $paramItalic[$char-style-index]">
-                        <xsl:value-of select="'em'" />
-                    </xsl:when>
-                    <xsl:when test="(not($char-style-index>0)
-                                     or ($char-style-index>0 and $paramUnderlineFollowPrint[$char-style-index]))
-                                and (count($node/ancestor::dtb:span[@underline-style][not(@underline-style='none')][1]/ancestor::*)
-                                   > count($node/ancestor::dtb:span                  [    @underline-style='none' ][1]/ancestor::*))">
-                        <xsl:value-of select="'em'" />
-                    </xsl:when>
-                    <xsl:when test="$char-style-index>0 and not($paramUnderlineFollowPrint[$char-style-index])
-                                                   and $paramUnderline[$char-style-index]">
-                        <xsl:value-of select="'em'" />
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="'none'" />
-                    </xsl:otherwise>
-                </xsl:choose>
+                <xsl:value-of select="'none'" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -538,22 +485,10 @@
 
     <xsl:template name="get-char-style-index">
         <xsl:param name="style" />
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$paramCharacterStyles">
-                <xsl:variable name="i" select="position()" />
-                <xsl:if test="$paramCharacterStyles[$i]=$style">
-                    <xsl:sequence select="$i" />
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:value-of select="$occurences[1]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="-1" />
-            </xsl:otherwise>
-        </xsl:choose>
+        <xsl:call-template name="first-index-of">
+            <xsl:with-param name="array" select="$paramCharacterStyles"/>
+            <xsl:with-param name="value" select="$style"/>
+        </xsl:call-template>
     </xsl:template>
 
 
@@ -600,6 +535,27 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="true()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+
+    <xsl:template name="first-index-of">
+        <xsl:param name="array"/>
+        <xsl:param name="value"/>
+        <xsl:variable name="occurences" as="xsd:integer*">
+            <xsl:for-each select="$array">
+                <xsl:if test=".=$value">
+                    <xsl:sequence select="position()" />
+                </xsl:if>
+            </xsl:for-each>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$occurences[1]">
+                <xsl:value-of select="$occurences[1]" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="-1" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

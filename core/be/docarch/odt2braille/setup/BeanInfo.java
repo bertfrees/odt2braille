@@ -14,26 +14,50 @@ import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
 
 public class BeanInfo {
     
-    private static final Map<Class,Map<String,PropertyDescriptor>> propertyDescriptors
-            = new HashMap<Class,Map<String,PropertyDescriptor>>();
+    private static final Map<Class,PropertyDescriptors> propertyDescriptors
+               = new HashMap<Class,PropertyDescriptors>();
     
-    public static Map<String,PropertyDescriptor> getPropertyDescriptors(Class type) {
+    public static PropertyDescriptor[] getPropertyDescriptors(Class type) {
         if (!propertyDescriptors.containsKey(type)) { return null; }
-        return propertyDescriptors.get(type);
+        return propertyDescriptors.get(type).list;
     }
-    
+
+    public static PropertyDescriptor getPropertyDescriptor(Class type, String property) {
+        if (!propertyDescriptors.containsKey(type)) { return null; }
+        return propertyDescriptors.get(type).get(property);
+    }
+
+    private static class PropertyDescriptors {
+
+        public final PropertyDescriptor[] list;
+        private final Map<String,PropertyDescriptor> map = new HashMap<String,PropertyDescriptor>();
+
+        public PropertyDescriptors(PropertyDescriptor[] array) {
+            list = array;
+            for (PropertyDescriptor d : array) {
+                map.put(d.getName(), d);
+            }
+        }
+
+        public PropertyDescriptor[] values() {
+            return list;
+        }
+
+        public PropertyDescriptor get(String property) {
+            return map.get(property);
+        }
+    }
+
     static {
         
         Class type;
-        PropertyDescriptor[] descriptors;
-        Map<String,PropertyDescriptor> map;
         
         try {
             
             /* Configuration */
-            
+
             type = Configuration.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newReadOnlyPropertyDescriptor(type, "translationTables"),
                 newPropertyDescriptor(type, "mathCode"),
                 newPropertyDescriptor(type, "printPageNumbers"),
@@ -59,6 +83,7 @@ public class BeanInfo {
                 newReadOnlyPropertyDescriptor(type, "frameStyle"),
                 newReadOnlyPropertyDescriptor(type, "footnoteStyle"),
                 newReadOnlyPropertyDescriptor(type, "pictureStyle"),
+                newReadOnlyPropertyDescriptor(type, "noteReferenceFormats"),
                 newPropertyDescriptor(type, "hardPageBreaks"),
                 newPropertyDescriptor(type, "creator"),
                 newPropertyDescriptor(type, "hyphenate"),
@@ -81,15 +106,12 @@ public class BeanInfo {
                 newReadOnlyPropertyDescriptor(type, "rearMatterVolume"),
                 newReadOnlyPropertyDescriptor(type, "sectionVolumeList"),
                 newReadOnlyPropertyDescriptor(type, "specialSymbolList")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* ExportConfiguration */
             
             type = ExportConfiguration.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "fileFormatType"),
                 newPropertyDescriptor(type, "duplex"),
                 newPropertyDescriptor(type, "eightDots"),
@@ -97,15 +119,12 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "multipleFiles"),
                 newPropertyDescriptor(type, "columns"),
                 newPropertyDescriptor(type, "rows")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* EmbossConfiguration */
             
             type = EmbossConfiguration.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "embosserType"),
                 newPropertyDescriptor(type, "duplex"),
                 newPropertyDescriptor(type, "eightDots"),
@@ -116,25 +135,22 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "paperWidth"),
                 newPropertyDescriptor(type, "paperHeight"),
                 newReadOnlyPropertyDescriptor(type, "margins")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* MarginSettings */
             
             type = MarginSettings.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "inner"),
                 newPropertyDescriptor(type, "outer"),
                 newPropertyDescriptor(type, "top"),
                 newPropertyDescriptor(type, "bottom"),
-            };
+            }));
             
             /* ParagraphStyle */
             
             type = ParagraphStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "inherit"),
                 newPropertyDescriptor(type, "alignment"),
                 newPropertyDescriptor(type, "firstLine"),
@@ -149,15 +165,12 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "orphanControlEnabled"),
                 newPropertyDescriptor(type, "widowControl"),
                 newPropertyDescriptor(type, "orphanControl")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* HeadingStyle */
             
             type = HeadingStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "alignment"),
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers"),
@@ -173,29 +186,23 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "paddingBelow"),
                 newPropertyDescriptor(type, "upperBorderStyle"),
                 newPropertyDescriptor(type, "lowerBorderStyle")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* CharacterStyle */
             
             type = CharacterStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "inherit"),
                 newPropertyDescriptor(type, "italic"),
                 newPropertyDescriptor(type, "boldface"),
                 newPropertyDescriptor(type, "underline"),
                 newPropertyDescriptor(type, "capitals")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* ListStyle */
             
             type = ListStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers"),
                 newPropertyDescriptor(type, "linesAbove"),
@@ -204,15 +211,12 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "dontSplit"),
                 newPropertyDescriptor(type, "dontSplitItems"),
                 newPropertyDescriptor(type, "prefix")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* TableStyle */
             
             type = TableStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers"),
                 newPropertyDescriptor(type, "linesAbove"),
@@ -235,15 +239,12 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "upperBorderStyle"),
                 newPropertyDescriptor(type, "lowerBorderStyle"),
                 newPropertyDescriptor(type, "headingBorderStyle")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* TocStyle */
             
             type = TocStyle.class;
-                descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newReadOnlyPropertyDescriptor(type, "levels"),
                 newPropertyDescriptor(type, "title"),
                 newPropertyDescriptor(type, "printPageNumbers"),
@@ -251,41 +252,32 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "linesBetween"),
                 newPropertyDescriptor(type, "lineFillSymbol"),
                 newPropertyDescriptor(type, "evaluateUptoLevel")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* TocLevelStyle */
             
             type = TocLevelStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* FootnoteStyle */
             
             type = FootnoteStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "alignment"),
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers"),
                 newPropertyDescriptor(type, "marginLeftRight"),
                 newPropertyDescriptor(type, "linesAbove"),
                 newPropertyDescriptor(type, "linesBelow")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* FrameStyle */
             
             type = FrameStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "linesAbove"),
                 newPropertyDescriptor(type, "linesBelow"),
                 newPropertyDescriptor(type, "upperBorderEnabled"),
@@ -294,15 +286,12 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "paddingBelow"),
                 newPropertyDescriptor(type, "upperBorderStyle"),
                 newPropertyDescriptor(type, "lowerBorderStyle")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* PictureStyle */
             
             type = PictureStyle.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "firstLine"),
                 newPropertyDescriptor(type, "runovers"),
                 newPropertyDescriptor(type, "linesAbove"),
@@ -310,57 +299,52 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "openingMark"),
                 newPropertyDescriptor(type, "closingMark"),
                 newPropertyDescriptor(type, "descriptionPrefix")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* Volume */
             
             type = Volume.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "title"),
                 newPropertyDescriptor(type, "frontMatter"),
                 newPropertyDescriptor(type, "tableOfContent"),
                 newPropertyDescriptor(type, "transcribersNotesPage"),
                 newPropertyDescriptor(type, "specialSymbolList")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* SectionVolume */
             
             type = SectionVolume.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "section")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* SpecialSymbol */
             
             type = SpecialSymbol.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "type"),
                 newPropertyDescriptor(type, "symbol"),
                 newPropertyDescriptor(type, "description"),
                 newPropertyDescriptor(type, "mode")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
             
             /* TranslationTable */
             
             type = TranslationTable.class;
-            descriptors = new PropertyDescriptor[] {
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 new PropertyDescriptor("id", type, "getID","setID")
-            };
-            map = new HashMap<String,PropertyDescriptor>();
-            for (PropertyDescriptor d : descriptors) { map.put(d.getName(), d); }
-            propertyDescriptors.put(type, map);
+            }));
+
+            /* NoteReferenceFormat */
+
+            type = NoteReferenceFormat.class;
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
+                newPropertyDescriptor(type, "spaceBefore"),
+                newPropertyDescriptor(type, "spaceAfter"),
+                newPropertyDescriptor(type, "prefix")
+            }));
+
             
         } catch (IntrospectionException e) {
         }

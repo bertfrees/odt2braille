@@ -38,13 +38,13 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
         try {
 
-            Map<String,PropertyDescriptor> descriptors = BeanInfo.getPropertyDescriptors(type);
+            PropertyDescriptor[] descriptors = BeanInfo.getPropertyDescriptors(type);
 
             if (descriptors != null) {
 
                 initialize(type.getSuperclass(), oldInstance, newInstance, out);
 
-                for (PropertyDescriptor d : descriptors.values()) {
+                for (PropertyDescriptor d : descriptors) {
                     Method getter = d.getReadMethod();
                     Method setter = d.getWriteMethod();
                     if (getter != null) {
@@ -77,7 +77,7 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                         if (!(key instanceof String || key instanceof Integer)) {
                             out.writeExpression(instantiate(key, out));
                         }
-                        out.writeExpression(new Expression(oldValue, oldInstance, "get", new Object[]{key})); // niet uitgevoerd indien nieuw element = oud element !!
+                        out.writeExpression(new Expression(oldValue, oldInstance, "get", new Object[]{key}));
                     }
                 }
 
@@ -92,9 +92,18 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                 if (!oldList.equals(newList)) {
                     if (newList.size() > 0) {
                         out.writeStatement(new Statement(oldInstance, "clear", new Object[]{}));
+                        newSettingList.clear();
                     }
+                    
+                    Object newObject;
+
                     for (Object oldObject : oldList) {
-                        out.writeExpression(new Expression(oldObject, oldInstance, "add", new Object[]{})); // niet uitgevoerd indien nieuw element = oud element !!
+                        newObject = newSettingList.add();
+                        if (!oldObject.equals(newObject)) {
+                            out.writeExpression(new Expression(oldObject, oldInstance, "add", new Object[]{}));
+                        } else {
+                            out.writeStatement(new Statement(oldInstance, "add", new Object[]{}));
+                        }
                     }
                 }
             }

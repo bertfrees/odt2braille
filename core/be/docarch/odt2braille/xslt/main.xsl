@@ -76,6 +76,7 @@
         <xsl:param name="paramPictureOpeningMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
         <xsl:param name="paramPictureClosingMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
 
+        <xsl:param name="paramConfiguredParagraphStyles"  as="xsd:string*"  />
         <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberPrefixes"      as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberFormats"       as="xsd:string*"  />
@@ -1044,6 +1045,11 @@ BLOCK ELEMENTS
 
             <!-- PARAGRAPH -->
             <xsl:otherwise>
+                <xsl:variable name="configured-style-name" as="xsd:string">
+                    <xsl:call-template name="get-configured-paragraph-style">
+                        <xsl:with-param name="style-name" select="$style-name"/>
+                    </xsl:call-template>
+                </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="$is-caption">
                         <xsl:apply-templates select="pagenum" />
@@ -1054,7 +1060,7 @@ BLOCK ELEMENTS
                         <xsl:apply-templates select="pagenum" />
                         <xsl:variable name="keep-empty" as="xsd:boolean">
                             <xsl:call-template name="get-keep-empty-para-style">
-                                <xsl:with-param name="style" select="$style-name" />
+                                <xsl:with-param name="style-name" select="$configured-style-name" />
                             </xsl:call-template>
                         </xsl:variable>                        
                         <xsl:if test="$keep-empty">
@@ -1064,7 +1070,7 @@ BLOCK ELEMENTS
                     <xsl:otherwise>
                         <dtb:paragraph>
                             <xsl:if test="$is-paragraph">
-                                <xsl:attribute name="style" select="$style-name" />
+                                <xsl:attribute name="style" select="$configured-style-name" />
                             </xsl:if>
                             <xsl:if test="current()/child::*[not(self::draw:a or self::draw:frame)]
                                         | current()/text()">
@@ -1879,45 +1885,64 @@ HELP TEMPLATES
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    
-    <xsl:template name="get-keep-empty-para-style">
-        <xsl:param name="style" />
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$paramKeepEmptyParagraphStyles">
-                <xsl:variable name="i" select="position()" />
-                <xsl:if test="$paramKeepEmptyParagraphStyles[$i]=$style">
-                    <xsl:sequence select="$i" />
-                </xsl:if>
-            </xsl:for-each>
+
+
+    <xsl:template name="get-configured-paragraph-style">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:variable name="contains" as="xsd:boolean">
+            <xsl:call-template name="array-contains-value">
+                <xsl:with-param name="array" select="$paramConfiguredParagraphStyles"/>
+                <xsl:with-param name="value" select="$style-name"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:value-of select="true()" />
+            <xsl:when test="$contains">
+                <xsl:value-of select="$style-name" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="false()" />
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="not($parent-style-name='')">
+                        <xsl:call-template name="get-configured-paragraph-style">
+                            <xsl:with-param name="style-name" select="$parent-style-name"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="'Standard'" />
+                    </xsl:otherwise>
+                </xsl:choose>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
 
 
+    <xsl:template name="get-keep-empty-para-style">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:call-template name="array-contains-value">
+            <xsl:with-param name="array" select="$paramKeepEmptyParagraphStyles"/>
+            <xsl:with-param name="value" select="$style-name"/>
+        </xsl:call-template>
+    </xsl:template>
+
+
     <xsl:template name="get-noteref-prefix">
         <xsl:param name="num-format" as="xsd:string" />
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$paramNoterefNumberFormats">
-                <xsl:if test=".=$num-format">
-                    <xsl:sequence select="position()" />
-                </xsl:if>
-            </xsl:for-each>
+        <xsl:variable name="index" as="xsd:integer">
+            <xsl:call-template name="first-index-of">
+                <xsl:with-param name="array" select="$paramNoterefNumberFormats"/>
+                <xsl:with-param name="value" select="$num-format"/>
+            </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:variable name="i" select="$occurences[1]" />
-                <xsl:value-of select="$paramNoterefNumberPrefixes[$i]" />
+            <xsl:when test="$index = -1">
+                <xsl:value-of select="''" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="''" />
+                <xsl:value-of select="$paramNoterefNumberPrefixes[$index]" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
