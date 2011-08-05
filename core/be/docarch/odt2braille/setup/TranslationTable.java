@@ -44,6 +44,9 @@ public class TranslationTable implements Serializable {
     private static final Collection<String> localeOptions = new HashSet<String>();
 
     protected static void setTablesFolder(File folder) throws Exception {
+        if (!folder.exists()) {
+            throw new Exception("Folder doesn't exist");
+        }
         for (String table : folder.list(filter)) {
             if (table.matches("__[a-z]+(-[A-Z]+)?-g[0-9](-8d)?\\.ctb")) {
                 options.add(table.substring(2, table.lastIndexOf(".ctb")));

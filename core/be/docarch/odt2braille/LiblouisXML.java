@@ -108,12 +108,10 @@ public class LiblouisXML {
         if (IS_WINDOWS) {
 
             liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" +
-                                                      FILE_SEPARATOR + "win" +
                                                       FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME + ".exe").getAbsolutePath();
         } else if (IS_MAC_OS) {
 
             liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" +
-                                                      FILE_SEPARATOR + "mac" +
                                                       FILE_SEPARATOR + LIBLOUISXML_EXEC_NAME).getAbsolutePath();
 
          /* Runtime.getRuntime().exec(new String[] { "chmod",

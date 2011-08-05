@@ -133,9 +133,7 @@ public class ReportWriter {
         addStatement(subject, RDF_TYPE, EARL_TESTSUBJECT);
         addStatement(subject, RDF_TYPE, CHECKER_DOCUMENT);
 
-        Collection<BrailleCheck> detectedIssues = checker.getDetectedIssues();
-
-        for (BrailleCheck issue : detectedIssues) {
+        for (BrailleCheck issue : checker.getDetectedIssues()) {
             XURI testcase = URI.createNS(context, CHECKER_CHECKS, issue.getIdentifier());
             addStatement(testcase, RDF_TYPE, EARL_TESTCASE);
             addAssertion(subject, testcase);

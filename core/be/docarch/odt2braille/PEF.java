@@ -97,7 +97,8 @@ public class PEF {
                PEFConfiguration pefSettings,
                LiblouisXML liblouisXML)
         throws IOException,
-               TransformerException {
+               TransformerException,
+               SAXException {
 
         this(settings, pefSettings, liblouisXML, null, null);
 
@@ -120,7 +121,8 @@ public class PEF {
                StatusIndicator statusIndicator,
                PostConversionBrailleChecker checker)
         throws IOException,
-               TransformerException {
+               TransformerException,
+               SAXException {
 
         logger.entering("PEF", "<init>");
 

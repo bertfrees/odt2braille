@@ -113,6 +113,8 @@ public class FrameStyle extends Style {
 
         /* INITIALIZATION */
 
+        upperBorderEnabled.set(true);
+        lowerBorderEnabled.set(true);
         upperBorderStyle.set('\u2812');
         lowerBorderStyle.set('\u2812');
 

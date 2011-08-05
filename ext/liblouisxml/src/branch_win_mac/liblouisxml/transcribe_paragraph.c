@@ -11,17 +11,17 @@
    All rights reserved
 
    This file is free software; you can redistribute it and/or modify it
-   under the terms of the Lesser or Library GNU General Public License 
+   under the terms of the Lesser or Library GNU General Public License
    as published by the
    Free Software Foundation; either version 3, or (at your option) any
    later version.
 
    This file is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the 
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    Library GNU General Public License for more details.
 
-   You should have received a copy of the Library GNU General Public 
+   You should have received a copy of the Library GNU General Public
    License along with this program; see the file COPYING.  If not, write to
    the Free Software Foundation, 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
@@ -220,7 +220,10 @@ transcribe_paragraph (xmlNode * node, int action)
       if (action != 0)
 	pop_sem_stack ();
       return 1;
-    case righthandpage:
+/*  case softreturn:
+ *    do_softreturn ();
+ *    break;
+ */ case righthandpage:
       do_righthandpage ();
       if (action != 0)
 	pop_sem_stack ();
@@ -281,7 +284,7 @@ transcribe_paragraph (xmlNode * node, int action)
           keep_with_next_this = 0;
           if (!dont_split)
 			{
-          	  if (ud->lines_on_page > 0 && 
+          	  if (ud->lines_on_page > 0 &&
 					!((keep_with_previous || keep_with_previous_this) &&
 					!ud->outbuf3_enabled))
 				{
@@ -347,7 +350,7 @@ transcribe_paragraph (xmlNode * node, int action)
           		  else
             		keep_with_previous_status = 0;
           		  if (keep_with_previous_pos < ud->lines_length &&
-              			ud->lines_pagenum[keep_with_previous_pos] > 
+              			ud->lines_pagenum[keep_with_previous_pos] >
 						ud->lines_pagenum[keep_with_previous_pos-1] &&
               		   !ud->lines_newpage[keep_with_previous_pos])
             		keep_with_previous_status = -1;
@@ -375,7 +378,7 @@ transcribe_paragraph (xmlNode * node, int action)
           		  int i=1;
           		  while (i < orphan_control && orphan_control_pos + i < ud->lines_length)
 					{
-            		  if (ud->lines_pagenum[orphan_control_pos + i] > 
+            		  if (ud->lines_pagenum[orphan_control_pos + i] >
 						  ud->lines_pagenum[orphan_control_pos + i - 1])
 						{
               			  if (!ud->lines_newpage[i])
@@ -427,7 +430,7 @@ transcribe_paragraph (xmlNode * node, int action)
         	  orphan_control = 0;
         	  orphan_control_status = 0;
       		}
-      	  if ((!dont_split && !keep_with_previous && 
+      	  if ((!dont_split && !keep_with_previous &&
 		   	   !keep_with_next && !orphan_control) ||
           		(!child && state_saved))
 			{

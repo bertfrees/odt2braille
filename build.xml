@@ -238,7 +238,7 @@
     
     <!-- copy windows binaries -->
     <target name="-copy-liblouis-bin-win" if="target.is.windows">
-        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin${file.separator}win">
+        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin">
             <fileset dir="ext${file.separator}liblouis${file.separator}bin">
                 <filename name="*.dll"/>
             </fileset>
@@ -257,7 +257,7 @@
 	
     <!-- copy mac os binaries -->
     <target name="-copy-liblouis-bin-mac" if="target.is.macosx">
-        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin${file.separator}mac">
+        <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin">
             <fileset dir="ext${file.separator}liblouis${file.separator}bin">
                 <filename name="*.dylib"/>
             </fileset>

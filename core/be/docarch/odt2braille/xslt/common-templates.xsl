@@ -31,6 +31,7 @@
             xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
             xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+            xmlns:math="http://www.w3.org/1998/Math/MathML"
             xmlns:num="http://whatever"
 
             exclude-result-prefixes="xsd style text table fo office draw" >
@@ -40,6 +41,12 @@
     <xsl:template name="is-empty">
         <xsl:param name="node" />
         <xsl:choose>
+            <xsl:when test="($node/draw:frame/draw:object/math) or
+                            ($node/draw:frame/draw:object/math:math) or
+                            ($node/draw:a/draw:frame/draw:object/math) or
+                            ($node/draw:a/draw:frame/draw:object/math:math)">
+                <xsl:value-of select="false()" />
+            </xsl:when>
             <xsl:when test="string($node)=string-join($node/*[self::draw:frame or self::draw:a], '')">
                 <xsl:value-of select="true()" />
             </xsl:when>
@@ -132,6 +139,18 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="false()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="is-formula">
+        <xsl:param name="node" />
+        <xsl:choose>
+            <xsl:when test="$node[self::draw:frame]/draw:object/*[self::math or self::math:math]">
+                <xsl:value-of select="true()"/>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="false()"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

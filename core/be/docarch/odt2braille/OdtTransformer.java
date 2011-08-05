@@ -368,9 +368,9 @@ public class OdtTransformer {
 
             OdtUtils.replaceObjectContent(docBuilder, contentDoc, zip);
             OdtUtils.removeEmptyHeadings(contentRoot);
-            //OdtUtils.normalizeTextS(contentDoc);
-            //OdtUtils.removeEmptyParagraphs(contentRoot);
-            OdtUtils.insertEmptyParaForHeadings(contentDoc);
+          //OdtUtils.normalizeTextS(contentDoc);
+          //OdtUtils.removeEmptyParagraphs(contentRoot);
+          //OdtUtils.insertEmptyParaForHeadings(contentDoc);
 
             documentSaved = false;
             correctionDone = true;
@@ -1429,11 +1429,11 @@ public class OdtTransformer {
                             if (numNode != null) {
 
                                 listText = child.getFirstChild();                                
-                                while(isWhiteSpaceOnlyTextNode(listText) ||
-                                      listText.getNodeName().equals("draw:frame") ||
-                                      listText.getNodeName().equals("text:soft-page-break") ||
-                                      listText.getNodeName().equals("pagenum")) {
-                                        listText = listText.getNextSibling();
+                                while(listText != null &&
+                                       (isWhiteSpaceOnlyTextNode(listText) ||
+                                        listText.getNodeName().equals("text:soft-page-break") ||
+                                        listText.getNodeName().equals("pagenum"))) {
+                                    listText = listText.getNextSibling();
                                 }
                                 if (listText != null) {
                                     child.insertBefore(numNode, listText);
@@ -1804,7 +1804,7 @@ public class OdtTransformer {
             languagesAndTypefaceXSL.setParameter("paramTranslationTables",    translationTables.toArray(new String[translationTables.size()]));
             languagesAndTypefaceXSL.setParameter("paramGrades",               grades.toArray(new Integer[grades.size()]));
             languagesAndTypefaceXSL.setParameter("paramEightDots",            eightDots.toArray(new Boolean[eightDots.size()]));
-            languagesAndTypefaceXSL.setParameter("paramMathType",             settings.getMathCode().name().toLowerCase());
+            languagesAndTypefaceXSL.setParameter("paramMathCode",             settings.getMathCode().name().toLowerCase());
 
             languagesAndTypefaceXSL.setParameter("paramCharacterStyles",      characterStyles.toArray(new String[characterStyles.size()]));
             languagesAndTypefaceXSL.setParameter("paramBoldface",             boldface.toArray(new Boolean[boldface.size()]));

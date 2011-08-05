@@ -22,6 +22,7 @@ package be.docarch.odt2braille.checker;
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.Collection;
 import java.util.List;
@@ -61,7 +62,7 @@ public class PostConversionBrailleChecker /* implements Checker */ {
 
     private Map<BrailleCheck.ID,BrailleCheck> checks;
 
-    private Collection<BrailleCheck> detectedIssues;
+    private Set<BrailleCheck> detectedIssues;
 
     private static NamespaceContext namespace = new NamespaceContext();
 
@@ -142,7 +143,7 @@ public class PostConversionBrailleChecker /* implements Checker */ {
                 if (Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
                         "max(distinct-values(string-to-codepoints(string(/pef:pef/pef:body))))", namespace)) > 0x283F) {
                     detectedIssues.add(checks.get((pefSettings instanceof ExportConfiguration) ? BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot
-                                                                                                : BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
+                                                                                               : BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
                 }
             } catch (Exception e) {
             }
@@ -228,7 +229,7 @@ public class PostConversionBrailleChecker /* implements Checker */ {
         return checks.values();
     } */
     
-    public Collection<BrailleCheck> getDetectedIssues() {
+    public Set<BrailleCheck> getDetectedIssues() {
         return detectedIssues;
     }
 }

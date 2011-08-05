@@ -10,7 +10,7 @@ import be.docarch.odt2braille.setup.style.ListStyle;
 import be.docarch.odt2braille.setup.style.TocStyle;
 import be.docarch.odt2braille.setup.style.FrameStyle;
 import be.docarch.odt2braille.setup.style.FootnoteStyle;
-import be.docarch.odt2braille.setup.style.Style;
+import be.docarch.odt2braille.setup.style.PictureStyle;
 import be.docarch.odt2braille.setup.style.Style.Alignment;
 
 public class BANAFormattingRules implements FormattingRules {
@@ -154,7 +154,7 @@ public class BANAFormattingRules implements FormattingRules {
 
         FootnoteStyle footnoteStyle = configuration.getFootnoteStyle();
 
-        footnoteStyle.setAlignment(Style.Alignment.LEFT);
+        footnoteStyle.setAlignment(Alignment.LEFT);
         footnoteStyle.setLinesAbove(0);
         footnoteStyle.setLinesBelow(0);
         footnoteStyle.setFirstLine(6);
@@ -172,5 +172,13 @@ public class BANAFormattingRules implements FormattingRules {
             format.setSpaceAfter(true);
             format.setSpaceAfter(true);
         }
+
+        PictureStyle pictureStyle = configuration.getPictureStyle();
+        pictureStyle.setFirstLine(6);
+        pictureStyle.setRunovers(4);
+        pictureStyle.setLinesAbove(1);
+        pictureStyle.setLinesBelow(1);
+        pictureStyle.setOpeningMark("\u2820\u2804");
+        pictureStyle.setClosingMark("\u2820\u2804");
     }
 }

@@ -43,7 +43,7 @@
         <xsl:param name="paramGrades"                   as="xsd:integer*"  />
         <xsl:param name="paramEightDots"                as="xsd:boolean*"  />
 
-        <xsl:param name="paramMathType"                 as="xsd:string"    />
+        <xsl:param name="paramMathCode"                 as="xsd:string"    />
 
         <xsl:param name="paramCharacterStyles"          as="xsd:string*"   />
         <xsl:param name="paramCapsFollowPrint"          as="xsd:boolean*"  />
@@ -106,7 +106,7 @@
         <dtb:span>
             <xsl:attribute name="lang">
                 <xsl:text>__</xsl:text>
-                <xsl:value-of select="$paramMathType" />
+                <xsl:value-of select="$paramMathCode" />
                 <xsl:text>.ctb</xsl:text>
             </xsl:attribute>
             <xsl:copy>

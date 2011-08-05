@@ -10,7 +10,7 @@
 
 /* Define to 1 if you have the declaration of `program_invocation_name', and
    to 0 if you don't. */
-#define HAVE_DECL_PROGRAM_INVOCATION_NAME 1
+#define HAVE_DECL_PROGRAM_INVOCATION_NAME 0
 
 /* Define to 1 if you have the declaration of `program_invocation_short_name',
    and to 0 if you don't. */

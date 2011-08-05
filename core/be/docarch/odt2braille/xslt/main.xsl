@@ -930,7 +930,8 @@ BLOCK ELEMENTS
                     <xsl:when test="$omit-frames">
 
                         <!-- Omit frames -->
-                        <xsl:for-each select="current()/draw:frame | current()/draw:a">
+                        <xsl:for-each select="current()/draw:frame[not(draw:object/math or draw:object/math:math)] |
+                                              current()/draw:a/draw:frame[not(draw:object/math or draw:object/math:math)]">
                             <dtb:div class="omission">
                                 <dtb:flag class="double-dash" />
                                 <dtb:span class="spaced">
@@ -942,7 +943,8 @@ BLOCK ELEMENTS
                     <xsl:when test="$transpose-frames">
 
                         <!-- Transpose frames -->
-                        <xsl:for-each select="current()/draw:frame | current()/draw:a">
+                        <xsl:for-each select="current()/draw:frame[not(draw:object/math or draw:object/math:math)] |
+                                              current()/draw:a/draw:frame[not(draw:object/math or draw:object/math:math)]">
                             <dtb:div class="transposition">
                                 <dtb:flag class="double-dash" />
                                 <dtb:span class="spaced">
@@ -971,9 +973,7 @@ BLOCK ELEMENTS
 
         <!-- Frames -->
         <xsl:if test="$frames and not($transpose-frames) and not($omit-frames)">
-            <xsl:apply-templates select="current()/draw:frame | current()/draw:a">
-                <xsl:with-param name="render" select="true()" />
-            </xsl:apply-templates>
+            <xsl:apply-templates select="current()/draw:frame | current()/draw:a" mode="frame"/>
         </xsl:if>
     </xsl:template>
 
@@ -1072,19 +1072,17 @@ BLOCK ELEMENTS
                             <xsl:if test="$is-paragraph">
                                 <xsl:attribute name="style" select="$configured-style-name" />
                             </xsl:if>
-                            <xsl:if test="current()/child::*[not(self::draw:a or self::draw:frame)]
-                                        | current()/text()">
-                                <dtb:p>
-                                    <xsl:apply-templates select="current()" mode="language">
-                                        <xsl:with-param name="specialtypeface" select="$specialtypeface" />
-                                    </xsl:apply-templates>
-                                </dtb:p>
-                            </xsl:if>
+                            <dtb:p>
+                                <xsl:apply-templates select="current()" mode="language">
+                                    <xsl:with-param name="specialtypeface" select="$specialtypeface" />
+                                </xsl:apply-templates>
+                            </dtb:p>
                             <xsl:choose>
                                 <xsl:when test="$omit-frames">
 
                                     <!-- Omit frames -->
-                                    <xsl:for-each select="./draw:frame | ./draw:a">
+                                    <xsl:for-each select="./draw:frame[not(draw:object/math or draw:object/math:math)] |
+                                                          ./draw:a/draw:frame[not(draw:object/math or draw:object/math:math)]">
                                         <dtb:div class="omission">
                                             <dtb:flag class="double-dash" />
                                             <dtb:span class="spaced">
@@ -1096,7 +1094,8 @@ BLOCK ELEMENTS
                                 <xsl:when test="$transpose-frames">
 
                                     <!-- Transpose frames -->
-                                    <xsl:for-each select="current()/draw:frame | current()/draw:a">
+                                    <xsl:for-each select="./draw:frame[not(draw:object/math or draw:object/math:math)] |
+                                                          ./draw:a/draw:frame[not(draw:object/math or draw:object/math:math)]">
                                         <dtb:div class="transposition">
                                             <dtb:flag class="double-dash" />
                                             <dtb:span class="spaced">
@@ -1123,9 +1122,7 @@ BLOCK ELEMENTS
 
         <!-- Frames -->
         <xsl:if test="$frames and not($transpose-frames) and not($omit-frames)">
-            <xsl:apply-templates select="current()/draw:frame | current()/draw:a">
-                <xsl:with-param name="render" select="true()" />
-            </xsl:apply-templates>
+            <xsl:apply-templates select="current()/draw:frame | current()/draw:a" mode="frame"/>
         </xsl:if>
     </xsl:template>
 
@@ -1211,10 +1208,8 @@ BLOCK ELEMENTS
                         <xsl:apply-templates select="(current()//text:list-item/*/draw:frame)
                                                     |(current()//text:list-item/*/draw:a)
                                                     |(current()//text:list-header/*/draw:frame)
-                                                    |(current()//text:list-header/*/draw:a)">
-
-                            <xsl:with-param name="render" select="true()" />
-                        </xsl:apply-templates>
+                                                    |(current()//text:list-header/*/draw:a)"
+                                             mode="frame"/>
                     </xsl:when>
                     <xsl:otherwise>
                         <dtb:list>
@@ -1280,11 +1275,13 @@ BLOCK ELEMENTS
                 </dtb:div>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="transposedContent" select="current()/descendant::*[name()='table:table'
-                                                                                    or name()='text:list'
-                                                                                    or name()='draw:frame']" />
-                <xsl:variable name="emptyCells" select="current()/table:table-row/table:table-cell[not(string(self::*))]
-                                                     or current()/table:table-header-rows/table:table-row/table:table-cell[not(string(self::*))]" />
+                <xsl:variable name="transposedContent"
+                              select="current()/descendant::*[self::table:table
+                                                           or self::text:list
+                                                           or (self::draw:frame and not(child::draw:object[math or math:math]))]" />
+                <xsl:variable name="emptyCells"
+                              select="current()/table:table-row/table:table-cell[not(string(self::*))]
+                                   or current()/table:table-header-rows/table:table-row/table:table-cell[not(string(self::*))]" />
                 
                 <xsl:if test="$transposedContent or $transposed or $emptyCells">
                     <dtb:div class="tn">
@@ -1431,10 +1428,8 @@ BLOCK ELEMENTS
                                             |(current()/table:table-header-rows/table:table-row/table:table-cell/*/draw:frame)
                                             |(current()/table:table-header-rows/table:table-row/table:table-cell/*/draw:a)
                                             |(current()/table:table-header-rows/table:table-row/table:table-cell/table:table)
-                                            |(current()/table:table-header-rows/table:table-row/table:table-cell/text:list)">
-
-                    <xsl:with-param name="transposed" select="true()" />
-                </xsl:apply-templates>
+                                            |(current()/table:table-header-rows/table:table-row/table:table-cell/text:list)"
+                                     mode="frame"/>
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
@@ -1558,15 +1553,62 @@ BLOCK ELEMENTS
     </xsl:template>
 
     <!-- TABLE OF CONTENTS -->
+
     <xsl:template match="text:table-of-content">
         <dtb:div class="toc" />
         <xsl:apply-templates select="current()/descendant::pagenum" />
     </xsl:template>
-   
+
     <!-- FRAMES -->
 
+    <xsl:template match="draw:a">
+        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
+        <xsl:apply-templates select="draw:frame">
+            <xsl:with-param name="transposed" select="$transposed" />
+        </xsl:apply-templates>
+    </xsl:template>
+
     <xsl:template match="draw:frame">
-        <xsl:param name="render"     as="xsd:boolean" select="false()" />
+        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
+        
+        <xsl:variable name="is-formula" as="xsd:boolean">
+            <xsl:call-template name="is-formula">
+                <xsl:with-param name="node" select="." />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$is-formula">
+                <xsl:apply-templates select="." mode="formula"/>
+            </xsl:when>
+            <xsl:when test="$transposed">
+                <xsl:apply-templates select="." mode="frame">
+                    <xsl:with-param name="transposed" select="true()"/>
+                </xsl:apply-templates>
+            </xsl:when>
+            <xsl:otherwise/>
+        </xsl:choose>
+    </xsl:template>
+
+    <!-- FORMULAS -->
+
+    <xsl:template match="draw:a" mode="formula">
+        <xsl:apply-templates select="draw:frame" mode="formula" />
+    </xsl:template>
+
+    <xsl:template match="draw:frame" mode="formula">
+        <xsl:apply-templates select="draw:object/*" mode="math" />
+    </xsl:template>
+
+    <!-- TEXTBOXES & IMAGES -->
+
+    <xsl:template match="draw:a" mode="frame">
+        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
+        <xsl:apply-templates select="draw:frame" mode="frame">
+            <xsl:with-param name="transposed" select="$transposed" />
+        </xsl:apply-templates>
+    </xsl:template>
+
+    <xsl:template match="draw:frame" mode="frame">
         <xsl:param name="transposed" as="xsd:boolean" select="false()" />
 
         <xsl:variable name="caption-id">
@@ -1575,180 +1617,182 @@ BLOCK ELEMENTS
             </xsl:call-template>
         </xsl:variable>
 
-        <xsl:if test="$render or $transposed">
-            <xsl:choose>
+        <xsl:variable name="is-formula" as="xsd:boolean">
+            <xsl:call-template name="is-formula">
+                <xsl:with-param name="node" select="." />
+            </xsl:call-template>
+        </xsl:variable>
+        
+        <xsl:choose>
 
-                <!-- Formula -->
-                <xsl:when test="current()/child::draw:object
-                            and $automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
-                                /@style:parent-style-name='Formula'">
-                    <xsl:apply-templates select="draw:object/*" mode="math" />
-                </xsl:when>
+            <!-- Formula -->
+            <xsl:when test="$is-formula"/>
 
-                <!-- Image -->
-                <xsl:when test="current()/child::draw:image">
+            <!-- Image -->
+            <xsl:when test="current()/child::draw:image">
 
-                    <xsl:variable name="caption" as="element()*">
-                        <xsl:if test="$caption-id">
-                            <xsl:apply-templates select="$body//text:p[@xml:id=$caption-id][1]">
-                                <xsl:with-param name="caption" select="true()" />
-                                <xsl:with-param name="frames" select="false()" />
-                                <xsl:with-param name="notes" select="false()" />
-                                <xsl:with-param name="specialtypeface" select="false()" />
-                            </xsl:apply-templates>
+                <xsl:variable name="caption" as="element()*">
+                    <xsl:if test="$caption-id">
+                        <xsl:apply-templates select="$body//text:p[@xml:id=$caption-id][1]">
+                            <xsl:with-param name="caption" select="true()" />
+                            <xsl:with-param name="frames" select="false()" />
+                            <xsl:with-param name="notes" select="false()" />
+                            <xsl:with-param name="specialtypeface" select="false()" />
+                        </xsl:apply-templates>
+                    </xsl:if>
+                </xsl:variable>
+
+                <xsl:variable name="description" as="element()*">
+                    <xsl:if test="svg:title">
+                        <dtb:span>
+                            <xsl:apply-templates select="svg:title/text()" mode="convert-breaks" />
+                        </dtb:span>
+                    </xsl:if>
+                    <xsl:if test="svg:desc">
+                        <dtb:span>
+                            <xsl:apply-templates select="svg:desc/text()" mode="convert-breaks" />
+                        </dtb:span>
+                    </xsl:if>
+                </xsl:variable>
+
+                <!-- Ignore images without a caption or description -->
+                <xsl:if test="$caption or $description">
+
+                    <!-- Collect notes -->
+                    <xsl:variable name="notes" as="element()*">
+
+                        <!-- Transposition notification -->
+                        <xsl:if test="$transposed">
+                            <dtb:note>
+                                <dtb:span>
+                                    <xsl:value-of select='"The picture below was transposed from it&apos;s original location."' />
+                                </dtb:span>
+                            </dtb:note>
                         </xsl:if>
-                    </xsl:variable>
 
-                    <xsl:variable name="description" as="element()*">
-                        <xsl:if test="svg:title">
-                            <dtb:span>
-                                <xsl:apply-templates select="svg:title/text()" mode="convert-breaks" />
-                            </dtb:span>
+                        <!-- Caption -->
+                        <xsl:if test="$caption">
+                            <dtb:note>
+                                <xsl:sequence select="$caption"/>
+                            </dtb:note>
                         </xsl:if>
-                        <xsl:if test="svg:desc">
-                            <dtb:span>
-                                <xsl:apply-templates select="svg:desc/text()" mode="convert-breaks" />
-                            </dtb:span>
-                        </xsl:if>
-                    </xsl:variable>
 
-                    <!-- Ignore images without a caption or description -->
-                    <xsl:if test="$caption or $description">
-
-                        <!-- Collect notes -->
-                        <xsl:variable name="notes" as="element()*">
-
-                            <!-- Transposition notification -->
-                            <xsl:if test="$transposed">
-                                <dtb:note>
-                                    <dtb:span>
-                                        <xsl:value-of select='"The picture below was transposed from it&apos;s original location."' />
+                        <!-- Description -->
+                        <xsl:for-each select="$description">
+                            <xsl:variable name="i" select="position()"/>
+                            <dtb:note>
+                                <xsl:if test="$i=1 and string-length($paramPictureDescriptionPrefix)>0">
+                                    <dtb:span class="unspaced">
+                                        <xsl:value-of select="$paramPictureDescriptionPrefix" />
                                     </dtb:span>
-                                </dtb:note>
-                            </xsl:if>
+                                </xsl:if>
+                                <xsl:sequence select="."/>
+                            </dtb:note>
+                        </xsl:for-each>
+                    </xsl:variable>
 
-                            <!-- Caption -->
-                            <xsl:if test="$caption">
-                                <dtb:note>
-                                    <xsl:sequence select="$caption"/>
-                                </dtb:note>
-                            </xsl:if>
+                    <dtb:div class="image">
+                        <dtb:div class="tn">
+                            <xsl:for-each select="$notes">
+                                <xsl:copy>
 
-                            <!-- Description -->
-                            <xsl:for-each select="$description">
-                                <xsl:variable name="i" select="position()"/>
-                                <dtb:note>
-                                    <xsl:if test="$i=1 and string-length($paramPictureDescriptionPrefix)>0">
+                                    <!-- Add opening mark -->
+                                    <xsl:if test="position() = 1">
                                         <dtb:span class="unspaced">
-                                            <xsl:value-of select="$paramPictureDescriptionPrefix" />
+                                            <xsl:value-of select="$paramPictureOpeningMark" />
                                         </dtb:span>
                                     </xsl:if>
-                                    <xsl:sequence select="."/>
-                                </dtb:note>
+                                    <xsl:sequence select="child::*"/>
+
+                                    <!-- Add closing mark -->
+                                    <xsl:if test="position() = last()">
+                                        <dtb:span class="unspaced">
+                                            <xsl:value-of select="$paramPictureClosingMark" />
+                                        </dtb:span>
+                                    </xsl:if>
+                                </xsl:copy>
                             </xsl:for-each>
-                        </xsl:variable>
-
-                        <dtb:div class="image">
-                            <dtb:div class="tn">
-                                <xsl:for-each select="$notes">
-                                    <xsl:copy>
-                                        
-                                        <!-- Add opening mark -->
-                                        <xsl:if test="position() = 1">
-                                            <dtb:span class="unspaced">
-                                                <xsl:value-of select="$paramPictureOpeningMark" />
-                                            </dtb:span>
-                                        </xsl:if>
-                                        <xsl:sequence select="child::*"/>
-                                        
-                                        <!-- Add closing mark -->
-                                        <xsl:if test="position() = last()">
-                                            <dtb:span class="unspaced">
-                                                <xsl:value-of select="$paramPictureClosingMark" />
-                                            </dtb:span>
-                                        </xsl:if>
-                                    </xsl:copy>
-                                </xsl:for-each>
-                            </dtb:div>
                         </dtb:div>
-                    </xsl:if>
-
-                    <!-- Footnotes in caption -->
-                    <xsl:if test="$caption-id">
-                        <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
-                        <xsl:if test="$caption//text:note[@text:note-class='footnote']">
-                            <xsl:call-template name="footnote">
-                                <xsl:with-param name="notes" select="$caption//text:note[@text:note-class='footnote']" />
-                            </xsl:call-template>
-                        </xsl:if>
-                    </xsl:if>
-                </xsl:when>
-
-                <!-- Textbox -->
-                <xsl:when test="current()/child::draw:text-box">
-
-                    <xsl:variable name="border"
-                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
-                                          /style:graphic-properties/@fo:border" />
-                    <xsl:variable name="border-bottom"
-                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
-                                          /style:graphic-properties/@fo:border-bottom" />
-                    <xsl:variable name="border-top"
-                                  select="$automatic-styles/style:style[@style:name=(current()/@draw:style-name)]
-                                          /style:graphic-properties/@fo:border-top" />
-                    <xsl:variable name="upper-border" as="xsd:boolean">
-                        <xsl:value-of select="$paramFrameUpperBorder" />
-                    </xsl:variable>
-                    <xsl:variable name="lower-border" as="xsd:boolean">
-                        <xsl:value-of select="$paramFrameLowerBorder" />
-                    </xsl:variable>
-
-                    <!-- Transposition notification -->
-                    <xsl:if test="$transposed">
-                        <dtb:div class="tn">
-                            <dtb:note>
-                                <xsl:value-of select='"The textbox below was transposed from it&apos;s original location."' />
-                            </dtb:note>
-                        </dtb:div>
-                    </xsl:if>
-
-                    <dtb:div class="frame">
-
-                        <!-- Top boxline -->
-                        <xsl:if test="$upper-border">
-                            <dtb:hr/>
-                        </xsl:if>
-                        <dtb:div class="border">
-
-                            <!-- Caption -->
-                            <xsl:if test="$caption-id">
-                                <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id]" />
-                                <xsl:if test="$caption" >
-                                    <dtb:div class="caption">
-                                        <xsl:apply-templates select="$caption">
-                                            <xsl:with-param name="caption" select="true()" />
-                                            <xsl:with-param name="frames"  select="false()" />
-                                            <xsl:with-param name="specialtypeface" select="false()" />
-                                        </xsl:apply-templates>
-                                    </dtb:div>
-                                </xsl:if>
-                            </xsl:if>
-
-                            <!-- Box content -->
-                            <xsl:apply-templates select="current()/draw:text-box/draw:frame | current()/draw:text-box/draw:a">
-                                <xsl:with-param name="render" select="true()" />
-                            </xsl:apply-templates>
-                            <xsl:apply-templates select="current()/draw:text-box/*" />
-                        </dtb:div>
-
-                        <!-- Bottom boxline -->
-                        <xsl:if test="$upper-border">
-                            <dtb:hr/>
-                        </xsl:if>
                     </dtb:div>
-                </xsl:when>
-            </xsl:choose>
-        </xsl:if>
+                </xsl:if>
+
+                <!-- Footnotes in caption -->
+                <xsl:if test="$caption-id">
+                    <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
+                    <xsl:if test="$caption//text:note[@text:note-class='footnote']">
+                        <xsl:call-template name="footnote">
+                            <xsl:with-param name="notes" select="$caption//text:note[@text:note-class='footnote']" />
+                        </xsl:call-template>
+                    </xsl:if>
+                </xsl:if>
+            </xsl:when>
+
+            <!-- Textbox -->
+            <xsl:when test="current()/child::draw:text-box">
+
+                <xsl:variable name="style-name" select="@draw:style-name"/>
+                <xsl:variable name="border"
+                              select="$automatic-styles/style:style[@style:name=$style-name]
+                                      /style:graphic-properties/@fo:border" />
+                <xsl:variable name="border-top"
+                              select="$automatic-styles/style:style[@style:name=$style-name]
+                                      /style:graphic-properties/@fo:border-top" />
+                <xsl:variable name="border-bottom"
+                              select="$automatic-styles/style:style[@style:name=$style-name]
+                                      /style:graphic-properties/@fo:border-bottom" />
+                <xsl:variable name="upper-border" as="xsd:boolean">
+                    <xsl:value-of select="$paramFrameUpperBorder and (($border and not($border='none')) or
+                                                                      ($border-top and not($border-top='none')))" />
+                </xsl:variable>
+                <xsl:variable name="lower-border" as="xsd:boolean">
+                    <xsl:value-of select="$paramFrameLowerBorder and (($border and not($border='none')) or
+                                                                      ($border-bottom and not($border-bottom='none')))" />
+                </xsl:variable>
+
+                <!-- Transposition notification -->
+                <xsl:if test="$transposed">
+                    <dtb:div class="tn">
+                        <dtb:note>
+                            <xsl:value-of select='"The textbox below was transposed from it&apos;s original location."' />
+                        </dtb:note>
+                    </dtb:div>
+                </xsl:if>
+
+                <dtb:div class="frame">
+
+                    <!-- Top boxline -->
+                    <xsl:if test="$upper-border">
+                        <dtb:hr/>
+                    </xsl:if>
+                    <dtb:div class="border">
+
+                        <!-- Caption -->
+                        <xsl:if test="$caption-id">
+                            <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id]" />
+                            <xsl:if test="$caption" >
+                                <dtb:div class="caption">
+                                    <xsl:apply-templates select="$caption">
+                                        <xsl:with-param name="caption" select="true()" />
+                                        <xsl:with-param name="frames"  select="false()" />
+                                        <xsl:with-param name="specialtypeface" select="false()" />
+                                    </xsl:apply-templates>
+                                </dtb:div>
+                            </xsl:if>
+                        </xsl:if>
+
+                        <!-- Box content -->
+                        <xsl:apply-templates select="./draw:text-box/draw:frame | ./draw:text-box/draw:a" mode="formula"/>
+                        <xsl:apply-templates select="./draw:text-box/draw:frame | ./draw:text-box/draw:a" mode="frame"/>
+                        <xsl:apply-templates select="current()/draw:text-box/*" />
+                    </dtb:div>
+
+                    <!-- Bottom boxline -->
+                    <xsl:if test="$lower-border">
+                        <dtb:hr/>
+                    </xsl:if>
+                </dtb:div>
+            </xsl:when>
+        </xsl:choose>
     </xsl:template>
 
     <!-- MATH -->
@@ -1787,17 +1831,10 @@ BLOCK ELEMENTS
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-    
-    <!-- FRAME LINKS -->
 
-    <xsl:template match="draw:a">
-        <xsl:param name="render"     as="xsd:boolean" select="false()" />
-        <xsl:param name="transposed" as="xsd:boolean" select="false()" />
-
-        <xsl:apply-templates select="draw:frame">
-            <xsl:with-param name="render"     select="$render" />
-            <xsl:with-param name="transposed" select="$transposed" />
-        </xsl:apply-templates>
+    <xsl:template match="annotation | math:annotation"
+                  mode="math">
+        <!-- skip -->
     </xsl:template>
 
     <!-- BIBLIOGRAPHY -->

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="liblouisxml" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\liblouisxml" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_DLL" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\liblouisxml" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-DBUILD_DLL" />
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="user32" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="..\..\ext\liblouis\src\release_2.3\liblouis" />
+			<Add directory="..\..\ext\libxml2\include" />
+		</Compiler>
+		<Linker>
+			<Add library="..\..\ext\liblouis\bin\liblouis.a" />
+			<Add library="..\..\ext\libxml2\bin\libxml2.dll.a" />
+		</Linker>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\change_table.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\config.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\examine_document.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\liblouisxml.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\liblouisxml.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\louisxml.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\makeContents.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\make_sem_names.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\paths.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\readconfig.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\sem_enum.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\sem_names.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\semantics.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_cdataSection.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_chemistry.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_computerCode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_document.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_graphic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_math.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_music.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcribe_paragraph.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml\transcriber.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

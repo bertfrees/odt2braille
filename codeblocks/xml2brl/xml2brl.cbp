@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="xml2brl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\xml2brl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\xml2brl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add directory="..\..\ext\liblouisxml\src\branch_win_mac\liblouisxml" />
+			<Add directory="..\..\ext\liblouis\src\release_2.3\liblouis" />
+			<Add directory="..\..\ext\libxml2\include" />
+			<Add directory="..\..\ext\liblouisxml\src\branch_win_mac\gnulib" />
+		</Compiler>
+		<Linker>
+			<Add library="..\..\ext\liblouisxml\bin\liblouisxml.a" />
+			<Add library="..\..\ext\liblouis\bin\liblouis.a" />
+			<Add library="..\..\ext\libxml2\bin\libxml2.dll.a" />
+		</Linker>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\getopt_int.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\gettext.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\progname.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\progname.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\version-etc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\gnulib\version-etc.h" />
+		<Unit filename="..\..\ext\liblouisxml\src\branch_win_mac\tools\xml2brl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Extensions>
+			<code_completion />
+			<debugger />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>

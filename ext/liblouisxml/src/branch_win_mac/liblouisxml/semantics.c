@@ -641,6 +641,7 @@ compileLine (FileInfo * nested)
 	{
 	  semanticError (nested, "unmatched parentheses in column 2 '%s'",
 			 lookFor);
+         /* bug: er wordt geen rekening gehouden met ' en " */
 	  return 0;
 	}
       switch (func)
