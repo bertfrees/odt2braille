@@ -212,7 +212,7 @@
     <target name="-copy-liblouis-files">
         <copy todir="${dist.dir}${file.separator}liblouis${file.separator}files"
               flatten="true">
-            <fileset dir="ext${file.separator}liblouis${file.separator}tables">
+            <fileset dir="tables${file.separator}liblouis${file.separator}tables">
                 <patternset>
                     <include name="**/*.ctb"/>
                     <include name="**/*.cti"/>
@@ -221,7 +221,7 @@
                     <include name="**/*.dic"/>
                 </patternset>
             </fileset>
-            <fileset dir="ext${file.separator}liblouisxml${file.separator}lbx_files">
+            <fileset dir="tables${file.separator}liblouisxml${file.separator}lbx_files">
                 <patternset>
                     <include name="**/*.cfg"/>
                     <include name="**/*.sem"/>

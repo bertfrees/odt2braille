@@ -1,0 +1,59 @@
+# ----------------------------------------------------------------------------------------------
+#  odt2braille - Braille authoring in OpenOffice.org.
+#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+# ----------------------------------------------------------------------------------------------
+
+# ----------------------------------------------------------------------------------------------
+# Unicode 20D0..20FF  Combining Diacritical Marks for Symbols
+# ----------------------------------------------------------------------------------------------
+
+sign        \x20D2        1456                ⃒                   COMBINING LONG VERTICAL LINE OVERLAY
+sign        \x20D3        1456                ⃓                   COMBINING SHORT VERTICAL LINE OVERLAY
+sign        \x20D4        1456                ⃔                   COMBINING ANTICLOCKWISE ARROW ABOVE
+sign        \x20D5        1456                ⃕                   COMBINING CLOCKWISE ARROW ABOVE
+sign        \x20D6        1456                ⃖                   COMBINING LEFT ARROW ABOVE
+sign        \x20D7        1456                ⃗                   COMBINING RIGHT ARROW ABOVE
+sign        \x20D8        1456                ⃘                   COMBINING RING OVERLAY
+sign        \x20D9        1456                ⃙                   COMBINING CLOCKWISE RING OVERLAY
+sign        \x20DA        1456                ⃚                   COMBINING ANTICLOCKWISE RING OVERLAY
+sign        \x20DB        1456                ⃛                   COMBINING THREE DOTS ABOVE
+sign        \x20DC        1456                ⃜                   COMBINING FOUR DOTS ABOVE
+sign        \x20DD        1456                ⃝                   COMBINING ENCLOSING CIRCLE
+sign        \x20DE        1456                ⃞                   COMBINING ENCLOSING SQUARE
+sign        \x20DF        1456                ⃟                   COMBINING ENCLOSING DIAMOND
+sign        \x20E0        1456                ⃠                   COMBINING ENCLOSING CIRCLE BACKSLASH
+sign        \x20E1        1456                ⃡                   COMBINING LEFT RIGHT ARROW ABOVE
+sign        \x20E2        1456                ⃢                   COMBINING ENCLOSING SCREEN
+sign        \x20E3        1456                ⃣                   COMBINING ENCLOSING KEYCAP
+sign        \x20E4        1456                ⃤                   COMBINING ENCLOSING UPWARD POINTING TRIANGLE
+sign        \x20E5        1456                ⃥                   COMBINING REVERSE SOLIDUS OVERLAY
+sign        \x20E6        1456                ⃦                   COMBINING DOUBLE VERTICAL STROKE OVERLAY
+sign        \x20E7        1456                ⃧                   COMBINING ANNUITY SYMBOL
+sign        \x20E8        1456                ⃨                   COMBINING TRIPLE UNDERDOT
+sign        \x20E9        1456                ⃩                   COMBINING WIDE BRIDGE ABOVE
+sign        \x20EA        1456                ⃪                   COMBINING LEFTWARDS ARROW OVERLAY
+sign        \x20EB        1456                ⃫                   COMBINING LONG DOUBLE SOLIDUS OVERLAY
+sign        \x20EC        1456                ⃬                   COMBINING RIGHTWARDS HARPOON WITH BARB DOWNWARDS
+sign        \x20ED        1456                ⃭                   COMBINING LEFTWARDS HARPOON WITH BARB DOWNWARDS
+sign        \x20EE        1456                ⃮                   COMBINING LEFT ARROW BELOW
+sign        \x20EF        1456                ⃯                   COMBINING RIGHT ARROW BELOW
+sign        \x20F0        1456                ⃰                   COMBINING ASTERISK ABOVE
+sign        \x20F1        1456                ⃱
+sign        \x20F2        1456                ⃲
+sign        \x20F3        1456                ⃳
+sign        \x20F4        1456                ⃴
+sign        \x20F5        1456                ⃵
+sign        \x20F6        1456                ⃶
+sign        \x20F7        1456                ⃷
+sign        \x20F8        1456                ⃸
+sign        \x20F9        1456                ⃹
+sign        \x20FA        1456                ⃺
+sign        \x20FB        1456                ⃻
+sign        \x20FC        1456                ⃼
+sign        \x20FD        1456                ⃽
+sign        \x20FE        1456                ⃾
+sign        \x20FF        1456                ⃿
+
+
+# ----------------------------------------------------------------------------------------------
+

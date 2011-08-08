@@ -21,7 +21,7 @@ Windows/Mac
  + roman caps (Windows)
  + softreturn change (Windows)
  
- => %ODT2BRAILLE_HOME%/ext/liblouisxml/src/branch_win_mac
+ => %ODT2BRAILLE_HOME%/tables/liblouisxml/src/branch_win_mac
 
 
 Configuration & semantic action files

@@ -108,7 +108,7 @@ public class SettingsDialog {
     private final static short NOTES_PAGE = 8;
     private final static short PICTURES_PAGE = 9;
     private final static short PAGENUMBERS_PAGE = 10;
-    private final static short DOCUMENT_LAYOUT_PAGE = 11;
+    private final static short DOCUMENT_STRUCTURE_PAGE = 11;
     private final static short VOLUME_MANAGEMENT_PAGE = 12;
     private final static short TOC_PAGE = 13;
     private final static short SPECIAL_SYMBOLS_PAGE = 14;
@@ -737,11 +737,11 @@ public class SettingsDialog {
         roadmapLabels[HEADINGS_PAGE-1] = bundle.getString("headingSettingsPageTitle");
         roadmapLabels[LISTS_PAGE-1] = bundle.getString("listSettingsPageTitle");
         roadmapLabels[TABLES_PAGE-1] = bundle.getString("tableSettingsPageTitle");
-        roadmapLabels[NOTES_PAGE-1] = "Notes";
-        roadmapLabels[PICTURES_PAGE-1] = "Pictures";
+        roadmapLabels[NOTES_PAGE-1] = bundle.getString("noteSettingsPageTitle");
+        roadmapLabels[PICTURES_PAGE-1] = bundle.getString("pictureSettingsPageTitle");
         roadmapLabels[PAGENUMBERS_PAGE-1] = bundle.getString("pagenumberSettingsPageTitle");
-        roadmapLabels[DOCUMENT_LAYOUT_PAGE-1] = "Document Layout";
-        roadmapLabels[VOLUME_MANAGEMENT_PAGE-1] = "Volume Management";
+        roadmapLabels[DOCUMENT_STRUCTURE_PAGE-1] = bundle.getString("documentStructurePageTitle");
+        roadmapLabels[VOLUME_MANAGEMENT_PAGE-1] = bundle.getString("volumeManagementPageTitle");
         roadmapLabels[TOC_PAGE-1] = bundle.getString("tableOfContentsSettingsPageTitle");
         roadmapLabels[SPECIAL_SYMBOLS_PAGE-1] = bundle.getString("specialSymbolsSettingsPageTitle");
         roadmapLabels[MATH_PAGE-1] = bundle.getString("mathSettingsPageTitle");
@@ -884,7 +884,7 @@ public class SettingsDialog {
                                  bundle.getString("creatorLabel") + ":");
 
         transcribersNotesPageTitleLabel = new Label(container.getControl("Label7"),
-                                                    "Transcriber's notes page title:");
+                                                    bundle.getString("transcribersNotesPageTitleLabel") + ":");
 
         mainTranslationTableLabel = new Label(container.getControl("Label1"),
                                               bundle.getString("languageLabel") + ":");
@@ -914,7 +914,7 @@ public class SettingsDialog {
                                          bundle.getString("paragraphStyleLabel") + ":");
 
         minSyllableLengthLabel = new Label(container.getControl("Label117"),
-                                           "Don't break words into parts smaller than:");
+                                           bundle.getString("minSyllableLengthLabel") + ":");
 
         /* INITIALIZATION */
 
@@ -1098,7 +1098,7 @@ public class SettingsDialog {
         /* LABELS */
 
         characterStyleLabel = new Label(container.getControl("Label90"),
-                                        bundle.getString("styleLabel") + ":");
+                                        bundle.getString("characterStyleLabel") + ":");
 
         characterInheritLabel = new Label(container.getControl("Label91"),
                                           bundle.getString("inheritLabel") + ":");
@@ -1292,7 +1292,7 @@ public class SettingsDialog {
         /* LABELS */
 
         paragraphStyleLabel = new Label(container.getControl("Label83"),
-                                        bundle.getString("styleLabel") + ":");
+                                        bundle.getString("paragraphStyleLabel") + ":");
 
         paragraphInheritLabel = new Label(container.getControl("Label84"),
                                           bundle.getString("inheritLabel") + ":");
@@ -1336,10 +1336,10 @@ public class SettingsDialog {
                                              bundle.getString("spacingLabel"));
 
         paragraphIndentsLine = new FixedLine(container.getControl("FixedLine11"),
-                                             "Alignment & Indents");
+                                             bundle.getString("alignmentLabel") + " & " + bundle.getString("indentsLabel"));
 
         paragraphTextFlowLine = new FixedLine(container.getControl("FixedLine12"),
-                                              "Text Flow");
+                                              bundle.getString("textFlowLabel"));
 
         /* INITIALIZATION */
 
@@ -1578,16 +1578,16 @@ public class SettingsDialog {
                                           bundle.getString("dontSplitLabel"));
 
         headingUpperBorderLabel = new Label(container.getControl("Label54"),
-                                            "Top:");
+                                            bundle.getString("top") + ":");
 
         headingUpperBorderPaddingLabel = new Label(container.getControl("Label62"),
-                                                   "Padding:");
+                                                   bundle.getString("paddingLabel") + ":");
 
         headingLowerBorderLabel = new Label(container.getControl("Label57"),
-                                            "Bottom:");
+                                            bundle.getString("bottom") + ":");
 
         headingLowerBorderPaddingLabel = new Label(container.getControl("Label100"),
-                                                   "Padding:");
+                                                   bundle.getString("paddingLabel") + ":");
 
         /* LINES */
 
@@ -1595,13 +1595,13 @@ public class SettingsDialog {
                                            bundle.getString("spacingLabel"));
 
         headingIndentsLine = new FixedLine(container.getControl("FixedLine14"),
-                                           "Alignment & Indents");
+                                           bundle.getString("alignmentLabel") + " & " + bundle.getString("indentsLabel"));
 
         headingTextFlowLine = new FixedLine(container.getControl("FixedLine15"),
-                                            "Text Flow");
+                                            bundle.getString("textFlowLabel"));
 
         headingBordersLine = new FixedLine(container.getControl("FixedLine16"),
-                                           "Borders");
+                                           bundle.getString("bordersLabel"));
 
         /* INITIALIZATION */
 
@@ -1948,7 +1948,7 @@ public class SettingsDialog {
         /* LABELS */
 
         tableStyleLabel = new Label(container.getControl("Label29"),
-                                    "Table style:");
+                                    bundle.getString("tableStyleLabel") + ":");
 
         tableSimpleLabel = new Label(container.getControl("Label23"),
                                      bundle.getString("simpleTableLabel"));
@@ -1960,7 +1960,7 @@ public class SettingsDialog {
                                               bundle.getString("columnDelimiterLabel") + ":");
 
         tableIndentPerColumnLabel = new Label(container.getControl("Label22"),
-                                              "Indent per column:");
+                                              bundle.getString("indentPerColumnLabel") + ":");
 
         tableLinesAboveBelowLabel = new Label(container.getControl("Label48"),
                                               bundle.getString("linesAboveLabel") + "/" + bundle.getString("linesBelowLabel") + ":");
@@ -1975,29 +1975,29 @@ public class SettingsDialog {
                                        bundle.getString("runoversLabel") + ":");
 
         tableMirrorLabel = new Label(container.getControl("Label121"),
-                                     "Invert reading order");
+                                     bundle.getString("tableMirrorLabel"));
 
         tableDontSplitRowsLabel = new Label(container.getControl("Label45"),
                                             bundle.getString("tableDontSplitRowsLabel"));
 
         tableColumnHeadingsLabel = new Label(container.getControl("Label120"),
-                                             "Column headings in first row");
+                                             bundle.getString("tableColumnHeadingsLabel"));
 
         tableRowHeadingsLabel = new Label(container.getControl("Label50"),
-                                          "Row headings in first column");
+                                          bundle.getString("tableRowHeadingsLabel"));
 
         tableRepeatHeadingsLabel = new Label(container.getControl("Label95"),
-                                             "Repeat headings");
+                                             bundle.getString("tableRepeatHeadingsLabel"));
 
         tableHeadingSuffixLabel = new Label(container.getControl("Label49"),
-                                            "Heading suffix:");
+                                            bundle.getString("tableHeadingSuffixLabel") + ":");
 
         /* LINES */
 
         tableSpacingLine = new FixedLine(container.getControl("FixedLine4"),
-                                         "Spacing & Indents");
+                                         bundle.getString("spacingLabel") + " & " + bundle.getString("indentsLabel"));
         tableTextFlowLine = new FixedLine(container.getControl("FixedLine22"),
-                                          "Text Flow");
+                                          bundle.getString("textFlowLabel"));
 
         /* INITIALIZATION */
 
@@ -2100,16 +2100,16 @@ public class SettingsDialog {
         /* LABELS */
 
         notesNoterefFormatLabel = new Label(container.getControl("Label102"),
-                                            "Format");
+                                            bundle.getString("noterefFormatLabel"));
 
         notesNoterefPrefixLabel = new Label(container.getControl("Label103"),
-                                            "Prefix:");
+                                            bundle.getString("noterefPrefixLabel") + ":");
         
         notesNoterefSpaceBeforeLabel = new Label(container.getControl("Label118"),
-                                                 "Space before");
+                                                 bundle.getString("noterefSpaceBeforeLabel"));
         
         notesNoterefSpaceAfterLabel = new Label(container.getControl("Label119"),
-                                                "Space after");
+                                                bundle.getString("noterefSpaceAfterLabel"));
 
         notesFootnoteLinesAboveLabel = new Label(container.getControl("Label105"),
                                                  bundle.getString("linesAboveLabel") + ":");
@@ -2131,8 +2131,8 @@ public class SettingsDialog {
 
         /* LINES */
 
-        notesFootnoteLine = new FixedLine(container.getControl("FixedLine18"), "Footnotes");
-        notesNoterefLine = new FixedLine(container.getControl("FixedLine17"), "Note references");
+        notesFootnoteLine = new FixedLine(container.getControl("FixedLine18"), bundle.getString("footnotesLabel"));
+        notesNoterefLine = new FixedLine(container.getControl("FixedLine17"), bundle.getString("noteReferencesLabel"));
 
         /* INITIALIZATION */
 
@@ -2181,18 +2181,18 @@ public class SettingsDialog {
                                                  bundle.getString("linesAboveLabel") + "/" + bundle.getString("linesBelowLabel") + ":");
 
         picturesOpeningMarkLabel = new Label(container.getControl("Label127"),
-                                             "Opening mark:");
+                                             bundle.getString("picturesOpeningMarkLabel") + ":");
 
         picturesClosingMarkLabel = new Label(container.getControl("Label126"),
-                                             "Closing mark:");
+                                             bundle.getString("picturesClosingMarkLabel") + ":");
 
         picturesDescriptionPrefixLabel = new Label(container.getControl("Label122"),
-                                                   "Description prefix:");
+                                                   bundle.getString("picturesDescriptionPrefixLabel") + ":");
 
 
         /* LINES */
 
-        picturesSpacingLine = new FixedLine(container.getControl("FixedLine5"), "Spacing & indents");
+        picturesSpacingLine = new FixedLine(container.getControl("FixedLine5"), bundle.getString("spacingLabel") + " & " + bundle.getString("indentsLabel"));
 
         /* INITIALIZATION */
 
@@ -2416,54 +2416,54 @@ public class SettingsDialog {
         /* LABELS */
 
         frontmatterLabel = new Label(container.getControl("Label129"),
-                                     "Frontmatter section:");
+                                     bundle.getString("frontmatterSectionLabel") + ":");
 
         titlePageLabel = new Label(container.getControl("Label130"),
-                                   "Title page:");
+                                   bundle.getString("titlePageSectionLabel") + ":");
 
         repeatFrontmatterLabel = new Label(container.getControl("Label131"),
-                                           "Repeat frontmatter:");
+                                           bundle.getString("repeatFrontmatterSectionLabel") + ":");
 
         singleVolumeLabel = new Label(container.getControl("Label110"),
-                                      "Single volume");
+                                      bundle.getString("singleVolumeLabel"));
 
         manualVolumesLabel = new Label(container.getControl("Label111"),
-                                       "Manual volumes");
+                                       bundle.getString("manualVolumesLabel"));
 
         automaticVolumesLabel = new Label(container.getControl("Label112"),
-                                          "Automatic volumes");
+                                          bundle.getString("automaticVolumesLabel"));
 
         preferredVolumeSizeLabel = new Label(container.getControl("Label114"),
-                                             "Preferred volume size");
+                                             bundle.getString("preferredVolumeSizeLabel"));
 
         maxVolumeSizeLabel = new Label(container.getControl("Label113"),
-                                       "Maximum volume size");
+                                       bundle.getString("maxVolumeSizeLabel"));
 
         minVolumeSizeLabel = new Label(container.getControl("Label115"),
-                                       "Minimum volume size");
+                                       bundle.getString("minVolumeSizeLabel"));
 
         minLastVolumeSizeLabel = new Label(container.getControl("Label116"),
-                                           "Minimum size of last volume");
+                                           bundle.getString("minLastVolumeSizeLabel"));
 
         rearmatterLabel = new Label(container.getControl("Label132"),
-                                    "Rearmatter section:");
+                                    bundle.getString("rearmatterSectionLabel") + ":");
 
         singleRearVolumeLabel = new Label(container.getControl("Label123"),
-                                          "Single volume");
+                                          bundle.getString("singleVolumeLabel"));
 
         manualRearVolumesLabel = new Label(container.getControl("Label128"),
-                                           "Manual volumes");
+                                           bundle.getString("manualVolumesLabel"));
 
         /* LINES */
 
         frontMatterLine = new FixedLine(container.getControl("FixedLine26"),
-                                        "Frontmatter");
+                                        bundle.getString("frontmatterLabel"));
 
         bodyMatterLine = new FixedLine(container.getControl("FixedLine28"),
-                                       "Bodymatter");
+                                       bundle.getString("bodymatterLabel"));
 
         rearMatterLine = new FixedLine(container.getControl("FixedLine27"),
-                                       "Rearmatter");
+                                       bundle.getString("rearmatterLabel"));
 
         /* INITIALIZATION */
 
@@ -2586,27 +2586,27 @@ public class SettingsDialog {
                                            bundle.getString("preliminaryVolumeLabel"));
 
         volumeTitleLabel = new Label(container.getControl("Label135"),
-                                     "Title:");
+                                     bundle.getString("volumeTitleLabel") + ":");
 
         volumeSectionLabel = new Label(container.getControl("Label134"),
-                                       "Section:");
+                                       bundle.getString("volumeSectionLabel") + ":");
 
         volumeFrontmatterLabel = new Label(container.getControl("Label136"),
-                                           "Include frontmatter");
+                                           bundle.getString("includeFrontmatterLabel"));
 
         volumeListOfSpecialSymbolsLabel = new Label(container.getControl("Label137"),
-                                                    "Include list of special symbols");
+                                                    bundle.getString("includeSpecialSymbolsListLabel"));
 
         volumeTranscribersNotePageLabel = new Label(container.getControl("Label138"),
-                                                    "Include transcriber's notes page");
+                                                    bundle.getString("includeTranscribersNotesPageLabel"));
 
         volumeTableOfContentsLabel = new Label(container.getControl("Label139"),
-                                               "Include table of contents");
+                                               bundle.getString("includeTableOfContentsLabel"));
 
         /* LINES */
 
         volumesLine = new FixedLine(container.getControl("FixedLine29"),
-                                    "Volumes");
+                                    "volumesLabel");
 
         /* INITIALIZATION */
 
@@ -2687,7 +2687,7 @@ public class SettingsDialog {
                                                            bundle.getString("tableOfContentsBraillePageNumbersLabel"));
 
         tableOfContentsUptoLevelLabel = new Label(container.getControl("Label101"),
-                                                  "Evaluate up to level:");
+                                                  bundle.getString("tableOfContentsUptoLevelLabel") + ":");
 
         tableOfContentsLevelLabel = new Label(container.getControl("Label56"),
                                               bundle.getString("levelLabel") + ":");
@@ -2701,7 +2701,7 @@ public class SettingsDialog {
         /* LINES */
 
         tableOfContentsIndentsLine = new FixedLine(container.getControl("FixedLine6"),
-                                                   "Indents");
+                                                   bundle.getString("indentsLabel"));
 
         /* INITIALIZATION */
 
@@ -3054,7 +3054,9 @@ public class SettingsDialog {
             listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, listboxControl);
             button = (XButton)UnoRuntime.queryInterface(XButton.class, buttonControl);
             rulesList.add(new BANAFormattingRules());
+          //rulesList.add(new UEBCFormattingRules());
             listbox.addItem("BANA", (short)1);
+          //listbox.addItem("UEBC", (short)2);
             listbox.selectItemPos((short)0, true);
             button.setLabel("Apply...");
             button.addActionListener(this);

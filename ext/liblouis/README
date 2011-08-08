@@ -10,7 +10,7 @@ Source code
 Translation tables
 ******************
  
- => %ODT2BRAILLE_HOME%/ext/liblouis/tables
+ => %ODT2BRAILLE_HOME%/tables/liblouis/tables
 
 
 Build instructions
