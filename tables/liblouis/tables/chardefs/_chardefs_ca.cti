@@ -132,24 +132,6 @@ punctuation \x201F        236                 ‟                   DOUBLE HIGH-
 punctuation \x2043        36                  ⁃                   HYPHEN BULLET
 
 
-# ----------------------------------------------------------------------------------------------
-# Unicode 2800..28FF  Braille Patterns
-# ----------------------------------------------------------------------------------------------
-
-sign        \x2808        4                   ⠈                   BRAILLE PATTERN DOTS-4
-sign        \x2809        14                  ⠉                   BRAILLE PATTERN DOTS-14
-sign        \x2810        5                   ⠐                   BRAILLE PATTERN DOTS-5
-sign        \x2818        45                  ⠘                   BRAILLE PATTERN DOTS-45
-sign        \x2820        6                   ⠠                   BRAILLE PATTERN DOTS-6
-sign        \x2821        16                  ⠡                   BRAILLE PATTERN DOTS-16
-sign        \x2828        46                  ⠨                   BRAILLE PATTERN DOTS-46
-sign        \x282E        2346                ⠮                   BRAILLE PATTERN DOTS-2346
-sign        \x282F        12346               ⠯                   BRAILLE PATTERN DOTS-12346
-sign        \x2830        56                  ⠰                   BRAILLE PATTERN DOTS-56
-sign        \x2839        1456                ⠹                   BRAILLE PATTERN DOTS-1456
-sign        \x283C        3456                ⠼                   BRAILLE PATTERN DOTS-3456
-
-
 # ==============================================================================================
 # MULTI-CELL
 # ==============================================================================================

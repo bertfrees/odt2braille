@@ -10,21 +10,19 @@ import com.sun.star.awt.FocusEvent;
 import be.docarch.odt2braille.setup.Setting;
 
 public class TextSettingControl extends SettingControl<Setting<String>>
-                      implements XFocusListener {
+                             implements XFocusListener {
 
     private final XTextComponent textField;
     protected final XWindow window;
     
     public TextSettingControl(XControl control) {
-
         super(control);
         textField = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, control);
         window = (XWindow)UnoRuntime.queryInterface(XWindow.class, control);
     }
 
     public void update() {
-        if (property == null) { return; }
-        textField.setText(property.get());
+        textField.setText((property == null) ? "" : property.get());
     }
 
     public void save() {
@@ -36,7 +34,7 @@ public class TextSettingControl extends SettingControl<Setting<String>>
         if (onOff) {
             window.addFocusListener(this);
         } else {
-            window.addFocusListener(this);
+            window.removeFocusListener(this);
         }
     }
 

@@ -7,8 +7,9 @@
             <minimum-ant-version>1.7.0</minimum-ant-version>
             <explicit-platform explicit-source-supported="true"/>
             <source-roots>
+                <root id="src.tools.dir"/>
                 <root id="src.dir" name="addon"/>
-                <root id="src.core.dir" name="core"/>
+                <root id="src.core.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir" name="test"/>

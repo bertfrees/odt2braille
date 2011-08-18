@@ -6,7 +6,7 @@
 # ----------------------------------------------------------------------------------------------
 # Extract preliminary page range mode (_extractpprangemode.sem)
 #
-#	preliminary &xpath(//dtb:frontmatter) \*@e
+#	preliminary &xpath(//dtb:frontmatter) \*\evs
 # ----------------------------------------------------------------------------------------------
 
 # General
@@ -23,8 +23,8 @@
 	
 # Volumes
 
-    newPageBefore volume \*@e
-    generic       &xpath(//dtb:volume[not(preceding::dtb:volume) and not(preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*@e
+    newPageBefore volume \*\evs
+    generic       &xpath(//dtb:volume[not(preceding::dtb:volume) and not(preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*\evs
 	
 # Special Typefaces
 # Languages

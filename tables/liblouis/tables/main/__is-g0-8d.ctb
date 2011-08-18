@@ -4,11 +4,10 @@
 # ----------------------------------------------------------------------------------------------
 
 include _display.dis
-include _chardefs_is.cti
+include _chardefs_is-8d.cti
 include _chardefs.cti
-include _chardefs_is.cti
+include _chardefs_is-8d.cti
 include _translation.ctb
-include _translation_is-g1.ctb
 include _hyphenation_is.cti
 include _correct.ctb
 

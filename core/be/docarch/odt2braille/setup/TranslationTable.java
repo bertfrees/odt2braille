@@ -162,7 +162,9 @@ public class TranslationTable implements Serializable {
                     options.add(Integer.parseInt(option.substring(i,i+1)));
                 }
             }
-            if (options.size() > 1) { options.remove(0); }
+            if (options.size() > 1 && !TranslationTable.options.contains(locale + "-g0-8d")) {
+                options.remove(0);
+            }
         }
     };
 

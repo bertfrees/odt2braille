@@ -2,14 +2,12 @@ package be.docarch.odt2braille.setup;
 
 import java.util.Locale;
 import java.util.List;
-import java.util.Map;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Expression;
 import java.beans.Encoder;
 import java.beans.PropertyDescriptor;
 import java.beans.Statement;
 import java.lang.reflect.Method;
-
 
 public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
@@ -94,15 +92,16 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                         out.writeStatement(new Statement(oldInstance, "clear", new Object[]{}));
                         newSettingList.clear();
                     }
-                    
+                    int i = 0;
                     Object newObject;
-
                     for (Object oldObject : oldList) {
                         newObject = newSettingList.add();
-                        if (!oldObject.equals(newObject)) {
-                            out.writeExpression(new Expression(oldObject, oldInstance, "add", new Object[]{}));
+                        newSettingList.remove(i++);
+                        Expression expression = new Expression(oldObject, oldInstance, "add", new Object[]{});
+                        if (oldObject.equals(newObject)) {
+                            out.writeStatement(expression);
                         } else {
-                            out.writeStatement(new Statement(oldInstance, "add", new Object[]{}));
+                            out.writeExpression(expression);
                         }
                     }
                 }

@@ -21,6 +21,6 @@ public class NumericPropertyField extends PropertyField<Property<Integer>> {
     }
 
     public void update() {
-        numericField.setValue((double)property.get());
+        numericField.setValue((double)((property == null) ? 0 : property.get()));
     }
 }

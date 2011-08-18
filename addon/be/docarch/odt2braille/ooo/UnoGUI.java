@@ -646,6 +646,10 @@ public class UnoGUI {
                 }
             }
 
+            // TODO: change PrintDate & PrintedBy information in DocumentProperties
+            // http://api.openoffice.org/docs/common/ref/com/sun/star/document/XDocumentProperties.html#PrintedBy
+            // http://api.openoffice.org/docs/common/ref/com/sun/star/document/XDocumentProperties.html#PrintDate
+
         } catch (Exception ex) {
             handleUnexpectedException(ex);
         } finally {

@@ -342,6 +342,12 @@ public class SettingsDialog {
     private final Label listDontSplitLabel;
     private final Label listDontSplitItemsLabel;
 
+    /* LINES */
+
+    private final FixedLine listSpacingLine;
+    private final FixedLine listIndentsLine;
+    private final FixedLine listTextFlowLine;
+
     /***************/
     /* TABLES PAGE */
     /***************/
@@ -817,7 +823,8 @@ public class SettingsDialog {
         /* CONTROLS */
 
         formattingRulesListBox = new FormattingRulesButton(container.getControl("CommandButton21"),
-                                                           container.getControl("ListBox19"));
+                                                           container.getControl("ListBox19"),
+                                                           bundle.getString("applyButton") + "...");
 
         /* INITIALIZATION */
 
@@ -1768,6 +1775,17 @@ public class SettingsDialog {
         listDontSplitItemsLabel = new Label(container.getControl("Label97"),
                                             bundle.getString("listDontSplitItemsLabel"));
 
+        /* LINES */
+
+        listSpacingLine = new FixedLine(container.getControl("FixedLine19"),
+                                           bundle.getString("spacingLabel"));
+
+        listIndentsLine = new FixedLine(container.getControl("FixedLine20"),
+                                        bundle.getString("indentsLabel"));
+
+        listTextFlowLine = new FixedLine(container.getControl("FixedLine21"),
+                                         bundle.getString("textFlowLabel"));
+
         /* INITIALIZATION */
 
         listLinesAboveField.link(listLevelListBox.getSelectedItem().linesAbove);
@@ -2606,7 +2624,7 @@ public class SettingsDialog {
         /* LINES */
 
         volumesLine = new FixedLine(container.getControl("FixedLine29"),
-                                    "volumesLabel");
+                                    bundle.getString("volumesLabel"));
 
         /* INITIALIZATION */
 
@@ -3050,7 +3068,8 @@ public class SettingsDialog {
         private final List<FormattingRules> rulesList = new ArrayList<FormattingRules>();
 
         public FormattingRulesButton(XControl buttonControl,
-                                     XControl listboxControl) {
+                                     XControl listboxControl,
+                                     String buttonLabel) {
             listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, listboxControl);
             button = (XButton)UnoRuntime.queryInterface(XButton.class, buttonControl);
             rulesList.add(new BANAFormattingRules());
@@ -3058,7 +3077,7 @@ public class SettingsDialog {
             listbox.addItem("BANA", (short)1);
           //listbox.addItem("UEBC", (short)2);
             listbox.selectItemPos((short)0, true);
-            button.setLabel("Apply...");
+            button.setLabel(buttonLabel);
             button.addActionListener(this);
         }
         public void actionPerformed(ActionEvent event) {
@@ -3247,7 +3266,9 @@ public class SettingsDialog {
                 settings.getRearMatterMode() != VolumeManagementMode.MANUAL) {
                 list.add(settings.getRearMatterVolume());
             }
-            if (!list.contains(selectedVolume)) {
+            if (list.size() == 0) {
+                selectedVolume = null;
+            } else if (!list.contains(selectedVolume)) {
                 selectedVolume = list.get(0);
             }
             listenControl(false);
@@ -3257,8 +3278,14 @@ public class SettingsDialog {
                 listbox.addItem(getDisplayValue(v), i);
                 i++;
             }
+            if (list.size() > 0) {
+                listbox.selectItem(getDisplayValue(selectedVolume), true);
+            }
             listenControl(true);
-            listbox.selectItem(getDisplayValue(selectedVolume), true);
+            EventObject eo = new EventObject(this);
+            for (DialogElementListener listener : listeners) {
+                listener.dialogElementUpdated(eo);
+            }
         }
 
         public void updateProperties() {
@@ -3376,7 +3403,9 @@ public class SettingsDialog {
         public void update() {
             list.clear();
             list.addAll(settings.getSpecialSymbolList().values());
-            if (!list.contains(selectedSymbol)) {
+            if (list.size() == 0) {
+                selectedSymbol = null;
+            } else if (!list.contains(selectedSymbol)) {
                 selectedSymbol = list.get(0);
             }
             listenControl(false);
@@ -3386,8 +3415,14 @@ public class SettingsDialog {
                 listbox.addItem(getDisplayValue(s), i);
                 i++;
             }
+            if (list.size() > 0) {
+                listbox.selectItem(getDisplayValue(selectedSymbol), true);
+            }
             listenControl(true);
-            listbox.selectItem(getDisplayValue(selectedSymbol), true);
+            EventObject eo = new EventObject(this);
+            for (DialogElementListener listener : listeners) {
+                listener.dialogElementUpdated(eo);
+            }
         }
 
         public void updateProperties() {

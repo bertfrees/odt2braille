@@ -98,7 +98,7 @@
      <para><code>ant javadoc</code> : build the javadoc documentation</para>
 	</listitem>
 	<listitem>
-     <para><code>ant text</code> : test the odt2braille core</para>
+     <para><code>ant test</code> : test the odt2braille core</para>
 	</listitem>
    </itemizedlist>
   </section>

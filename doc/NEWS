@@ -212,8 +212,9 @@ Version 0.1.1
 
 bugs fixed:
 
--Math
--Multiple files checkbox
+- Math
+- Multiple files checkbox
+- ...
 
 embossers:
 
@@ -226,20 +227,37 @@ embossers:
 
 changes:
 
--headings: tot level 10
--table of contents: upto level 1..10
+- headings: tot level 10
+- table of contents: upto level 1..10
+- settings are stored elsewhere (not in custom properties)
+- export: filename01.brf, filename02.brf, .. if more than 9 parts
+- free to name sections (PreliminaryPages, TitlePage, Volume1, Volume2, Supplement1, ...)
 
 added:
 
--borders on headings/tables/frames
--note settings: noteref/footnotes
--volume management settings: automatic splitting in volumes
--setting for hyphenation: minimum length of splitted parts
+- borders on headings/tables/frames
+- table settings: invert reading order, repeat headings, ...
+- note settings: noteref/footnotes
+- picture settings
+- document structure settings
+- volume management settings: automatic splitting in volumes
+- setting for hyphenation: minimum length of splitted parts
+- formulas: inline instead of as block
 
 new tables:
-
 - Serbian
 - Kurdish
 - Ethiopic
+- Swedish (8 dot)
+- Icelandic (8 dot)
 
-updated tables => zie liblouis ?
+updated tables:
+- Czech
+- French
+- Norwegian
+- Romanian
+
+Localisation:
+- Czech
+- Arabic
+- Polish

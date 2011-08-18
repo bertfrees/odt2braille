@@ -20,6 +20,6 @@ public class TextPropertyField<T> extends PropertyField<Property<T>> {
     }
 
     public void update() {
-        textField.setText(getDisplayValue(property.get()));
+        textField.setText((property == null) ? "" : getDisplayValue(property.get()));
     }
 }

@@ -24,8 +24,7 @@ public class CheckBox extends SettingControl<Setting<Boolean>>
     }
 
     public void update() {
-        if (property == null) { return; }
-        checkbox.setState((short)(property.get()?1:0));
+        checkbox.setState((short)((property == null) ? 0 : property.get()?1:0));
     }
 
     @Override

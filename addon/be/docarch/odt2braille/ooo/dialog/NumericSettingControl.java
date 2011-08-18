@@ -30,8 +30,7 @@ public class NumericSettingControl extends SettingControl<Setting<Integer>>
     }
 
     public void update() {
-        if (property == null) { return; }
-        numericField.setValue((double)property.get());
+        numericField.setValue((double)((property == null) ? 0 : property.get()));
     }
 
     public void textChanged(TextEvent event) {

@@ -12,8 +12,9 @@
     
     <property name="project-name" value="odt2braille"/>
     <property name="release-version" value="0.1.1.rc10"/>
-
 	
+    <property name="on-debian" value="false"/>
+
 <!--
   /- ===========================================================================
   /- MAIN TARGETS                                                           
@@ -85,7 +86,7 @@
     
     <!-- initialise -->
     <target name="-init-build"
-            depends="-windows-properties,-macosx-properties,-linux-properties">
+            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
 
         <property file="build.properties"/>
 		
@@ -148,6 +149,9 @@
         <property file="build.linux.properties"/>
     </target>
 
+    <target name="-debian-properties" if="is.debian" depends="-detect-os">
+        <property file="build.debian.properties"/>
+    </target>
 
     <!-- ask target.os as an input -->
     <target name="-prompt-target-os">
@@ -182,6 +186,14 @@
             <and>
                 <os family="unix"/>
                 <not><os family="mac"/></not>
+                <not><istrue value="${on-debian}"/></not>
+            </and>
+        </condition>
+        <condition property="is.debian">
+            <and>
+                <os family="unix"/>
+                <not><os family="mac"/></not>
+                <istrue value="${on-debian}"/>
             </and>
         </condition>
     </target>

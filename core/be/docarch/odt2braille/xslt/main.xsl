@@ -1887,6 +1887,7 @@ SKIP / OMISSIONS
     <xsl:template match="text:change" />
     <xsl:template match="text:change-start" />
     <xsl:template match="text:change-end" />
+    <xsl:template match="text:section-source" />
 
     <!-- OMISSIONS -->
 

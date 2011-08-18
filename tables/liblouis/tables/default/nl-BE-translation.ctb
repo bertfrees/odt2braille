@@ -1,5 +1,5 @@
 #
-#  Copyright (C) 2010 by DocArch <http://www.docarch.be>
+#  Copyright (C) 2010, 2011 by DocArch <http://www.docarch.be>
 #
 #  This file is part of liblouis.
 #
@@ -17,7 +17,7 @@
 #  License along with liblouis. If not, see
 #  <http://www.gnu.org/licenses/>.
 #
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 #
 #  Dutch Braille (for Belgium and the Netherlands)
 #     Created and maintained by Bert Frees <bertfrees@gmail.com>
@@ -75,7 +75,7 @@ midword \x00A7 0-346-0
 endword \x00A7 0-346
 
 # percent %
-# promille ‰
+# promille
 endnum  \x0025 0-123456
 endnum  \x2030 0-123456-123456
 
@@ -98,7 +98,7 @@ begword \x00D7   236-0
 midword \x00D7 0-236-0
 endword \x00D7 0-236
 
-# euroteken €
+# euroteken
 # dollarteken $
 # pondteken £
 # yenteken ¥

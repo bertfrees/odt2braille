@@ -9,7 +9,6 @@ include _chardefs.cti
 include _chardefs_is.cti
 include _translation.ctb
 include _hyphenation_is.cti
-include _exactdots.ctb
 include _correct.ctb
 
 # ----------------------------------------------------------------------------------------------

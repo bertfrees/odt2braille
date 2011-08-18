@@ -1330,8 +1330,8 @@ public class Configuration implements Serializable {
         }
     }
 
-    private class SectionVolumeList extends SettingList<SectionVolume>
-                                 implements Dependent {
+    public class SectionVolumeList extends SettingList<SectionVolume>
+                                implements Dependent {
 
         private List<SectionVolume> list = new ArrayList<SectionVolume>();
         private Collection<String> available = new ArrayList<String>();

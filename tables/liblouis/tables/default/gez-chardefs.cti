@@ -1,4 +1,25 @@
 #
+#  Copyright (C) 2011 by Peter Engström <peter.engstrom@indexbraille.com>
+#  Copyright (C) 2011 by Dr. Tamru E. Belay <tamru@sympatico.ca>
+#
+#  This file is part of liblouis.
+#
+#  liblouis is free software: you can redistribute it and/or modify it
+#  under the terms of the GNU Lesser General Public License as
+#  published by the Free Software Foundation, either version 3 of the
+#  License, or (at your option) any later version.
+#
+#  liblouis is distributed in the hope that it will be useful, but
+#  WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with liblouis. If not, see
+#  <http://www.gnu.org/licenses/>.
+#
+# -----------------------------------------------------------------------------
+#
 # 	ETHIOPIC
 #	========
 # 	Authors:	Peter Engström, Index Braille <peter.engstrom@indexbraille.com>
@@ -107,7 +128,7 @@ sign \x00B0 356						# 176 ° degrees sign
 sign \x00B5 46-134					# 181 µ micro sign
 sign \x00B6 4-1234-345				# 182 ¶ pilcrow sign
 sign \x00BF 236						# 191 inverted question mark
-math \x00D7 12346-1346				# 215 — multiplication sign
+math \x00D7 12346-1346				# 215 multiplication sign
 math \x00F7 56-256					# 247 · division sign
 punctuation \x2010 36				# 8208 hyphen
 punctuation \x2011 23478			# 8209 non-breaking hyphen

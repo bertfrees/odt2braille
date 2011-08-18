@@ -125,7 +125,7 @@ public class PrintDialog implements XItemListener,
 
         L10N_deviceLabel = bundle.getString("deviceLabel") + ":";
         L10N_printToFileLabel = bundle.getString("printToFileLabel");
-        L10N_numberOfCopiesLabel = "Number of copies:";
+        L10N_numberOfCopiesLabel = "Number of copies:"; // numberOfCopiesLabel
         L10N_okButton = bundle.getString("embossButton");
         L10N_cancelButton = bundle.getString("cancelButton");
         L10N_windowTitle = bundle.getString("embossDialogTitle");

@@ -33,16 +33,16 @@ generic      &xpath(//math:mfenced[@open='∣' and @close='∣'][not(child::math
 
 generic      mtable
 skip         &xpath(//math:mtext[ancestor::math:mfrac or ancestor::math:mtable])
-mathnewline	 mtr @56@1256
-mathnewline  &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=1])       @123456
+softreturn   mtr @56@1256
+softreturn   &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=1])       @123456
 generic      &xpath(//*[not(self::math:mfenced)]/math:mtable/math:mtr[position()=last()])  @56@1256,\*\ex
 generic      mtd \s
 generic      &xpath(//math:mtd[position()=1])
 
-mathnewline  &xpath(//math:mfenced[@open='']/math:mtable/math:mtr[position()=1])   (@123456
-mathnewline  &xpath(//math:mfenced[@open='[']/math:mtable/math:mtr[position()=1])   [@123456
-mathnewline  &xpath(//math:mfenced[@open=']']/math:mtable/math:mtr[position()=1])   ]@123456
-mathnewline  &xpath(//math:mfenced[@open='∣']/math:mtable/math:mtr[position()=1])   @1456@123456
+softreturn   &xpath(//math:mfenced[@open='']/math:mtable/math:mtr[position()=1])   (@123456
+softreturn   &xpath(//math:mfenced[@open='[']/math:mtable/math:mtr[position()=1])   [@123456
+softreturn   &xpath(//math:mfenced[@open=']']/math:mtable/math:mtr[position()=1])   ]@123456
+softreturn   &xpath(//math:mfenced[@open='∣']/math:mtable/math:mtr[position()=1])   @1456@123456
 
 generic      &xpath(//math:mfenced[@close='']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex)
 generic      &xpath(//math:mfenced[@close=']']/math:mtable/math:mtr[position()=last()])   @56@1256,\*\ex]

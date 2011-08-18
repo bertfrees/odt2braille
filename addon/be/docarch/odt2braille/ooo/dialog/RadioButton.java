@@ -29,8 +29,7 @@ public class RadioButton<T> extends SettingControl<Setting<T>>
     }
 
     public void update() {
-        if (property == null || condition == null) { return; }
-        radiobutton.setState(property.get().equals(condition));
+        radiobutton.setState((property == null || condition == null) ? false : property.get().equals(condition));
     }
 
     public void save() {
@@ -43,7 +42,8 @@ public class RadioButton<T> extends SettingControl<Setting<T>>
     @Override
     public void updateProperties() {
         try {
-            propertySet.setPropertyValue("Enabled", property!=null ? property.enabled() && property.accept(condition) : false);
+            propertySet.setPropertyValue("Enabled",
+                    (property == null || condition == null) ? false : property.enabled() && property.accept(condition));
         } catch (UnknownPropertyException e) {
         } catch (PropertyVetoException e) {
         } catch (IllegalArgumentException e) {

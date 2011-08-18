@@ -6,9 +6,10 @@ midnum + 23578							plus
 midnum / 34
 midnum : 25
 
+
 repeated \s 0							espaces
 repeated \t 0							tabulations
-# repeated \x00a0 0					no-break space
+repeated \x00a0 0					no-break space
 
 repeated ... 256-256-256				points de suspension
 repeated --- 36-36-36

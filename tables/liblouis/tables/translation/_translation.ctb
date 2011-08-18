@@ -8,5 +8,6 @@ punctuation \x00AD        367                 ­                   SOFT HYPHEN
 midword     \x00AD        ef
 replace     \x00AD
 
+context ["\evs"] @e                                               # volume separator
 
 # ----------------------------------------------------------------------------------------------
