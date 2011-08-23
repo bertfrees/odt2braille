@@ -16,6 +16,7 @@ import be.docarch.odt2braille.CustomTractorPaper;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.embosser.EmbosserCatalog;
+import org.daisy.braille.embosser.EmbosserProperties.PrintMode;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableCatalog;
 import org.daisy.braille.tools.Length;
@@ -58,7 +59,7 @@ public class EmbossConfiguration implements Serializable,
     public final DependentYesNoSetting     duplex;
     public final DependentYesNoSetting     eightDots;
     public final DependentYesNoSetting     zFolding;
-    public final DependentYesNoSetting     saddleStitch;
+    public final DependentYesNoSetting     magazineMode;
     public final DependentNumberSetting    sheetsPerQuire;
     public final PaperSetting              paper;
     public final PageFormatProperty        pageFormat;
@@ -86,7 +87,7 @@ public class EmbossConfiguration implements Serializable,
     public boolean  getDuplex()           { return duplex.get(); }
     public boolean  getEightDots()        { return eightDots.get(); }
     public boolean  getZFolding()         { return zFolding.get(); }
-    public boolean  getSaddleStitch()     { return saddleStitch.get(); }
+    public boolean  getMagazineMode()     { return magazineMode.get(); }
 
     
     /* SETTERS */
@@ -100,7 +101,7 @@ public class EmbossConfiguration implements Serializable,
     public void setDuplex          (boolean value) { duplex.set(value); }
     public void setEightDots       (boolean value) { eightDots.set(value); }
     public void setZFolding        (boolean value) { zFolding.set(value); }
-    public void setSaddleStitch    (boolean value) { saddleStitch.set(value); }
+    public void setMagazineMode    (boolean value) { magazineMode.set(value); }
 
     
     /***************************/
@@ -230,7 +231,7 @@ public class EmbossConfiguration implements Serializable,
         duplex = new DuplexSetting();
         eightDots = new EightDotsSetting();
         zFolding = new ZFoldingSetting();
-        saddleStitch = new SaddleStitchSetting();
+        magazineMode = new MagazineModeSetting();
         sheetsPerQuire = new SheetsPerQuireSetting();
         columns = new ColumnsProperty();
         rows = new RowsProperty();
@@ -243,7 +244,7 @@ public class EmbossConfiguration implements Serializable,
         
         duplex.set(true);
         eightDots.set(false);
-        saddleStitch.set(false);
+        magazineMode.set(false);
         zFolding.set(false);
         sheetsPerQuire.set(1);
         
@@ -251,7 +252,7 @@ public class EmbossConfiguration implements Serializable,
         eightDots.refresh();
         charSet.refresh();
         sheetsPerQuire.refresh();
-        saddleStitch.refresh();
+        magazineMode.refresh();
         zFolding.refresh();
         paper.refresh();
         pageOrientation.refresh();
@@ -271,7 +272,7 @@ public class EmbossConfiguration implements Serializable,
         embosser.addListener(eightDots);
         embosser.addListener(charSet);
         embosser.addListener(sheetsPerQuire);
-        embosser.addListener(saddleStitch);
+        embosser.addListener(magazineMode);
         embosser.addListener(zFolding);
         embosser.addListener(paper);
         embosser.addListener(pageFormat);
@@ -280,11 +281,11 @@ public class EmbossConfiguration implements Serializable,
         embosser.addListener(columns);
         embosser.addListener(rows);
         eightDots.addListener(charSet);
-        saddleStitch.addListener(paper);
-        saddleStitch.addListener(pageFormat);
-        saddleStitch.addListener(pageOrientation);
-        saddleStitch.addListener(margins);
-        saddleStitch.addListener(sheetsPerQuire);
+        magazineMode.addListener(paper);
+        magazineMode.addListener(pageFormat);
+        magazineMode.addListener(pageOrientation);
+        magazineMode.addListener(margins);
+        magazineMode.addListener(sheetsPerQuire);
         paper.addListener(pageFormat);
         paper.addListener(pageOrientation);        
         pageOrientation.addListener(pageFormat);
@@ -523,6 +524,7 @@ public class EmbossConfiguration implements Serializable,
 
         public boolean accept(Length value) {
             if (!enabled()) { return false; }
+            if (!pageFormat.isValid()) { return true; }
             Embosser e = embosser.get();
             switch (paper.get().getType()) {
                 case SHEET: return e.supportsPageFormat(new SheetPaperFormat(value, pageHeight.get()));
@@ -562,6 +564,7 @@ public class EmbossConfiguration implements Serializable,
 
         public boolean accept(Length value) {
             if (!enabled()) { return false; }
+            if (!pageFormat.isValid()) { return true; }
             Embosser e = embosser.get();
             switch (paper.get().getType()) {
                 case SHEET: return e.supportsPageFormat(new SheetPaperFormat(pageWidth.get(), value));
@@ -673,11 +676,11 @@ public class EmbossConfiguration implements Serializable,
         }
         
         public boolean accept(Boolean value) {
-            return (getEmbosser().getFeature(EmbosserFeatures.Z_FOLDING) != null) ? true : !value;
+            return getEmbosser().supportsZFolding() ? true : !value;
         }
     }
 
-    private class SaddleStitchSetting extends DependentYesNoSetting {
+    private class MagazineModeSetting extends DependentYesNoSetting {
 
         @Override
         public boolean refresh() {
@@ -694,7 +697,7 @@ public class EmbossConfiguration implements Serializable,
         }
         
         public boolean accept(Boolean value) {
-            return (getEmbosser().getFeature(EmbosserFeatures.SADDLE_STITCH) != null) ? true : !value;
+            return getEmbosser().supportsPrintMode(value ? PrintMode.MAGAZINE : PrintMode.REGULAR);
         }
     }
     
@@ -720,7 +723,7 @@ public class EmbossConfiguration implements Serializable,
         @Override
         public boolean enabled() {
             if (!super.enabled()) { return false; }
-            return (getSaddleStitch() && 
+            return (getMagazineMode() &&
                     getEmbosser().getFeature(EmbosserFeatures.PAGES_IN_QUIRE) != null);
         }
     }

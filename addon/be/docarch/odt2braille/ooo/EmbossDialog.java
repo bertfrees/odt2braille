@@ -94,7 +94,7 @@ public class EmbossDialog {
     private final CheckBox duplexCheckBox;
     private final CheckBox eightDotsCheckBox;
     private final CheckBox zFoldingCheckBox;
-    private final CheckBox saddleStitchCheckBox;
+    private final CheckBox magazineModeCheckBox;
 
     private final CheckBox pageOrientationCheckBox;
     private final PaperDimensionControl pageWidthField;
@@ -115,7 +115,7 @@ public class EmbossDialog {
     private final Label duplexLabel;
     private final Label eightDotsLabel;
     private final Label zFoldingLabel;
-    private final Label saddleStitchLabel;
+    private final Label magazineModeLabel;
     private final Label pageOrientationLabel;
     private final Label pageWidthLabel;
     private final Label pageHeightLabel;
@@ -293,7 +293,7 @@ public class EmbossDialog {
 
         zFoldingCheckBox = new CheckBox(container.getControl("CheckBox2"));
         
-        saddleStitchCheckBox = new CheckBox(container.getControl("CheckBox4"));
+        magazineModeCheckBox = new CheckBox(container.getControl("CheckBox4"));
 
         pageOrientationCheckBox = new CheckBox(container.getControl("CheckBox5"));
 
@@ -346,7 +346,7 @@ public class EmbossDialog {
         zFoldingLabel = new Label(container.getControl("Label5"),
                                   bundle.getString("zFoldingLabel"));
         
-        saddleStitchLabel = new Label(container.getControl("Label16"),
+        magazineModeLabel = new Label(container.getControl("Label16"),
                                       bundle.getString("saddleStitchLabel"));
 
         pageOrientationLabel = new Label(container.getControl("Label18"),
@@ -390,7 +390,7 @@ public class EmbossDialog {
         duplexCheckBox.link(embossSettings.duplex);
         eightDotsCheckBox.link(embossSettings.eightDots);
         zFoldingCheckBox.link(embossSettings.zFolding);
-        saddleStitchCheckBox.link(embossSettings.saddleStitch);
+        magazineModeCheckBox.link(embossSettings.magazineMode);
         sheetsPerQuireField.link(embossSettings.sheetsPerQuire);
         pageOrientationCheckBox.link(embossSettings.pageOrientation);
         columnsField.link(embossSettings.columns);

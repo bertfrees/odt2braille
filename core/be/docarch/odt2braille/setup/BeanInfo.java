@@ -129,7 +129,7 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "duplex"),
                 newPropertyDescriptor(type, "eightDots"),
                 newPropertyDescriptor(type, "charSetType"),
-                newPropertyDescriptor(type, "saddleStitch"),
+                newPropertyDescriptor(type, "magazineMode"),
                 newPropertyDescriptor(type, "zFolding"),
                 newPropertyDescriptor(type, "paperType"),
                 newPropertyDescriptor(type, "pageOrientation"),
