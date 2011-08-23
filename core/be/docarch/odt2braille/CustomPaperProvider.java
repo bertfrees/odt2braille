@@ -11,13 +11,15 @@ import org.daisy.paper.PaperProvider;
  */
 public class CustomPaperProvider implements PaperProvider {
 
-    enum PaperSize { CUSTOM };
+    enum PaperType { SHEET, TRACTOR, ROLL };
 
     private final ArrayList<Paper> papers;
 
     public CustomPaperProvider() {
         papers = new ArrayList<Paper>();
-        papers.add(new CustomPaper());
+        papers.add(new CustomSheetPaper("Custom sheet...", "Sheet paper with adjustable width and height"));
+        papers.add(new CustomTractorPaper("Custom tractor paper...", "Tractor paper with adjustable width and height"));
+        papers.add(new CustomRollPaper("Custom roll...", "Roll paper with adjustable width"));
     }
 
     public Collection<Paper> list() {

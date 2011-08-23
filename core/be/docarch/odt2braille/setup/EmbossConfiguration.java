@@ -2,22 +2,32 @@ package be.docarch.odt2braille.setup;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import java.util.NoSuchElementException;
 
 import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.CustomPaper;
-import be.docarch.odt2braille.Dimensions;
+import be.docarch.odt2braille.CustomSheetPaper;
+import be.docarch.odt2braille.CustomRollPaper;
+import be.docarch.odt2braille.CustomTractorPaper;
 
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.embosser.EmbosserCatalog;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableCatalog;
+import org.daisy.braille.tools.Length;
 import org.daisy.paper.Paper;
+import org.daisy.paper.SheetPaper;
+import org.daisy.paper.TractorPaper;
+import org.daisy.paper.RollPaper;
 import org.daisy.paper.PageFormat;
+import org.daisy.paper.SheetPaperFormat;
+import org.daisy.paper.SheetPaperFormat.Orientation;
+import org.daisy.paper.RollPaperFormat;
+import org.daisy.paper.TractorPaperFormat;
 import org.daisy.paper.Area;
 import org.daisy.paper.PrintPage;
 import org.daisy.paper.PaperCatalog;
@@ -45,55 +55,53 @@ public class EmbossConfiguration implements Serializable,
     
     public final EmbosserSetting           embosser;
     public final CharacterSetSetting       charSet;
-    public final PaperSetting              paper;
     public final DependentYesNoSetting     duplex;
     public final DependentYesNoSetting     eightDots;
     public final DependentYesNoSetting     zFolding;
     public final DependentYesNoSetting     saddleStitch;
     public final DependentNumberSetting    sheetsPerQuire;
-    
+    public final PaperSetting              paper;
+    public final PageFormatProperty        pageFormat;
+    public final PageDimensionSetting      pageWidth;
+    public final PageDimensionSetting      pageHeight;
+    public final DependentYesNoSetting     pageOrientation;
+
+    public final MarginSettings            margins;
     
     /* GETTERS */
     
-    public Embosser getEmbosser()      { return embosser.get(); }
-    public Table    getCharSet()       { return charSet.get(); }
-    public Paper    getPaper()         { return paper.get(); }
+    public Embosser       getEmbosser()   { return embosser.get(); }
+    public Table          getCharSet()    { return charSet.get(); }
+    public Paper          getPaper()      { return paper.get(); }
+    public PageFormat     getPageFormat() { return pageFormat.get(); }
+
+    public MarginSettings getMargins()    { return margins; }
             
-    public String   getEmbosserType()  { return embosser.getType(); }
-    public String   getCharSetType()   { return charSet.getType(); }
-    public String   getPaperType()     { return paper.getType(); }
-    public double   getPaperWidth()    { return paper.getWidth(); }
-    public double   getPaperHeight()   { return paper.getHeight(); }
-    public boolean  getDuplex()        { return duplex.get(); }
-    public boolean  getEightDots()     { return eightDots.get(); }
-    public boolean  getZFolding()      { return zFolding.get(); }
-    public boolean  getSaddleStitch()  { return saddleStitch.get(); }
+    public String   getEmbosserType()     { return embosser.getType(); }
+    public String   getCharSetType()      { return charSet.getType(); }
+    public String   getPaperType()        { return paper.getType(); }
+    public Length   getPageWidth()        { return pageWidth.get(); }
+    public Length   getPageHeight()       { return pageHeight.get(); }
+    public boolean  getPageOrientation()  { return pageOrientation.get(); }
+    public boolean  getDuplex()           { return duplex.get(); }
+    public boolean  getEightDots()        { return eightDots.get(); }
+    public boolean  getZFolding()         { return zFolding.get(); }
+    public boolean  getSaddleStitch()     { return saddleStitch.get(); }
 
     
     /* SETTERS */
             
-    public void setEmbosserType   (String value)  { embosser.setType(value); }
-    public void setCharSetType    (String value)  { charSet.setType(value); }
-    public void setPaperType      (String value)  { paper.setType(value); }
-    public void setPaperWidth     (double value)  { paper.setWidth(value); }
-    public void setPaperHeight    (double value)  { paper.setHeight(value); }
-    public void setDuplex         (boolean value) { duplex.set(value); }
-    public void setEightDots      (boolean value) { eightDots.set(value); }
-    public void setZFolding       (boolean value) { zFolding.set(value); }
-    public void setSaddleStitch   (boolean value) { saddleStitch.set(value); }
-    
-    
-    /***************************/
-    /* SUBLEVEL CONFIGURATIONS */
-    /***************************/
-    
-    public final MarginSettings margins;
-    
-    
-    /* GETTERS */
-    
-    public MarginSettings getMargins() { return margins; }
-    
+    public void setEmbosserType    (String value)  { embosser.setType(value); }
+    public void setCharSetType     (String value)  { charSet.setType(value); }
+    public void setPaperType       (String value)  { paper.setType(value); }
+    public void setPageWidth       (Length value)  { pageWidth.set(value); }
+    public void setPageHeight      (Length value)  { pageHeight.set(value); }
+    public void setPageOrientation (boolean value) { pageOrientation.set(value); }
+    public void setDuplex          (boolean value) { duplex.set(value); }
+    public void setEightDots       (boolean value) { eightDots.set(value); }
+    public void setZFolding        (boolean value) { zFolding.set(value); }
+    public void setSaddleStitch    (boolean value) { saddleStitch.set(value); }
+
     
     /***************************/
     /* PUBLIC STATIC CONSTANTS */
@@ -165,7 +173,10 @@ public class EmbossConfiguration implements Serializable,
     public static final String EMFUSE =                  "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMFUSE";
     public static final String EMPRINT_SPOTDOT =         "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMPRINT_SPOTDOT";
 
-    public static final String CUSTOM_PAPER =            "be.docarch.odt2braille.CustomPaperProvider.PaperSize.CUSTOM";
+    public static final String CUSTOM_SHEET_PAPER =      "be.docarch.odt2braille.CustomPaperProvider.PaperType.SHEET";
+    public static final String CUSTOM_ROLL_PAPER =       "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROLL";
+    public static final String CUSTOM_TRACTOR_PAPER =    "be.docarch.odt2braille.CustomPaperProvider.PaperType.TRACTOR";
+    public static final String A4_PAPER =                "org_daisy.ISO216PaperProvider.PaperSize.A4";
 
     /****************************/
     /* PRIVATE STATIC CONSTANTS */
@@ -212,6 +223,10 @@ public class EmbossConfiguration implements Serializable,
         embosser = new EmbosserSetting();
         charSet = new CharacterSetSetting();
         paper = new PaperSetting();
+        pageFormat = new PageFormatProperty();
+        pageWidth = new PageWidthSetting();
+        pageHeight = new PageHeightSetting();
+        pageOrientation = new PageOrientationSetting();
         duplex = new DuplexSetting();
         eightDots = new EightDotsSetting();
         zFolding = new ZFoldingSetting();
@@ -239,6 +254,10 @@ public class EmbossConfiguration implements Serializable,
         saddleStitch.refresh();
         zFolding.refresh();
         paper.refresh();
+        pageOrientation.refresh();
+        pageFormat.refresh();
+        pageWidth.refresh();
+        pageHeight.refresh();
         margins.refresh();
         columns.refresh();
         rows.refresh();
@@ -255,16 +274,27 @@ public class EmbossConfiguration implements Serializable,
         embosser.addListener(saddleStitch);
         embosser.addListener(zFolding);
         embosser.addListener(paper);
+        embosser.addListener(pageFormat);
+        embosser.addListener(pageOrientation);
         embosser.addListener(margins);
         embosser.addListener(columns);
         embosser.addListener(rows);
         eightDots.addListener(charSet);
         saddleStitch.addListener(paper);
+        saddleStitch.addListener(pageFormat);
+        saddleStitch.addListener(pageOrientation);
         saddleStitch.addListener(margins);
         saddleStitch.addListener(sheetsPerQuire);
-        paper.addListener(margins);
-        paper.addListener(columns);
-        paper.addListener(rows);
+        paper.addListener(pageFormat);
+        paper.addListener(pageOrientation);        
+        pageOrientation.addListener(pageFormat);
+        pageWidth.addListener(pageFormat);
+        pageHeight.addListener(pageFormat);
+        pageFormat.addListener(pageWidth);
+        pageFormat.addListener(pageHeight);
+        pageFormat.addListener(margins);
+        pageFormat.addListener(columns);
+        pageFormat.addListener(rows);
 
         logger.exiting("EmbossConfiguration","<init>");
         
@@ -371,50 +401,28 @@ public class EmbossConfiguration implements Serializable,
             return charSet.getIdentifier();
         }
     }
-    
+
     public class PaperSetting extends DependentOptionSetting<Paper> {
 
-        private static final String DEFAULT_PAPER = CUSTOM_PAPER;
-        private Paper paper = paperCatalog.get(DEFAULT_PAPER);
+        private Paper paper = paperCatalog.get(A4_PAPER);
+        private Paper customSheetPaper = paperCatalog.get(CUSTOM_SHEET_PAPER);
+        private Paper customTractorPaper = paperCatalog.get(CUSTOM_TRACTOR_PAPER);
+        private Paper customRollPaper = paperCatalog.get(CUSTOM_ROLL_PAPER);
+        private Collection<Paper> options = new HashSet();
 
         @Override
         public boolean accept(Paper value) {
             if (value == null) { return false; }
-            String id = value.getIdentifier();   
-            String emb = getEmbosser().getIdentifier();
-            if (!(emb.equals(INDEX_BASIC_BLUE_BAR) ||
-                  emb.equals(INDEX_BASIC_S_V2) ||
-                  emb.equals(INDEX_BASIC_D_V2) ||
-                  emb.equals(INDEX_BASIC_S_V3) ||
-                  emb.equals(INDEX_BASIC_D_V3) ||
-                  emb.equals(INDEX_BASIC_D_V4))
-                && id.equals(CUSTOM_PAPER)) {
-                return true;
-            }
-            return getEmbosser().supportsDimensions(value);
+            return options.contains(value);
         }
-        
+
         public Collection<Paper> options() {
-            Collection<Paper> options = new ArrayList();
-            for (Paper p : paperCatalog.list()) {
-                if (accept(p)) { options.add(p); }
-            }
-            return options;
+            return new ArrayList(options);
         }
 
         protected boolean update(Paper value) {
             if (value == null) { return false; }
-            if (value instanceof CustomPaper && !getEmbosser().supportsDimensions(value)) {
-                CustomPaper cp = (CustomPaper)value;
-                for (Paper p : options()) {
-                    if (getEmbosser().supportsDimensions(p)) {
-                        cp.setWidth(p.getWidth());
-                        cp.setHeight(p.getHeight());
-                    }
-                }
-            } else if (paper.getIdentifier().equals(value.getIdentifier())) {
-                return false;
-            }
+            if (paper.getIdentifier().equals(value.getIdentifier())) { return false; }
             paper = value;
             return true;
         }
@@ -424,72 +432,201 @@ public class EmbossConfiguration implements Serializable,
         }
 
         public boolean refresh() {
-            if (accept(paper)) {
-                return update(paper);
-            } else {
-                for (Paper p : options()) {
-                    if (getEmbosser().supportsDimensions(p)) {
-                        return update(p);
-                    }
+            options.clear();
+            Collection<Paper.Type> types = new HashSet<Paper.Type>();
+            for (Paper p : paperCatalog.list()) {
+                if (getEmbosser().supportsPaper(p)) {
+                    options.add(p);
+                    types.add(p.getType());
                 }
             }
-            return false;
+            for (Paper.Type t : types) {
+                switch (t) {
+                    case SHEET: options.add(customSheetPaper); break;
+                    case TRACTOR: options.add(customTractorPaper); break;
+                    case ROLL: options.add(customRollPaper); break;
+                }
+            }
+            if (accept(paper)) { return update(paper); }
+            try {
+                return update(options.iterator().next());
+            } catch (NoSuchElementException e) {
+                return false;
+            }
         }
-        
+
         @Override
         public boolean enabled() {
             if (!super.enabled()) { return false; }
-            return (options().size() > 0);
+            return (options.size() > 0);
         }
-        
+
         public void setType(String type) {
             Paper p = paperCatalog.get(type);
             if (p != null) { set(p); }
         }
-        
+
         public String getType() {
             if (paper == null) { return null; }
             return paper.getIdentifier();
         }
-        
-        public boolean setWidth(double width) {
-            if (!enabled()) { return false; }
-            if (paper == null) { return false; }
-            if (width == getWidth()) { return true; }
-            if (paper instanceof CustomPaper) {
-                if (getEmbosser().supportsDimensions(new Dimensions(width, getHeight()))) {
-                    ((CustomPaper)paper).setWidth(width);
-                    fireEvent(true, false);
-                    return true;
-                }
-            }
-            return false;
+    }
+
+    public class PageOrientationSetting extends DependentYesNoSetting {
+    
+        private boolean enabled;
+
+        public boolean accept(Boolean value) {
+            if (!enabled) { return false; }
+            return embosser.get().supportsPageFormat(
+                    new SheetPaperFormat((SheetPaper)paper.get(), value ? Orientation.REVERSED :
+                                                                          Orientation.DEFAULT));
         }
-        
-        public boolean setHeight(double height) {
-            if (!enabled()) { return false; }
-            if (paper == null) { return false; }
-            if (height == getHeight()) { return true; }
-            if (paper instanceof CustomPaper) {
-                if (getEmbosser().supportsDimensions(new Dimensions(getWidth(), height))) {
-                    ((CustomPaper)paper).setHeight(height);
-                    fireEvent(true, false);
-                    return true;
-                }
-            }
-            return false;
+        @Override
+        public boolean refresh() {
+            enabled = (paper.get().getType() == Paper.Type.SHEET &&
+                      !(paper.get() instanceof CustomSheetPaper));
+            if (accept(get())) { return false; }
+            return update(enabled && !get());
         }
-        
-        public double getWidth() {
-            if (paper==null) { return 0; }
-            return paper.getWidth();
-        }
-            
-        public double getHeight() {
-            if (paper==null) { return 0; }
-            return paper.getHeight();
+        @Override
+        public boolean enabled() {
+            return enabled && super.enabled();
         }
     }
+
+    public abstract class PageDimensionSetting extends Setting<Length> implements Dependent {
+
+        private Length length = Length.newMillimeterValue(0);
+        protected boolean enabled;
+
+        public Length get() {
+            return length;
+        }
+        protected boolean update(Length value) {
+            if (value.asMillimeter() == length.asMillimeter()) { return false; }
+            length = value;
+            return true;
+        }
+        @Override
+        public boolean enabled() {
+            return enabled;
+        }
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.ValueChanged) {
+                fireEvent(refresh(), true);
+            }
+        }
+    }
+
+    public class PageWidthSetting extends PageDimensionSetting {
+
+        public boolean accept(Length value) {
+            if (!enabled()) { return false; }
+            Embosser e = embosser.get();
+            switch (paper.get().getType()) {
+                case SHEET: return e.supportsPageFormat(new SheetPaperFormat(value, pageHeight.get()));
+                case TRACTOR: return e.supportsPageFormat(new TractorPaperFormat(value, pageHeight.get()));
+                case ROLL: return e.supportsPageFormat(new RollPaperFormat(value, pageHeight.get()));
+            }
+            return false;
+        }
+        @Override
+        public boolean update(Length value) {
+            if (!enabled()) { return false; }
+            if (!super.update(value)) { return false; }
+            Paper p = paper.get();
+            switch (p.getType()) {
+                case SHEET: ((CustomSheetPaper)p).setPageWidth(value); break;
+                case TRACTOR: ((CustomTractorPaper)p).setLengthAcrossFeed(value); break;
+                case ROLL: ((CustomRollPaper)p).setLengthAcrossFeed(value); break;
+            }
+            return true;
+        }
+        public boolean refresh() {
+            Paper p = paper.get();
+            enabled = p instanceof CustomSheetPaper ||
+                      p instanceof CustomTractorPaper ||
+                      p instanceof CustomRollPaper;
+            PageFormat f = pageFormat.get();
+            switch (f.getPageFormatType()) {
+                case SHEET: return super.update(f.asSheetPaperFormat().getPageWidth());
+                case TRACTOR: return super.update(f.asTractorPaperFormat().getLengthAcrossFeed());
+                case ROLL: return super.update(f.asRollPaperFormat().getLengthAcrossFeed());
+            }
+            return false;
+        }
+    }
+
+    public class PageHeightSetting extends PageDimensionSetting {
+
+        public boolean accept(Length value) {
+            if (!enabled()) { return false; }
+            Embosser e = embosser.get();
+            switch (paper.get().getType()) {
+                case SHEET: return e.supportsPageFormat(new SheetPaperFormat(pageWidth.get(), value));
+                case TRACTOR: return e.supportsPageFormat(new TractorPaperFormat(pageWidth.get(), value));
+                case ROLL: return e.supportsPageFormat(new RollPaperFormat(pageWidth.get(), value));
+            }
+            return false;
+        }
+        @Override
+        public boolean update(Length value) {
+            if (!enabled()) { return false; }
+            if (!super.update(value)) { return false; }
+            Paper p = paper.get();
+            switch (p.getType()) {
+                case SHEET: ((CustomSheetPaper)p).setPageHeight(value); break;
+                case TRACTOR: ((CustomTractorPaper)p).setLengthAlongFeed(value); break;
+            }
+            return true;
+        }
+        public boolean refresh() {
+            Paper p = paper.get();
+            enabled = p instanceof CustomSheetPaper ||
+                      p instanceof CustomTractorPaper ||
+                      p instanceof RollPaper;
+            PageFormat f = pageFormat.get();
+            switch (f.getPageFormatType()) {
+                case SHEET: return super.update(f.asSheetPaperFormat().getPageHeight());
+                case TRACTOR: return super.update(f.asTractorPaperFormat().getLengthAlongFeed());
+                case ROLL: return super.update(f.asRollPaperFormat().getLengthAlongFeed());
+            }
+            return false;
+        }
+    }
+
+    public class PageFormatProperty extends Property<PageFormat>
+                                 implements Dependent {
+
+        private PageFormat format;
+
+        public boolean refresh() {
+            Paper p = paper.get();
+            switch (p.getType()) {
+                case SHEET: format = new SheetPaperFormat((SheetPaper)p,
+                                     pageOrientation.get() ? Orientation.REVERSED : Orientation.DEFAULT); break;
+                case TRACTOR: format = new TractorPaperFormat((TractorPaper)p); break;
+                case ROLL: format = new RollPaperFormat((RollPaper)p, pageHeight.get()); break;
+            }
+            return true;
+        }
+
+        public PageFormat get() {
+            return format;
+        }
+
+        public boolean isValid() {
+            return getEmbosser().supportsPageFormat(format);
+        }
+
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.ValueChanged) {
+                fireEvent(refresh(), true);
+            }
+        }
+    }
+  
     
     private class DuplexSetting extends DependentYesNoSetting {
 
@@ -621,7 +758,7 @@ public class EmbossConfiguration implements Serializable,
         public void setInner  (int value) { inner.set(value); }
         public void setOuter  (int value) { outer.set(value); }
         public void setTop    (int value) { top.set(value); }
-        public void setBottom (int value) { bottom.set(value); }        
+        public void setBottom (int value) { bottom.set(value); }
         
         /***********/
         /* PRIVATE */
@@ -676,7 +813,7 @@ public class EmbossConfiguration implements Serializable,
             }
             @Override
             public boolean refresh() {
-                enabled = getEmbosser().supportsAligning();
+                enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printableArea.getOffsetX();
                 boolean update = update(Math.min(maxMarginInner, Math.max(minMarginInner, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
@@ -694,7 +831,7 @@ public class EmbossConfiguration implements Serializable,
             }
             @Override
             public boolean refresh() {
-                enabled = getEmbosser().supportsAligning();
+                enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printPage.getWidth() - printableArea.getWidth() - printableArea.getOffsetX();
                 boolean update = update(Math.min(maxMarginOuter, Math.max(minMarginOuter, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
@@ -712,7 +849,7 @@ public class EmbossConfiguration implements Serializable,
             }
             @Override
             public boolean refresh() {
-                enabled = getEmbosser().supportsAligning();
+                enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printableArea.getOffsetY();
                 boolean update = update(Math.min(maxMarginTop, Math.max(minMarginTop, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
@@ -731,7 +868,7 @@ public class EmbossConfiguration implements Serializable,
             }
             @Override
             public boolean refresh() {
-                enabled = getEmbosser().supportsAligning();
+                enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printPage.getHeight() - printableArea.getHeight() - printableArea.getOffsetY();
                 boolean update = update(Math.min(maxMarginBottom, Math.max(minMarginBottom, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
@@ -748,21 +885,20 @@ public class EmbossConfiguration implements Serializable,
         /*************/
 
         public boolean refresh() {
-            
+
             maxMarginInner = 0;
             maxMarginTop = 0;
             maxMarginOuter = 0;
             maxMarginBottom = 0;
 
-            Paper paper = getPaper();
             Embosser embosser = getEmbosser();
+            PageFormat inputPage = getPageFormat();
 
-            PageFormat inputPage = new PageFormat(paper);
             printPage = embosser.getPrintPage(inputPage);
             printableArea = embosser.getPrintableArea(inputPage);
 
-            int cellsInWidth = getEmbosser().getMaxWidth(inputPage);
-            int linesInHeight = getEmbosser().getMaxHeight(inputPage);
+            int cellsInWidth = embosser.getMaxWidth(inputPage);
+            int linesInHeight = embosser.getMaxHeight(inputPage);
 
             if (embosser.supportsAligning()) {
 
@@ -788,7 +924,7 @@ public class EmbossConfiguration implements Serializable,
             outer.fireEvent(outer.refresh(), true);
             top.fireEvent(top.refresh(), true);
             bottom.fireEvent(bottom.refresh(), true);
-            
+
             return true;
         }
         
@@ -803,8 +939,8 @@ public class EmbossConfiguration implements Serializable,
         private int columns = 0;
 
         public boolean refresh() {
-            PageFormat inputPage = new PageFormat(getPaper());
-            int cellsInWidth = getEmbosser().getMaxWidth(inputPage);
+            if (!pageFormat.isValid()) { return false; }
+            int cellsInWidth = getEmbosser().getMaxWidth(getPageFormat());
             int newValue = cellsInWidth - margins.getInner() - margins.getOuter();
             if (newValue == columns) { return false; }
             columns = newValue;
@@ -828,8 +964,8 @@ public class EmbossConfiguration implements Serializable,
         private int rows = 0;
 
         public boolean refresh() {
-            PageFormat inputPage = new PageFormat(getPaper());
-            int linesInHeight = getEmbosser().getMaxHeight(inputPage);
+            if (!pageFormat.isValid()) { return false; }
+            int linesInHeight = getEmbosser().getMaxHeight(getPageFormat());
             int newValue = linesInHeight - margins.getTop() - margins.getBottom();
             if (newValue == rows) { return false; }
             rows = newValue;

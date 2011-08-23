@@ -95,7 +95,6 @@ import be.docarch.odt2braille.ooo.checker.BrailleCheckerDialog;
 import be.docarch.odt2braille.ooo.checker.ReportWriter;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
-import org.daisy.paper.PageFormat;
 import be_interpoint.Interpoint55Embosser;
 
 /**
@@ -559,7 +558,7 @@ public class UnoGUI {
 
             // Load embosser with paper
             Embosser embosser = embossSettings.getEmbosser();
-            embosser.setFeature(EmbosserFeatures.PAGE_FORMAT, new PageFormat(embossSettings.getPaper()));
+            embosser.setFeature(EmbosserFeatures.PAGE_FORMAT, embossSettings.getPageFormat());
 
             // Emboss Dialog
             if (embosser instanceof Interpoint55Embosser) {
@@ -890,7 +889,8 @@ public class UnoGUI {
         logger.log(Level.SEVERE, null, e);
 
         String message = L10N_Unexpected_Exception_Message + ": " + logFile.getAbsolutePath();
-        if (e instanceof LiblouisXMLException) { message = e.getMessage(); }
+        if (e instanceof LiblouisXMLException ||
+            e instanceof IllegalArgumentException) { message = e.getMessage(); }
         UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title, message);
 
     }

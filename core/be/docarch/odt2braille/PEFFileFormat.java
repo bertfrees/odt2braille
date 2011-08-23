@@ -5,6 +5,7 @@ import org.daisy.braille.embosser.EmbosserWriter;
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableFilter;
+import org.daisy.factory.Factory;
 
 /**
  *
@@ -85,5 +86,13 @@ public class PEFFileFormat implements FileFormat {
     @Override
     public Object getProperty(String key) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int compareTo(Factory o) {
+        if (this.equals(o)) {
+            return 0;
+        } else {
+            return this.getDisplayName().compareTo(o.getDisplayName());
+        }
     }
 }

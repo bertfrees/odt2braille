@@ -132,8 +132,9 @@ public class BeanInfo {
                 newPropertyDescriptor(type, "saddleStitch"),
                 newPropertyDescriptor(type, "zFolding"),
                 newPropertyDescriptor(type, "paperType"),
-                newPropertyDescriptor(type, "paperWidth"),
-                newPropertyDescriptor(type, "paperHeight"),
+                newPropertyDescriptor(type, "pageOrientation"),
+                newPropertyDescriptor(type, "pageWidth"),
+                newPropertyDescriptor(type, "pageHeight"),
                 newReadOnlyPropertyDescriptor(type, "margins")
             }));
             

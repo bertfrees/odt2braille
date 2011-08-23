@@ -1,5 +1,6 @@
 package be.docarch.odt2braille.ooo;
 
+import be.docarch.odt2braille.setup.PropertyEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Map;
@@ -41,14 +42,15 @@ import com.sun.star.beans.PropertyVetoException;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.EmbossConfiguration;
-import be.docarch.odt2braille.setup.EmbossConfiguration.PaperSetting;
+import be.docarch.odt2braille.setup.EmbossConfiguration.PageFormatProperty;
+import be.docarch.odt2braille.setup.Setting;
 import be.docarch.odt2braille.setup.Property;
-import be.docarch.odt2braille.CustomPaper;
+import be.docarch.odt2braille.setup.PropertyListener;
 import be.docarch.odt2braille.ooo.dialog.*;
 import org.daisy.paper.Paper;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserTools;
+import org.daisy.braille.tools.Length;
 
 /**
  *
@@ -68,16 +70,14 @@ public class EmbossDialog {
     private final ProgressBar progressbar;
     private final XDialog dialog;
     private final XComponent component;
-    private final XControl control;
     private final Map<String,EmbosserStatus> embosserStatus;
     private final String warningImageUrl;
 
     private SettingsDialog settingsDialog;
-    private boolean validPaperDimensions = true;
 
     /* BUTTONS */
 
-    private final Button okButton;
+    private final OKButton okButton;
     private final Button cancelButton;
     private final Button settingsButton;
 
@@ -96,10 +96,9 @@ public class EmbossDialog {
     private final CheckBox zFoldingCheckBox;
     private final CheckBox saddleStitchCheckBox;
 
-    private final PaperDimensionUnitListBox paperWidthUnitListBox;
-    private final PaperDimensionUnitListBox paperHeightUnitListBox;
-    private final PaperDimensionControl paperWidthField;
-    private final PaperDimensionControl paperHeightField;
+    private final CheckBox pageOrientationCheckBox;
+    private final PaperDimensionControl pageWidthField;
+    private final PaperDimensionControl pageHeightField;
     private final NumericPropertyField columnsField;
     private final NumericPropertyField rowsField;
     private final NumericSettingControl marginInnerField;
@@ -117,8 +116,9 @@ public class EmbossDialog {
     private final Label eightDotsLabel;
     private final Label zFoldingLabel;
     private final Label saddleStitchLabel;
-    private final Label paperWidthLabel;
-    private final Label paperHeightLabel;
+    private final Label pageOrientationLabel;
+    private final Label pageWidthLabel;
+    private final Label pageHeightLabel;
     private final Label columnsLabel;
     private final Label rowsLabel;
     private final Label marginLabel;
@@ -147,7 +147,7 @@ public class EmbossDialog {
         dialog = xDialogProvider.createDialog(dialogUrl);
         XControlContainer container = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, dialog);
         component = (XComponent)UnoRuntime.queryInterface(XComponent.class, dialog);
-        control = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
+        XControl control = (XControl)UnoRuntime.queryInterface(XControl.class, dialog);
         XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class, control.getModel());
         warningImageUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/images/warning_20x20.png";
         
@@ -175,20 +175,9 @@ public class EmbossDialog {
         
         /* DIALOG ELEMENTS */
         
-        okButton = new Button(container.getControl("CommandButton2"),
-                              bundle.getString("embossButton")) {
-            @Override
-            public void updateProperties() {
-                try {
-                    propertySet.setPropertyValue("Enabled", validPaperDimensions);
-                } catch (UnknownPropertyException e) {
-                } catch (PropertyVetoException e) {
-                } catch (IllegalArgumentException e) {
-                } catch (WrappedTargetException e) {
-                }
-            }
-            public void actionPerformed(ActionEvent event) {}
-        };
+        okButton = new OKButton(container.getControl("CommandButton2"),
+                                bundle.getString("embossButton"),
+                                embossSettings.pageFormat);
         
         cancelButton = new Button(container.getControl("CommandButton1"),
                                   bundle.getString("cancelButton")) {
@@ -286,12 +275,14 @@ public class EmbossDialog {
                 String id2 = p2.getIdentifier();
                 if (id1.equals(id2)) {
                     return 0;
-                } else if (id1.equals(EmbossConfiguration.CUSTOM_PAPER)) {
+                } else if (id1.startsWith("be.docarch.odt2braille.CustomPaperProvider") &&
+                          !id2.startsWith("be.docarch.odt2braille.CustomPaperProvider")) {
                     return 1;
-                } else if (id2.equals(EmbossConfiguration.CUSTOM_PAPER)) {
+                } else if (id2.startsWith("be.docarch.odt2braille.CustomPaperProvider") &&
+                          !id1.startsWith("be.docarch.odt2braille.CustomPaperProvider")) {
                     return -1;
                 } else {
-                    return ((Comparable)p1.getDisplayName()).compareTo(p2.getDisplayName());
+                    return p1.getDisplayName().compareTo(p2.getDisplayName());
                 }
             }
         };
@@ -303,37 +294,16 @@ public class EmbossDialog {
         zFoldingCheckBox = new CheckBox(container.getControl("CheckBox2"));
         
         saddleStitchCheckBox = new CheckBox(container.getControl("CheckBox4"));
-        
-        paperWidthUnitListBox = new PaperDimensionUnitListBox(container.getControl("ListBox5"));
 
-        paperHeightUnitListBox = new PaperDimensionUnitListBox(container.getControl("ListBox6"));
+        pageOrientationCheckBox = new CheckBox(container.getControl("CheckBox5"));
 
-        paperWidthField = new PaperDimensionControl(container.getControl("NumericField1"), embossSettings.paper) {
-            public void save() {
-                validPaperDimensions = property.setWidth(numericField.getValue() * paperWidthUnitListBox.getConvertFactor());
-                okButton.updateProperties();
-            }
-            public void update() {
-                numericField.setValue(property.getWidth() / paperWidthUnitListBox.getConvertFactor());
-                numericField.setDecimalDigits((short)(paperWidthUnitListBox.getConvertFactor() == 1 ? 0 : 2));
-                updateProperties();
-            }
-        };
+        pageWidthField = new PaperDimensionControl(container.getControl("NumericField1"),
+                                                   container.getControl("ListBox5"),
+                                                   embossSettings.pageWidth);
 
-        paperHeightField = new PaperDimensionControl(container.getControl("NumericField2"), embossSettings.paper) {
-            public void save() {
-                validPaperDimensions = property.setHeight(numericField.getValue() * paperHeightUnitListBox.getConvertFactor());
-                okButton.updateProperties();
-            }
-            public void update() {
-                numericField.setValue(property.getHeight() / paperHeightUnitListBox.getConvertFactor());
-                numericField.setDecimalDigits((short)(paperHeightUnitListBox.getConvertFactor() == 1 ? 0 : 2));
-                updateProperties();
-            }
-        };
-
-        paperWidthUnitListBox.addListener(paperWidthField);
-        paperHeightUnitListBox.addListener(paperHeightField);
+        pageHeightField = new PaperDimensionControl(container.getControl("NumericField2"),
+                                                    container.getControl("ListBox6"),
+                                                    embossSettings.pageHeight);
         
         columnsField = new NumericPropertyField(container.getControl("NumericField3"));
         
@@ -378,12 +348,15 @@ public class EmbossDialog {
         
         saddleStitchLabel = new Label(container.getControl("Label16"),
                                       bundle.getString("saddleStitchLabel"));
-        
-        paperWidthLabel = new Label(container.getControl("Label10"),
-                                    bundle.getString("paperWidthLabel") + ":");
+
+        pageOrientationLabel = new Label(container.getControl("Label18"),
+                                         "Reverse orientation");
+
+        pageWidthLabel = new Label(container.getControl("Label10"),
+                                   bundle.getString("paperWidthLabel") + ":");
        
-        paperHeightLabel = new Label(container.getControl("Label11"),
-                                     bundle.getString("paperHeightLabel") + ":");
+        pageHeightLabel = new Label(container.getControl("Label11"),
+                                    bundle.getString("paperHeightLabel") + ":");
         
         columnsLabel = new Label(container.getControl("Label6"),
                                  bundle.getString("numberOfCellsPerLineLabel") + ":");
@@ -419,6 +392,7 @@ public class EmbossDialog {
         zFoldingCheckBox.link(embossSettings.zFolding);
         saddleStitchCheckBox.link(embossSettings.saddleStitch);
         sheetsPerQuireField.link(embossSettings.sheetsPerQuire);
+        pageOrientationCheckBox.link(embossSettings.pageOrientation);
         columnsField.link(embossSettings.columns);
         rowsField.link(embossSettings.rows);
 
@@ -434,61 +408,91 @@ public class EmbossDialog {
     /* INNER CLASSES */
     /*****************/
 
-    private abstract class PaperDimensionControl extends SettingControl<PaperSetting>
-                                              implements XTextListener,
-                                                         XSpinListener,
-                                                         XFocusListener,
-                                                         XItemListener {
-        protected final XNumericField numericField;
-        private final XTextComponent textComponent;
+    private class PaperDimensionControl extends SettingControl<Setting<Length>>
+                                     implements XTextListener,
+                                                XSpinListener,
+                                                XFocusListener,
+                                                XItemListener {
         private final XWindow window;
         private final XSpinField spinButton;
+        private final XNumericField numericField;
+        private final XTextComponent textComponent;
+        private final XListBox unitListbox;
+        private boolean inches = false;
         
-        public PaperDimensionControl(XControl control, PaperSetting paperSetting) {
-            super(control);
-            numericField = (XNumericField)UnoRuntime.queryInterface(XNumericField.class, control);
-            textComponent = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, control);
-            window = (XWindow)UnoRuntime.queryInterface(XWindow.class, control);
-            spinButton = (XSpinField)UnoRuntime.queryInterface(XSpinField.class, control);
+        public PaperDimensionControl(XControl valueControl,
+                                     XControl unitControl,
+                                     Setting<Length> dimension) {
+            super(valueControl);
+            numericField = (XNumericField)UnoRuntime.queryInterface(XNumericField.class, valueControl);
+            textComponent = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, valueControl);
             numericField.setDecimalDigits((short)0);
             numericField.setMin((double)0);
             numericField.setMax((double)Integer.MAX_VALUE);
-            link(paperSetting);
+            window = (XWindow)UnoRuntime.queryInterface(XWindow.class, valueControl);
+            spinButton = (XSpinField)UnoRuntime.queryInterface(XSpinField.class, valueControl);
+            unitListbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, unitControl);
+            unitListbox.addItem("mm", (short)0);
+            unitListbox.addItem("in", (short)1);
+            unitListbox.selectItemPos((short)0, true);
+            link(dimension);
+            unitListbox.addItemListener(this);
         }
 
-        @Override
-        public void updateProperties() {
-            try {
-                propertySet.setPropertyValue("Enabled", property.get() instanceof CustomPaper);
-            } catch (UnknownPropertyException e) {
-            } catch (PropertyVetoException e) {
-            } catch (IllegalArgumentException e) {
-            } catch (WrappedTargetException e) {
+        public void update() {
+            updateUnit();
+            updateValue();
+        }
+
+        private void updateUnit() {
+            inches = property.get().getUnitsOfLength() == Length.UnitsOfLength.INCH;
+            unitListbox.selectItemPos((short)(inches?1:0), true);
+            numericField.setDecimalDigits((short)(inches ? 2 : 0));
+        }
+
+        private void updateValue() {
+            Length l = property.get();
+            numericField.setValue(inches ? l.asInches() : l.asMillimeter());
+        }
+
+        public void save() {
+            Length newValue = inches ? Length.newInchValue(numericField.getValue()) :
+                                       Length.newMillimeterValue(numericField.getValue());
+            okButton.updateProperties();
+            if (property.accept(newValue)) {
+                property.set(newValue);
+            } else {
+                okButton.disable();
             }
         }
 
-        @Override
-        public void itemStateChanged(ItemEvent event) { update(); }
         public void textChanged(TextEvent event) {
             if (event.Source.equals(numericField)) { save(); }
         }
-        public void up(SpinEvent event) {
-            update();
-            validPaperDimensions = true;
-            okButton.updateProperties();
+        public void itemStateChanged(ItemEvent event) {
+            if (event.Source.equals(unitListbox)) {
+                inches = (unitListbox.getSelectedItemPos()==(short)1);
+                numericField.setDecimalDigits((short)(inches?2:0));
+                updateValue();
+            }
         }
-        public void down(SpinEvent event) {
-            update();
-            validPaperDimensions = true;
-            okButton.updateProperties();
+        private void spin(SpinEvent event) {
+            if (event.Source.equals(spinButton)) {
+                updateValue();
+                okButton.updateProperties();
+            }
         }
+        public void up(SpinEvent event) { spin(event); }
+        public void down(SpinEvent event) { spin(event); }
         public void first(SpinEvent event) {}
         public void last(SpinEvent event) {}
         public void focusGained(FocusEvent event) {}
+
         public void focusLost(FocusEvent event) {
-            update();
-            validPaperDimensions = true;
-            okButton.updateProperties();
+            if (event.Source.equals(window)) {
+                updateValue();
+                okButton.updateProperties();
+            }
         }
 
         public void listenControl(boolean onOff) {
@@ -501,26 +505,6 @@ public class EmbossDialog {
                 window.removeFocusListener(this);
                 spinButton.removeSpinListener(this);
             }
-        }
-    }
-
-    private class PaperDimensionUnitListBox implements DialogElement {
-
-        private final XListBox listbox;
-
-        public PaperDimensionUnitListBox(XControl control) {
-            listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, control);
-            listbox.addItem("mm", (short)0);
-            listbox.addItem("in", (short)1);
-            listbox.selectItemPos((short)0, true);
-        }
-
-        public double getConvertFactor() {
-            return (listbox.getSelectedItemPos()==(short)1) ? EmbosserTools.INCH_IN_MM : 1d;
-        }
-
-        public void addListener(XItemListener listener) {
-            listbox.addItemListener(listener);
         }
     }
 
@@ -569,6 +553,49 @@ public class EmbossDialog {
         public void save() {
             marginSetting.set((int)(numericField.getValue()) - marginSetting.getOffset());
         }
+    }
+
+    private class OKButton extends Button implements PropertyListener {
+
+        private PageFormatProperty pageFormat;
+        private boolean enabled = false;
+
+        public OKButton(XControl control, String label, PageFormatProperty pageFormat) {
+            super(control, label);
+            this.pageFormat = pageFormat;
+            enabled = pageFormat.isValid();
+            pageFormat.addListener(this);
+        }
+
+        public void disable() {
+            try {
+                propertySet.setPropertyValue("Enabled", false);
+            } catch (UnknownPropertyException e) {
+            } catch (PropertyVetoException e) {
+            } catch (IllegalArgumentException e) {
+            } catch (WrappedTargetException e) {
+            }
+        }
+
+        @Override
+        public void updateProperties() {
+            try {
+                propertySet.setPropertyValue("Enabled", enabled);
+            } catch (UnknownPropertyException e) {
+            } catch (PropertyVetoException e) {
+            } catch (IllegalArgumentException e) {
+            } catch (WrappedTargetException e) {
+            }
+        }
+
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.getSource() == pageFormat) {
+                enabled = pageFormat.isValid();
+                updateProperties();
+            }
+        }
+
+        public void actionPerformed(ActionEvent event) {}
     }
 
     /******************/

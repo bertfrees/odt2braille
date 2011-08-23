@@ -10,6 +10,7 @@ import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
 import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
+import org.daisy.braille.tools.Length;
 
 public class ConfigurationEncoder {
 
@@ -37,6 +38,7 @@ public class ConfigurationEncoder {
             xmlEncoder.setPersistenceDelegate(TranslationTable.class,    delegate);
             xmlEncoder.setPersistenceDelegate(MarginSettings.class,      delegate);
             xmlEncoder.setPersistenceDelegate(Locale.class,              delegate);
+            xmlEncoder.setPersistenceDelegate(Length.class,              delegate);
             xmlEncoder.setPersistenceDelegate(Volume.class,              delegate);
             xmlEncoder.setPersistenceDelegate(SectionVolume.class,       delegate);
             xmlEncoder.setPersistenceDelegate(SpecialSymbol.class,       delegate);

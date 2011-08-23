@@ -8,6 +8,7 @@ import java.beans.Encoder;
 import java.beans.PropertyDescriptor;
 import java.beans.Statement;
 import java.lang.reflect.Method;
+import org.daisy.braille.tools.Length;
 
 public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
@@ -22,9 +23,21 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
             Locale oldLocale = (Locale)oldInstance;
             if (oldLocale.getCountry().length() > 0) {
-                return new Expression(oldInstance, oldInstance.getClass(), "new", new Object[]{oldLocale.getLanguage(), oldLocale.getCountry()});
+                return new Expression(oldInstance, Locale.class, "new", new Object[]{oldLocale.getLanguage(), oldLocale.getCountry()});
             } else {
-                return new Expression(oldInstance, oldInstance.getClass(), "new", new Object[]{oldLocale.getLanguage()});
+                return new Expression(oldInstance, Locale.class, "new", new Object[]{oldLocale.getLanguage()});
+            }
+
+        } else if (oldInstance instanceof Length) {
+
+            Length oldLength = (Length)oldInstance;
+            switch (oldLength.getUnitsOfLength()) {
+                case MILLIMETER:
+                    return new Expression(oldInstance, Length.class, "newMillimeterValue", new Object[]{oldLength.getLength()});
+                case INCH:
+                    return new Expression(oldInstance, Length.class, "newInchValue", new Object[]{oldLength.getLength()});
+                case CENTIMETER:
+                    return new Expression(oldInstance, Length.class, "newCentimeterValue", new Object[]{oldLength.getLength()});
             }
         }
 
@@ -114,6 +127,11 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
     @Override
     protected boolean mutatesTo(Object oldInstance, Object newInstance) {
+
+        if (oldInstance.getClass() == Length.class) {
+            return equals(oldInstance, newInstance);
+        }
+
         return (newInstance != null && oldInstance != null &&
                 oldInstance.getClass() == newInstance.getClass());
     }

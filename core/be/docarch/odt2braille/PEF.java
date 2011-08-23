@@ -49,8 +49,6 @@ import be.docarch.odt2braille.setup.SpecialSymbol;
 import be.docarch.odt2braille.setup.PEFConfiguration;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.Configuration.VolumeManagementMode;
-import be.docarch.odt2braille.setup.EmbossConfiguration;
-import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 
 import org.daisy.braille.table.BrailleConverter;
@@ -569,7 +567,7 @@ public class PEF {
                     if (checker != null) {
                         checker.checkDaisyFile(preliminaryFile);
                     }
-                    liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getTableOfContent()?volume.getFirstBraillePage():1);
+                    liblouisXML.configure(preliminaryFile, brailleFile, !volume.getTableOfContent(), volume.getTableOfContent()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
                     fileInputStream = new FileInputStream(brailleFile);
@@ -588,7 +586,8 @@ public class PEF {
                             line = bufferedReader.readLine();
                             line = line.replaceAll("\u2800","\u0020")
                                        .replaceAll("\u00A0","\u0020")
-                                       .replaceAll("\uE00F","\u002D");
+                                       .replaceAll("\uE00F","\u002D")
+                                       .replaceAll("\uE000","\u0020");
                             if (IS_WINDOWS) { bufferedReader.readLine(); }
                             rowElement = document.createElementNS(pefNS,"row");
                             node = document.createTextNode(liblouisTable.toBraille(line));
