@@ -26,5 +26,6 @@ package be.docarch.odt2braille.setup.style;
 public class Style {
 
     public enum Alignment {LEFT, CENTERED, RIGHT};
-
+    public enum FollowPrint { IGNORE, FOLLOW_PRINT };
+    
 }

@@ -53,10 +53,10 @@ public class BANAFormattingRules implements FormattingRules {
         for (CharacterStyle charStyle : configuration.getCharacterStyles().values()) {
             charStyle.setInherit(true);
             if (charStyle.getID().equals("Default")) {
-                charStyle.setItalic(CharacterStyle.TypefaceOption.FOLLOW_PRINT);
-                charStyle.setBoldface(CharacterStyle.TypefaceOption.FOLLOW_PRINT);
-                charStyle.setUnderline(CharacterStyle.TypefaceOption.NO);
-                charStyle.setCapitals(CharacterStyle.TypefaceOption.FOLLOW_PRINT);
+                charStyle.setItalic(CharacterStyle.FollowPrint.FOLLOW_PRINT);
+                charStyle.setBoldface(CharacterStyle.FollowPrint.FOLLOW_PRINT);
+                charStyle.setUnderline(CharacterStyle.FollowPrint.IGNORE);
+                charStyle.setCapitals(CharacterStyle.FollowPrint.FOLLOW_PRINT);
             }
         }
 

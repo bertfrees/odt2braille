@@ -83,6 +83,8 @@ import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
 import be.docarch.odt2braille.setup.Configuration.SplittableVolume;
 import be.docarch.odt2braille.setup.style.Style;
+import be.docarch.odt2braille.setup.style.Style.FollowPrint;
+import be.docarch.odt2braille.setup.style.Style.Alignment;
 import be.docarch.odt2braille.setup.style.ParagraphStyle;
 import be.docarch.odt2braille.setup.style.HeadingStyle;
 import be.docarch.odt2braille.setup.style.ListStyle;
@@ -119,7 +121,7 @@ public class SettingsDialog {
 
     private final Map<Style.Alignment,String> L10N_alignment = new HashMap<Style.Alignment,String>();
     private final Map<MathCode,String> L10N_math = new HashMap<MathCode,String>();
-    private final Map<CharacterStyle.TypefaceOption,String> L10N_typeface = new HashMap<CharacterStyle.TypefaceOption,String>();
+    private final Map<Style.FollowPrint,String> L10N_followPrint = new HashMap<Style.FollowPrint,String>();
     private final Map<String,String> L10N_noterefFormats = new HashMap<String,String>();
     private final Map<PageNumberFormat,String> L10N_pageNumberFormats = new HashMap<PageNumberFormat,String>();
     private final Map<PageNumberPosition,String> L10N_pageNumberPositions = new HashMap<PageNumberPosition,String>();
@@ -159,7 +161,6 @@ public class SettingsDialog {
     private final CheckBox transcriptionInfoCheckBox;
     private final CheckBox volumeInfoCheckBox;
     private final CheckBox hyphenateCheckBox;
-    private final CheckBox hardPageBreaksCheckBox;
     private final ListBox<ParagraphStyle> transcriptionInfoStyleListBox;
     private final ListBox<ParagraphStyle> volumeInfoStyleListBox;
     private final NumericSettingControl minSyllableLengthField;
@@ -174,7 +175,6 @@ public class SettingsDialog {
     private final Label transcriptionInfoLabel;
     private final Label volumeInfoLabel;
     private final Label hyphenateLabel;
-    private final Label hardPageBreaksLabel;
     private final Label transcriptionInfoStyleLabel;
     private final Label volumeInfoStyleLabel;
     private final Label minSyllableLengthLabel;
@@ -205,10 +205,10 @@ public class SettingsDialog {
     private final MapListBox<String,CharacterStyle> characterStyleListBox;
     private final CheckBox characterInheritCheckBox;
     private final TextField characterParentField;
-    private final ListBox<CharacterStyle.TypefaceOption> characterBoldfaceListBox;
-    private final ListBox<CharacterStyle.TypefaceOption> characterItalicListBox;
-    private final ListBox<CharacterStyle.TypefaceOption> characterUnderlineListBox;
-    private final ListBox<CharacterStyle.TypefaceOption> characterCapitalsListBox;
+    private final ListBox<FollowPrint> characterBoldfaceListBox;
+    private final ListBox<FollowPrint> characterItalicListBox;
+    private final ListBox<FollowPrint> characterUnderlineListBox;
+    private final ListBox<FollowPrint> characterCapitalsListBox;
 
     /* LABELS */
 
@@ -234,7 +234,8 @@ public class SettingsDialog {
     private final NumericSettingControl paragraphFirstLineField;
     private final NumericSettingControl paragraphRunoversField;
     private final NumericSettingControl paragraphMarginLeftRightField;
-    private final CheckBox paragraphKeepEmptyCheckBox;
+    private final ListBox<FollowPrint> paragraphEmptyParagraphsListBox;
+    private final ListBox<FollowPrint> paragraphHardPageBreaksListBox;
     private final CheckBox paragraphKeepWithNextCheckBox;
     private final CheckBox paragraphDontSplitCheckBox;
     private final CheckBox paragraphWidowControlCheckBox;
@@ -252,7 +253,8 @@ public class SettingsDialog {
     private final Label paragraphMarginLeftRightLabel;
     private final Label paragraphLinesAboveLabel;
     private final Label paragraphLinesBelowLabel;
-    private final Label paragraphKeepEmptyLabel;
+    private final Label paragraphEmptyParagraphsLabel;
+    private final Label paragraphHardPageBreaksLabel;
     private final Label paragraphKeepWithNextLabel;
     private final Label paragraphDontSplitLabel;
     private final Label paragraphWidowControlLabel;
@@ -694,9 +696,8 @@ public class SettingsDialog {
         L10N_math.put(MathCode.MARBURG,   "Marburg");
         L10N_math.put(MathCode.WISKUNDE,  "Woluwe");
 
-        L10N_typeface.put(CharacterStyle.TypefaceOption.FOLLOW_PRINT, bundle.getString("followPrint"));
-        L10N_typeface.put(CharacterStyle.TypefaceOption.YES,          bundle.getString("yes"));
-        L10N_typeface.put(CharacterStyle.TypefaceOption.NO,           bundle.getString("no"));
+        L10N_followPrint.put(FollowPrint.FOLLOW_PRINT, bundle.getString("followPrint"));
+        L10N_followPrint.put(FollowPrint.IGNORE,       "Ignore");
 
         L10N_noterefFormats.put("1", "1, 2, 3,\u2026");
         L10N_noterefFormats.put("A", "A, B, C,\u2026");
@@ -867,7 +868,6 @@ public class SettingsDialog {
         transcriptionInfoCheckBox = new CheckBox(container.getControl("CheckBox1"));        
         volumeInfoCheckBox = new CheckBox(container.getControl("CheckBox2"));        
         hyphenateCheckBox = new CheckBox(container.getControl("CheckBox20"));
-        hardPageBreaksCheckBox = new CheckBox(container.getControl("CheckBox19"));
 
         transcriptionInfoStyleListBox = new ListBox<ParagraphStyle>(container.getControl("ListBox6")) {
             @Override
@@ -911,9 +911,6 @@ public class SettingsDialog {
         hyphenateLabel = new Label(container.getControl("Label77"),
                                    bundle.getString("hyphenateLabel"));
 
-        hardPageBreaksLabel = new Label(container.getControl("Label72"),
-                                        bundle.getString("hardPageBreaksLabel"));
-
         transcriptionInfoStyleLabel = new Label(container.getControl("Label98"),
                                                 bundle.getString("paragraphStyleLabel") + ":");
 
@@ -933,7 +930,6 @@ public class SettingsDialog {
         transcriptionInfoCheckBox.link(settings.transcriptionInfoEnabled);
         volumeInfoCheckBox.link(settings.volumeInfoEnabled);
         hyphenateCheckBox.link(settings.hyphenate);
-        hardPageBreaksCheckBox.link(settings.hardPageBreaks);
         transcriptionInfoStyleListBox.link(settings.transcriptionInfoStyle);
         volumeInfoStyleListBox.link(settings.volumeInfoStyle);
         minSyllableLengthField.link(settings.minSyllableLength);
@@ -1050,7 +1046,7 @@ public class SettingsDialog {
             }
         };
 
-        characterBoldfaceListBox = new ListBox<CharacterStyle.TypefaceOption>(container.getControl("ListBox29")) {
+        characterBoldfaceListBox = new ListBox<FollowPrint>(container.getControl("ListBox29")) {
             @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == characterStyleListBox) {
@@ -1058,12 +1054,12 @@ public class SettingsDialog {
                 }
             }
             @Override
-            public String getDisplayValue(CharacterStyle.TypefaceOption value) {
-                return L10N_typeface.get(value);
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
             }
         };
 
-        characterItalicListBox = new ListBox<CharacterStyle.TypefaceOption>(container.getControl("ListBox27")) {
+        characterItalicListBox = new ListBox<FollowPrint>(container.getControl("ListBox27")) {
             @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == characterStyleListBox) {
@@ -1071,12 +1067,12 @@ public class SettingsDialog {
                 }
             }
             @Override
-            public String getDisplayValue(CharacterStyle.TypefaceOption value) {
-                return L10N_typeface.get(value);
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
             }
         };
 
-        characterUnderlineListBox = new ListBox<CharacterStyle.TypefaceOption>(container.getControl("ListBox31")) {
+        characterUnderlineListBox = new ListBox<FollowPrint>(container.getControl("ListBox31")) {
             @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == characterStyleListBox) {
@@ -1084,12 +1080,12 @@ public class SettingsDialog {
                 }
             }
             @Override
-            public String getDisplayValue(CharacterStyle.TypefaceOption value) {
-                return L10N_typeface.get(value);
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
             }
         };
 
-        characterCapitalsListBox = new ListBox<CharacterStyle.TypefaceOption>(container.getControl("ListBox30")) {
+        characterCapitalsListBox = new ListBox<FollowPrint>(container.getControl("ListBox30")) {
             @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == characterStyleListBox) {
@@ -1097,8 +1093,8 @@ public class SettingsDialog {
                 }
             }
             @Override
-            public String getDisplayValue(CharacterStyle.TypefaceOption value) {
-                return L10N_typeface.get(value);
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
             }
         };
 
@@ -1233,12 +1229,29 @@ public class SettingsDialog {
             }
         };
 
-        paragraphKeepEmptyCheckBox = new CheckBox(container.getControl("CheckBox9")) {
+        paragraphEmptyParagraphsListBox = new ListBox<FollowPrint>(container.getControl("ListBox34")) {
             @Override
             public void dialogElementUpdated(EventObject event) {
                 if (event.getSource() == paragraphStyleListBox) {
-                    link(paragraphStyleListBox.getSelectedItem().keepEmptyParagraphs);
+                    link(paragraphStyleListBox.getSelectedItem().emptyParagraphs);
                 }
+            }
+            @Override
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
+            }
+        };
+
+        paragraphHardPageBreaksListBox = new ListBox<FollowPrint>(container.getControl("ListBox35")) {
+            @Override
+            public void dialogElementUpdated(EventObject event) {
+                if (event.getSource() == paragraphStyleListBox) {
+                    link(paragraphStyleListBox.getSelectedItem().hardPageBreaks);
+                }
+            }
+            @Override
+            public String getDisplayValue(FollowPrint value) {
+                return L10N_followPrint.get(value);
             }
         };
 
@@ -1322,8 +1335,11 @@ public class SettingsDialog {
         paragraphLinesBelowLabel = new Label(container.getControl("Label34"),
                                              bundle.getString("linesBelowLabel") + ":");
 
-        paragraphKeepEmptyLabel = new Label(container.getControl("Label14"),
-                                            bundle.getString("paragraphKeepEmptyLabel"));
+        paragraphEmptyParagraphsLabel = new Label(container.getControl("Label14"),
+                                                  "Empty paragraphs:");
+
+        paragraphHardPageBreaksLabel = new Label(container.getControl("Label6"),
+                                                 "Hard page breaks:");
 
         paragraphKeepWithNextLabel = new Label(container.getControl("Label70"),
                                                bundle.getString("keepWithNextLabel"));
@@ -1359,7 +1375,8 @@ public class SettingsDialog {
         paragraphMarginLeftRightField.link(paragraphStyleListBox.getSelectedItem().marginLeftRight);
         paragraphLinesAboveField.link(paragraphStyleListBox.getSelectedItem().linesAbove);
         paragraphLinesBelowField.link(paragraphStyleListBox.getSelectedItem().linesBelow);
-        paragraphKeepEmptyCheckBox.link(paragraphStyleListBox.getSelectedItem().keepEmptyParagraphs);
+        paragraphEmptyParagraphsListBox.link(paragraphStyleListBox.getSelectedItem().emptyParagraphs);
+        paragraphHardPageBreaksListBox.link(paragraphStyleListBox.getSelectedItem().hardPageBreaks);
         paragraphKeepWithNextCheckBox.link(paragraphStyleListBox.getSelectedItem().keepWithNext);
         paragraphDontSplitCheckBox.link(paragraphStyleListBox.getSelectedItem().dontSplit);
         paragraphWidowControlCheckBox.link(paragraphStyleListBox.getSelectedItem().widowControlEnabled);
@@ -1375,7 +1392,8 @@ public class SettingsDialog {
         paragraphStyleListBox.addListener(paragraphMarginLeftRightField);
         paragraphStyleListBox.addListener(paragraphLinesAboveField);
         paragraphStyleListBox.addListener(paragraphLinesBelowField);
-        paragraphStyleListBox.addListener(paragraphKeepEmptyCheckBox);
+        paragraphStyleListBox.addListener(paragraphEmptyParagraphsListBox);
+        paragraphStyleListBox.addListener(paragraphHardPageBreaksListBox);
         paragraphStyleListBox.addListener(paragraphKeepWithNextCheckBox);
         paragraphStyleListBox.addListener(paragraphDontSplitCheckBox);
         paragraphStyleListBox.addListener(paragraphWidowControlCheckBox);
@@ -3127,12 +3145,12 @@ public class SettingsDialog {
         }
     }
 
-    private class AlignmentListBox extends ListBox<Style.Alignment> {
+    private class AlignmentListBox extends ListBox<Alignment> {
         public AlignmentListBox(XControl control) {
             super(control);
         }
         @Override
-        public String getDisplayValue(Style.Alignment value) {
+        public String getDisplayValue(Alignment value) {
             return L10N_alignment.get(value);
         }
     }

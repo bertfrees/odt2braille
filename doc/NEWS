@@ -236,6 +236,7 @@ changes:
 added:
 
 - borders on headings/tables/frames
+- paragraph settings: hard page breaks: ignore/follow print
 - table settings: invert reading order, repeat headings, ...
 - note settings: noteref/footnotes
 - picture settings

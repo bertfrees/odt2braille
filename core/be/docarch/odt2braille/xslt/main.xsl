@@ -84,7 +84,6 @@
         <xsl:param name="paramTocUptoLevel"               as="xsd:integer"  select="2" />
 
         <xsl:param name="paramHyphenationEnabled"         as="xsd:boolean"  select="false()" />
-        <xsl:param name="paramKeepHardPageBreaks"         as="xsd:boolean"  select="false()" />
         <xsl:param name="paramNoterefSpaceBefore"         as="xsd:boolean"  select="false()" />
         <xsl:param name="paramNoterefSpaceAfter"          as="xsd:boolean"  select="false()" />
         <xsl:param name="paramStairstepTableEnabled"      as="xsd:boolean"  select="false()" />
@@ -224,7 +223,7 @@ TOP LEVEL
         <xsl:choose>
 
             <!-- PAGENUMBER -->
-            <xsl:when test="$pagenumbers and name(current())='pagenum'">
+            <xsl:when test="$pagenumbers and name(current())='pagebreak'">
                 <xsl:call-template name="pagenumbering" />
             </xsl:when>
 
@@ -259,7 +258,7 @@ TOP LEVEL
                     <dtb:div class="toc" />
                 </xsl:if>
                 <xsl:if test="$pagenumbers">
-                    <xsl:apply-templates select="current()/descendant::pagenum" />
+                    <xsl:apply-templates select="current()/descendant::pagebreak" />
                 </xsl:if>
             </xsl:when>
 
@@ -274,7 +273,7 @@ TOP LEVEL
                     <!-- NOT RENDERED FRONTMATTER -->
                     <xsl:when test="$section-name=$frontmatter-section and not($frontmatter-mode)">
                         <xsl:if test="$pagenumbers">
-                            <xsl:apply-templates select="current()/descendant::pagenum" />
+                            <xsl:apply-templates select="current()/descendant::pagebreak" />
                         </xsl:if>
                     </xsl:when>
 
@@ -372,7 +371,7 @@ TOP LEVEL
                     <dtb:div class="omission" />
                 </xsl:if>
                 <xsl:if test="$pagenumbers">
-                    <xsl:apply-templates select="current()/descendant::pagenum" />
+                    <xsl:apply-templates select="current()/descendant::pagebreak" />
                 </xsl:if>
             </xsl:otherwise>
         </xsl:choose>
@@ -754,32 +753,18 @@ INLINE ELEMENTS
 
     <!-- PAGENUMBERS -->
 
-    <xsl:template match="pagenum" name="pagenumbering">
+    <xsl:template match="pagebreak" name="pagenumbering">
         <xsl:param name="pagenum" as="xsd:boolean" select="true()" />
 
         <xsl:if test="$pagenum">
-            <xsl:if test="(@type = 'hard' and $paramKeepHardPageBreaks) or
-                          (@type = 'new-braille-page')">
+            <xsl:if test="(@type = 'braille') or (@type = 'both')">
                 <dtb:pagebreak />
             </xsl:if>
-            <xsl:if test="@num and @enum and @render and @value">
-                <xsl:variable name="attrPage">
-                    <xsl:choose>
-                        <xsl:when test="@enum='1'">
-                            <xsl:value-of select="'normal'" />
-                        </xsl:when>
-                        <xsl:otherwise>
-                            <xsl:value-of select="'special'" />
-                        </xsl:otherwise>
-                    </xsl:choose>
-                </xsl:variable>
+            <xsl:if test="(@type = 'print') or (@type = 'both')">
                 <xsl:choose>
-                    <xsl:when test="@render='true'">
+                    <xsl:when test="@pagenum">
                         <dtb:pagenum>
-                            <xsl:attribute name="page">
-                                <xsl:value-of select="$attrPage" />
-                            </xsl:attribute>
-                            <xsl:value-of select="@value" />
+                            <xsl:value-of select="@pagenum" />
                         </dtb:pagenum>
                     </xsl:when>
                     <xsl:otherwise>
@@ -1052,12 +1037,12 @@ BLOCK ELEMENTS
                 </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="$is-caption">
-                        <xsl:apply-templates select="pagenum" />
+                        <xsl:apply-templates select="pagebreak" />
                     </xsl:when>
                     <xsl:when test="$is-paragraph and $is-empty">
 
                         <!-- Empty paragraph -->
-                        <xsl:apply-templates select="pagenum" />
+                        <xsl:apply-templates select="pagebreak" />
                         <xsl:variable name="keep-empty" as="xsd:boolean">
                             <xsl:call-template name="get-keep-empty-para-style">
                                 <xsl:with-param name="style-name" select="$configured-style-name" />
@@ -1417,7 +1402,7 @@ BLOCK ELEMENTS
 
                 <!-- Page breaks -->
                 <xsl:if test="not($transposed)">
-                    <xsl:apply-templates select="descendant::pagenum" />
+                    <xsl:apply-templates select="descendant::pagebreak" />
                 </xsl:if>
 
                 <!-- Transposed tables, lists & frames -->
@@ -1556,7 +1541,7 @@ BLOCK ELEMENTS
 
     <xsl:template match="text:table-of-content">
         <dtb:div class="toc" />
-        <xsl:apply-templates select="current()/descendant::pagenum" />
+        <xsl:apply-templates select="current()/descendant::pagebreak" />
     </xsl:template>
 
     <!-- FRAMES -->
@@ -1861,7 +1846,7 @@ BLOCK ELEMENTS
                 </xsl:for-each>
             </dtb:list>
         </dtb:bibliography>
-        <xsl:apply-templates select="current()/descendant::pagenum" />
+        <xsl:apply-templates select="current()/descendant::pagebreak" />
     </xsl:template>
 
 

@@ -26,7 +26,6 @@ import be.docarch.odt2braille.setup.DependentYesNoSetting;
 import be.docarch.odt2braille.setup.DependentNumberSetting;
 import be.docarch.odt2braille.setup.EnumSetting;
 import be.docarch.odt2braille.setup.TextSetting;
-import be.docarch.odt2braille.setup.YesNoSetting;
 
 /**
  *
@@ -39,6 +38,7 @@ public class ParagraphStyle extends Style {
     /************************/
 
     private final String id;
+    private final boolean automatic;
 
     private final Setting<String> displayName;
     private final Setting<ParagraphStyle> parentStyle;
@@ -51,7 +51,8 @@ public class ParagraphStyle extends Style {
     public final InheritableNumberSetting marginLeftRight;
     public final InheritableNumberSetting linesAbove;
     public final InheritableNumberSetting linesBelow;
-    public final InheritableYesNoSetting keepEmptyParagraphs;
+    public final FollowPrintSetting emptyParagraphs;
+    public final FollowPrintSetting hardPageBreaks;
     public final InheritableYesNoSetting keepWithNext;
     public final InheritableYesNoSetting dontSplit;
     public final InheritableYesNoSetting widowControlEnabled;
@@ -62,6 +63,7 @@ public class ParagraphStyle extends Style {
     /* GETTERS */
 
     public String         getID()                   { return id; }
+    public boolean        getAutomatic()            { return automatic; }
     public String         getDisplayName()          { return displayName.get(); }
     public ParagraphStyle getParentStyle()          { return parentStyle.get(); }
     public boolean        getInherit()              { return inherit.get(); }
@@ -71,7 +73,8 @@ public class ParagraphStyle extends Style {
     public int            getMarginLeftRight()      { return marginLeftRight.get(); }
     public int            getLinesAbove()           { return linesAbove.get(); }
     public int            getLinesBelow()           { return linesBelow.get(); }
-    public boolean        getKeepEmptyParagraphs()  { return keepEmptyParagraphs.get(); }
+    public FollowPrint    getEmptyParagraphs()      { return emptyParagraphs.get(); }
+    public FollowPrint    getHardPageBreaks()       { return hardPageBreaks.get(); }
     public boolean        getKeepWithNext()         { return keepWithNext.get(); }
     public boolean        getDontSplit()            { return dontSplit.get(); }
     public boolean        getWidowControlEnabled()  { return widowControlEnabled.get(); }
@@ -90,7 +93,8 @@ public class ParagraphStyle extends Style {
     public void setMarginLeftRight      (int value)            { marginLeftRight.set(value); }
     public void setLinesAbove           (int value)            { linesAbove.set(value); }
     public void setLinesBelow           (int value)            { linesBelow.set(value); }
-    public void setKeepEmptyParagraphs  (boolean value)        { keepEmptyParagraphs.set(value); }
+    public void setEmptyParagraphs      (FollowPrint value)    { emptyParagraphs.set(value); }
+    public void setHardPageBreaks       (FollowPrint value)    { hardPageBreaks.set(value); }
     public void setKeepWithNext         (boolean value)        { keepWithNext.set(value); }
     public void setDontSplit            (boolean value)        { dontSplit.set(value); }
     public void setWidowControlEnabled  (boolean value)        { widowControlEnabled.set(value); }
@@ -99,9 +103,11 @@ public class ParagraphStyle extends Style {
     public void setOrphanControl        (int value)            { orphanControl.set(value); }
 
 
-    public ParagraphStyle(String id) {
+    public ParagraphStyle(String id,
+                          boolean automatic) {
 
         this.id = id;
+        this.automatic = automatic;
 
         /* DECLARATION */
 
@@ -156,9 +162,12 @@ public class ParagraphStyle extends Style {
             public boolean accept(Integer value) { return value >= 0; }
         };
 
-        keepEmptyParagraphs = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getKeepEmptyParagraphs(); }
-            public boolean accept(Boolean value) { return true; }
+        emptyParagraphs = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getEmptyParagraphs(); }
+        };
+
+        hardPageBreaks = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getHardPageBreaks(); }
         };
 
         keepWithNext = new InheritableYesNoSetting() {
@@ -232,7 +241,8 @@ public class ParagraphStyle extends Style {
         parentStyle.addListener(marginLeftRight);
         parentStyle.addListener(linesAbove);
         parentStyle.addListener(linesBelow);
-        parentStyle.addListener(keepEmptyParagraphs);
+        parentStyle.addListener(emptyParagraphs);
+        parentStyle.addListener(hardPageBreaks);
         parentStyle.addListener(keepWithNext);
         parentStyle.addListener(dontSplit);
         parentStyle.addListener(widowControlEnabled);
@@ -245,7 +255,8 @@ public class ParagraphStyle extends Style {
         inherit.addListener(marginLeftRight);
         inherit.addListener(linesAbove);
         inherit.addListener(linesBelow);
-        inherit.addListener(keepEmptyParagraphs);
+        inherit.addListener(emptyParagraphs);
+        inherit.addListener(hardPageBreaks);
         inherit.addListener(keepWithNext);
         inherit.addListener(dontSplit);
         inherit.addListener(widowControlEnabled);
@@ -361,6 +372,36 @@ public class ParagraphStyle extends Style {
         }
     }
 
+    public abstract class FollowPrintSetting extends EnumSetting<FollowPrint>
+                                          implements Dependent {
+
+        public FollowPrintSetting() { super(FollowPrint.class); }
+
+        public abstract FollowPrint getInheritedValue();
+
+        @Override
+        public FollowPrint get() {
+            if (getInherit()) { return getInheritedValue(); }
+            return super.get();
+        }
+
+        @Override
+        public boolean enabled() {
+            if (getInherit()) { return false; }
+            return super.enabled();
+        }
+
+        public boolean refresh() { return true; }
+
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.getSource() == inherit) {
+                fireEvent(true, true);
+            } else if (event.ValueChanged) {
+                fireEvent(refresh(), true);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object object) {
         if (this == object) { return true; }
@@ -376,7 +417,8 @@ public class ParagraphStyle extends Style {
                this.marginLeftRight.equals(that.marginLeftRight) &&
                this.linesAbove.equals(that.linesAbove) &&
                this.linesBelow.equals(that.linesBelow) &&
-               this.keepEmptyParagraphs.equals(that.keepEmptyParagraphs) &&
+               this.emptyParagraphs.equals(that.emptyParagraphs) &&
+               this.hardPageBreaks.equals(that.hardPageBreaks) &&
                this.keepWithNext.equals(that.keepWithNext) &&
                this.dontSplit.equals(that.dontSplit) &&
                this.widowControlEnabled.equals(that.widowControlEnabled) &&
@@ -398,7 +440,8 @@ public class ParagraphStyle extends Style {
         hash = 11 * hash + marginLeftRight.hashCode();
         hash = 11 * hash + linesAbove.hashCode();
         hash = 11 * hash + linesBelow.hashCode();
-        hash = 11 * hash + keepEmptyParagraphs.hashCode();
+        hash = 11 * hash + emptyParagraphs.hashCode();
+        hash = 11 * hash + hardPageBreaks.hashCode();
         hash = 11 * hash + keepWithNext.hashCode();
         hash = 11 * hash + dontSplit.hashCode();
         hash = 11 * hash + widowControlEnabled.hashCode();

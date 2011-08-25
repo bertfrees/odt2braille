@@ -53,7 +53,6 @@
     <!--<xsl:param    name="meta-url"                    as="xsd:string" />-->
 
         <xsl:variable name="body"            select="doc($content-url)/office:document-content/office:body" />
-    <!--<xsl:variable name="meta"            select="doc($meta-url)/office:document-meta" />-->
 
         <xsl:variable name="content-base"    select="'../content.xml#'" />
         

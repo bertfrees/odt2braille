@@ -32,8 +32,6 @@ import be.docarch.odt2braille.setup.TextSetting;
  */
 public class CharacterStyle extends Style {
 
-    public enum TypefaceOption { YES, NO, FOLLOW_PRINT };
-
     /************************/
     /* CONSTANTS & SETTINGS */
     /************************/
@@ -45,10 +43,10 @@ public class CharacterStyle extends Style {
 
     public final DependentYesNoSetting inherit;
 
-    public final TypeFaceSetting italic;
-    public final TypeFaceSetting boldface;
-    public final TypeFaceSetting underline;
-    public final TypeFaceSetting capitals;
+    public final FollowPrintSetting italic;
+    public final FollowPrintSetting boldface;
+    public final FollowPrintSetting underline;
+    public final FollowPrintSetting capitals;
 
     /* GETTERS */
 
@@ -56,20 +54,20 @@ public class CharacterStyle extends Style {
     public String         getDisplayName() { return displayName.get(); }
     public CharacterStyle getParentStyle() { return parentStyle.get(); }
     public boolean        getInherit()     { return inherit.get(); }
-    public TypefaceOption getItalic()      { return italic.get(); }
-    public TypefaceOption getBoldface()    { return boldface.get(); }
-    public TypefaceOption getUnderline()   { return underline.get(); }
-    public TypefaceOption getCapitals()    { return capitals.get(); }
+    public FollowPrint    getItalic()      { return italic.get(); }
+    public FollowPrint    getBoldface()    { return boldface.get(); }
+    public FollowPrint    getUnderline()   { return underline.get(); }
+    public FollowPrint    getCapitals()    { return capitals.get(); }
 
     /* SETTERS */
 
     public void setDisplayName (String value)         { displayName.set(value); }
     public void setParentStyle (CharacterStyle value) { parentStyle.set(value); }
     public void setInherit     (boolean value)        { inherit.set(value); }
-    public void setItalic      (TypefaceOption value) { italic.set(value); }
-    public void setBoldface    (TypefaceOption value) { boldface.set(value); }
-    public void setUnderline   (TypefaceOption value) { underline.set(value); }
-    public void setCapitals    (TypefaceOption value) { capitals.set(value); }
+    public void setItalic      (FollowPrint value)    { italic.set(value); }
+    public void setBoldface    (FollowPrint value)    { boldface.set(value); }
+    public void setUnderline   (FollowPrint value)    { underline.set(value); }
+    public void setCapitals    (FollowPrint value)    { capitals.set(value); }
 
 
     public CharacterStyle(String id) {
@@ -85,30 +83,30 @@ public class CharacterStyle extends Style {
             public boolean accept(Boolean value) { return !value || getParentStyle() != null; }
         };
 
-        italic = new TypeFaceSetting() {
-            public TypefaceOption getInheritedValue() { return getParentStyle().getItalic(); }
+        italic = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getItalic(); }
         };
 
-        boldface = new TypeFaceSetting() {
-            public TypefaceOption getInheritedValue() { return getParentStyle().getBoldface(); }
+        boldface = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getBoldface(); }
         };
 
-        underline = new TypeFaceSetting() {
-            public TypefaceOption getInheritedValue() { return getParentStyle().getUnderline(); }
+        underline = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getUnderline(); }
         };
 
-        capitals = new TypeFaceSetting() {
-            public TypefaceOption getInheritedValue() { return getParentStyle().getCapitals(); }
+        capitals = new FollowPrintSetting() {
+            public FollowPrint getInheritedValue() { return getParentStyle().getCapitals(); }
         };
 
         /* INITIALIZATION */
 
         displayName.set(id);
         inherit.set(true);
-        italic.set(TypefaceOption.FOLLOW_PRINT);
-        boldface.set(TypefaceOption.FOLLOW_PRINT);
-        underline.set(TypefaceOption.FOLLOW_PRINT);
-        capitals.set(TypefaceOption.FOLLOW_PRINT);
+        italic.set(FollowPrint.FOLLOW_PRINT);
+        boldface.set(FollowPrint.FOLLOW_PRINT);
+        underline.set(FollowPrint.FOLLOW_PRINT);
+        capitals.set(FollowPrint.FOLLOW_PRINT);
 
         /* LINKING */
 
@@ -142,15 +140,15 @@ public class CharacterStyle extends Style {
         }
     }
 
-    public abstract class TypeFaceSetting extends EnumSetting<TypefaceOption>
-                                       implements Dependent {
+    public abstract class FollowPrintSetting extends EnumSetting<FollowPrint>
+                                          implements Dependent {
 
-        public TypeFaceSetting() { super(TypefaceOption.class); }
+        public FollowPrintSetting() { super(FollowPrint.class); }
 
-        public abstract TypefaceOption getInheritedValue();
+        public abstract FollowPrint getInheritedValue();
 
         @Override
-        public TypefaceOption get() {
+        public FollowPrint get() {
             if (getInherit()) { return getInheritedValue(); }
             return super.get();
         }

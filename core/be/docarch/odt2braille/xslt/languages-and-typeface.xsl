@@ -50,10 +50,6 @@
         <xsl:param name="paramItalicFollowPrint"        as="xsd:boolean*"  />
         <xsl:param name="paramBoldfaceFollowPrint"      as="xsd:boolean*"  />
         <xsl:param name="paramUnderlineFollowPrint"     as="xsd:boolean*"  />
-        <xsl:param name="paramCaps"                     as="xsd:boolean*"  />
-        <xsl:param name="paramItalic"                   as="xsd:boolean*"  />
-        <xsl:param name="paramBoldface"                 as="xsd:boolean*"  />
-        <xsl:param name="paramUnderline"                as="xsd:boolean*"  />
 
         <xsl:variable name="main-lang">
             <xsl:variable name="index" as="xsd:integer">
@@ -414,28 +410,16 @@
                            > count($node/ancestor::dtb:span[@font-weight='normal'][1]/ancestor::*))">
                 <xsl:value-of select="'strong'" />
             </xsl:when>
-            <xsl:when test="$char-style-index>0 and not($paramBoldfaceFollowPrint[$char-style-index])
-                                           and $paramBoldface[$char-style-index]">
-                <xsl:value-of select="'strong'" />
-            </xsl:when>
             <xsl:when test="(not($char-style-index>0)
                              or ($char-style-index>0 and $paramItalicFollowPrint[$char-style-index]))
                         and (count($node/ancestor::dtb:span[@font-style='italic'][1]/ancestor::*)
                            > count($node/ancestor::dtb:span[@font-style='normal'][1]/ancestor::*))">
                 <xsl:value-of select="'em'" />
             </xsl:when>
-            <xsl:when test="$char-style-index>0 and not($paramItalicFollowPrint[$char-style-index])
-                                           and $paramItalic[$char-style-index]">
-                <xsl:value-of select="'em'" />
-            </xsl:when>
             <xsl:when test="(not($char-style-index>0)
                              or ($char-style-index>0 and $paramUnderlineFollowPrint[$char-style-index]))
                         and (count($node/ancestor::dtb:span[@underline-style][not(@underline-style='none')][1]/ancestor::*)
                            > count($node/ancestor::dtb:span                  [    @underline-style='none' ][1]/ancestor::*))">
-                <xsl:value-of select="'em'" />
-            </xsl:when>
-            <xsl:when test="$char-style-index>0 and not($paramUnderlineFollowPrint[$char-style-index])
-                                           and $paramUnderline[$char-style-index]">
                 <xsl:value-of select="'em'" />
             </xsl:when>
             <xsl:otherwise>
@@ -477,7 +461,7 @@
                 </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-                <xsl:value-of select="$paramCaps[$char-style-index]" />
+                <xsl:value-of select="false()" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

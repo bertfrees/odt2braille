@@ -128,7 +128,6 @@ public class Configuration implements Serializable {
     public final DependentOptionSetting<PageNumberFormat> preliminaryPageNumberFormat;
   //public final DependentOptionSetting<PageNumberFormat> supplementaryPageNumberFormat;
     public final DependentNumberSetting beginningBraillePageNumber;
-    public final Setting<Boolean> hardPageBreaks;
     public final Setting<String> creator;
     public final Setting<Boolean> hyphenate;
     public final Setting<Integer> minSyllableLength;
@@ -165,7 +164,6 @@ public class Configuration implements Serializable {
     public PageNumberFormat     getPreliminaryPageNumberFormat()   { return preliminaryPageNumberFormat.get(); }
   //public PageNumberFormat     getSupplementaryPageNumberFormat() { return supplementaryPageNumberFormat.get(); }
     public int                  getBeginningBraillePageNumber()    { return beginningBraillePageNumber.get(); }
-    public boolean              getHardPageBreaks()                { return hardPageBreaks.get(); }
     public String               getCreator()                       { return creator.get(); }
     public boolean              getHyphenate()                     { return hyphenate.get(); }
     public int                  getMinSyllableLength()             { return minSyllableLength.get(); }
@@ -202,7 +200,6 @@ public class Configuration implements Serializable {
     public void setPreliminaryPageNumberFormat   (PageNumberFormat value)     { preliminaryPageNumberFormat.set(value); }
   //public void setSupplementaryPageNumberFormat (PageNumberFormat value)     { supplementaryPageNumberFormat.set(value); }
     public void setBeginningBraillePageNumber    (int value)                  { beginningBraillePageNumber.set(value); }
-    public void setHardPageBreaks                (boolean value)              { hardPageBreaks.set(value); }
     public void setCreator                       (String value)               { creator.set(value); }
     public void setHyphenate                     (boolean value)              { hyphenate.set(value); }
     public void setMinSyllableLength             (int value)                  { minSyllableLength.set(value); }
@@ -419,7 +416,6 @@ public class Configuration implements Serializable {
         volumeInfoStyle = new ParagraphStyleSetting();
         transcriptionInfoStyle = new ParagraphStyleSetting();
 
-        hardPageBreaks = new YesNoSetting();
         creator = new TextSetting();
         hyphenate = new YesNoSetting();
         minSyllableLength = new MinSyllableLengthSetting();
@@ -460,7 +456,6 @@ public class Configuration implements Serializable {
 
         tocStyle.setTitle(L10N_tableOfContentTitle.toUpperCase());
 
-        hardPageBreaks.set(false);
         creator.set(CREATOR);
         hyphenate.set(false);
         volumeInfoEnabled.set(false);
@@ -975,8 +970,10 @@ public class Configuration implements Serializable {
 
         public ParagraphStyleMap(Collection<ParagraphStyle> styles) {
             for (ParagraphStyle style : styles) {
-                map.put(style.getID(), style);
-                style.setInherit(true);
+                if (!style.getAutomatic()) {
+                    map.put(style.getID(), style);
+                    style.setInherit(true);
+                }
             }
         }
 

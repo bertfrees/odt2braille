@@ -13,9 +13,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.TransformerFactoryImpl;
 
-//import be.docarch.accessibility.Check;
-//import be.docarch.accessibility.RemoteRunnableChecker;
-//import be.docarch.accessibility.Report;
+import be.docarch.accessibility.Check;
+import be.docarch.accessibility.RemoteRunnableChecker;
+import be.docarch.accessibility.Report;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.OdtTransformer;
 import be.docarch.odt2braille.setup.Configuration;
@@ -31,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
  *
  * @author Bert Frees
  */
-public class BrailleChecker /* implements RemoteRunnableChecker */ {
+public class BrailleChecker implements RemoteRunnableChecker {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
@@ -41,7 +41,7 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
     private Transformer earlXSL = null;
     private Date lastChecked = null;
     private SimpleDateFormat dateFormat = null;
-    private Map<String,BrailleCheck> checks = null;
+    private Map<String,Check> checks = null;
 
     public BrailleChecker() {
 
@@ -59,7 +59,7 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
             earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
             earlReport.deleteOnExit();
 
-            checks = new HashMap<String,BrailleCheck>();
+            checks = new HashMap<String,Check>();
             checks.put(BrailleCheck.ID.A_NoBrailleToc.name(),         new BrailleCheck(BrailleCheck.ID.A_NoBrailleToc));
             checks.put(BrailleCheck.ID.A_OmittedCaption.name(),       new BrailleCheck(BrailleCheck.ID.A_OmittedCaption));
 
@@ -70,77 +70,65 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
         }
     }
 
- /* @Override
     public void setOdtFile(File odtFile) {
         this.odtFile = odtFile;
     }
 
-    @Override
     public Collection<Check> getChecks() {
         return checks.values();
     }
 
-    @Override
     public Report getAccessibilityReport() {
         return new Report(earlReport, reportName);
     }
 
-    @Override
     public boolean run() {
 
         if (odtFile == null) { return false; }
 
         lastChecked = new Date();
-        reportName = BrailleChecker.getCanonicalName()
-                        + "/" + new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss").format(lastChecked) + ".rdf";
+        reportName = "be.docarch.odt2braille.checker.BrailleChecker/"
+                        + new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss").format(lastChecked) + ".rdf";
 
         try {
 
-            OdtTransformer odtTransformer = new OdtTransformer(odtFile);
-            Configuration settings = new Configuration(odtTransformer);
+            OdtTransformer transformer = new OdtTransformer(odtFile);
+            Configuration.setTransformer(transformer);
+            Configuration settings = Configuration.newInstance();
 
-              // TODO: load settings from odt-file
+            // TODO: load settings from odt-file
 
-            odtTransformer.configure(settings);
-            odtTransformer.makeControlFlow();
+            transformer.configure(settings);
+            transformer.makeControlFlow();
 
-            settings.configureVolumes();
-            boolean tocEnabled = false;
-            for (Volume volume : settings.getVolumes()) {
-                if (volume.getToc()) {
-                    tocEnabled = true;
-                    break;
-                }
-            }
-
-            earlXSL.setParameter("paramTocEnabled", tocEnabled);
+            earlXSL.setParameter("paramTocEnabled", true);
             earlXSL.setParameter("paramTimestamp", dateFormat.format(lastChecked));
-            earlXSL.setParameter("content-url", odtTransformer.getOdtContentFile().toURI());
-            //earlXSL.setParameter("meta-url", odtTransformer.getOdtMetaFile().toURI());
-            earlXSL.transform(new StreamSource(odtTransformer.getControllerFile()), new StreamResult(earlReport));
-            odtTransformer.close();
+            earlXSL.setParameter("content-url", transformer.getOdtContentFile().toURI());
+            earlXSL.transform(new StreamSource(transformer.getControllerFile()), new StreamResult(earlReport));
+            transformer.close();
 
             return true;
 
-        } catch (ParserConfigurationException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (SAXException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (TransformerException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (ParserConfigurationException e) {
+            logger.log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, null, e);
+        } catch (SAXException e) {
+            logger.log(Level.SEVERE, null, e);
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, null, e);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
         }
 
         return false;
-    } */
+    }
 
-  //@Override
     public String getIdentifier() {
         return "http://docarch.be/odt2braille/checker/BrailleChecker";
     }
 
-    public Date getLastChecked() {
+ /* public Date getLastCheckDate() {
 
         try {
             if (lastChecked != null) {
@@ -151,5 +139,5 @@ public class BrailleChecker /* implements RemoteRunnableChecker */ {
         } catch (java.text.ParseException ex) {
             return null;
         }
-    }
+    } */
 }

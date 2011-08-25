@@ -2,16 +2,14 @@ package be.docarch.odt2braille.checker;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
-
 import java.util.MissingResourceException;
-
-//import be.docarch.accessibility.Check;
+import be.docarch.accessibility.Check;
 
 /**
  *
  * @author Bert Frees
  */
-public class BrailleCheck /* extends Check */ {
+public class BrailleCheck extends Check {
 
     private static String L10N = "be/docarch/odt2braille/checker/l10n/Bundle";
 
@@ -42,71 +40,24 @@ public class BrailleCheck /* extends Check */ {
         this.identifier = identifier;
     }
 
-  //@Override
     public String getIdentifier() {
         return identifier.name();
     }
 
- /* @Override
     public Status getStatus() {
 
-        switch (identifier) {
-            case A_NoBrailleToc:
-            case A_NotInBrailleVolume:
-            case A_OmittedInBraille:
-            case A_TransposedInBraille:
-            case A_UnnaturalVolumeBreak:
-            case A_VolumesTooLong:
-            case A_VolumesTooShort:
-            case A_VolumesDifferTooMuch:
-            case A_PreliminaryVolumeRequired:
-            case A_PreliminaryVolumeTooShort:
-            case A_VolumeDoesntBeginWithHeading:
-            case A_OmissionsInsideVolume:
-            case A_OmissionsOutsideVolume:
-            case A_Transpositions:
-            case A_PageWidthTooSmall:
-            case A_EmbosserDoesNotSupport8Dot:
-            case A_FileFormatDoesNotSupport8Dot:
-                return Status.ALERT;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public Category getCategory() {
-
-        switch (identifier) {
-            case A_NoBrailleToc:
-            case A_NotInBrailleVolume:
-            case A_OmittedInBraille:
-            case A_TransposedInBraille:
-            case A_UnnaturalVolumeBreak:
-            case A_VolumesTooLong:
-            case A_VolumesTooShort:
-            case A_VolumesDifferTooMuch:
-            case A_PreliminaryVolumeRequired:
-            case A_PreliminaryVolumeTooShort:
-            case A_VolumeDoesntBeginWithHeading:
-            case A_OmissionsInsideVolume:
-            case A_OmissionsOutsideVolume:
-            case A_Transpositions:
-            case A_PageWidthTooSmall:
-            case A_EmbosserDoesNotSupport8Dot:
-            case A_FileFormatDoesNotSupport8Dot:
-                return Category.BRAILLE;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public String getName(Locale locale) {
-
-        if (identifier == null) {
+        if (identifier.name().startsWith("E_")) {
+            return Status.ERROR;
+        } else if (identifier.name().startsWith("A_")) {
+            return Status.ALERT;
+        } else {
             return null;
         }
+    }
+
+    public String getName(Locale locale) {
+
+        if (identifier == null) { return null; }
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("name_" + identifier.name());
@@ -119,14 +70,11 @@ public class BrailleCheck /* extends Check */ {
                     return identifier.name();
             }
         }
-    } */
+    }
 
-  //@Override
     public String getDescription(Locale locale) {
 
-        if (identifier == null) {
-            return null;
-        }
+        if (identifier == null) { return null; }
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("description_" + identifier.name());
@@ -142,17 +90,14 @@ public class BrailleCheck /* extends Check */ {
         }
     }
 
- /* @Override
     public String getSuggestion(Locale locale) {
 
-        if (identifier == null) {
-            return null;
-        }
+        if (identifier == null) { return null; }
         try {
             ResourceBundle bundle = ResourceBundle.getBundle(L10N, locale);
             return bundle.getString("suggestion_" + identifier.name());
         } catch (MissingResourceException e) {
             return "";
         }
-    } */
+    }
 }

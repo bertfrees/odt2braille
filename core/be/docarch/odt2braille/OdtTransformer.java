@@ -63,7 +63,6 @@ import be.docarch.odt2braille.setup.TranslationTable;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.Configuration.PageNumberFormat;
 import be.docarch.odt2braille.setup.SettingMap;
-import be.docarch.odt2braille.setup.style.ListStyle;
 import be.docarch.odt2braille.setup.style.TocStyle;
 import be.docarch.odt2braille.setup.style.ParagraphStyle;
 import be.docarch.odt2braille.setup.style.HeadingStyle;
@@ -71,7 +70,7 @@ import be.docarch.odt2braille.setup.style.TableStyle;
 import be.docarch.odt2braille.setup.style.FootnoteStyle;
 import be.docarch.odt2braille.setup.style.PictureStyle;
 import be.docarch.odt2braille.setup.style.CharacterStyle;
-import be.docarch.odt2braille.setup.style.CharacterStyle.TypefaceOption;
+import be.docarch.odt2braille.setup.style.Style.FollowPrint;
 
 /**
  * This class enables you to transform a flat .odt file to a DAISY-like xml file that is suited to be processed by <code>liblouisxml</code>.
@@ -145,8 +144,7 @@ public class OdtTransformer {
     private Map<String,String> linkedLists = new TreeMap();
     private Map<String,String> listStyles = new TreeMap();
     private ListNumber currentNumber = null;
-    private SettingMap<Integer,ListStyle> listSettings = null;
-    private SettingMap<Integer,HeadingStyle> headingSettings = null;
+    private Map<String,ParagraphStyle> allParagraphStyles = null;
 
     public OdtTransformer(File odtFile)
                    throws IOException,
@@ -380,11 +378,10 @@ public class OdtTransformer {
     }
 
 
-    private void paginationProcessing(SettingMap<Integer,HeadingStyle> headingSettings)
-                               throws IOException,
-                                      SAXException,
-                                      TransformerConfigurationException,
-                                      TransformerException {
+    private void paginationProcessing() throws IOException,
+                                               SAXException,
+                                               TransformerConfigurationException,
+                                               TransformerException {
 
         if (!paginationDone) {
 
@@ -392,7 +389,7 @@ public class OdtTransformer {
 
             parseDocument();
 
-            this.headingSettings = headingSettings;
+            extractParagraphStyles();
 
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
@@ -453,7 +450,7 @@ public class OdtTransformer {
         }
     }
 
-    private void listNumberingProcessing(SettingMap<Integer,ListStyle> listSettings)
+    private void listNumberingProcessing()
                                   throws IOException,
                                          SAXException,
                                          TransformerConfigurationException,
@@ -463,8 +460,6 @@ public class OdtTransformer {
             logger.entering("OdtTransformer","listNumberingProcessing");
 
             parseDocument();
-
-            this.listSettings = listSettings;
 
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
@@ -529,6 +524,7 @@ public class OdtTransformer {
         int hardPageBreaksBefore = 0;
         int hardPageBreaksAfter = 0;
         boolean newBraillePage = false;
+        boolean followPrint = false;
         boolean thisIsFirst = isFirst;
 
         nodeName = node.getNodeName();
@@ -549,12 +545,16 @@ public class OdtTransformer {
         } else if (nodeName.equals("text:p") ){
 
             styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
+            ParagraphStyle style = allParagraphStyles.get(styleName);
+            while(style.getAutomatic() && style != null) { style = style.getParentStyle(); }
+            if (style != null) { followPrint = style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT; }
 
         } else if (nodeName.equals("text:h")) {
 
             styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
-            newBraillePage = headingSettings.get(
-                    Math.min(4, Integer.parseInt(node.getAttributes().getNamedItem("text:outline-level").getNodeValue()))).getNewBraillePage();
+            int level = Integer.parseInt(node.getAttributes().getNamedItem("text:outline-level").getNodeValue());
+            HeadingStyle style = settings.getHeadingStyles().get(level);
+            if (style != null) { newBraillePage = style.getNewBraillePage(); }
             NodeList softPageBreakDescendants = ((Element)node).getElementsByTagName("text:soft-page-break");
             if (softPageBreakDescendants.getLength() > 0) {
                 softPageBreaksBefore = 1;
@@ -597,31 +597,25 @@ public class OdtTransformer {
 
         if (styleName != null) {
 
-            xpath = "//automatic-styles/style[@name='" + styleName + "']/paragraph-properties";
+            xpath = "//automatic-styles/style[@name='" + styleName + "']/paragraph-properties"; // TODO: hoeft niet in automatic-styles te zitten !
 
-            if (XPathAPI.eval(contentRoot, xpath + "[@page-number>0]").bool()) {
+            if (XPathAPI.eval(contentRoot, xpath + "[@page-number='auto']").bool()) {
+                if (XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str().length() > 0) {
+                    hardPageBreaksBefore ++;
+                }
+            } else if (XPathAPI.eval(contentRoot, xpath + "[@page-number>0]").bool()) {
                 hardPageBreaksBefore ++;
                 pagenum = Integer.parseInt(XPathAPI.eval(contentRoot, xpath + "/@page-number").str()) - 1;
-            } else {
-                if (XPathAPI.eval(contentRoot, xpath + "[@page-number='auto']").bool()) {
-                    if (!XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str().equals("")) {
-                        hardPageBreaksBefore ++;
-                    }
-                } else {
-                    if (XPathAPI.eval(contentRoot, xpath + "[@break-before='page']").bool()) {
-                        hardPageBreaksBefore ++;
-                    }
-                }
+            } else if (XPathAPI.eval(contentRoot, xpath + "[@break-before='page']").bool()) {
+                hardPageBreaksBefore ++;
+            } else if (XPathAPI.eval(contentRoot, xpath + "[@break-after='page']").bool()) {
+                hardPageBreaksAfter ++;
             }
         }
 
         if (isFirst && !nodeName.equals("text:section")) {
-            if (hardPageBreaksBefore > 0) {
-                hardPageBreaksBefore --;
-            }
-            if (softPageBreaksBefore + hardPageBreaksBefore == 0) {
-                softPageBreaksBefore = 1;
-            }
+            if (hardPageBreaksBefore > 0) { hardPageBreaksBefore --; }
+            if (softPageBreaksBefore + hardPageBreaksBefore == 0) { softPageBreaksBefore = 1; }
         }
 
         Node insertAfterNode = node;
@@ -630,7 +624,7 @@ public class OdtTransformer {
                softPageBreaksBefore + hardPageBreaksBefore +
                softPageBreaksAfter +  hardPageBreaksAfter > 0) {
 
-            Element pageNode = contentRoot.getOwnerDocument().createElement("pagenum");
+            Element pageNode = contentRoot.getOwnerDocument().createElement("pagebreak");
 
             if (softPageBreaksBefore + hardPageBreaksBefore +
                 softPageBreaksAfter +  hardPageBreaksAfter > 0) {
@@ -693,33 +687,37 @@ public class OdtTransformer {
                     value = String.valueOf(pagenum + offset);
                 }
 
-                pageNode.setAttribute("num", Integer.toString(pagenum + offset));
-                pageNode.setAttribute("enum", enumType);
-                pageNode.setAttribute("render", Boolean.toString(inclPageNum));
-                pageNode.setAttribute("value", value);
-
+                if (inclPageNum) {
+                    pageNode.setAttribute("pagenum", value);
+                }
             }
 
             if (softPageBreaksBefore > 0) {
-                pageNode.setAttribute("type", newBraillePage?"new-braille-page":"soft");
+                pageNode.setAttribute("type", newBraillePage?"both":"print");
                 node.getParentNode().insertBefore(pageNode, node);
                 softPageBreaksBefore--;
             } else if (hardPageBreaksBefore > 0) {
-                pageNode.setAttribute("type", newBraillePage?"new-braille-page":"hard");
+                pageNode.setAttribute("type", (newBraillePage || followPrint)?"both":"print");
                 node.getParentNode().insertBefore(pageNode, node);
                 hardPageBreaksBefore--;
+            } else if (newBraillePage) {
+                pageNode.setAttribute("type", "braille");
+                node.getParentNode().insertBefore(pageNode, node);
             } else if (softPageBreaksAfter > 0) {
-                pageNode.setAttribute("type", newBraillePage?"new-braille-page":"soft");
+                pageNode.setAttribute("type", "print");
                 if (node.getNextSibling() != null) {
                     node.getParentNode().insertBefore(pageNode, insertAfterNode.getNextSibling());
                 } else {
                     node.getParentNode().appendChild(pageNode);
                 }
                 softPageBreaksAfter--;
-            } else if (newBraillePage) {
-                pageNode.setAttribute("type", "new-braille-page");
-                node.getParentNode().insertBefore(pageNode, node);
             } else if (hardPageBreaksAfter > 0) {
+                pageNode.setAttribute("type",followPrint?"both":"print");
+                if (node.getNextSibling() != null) {
+                    node.getParentNode().insertBefore(pageNode, insertAfterNode.getNextSibling());
+                } else {
+                    node.getParentNode().appendChild(pageNode);
+                }
                 hardPageBreaksAfter--;
             }
 
@@ -1350,7 +1348,7 @@ public class OdtTransformer {
 
                             } else if (numFormat[newLevel-1].equals("bullet")) {
 
-                                display = listSettings.get(newLevel).getPrefix();
+                                display = settings.getListStyles().get(newLevel).getPrefix();
                                 if (!display.equals("")) {
                                     numNode = contentRoot.getOwnerDocument().createElement("num");
                                     numNode.setAttribute("value", display + " ");
@@ -1685,9 +1683,9 @@ public class OdtTransformer {
             daisyFile.deleteOnExit();
 
             // Dependencies
-            paginationProcessing(settings.getHeadingStyles());
+            paginationProcessing();
             headingNumberingProcessing();
-            listNumberingProcessing(settings.getListStyles());
+            listNumberingProcessing();
             correctionProcessing();
             makeControlFlow();
 
@@ -1698,10 +1696,6 @@ public class OdtTransformer {
             List<String> configuredParagraphStyles = new ArrayList<String>();
             List<String> keepEmptyParagraphStyles = new ArrayList<String>();
             List<String> characterStyles = new ArrayList<String>();
-            List<Boolean> boldface = new ArrayList<Boolean>();
-            List<Boolean> italic = new ArrayList<Boolean>();
-            List<Boolean> underline = new ArrayList<Boolean>();
-            List<Boolean> caps = new ArrayList<Boolean>();
             List<Boolean> boldfaceFollowPrint = new ArrayList<Boolean>();
             List<Boolean> italicFollowPrint = new ArrayList<Boolean>();
             List<Boolean> underlineFollowPrint = new ArrayList<Boolean>();
@@ -1719,7 +1713,7 @@ public class OdtTransformer {
             for (ParagraphStyle style : settings.getParagraphStyles().values()) {
                 if (!style.getInherit()) {
                     configuredParagraphStyles.add(style.getID());
-                    if (style.getKeepEmptyParagraphs()) {
+                    if (style.getEmptyParagraphs() == ParagraphStyle.FollowPrint.FOLLOW_PRINT) {
                         keepEmptyParagraphStyles.add(style.getID());
                     }
                 }
@@ -1739,14 +1733,10 @@ public class OdtTransformer {
             for (CharacterStyle style : settings.getCharacterStyles().values()) {
 
                 characterStyles.add(style.getID());
-                boldface.add(style.getBoldface() == TypefaceOption.YES);
-                italic.add(style.getItalic() == TypefaceOption.YES);
-                underline.add(style.getUnderline() == TypefaceOption.YES);
-                caps.add(style.getCapitals() == TypefaceOption.YES);
-                boldfaceFollowPrint.add(style.getBoldface() == TypefaceOption.FOLLOW_PRINT);
-                italicFollowPrint.add(style.getItalic() == TypefaceOption.FOLLOW_PRINT);
-                underlineFollowPrint.add(style.getUnderline() == TypefaceOption.FOLLOW_PRINT);
-                capsFollowPrint.add(style.getCapitals() == TypefaceOption.FOLLOW_PRINT);
+                boldfaceFollowPrint.add(style.getBoldface() == FollowPrint.FOLLOW_PRINT);
+                italicFollowPrint.add(style.getItalic() == FollowPrint.FOLLOW_PRINT);
+                underlineFollowPrint.add(style.getUnderline() == FollowPrint.FOLLOW_PRINT);
+                capsFollowPrint.add(style.getCapitals() == FollowPrint.FOLLOW_PRINT);
 
             }
 
@@ -1774,7 +1764,6 @@ public class OdtTransformer {
             mainXSL.setParameter("paramBodyMatterMode",            settings.getBodyMatterMode().name());
             mainXSL.setParameter("paramRearMatterMode",            settings.getRearMatterMode().name());
             mainXSL.setParameter("paramHyphenationEnabled",        settings.getHyphenate());
-            mainXSL.setParameter("paramKeepHardPageBreaks",        settings.getHardPageBreaks());
             mainXSL.setParameter("paramNoterefSpaceBefore",        noterefFormats.get("1").getSpaceBefore());
             mainXSL.setParameter("paramNoterefSpaceAfter",         noterefFormats.get("1").getSpaceAfter());
             mainXSL.setParameter("paramNoterefNumberFormats",      noterefNumberFormats.toArray(new String[noterefNumberFormats.size()]));
@@ -1807,10 +1796,6 @@ public class OdtTransformer {
             languagesAndTypefaceXSL.setParameter("paramMathCode",             settings.getMathCode().name().toLowerCase());
 
             languagesAndTypefaceXSL.setParameter("paramCharacterStyles",      characterStyles.toArray(new String[characterStyles.size()]));
-            languagesAndTypefaceXSL.setParameter("paramBoldface",             boldface.toArray(new Boolean[boldface.size()]));
-            languagesAndTypefaceXSL.setParameter("paramItalic",               italic.toArray(new Boolean[italic.size()]));
-            languagesAndTypefaceXSL.setParameter("paramUnderline",            underline.toArray(new Boolean[underline.size()]));
-            languagesAndTypefaceXSL.setParameter("paramCaps",                 caps.toArray(new Boolean[caps.size()]));
             languagesAndTypefaceXSL.setParameter("paramBoldfaceFollowPrint",  boldfaceFollowPrint.toArray(new Boolean[boldfaceFollowPrint.size()]));
             languagesAndTypefaceXSL.setParameter("paramItalicFollowPrint",    italicFollowPrint.toArray(new Boolean[italicFollowPrint.size()]));
             languagesAndTypefaceXSL.setParameter("paramUnderlineFollowPrint", underlineFollowPrint.toArray(new Boolean[underlineFollowPrint.size()]));
@@ -1890,78 +1875,80 @@ public class OdtTransformer {
     }
 
     public Collection<ParagraphStyle> extractParagraphStyles() {
+
         logger.entering("OdtTransformer","extractParagraphStyles");
 
-        TreeMap<String,ParagraphStyle> styles = new TreeMap();
-        TreeMap<String,String> parents = new TreeMap();
+        if (allParagraphStyles == null) {
 
-        try {
+            allParagraphStyles = new TreeMap<String,ParagraphStyle>();
+            Map<String,String> parents = new TreeMap<String,String>();
 
-            if (usedStylesFile == null) {
+            try {
 
-                usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
-                usedStylesFile.deleteOnExit();
+                if (usedStylesFile == null) {
 
-                Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
+                    usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
+                    usedStylesFile.deleteOnExit();
 
-                stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
+                    Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
 
-                stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
-                stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
-                stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+                    stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
-                saveDocument();
-                stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
+                    stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                    stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
+                    stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
+                    stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
 
-            }
+                    saveDocument();
+                    stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
 
-            int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace).intValue();
+                }
 
-            ParagraphStyle style = null;
-            String name = null;
-            String displayName = null;
-            String parentStyleName = null;
-            boolean automatic = false;
+                int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace).intValue();
 
-            for (int i=1; i<=count; i++) {
+                ParagraphStyle style = null;
+                String name = null;
+                String displayName = null;
+                String parentStyleName = null;
+                boolean auto = false;
 
-                name = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                       "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
-                displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                              "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@display-name", namespace);
-                parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                                  "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
-                automatic = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
-                                  "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@automatic", namespace);
+                for (int i=1; i<=count; i++) {
 
-                if (!automatic) {
-                    style = new ParagraphStyle(name);
+                    name = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
+                    displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@display-name", namespace);
+                    parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
+                    auto = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
+                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@automatic", namespace);
+
+                    style = new ParagraphStyle(name, auto);
                     if (displayName.length()>0)     { style.setDisplayName(displayName); }
                     if (parentStyleName.length()>0) { parents.put(name, parentStyleName); }
-                    styles.put(name, style);
+                    allParagraphStyles.put(name, style);
                 }
-            }
-            if (!styles.containsKey("Standard")) {
-                styles.put("Standard", new ParagraphStyle("Standard"));
-            }
-            styles.get("Standard").setDisplayName("Default");
-            String[] children = parents.keySet().toArray(new String[parents.size()]);
-            String child = null;
+                if (!allParagraphStyles.containsKey("Standard")) {
+                    allParagraphStyles.put("Standard", new ParagraphStyle("Standard", false));
+                }
+                allParagraphStyles.get("Standard").setDisplayName("Default");
+                String[] children = parents.keySet().toArray(new String[parents.size()]);
+                String child = null;
 
-            for (int i=0; i<children.length; i++) {
-                child = children[i];
-                styles.get(child).setParentStyle(styles.get(parents.get(child)));
-            }
+                for (int i=0; i<children.length; i++) {
+                    child = children[i];
+                    allParagraphStyles.get(child).setParentStyle(allParagraphStyles.get(parents.get(child)));
+                }
 
-        } catch (IOException e) {
-        } catch (TransformerConfigurationException e) {
-        } catch (TransformerException e) {
+            } catch (IOException e) {
+            } catch (TransformerConfigurationException e) {
+            } catch (TransformerException e) {
+            }
         }
 
         logger.exiting("OdtTransformer","extractParagraphStyles");
 
-        return styles.values();
+        return allParagraphStyles.values();
 
     }
 

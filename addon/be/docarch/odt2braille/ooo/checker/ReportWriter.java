@@ -1,6 +1,5 @@
 package be.docarch.odt2braille.ooo.checker;
 
-import java.util.Collection;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
@@ -24,9 +23,8 @@ import com.sun.star.container.ElementExistException;
 import com.sun.star.container.NoSuchElementException;
 import com.sun.star.rdf.RepositoryException;
 
-import be.docarch.odt2braille.checker.BrailleCheck;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-//import be.docarch.accessibility.Constants;
+import be.docarch.accessibility.Check;
 
 /**
  *
@@ -133,7 +131,7 @@ public class ReportWriter {
         addStatement(subject, RDF_TYPE, EARL_TESTSUBJECT);
         addStatement(subject, RDF_TYPE, CHECKER_DOCUMENT);
 
-        for (BrailleCheck issue : checker.getDetectedIssues()) {
+        for (Check issue : checker.getDetectedIssues()) {
             XURI testcase = URI.createNS(context, CHECKER_CHECKS, issue.getIdentifier());
             addStatement(testcase, RDF_TYPE, EARL_TESTCASE);
             addAssertion(subject, testcase);
