@@ -66,6 +66,11 @@
         <xsl:param name="paramBodyMatterMode"             as="xsd:string"   select="'SINGLE'"  />
         <xsl:param name="paramRearMatterMode"             as="xsd:string"   select="'SINGLE'"  />
 
+        <xsl:param name="paramSingleBodyVolumeId"         as="xsd:string"   select="''"  />
+        <xsl:param name="paramSingleRearVolumeId"         as="xsd:string"   select="''"  />
+        <xsl:param name="paramManualVolumeSections"       as="xsd:string*"  />
+        <xsl:param name="paramManualVolumeIds"            as="xsd:string*"  />
+
         <xsl:param name="paramColumnDelimiter"            as="xsd:string"   select='"&#x2830;"' />
         <xsl:param name="paramTableHeadingSuffix"         as="xsd:string"   select='"&#x2812;"' />
         <xsl:param name="paramEllipsis"			  as="xsd:string"   select="'&#x2810;&#x2810;&#x2810;'" />
@@ -165,6 +170,7 @@ DOCUMENT ROOT
                         <xsl:when test="$paramBodyMatterMode='SINGLE' or
                                         $paramBodyMatterMode='AUTOMATIC'">
                             <dtb:volume>
+                                <xsl:attribute name="id" select="$paramSingleBodyVolumeId"/>
                                 <xsl:apply-templates mode="toplevel"
                                                      select="$body/office:text/text:sequence-decls/following-sibling::*"/>
                             </dtb:volume>
@@ -185,6 +191,7 @@ DOCUMENT ROOT
                         <xsl:choose>
                             <xsl:when test="$paramRearMatterMode='SINGLE'">
                                 <dtb:volume>
+                                    <xsl:attribute name="id" select="$paramSingleRearVolumeId"/>
                                     <xsl:apply-templates mode="toplevel"
                                                          select="$body/office:text//text:section[@text:name=$rearmatter-section][1]">
                                         <xsl:with-param name="rearmatter-mode" select="true()" />
@@ -332,27 +339,23 @@ TOP LEVEL
                         </xsl:call-template>
                     </xsl:when>
 
-                    <!-- VOLUME IN REARMATTER -->
-                    <xsl:when test="$rearmatter-mode and
-                                    $paramRearMatterMode='MANUAL' and
-                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:volume>
-                            <xsl:attribute name="id" select="$section-name" />
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="without-notesection" select="true()" />
+                    <!-- VOLUME IN REARMATTER / BODYMATTER -->
+                    <xsl:when test="$controller//ns1:volume[@rdf:about=concat('section:/', $section-name)] and
+                                  (($paramRearMatterMode='MANUAL' and $rearmatter-mode)
+                                or ($paramBodyMatterMode='MANUAL' and not($rearmatter-mode)))">
+                        <xsl:variable name="section-id">
+                            <xsl:call-template name="get-section-id">
+                                <xsl:with-param name="section" select="$section-name"/>
                             </xsl:call-template>
-                        </dtb:volume>
-                    </xsl:when>
-
-                    <!-- VOLUME IN BODYMATTER -->
-                    <xsl:when test="$paramBodyMatterMode='MANUAL' and
-                                    $controller//ns1:volume[@rdf:about=concat('section:/', $section-name)]">
-                        <dtb:volume>
-                            <xsl:attribute name="id" select="$section-name" />
-                            <xsl:call-template name="section">
-                                <xsl:with-param name="without-notesection" select="true()" />
-                            </xsl:call-template>
-                        </dtb:volume>
+                        </xsl:variable>
+                        <xsl:if test="string-length($section-id) > 0">
+                            <dtb:volume>
+                                <xsl:attribute name="id" select="$section-id" />
+                                <xsl:call-template name="section">
+                                    <xsl:with-param name="without-notesection" select="true()" />
+                                </xsl:call-template>
+                            </dtb:volume>
+                        </xsl:if>
                     </xsl:when>
 
                     <!-- OTHER SECTION -->
@@ -1044,9 +1047,16 @@ BLOCK ELEMENTS
                         <!-- Empty paragraph -->
                         <xsl:apply-templates select="pagebreak" />
                         <xsl:variable name="keep-empty" as="xsd:boolean">
-                            <xsl:call-template name="get-keep-empty-para-style">
-                                <xsl:with-param name="style-name" select="$configured-style-name" />
-                            </xsl:call-template>
+                            <xsl:choose>
+                                <xsl:when test="string-length($configured-style-name) > 0">
+                                    <xsl:call-template name="get-keep-empty-para-style">
+                                        <xsl:with-param name="style-name" select="$configured-style-name" />
+                                    </xsl:call-template>
+                                </xsl:when>
+                                <xsl:otherwise>
+                                    <xsl:value-of select="false()" />
+                                </xsl:otherwise>
+                            </xsl:choose>
                         </xsl:variable>                        
                         <xsl:if test="$keep-empty">
                             <dtb:br />
@@ -1054,7 +1064,7 @@ BLOCK ELEMENTS
                     </xsl:when>
                     <xsl:otherwise>
                         <dtb:paragraph>
-                            <xsl:if test="$is-paragraph">
+                            <xsl:if test="$is-paragraph and (string-length($configured-style-name) > 0)">
                                 <xsl:attribute name="style" select="$configured-style-name" />
                             </xsl:if>
                             <dtb:p>
@@ -1929,13 +1939,13 @@ HELP TEMPLATES
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="not($parent-style-name='')">
+                    <xsl:when test="string-length($parent-style-name) > 0">
                         <xsl:call-template name="get-configured-paragraph-style">
                             <xsl:with-param name="style-name" select="$parent-style-name"/>
                         </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="'Standard'" />
+                        <xsl:value-of select="''" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>
@@ -1966,6 +1976,25 @@ HELP TEMPLATES
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="$paramNoterefNumberPrefixes[$index]" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+
+    <xsl:template name="get-section-id">
+        <xsl:param name="section" as="xsd:string" />
+        <xsl:variable name="index" as="xsd:integer">
+            <xsl:call-template name="first-index-of">
+                <xsl:with-param name="array" select="$paramManualVolumeSections"/>
+                <xsl:with-param name="value" select="$section"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$index = -1">
+                <xsl:value-of select="''" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="$paramManualVolumeIds[$index]" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

@@ -20,6 +20,9 @@
 package be.docarch.odt2braille;
 
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.HashSet;
 
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.SpecialSymbol;
@@ -51,14 +54,9 @@ public class Volume {
     private List<String> transcribersNotes;
 
     public Volume(Configuration.Volume settings) {
-        this(settings, null);
-    }
-
-    public Volume(Configuration.Volume settings,
-                  String id) {
 
         title = settings.getTitle();
-        identifier = id;
+        identifier = createUniqueIdentifier();
 
         frontMatterMode = settings.getFrontMatter() ? FrontMatterMode.BASIC : FrontMatterMode.NONE;
         tableOfContentMode = settings.getTableOfContent() ? TableOfContentMode.BASIC : TableOfContentMode.NONE;
@@ -114,4 +112,23 @@ public class Volume {
     public List<SpecialSymbol> getSpecialSymbols()               { return specialSymbols; }
     public List<String>        getTranscribersNotes()            { return transcribersNotes; }
 
+    private static final Set<String> uniqueIDs = new HashSet<String>();
+
+    private static String createUniqueIdentifier() {
+
+        Random random = new Random();
+        String s = "abcdefghijklmnopqrstuvwxyz0123456789";
+        StringBuilder builder = new StringBuilder();
+        for (int i=0; i<4; i++) {
+            int index = random.nextInt(36);
+            builder.append(s.charAt(index));
+        }
+        String id = builder.toString();
+        if (uniqueIDs.contains(id)) {
+            return createUniqueIdentifier();
+        } else {
+            uniqueIDs.add(id);
+            return id;
+        }
+    }
 }

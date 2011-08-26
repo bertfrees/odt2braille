@@ -151,7 +151,8 @@
                 </xsl:copy>
             </xsl:when>
             <xsl:when test="($paramBodyMatterEnabled or $paramTableOfContentEnabled)
-                                and string-length($paramVolumeId) > 0">
+                                and string-length($paramVolumeId) > 0
+                                and dtb:volume[@id=$paramVolumeId]">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume[@id=$paramVolumeId]"/>
                 </xsl:copy>
@@ -172,7 +173,8 @@
                 </xsl:copy>
             </xsl:when>
             <xsl:when test="($paramRearMatterEnabled or $paramTableOfContentEnabled)
-                                and string-length($paramVolumeId) > 0">
+                                and string-length($paramVolumeId) > 0
+                                and dtb:volume[@id=$paramVolumeId]">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume[@id=$paramVolumeId]"/>
                 </xsl:copy>

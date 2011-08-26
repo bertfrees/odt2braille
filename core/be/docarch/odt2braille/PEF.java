@@ -48,7 +48,6 @@ import org.xml.sax.SAXException;
 import be.docarch.odt2braille.setup.SpecialSymbol;
 import be.docarch.odt2braille.setup.PEFConfiguration;
 import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.Configuration.VolumeManagementMode;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 
 import org.daisy.braille.table.BrailleConverter;
@@ -89,14 +88,15 @@ public class PEF {
     private final PostConversionBrailleChecker checker;
     private final Validator validator;
 
-    private final List<Volume> volumes;
+    private final VolumeManager manager;
 
     public PEF(Configuration settings,
                PEFConfiguration pefSettings,
                LiblouisXML liblouisXML)
         throws IOException,
                TransformerException,
-               SAXException {
+               SAXException,
+               ConversionException {
 
         this(settings, pefSettings, liblouisXML, null, null);
 
@@ -120,7 +120,8 @@ public class PEF {
                PostConversionBrailleChecker checker)
         throws IOException,
                TransformerException,
-               SAXException {
+               SAXException,
+               ConversionException {
 
         logger.entering("PEF", "<init>");
 
@@ -134,51 +135,7 @@ public class PEF {
         pefFile.deleteOnExit();
 
         odtTransformer = settings.odtTransformer;
-        odtTransformer.configure(settings);
-        odtTransformer.ensureMetadataReferences();
-        odtTransformer.makeControlFlow();
-
-        volumes = new ArrayList<Volume>();
-
-        if (settings.getPreliminaryVolumeEnabled()) {
-            volumes.add(new PreliminaryVolume(settings.getPreliminaryVolume()));
-        }
-        switch (settings.getBodyMatterMode()) {
-            case SINGLE:
-                volumes.add(new Volume(settings.getBodyMatterVolume()));
-                break;
-            case AUTOMATIC:
-                volumes.addAll(VolumeSplitter.splitBodyMatterVolume(settings));
-                break;
-        }
-        for (Configuration.SectionVolume volume : settings.getSectionVolumeList().values()) {
-            volumes.add(new Volume(volume, volume.getSection()));
-        }
-        if (settings.getRearMatterSection() != null &&
-            settings.getRearMatterMode() == VolumeManagementMode.SINGLE) {
-            volumes.add(new Volume(settings.getRearMatterVolume()));
-        }
-
-        int i = 1;
-        for (Volume v : volumes) {
-            String title = v.getTitle();
-            if (title.contains("@i")) {
-                v.setTitle(title.replaceFirst("@i", String.valueOf(i)));
-                i++;
-            }
-        }
-        for (Volume v : volumes) {
-            if (v.getFrontMatter()) {
-                v.setExtendedFrontMatter(true);
-                break;
-            }
-        }
-        for (Volume v : volumes) {
-            if (v.getTableOfContent()) {
-                v.setExtendedTableOfContent(true);
-                break;
-            }
-        }
+        manager = new VolumeManager(settings);
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
@@ -198,7 +155,7 @@ public class PEF {
 
 
     public List<Volume> getVolumes() {
-        return volumes;
+        return manager.getVolumes();
     }
 
 
@@ -223,6 +180,7 @@ public class PEF {
                                     TransformerException,
                                     InterruptedException,
                                     SAXException,
+                                    ConversionException,
                                     LiblouisXMLException {
 
         logger.entering("PEF", "makePEF");
@@ -254,6 +212,8 @@ public class PEF {
         Volume volume;
         File bodyFile;
         File preliminaryFile;
+
+        List<Volume> volumes = manager.getVolumes();
 
         String volumeInfo = capitalizeFirstLetter(
                 ResourceBundle.getBundle(L10N, settings.mainLocale).getString("in")) + " " + volumes.size() + " " +

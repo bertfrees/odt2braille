@@ -25,7 +25,6 @@ import be.docarch.odt2braille.setup.Dependent;
 import be.docarch.odt2braille.setup.DependentYesNoSetting;
 import be.docarch.odt2braille.setup.DependentNumberSetting;
 import be.docarch.odt2braille.setup.EnumSetting;
-import be.docarch.odt2braille.setup.TextSetting;
 
 /**
  *
@@ -39,12 +38,11 @@ public class ParagraphStyle extends Style {
 
     private final String id;
     private final boolean automatic;
-
-    private final Setting<String> displayName;
-    private final Setting<ParagraphStyle> parentStyle;
+    private final String displayName;
+    private final ParagraphStyle parentStyle;
 
     public final DependentYesNoSetting inherit;
-
+    
     public final AlignmentSetting alignment;
     public final InheritableNumberSetting firstLine;
     public final InheritableNumberSetting runovers;
@@ -64,8 +62,9 @@ public class ParagraphStyle extends Style {
 
     public String         getID()                   { return id; }
     public boolean        getAutomatic()            { return automatic; }
-    public String         getDisplayName()          { return displayName.get(); }
-    public ParagraphStyle getParentStyle()          { return parentStyle.get(); }
+    public String         getDisplayName()          { return displayName; }
+    public ParagraphStyle getParentStyle()          { return parentStyle; }
+
     public boolean        getInherit()              { return inherit.get(); }
     public Alignment      getAlignment()            { return alignment.get(); }
     public int            getFirstLine()            { return firstLine.get(); }
@@ -84,8 +83,6 @@ public class ParagraphStyle extends Style {
 
     /* SETTERS */
 
-    public void setDisplayName          (String value)         { displayName.set(value); }
-    public void setParentStyle          (ParagraphStyle value) { parentStyle.set(value); }
     public void setInherit              (boolean value)        { inherit.set(value); }
     public void setAlignment            (Alignment value)      { alignment.set(value); }
     public void setFirstLine            (int value)            { firstLine.set(value); }
@@ -104,90 +101,64 @@ public class ParagraphStyle extends Style {
 
 
     public ParagraphStyle(String id,
-                          boolean automatic) {
+                          boolean automatic,
+                          String displayName,
+                          ParagraphStyle parentStyle) {
 
         this.id = id;
         this.automatic = automatic;
+        this.displayName = displayName;
+        this.parentStyle = parentStyle;
 
         /* DECLARATION */
-
-        displayName = new TextSetting();
-        parentStyle = new ParentStyleSetting();
 
         inherit = new DependentYesNoSetting() {
             public boolean accept(Boolean value) { return !value || getParentStyle() != null; }
         };
 
-        alignment = new AlignmentSetting() {
-            public Alignment getInheritedValue() { return getParentStyle().getAlignment(); }
-        };
+        alignment = new AlignmentSetting(parentStyle==null ? null : parentStyle.alignment);
 
-        firstLine = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getFirstLine(); }
+        firstLine = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.firstLine) {
             @Override
             public boolean enabled() {
                 if (getAlignment() != Alignment.LEFT) { return false; }
                 return super.enabled();
             }
-            public boolean accept(Integer value) { return value >= 0; }
         };
 
-        runovers = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getRunovers(); }
+        runovers = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.runovers) {
             @Override
             public boolean enabled() {
                 if (getAlignment() != Alignment.LEFT) { return false; }
                 return super.enabled();
             }
-            public boolean accept(Integer value) { return value >= 0; }
         };
 
-        marginLeftRight = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getMarginLeftRight(); }
+        marginLeftRight = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.marginLeftRight) {
             @Override
             public boolean enabled() {
                 if (getAlignment() != Alignment.CENTERED) { return false; }
                 return super.enabled();
             }
-            public boolean accept(Integer value) { return value >= 0; }
         };
 
-        linesAbove = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getLinesAbove(); }
-            public boolean accept(Integer value) { return value >= 0; }
-        };
+        linesAbove = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.linesAbove);
+        linesBelow = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.linesBelow);
+        emptyParagraphs = new FollowPrintSetting(parentStyle==null ? null : parentStyle.emptyParagraphs);
+        hardPageBreaks = new FollowPrintSetting(parentStyle==null ? null : parentStyle.hardPageBreaks);
+        keepWithNext = new InheritableYesNoSetting(parentStyle==null ? null : parentStyle.keepWithNext);
 
-        linesBelow = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getLinesBelow(); }
-            public boolean accept(Integer value) { return value >= 0; }
-        };
-
-        emptyParagraphs = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getEmptyParagraphs(); }
-        };
-
-        hardPageBreaks = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getHardPageBreaks(); }
-        };
-
-        keepWithNext = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getKeepWithNext(); }
-            public boolean accept(Boolean value) { return true; }
-        };
-
-        dontSplit = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getDontSplit(); }
+        dontSplit = new InheritableYesNoSetting(parentStyle==null ? null : parentStyle.dontSplit) {
+            @Override
             public boolean accept(Boolean value) { return getKeepWithNext() ? value : true; }
         };
 
-        widowControlEnabled = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getWidowControlEnabled(); }
+        widowControlEnabled = new InheritableYesNoSetting(parentStyle==null ? null : parentStyle.widowControlEnabled) {
+            @Override
             public boolean accept(Boolean value) { return !value; }
         };
 
-        orphanControlEnabled = new InheritableYesNoSetting() {
-            public Boolean getInheritedValue() { return getParentStyle().getOrphanControlEnabled(); }
-            public boolean accept(Boolean value) { return true; }
+        orphanControlEnabled = new InheritableYesNoSetting(parentStyle==null ? null : parentStyle.orphanControlEnabled) {
             @Override
             public boolean enabled() {
                 if (getDontSplit()) { return false; }
@@ -195,8 +166,8 @@ public class ParagraphStyle extends Style {
             }
         };
 
-        widowControl = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getWidowControl(); }
+        widowControl = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.widowControl) {
+            @Override
             public boolean accept(Integer value) { return value >= 2; }
             @Override
             public boolean refresh() {
@@ -210,8 +181,8 @@ public class ParagraphStyle extends Style {
             }
         };
 
-        orphanControl = new InheritableNumberSetting() {
-            public Integer getInheritedValue() { return getParentStyle().getOrphanControl(); }
+        orphanControl = new InheritableNumberSetting(parentStyle==null ? null : parentStyle.orphanControl) {
+            @Override
             public boolean accept(Integer value) { return value >= 2; }
             @Override
             public boolean refresh() {
@@ -227,28 +198,12 @@ public class ParagraphStyle extends Style {
 
         /* INITIALIZATION */
 
-        displayName.set(id);
         inherit.set(true);
         widowControl.refresh();
         orphanControl.refresh();
 
         /* LINKING */
 
-        parentStyle.addListener(inherit);
-        parentStyle.addListener(alignment);
-        parentStyle.addListener(firstLine);
-        parentStyle.addListener(runovers);
-        parentStyle.addListener(marginLeftRight);
-        parentStyle.addListener(linesAbove);
-        parentStyle.addListener(linesBelow);
-        parentStyle.addListener(emptyParagraphs);
-        parentStyle.addListener(hardPageBreaks);
-        parentStyle.addListener(keepWithNext);
-        parentStyle.addListener(dontSplit);
-        parentStyle.addListener(widowControlEnabled);
-        parentStyle.addListener(orphanControlEnabled);
-        parentStyle.addListener(widowControl);
-        parentStyle.addListener(orphanControl);
         inherit.addListener(alignment);
         inherit.addListener(firstLine);
         inherit.addListener(runovers);
@@ -277,94 +232,32 @@ public class ParagraphStyle extends Style {
     /* INNER CLASSES */
     /*****************/
 
-    private class ParentStyleSetting extends Setting<ParagraphStyle> {
+    public class InheritableNumberSetting extends DependentNumberSetting {
 
-        ParagraphStyle style = null;
-
-        public boolean accept(ParagraphStyle value) { return true; }
-        public ParagraphStyle get() { return style; }
-
-        protected boolean update(ParagraphStyle value) {
-            if (style == value) { return false; }
-            style = value;
-            return true;
+        private final Setting<Integer> parentSetting;
+        public InheritableNumberSetting(Setting<Integer> parentSetting) {
+            super();
+            this.parentSetting = parentSetting;
+            if (parentSetting != null) { parentSetting.addListener(this); }
         }
-    }
-
-    public abstract class InheritableNumberSetting extends DependentNumberSetting {
-
-        public abstract Integer getInheritedValue();
-
         @Override
         public Integer get() {
-            if (getInherit()) { return getInheritedValue(); }
+            if (getInherit()) { return parentSetting.get(); }
             return super.get();
         }
-
         @Override
         public boolean enabled() {
             if (getInherit()) { return false; }
             return super.enabled();
         }
-
+        public boolean accept(Integer value) { return value >= 0; }
         @Override
         public void propertyUpdated(PropertyEvent event) {
             if (event.getSource() == inherit) {
                 fireEvent(true, true);
-            } else {
-                super.propertyUpdated(event);
-            }
-        }
-    }
-
-    public abstract class InheritableYesNoSetting extends DependentYesNoSetting {
-
-        public abstract Boolean getInheritedValue();
-
-        @Override
-        public Boolean get() {
-            if (getInherit()) { return getInheritedValue(); }
-            return super.get();
-        }
-
-        @Override
-        public boolean enabled() {
-            if (getInherit()) { return false; }
-            return super.enabled();
-        }
-
-        @Override
-        public void propertyUpdated(PropertyEvent event) {
-            if (event.getSource() == inherit) {
-                fireEvent(true, true);
-            } else {
-                super.propertyUpdated(event);
-            }
-        }
-    }
-
-    public abstract class AlignmentSetting extends EnumSetting<Alignment>
-                                        implements Dependent {
-
-        public AlignmentSetting() { super(Alignment.class); }
-
-        public abstract Alignment getInheritedValue();
-
-        @Override
-        public Alignment get() {
-            if (getInherit()) { return getInheritedValue(); }
-            return super.get();
-        }
-
-        @Override
-        public boolean enabled() {
-            if (getInherit()) { return false; }
-            return super.enabled();
-        }
-
-        public boolean refresh() { return false; }
-        public void propertyUpdated(PropertyEvent event) {
-            if (event.getSource() == inherit) {
+            } else if (parentSetting != null &&
+                       getInherit() &&
+                       event.getSource() == parentSetting) {
                 fireEvent(true, true);
             } else if (event.ValueChanged) {
                 fireEvent(refresh(), true);
@@ -372,29 +265,98 @@ public class ParagraphStyle extends Style {
         }
     }
 
-    public abstract class FollowPrintSetting extends EnumSetting<FollowPrint>
-                                          implements Dependent {
+    public class InheritableYesNoSetting extends DependentYesNoSetting {
 
-        public FollowPrintSetting() { super(FollowPrint.class); }
-
-        public abstract FollowPrint getInheritedValue();
-
+        private final Setting<Boolean> parentSetting;
+        public InheritableYesNoSetting(Setting<Boolean> parentSetting) {
+            super();
+            this.parentSetting = parentSetting;
+            if (parentSetting != null) { parentSetting.addListener(this); }
+        }
         @Override
-        public FollowPrint get() {
-            if (getInherit()) { return getInheritedValue(); }
+        public Boolean get() {
+            if (getInherit()) { return parentSetting.get(); }
             return super.get();
         }
-
         @Override
         public boolean enabled() {
             if (getInherit()) { return false; }
             return super.enabled();
         }
-
-        public boolean refresh() { return true; }
-
+        public boolean accept(Boolean value) { return true; }
+        @Override
         public void propertyUpdated(PropertyEvent event) {
             if (event.getSource() == inherit) {
+                fireEvent(true, true);
+            } else if (parentSetting != null &&
+                       getInherit() &&
+                       event.getSource() == parentSetting) {
+                fireEvent(true, true);
+            } else if (event.ValueChanged) {
+                fireEvent(refresh(), true);
+            }
+        }
+    }
+
+    public class AlignmentSetting extends EnumSetting<Alignment>
+                               implements Dependent {
+
+        private final Setting<Alignment> parentSetting;
+        public AlignmentSetting(Setting<Alignment> parentSetting) {
+            super(Alignment.class);
+            this.parentSetting = parentSetting;
+            if (parentSetting != null) { parentSetting.addListener(this); }
+        }
+        @Override
+        public Alignment get() {
+            if (getInherit()) { return parentSetting.get(); }
+            return super.get();
+        }
+        @Override
+        public boolean enabled() {
+            if (getInherit()) { return false; }
+            return super.enabled();
+        }
+        public boolean refresh() { return false; }
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.getSource() == inherit) {
+                fireEvent(true, true);
+            } else if (parentSetting != null &&
+                       getInherit() &&
+                       event.getSource() == parentSetting) {
+                fireEvent(true, true);
+            } else if (event.ValueChanged) {
+                fireEvent(refresh(), true);
+            }
+        }
+    }
+
+    public class FollowPrintSetting extends EnumSetting<FollowPrint>
+                                 implements Dependent {
+
+        private final Setting<FollowPrint> parentSetting;
+        public FollowPrintSetting(Setting<FollowPrint> parentSetting) {
+            super(FollowPrint.class);
+            this.parentSetting = parentSetting;
+            if (parentSetting != null) { parentSetting.addListener(this); }
+        }
+        @Override
+        public FollowPrint get() {
+            if (getInherit()) { return parentSetting.get(); }
+            return super.get();
+        }
+        @Override
+        public boolean enabled() {
+            if (getInherit()) { return false; }
+            return super.enabled();
+        }
+        public boolean refresh() { return true; }
+        public void propertyUpdated(PropertyEvent event) {
+            if (event.getSource() == inherit) {
+                fireEvent(true, true);
+            } else if (parentSetting != null &&
+                       getInherit() &&
+                       event.getSource() == parentSetting) {
                 fireEvent(true, true);
             } else if (event.ValueChanged) {
                 fireEvent(refresh(), true);

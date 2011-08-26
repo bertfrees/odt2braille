@@ -123,6 +123,7 @@ public class OdtTransformer {
     private boolean correctionDone = false;
     private boolean metaDataReferencesDone = false;
     private boolean splitInAutomaticVolumesDone = false;
+    private boolean transformDone = false;
 
     private static String L10N_in = null;
     private static String L10N_and = null;
@@ -305,9 +306,10 @@ public class OdtTransformer {
   
     public boolean makeControlFlow() throws IOException,
                                             TransformerConfigurationException,
-                                            TransformerException {
+                                            TransformerException,
+                                            ConversionException {
 
-        if (settings == null) { return false; }
+        if (settings == null) { throw new ConversionException(); }
 
         if (controllerFile == null) {
 
@@ -546,7 +548,7 @@ public class OdtTransformer {
 
             styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
             ParagraphStyle style = allParagraphStyles.get(styleName);
-            while(style.getAutomatic() && style != null) { style = style.getParentStyle(); }
+            while(style != null && style.getAutomatic()) { style = style.getParentStyle(); }
             if (style != null) { followPrint = style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT; }
 
         } else if (nodeName.equals("text:h")) {
@@ -1476,12 +1478,11 @@ public class OdtTransformer {
                           throws IOException,
                                  SAXException,
                                  TransformerConfigurationException,
-                                 TransformerException {
-
-        if (settings == null) { return false; }
+                                 TransformerException,
+                                 ConversionException {
 
         // Dependencies
-        if (!transform()) { return false; }
+        if (settings == null || !transformDone) { throw new ConversionException(); }
 
         logger.entering("OdtTransformer","getBodyMatter");
 
@@ -1520,12 +1521,11 @@ public class OdtTransformer {
                            throws IOException,
                                   SAXException,
                                   TransformerConfigurationException,
-                                  TransformerException {
-
-        if (settings == null) { return false; }
+                                  TransformerException,
+                                  ConversionException {
 
         // Dependencies
-        if (!transform()) { return false; }
+        if (settings == null || !transformDone) { throw new ConversionException(); }
 
         logger.entering("OdtTransformer","getFrontMatter");
 
@@ -1534,7 +1534,6 @@ public class OdtTransformer {
         List<String> specialSymbolsDescription = new ArrayList<String>();
       //List<String> transcribersNotes = volume.getTranscribersNotes();
 
-        String id = volume.getIdentifier();
         int firstBraillePage = volume.getFirstBraillePage();
         int lastBraillePage = volume.getLastBraillePage();
         int numberOfPreliminaryPages = volume.getNumberOfPreliminaryPages();
@@ -1584,7 +1583,8 @@ public class OdtTransformer {
 
         splitVolumesXSL.setParameter("paramBodyMatterEnabled", false);
         splitVolumesXSL.setParameter("paramRearMatterEnabled", false);
-        splitVolumesXSL.setParameter("paramAllVolumes", id == null);
+        splitVolumesXSL.setParameter("paramAllVolumes", false);
+        splitVolumesXSL.setParameter("paramVolumeId", (volume instanceof PreliminaryVolume) ? "" : volume.getIdentifier());
         splitVolumesXSL.setParameter("paramFrontMatterEnabled", volume.getFrontMatter());
         splitVolumesXSL.setParameter("paramTableOfContentEnabled", volume.getTableOfContent());
         splitVolumesXSL.setParameter("paramSpecialSymbolsListEnabled", volume.getSpecialSymbolListEnabled());
@@ -1604,10 +1604,6 @@ public class OdtTransformer {
         splitVolumesXSL.setParameter("paramSpecialSymbolsDescription", specialSymbolsDescription.toArray(new String[specialSymbolsDescription.size()]));
         splitVolumesXSL.setParameter("paramNoteSectionTitle", "NOTES");
         splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", settings.continuedSuffix);
-
-        if (id != null) {
-            splitVolumesXSL.setParameter("paramVolumeId", id);
-        }
 
         // Set output options
 
@@ -1629,9 +1625,10 @@ public class OdtTransformer {
                                    throws IOException,
                                           SAXException,
                                           TransformerException,
-                                          TransformerConfigurationException {
+                                          TransformerConfigurationException,
+                                          ConversionException {
         // Dependencies
-        if (!transform()) { return false; }
+        if (!transformDone) { throw new ConversionException(); }
 
         if (!splitInAutomaticVolumesDone) {
 
@@ -1668,14 +1665,18 @@ public class OdtTransformer {
         return false;
     }
 
-    private boolean transform() throws IOException,
-                                       SAXException,
-                                       TransformerConfigurationException,
-                                       TransformerException {
+    public boolean transform(Volume singleBodyVolume,
+                             Volume singleRearVolume,
+                             Map<String,Volume> manualVolumes)
+                      throws IOException,
+                             SAXException,
+                             TransformerConfigurationException,
+                             TransformerException,
+                             ConversionException {
 
-        if (settings == null) { return false; }
+        if (settings == null) { throw new ConversionException(); }
 
-        if (daisyFile == null) {
+        if (!transformDone || daisyFile == null) {
 
             logger.entering("OdtTransformer","transform");
 
@@ -1687,8 +1688,11 @@ public class OdtTransformer {
             headingNumberingProcessing();
             listNumberingProcessing();
             correctionProcessing();
+            ensureMetadataReferences();
             makeControlFlow();
 
+            List<String> manualVolumeSections = new ArrayList<String>();
+            List<String> manualVolumeIDs = new ArrayList<String>();
             List<String> languages = new ArrayList<String>();
             List<String> translationTables = new ArrayList<String>();
             List<Integer> grades = new ArrayList<Integer>();
@@ -1709,6 +1713,11 @@ public class OdtTransformer {
             TableStyle tableStyle = settings.getTableStyles().get("Default");
             PictureStyle pictureStyle = settings.getPictureStyle();
             TocStyle tocStyle = settings.getTocStyle();
+
+            for (String section : manualVolumes.keySet()) {
+                manualVolumeSections.add(section);
+                manualVolumeIDs.add(manualVolumes.get(section).getIdentifier());
+            }
 
             for (ParagraphStyle style : settings.getParagraphStyles().values()) {
                 if (!style.getInherit()) {
@@ -1763,6 +1772,10 @@ public class OdtTransformer {
 
             mainXSL.setParameter("paramBodyMatterMode",            settings.getBodyMatterMode().name());
             mainXSL.setParameter("paramRearMatterMode",            settings.getRearMatterMode().name());
+            mainXSL.setParameter("paramSingleBodyVolumeId",        singleBodyVolume==null?"":singleBodyVolume.getIdentifier());
+            mainXSL.setParameter("paramSingleRearVolumeId",        singleRearVolume==null?"":singleRearVolume.getIdentifier());
+            mainXSL.setParameter("paramManualVolumeSections",      manualVolumeSections.toArray(new String[manualVolumeSections.size()]));
+            mainXSL.setParameter("paramManualVolumeIds",           manualVolumeIDs.toArray(new String[manualVolumeIDs.size()]));
             mainXSL.setParameter("paramHyphenationEnabled",        settings.getHyphenate());
             mainXSL.setParameter("paramNoterefSpaceBefore",        noterefFormats.get("1").getSpaceBefore());
             mainXSL.setParameter("paramNoterefSpaceAfter",         noterefFormats.get("1").getSpaceAfter());
@@ -1824,9 +1837,12 @@ public class OdtTransformer {
             tempFile.delete();
 
             logger.exiting("OdtTransformer","transform");
+
+            transformDone = true;
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public String[] extractLanguages() {
@@ -1905,39 +1921,39 @@ public class OdtTransformer {
                 }
 
                 int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace).intValue();
-
-                ParagraphStyle style = null;
-                String name = null;
-                String displayName = null;
-                String parentStyleName = null;
-                boolean auto = false;
-
                 for (int i=1; i<=count; i++) {
-
-                    name = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
-                    displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@display-name", namespace);
-                    parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
-                    auto = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
-                           "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@automatic", namespace);
-
-                    style = new ParagraphStyle(name, auto);
-                    if (displayName.length()>0)     { style.setDisplayName(displayName); }
-                    if (parentStyleName.length()>0) { parents.put(name, parentStyleName); }
-                    allParagraphStyles.put(name, style);
+                    String styleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                        "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
+                    String parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                        "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
+                    parents.put(styleName, (parentStyleName.length()>0) ? parentStyleName : null);
                 }
-                if (!allParagraphStyles.containsKey("Standard")) {
-                    allParagraphStyles.put("Standard", new ParagraphStyle("Standard", false));
-                }
-                allParagraphStyles.get("Standard").setDisplayName("Default");
-                String[] children = parents.keySet().toArray(new String[parents.size()]);
-                String child = null;
 
-                for (int i=0; i<children.length; i++) {
-                    child = children[i];
-                    allParagraphStyles.get(child).setParentStyle(allParagraphStyles.get(parents.get(child)));
+                Collection<String> remove = new ArrayList<String>();
+                boolean cont = true;
+                while (cont) {
+                    cont = false;
+                    for (String styleName : parents.keySet()) {
+                        String parentStyleName = parents.get(styleName);
+                        if (parentStyleName == null || allParagraphStyles.containsKey(parentStyleName)) {
+                            ParagraphStyle parentStyle = (parentStyleName == null) ? null : allParagraphStyles.get(parentStyleName);
+                            String displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                                "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@display-name", namespace);
+                            boolean auto = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
+                                "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@automatic", namespace);
+                            if (styleName.equals("Standard")) {
+                                displayName = "Default";
+                            } else if (displayName.length() == 0) {
+                                displayName = styleName;
+                            }
+                            ParagraphStyle style = new ParagraphStyle(styleName, auto, displayName, parentStyle);
+                            allParagraphStyles.put(styleName, style);
+                            remove.add(styleName);
+                            cont = true;
+                        }
+                    }
+                    for (String styleName : remove) { parents.remove(styleName); }
+                    remove.clear();
                 }
 
             } catch (IOException e) {
@@ -1955,8 +1971,8 @@ public class OdtTransformer {
     public Collection<CharacterStyle> extractCharacterStyles() {
         logger.entering("OdtTransformer","extractCharacterStyles");
 
-        TreeMap<String,CharacterStyle> styles = new TreeMap();
-        TreeMap<String,String> parents = new TreeMap();
+        TreeMap<String,CharacterStyle> styles = new TreeMap<String,CharacterStyle>();
+        TreeMap<String,String> parents = new TreeMap<String,String>();
 
         try {
 
@@ -1979,40 +1995,36 @@ public class OdtTransformer {
 
             }
 
+            styles.put("Default", new CharacterStyle("Default", "Default", null));
+
             int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='text'])", namespace).intValue();
-
-            CharacterStyle style = null;
-            String name = null;
-            String displayName = null;
-            String parentStyleName = null;
-
-            styles.put("Default", new CharacterStyle("Default"));
-
             for (int i=1; i<=count; i++) {
-
-                name = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                       "/o2b:styles/o2b:style[@family='text'][" + i + "]/@name", namespace);
-                displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                              "/o2b:styles/o2b:style[@family='text'][" + i + "]/@display-name", namespace);
-                parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                                  "/o2b:styles/o2b:style[@family='text'][" + i + "]/@parent-style-name", namespace);
-                style = new CharacterStyle(name);
-                if (displayName.length()>0)     { style.setDisplayName(displayName);  }
-                if (parentStyleName.length()>0) {
-                    parents.put(name, parentStyleName);
-                } else {
-                    parents.put(name, "Default");
-                }
-                styles.put(name, style);
-
+                String styleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                    "/o2b:styles/o2b:style[@family='text'][" + i + "]/@name", namespace);
+                String parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                    "/o2b:styles/o2b:style[@family='text'][" + i + "]/@parent-style-name", namespace);
+                parents.put(styleName, (parentStyleName.length()>0) ? parentStyleName : "Default");
             }
 
-            String[] children = parents.keySet().toArray(new String[parents.size()]);
-            String child = null;
-
-            for (int i=0; i<children.length; i++) {
-                child = children[i];
-                styles.get(child).setParentStyle(styles.get(parents.get(child)));
+            Collection<String> remove = new ArrayList<String>();
+            boolean cont = true;
+            while (cont) {
+                cont = false;
+                for (String styleName : parents.keySet()) {
+                    String parentStyleName = parents.get(styleName);
+                    if (styles.containsKey(parentStyleName)) {
+                        CharacterStyle parentStyle = styles.get(parentStyleName);
+                        String displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                            "/o2b:styles/o2b:style[@family='text' and @name='" + styleName + "']/@display-name", namespace);
+                        if (displayName.length() == 0) { displayName = styleName; }
+                        CharacterStyle style = new CharacterStyle(styleName, displayName, parentStyle);
+                        styles.put(styleName, style);
+                        remove.add(styleName);
+                        cont = true;
+                    }
+                }
+                for (String styleName : remove) { parents.remove(styleName); }
+                remove.clear();
             }
 
         } catch (IOException e) {
@@ -2066,9 +2078,10 @@ public class OdtTransformer {
     public int[] extractDocumentOutline() throws IOException,
                                                  SAXException,
                                                  TransformerConfigurationException,
-                                                 TransformerException {
+                                                 TransformerException,
+                                                 ConversionException {
         // Dependencies
-        if (!transform()) { return new int[0]; }
+        if (!transformDone) { throw new ConversionException(); }
 
         logger.entering("OdtTransformer","extractDocumentOutline");
 

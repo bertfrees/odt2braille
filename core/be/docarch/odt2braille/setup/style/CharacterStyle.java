@@ -24,7 +24,6 @@ import be.docarch.odt2braille.setup.Setting;
 import be.docarch.odt2braille.setup.Dependent;
 import be.docarch.odt2braille.setup.DependentYesNoSetting;
 import be.docarch.odt2braille.setup.EnumSetting;
-import be.docarch.odt2braille.setup.TextSetting;
 
 /**
  *
@@ -37,9 +36,8 @@ public class CharacterStyle extends Style {
     /************************/
 
     private final String id;
-
-    private final Setting<String> displayName;
-    private final Setting<CharacterStyle> parentStyle;
+    private final String displayName;
+    private final CharacterStyle parentStyle;
 
     public final DependentYesNoSetting inherit;
 
@@ -51,8 +49,9 @@ public class CharacterStyle extends Style {
     /* GETTERS */
 
     public String         getID()          { return id; }
-    public String         getDisplayName() { return displayName.get(); }
-    public CharacterStyle getParentStyle() { return parentStyle.get(); }
+    public String         getDisplayName() { return displayName; }
+    public CharacterStyle getParentStyle() { return parentStyle; }
+
     public boolean        getInherit()     { return inherit.get(); }
     public FollowPrint    getItalic()      { return italic.get(); }
     public FollowPrint    getBoldface()    { return boldface.get(); }
@@ -61,8 +60,6 @@ public class CharacterStyle extends Style {
 
     /* SETTERS */
 
-    public void setDisplayName (String value)         { displayName.set(value); }
-    public void setParentStyle (CharacterStyle value) { parentStyle.set(value); }
     public void setInherit     (boolean value)        { inherit.set(value); }
     public void setItalic      (FollowPrint value)    { italic.set(value); }
     public void setBoldface    (FollowPrint value)    { boldface.set(value); }
@@ -70,38 +67,27 @@ public class CharacterStyle extends Style {
     public void setCapitals    (FollowPrint value)    { capitals.set(value); }
 
 
-    public CharacterStyle(String id) {
+    public CharacterStyle(String id,
+                          String displayName,
+                          CharacterStyle parentStyle) {
 
         this.id = id;
+        this.displayName = displayName;
+        this.parentStyle = parentStyle;
 
         /* DECLARATION */
-
-        displayName = new TextSetting();
-        parentStyle = new ParentStyleSetting();
 
         inherit = new DependentYesNoSetting() {
             public boolean accept(Boolean value) { return !value || getParentStyle() != null; }
         };
 
-        italic = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getItalic(); }
-        };
-
-        boldface = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getBoldface(); }
-        };
-
-        underline = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getUnderline(); }
-        };
-
-        capitals = new FollowPrintSetting() {
-            public FollowPrint getInheritedValue() { return getParentStyle().getCapitals(); }
-        };
+        italic = new FollowPrintSetting(parentStyle==null ? null : parentStyle.italic);
+        boldface = new FollowPrintSetting(parentStyle==null ? null : parentStyle.boldface);
+        underline = new FollowPrintSetting(parentStyle==null ? null : parentStyle.underline);
+        capitals = new FollowPrintSetting(parentStyle==null ? null : parentStyle.capitals);
 
         /* INITIALIZATION */
 
-        displayName.set(id);
         inherit.set(true);
         italic.set(FollowPrint.FOLLOW_PRINT);
         boldface.set(FollowPrint.FOLLOW_PRINT);
@@ -110,11 +96,6 @@ public class CharacterStyle extends Style {
 
         /* LINKING */
 
-        parentStyle.addListener(inherit);
-        parentStyle.addListener(italic);
-        parentStyle.addListener(boldface);
-        parentStyle.addListener(underline);
-        parentStyle.addListener(capitals);
         inherit.addListener(italic);
         inherit.addListener(boldface);
         inherit.addListener(underline);
@@ -126,43 +107,32 @@ public class CharacterStyle extends Style {
     /* INNER CLASSES */
     /*****************/
 
-    private class ParentStyleSetting extends Setting<CharacterStyle> {
+    public class FollowPrintSetting extends EnumSetting<FollowPrint>
+                                 implements Dependent {
 
-        CharacterStyle style = null;
-
-        public boolean accept(CharacterStyle value) { return true; }
-        public CharacterStyle get() { return style; }
-
-        protected boolean update(CharacterStyle value) {
-            if (style == value) { return false; }
-            style = value;
-            return true;
+        private final Setting<FollowPrint> parentSetting;
+        public FollowPrintSetting(Setting<FollowPrint> parentSetting) {
+            super(FollowPrint.class);
+            this.parentSetting = parentSetting;
+            if (parentSetting != null) { parentSetting.addListener(this); }
         }
-    }
-
-    public abstract class FollowPrintSetting extends EnumSetting<FollowPrint>
-                                          implements Dependent {
-
-        public FollowPrintSetting() { super(FollowPrint.class); }
-
-        public abstract FollowPrint getInheritedValue();
-
         @Override
         public FollowPrint get() {
-            if (getInherit()) { return getInheritedValue(); }
+            if (getInherit()) { return parentSetting.get(); }
             return super.get();
         }
-
         @Override
         public boolean enabled() {
             if (getInherit()) { return false; }
             return super.enabled();
         }
-
         public boolean refresh() { return true; }
-
         public void propertyUpdated(PropertyEvent event) {
             if (event.getSource() == inherit) {
+                fireEvent(true, true);
+            } else if (parentSetting != null &&
+                       getInherit() &&
+                       event.getSource() == parentSetting) {
                 fireEvent(true, true);
             } else if (event.ValueChanged) {
                 fireEvent(refresh(), true);
