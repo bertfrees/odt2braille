@@ -23,8 +23,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -241,7 +245,8 @@ public class PEF {
             metaElement = document.createElementNS(pefNS,"meta");
             metaElement.setAttributeNS("http://www.w3.org/2000/xmlns/", "xmlns:dc", "http://purl.org/dc/elements/1.1/");
             dcElement = document.createElementNS("http://purl.org/dc/elements/1.1/","dc:identifier");
-            node = document.createTextNode("00001");
+            node = document.createTextNode(Integer.toHexString((int)(Math.random()*1000000)) + " "
+                    + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format((new Date())));
             dcElement.appendChild(node);
             metaElement.appendChild(dcElement);
             dcElement = document.createElementNS("http://purl.org/dc/elements/1.1/","dc:format");
@@ -288,8 +293,8 @@ public class PEF {
 
             int columns = pefSettings.getColumns();
             int rows = pefSettings.getRows();
-            boolean eightDots = pefSettings.getEightDots();
             boolean duplex = pefSettings.getDuplex();
+            int rowgap = pefSettings.getEightDots()?1:0;
 
             for (volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
@@ -299,8 +304,8 @@ public class PEF {
 
                 volumeElements[volumeCount] = document.createElementNS(pefNS, "volume");
                 volumeElements[volumeCount].setAttributeNS(null, "cols", String.valueOf(columns));
-                volumeElements[volumeCount].setAttributeNS(null, "rows", String.valueOf(rows));
-                volumeElements[volumeCount].setAttributeNS(null, "rowgap", eightDots?"1":"0");
+                volumeElements[volumeCount].setAttributeNS(null, "rows", String.valueOf(rows + (int)Math.ceil(((rows-1)*rowgap)/4d)));
+                volumeElements[volumeCount].setAttributeNS(null, "rowgap", String.valueOf(rowgap));
                 volumeElements[volumeCount].setAttributeNS(null, "duplex", duplex?"true":"false");
 
                 if (!(volume instanceof PreliminaryVolume)) {
@@ -673,7 +678,17 @@ public class PEF {
 
         } Thread.currentThread().setContextClassLoader(cl);
 
-        return output.listFiles();
+        File[] pefs = output.listFiles();
+        Arrays.sort(pefs, new Comparator<File>(){
+            public int compare(File f1, File f2) {
+                String n1 = f1.getName();
+                String n2 = f2.getName();
+                Integer i1 = Integer.parseInt(n1.substring(n1.lastIndexOf('-')+1, n1.length()-4));
+                Integer i2 = Integer.parseInt(n2.substring(n2.lastIndexOf('-')+1, n2.length()-4));
+                return i1.compareTo(i2);
+            }
+        });
+        return pefs;
     }
 
     private String capitalizeFirstLetter(String in) {

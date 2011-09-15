@@ -287,7 +287,8 @@ public class ExportConfiguration implements Serializable,
 
         @Override
         public boolean accept(Boolean value) {
-            return System.getProperty("os.name").toLowerCase().contains("mac os") ? !value : true;
+          //return System.getProperty("os.name").toLowerCase().contains("mac os") ? !value : true;
+            return true;
         }
     }
 }

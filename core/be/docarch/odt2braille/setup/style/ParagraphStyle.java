@@ -228,6 +228,14 @@ public class ParagraphStyle extends Style {
 
     }
 
+    public ParagraphStyle getNonAutomaticStyle() {
+        if (getAutomatic()) {
+            return getParentStyle().getNonAutomaticStyle();
+        } else {
+            return this;
+        }    
+    }
+
     /*****************/
     /* INNER CLASSES */
     /*****************/

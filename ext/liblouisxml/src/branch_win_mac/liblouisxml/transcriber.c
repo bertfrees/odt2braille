@@ -868,9 +868,13 @@ makeRomanNumber (int n)
     "viii",
     "ix"
   };
-  if (n <= 0 || n > 1000)
+  if (n <= 0)
     return NULL;
   romNum[0] = 0;
+  while (n>1000) {
+    strcat (romNum, hundreds[10]);
+    n = n-1000;
+  }
   strcat (romNum, hundreds[n / 100]);
   strcat (romNum, tens[(n / 10) % 10]);
   strcat (romNum, units[n % 10]);
@@ -918,9 +922,13 @@ makeRomanCapsNumber (int n)
     "VIII",
     "IX"
   };
-  if (n <= 0 || n > 1000)
+  if (n <= 0)
     return NULL;
   romNum[0] = 0;
+  while (n>1000) {
+    strcat (romNum, hundreds[10]);
+    n = n-1000;
+  }
   strcat (romNum, hundreds[n / 100]);
   strcat (romNum, tens[(n / 10) % 10]);
   strcat (romNum, units[n % 10]);

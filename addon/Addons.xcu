@@ -38,10 +38,6 @@
                                 <value xml:lang="pt-BR">~Exportar como Braille…</value>
                                 <value xml:lang="sl">~Izvozi kot brajico …</value>
                                 <value xml:lang="sv">~Exportera som punktskrift…</value>
-								
-                                <!-- <value xml:lang="da">~</value> -->
-                                <!-- <value xml:lang="is">~</value> -->
-                                
 
                             </prop>
                         </node>
@@ -82,9 +78,6 @@
                                 <value xml:lang="sl">~Izboči …</value>
                                 <value xml:lang="sv">~Punktutskrift…</value>
 								
-						   <!-- <value xml:lang="da">~</value> -->
-						   <!-- <value xml:lang="is">~</value> -->
-								
                             </prop>
                         </node>
                     </node>
@@ -121,9 +114,6 @@
                                 <value xml:lang="sl">~Znaki brajice</value>
                                 <value xml:lang="sv">~Punktskriftstecken</value>
 								
-						   <!-- <value xml:lang="da">~</value> -->
-						   <!-- <value xml:lang="is">~</value> -->
-								
                             </prop>
                             <node oor:name="Submenu">
                                 <node oor:name="M4" oor:op="replace">
@@ -144,10 +134,6 @@
                                         <value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
                                         <value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
                                         <value xml:lang="sv">~Inmatning enligt tecken beskrivning…</value>
-										
-                                       <!-- <value xml:lang="da">~</value> -->
-                                       <!-- <value xml:lang="is">~</value> -->
-                                       <!-- <value xml:lang="nb">~</value> -->
 										
                                     </prop>
                                 </node>
@@ -182,6 +168,38 @@
                 </node>
                 <node oor:name="S6" oor:op="replace">
                     <prop oor:name="MergePoint">
+                        <value>.uno:FormatMenu\.uno:GraphicDialog</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+						<node oor:name="M6a" oor:op="replace">
+						    <prop oor:name="URL" oor:type="xs:string">
+						        <value>private:separator</value>
+						    </prop>
+						</node>
+						<node oor:name="M6b" oor:op="replace">
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>be.docarch.odt2braille.ooo.odt2brailleaddon:FormatCommand</value>
+                            </prop>
+                            <prop oor:name="Title" oor:type="xs:string">
+							
+                            <value xml:lang="en">~Braille…</value>
+								
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+				<!--
+				<node oor:name="S7" oor:op="replace">
+                    <prop oor:name="MergePoint">
                         <value>.uno:PickList\.uno:SetDocumentProperties</value>
                     </prop>
                     <prop oor:name="MergeCommand">
@@ -194,7 +212,7 @@
                         <value>com.sun.star.text.TextDocument</value>
                     </prop>
                     <node oor:name="MenuItems">
-                        <node oor:name="M6" oor:op="replace">
+                        <node oor:name="M7" oor:op="replace">
                             <prop oor:name="URL" oor:type="xs:string">
                                 <value>be.docarch.odt2braille.ooo.odt2brailleaddon:SettingsCommand</value>
                             </prop>
@@ -215,13 +233,11 @@
                             <value xml:lang="sl">~Nastavitve brajice …</value>
                             <value xml:lang="sv">~Punktskriftsinställningar…</value>
 								
-						   <!-- <value xml:lang="da">~</value> -->
-						   <!-- <value xml:lang="is">~</value> -->
-								
                             </prop>
                         </node>
                     </node>
                 </node>
+				-->
             </node>
         </node>
         <node oor:name="Images">
@@ -238,6 +254,16 @@
             <node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.embosscommand.images" oor:op="replace">
                 <prop oor:name="URL" oor:type="xs:string">
                     <value>be.docarch.odt2braille.ooo.odt2brailleaddon:EmbossCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+			<node oor:name="be.docarch.odt2braille.ooo.odt2brailleaddon.formatcommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille.ooo.odt2brailleaddon:FormatCommand</value>
                 </prop>
                 <node oor:name="UserDefinedImages">
                     <prop oor:name="ImageSmallURL">

@@ -20,6 +20,7 @@ Windows/Mac
     (see http://code.google.com/p/liblouisutdml/source/detail?r=1917792c971779e02a0cdc6e5de2460fc3137688)
  + roman caps (Windows)
  + softreturn change (Windows)
+ + roman numbers > 1000(Windows)
  
  => %ODT2BRAILLE_HOME%/tables/liblouisxml/src/branch_win_mac
 

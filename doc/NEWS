@@ -227,6 +227,7 @@ embossers:
 
 changes:
 
+- Braille settings -> Format menu
 - headings: tot level 10
 - table of contents: upto level 1..10
 - settings are stored elsewhere (not in custom properties)

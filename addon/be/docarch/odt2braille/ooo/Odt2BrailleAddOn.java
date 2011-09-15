@@ -94,7 +94,8 @@ public final class Odt2BrailleAddOn extends WeakBase
     {
         if ( aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon"))
         {
-            if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
+            if ( aURL.Path.compareTo("SettingsCommand") == 0 ||
+                 aURL.Path.compareTo("FormatCommand") == 0 ) {
                 return this;
             } else if (aURL.Path.compareTo("ExportCommand") == 0) {
                 return this;
@@ -143,7 +144,8 @@ public final class Odt2BrailleAddOn extends WeakBase
     {
          if ( aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon"))
         {
-             if ( aURL.Path.compareTo("SettingsCommand") == 0 ) {
+             if ( aURL.Path.compareTo("SettingsCommand") == 0  ||
+                  aURL.Path.compareTo("FormatCommand") == 0) {
 
                  UnoGUI unoGui = null;
 

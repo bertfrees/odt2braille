@@ -139,13 +139,13 @@ public class OdtTransformer {
     private ListStyleProperties outlineProperties = null;
     private ListNumber outlineNumber = null;
     private ListNumber outlineNumberFrame = null;
-    private Map<String,ListStyleProperties> listProperties = new TreeMap();
-    private Map<String,ListNumber> listNumber = new TreeMap();
-    private Map<String,ListNumber> listNumberFrame = new TreeMap();
-    private Map<String,String> linkedLists = new TreeMap();
-    private Map<String,String> listStyles = new TreeMap();
+    private Map<String,ListStyleProperties> listProperties = new TreeMap<String,ListStyleProperties>();
+    private Map<String,ListNumber> listNumber = new TreeMap<String,ListNumber>();
+    private Map<String,ListNumber> listNumberFrame = new TreeMap<String,ListNumber>();
+    private Map<String,String> linkedLists = new TreeMap<String,String>();
+    private Map<String,String> listStyles = new TreeMap<String,String>();
     private ListNumber currentNumber = null;
-    private Map<String,ParagraphStyle> allParagraphStyles = null;
+    private Map<String,ParagraphStyle> automaticParagraphStyles = new TreeMap<String,ParagraphStyle>();
 
     public OdtTransformer(File odtFile)
                    throws IOException,
@@ -383,15 +383,18 @@ public class OdtTransformer {
     private void paginationProcessing() throws IOException,
                                                SAXException,
                                                TransformerConfigurationException,
-                                               TransformerException {
+                                               TransformerException,
+                                               ConversionException {
+
+        // TODO: speed up
+
+        if (settings == null) { throw new ConversionException(); }
 
         if (!paginationDone) {
 
             logger.entering("OdtTransformer","paginationProcessing");
 
             parseDocument();
-
-            extractParagraphStyles();
 
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
@@ -421,7 +424,11 @@ public class OdtTransformer {
     private void headingNumberingProcessing() throws IOException,
                                                      SAXException,
                                                      TransformerConfigurationException,
-                                                     TransformerException {
+                                                     TransformerException,
+                                                     ConversionException {
+
+        if (settings == null) { throw new ConversionException(); }
+
         if (!headingNumberingDone) {
 
             logger.entering("OdtTransformer","headingNumberingProcessing");
@@ -452,11 +459,14 @@ public class OdtTransformer {
         }
     }
 
-    private void listNumberingProcessing()
-                                  throws IOException,
-                                         SAXException,
-                                         TransformerConfigurationException,
-                                         TransformerException {
+    private void listNumberingProcessing() throws IOException,
+                                                  SAXException,
+                                                  TransformerConfigurationException,
+                                                  TransformerException,
+                                                  ConversionException {
+
+        if (settings == null) { throw new ConversionException(); }
+
         if (!listNumberingDone) {
 
             logger.entering("OdtTransformer","listNumberingProcessing");
@@ -547,9 +557,10 @@ public class OdtTransformer {
         } else if (nodeName.equals("text:p") ){
 
             styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
-            ParagraphStyle style = allParagraphStyles.get(styleName);
-            while(style != null && style.getAutomatic()) { style = style.getParentStyle(); }
-            if (style != null) { followPrint = style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT; }
+            ParagraphStyle style = settings.getParagraphStyles().get(styleName);
+            if (style == null) { style = automaticParagraphStyles.get(styleName); }
+            if (style != null) { style = style.getNonAutomaticStyle(); }
+            if (style != null) { followPrint = (style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT); }
 
         } else if (nodeName.equals("text:h")) {
 
@@ -1894,77 +1905,75 @@ public class OdtTransformer {
 
         logger.entering("OdtTransformer","extractParagraphStyles");
 
-        if (allParagraphStyles == null) {
+        Map<String,ParagraphStyle> styles = new TreeMap<String,ParagraphStyle>();
+        Map<String,String> parents = new TreeMap<String,String>();
 
-            allParagraphStyles = new TreeMap<String,ParagraphStyle>();
-            Map<String,String> parents = new TreeMap<String,String>();
+        try {
 
-            try {
+            if (usedStylesFile == null) {
 
-                if (usedStylesFile == null) {
+                usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
+                usedStylesFile.deleteOnExit();
 
-                    usedStylesFile = File.createTempFile(TMP_NAME, ".styles.xml", TMP_DIR);
-                    usedStylesFile.deleteOnExit();
+                Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
 
-                    Transformer stylesXSL = tFactory.newTransformer(new StreamSource(getClass().getResource(XSLT + "get-styles.xsl").toString()));
+                stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
 
-                    stylesXSL.setParameter("styles-url", odtStylesFile.toURI());
+                stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
+                stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
+                stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
 
-                    stylesXSL.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                    stylesXSL.setOutputProperty(OutputKeys.METHOD, "xml");
-                    stylesXSL.setOutputProperty(OutputKeys.INDENT, "yes");
-                    stylesXSL.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");
+                saveDocument();
+                stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
 
-                    saveDocument();
-                    stylesXSL.transform(new StreamSource(odtContentFile), new StreamResult(usedStylesFile));
-
-                }
-
-                int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace).intValue();
-                for (int i=1; i<=count; i++) {
-                    String styleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                        "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
-                    String parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                        "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
-                    parents.put(styleName, (parentStyleName.length()>0) ? parentStyleName : null);
-                }
-
-                Collection<String> remove = new ArrayList<String>();
-                boolean cont = true;
-                while (cont) {
-                    cont = false;
-                    for (String styleName : parents.keySet()) {
-                        String parentStyleName = parents.get(styleName);
-                        if (parentStyleName == null || allParagraphStyles.containsKey(parentStyleName)) {
-                            ParagraphStyle parentStyle = (parentStyleName == null) ? null : allParagraphStyles.get(parentStyleName);
-                            String displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
-                                "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@display-name", namespace);
-                            boolean auto = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
-                                "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@automatic", namespace);
-                            if (styleName.equals("Standard")) {
-                                displayName = "Default";
-                            } else if (displayName.length() == 0) {
-                                displayName = styleName;
-                            }
-                            ParagraphStyle style = new ParagraphStyle(styleName, auto, displayName, parentStyle);
-                            allParagraphStyles.put(styleName, style);
-                            remove.add(styleName);
-                            cont = true;
-                        }
-                    }
-                    for (String styleName : remove) { parents.remove(styleName); }
-                    remove.clear();
-                }
-
-            } catch (IOException e) {
-            } catch (TransformerConfigurationException e) {
-            } catch (TransformerException e) {
             }
+
+            int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace).intValue();
+            for (int i=1; i<=count; i++) {
+                String styleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                    "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
+                String parentStyleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                    "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@parent-style-name", namespace);
+                parents.put(styleName, (parentStyleName.length()>0) ? parentStyleName : null);
+            }
+
+            Collection<String> remove = new ArrayList<String>();
+            boolean cont = true;
+            while (cont) {
+                cont = false;
+                for (String styleName : parents.keySet()) {
+                    String parentStyleName = parents.get(styleName);
+                    if (parentStyleName == null || styles.containsKey(parentStyleName)) {
+                        ParagraphStyle parentStyle = (parentStyleName == null) ? null : styles.get(parentStyleName);
+                        String displayName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
+                            "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@display-name", namespace);
+                        boolean auto = XPathUtils.evaluateBoolean(usedStylesFile.toURL().openStream(),
+                            "/o2b:styles/o2b:style[@family='paragraph' and @name='" + styleName + "']/@automatic", namespace);
+                        if (styleName.equals("Standard")) {
+                            displayName = "Default";
+                        } else if (displayName.length() == 0) {
+                            displayName = styleName;
+                        }
+                        ParagraphStyle style = new ParagraphStyle(styleName, auto, displayName, parentStyle);
+                        if (auto) { automaticParagraphStyles.put(styleName, style); }
+                        styles.put(styleName, style);
+                        remove.add(styleName);
+                        cont = true;
+                    }
+                }
+                for (String styleName : remove) { parents.remove(styleName); }
+                remove.clear();
+            }
+
+        } catch (IOException e) {
+        } catch (TransformerConfigurationException e) {
+        } catch (TransformerException e) {
         }
 
         logger.exiting("OdtTransformer","extractParagraphStyles");
 
-        return allParagraphStyles.values();
+        return styles.values();
 
     }
 

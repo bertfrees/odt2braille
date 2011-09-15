@@ -102,8 +102,8 @@ public class PreviewDialog implements XItemListener,
     private static final String FONT_8_DOT = "odt2braille 8 dot";
     private static String FONT_DOTS;
 
-    private static final short DEFAULT_FONT_SIZE = 20;
-    private static final short MIN_FONTSIZE = 16;
+    private static final short DEFAULT_FONT_SIZE = 18;
+    private static final short MIN_FONTSIZE = 10;
     private static final short MAX_FONTSIZE = 50;
 
     private static final int X_BACK_BUTTON = 2*7;
@@ -288,7 +288,6 @@ public class PreviewDialog implements XItemListener,
         XControl volumesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_VOLUMES_LISTBOX, 2*8, 2*69, 2*12);
         XControl sectionsListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_SECTIONS_LISTBOX, 2*8, 2*68, 2*12);
         XControl pagesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_PAGES_LISTBOX, 2*8, 2*46, 2*12);
-        XControl charsetListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_CHARSET_LISTBOX, 2*30, 2*38, 2*12);
         XControl previewFieldControl = createControl(xMCF, xContext, toolkit, windowPeer, "Edit", 0, Y_PREVIEW_FIELD, MIN_WIDTH, MIN_HEIGHT - Y_PREVIEW_FIELD);
 
         nextButton = (XButton)UnoRuntime.queryInterface(XButton.class, nextButtonControl);
@@ -298,7 +297,6 @@ public class PreviewDialog implements XItemListener,
         volumesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, volumesListBoxControl);
         sectionsListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, sectionsListBoxControl);
         pagesListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, pagesListBoxControl);
-        charsetListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, charsetListBoxControl);
         previewField = (XTextComponent)UnoRuntime.queryInterface(XTextComponent.class, previewFieldControl);
 
         nextButtonWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, nextButtonControl);
@@ -306,7 +304,6 @@ public class PreviewDialog implements XItemListener,
         volumesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, volumesListBoxControl);
         sectionsListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, sectionsListBoxControl);
         pagesListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, pagesListBoxControl);
-        charsetListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, charsetListBoxControl);
         previewFieldWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, previewFieldControl);
 
         nextButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, nextButtonControl.getModel());
@@ -314,7 +311,13 @@ public class PreviewDialog implements XItemListener,
         increaseFontSizeButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, increaseFontSizeButtonControl.getModel());
         decreaseFontSizeButtonProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, decreaseFontSizeButtonControl.getModel());
         previewFieldProperties = (XPropertySet) UnoRuntime.queryInterface(XPropertySet.class, previewFieldControl.getModel());
-
+        
+        if (table != null) {
+            XControl charsetListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_CHARSET_LISTBOX, 2*30, 2*38, 2*12);
+            charsetListBox = (XListBox)UnoRuntime.queryInterface(XListBox.class, charsetListBoxControl);
+            charsetListBoxWindow = (XWindow)UnoRuntime.queryInterface(XWindow.class, charsetListBoxControl);
+        }
+        
         nextButtonProperties.setPropertyValue("Label", "\u003E");
         backButtonProperties.setPropertyValue("Label", "\u003C");
         increaseFontSizeButtonProperties.setPropertyValue("Label", "+");
@@ -413,12 +416,6 @@ public class PreviewDialog implements XItemListener,
         page = 1;
         charset = (short)0;
 
-        charsetListBox.addItem("Dots", (short)0);
-        if (table != null) {
-            charsetListBox.addItem("Text", (short)1);
-        }
-        charsetListBox.selectItemPos(charset, true);
-
         updateVolumesListBox();
         updateSectionsListBox();
         updatePagesListBox();
@@ -426,11 +423,17 @@ public class PreviewDialog implements XItemListener,
 
         sectionsListBox.addItemListener(this);
         pagesListBox.addItemListener(this);
-        charsetListBox.addItemListener(this);
         backButton.addActionListener(this);
         nextButton.addActionListener(this);
         increaseFontSizeButton.addActionListener(this);
         decreaseFontSizeButton.addActionListener(this);
+
+        if (charsetListBox != null) {
+            charsetListBox.addItem("Dots", (short)0);
+            charsetListBox.addItem("Text", (short)1);
+            charsetListBox.selectItemPos(charset, true);
+            charsetListBox.addItemListener(this);
+        }
 
         showPage();
 
@@ -693,7 +696,7 @@ public class PreviewDialog implements XItemListener,
                 page = pagesListBox.getSelectedItemPos() + 1;
                 updateButtons();
                 showPage();
-            } else if (source.equals(charsetListBox)) {
+            } else if (charsetListBox != null && source.equals(charsetListBox)) {
                 charset = charsetListBox.getSelectedItemPos();
                 previewFieldProperties.setPropertyValue("FontDescriptor", font);
                 showPage();
@@ -727,11 +730,13 @@ public class PreviewDialog implements XItemListener,
         volumesListBoxWindow.setPosSize(X_VOLUMES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
         sectionsListBoxWindow.setPosSize(X_SECTIONS_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
         pagesListBoxWindow.setPosSize(X_PAGES_LISTBOX + xOffset, 0, 0, 0, PosSize.X);
-        charsetListBoxWindow.setPosSize(X_CHARSET_LISTBOX + 2*xOffset, 0, 0, 0, PosSize.X);
         nextButtonWindow.setPosSize(X_NEXT_BUTTON + xOffset, 0, 0, 0, PosSize.X);
         previewFieldWindow.setPosSize(0, 0, newWidth, newHeight - Y_PREVIEW_FIELD, PosSize.SIZE);
         window.setPosSize(0, 0, newWidth, newHeight, PosSize.SIZE);
-
+        
+        if (charsetListBoxWindow != null) {
+            charsetListBoxWindow.setPosSize(X_CHARSET_LISTBOX + 2*xOffset, 0, 0, 0, PosSize.X);
+        }
     }
 
     @Override
