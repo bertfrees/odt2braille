@@ -133,6 +133,7 @@ public class Configuration implements Serializable {
     public final Setting<Integer> minSyllableLength;
     public final Setting<String> transcribersNotesPageTitle;
     public final Setting<String> specialSymbolListTitle;
+    public final Setting<String> endNotesPageTitle;
     public final DependentOptionSetting<VolumeManagementMode> bodyMatterMode;
     public final DependentOptionSetting<VolumeManagementMode> rearMatterMode;
     public final DependentOptionSetting<String> frontMatterSection;
@@ -142,8 +143,8 @@ public class Configuration implements Serializable {
     public final Setting<Boolean> preliminaryVolumeEnabled;
     public final YesNoSetting volumeInfoEnabled;
     public final YesNoSetting transcriptionInfoEnabled;
-    public final OptionSetting<ParagraphStyle> volumeInfoStyle;
-    public final OptionSetting<ParagraphStyle> transcriptionInfoStyle;
+    public final ParagraphStyleSetting volumeInfoStyle;
+    public final ParagraphStyleSetting transcriptionInfoStyle;
 
     
     /* GETTERS */
@@ -169,6 +170,7 @@ public class Configuration implements Serializable {
     public int                  getMinSyllableLength()             { return minSyllableLength.get(); }
     public String               getTranscribersNotesPageTitle()    { return transcribersNotesPageTitle.get(); }
     public String               getSpecialSymbolListTitle()        { return specialSymbolListTitle.get(); }
+    public String               getEndNotesPageTitle()             { return endNotesPageTitle.get(); }
     public VolumeManagementMode getBodyMatterMode()                { return bodyMatterMode.get(); }
     public VolumeManagementMode getRearMatterMode()                { return rearMatterMode.get(); }
     public String               getFrontMatterSection()            { return frontMatterSection.get(); }
@@ -180,6 +182,8 @@ public class Configuration implements Serializable {
     public boolean              getTranscriptionInfoEnabled()      { return transcriptionInfoEnabled.get(); }
     public ParagraphStyle       getVolumeInfoStyle()               { return volumeInfoStyle.get(); }
     public ParagraphStyle       getTranscriptionInfoStyle()        { return transcriptionInfoStyle.get(); }
+    public String               getVolumeInfoStyleID()             { return volumeInfoStyle.get().getID(); }
+    public String               getTranscriptionInfoStyleID()      { return transcriptionInfoStyle.get().getID(); }
 
     
     /* SETTERS */
@@ -205,6 +209,7 @@ public class Configuration implements Serializable {
     public void setMinSyllableLength             (int value)                  { minSyllableLength.set(value); }
     public void setTranscribersNotesPageTitle    (String value)               { transcribersNotesPageTitle.set(value); }
     public void setSpecialSymbolListTitle        (String value)               { specialSymbolListTitle.set(value); }
+    public void setEndNotesPageTitle             (String value)               { endNotesPageTitle.set(value); }
     public void setBodyMatterMode                (VolumeManagementMode value) { bodyMatterMode.set(value); }
     public void setRearMatterMode                (VolumeManagementMode value) { rearMatterMode.set(value); }
     public void setFrontMatterSection            (String value)               { frontMatterSection.set(value); }
@@ -214,8 +219,8 @@ public class Configuration implements Serializable {
     public void setPreliminaryVolumeEnabled      (boolean value)              { preliminaryVolumeEnabled.set(value); }
     public void setVolumeInfoEnabled             (boolean value)              { volumeInfoEnabled.set(value); }
     public void setTranscriptionInfoEnabled      (boolean value)              { transcriptionInfoEnabled.set(value); }
-    public void setVolumeInfoStyle               (ParagraphStyle value)       { volumeInfoStyle.set(value); }
-    public void setTranscriptionInfoStyle        (ParagraphStyle value)       { transcriptionInfoStyle.set(value); }
+    public void setVolumeInfoStyleID             (String value)               { volumeInfoStyle.setID(value); }
+    public void setTranscriptionInfoStyleID      (String value)               { transcriptionInfoStyle.setID(value); }
 
     
     /***************************/
@@ -285,6 +290,7 @@ public class Configuration implements Serializable {
 
     private final String L10N_transcribersNotesPageTitle;
     private final String L10N_specialSymbolListTitle;
+    private final String L10N_endNotesPageTitle;
     private final String L10N_tableOfContentTitle;
     private final String L10N_continuedSuffix;
     private final String L10N_supplement;
@@ -361,6 +367,7 @@ public class Configuration implements Serializable {
         L10N_preliminary = bundle.getString("preliminary");
         L10N_transcribersNotesPageTitle = bundle.getString("transcribersNotesPageTitle");
         L10N_specialSymbolListTitle = bundle.getString("specialSymbolsListTitle");
+        L10N_endNotesPageTitle = bundle.getString("endNotesTitle");
         L10N_tableOfContentTitle = bundle.getString("tableOfContentTitle");
         L10N_continuedSuffix = bundle.getString("continuedSuffix");
         L10N_transcriptionInfo = bundle.getString("transcriptionInfo");
@@ -421,6 +428,7 @@ public class Configuration implements Serializable {
         minSyllableLength = new MinSyllableLengthSetting();
         transcribersNotesPageTitle = new TextSetting();
         specialSymbolListTitle = new TextSetting();
+        endNotesPageTitle = new TextSetting();
         volumeInfoEnabled = new YesNoSetting();
         transcriptionInfoEnabled = new YesNoSetting();
 
@@ -463,6 +471,7 @@ public class Configuration implements Serializable {
         minSyllableLength.set(2);
         transcribersNotesPageTitle.set(L10N_transcribersNotesPageTitle.toUpperCase());
         specialSymbolListTitle.set(L10N_specialSymbolListTitle.toUpperCase());
+        endNotesPageTitle.set(L10N_endNotesPageTitle.toUpperCase());
 
         frontMatterSection.set("PreliminaryPages");
         if (titlePageSection.options().contains("TitlePage")) {
@@ -1052,7 +1061,7 @@ public class Configuration implements Serializable {
         protected void add(Integer key) {}
     }
 
-    private class ParagraphStyleSetting extends OptionSetting<ParagraphStyle> {
+    public class ParagraphStyleSetting extends OptionSetting<ParagraphStyle> {
 
         private ParagraphStyle style = paragraphStyles.get("Standard");
 
@@ -1065,6 +1074,11 @@ public class Configuration implements Serializable {
         }
 
         public ParagraphStyle get() { return style; }
+
+        public void setID(String id) {
+            ParagraphStyle s = paragraphStyles.get(id);
+            if (s != null) { set(s); }
+        }
     }
 
     public class SpecialSymbolList extends SettingList<SpecialSymbol> {

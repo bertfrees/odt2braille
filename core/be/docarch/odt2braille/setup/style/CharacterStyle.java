@@ -147,7 +147,7 @@ public class CharacterStyle extends Style {
         CharacterStyle that = (CharacterStyle)object;
         return this.id.equals(that.id) &&
                this.displayName.equals(that.displayName) &&
-               this.parentStyle.equals(that.parentStyle) &&
+               (this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle) &&
                this.inherit.equals(that.inherit) &&
                this.italic.equals(that.italic) &&
                this.boldface.equals(that.boldface) &&
@@ -160,7 +160,7 @@ public class CharacterStyle extends Style {
         int hash = 3;
         hash = 11 * hash + id.hashCode();
         hash = 11 * hash + displayName.hashCode();
-        hash = 11 * hash + parentStyle.hashCode();
+        if (parentStyle!=null) { hash = 11 * hash + parentStyle.hashCode(); }
         hash = 11 * hash + inherit.hashCode();
         hash = 11 * hash + italic.hashCode();
         hash = 11 * hash + boldface.hashCode();

@@ -91,7 +91,7 @@ Localisation:
 
 
 =============================
-Version 0.0.3
+Version 0.0.3 - 02/12/2010
 =============================
 
 Changes:
@@ -149,7 +149,7 @@ Localisation:
 
 
 =============================
-Version 0.1.0
+Version 0.1.0 - 25/02/2011
 =============================
 
 Changes/Updates:
@@ -239,7 +239,7 @@ added:
 - borders on headings/tables/frames
 - paragraph settings: hard page breaks: ignore/follow print
 - table settings: invert reading order, repeat headings, ...
-- note settings: noteref/footnotes
+- note settings: noteref/footnotes/endnotes
 - picture settings
 - document structure settings
 - volume management settings: automatic splitting in volumes

@@ -379,7 +379,7 @@ public class ParagraphStyle extends Style {
         ParagraphStyle that = (ParagraphStyle)object;
         return this.id.equals(that.id) &&
                this.displayName.equals(that.displayName) &&
-               this.parentStyle.equals(that.parentStyle) &&
+               (this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle) &&
                this.inherit.equals(that.inherit) &&
                this.alignment.equals(that.alignment) &&
                this.firstLine.equals(that.firstLine) &&
@@ -402,7 +402,7 @@ public class ParagraphStyle extends Style {
         int hash = 3;
         hash = 11 * hash + id.hashCode();
         hash = 11 * hash + displayName.hashCode();
-        hash = 11 * hash + parentStyle.hashCode();
+        if (parentStyle!=null) { hash = 11 * hash + parentStyle.hashCode(); }
         hash = 11 * hash + inherit.hashCode();
         hash = 11 * hash + alignment.hashCode();
         hash = 11 * hash + firstLine.hashCode();

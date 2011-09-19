@@ -1559,9 +1559,15 @@ public class OdtTransformer {
                 == PageNumberFormat.P)                {
         if (numberOfPreliminaryPages > 1)             {  braillePages += "p1-";                                            }
                                                          braillePages += "p" + numberOfPreliminaryPages ;                  }
-        else                                          {
+        if (settings.getPreliminaryPageNumberFormat()
+                == PageNumberFormat.ROMAN)            {
         if (numberOfPreliminaryPages > 1)             {  braillePages += "i-";                                             }
-                                                         braillePages += RomanNumbering.toRoman(numberOfPreliminaryPages); }}
+                                                         braillePages += RomanNumbering.toRoman(numberOfPreliminaryPages); }
+        if (settings.getPreliminaryPageNumberFormat()
+                == PageNumberFormat.ROMANCAPS)        {
+        if (numberOfPreliminaryPages > 1)             {  braillePages += "I-";                                             }
+                                                         braillePages += RomanNumbering.toRoman(numberOfPreliminaryPages)
+                                                                                       .toUpperCase();                     }}
         if (numberOfPreliminaryPages > 0 &&
                 lastBraillePage >= firstBraillePage)  {  braillePages += " " + L10N_and.toLowerCase() + " ";               }
         if (lastBraillePage >= firstBraillePage)      {
@@ -1613,7 +1619,7 @@ public class OdtTransformer {
         splitVolumesXSL.setParameter("paramSpecialSymbols", specialSymbols.toArray(new String[specialSymbols.size()]));
         splitVolumesXSL.setParameter("paramSpecialSymbolsDots", specialSymbolsDots.toArray(new String[specialSymbolsDots.size()]));
         splitVolumesXSL.setParameter("paramSpecialSymbolsDescription", specialSymbolsDescription.toArray(new String[specialSymbolsDescription.size()]));
-        splitVolumesXSL.setParameter("paramNoteSectionTitle", "NOTES");
+        splitVolumesXSL.setParameter("paramNoteSectionTitle", settings.getEndNotesPageTitle());
         splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", settings.continuedSuffix);
 
         // Set output options
@@ -1978,6 +1984,7 @@ public class OdtTransformer {
     }
 
     public Collection<CharacterStyle> extractCharacterStyles() {
+        
         logger.entering("OdtTransformer","extractCharacterStyles");
 
         TreeMap<String,CharacterStyle> styles = new TreeMap<String,CharacterStyle>();

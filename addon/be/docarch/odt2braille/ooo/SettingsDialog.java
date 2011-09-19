@@ -414,6 +414,7 @@ public class SettingsDialog {
     private final NumericSettingControl notesFootnoteFirstLineField;
     private final NumericSettingControl notesFootnoteRunoversField;
     private final NumericSettingControl notesFootnoteMarginLeftRightField;
+    private final TextSettingControl endnotesPageTitleField;
 
     /* LABELS */
 
@@ -427,10 +428,12 @@ public class SettingsDialog {
     private final Label notesFootnoteMarginLeftRightLabel;
     private final Label notesNoterefSpaceBeforeLabel;
     private final Label notesNoterefSpaceAfterLabel;
+    private final Label endnotesPageTitleLabel;
 
     /* LINES */
 
-    private final FixedLine notesFootnoteLine;
+    private final FixedLine notesFootnotesLine;
+    private final FixedLine notesEndnotesLine;
     private final FixedLine notesNoterefLine;
 
     /*****************/
@@ -1336,10 +1339,10 @@ public class SettingsDialog {
                                              bundle.getString("linesBelowLabel") + ":");
 
         paragraphEmptyParagraphsLabel = new Label(container.getControl("Label14"),
-                                                  "Empty paragraphs:");
+                                                  bundle.getString("paragraphKeepEmptyLabel") + ":");
 
         paragraphHardPageBreaksLabel = new Label(container.getControl("Label6"),
-                                                 "Hard page breaks:");
+                                                 bundle.getString("hardPageBreaksLabel")+ ":");
 
         paragraphKeepWithNextLabel = new Label(container.getControl("Label70"),
                                                bundle.getString("keepWithNextLabel"));
@@ -2132,6 +2135,7 @@ public class SettingsDialog {
         notesFootnoteFirstLineField = new NumericSettingControl(container.getControl("NumericField33"));
         notesFootnoteRunoversField = new NumericSettingControl(container.getControl("NumericField34"));
         notesFootnoteMarginLeftRightField = new NumericSettingControl(container.getControl("NumericField35"));
+        endnotesPageTitleField = new TextSettingControl(container.getControl("TextField20"));
 
         /* LABELS */
 
@@ -2165,9 +2169,13 @@ public class SettingsDialog {
         notesFootnoteMarginLeftRightLabel = new Label(container.getControl("Label109"),
                                                       bundle.getString("centeredMarginLabel") + ":");
 
+        endnotesPageTitleLabel = new Label(container.getControl("Label8"),
+                                           bundle.getString("endnotesPageTitleLabel") + ":");
+
         /* LINES */
 
-        notesFootnoteLine = new FixedLine(container.getControl("FixedLine18"), bundle.getString("footnotesLabel"));
+        notesFootnotesLine = new FixedLine(container.getControl("FixedLine18"), bundle.getString("footnotesLabel"));
+        notesEndnotesLine = new FixedLine(container.getControl("FixedLine24"), bundle.getString("endnotesLabel"));
         notesNoterefLine = new FixedLine(container.getControl("FixedLine17"), bundle.getString("noteReferencesLabel"));
 
         /* INITIALIZATION */
@@ -2182,6 +2190,7 @@ public class SettingsDialog {
         notesFootnoteFirstLineField.link(settings.getFootnoteStyle().firstLine);
         notesFootnoteRunoversField.link(settings.getFootnoteStyle().runovers);
         notesFootnoteMarginLeftRightField.link(settings.getFootnoteStyle().marginLeftRight);
+        endnotesPageTitleField.link(settings.endNotesPageTitle);
 
         notesNoterefFormatListBox.addListener(notesNoterefPrefixField);
         notesNoterefFormatListBox.addListener(notesNoterefPrefixButton);

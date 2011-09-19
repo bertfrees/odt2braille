@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="SettingsDialog" dlg:tab-index="1" dlg:left="142" dlg:top="73" dlg:width="269" dlg:height="301" dlg:page="4" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog2" dlg:tab-index="1" dlg:left="142" dlg:top="73" dlg:width="269" dlg:height="301" dlg:page="8" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="0xc0c0c0" dlg:look="simple"/>
   <dlg:style dlg:style-id="1" dlg:border="0xc0c0c0" dlg:font-name="odt2braille 6 dot" dlg:font-height="18" dlg:font-stylename="Regular" dlg:font-family="modern"/>
@@ -357,5 +357,8 @@
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox34" dlg:tab-index="334" dlg:left="207" dlg:top="232" dlg:width="53" dlg:height="12" dlg:page="4" dlg:spin="true"/>
   <dlg:menulist dlg:style-id="0" dlg:id="ListBox35" dlg:tab-index="335" dlg:left="207" dlg:top="246" dlg:width="53" dlg:height="12" dlg:page="4" dlg:spin="true"/>
   <dlg:text dlg:id="Label6" dlg:tab-index="336" dlg:left="119" dlg:top="247" dlg:width="84" dlg:height="10" dlg:page="4" dlg:value="Label6" dlg:multiline="true"/>
+  <dlg:fixedline dlg:id="FixedLine24" dlg:tab-index="337" dlg:left="89" dlg:top="208" dlg:width="181" dlg:height="10" dlg:page="8"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField20" dlg:tab-index="338" dlg:left="157" dlg:top="221" dlg:width="103" dlg:height="12" dlg:page="8"/>
+  <dlg:text dlg:id="Label8" dlg:tab-index="339" dlg:left="103" dlg:top="223" dlg:width="52" dlg:height="10" dlg:page="8" dlg:value="Label8" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>
