@@ -8,12 +8,16 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.SimpleFormatter;
 import org.custommonkey.xmlunit.Diff;
+import org.custommonkey.xmlunit.Difference;
+import org.custommonkey.xmlunit.DifferenceListener;
+import org.custommonkey.xmlunit.DifferenceConstants;
 import org.custommonkey.xmlunit.XMLUnit;
 import org.junit.Ignore;
 import static org.junit.Assert.assertTrue;
 
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
+import org.w3c.dom.Node;
 
 /**
  *
@@ -40,8 +44,7 @@ public abstract class Odt2BrailleTest {
 
             resources = Odt2BrailleTest.class.getResource("/be/docarch/odt2braille/resources/").getFile();
 
-            Configuration.setTablesFolder(new File("dist" + File.separator + "liblouis" + File.separator + "files"));
-            ODT2PEFConverter.setLiblouisLocation(new File("dist" + File.separator + "liblouis"));
+            Constants.setLiblouisDirectory(new File("dist" + File.separator + "liblouis"));
 
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
@@ -55,21 +58,32 @@ public abstract class Odt2BrailleTest {
         Diff myDiff = new Diff(new FileReader(correctPEF),
                                new FileReader(testPEF));
 
+        myDiff.overrideDifferenceListener(new DifferenceListener() {
+            public int differenceFound(Difference dfrnc) {
+                if (dfrnc.getId() == DifferenceConstants.TEXT_VALUE_ID) {
+                    if ("dc".equals(dfrnc.getControlNodeDetail().getNode().getParentNode().getPrefix())) {
+                        return DifferenceListener.RETURN_IGNORE_DIFFERENCE_NODES_IDENTICAL;
+                    }
+                }
+                return DifferenceListener.RETURN_ACCEPT_DIFFERENCE;
+            }
+            public void skippedComparison(Node node, Node node1) {}
+        });
+
         assertTrue("PEFs not equal\n" + myDiff, myDiff.identical());
     }
 
     protected static File simpleODT2PEF(File odtFile)
                                  throws Exception {
 
-        OdtTransformer tf = new OdtTransformer(odtFile);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(odtFile);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         return pefBuilder.getSinglePEF();
     }

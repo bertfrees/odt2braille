@@ -21,11 +21,10 @@ public class TablesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "tables_linear.pef");
         File testODT = new File(resources + "tables.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         TableStyle style = settings.getTableStyles().get("Default");
@@ -34,7 +33,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setFirstLine(0);
         style.setRunovers(3);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -47,11 +46,10 @@ public class TablesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "tables_stairstep.pef");
         File testODT = new File(resources + "tables.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         TableStyle style = settings.getTableStyles().get("Default");
@@ -60,7 +58,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setFirstLine(0);
         style.setRunovers(0);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -73,11 +71,10 @@ public class TablesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "tables_repeat_heading.pef");
         File testODT = new File(resources + "tables.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         TableStyle style = settings.getTableStyles().get("Default");
@@ -89,7 +86,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRepeatHeading(true);
         style.setHeadingSuffix("\u2812");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -102,11 +99,10 @@ public class TablesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "tables_invert.pef");
         File testODT = new File(resources + "tables.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         TableStyle style = settings.getTableStyles().get("Default");
@@ -116,7 +112,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRunovers(3);
         style.setMirrorTable(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -131,11 +127,10 @@ public class TablesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "table_captions.pef");
         File testODT = new File(resources + "table_captions.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         TableStyle style = settings.getTableStyles().get("Default");
@@ -145,7 +140,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRunovers(3);
         style.setColumnHeadings(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

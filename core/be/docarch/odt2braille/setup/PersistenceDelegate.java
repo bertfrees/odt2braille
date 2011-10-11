@@ -17,7 +17,7 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
 
         if (oldInstance instanceof Configuration) {
 
-            return new Expression(oldInstance, Configuration.class, "newInstance", new Object[] {});
+            return new Expression(oldInstance, ConfigurationBuilder.class, "build", new Object[] {});
 
         } else if (oldInstance instanceof Locale) {
 

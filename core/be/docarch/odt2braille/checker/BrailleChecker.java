@@ -1,6 +1,7 @@
 package be.docarch.odt2braille.checker;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Date;
 import java.util.Collection;
 import java.util.Map;
@@ -17,7 +18,7 @@ import be.docarch.accessibility.Check;
 import be.docarch.accessibility.RemoteRunnableChecker;
 import be.docarch.accessibility.Report;
 import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.OdtTransformer;
+import be.docarch.odt2braille.ODT;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.Volume;
 
@@ -43,6 +44,16 @@ public class BrailleChecker implements RemoteRunnableChecker {
     private SimpleDateFormat dateFormat = null;
     private Map<String,Check> checks = null;
 
+    static {
+        try {
+            String path = BrailleChecker.class.getResource(".").getPath();
+            URL u = new URL(path.substring(0, path.lastIndexOf("lib/odt2braille.jar!")) + "liblouis");
+            Constants.setLiblouisDirectory(new File(u.getPath()));
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+
     public BrailleChecker() {
 
         dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ");
@@ -53,29 +64,32 @@ public class BrailleChecker implements RemoteRunnableChecker {
             earlXSL = tFactory.newTransformer(
                     new StreamSource(getClass().getResource(Constants.XSLT_PATH + "earl.xsl").toString()));
 
-            earlXSL.setParameter("paramNoBrailleToc",         "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_NoBrailleToc.name());
-            earlXSL.setParameter("paramOmittedCaption",       "http://www.docarch.be/accessibility/checks#" + BrailleCheck.ID.A_OmittedCaption.name());
+            earlXSL.setParameter("checkerID",                 getIdentifier());
+            earlXSL.setParameter("paramNoBrailleToc",         be.docarch.accessibility.Constants.A11Y_CHECKS + BrailleCheck.ID.A_NoBrailleToc.name());
+            earlXSL.setParameter("paramOmittedCaption",       be.docarch.accessibility.Constants.A11Y_CHECKS + BrailleCheck.ID.A_OmittedCaption.name());
 
             earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
             earlReport.deleteOnExit();
 
             checks = new HashMap<String,Check>();
-            checks.put(BrailleCheck.ID.A_NoBrailleToc.name(),         new BrailleCheck(BrailleCheck.ID.A_NoBrailleToc));
-            checks.put(BrailleCheck.ID.A_OmittedCaption.name(),       new BrailleCheck(BrailleCheck.ID.A_OmittedCaption));
+            checks.put(BrailleCheck.ID.A_NoBrailleToc.name(),    new BrailleCheck(BrailleCheck.ID.A_NoBrailleToc));
+            checks.put(BrailleCheck.ID.A_OmittedCaption.name(),  new BrailleCheck(BrailleCheck.ID.A_OmittedCaption));
 
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, null, ex);
-        } catch (TransformerConfigurationException ex) {
-            logger.log(Level.SEVERE, null, ex);
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
         }
+    }
+
+    public Collection<Check> list() {
+        return checks.values();
+    }
+
+    public Check get(String identifier) {
+        return checks.get(identifier);
     }
 
     public void setOdtFile(File odtFile) {
         this.odtFile = odtFile;
-    }
-
-    public Collection<Check> getChecks() {
-        return checks.values();
     }
 
     public Report getAccessibilityReport() {
@@ -92,31 +106,20 @@ public class BrailleChecker implements RemoteRunnableChecker {
 
         try {
 
-            OdtTransformer transformer = new OdtTransformer(odtFile);
-            Configuration.setTransformer(transformer);
-            Configuration settings = Configuration.newInstance();
+            ODT odt = new ODT(odtFile);
+            
+            // TODO: load (certain) settings from odt-file
 
-            // TODO: load settings from odt-file
-
-            transformer.configure(settings);
-            transformer.makeControlFlow();
+            odt.makeControlFlow();
 
             earlXSL.setParameter("paramTocEnabled", true);
             earlXSL.setParameter("paramTimestamp", dateFormat.format(lastChecked));
-            earlXSL.setParameter("content-url", transformer.getOdtContentFile().toURI());
-            earlXSL.transform(new StreamSource(transformer.getControllerFile()), new StreamResult(earlReport));
-            transformer.close();
+            earlXSL.setParameter("content-url", odt.getOdtContentFile().toURI());
+            earlXSL.transform(new StreamSource(odt.getControllerFile()), new StreamResult(earlReport));
+            odt.close();
 
             return true;
 
-        } catch (ParserConfigurationException e) {
-            logger.log(Level.SEVERE, null, e);
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, null, e);
-        } catch (SAXException e) {
-            logger.log(Level.SEVERE, null, e);
-        } catch (TransformerException e) {
-            logger.log(Level.SEVERE, null, e);
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
         }

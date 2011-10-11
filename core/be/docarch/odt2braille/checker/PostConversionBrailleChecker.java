@@ -47,7 +47,7 @@ public class PostConversionBrailleChecker implements Checker {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
-    private Map<BrailleCheck.ID,Check> checks;
+    private Map<String,Check> checks;
 
     private Set<Check> detectedIssues;
 
@@ -61,20 +61,20 @@ public class PostConversionBrailleChecker implements Checker {
 
         logger.entering("PostConversionBrailleChecker", "<init>");
 
-        checks = new HashMap<BrailleCheck.ID,Check>();
+        checks = new HashMap<String,Check>();
 
-        checks.put(BrailleCheck.ID.A_VolumesTooLong,               new BrailleCheck(BrailleCheck.ID.A_VolumesTooLong));
-        checks.put(BrailleCheck.ID.A_VolumesTooShort,              new BrailleCheck(BrailleCheck.ID.A_VolumesTooShort));
-        checks.put(BrailleCheck.ID.A_VolumesDifferTooMuch,         new BrailleCheck(BrailleCheck.ID.A_VolumesDifferTooMuch));
-        checks.put(BrailleCheck.ID.A_PreliminaryVolumeRequired,    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeRequired));
-        checks.put(BrailleCheck.ID.A_PreliminaryVolumeTooShort,    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeTooShort));
-        checks.put(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading, new BrailleCheck(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading));
-        checks.put(BrailleCheck.ID.A_OmittedInBraille,             new BrailleCheck(BrailleCheck.ID.A_OmittedInBraille));
-        checks.put(BrailleCheck.ID.A_NotInBrailleVolume,           new BrailleCheck(BrailleCheck.ID.A_NotInBrailleVolume));
-        checks.put(BrailleCheck.ID.A_TransposedInBraille,          new BrailleCheck(BrailleCheck.ID.A_TransposedInBraille));
-        checks.put(BrailleCheck.ID.A_PageWidthTooSmall,            new BrailleCheck(BrailleCheck.ID.A_PageWidthTooSmall));
-        checks.put(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot,   new BrailleCheck(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
-        checks.put(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot, new BrailleCheck(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot));
+        checks.put(BrailleCheck.ID.A_VolumesTooLong.name(),               new BrailleCheck(BrailleCheck.ID.A_VolumesTooLong));
+        checks.put(BrailleCheck.ID.A_VolumesTooShort.name(),              new BrailleCheck(BrailleCheck.ID.A_VolumesTooShort));
+        checks.put(BrailleCheck.ID.A_VolumesDifferTooMuch.name(),         new BrailleCheck(BrailleCheck.ID.A_VolumesDifferTooMuch));
+        checks.put(BrailleCheck.ID.A_PreliminaryVolumeRequired.name(),    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeRequired));
+        checks.put(BrailleCheck.ID.A_PreliminaryVolumeTooShort.name(),    new BrailleCheck(BrailleCheck.ID.A_PreliminaryVolumeTooShort));
+        checks.put(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading.name(), new BrailleCheck(BrailleCheck.ID.A_VolumeDoesntBeginWithHeading));
+        checks.put(BrailleCheck.ID.A_OmittedInBraille.name(),             new BrailleCheck(BrailleCheck.ID.A_OmittedInBraille));
+        checks.put(BrailleCheck.ID.A_NotInBrailleVolume.name(),           new BrailleCheck(BrailleCheck.ID.A_NotInBrailleVolume));
+        checks.put(BrailleCheck.ID.A_TransposedInBraille.name(),          new BrailleCheck(BrailleCheck.ID.A_TransposedInBraille));
+        checks.put(BrailleCheck.ID.A_PageWidthTooSmall.name(),            new BrailleCheck(BrailleCheck.ID.A_PageWidthTooSmall));
+        checks.put(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot.name(),   new BrailleCheck(BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
+        checks.put(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot.name(), new BrailleCheck(BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot));
 
         detectedIssues = new HashSet<Check>();
 
@@ -88,15 +88,15 @@ public class PostConversionBrailleChecker implements Checker {
 
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='omission' and not(ancestor::dtb:div[@class='not-in-volume'])]", namespace)) {
-            detectedIssues.add(checks.get(BrailleCheck.ID.A_OmittedInBraille));
+            detectedIssues.add(get(BrailleCheck.ID.A_OmittedInBraille.name()));
         }
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='not-in-volume']//dtb:div[@class='omission']", namespace)) {
-            detectedIssues.add(checks.get(BrailleCheck.ID.A_NotInBrailleVolume));
+            detectedIssues.add(get(BrailleCheck.ID.A_NotInBrailleVolume.name()));
         }
         if (XPathUtils.evaluateBoolean(daisyFile.toURL().openStream(),
                 "/dtb:dtbook//dtb:div[@class='transposition']", namespace)) {
-            detectedIssues.add(checks.get(BrailleCheck.ID.A_TransposedInBraille));
+            detectedIssues.add(get(BrailleCheck.ID.A_TransposedInBraille.name()));
         }
     }
 
@@ -112,8 +112,8 @@ public class PostConversionBrailleChecker implements Checker {
             try {
                 if (Integer.parseInt(XPathUtils.evaluateString(pefFile.toURL().openStream(),
                         "max(distinct-values(string-to-codepoints(string(/pef:pef/pef:body))))", namespace)) > 0x283F) {
-                    detectedIssues.add(checks.get((pefSettings instanceof ExportConfiguration) ? BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot
-                                                                                               : BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot));
+                    detectedIssues.add(get((pefSettings instanceof ExportConfiguration) ? BrailleCheck.ID.A_FileFormatDoesNotSupport8Dot.name()
+                                                                                        : BrailleCheck.ID.A_EmbosserDoesNotSupport8Dot.name()));
                 }
             } catch (Exception e) {
             }
@@ -193,8 +193,12 @@ public class PostConversionBrailleChecker implements Checker {
         return "http://docarch.be/odt2braille/checker/PostConversionBrailleChecker";
     }
 
-    public Collection<Check> getChecks() {
+    public Collection<Check> list() {
         return checks.values();
+    }
+
+    public Check get(String identifier) {
+        return checks.get(identifier);
     }
     
     public Set<Check> getDetectedIssues() {

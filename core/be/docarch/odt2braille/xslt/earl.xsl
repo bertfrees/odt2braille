@@ -28,15 +28,15 @@
             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
             xmlns:earl="http://www.w3.org/ns/earl#"
             xmlns:foaf="http://xmlns.com/foaf/0.1/"
-            xmlns:dct="http://purl.org/dc/terms/"
+            xmlns:dct="http://purl.org/dc/elements/1.1/"
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
             xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
-            xmlns:ns1="http://www.docarch.be/accessibility/"
-            xmlns:ns2="http://www.docarch.be/accessibility/properties#"
-            xmlns:ns3="http://www.docarch.be/accessibility/types#"
+            xmlns:ns1="http://www.docarch.be/accessibility-checker/"
+            xmlns:ns2="http://www.docarch.be/accessibility-checker/types#"
+            xmlns:ns3="http://www.docarch.be/odt2braille/"
 
-            exclude-result-prefixes="xsl xsd rdf earl foaf dct ns2">
+            exclude-result-prefixes="xsl xsd rdf earl foaf dct">
 
         <xsl:output method="xml"
                     encoding="UTF-8"
@@ -44,13 +44,14 @@
                     indent="yes"
                     omit-xml-declaration="no"/>
 
-        <xsl:param    name="paramNoBrailleToc"           as="xsd:string" />
-        <xsl:param    name="paramOmittedCaption"         as="xsd:string" />
+        <xsl:param    name="paramNoBrailleToc"    as="xsd:string" />
+        <xsl:param    name="paramOmittedCaption"  as="xsd:string" />
 
-        <xsl:param    name="paramTimestamp"              as="xsd:string" />
-        <xsl:param    name="paramTocEnabled"             as="xsd:boolean" />
-        <xsl:param    name="content-url"                 as="xsd:string" />
-    <!--<xsl:param    name="meta-url"                    as="xsd:string" />-->
+        <xsl:param    name="checkerID"            as="xsd:string"  select="'http://docarch.be/odt2braille/checker/BrailleChecker'" />
+        <xsl:param    name="paramTimestamp"       as="xsd:string"  />
+        <xsl:param    name="paramTocEnabled"      as="xsd:boolean" />
+        <xsl:param    name="content-url"          as="xsd:string"  />
+    <!--<xsl:param    name="meta-url"             as="xsd:string" />-->
 
         <xsl:variable name="body"            select="doc($content-url)/office:document-content/office:body" />
 
@@ -59,22 +60,20 @@
 
     <xsl:template match="/">
         <rdf:RDF>
-            <foaf:Group rdf:nodeID="assertor" >
-                <earl:mainAssertor>
-                    <earl:Software rdf:about="http://www.docarch.be/odt2braille/checker/BrailleChecker" />
-                </earl:mainAssertor>
-                <foaf:member>
-                    <foaf:Person rdf:about="http://www.docarch.be/bert" />
-                </foaf:member>
-            </foaf:Group>
+            <ns1:Checker>
+                <xsl:attribute name="rdf:about" select="$checkerID" />
+                <rdf:type rdf:resource="http://www.w3.org/ns/earl#Assertor"/>
+            </ns1:Checker>
             
             <xsl:if test="not($paramTocEnabled) and $body/office:text//text:table-of-content">
                 <earl:Assertion>
-                    <earl:assertedBy rdf:nodeID="assertor" />
+                    <earl:assertedBy>
+                        <xsl:attribute name="rdf:resource" select="$checkerID" />
+                    </earl:assertedBy>
                     <earl:subject>
-                        <ns3:document>
+                        <ns2:Document>
                             <rdf:type rdf:resource="http://www.w3.org/ns/earl#TestSubject"/>
-                        </ns3:document>
+                        </ns2:Document>
                     </earl:subject>
                     <earl:test>
                         <earl:TestCase>
@@ -84,9 +83,9 @@
                     <earl:result>
                         <earl:TestResult>
                             <earl:outcome rdf:resource="http://www.w3.org/ns/earl#failed"/>
-                            <ns1:lastChecked>
+                            <dct:date>
                                 <xsl:value-of select="$paramTimestamp" />
-                            </ns1:lastChecked>
+                            </dct:date>
                         </earl:TestResult>
                     </earl:result>
                 </earl:Assertion>
@@ -95,23 +94,25 @@
             <earl:TestCase>
                 <xsl:attribute name="rdf:about" select="$paramOmittedCaption"/>
             </earl:TestCase>
-            <xsl:apply-templates select="//ns2:caption"/>
+            <xsl:apply-templates select="//ns3:Caption"/>
         </rdf:RDF>
     </xsl:template>
     
 
-    <xsl:template match="ns2:caption">
+    <xsl:template match="ns3:Caption">
         <xsl:variable name="caption-id" select="./@rdf:about" />
-        <xsl:if test="not(//ns2:hasCaption[@rdf:resource=$caption-id])">
+        <xsl:if test="not(//ns3:hasCaption[@rdf:resource=$caption-id])">
             <earl:Assertion>
-                <earl:assertedBy rdf:nodeID="assertor" />
+                <earl:assertedBy>
+                    <xsl:attribute name="rdf:resource" select="$checkerID" />
+                </earl:assertedBy>
                 <earl:subject>
-                    <ns3:paragraph>
+                    <ns2:Paragraph>
                         <ns1:start>
                             <xsl:attribute name="rdf:resource" select="concat($content-base, $caption-id)" />
                         </ns1:start>
                         <rdf:type rdf:resource="http://www.w3.org/ns/earl#TestSubject"/>
-                    </ns3:paragraph>
+                    </ns2:Paragraph>
                 </earl:subject>
                 <earl:test>
                     <xsl:attribute name="rdf:resource" select="$paramOmittedCaption" />
@@ -119,9 +120,9 @@
                 <earl:result>
                     <earl:TestResult>
                         <earl:outcome rdf:resource="http://www.w3.org/ns/earl#failed"/>
-                        <ns1:lastChecked>
+                        <dct:date>
                             <xsl:value-of select="$paramTimestamp" />
-                        </ns1:lastChecked>
+                        </dct:date>
                     </earl:TestResult>
                 </earl:result>
             </earl:Assertion>

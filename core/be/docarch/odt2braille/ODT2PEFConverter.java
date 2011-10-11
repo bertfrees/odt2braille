@@ -1,9 +1,7 @@
 package be.docarch.odt2braille;
 
-import java.io.File;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import be.docarch.odt2braille.setup.PEFConfiguration;
-import be.docarch.odt2braille.setup.Configuration;
 
 import org.xml.sax.SAXException;
 import java.io.IOException;
@@ -15,13 +13,7 @@ import javax.xml.transform.TransformerException;
 
 public class ODT2PEFConverter {
 
-    private static File liblouisLocation;
-
-    public static void setLiblouisLocation(File folder) {
-        liblouisLocation = folder;
-    }
-
-    public static PEF convert(Configuration configuration,
+    public static PEF convert(ODT odt,
                               PEFConfiguration pefConfiguration,
                               PostConversionBrailleChecker checker,
                               StatusIndicator indicator)
@@ -33,18 +25,14 @@ public class ODT2PEFConverter {
                               IOException,
                               ParserConfigurationException,
                               SAXException,
-                              ConversionException {
-
-
-        if (liblouisLocation == null) {
-            throw new ConversionException("liblouis location not set");
-        }
+                              ConversionException,
+                              Exception {
 
         // Create LiblouisXML
-        LiblouisXML liblouisXML = new LiblouisXML(configuration, pefConfiguration, liblouisLocation);
+        LiblouisXML liblouisXML = new LiblouisXML(odt.getConfiguration(), pefConfiguration, Constants.getLiblouisDirectory());
 
         // Create PEF
-        PEF pef = new PEF(configuration, pefConfiguration, liblouisXML, indicator, checker);
+        PEF pef = new PEF(odt, pefConfiguration, liblouisXML, indicator, checker);
 
         // Convert
         if(!pef.makePEF()) {

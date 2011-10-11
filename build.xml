@@ -57,6 +57,16 @@
     <target name="compile"
             description="Compile project"
             depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" />
+			
+	<target name="l10n"
+			description="Re-encode localisation files">
+		<ant dir="l10n" inheritAll="false" />
+	</target>
+			
+	<target name="brailleutils"
+			description="Build brailleutils jars">
+		<ant dir="ext/brailleutils/src/latest/braille" inheritAll="false" />
+	</target>
 	
 			
 <!--

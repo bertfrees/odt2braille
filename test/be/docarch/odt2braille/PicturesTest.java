@@ -15,11 +15,10 @@ public class PicturesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "pictures.pef");
         File testODT = new File(resources + "pictures.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         PictureStyle style = settings.getPictureStyle();
@@ -31,7 +30,7 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -44,11 +43,10 @@ public class PicturesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "picture_captions.pef");
         File testODT = new File(resources + "picture_captions.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         PictureStyle style = settings.getPictureStyle();
@@ -60,7 +58,7 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

@@ -25,7 +25,7 @@
 
         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
         xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        xmlns:ns1="http://www.docarch.be/accessibility/properties#"
+        xmlns:ns1="http://www.docarch.be/odt2braille/"
         xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
         xmlns:xlink="http://www.w3.org/1999/xlink"
         xmlns:dc="http://purl.org/dc/elements/1.1/"
@@ -186,7 +186,7 @@ DOCUMENT ROOT
                 <!-- REARMATTER -->
                 <dtb:rearmatter>
                     <xsl:variable name="rearmatter-section" as="xsd:string"
-                                  select="substring-after(string($controller//ns1:rearmatter/@rdf:about), 'section:/')"/>
+                                  select="substring-after(string($controller//ns1:Rearmatter/@rdf:about), 'section:/')"/>
                     <xsl:if test="string-length($rearmatter-section)>0">
                         <xsl:choose>
                             <xsl:when test="$paramRearMatterMode='SINGLE'">
@@ -286,8 +286,8 @@ TOP LEVEL
 
                     <!-- REPEATED FRONTMATTER = TITLE PAGE -->
                     <xsl:when test="$frontmatter-mode and
-                                    $controller//ns1:repeat-frontmatter[@rdf:about=concat('section:/', $section-name)] and
-                                    $controller//ns1:titlepage         [@rdf:about=concat('section:/', $section-name)]">
+                                    $controller//ns1:RepeatFrontmatter[@rdf:about=concat('section:/', $section-name)] and
+                                    $controller//ns1:Titlepage        [@rdf:about=concat('section:/', $section-name)]">
                         <dtb:repeat-frontmatter>
                             <dtb:titlepage>
                                 <xsl:call-template name="section">
@@ -300,7 +300,7 @@ TOP LEVEL
 
                     <!-- REPEATED FRONTMATTER -->
                     <xsl:when test="$frontmatter-mode and
-                                    $controller//ns1:repeat-frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                                    $controller//ns1:RepeatFrontmatter[@rdf:about=concat('section:/', $section-name)]">
                         <dtb:repeat-frontmatter>
                             <xsl:call-template name="section">
                                 <xsl:with-param name="frontmatter-mode"    select="true()"  />
@@ -311,7 +311,7 @@ TOP LEVEL
 
                     <!-- TITLE PAGE -->
                     <xsl:when test="$frontmatter-mode and
-                                    $controller//ns1:titlepage[@rdf:about=concat('section:/', $section-name)]">
+                                    $controller//ns1:Titlepage[@rdf:about=concat('section:/', $section-name)]">
                         <dtb:titlepage>
                             <xsl:call-template name="section">
                                 <xsl:with-param name="frontmatter-mode" select="true()"   />
@@ -321,7 +321,7 @@ TOP LEVEL
 
                     <!-- FRONTMATTER -->
                     <xsl:when test="$frontmatter-mode and
-                                    $controller//ns1:frontmatter[@rdf:about=concat('section:/', $section-name)]">
+                                    $controller//ns1:Frontmatter[@rdf:about=concat('section:/', $section-name)]">
                         <xsl:call-template name="section">
                             <xsl:with-param name="frontmatter-mode"    select="true()"   />
                             <xsl:with-param name="without-notesection" select="true()"  />
@@ -329,18 +329,18 @@ TOP LEVEL
                     </xsl:when>
 
                     <!-- NOT RENDERED REARMATTER -->
-                    <xsl:when test="$controller//ns1:rearmatter[@rdf:about=concat('section:/', $section-name)]
+                    <xsl:when test="$controller//ns1:Rearmatter[@rdf:about=concat('section:/', $section-name)]
                                     and not($rearmatter-mode)"/>
 
                     <!-- REARMATTER -->
-                    <xsl:when test="$controller//ns1:rearmatter[@rdf:about=concat('section:/', $section-name)]">
+                    <xsl:when test="$controller//ns1:Rearmatter[@rdf:about=concat('section:/', $section-name)]">
                         <xsl:call-template name="section">
                             <xsl:with-param name="rearmatter-mode"  select="true()" />
                         </xsl:call-template>
                     </xsl:when>
 
                     <!-- VOLUME IN REARMATTER / BODYMATTER -->
-                    <xsl:when test="$controller//ns1:volume[@rdf:about=concat('section:/', $section-name)] and
+                    <xsl:when test="$controller//ns1:Volume[@rdf:about=concat('section:/', $section-name)] and
                                   (($paramRearMatterMode='MANUAL' and $rearmatter-mode)
                                 or ($paramBodyMatterMode='MANUAL' and not($rearmatter-mode)))">
                         <xsl:variable name="section-id">
@@ -2002,20 +2002,20 @@ HELP TEMPLATES
 
     <xsl:template name="get-table-caption-id">
         <xsl:param name="table-name" />
-        <xsl:value-of select="$controller//ns1:table[@rdf:about=concat('table:/',$table-name)]/ns1:hasCaption[1]/@rdf:resource" />
+        <xsl:value-of select="$controller//ns1:Table[@rdf:about=concat('table:/',$table-name)]/ns1:hasCaption[1]/@rdf:resource" />
     </xsl:template>
 
 
     <xsl:template name="get-frame-caption-id">
         <xsl:param name="frame-name" />
-        <xsl:value-of select="$controller//ns1:frame[@rdf:about=concat('frame:/',$frame-name)]/ns1:hasCaption[1]/@rdf:resource" />
+        <xsl:value-of select="$controller//ns1:Frame[@rdf:about=concat('frame:/',$frame-name)]/ns1:hasCaption[1]/@rdf:resource" />
     </xsl:template>
 
 
     <xsl:template name="get-frontmatter-section">
         <xsl:choose>
-            <xsl:when test="$controller//ns1:frontmatter">
-                <xsl:value-of select="substring-after(string($controller//ns1:frontmatter/@rdf:about), 'section:/')" />
+            <xsl:when test="$controller//ns1:Frontmatter">
+                <xsl:value-of select="substring-after(string($controller//ns1:Frontmatter/@rdf:about), 'section:/')" />
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="''" />

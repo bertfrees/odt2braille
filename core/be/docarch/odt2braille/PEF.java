@@ -85,8 +85,7 @@ public class PEF {
 
     private final File pefFile;
     private final LiblouisXML liblouisXML;
-    private final OdtTransformer odtTransformer;
-    private final Configuration settings;
+    private final ODT odt;
     private final PEFConfiguration pefSettings;
     private final StatusIndicator statusIndicator;
     private final PostConversionBrailleChecker checker;
@@ -94,15 +93,16 @@ public class PEF {
 
     private final VolumeManager manager;
 
-    public PEF(Configuration settings,
+    public PEF(ODT odt,
                PEFConfiguration pefSettings,
                LiblouisXML liblouisXML)
         throws IOException,
                TransformerException,
                SAXException,
-               ConversionException {
+               ConversionException,
+               Exception {
 
-        this(settings, pefSettings, liblouisXML, null, null);
+        this(odt, pefSettings, liblouisXML, null, null);
 
     }
 
@@ -117,7 +117,7 @@ public class PEF {
      * @param checker           The <code>PostConversionBrailleChecker</code> that will check the braille document for possible accessibility issues.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
-    public PEF(Configuration settings,
+    public PEF(ODT odt,
                PEFConfiguration pefSettings,
                LiblouisXML liblouisXML,
                StatusIndicator statusIndicator,
@@ -125,11 +125,12 @@ public class PEF {
         throws IOException,
                TransformerException,
                SAXException,
-               ConversionException {
+               ConversionException,
+               Exception {
 
         logger.entering("PEF", "<init>");
 
-        this.settings = settings;
+        this.odt = odt;
         this.pefSettings = pefSettings;
         this.liblouisXML = liblouisXML;
         this.statusIndicator = statusIndicator;
@@ -138,8 +139,7 @@ public class PEF {
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
         pefFile.deleteOnExit();
 
-        odtTransformer = settings.odtTransformer;
-        manager = new VolumeManager(settings);
+        manager = new VolumeManager(odt);
 
         // Initialize liblouisXML
         liblouisXML.createStylesFiles();
@@ -168,7 +168,7 @@ public class PEF {
      *
      * This function
      * <ul>
-     * <li>uses {@link OdtTransformer} to convert the .odt file to multiple DAISY-like xml files,</li>
+     * <li>uses {@link ODT} to convert the .odt file to multiple DAISY-like xml files,</li>
      * <li>uses {@link LiblouisXML} to translate these files into braille, and</li>
      * <li>recombines these braille files into one single .pef file.</li>
      * </ul>
@@ -185,9 +185,12 @@ public class PEF {
                                     InterruptedException,
                                     SAXException,
                                     ConversionException,
-                                    LiblouisXMLException {
+                                    LiblouisXMLException,
+                                    Exception {
 
         logger.entering("PEF", "makePEF");
+
+        Configuration settings = odt.getConfiguration();
 
         DocumentBuilderFactory docFactory;
         DocumentBuilder docBuilder;
@@ -264,7 +267,7 @@ public class PEF {
             bodyFile = File.createTempFile(TMP_NAME, ".daisy.body.xml", TMP_DIR);
             bodyFile.deleteOnExit();
 
-            odtTransformer.getBodyMatter(bodyFile);
+            odt.getBodyMatter(bodyFile);
             if (checker != null) {
                 checker.checkDaisyFile(bodyFile);
             }
@@ -496,7 +499,7 @@ public class PEF {
 
                     sectionElement = document.createElementNS(pefNS,"section");
 
-                    odtTransformer.getFrontMatter(preliminaryFile, volume, volumeInfo);
+                    odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
                     liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                     liblouisXML.run();
 
@@ -528,7 +531,7 @@ public class PEF {
 
                     // Get preliminary pages
 
-                    odtTransformer.getFrontMatter(preliminaryFile, volume, volumeInfo);
+                    odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
                     if (checker != null) {
                         checker.checkDaisyFile(preliminaryFile);
                     }

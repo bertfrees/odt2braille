@@ -21,11 +21,10 @@ public class NotesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "footnotes.pef");
         File testODT = new File(resources + "footnotes.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         FootnoteStyle style = settings.getFootnoteStyle();
@@ -39,7 +38,7 @@ public class NotesTest extends Odt2BrailleTest {
         formats.get("a").setSpaceAfter(true);
         formats.get("i").setSpaceAfter(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

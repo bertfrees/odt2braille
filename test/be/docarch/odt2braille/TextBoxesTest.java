@@ -15,10 +15,10 @@ public class TextBoxesTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "textboxes.pef");
         File testODT = new File(resources + "textboxes.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
+
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         FrameStyle frameStyle = settings.getFrameStyle();
@@ -31,7 +31,7 @@ public class TextBoxesTest extends Odt2BrailleTest {
         frameStyle.setPaddingAbove(0);
         frameStyle.setPaddingBelow(0);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

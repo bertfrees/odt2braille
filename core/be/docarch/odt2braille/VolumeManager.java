@@ -21,37 +21,40 @@ public class VolumeManager {
     private final Map<String,Volume> sectionToVolume = new HashMap<String,Volume>();
     private final List<Volume> volumes = new ArrayList<Volume>();
 
-    public VolumeManager(Configuration settings) throws IOException,
-                                                        TransformerException,
-                                                        SAXException,
-                                                        ConversionException {
+    public VolumeManager(ODT odt)
+                  throws IOException,
+                         TransformerException,
+                         SAXException,
+                         ConversionException,
+                         Exception {
 
-        preliminaryVolume = new PreliminaryVolume(settings.getPreliminaryVolume());
-        singleBodyVolume = new Volume(settings.getBodyMatterVolume());
-        singleRearVolume = new Volume(settings.getRearMatterVolume());
-        for (Configuration.SectionVolume v : settings.getSectionVolumeList().values()) {
+        Configuration configuration = odt.getConfiguration();
+
+        preliminaryVolume = new PreliminaryVolume(configuration.getPreliminaryVolume());
+        singleBodyVolume = new Volume(configuration.getBodyMatterVolume());
+        singleRearVolume = new Volume(configuration.getRearMatterVolume());
+        for (Configuration.SectionVolume v : configuration.getSectionVolumeList().values()) {
             Volume volume = new Volume(v);
             manualVolumes.add(volume);
             sectionToVolume.put(v.getSection(), volume);
         }
 
-        settings.odtTransformer.configure(settings);
-        settings.odtTransformer.transform(singleBodyVolume, singleRearVolume, sectionToVolume);
+        odt.transform(singleBodyVolume, singleRearVolume, sectionToVolume);
 
-        if (settings.getPreliminaryVolumeEnabled()) {
+        if (configuration.getPreliminaryVolumeEnabled()) {
             volumes.add(preliminaryVolume);
         }
-        switch (settings.getBodyMatterMode()) {
+        switch (configuration.getBodyMatterMode()) {
             case SINGLE:
                 volumes.add(singleBodyVolume);
                 break;
             case AUTOMATIC:
-                volumes.addAll(VolumeSplitter.splitBodyMatterVolume(settings));
+                volumes.addAll(VolumeSplitter.splitBodyMatterVolume(odt));
                 break;
         }
         volumes.addAll(manualVolumes);
-        if (settings.getRearMatterSection() != null &&
-            settings.getRearMatterMode() == VolumeManagementMode.SINGLE) {
+        if (configuration.getRearMatterSection() != null &&
+            configuration.getRearMatterMode() == VolumeManagementMode.SINGLE) {
             volumes.add(singleRearVolume);
         }
 

@@ -700,7 +700,7 @@ public class SettingsDialog {
         L10N_math.put(MathCode.WISKUNDE,  "Woluwe");
 
         L10N_followPrint.put(FollowPrint.FOLLOW_PRINT, bundle.getString("followPrint"));
-        L10N_followPrint.put(FollowPrint.IGNORE,       "Ignore");
+        L10N_followPrint.put(FollowPrint.IGNORE,       bundle.getString("ignore"));
 
         L10N_noterefFormats.put("1", "1, 2, 3,\u2026");
         L10N_noterefFormats.put("A", "A, B, C,\u2026");
@@ -955,10 +955,10 @@ public class SettingsDialog {
 
         translationTableListBox = new ListBox<String>(container.getControl("ListBox4")) {
             @Override
-            public void itemStateChanged(ItemEvent event) {
-                if (event.Source.equals(languagesListBox)) {
+            public void dialogElementUpdated(EventObject event) {
+                if (event.getSource().equals(languagesListBox)) {
                     link(languagesListBox.getSelectedItem().locale);
-                } else { super.itemStateChanged(event); }
+                }
             }
             @Override
             public String getDisplayValue(String value) {
@@ -968,10 +968,10 @@ public class SettingsDialog {
         
         gradeListBox = new ListBox<Integer>(container.getControl("ListBox5")) {
             @Override
-            public void itemStateChanged(ItemEvent event) {
-                if (event.Source.equals(languagesListBox)) {
+            public void dialogElementUpdated(EventObject event) {
+                if (event.getSource().equals(languagesListBox)) {
                     link(languagesListBox.getSelectedItem().grade);
-                } else { super.itemStateChanged(event); }
+                }
             }
             @Override
             public String getDisplayValue(Integer value) {
@@ -981,10 +981,10 @@ public class SettingsDialog {
 
         eightDotsCheckBox = new EightDotsCheckBox(container.getControl("CheckBox22")) {
             @Override
-            public void itemStateChanged(ItemEvent event) {
-                if (event.Source.equals(languagesListBox)) {
+            public void dialogElementUpdated(EventObject event) {
+                if (event.getSource().equals(languagesListBox)) {
                     link(languagesListBox.getSelectedItem().dots);
-                } else { super.itemStateChanged(event); }
+                }
             }
         };
 

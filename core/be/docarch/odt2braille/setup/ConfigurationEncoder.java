@@ -9,6 +9,7 @@ import be.docarch.odt2braille.setup.style.*;
 import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
+import be.docarch.odt2braille.setup.Configuration.SplittableVolume;
 import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
 import org.daisy.braille.tools.Length;
 
@@ -41,6 +42,7 @@ public class ConfigurationEncoder {
             xmlEncoder.setPersistenceDelegate(Length.class,              delegate);
             xmlEncoder.setPersistenceDelegate(Volume.class,              delegate);
             xmlEncoder.setPersistenceDelegate(SectionVolume.class,       delegate);
+            xmlEncoder.setPersistenceDelegate(SplittableVolume.class,    delegate);
             xmlEncoder.setPersistenceDelegate(SpecialSymbol.class,       delegate);
             xmlEncoder.setPersistenceDelegate(CharacterStyle.class,      delegate);
             xmlEncoder.setPersistenceDelegate(ParagraphStyle.class,      delegate);

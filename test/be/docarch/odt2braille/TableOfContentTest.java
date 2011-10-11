@@ -14,15 +14,13 @@ public class TableOfContentTest extends Odt2BrailleTest {
     public void tableOfContentTest() throws Exception {
 
         File testODT = new File(resources + "toc.odt");
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
 
         // Configuration 1
         File correctPEF = new File(resources + "toc_config1.pef");
-
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(true);
         settings.setPrintPageNumbers(false);
         settings.setPageSeparator(false);
@@ -40,19 +38,18 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(3);
         level.setRunovers(9);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
         comparePEFs(correctPEF, testPEF);
 
         // Configuration 2
-        correctPEF = new File(resources + "toc_config2.pef");
-        tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-
-        settings = Configuration.newInstance();
-
+        correctPEF = new File(resources + "toc_config2.pef");        
+        odt = new ODT(testODT);
+        exportSettings = new ExportConfiguration();
+        
+        settings = odt.getConfiguration();
         settings.setBraillePageNumbers(true);
         settings.setPrintPageNumbers(true);
         settings.setPageSeparator(false);
@@ -73,7 +70,7 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(4);
         level.setRunovers(8);
 
-        pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         testPEF = pefBuilder.getSinglePEF();
 

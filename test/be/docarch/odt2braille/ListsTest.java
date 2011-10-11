@@ -19,11 +19,10 @@ public class ListsTest extends Odt2BrailleTest {
         File correctPEF = new File(resources + "lists.pef");
         File testODT = new File(resources + "lists.odt");
 
-        OdtTransformer tf = new OdtTransformer(testODT);
-        Configuration.setTransformer(tf);
-        Configuration settings = Configuration.newInstance();
+        ODT odt = new ODT(testODT);
         ExportConfiguration exportSettings = new ExportConfiguration();
 
+        Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
         ListStyle style1 = settings.getListStyles().get(1);
@@ -37,7 +36,7 @@ public class ListsTest extends Odt2BrailleTest {
         style2.setRunovers(6);
         style2.setPrefix("\u2836");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(settings, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

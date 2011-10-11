@@ -223,6 +223,7 @@ public class ParagraphStyle extends Style {
         alignment.addListener(marginLeftRight);
         keepWithNext.addListener(dontSplit);
         dontSplit.addListener(widowControlEnabled);
+        dontSplit.addListener(orphanControlEnabled);
         widowControlEnabled.addListener(widowControl);
         orphanControlEnabled.addListener(orphanControl);
 
@@ -379,7 +380,7 @@ public class ParagraphStyle extends Style {
         ParagraphStyle that = (ParagraphStyle)object;
         return this.id.equals(that.id) &&
                this.displayName.equals(that.displayName) &&
-               (this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle) &&
+               ((this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle)) &&
                this.inherit.equals(that.inherit) &&
                this.alignment.equals(that.alignment) &&
                this.firstLine.equals(that.firstLine) &&

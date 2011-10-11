@@ -45,7 +45,7 @@ import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.NamespaceContext;
-import be.docarch.odt2braille.OdtTransformer;
+import be.docarch.odt2braille.ODT;
 import be.docarch.odt2braille.XPathUtils;
 import be.docarch.odt2braille.setup.style.ListStyle;
 import be.docarch.odt2braille.setup.style.FootnoteStyle;
@@ -66,42 +66,10 @@ public class Configuration implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    
-    /********************/
-    /*  FACTORY METHODS */
-    /********************/
-
-    private static OdtTransformer transformer = null;
-    private static File tablesFolder = null;
-
-    public static void setTransformer(OdtTransformer transformer) {
-        Configuration.transformer = transformer;
-    }
-
-    public static void setTablesFolder(File folder) {
-        Configuration.tablesFolder = folder;
-    }
-
-    public static Configuration newInstance() throws IOException,
-                                                     SAXException,
-                                                     Exception {
-        if (transformer == null) {
-            throw new Exception("Exception: transformer is not set");
-        }
-        if (tablesFolder == null) {
-            throw new Exception("Exception: liblouis location is not set!");
-        }
-
-        TranslationTable.setTablesFolder(tablesFolder);
-        return new Configuration(transformer);
-    }
-
-
     /********************/
     /* PUBLIC CONSTANTS */
     /********************/
 
-    public final OdtTransformer odtTransformer;
     public final Locale mainLocale;
     public final String date;
     public final String continuedSuffix;
@@ -288,6 +256,8 @@ public class Configuration implements Serializable {
     /* PRIVATE CONSTANTS */
     /*********************/
 
+    private final ODT odtTransformer;
+    
     private final String L10N_transcribersNotesPageTitle;
     private final String L10N_specialSymbolListTitle;
     private final String L10N_endNotesPageTitle;
@@ -313,9 +283,9 @@ public class Configuration implements Serializable {
     /* CONSTRUCTOR */
     /***************/
     
-    public Configuration(OdtTransformer transformer)
-                  throws IOException,
-                         SAXException {
+    protected Configuration(ODT transformer)
+                     throws IOException,
+                            SAXException {
 
         logger.entering("Configuration","<init>");
 

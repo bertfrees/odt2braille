@@ -9,6 +9,7 @@ import java.beans.IntrospectionException;
 import be.docarch.odt2braille.setup.style.*;
 import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
+import be.docarch.odt2braille.setup.Configuration.SplittableVolume;
 import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
 
@@ -319,6 +320,15 @@ public class BeanInfo {
             type = SectionVolume.class;
             propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
                 newPropertyDescriptor(type, "section")
+            }));
+
+            /* SplittableVolume */
+            type = SplittableVolume.class;
+            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
+                newPropertyDescriptor(type, "preferredVolumeSize"),
+                newPropertyDescriptor(type, "maxVolumeSize"),
+                newPropertyDescriptor(type, "minVolumeSize"),
+                newPropertyDescriptor(type, "minLastVolumeSize")
             }));
             
             /* SpecialSymbol */

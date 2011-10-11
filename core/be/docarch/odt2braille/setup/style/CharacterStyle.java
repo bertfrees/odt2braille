@@ -147,7 +147,7 @@ public class CharacterStyle extends Style {
         CharacterStyle that = (CharacterStyle)object;
         return this.id.equals(that.id) &&
                this.displayName.equals(that.displayName) &&
-               (this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle) &&
+               ((this.parentStyle==null)?(that.parentStyle==null):this.parentStyle.equals(that.parentStyle)) &&
                this.inherit.equals(that.inherit) &&
                this.italic.equals(that.italic) &&
                this.boldface.equals(that.boldface) &&

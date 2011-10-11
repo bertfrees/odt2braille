@@ -26,7 +26,7 @@
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-            xmlns:ns1="http://www.docarch.be/accessibility/properties#"
+            xmlns:ns1="http://www.docarch.be/odt2braille/"
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
             xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
@@ -112,24 +112,24 @@
     <xsl:template match="text:section">
         <xsl:variable name="section-name" select="@text:name" />
         <xsl:if test="$frontmatter[@text:name=$section-name]">
-            <ns1:frontmatter>
+            <ns1:Frontmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:frontmatter>
+            </ns1:Frontmatter>
         </xsl:if>
         <xsl:if test="$repeat-frontmatter[@text:name=$section-name]">
-            <ns1:repeat-frontmatter>
+            <ns1:RepeatFrontmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:repeat-frontmatter>
+            </ns1:RepeatFrontmatter>
         </xsl:if>
         <xsl:if test="$title-page[@text:name=$section-name]">
-            <ns1:titlepage>
+            <ns1:Titlepage>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:titlepage>
+            </ns1:Titlepage>
         </xsl:if>
         <xsl:if test="$rearmatter[@text:name=$section-name]">
-            <ns1:rearmatter>
+            <ns1:Rearmatter>
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-            </ns1:rearmatter>
+            </ns1:Rearmatter>
         </xsl:if>
         <xsl:variable name="i" as="xsd:integer">
             <xsl:call-template name="get-volume-index">
@@ -148,9 +148,9 @@
                 <xsl:when test="$rearmatter/ancestor::text:section[@text:name=$section-name]"/>
                 <xsl:when test="$rearmatter/following::text:section[@text:name=$section-name]"/>
                 <xsl:otherwise>
-                    <ns1:volume>
+                    <ns1:Volume>
                         <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
-                    </ns1:volume>
+                    </ns1:Volume>
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:if>
@@ -198,12 +198,12 @@
                 </xsl:call-template>
             </xsl:variable>
             <xsl:if test="$caption-id and not($is-empty)">
-                <ns1:table>
+                <ns1:Table>
                     <xsl:attribute name="rdf:about" select="concat('table:/',$table-name)" />
                     <ns1:hasCaption>
                         <xsl:attribute name="rdf:resource" select="$caption-id" />
                     </ns1:hasCaption>
-                </ns1:table>
+                </ns1:Table>
             </xsl:if>
         </xsl:if>
     </xsl:template>
@@ -278,12 +278,12 @@
             </xsl:choose>
         </xsl:variable>
         <xsl:if test="string-length($caption-id)>0">
-            <ns1:frame>
+            <ns1:Frame>
                 <xsl:attribute name="rdf:about" select="concat('frame:/',$frame-name)" />
                 <ns1:hasCaption>
                     <xsl:attribute name="rdf:resource" select="$caption-id" />
                 </ns1:hasCaption>
-            </ns1:frame>
+            </ns1:Frame>
         </xsl:if>
     </xsl:template>
 
@@ -301,9 +301,9 @@
             </xsl:call-template>
         </xsl:variable>
         <xsl:if test="$is-caption and not($is-empty)">
-            <ns1:caption>
+            <ns1:Caption>
                 <xsl:attribute name="rdf:about" select="@xml:id" />
-            </ns1:caption>
+            </ns1:Caption>
         </xsl:if>
     </xsl:template>
 

@@ -84,12 +84,12 @@ public class LiblouisXML {
 
     BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
-    public LiblouisXML (Configuration settings,
-                        PEFConfiguration pefSettings,
-                        File liblouisLocation)
-                 throws IOException,
-                        InterruptedException,
-                        LiblouisXMLInstallationException {
+    public LiblouisXML(Configuration settings,
+                       PEFConfiguration pefSettings,
+                       File liblouisLocation)
+                throws IOException,
+                       InterruptedException,
+                       LiblouisXMLInstallationException {
 
         logger.entering("LiblouisXML", "<init>");
 
