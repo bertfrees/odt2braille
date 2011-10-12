@@ -39,8 +39,8 @@
     </extension-description>
     <!-- Extension Dialog Icon -->
     <icon>
-        <default xlink:href="images/odt2braille-logo-185x185.png"/>
-        <high-contrast xlink:href="images/odt2braille-logo-185x185.png"/>
+        <default xlink:href="images/odt2braille-logo-small.png"/>
+        <high-contrast xlink:href="images/odt2braille-logo-small.png"/>
     </icon>
 </description>
 <!--Created with OpenOffice.org API plug-in for NetBeans Version 2.0.6-->
