@@ -1,7 +1,7 @@
 package be.docarch.odt2braille.checker;
 
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 import java.util.Date;
 import java.util.Collection;
 import java.util.Map;
@@ -19,14 +19,6 @@ import be.docarch.accessibility.RemoteRunnableChecker;
 import be.docarch.accessibility.Report;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.ODT;
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.Volume;
-
-import java.io.IOException;
-import org.xml.sax.SAXException;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.parsers.ParserConfigurationException;
 
 /**
  *
@@ -46,9 +38,9 @@ public class BrailleChecker implements RemoteRunnableChecker {
 
     static {
         try {
-            String path = BrailleChecker.class.getResource(".").getPath();
-            URL u = new URL(path.substring(0, path.lastIndexOf("lib/odt2braille.jar!")) + "liblouis");
-            Constants.setLiblouisDirectory(new File(u.getPath()));
+            String uri = BrailleChecker.class.getResource(".").toURI().toString();
+            uri = uri.substring(4, uri.lastIndexOf("lib/odt2braille.jar!")) + "liblouis";
+            Constants.setLiblouisDirectory(new File(new URI(uri)));
         } catch (Exception e) {
             logger.log(Level.SEVERE, null, e);
         }
@@ -130,17 +122,4 @@ public class BrailleChecker implements RemoteRunnableChecker {
     public String getIdentifier() {
         return "http://docarch.be/odt2braille/checker/BrailleChecker";
     }
-
- /* public Date getLastCheckDate() {
-
-        try {
-            if (lastChecked != null) {
-                return dateFormat.parse(dateFormat.format(lastChecked));
-            } else {
-                return null;
-            }
-        } catch (java.text.ParseException ex) {
-            return null;
-        }
-    } */
 }

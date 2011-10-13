@@ -24,7 +24,8 @@ import com.sun.star.container.NoSuchElementException;
 import com.sun.star.rdf.RepositoryException;
 
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-import be.docarch.accessibility.Check;
+import be.docarch.accessibility.Issue;
+import be.docarch.accessibility.Constants;
 
 /**
  *
@@ -44,11 +45,9 @@ public class ReportWriter {
     private static XURI EARL_ASSERTOR;
     private static XURI EARL_ASSERTION;
     private static XURI EARL_ASSERTEDBY;
-    private static XURI EARL_SOFTWARE;
-    private static XURI CHECKER_LASTCHECKED;
-    private static XURI CHECKER_DOCUMENT;
-
-    public final String CHECKER_CHECKS = "http://www.docarch.be/accessibility/checks#";
+    private static XURI A11Y_DOCUMENT;
+    private static XURI A11Y_CHECKER;
+    private static XURI DCT_DATE;
 
     private XRepository xRepository;
     private XComponentContext context;
@@ -56,7 +55,6 @@ public class ReportWriter {
     private PostConversionBrailleChecker checker;
     private XNamedGraph currentGraph;
     private XResource currentAssertor;
-    private Date lastChecked;
     private SimpleDateFormat dateFormat;
     private boolean modified;
 
@@ -69,21 +67,21 @@ public class ReportWriter {
         
         try {
 
-            RDF_TYPE =            URI.create(context, "http://www.w3.org/1999/02/22-rdf-syntax-ns#type");
-            EARL_TESTRESULT =     URI.create(context, "http://www.w3.org/ns/earl#TestResult");
-            EARL_TESTSUBJECT =    URI.create(context, "http://www.w3.org/ns/earl#TestSubject");
-            EARL_TESTCASE =       URI.create(context, "http://www.w3.org/ns/earl#TestCase");
-            EARL_OUTCOME =        URI.create(context, "http://www.w3.org/ns/earl#outcome");
-            EARL_FAILED =         URI.create(context, "http://www.w3.org/ns/earl#failed");
-            EARL_RESULT =         URI.create(context, "http://www.w3.org/ns/earl#result");
-            EARL_SUBJECT =        URI.create(context, "http://www.w3.org/ns/earl#subject");
-            EARL_TEST =           URI.create(context, "http://www.w3.org/ns/earl#test");
-            EARL_ASSERTION =      URI.create(context, "http://www.w3.org/ns/earl#Assertion");
-            EARL_ASSERTEDBY =     URI.create(context, "http://www.w3.org/ns/earl#assertedBy");
-            EARL_SOFTWARE =       URI.create(context, "http://www.w3.org/ns/earl#Software");
-            EARL_ASSERTOR =       URI.create(context, "http://www.w3.org/ns/earl#Assertor");
-            CHECKER_LASTCHECKED = URI.create(context, "http://www.docarch.be/accessibility/lastChecked");
-            CHECKER_DOCUMENT =    URI.create(context, "http://www.docarch.be/accessibility/types#document");
+            RDF_TYPE =            URI.createKnown(context, com.sun.star.rdf.URIs.RDF_TYPE);
+            EARL_TESTRESULT =     URI.create(context, Constants.EARL_TESTRESULT);
+            EARL_TESTSUBJECT =    URI.create(context, Constants.EARL_TESTSUBJECT);
+            EARL_TESTCASE =       URI.create(context, Constants.EARL_TESTCASE);
+            EARL_OUTCOME =        URI.create(context, Constants.EARL_OUTCOME);
+            EARL_FAILED =         URI.create(context, Constants.EARL_FAILED);
+            EARL_RESULT =         URI.create(context, Constants.EARL_RESULT);
+            EARL_SUBJECT =        URI.create(context, Constants.EARL_SUBJECT);
+            EARL_TEST =           URI.create(context, Constants.EARL_TEST);
+            EARL_ASSERTION =      URI.create(context, Constants.EARL_ASSERTION);
+            EARL_ASSERTEDBY =     URI.create(context, Constants.EARL_ASSERTEDBY);
+            EARL_ASSERTOR =       URI.create(context, Constants.EARL_ASSERTOR);
+            A11Y_DOCUMENT =       URI.create(context, Constants.A11Y_DOCUMENT);
+            A11Y_CHECKER =        URI.create(context, Constants.A11Y_CHECKER);
+            DCT_DATE =            URI.create(context, Constants.DCT_DATE);
 
             XTextDocument textDocument = (XTextDocument)UnoRuntime.queryInterface(XTextDocument.class, doc);
             XModel xModel = (XModel) UnoRuntime.queryInterface(XModel.class, textDocument);
@@ -102,9 +100,8 @@ public class ReportWriter {
 
         String metaFolder = "meta/";
         XURI metaFolderURI = URI.create(context, xDMA.getNamespace() + metaFolder);
-        lastChecked = new Date();
         String reportName = PostConversionBrailleChecker.class.getCanonicalName()
-                                + "/" + new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss").format(lastChecked) + ".rdf";
+                                + "/" + new SimpleDateFormat("yyyy-MM-dd'T'HH.mm.ss").format(new Date()) + ".rdf";
 
         XURI type = URI.create(context, checker.getIdentifier());
         for (XURI graph : xDMA.getMetadataGraphsWithType(type)) {
@@ -122,43 +119,36 @@ public class ReportWriter {
         currentGraph = xRepository.getGraph(graphURI);
 
         currentAssertor = URI.create(context, checker.getIdentifier());
-        addStatement(currentAssertor, RDF_TYPE, EARL_SOFTWARE);
         addStatement(currentAssertor, RDF_TYPE, EARL_ASSERTOR);
+        addStatement(currentAssertor, RDF_TYPE, A11Y_CHECKER);
 
         modified = false;
 
         XBlankNode subject = xRepository.createBlankNode();
         addStatement(subject, RDF_TYPE, EARL_TESTSUBJECT);
-        addStatement(subject, RDF_TYPE, CHECKER_DOCUMENT);
+        addStatement(subject, RDF_TYPE, A11Y_DOCUMENT);
 
-        for (Check issue : checker.getDetectedIssues()) {
-            XURI testcase = URI.createNS(context, CHECKER_CHECKS, issue.getIdentifier());
+        for (Issue issue : checker.getDetectedIssues()) {
+
+            XURI testcase = URI.createNS(context, Constants.A11Y_CHECKS, issue.getCheck().getIdentifier());
             addStatement(testcase, RDF_TYPE, EARL_TESTCASE);
-            addAssertion(subject, testcase);
+
+            XBlankNode assertion = xRepository.createBlankNode();
+            XBlankNode testresult = xRepository.createBlankNode();
+
+            addStatement(testresult, RDF_TYPE, EARL_TESTRESULT);
+            addStatement(testresult, EARL_OUTCOME, EARL_FAILED);
+            addStatement(testresult, DCT_DATE, Literal.create(context, dateFormat.format(issue.getCheckDate())));
+            addStatement(assertion, RDF_TYPE, EARL_ASSERTION);
+            addStatement(assertion, EARL_RESULT, testresult);
+            addStatement(assertion, EARL_TEST, testcase);
+            addStatement(assertion, EARL_SUBJECT, subject);
+            addStatement(assertion, EARL_ASSERTEDBY, currentAssertor);
+
+            modified = true;
         }
 
         return modified;
-    }
-
-    private void addAssertion(XResource subject,
-                              XURI check)
-                       throws IllegalArgumentException,
-                              RepositoryException,
-                              NoSuchElementException {
-
-        XBlankNode assertion = xRepository.createBlankNode();
-        XBlankNode testresult = xRepository.createBlankNode();
-
-        addStatement(testresult, RDF_TYPE, EARL_TESTRESULT);
-        addStatement(testresult, EARL_OUTCOME, EARL_FAILED);
-        addStatement(testresult, CHECKER_LASTCHECKED, Literal.create(context, dateFormat.format(lastChecked)));
-        addStatement(assertion, RDF_TYPE, EARL_ASSERTION);
-        addStatement(assertion, EARL_RESULT, testresult);
-        addStatement(assertion, EARL_TEST, check);
-        addStatement(assertion, EARL_SUBJECT, subject);
-        addStatement(assertion, EARL_ASSERTEDBY, currentAssertor);
-
-        modified = true;
     }
 
     private void addStatement(XResource subject,

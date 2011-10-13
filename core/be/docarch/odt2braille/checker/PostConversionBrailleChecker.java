@@ -26,6 +26,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.Collection;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import java.net.MalformedURLException;
@@ -39,6 +40,7 @@ import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.XPathUtils;
 import be.docarch.accessibility.Checker;
 import be.docarch.accessibility.Check;
+import be.docarch.accessibility.Issue;
 
 /**
  * @author Bert Frees
@@ -201,7 +203,12 @@ public class PostConversionBrailleChecker implements Checker {
         return checks.get(identifier);
     }
     
-    public Set<Check> getDetectedIssues() {
-        return detectedIssues;
+    public Collection<Issue> getDetectedIssues() {
+
+        List<Issue> issues = new ArrayList<Issue>();
+        for (Check c : detectedIssues) {
+            issues.add(new Issue(null, c, this));
+        }
+        return issues;
     }
 }

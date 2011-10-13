@@ -12,7 +12,7 @@ import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import be.docarch.odt2braille.ooo.UnoAwtUtils;
 import be.docarch.odt2braille.ooo.UnoUtils;
-import be.docarch.accessibility.Check;
+import be.docarch.accessibility.Issue;
 
 /**
  *
@@ -22,7 +22,7 @@ public class BrailleCheckerDialog {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
 
-    private Collection<Check> detectedIssues;
+    private Collection<Issue> detectedIssues;
     private XWindowPeer parentWindowPeer;
     private Locale oooLocale;
 
@@ -55,8 +55,8 @@ public class BrailleCheckerDialog {
 
         String warning = L10N_warning + "\n\n" + L10N_details + ": \n";
 
-        for (Check issue : detectedIssues) {
-            warning += "\n \u2022 " + issue.getDescription(oooLocale);
+        for (Issue issue : detectedIssues) {
+            warning += "\n \u2022 " + issue.getCheck().getDescription(oooLocale);
         }
 
         warning += "\n\n" + L10N_question + "\n\n";
