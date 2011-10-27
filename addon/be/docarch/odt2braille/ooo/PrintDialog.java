@@ -23,6 +23,8 @@ import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -56,7 +58,7 @@ import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 
 /**
- * Show an OpenOffice.org dialog window for selecting the embosser device.
+ * Show an OpenOffice.org dialog window for selecting the embosser driver.
  *
  * @author   Bert Frees
  */
@@ -69,31 +71,34 @@ public class PrintDialog implements XItemListener,
     private boolean printToFile = false;
     private Embosser embosser = null;
 
+    private List<String> availableDrivers;
+    private String defaultDriver = "";
+
     private XDialog xDialog = null;
     private XControlContainer xControlContainer = null;
     private XComponent xComponent = null;
 
     private XCheckBox printToFileCheckBox = null;
-    private XListBox deviceListBox = null;
+    private XListBox driverListBox = null;
     private XNumericField numberOfCopiesField = null;
     private XButton okButton = null;
     private XButton cancelButton = null;
     private XTextComponent numberOfCopiesTextComponent = null;
 
-    private XPropertySet deviceListBoxProperties = null;
+    private XPropertySet driverListBoxProperties = null;
     private XPropertySet numberOfCopiesFieldProperties = null;
 
-    private static String _deviceListBox = "ListBox1";
+    private static String _driverListBox = "ListBox1";
     private static String _printToFileCheckBox = "CheckBox1";
     private static String _numberOfCopiesField = "NumericField1";
     private static String _okButton = "CommandButton1";
     private static String _cancelButton = "CommandButton2";
 
-    private static String _deviceLabel = "Label1";
+    private static String _driverLabel = "Label1";
     private static String _printToFileLabel = "Label2";
     private static String _numberOfCopiesLabel = "Label3";
 
-    private String L10N_deviceLabel = null;
+    private String L10N_driverLabel = null;
     private String L10N_printToFileLabel = null;
     private String L10N_numberOfCopiesLabel = null;
     private String L10N_okButton = null;
@@ -107,12 +112,19 @@ public class PrintDialog implements XItemListener,
      * @param   xContext
      */
     public PrintDialog(XComponentContext xContext,
-                       Embosser embosser)
+                       Embosser embosser,
+                       String driver)
                 throws com.sun.star.uno.Exception {
 
         logger.entering("PrintDialog", "<init>");
 
         this.embosser = embosser;
+        if (driver != null) { defaultDriver = driver; }
+        
+        availableDrivers = new ArrayList<String>();
+        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+        PrintService[] printers = PrintServiceLookup.lookupPrintServices(flavor, null);
+        for (PrintService p : printers) { availableDrivers.add(p.getName()); }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";
@@ -123,7 +135,7 @@ public class PrintDialog implements XItemListener,
               oooLocale = Locale.ENGLISH; }
         ResourceBundle bundle = ResourceBundle.getBundle(L10N, oooLocale);
 
-        L10N_deviceLabel = bundle.getString("deviceLabel") + ":";
+        L10N_driverLabel = bundle.getString("deviceLabel") + ":";
         L10N_printToFileLabel = bundle.getString("printToFileLabel");
         L10N_numberOfCopiesLabel = "Number of copies:"; // numberOfCopiesLabel
         L10N_okButton = bundle.getString("embossButton");
@@ -135,8 +147,8 @@ public class PrintDialog implements XItemListener,
         xControlContainer = (XControlContainer)UnoRuntime.queryInterface(XControlContainer.class, xDialog);
         xComponent = (XComponent)UnoRuntime.queryInterface(XComponent.class, xDialog);
 
-        deviceListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
-                            xControlContainer.getControl(_deviceListBox));
+        driverListBox = (XListBox) UnoRuntime.queryInterface(XListBox.class,
+                            xControlContainer.getControl(_driverListBox));
         printToFileCheckBox = (XCheckBox) UnoRuntime.queryInterface(XCheckBox.class,
                             xControlContainer.getControl(_printToFileCheckBox));
         numberOfCopiesField = (XNumericField) UnoRuntime.queryInterface(XNumericField.class,
@@ -150,8 +162,8 @@ public class PrintDialog implements XItemListener,
 
         XPropertySet windowProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, xDialog)).getModel());
-        deviceListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
-                ((XControl)UnoRuntime.queryInterface(XControl.class, deviceListBox)).getModel());
+        driverListBoxProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
+                ((XControl)UnoRuntime.queryInterface(XControl.class, driverListBox)).getModel());
         numberOfCopiesFieldProperties = (XPropertySet)UnoRuntime.queryInterface(XPropertySet.class,
                 ((XControl)UnoRuntime.queryInterface(XControl.class, numberOfCopiesField)).getModel());
 
@@ -188,8 +200,8 @@ public class PrintDialog implements XItemListener,
         cancelButton.setLabel(L10N_cancelButton);
 
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
-                        xControlContainer.getControl(_deviceLabel));
-        xFixedText.setText(L10N_deviceLabel);
+                        xControlContainer.getControl(_driverLabel));
+        xFixedText.setText(L10N_driverLabel);
         xFixedText = (XFixedText) UnoRuntime.queryInterface(XFixedText.class,
                         xControlContainer.getControl(_printToFileLabel));
         xFixedText.setText(L10N_printToFileLabel);
@@ -197,15 +209,16 @@ public class PrintDialog implements XItemListener,
                         xControlContainer.getControl(_numberOfCopiesLabel));
         xFixedText.setText(L10N_numberOfCopiesLabel);
 
-        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
-        PrintService[] printers = PrintServiceLookup.lookupPrintServices(flavor, null);
-
         short i = 0;
-        for (PrintService p : printers) {
-            deviceListBox.addItem(p.getName(), i);
+        for (String device : availableDrivers) {
+            driverListBox.addItem(device, i);
             i++;
-        } 
-        deviceListBox.selectItemPos((short)0, true);
+        }
+        if (availableDrivers.contains(defaultDriver)) {
+            driverListBox.selectItemPos((short)availableDrivers.indexOf(defaultDriver), true);
+        } else {
+            driverListBox.selectItemPos((short)0, true);
+        }
 
         numberOfCopiesField.setDecimalDigits((short)0);
         numberOfCopiesField.setMin((double)1);
@@ -216,14 +229,14 @@ public class PrintDialog implements XItemListener,
 
         short ret = xDialog.execute();
 
-        String deviceName = deviceListBox.getSelectedItem();
+        String selectedDriver = driverListBox.getSelectedItem();
 
         xComponent.dispose();
 
         logger.exiting("PrintDialog", "execute");
 
         if (ret == ((short) PushButtonType.OK_value)) {
-            return deviceName;
+            return selectedDriver;
         } else {
             return "";
         }
@@ -232,7 +245,7 @@ public class PrintDialog implements XItemListener,
     public void updateProperties() throws com.sun.star.uno.Exception {
 
         printToFile = (printToFileCheckBox.getState() == (short) 1);
-        deviceListBoxProperties.setPropertyValue("Enabled", !printToFile);
+        driverListBoxProperties.setPropertyValue("Enabled", !printToFile);
     }
 
     public boolean getPrintToFile() {

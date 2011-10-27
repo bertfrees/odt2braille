@@ -2,11 +2,13 @@ package be.docarch.odt2braille.setup;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import java.util.NoSuchElementException;
+import java.nio.charset.UnsupportedCharsetException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.CustomSheetPaper;
@@ -19,6 +21,7 @@ import org.daisy.braille.embosser.EmbosserCatalog;
 import org.daisy.braille.embosser.EmbosserProperties.PrintMode;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.table.TableCatalog;
+import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.tools.Length;
 import org.daisy.paper.Paper;
 import org.daisy.paper.SheetPaper;
@@ -349,8 +352,13 @@ public class EmbossConfiguration implements Serializable,
         @Override
         public boolean accept(Table value) {
             if (value == null) { return false; }
-            if (getEightDots() ^ value.newBrailleConverter().supportsEightDot()) { return false; }
-            return getEmbosser().supportsTable(value);
+            try {
+                BrailleConverter converter = value.newBrailleConverter();
+                if (getEightDots() ^ converter.supportsEightDot()) { return false; }
+                return getEmbosser().supportsTable(value);
+            } catch (UnsupportedCharsetException e) {
+                return false;
+            }
         }
         
         public Collection<Table> options() {
@@ -434,7 +442,7 @@ public class EmbossConfiguration implements Serializable,
 
         public boolean refresh() {
             options.clear();
-            Collection<Paper.Type> types = new HashSet<Paper.Type>();
+            Set<Paper.Type> types = new HashSet<Paper.Type>();
             for (Paper p : paperCatalog.list()) {
                 if (getEmbosser().supportsPaper(p)) {
                     options.add(p);
@@ -447,6 +455,10 @@ public class EmbossConfiguration implements Serializable,
                     case TRACTOR: options.add(customTractorPaper); break;
                     case ROLL: options.add(customRollPaper); break;
                 }
+            }
+            // Braille Box: only predefined paper sizes
+            if (getEmbosser().getIdentifier().equals(INDEX_BRAILLE_BOX_V4)) {
+                options.remove(customSheetPaper);
             }
             if (accept(paper)) { return update(paper); }
             try {

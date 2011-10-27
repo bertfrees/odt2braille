@@ -39,8 +39,7 @@
         <!-- XSLT Parameters  -->
 
         <xsl:param name="paramBodyMatterEnabled"              as="xsd:boolean"  select="true()"  />
-            <xsl:param name="paramAllVolumes"                 as="xsd:boolean"  select="true()"  />
-                <xsl:param name="paramVolumeId"               as="xsd:string"   select="''"      />
+            <xsl:param name="paramVolumeId"                   as="xsd:string"   select="''"      />
 
         <xsl:param name="paramFrontMatterEnabled"             as="xsd:boolean"  select="false()" />
             <xsl:param name="paramExtendedFront"              as="xsd:boolean"  select="false()" />
@@ -143,9 +142,7 @@
     <xsl:template match="dtb:bodymatter">
 
         <xsl:choose>
-            <xsl:when test="(($paramBodyMatterEnabled or $paramTableOfContentEnabled)
-                                    and $paramAllVolumes)
-                                or ($paramTableOfContentEnabled and $paramExtendedToc)">
+            <xsl:when test="$paramTableOfContentEnabled and $paramExtendedToc">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume"/>
                 </xsl:copy>
@@ -165,9 +162,7 @@
 
     <xsl:template match="dtb:rearmatter">
         <xsl:choose>
-            <xsl:when test="(($paramRearMatterEnabled or $paramTableOfContentEnabled)
-                                    and $paramAllVolumes)
-                                or ($paramTableOfContentEnabled and $paramExtendedToc)">
+            <xsl:when test="$paramTableOfContentEnabled and $paramExtendedToc">
                 <xsl:copy>
                     <xsl:apply-templates select="dtb:volume"/>
                 </xsl:copy>

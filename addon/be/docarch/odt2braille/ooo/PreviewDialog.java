@@ -272,14 +272,19 @@ public class PreviewDialog implements XItemListener,
                                         XWindowPeer.class, parentWindow);
         XToolkit toolkit = parentWindowPeer.getToolkit();
 
-        XWindowPeer windowPeer = createWindow(toolkit, parentWindowPeer, WindowClass.SIMPLE, "dialog",
-                       WindowAttribute.CLOSEABLE + WindowAttribute.BORDER + WindowAttribute.SIZEABLE + WindowAttribute.MOVEABLE + WindowAttribute.SHOW,
-                       2*100, 2*100, MIN_WIDTH, MIN_HEIGHT);
+        int windowWidth = MIN_WIDTH;
+        int windowHeight = MIN_HEIGHT;
+
+        XWindowPeer windowPeer = createWindow(toolkit, parentWindowPeer, 2*100, 2*100, windowWidth, windowHeight);
 
         window = (XWindow)UnoRuntime.queryInterface(XWindow.class, windowPeer);
         frame = (XFrame)UnoRuntime.queryInterface(XFrame.class, xMCF.createInstanceWithContext("com.sun.star.frame.Frame", xContext));
         frame.initialize(window);
         window.addWindowListener(this);
+
+        Rectangle windowRectangle = window.getPosSize();
+        windowWidth = windowRectangle.Width;
+        windowHeight = windowRectangle.Height;
 
         XControl nextButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", X_NEXT_BUTTON, 2*7, 2*24, 2*14);
         XControl backButtonControl = createControl(xMCF, xContext, toolkit, windowPeer, "Button", X_BACK_BUTTON, 2*7, 2*24, 2*14);
@@ -288,7 +293,7 @@ public class PreviewDialog implements XItemListener,
         XControl volumesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_VOLUMES_LISTBOX, 2*8, 2*69, 2*12);
         XControl sectionsListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_SECTIONS_LISTBOX, 2*8, 2*68, 2*12);
         XControl pagesListBoxControl = createControl(xMCF, xContext, toolkit, windowPeer, "ListBox", X_PAGES_LISTBOX, 2*8, 2*46, 2*12);
-        XControl previewFieldControl = createControl(xMCF, xContext, toolkit, windowPeer, "Edit", 0, Y_PREVIEW_FIELD, MIN_WIDTH, MIN_HEIGHT - Y_PREVIEW_FIELD);
+        XControl previewFieldControl = createControl(xMCF, xContext, toolkit, windowPeer, "Edit", 0, Y_PREVIEW_FIELD, windowWidth, windowHeight - Y_PREVIEW_FIELD);
 
         nextButton = (XButton)UnoRuntime.queryInterface(XButton.class, nextButtonControl);
         backButton = (XButton)UnoRuntime.queryInterface(XButton.class, backButtonControl);
@@ -335,9 +340,6 @@ public class PreviewDialog implements XItemListener,
 
     private XWindowPeer createWindow(XToolkit toolkit,
                                      XWindowPeer parent,
-                                     WindowClass type,
-                                     String service,
-                                     int attrs,
                                      int x,
                                      int y,
                                      int width,
@@ -352,12 +354,16 @@ public class PreviewDialog implements XItemListener,
             rectangle.Height = height;
 
             WindowDescriptor aWindowDescriptor = new WindowDescriptor();
-            aWindowDescriptor.Type = type;
-            aWindowDescriptor.WindowServiceName = service;
+            aWindowDescriptor.Type = WindowClass.SIMPLE;
+            aWindowDescriptor.WindowServiceName = "dialog";
             aWindowDescriptor.ParentIndex = -1;
             aWindowDescriptor.Bounds = rectangle;
             aWindowDescriptor.Parent = parent;
-            aWindowDescriptor.WindowAttributes = attrs;
+            aWindowDescriptor.WindowAttributes = WindowAttribute.CLOSEABLE +
+                                                 WindowAttribute.BORDER +
+                                                 WindowAttribute.SIZEABLE +
+                                                 WindowAttribute.MOVEABLE +
+                                                 WindowAttribute.SHOW;
 
             return toolkit.createWindow(aWindowDescriptor);
 

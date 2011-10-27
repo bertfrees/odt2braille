@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import java.util.logging.Handler;
@@ -595,18 +596,38 @@ public class UnoGUI {
 
             } else {
 
-                PrintDialog printDialog = new PrintDialog(xContext, embosser);
-                String deviceName = printDialog.execute();
+                // Set default driver
+                File driverSettings = new File(packageLocation + File.separator + "settings" + File.separator + "driver.properties");
+                Properties prop = new Properties();
+                if (driverSettings.exists()) {
+                    FileInputStream inputStream = new FileInputStream(driverSettings);
+                    if (inputStream != null) {
+                        prop.load(inputStream);
+                        inputStream.close();
+                    }
+                }
 
-                if (deviceName.equals("")) {
+                PrintDialog printDialog = new PrintDialog(xContext, embosser, prop.getProperty("default"));
+                String driver = printDialog.execute();
+
+                if (driver.equals("")) {
                     logger.log(Level.INFO, "User cancelled emboss dialog");
                     return;
+                }
+
+                // Remember driver
+                if (!driverSettings.exists()) { driverSettings.createNewFile(); }
+                FileOutputStream outputStream = new FileOutputStream(driverSettings);
+                if (outputStream != null) {
+                    prop.setProperty("default", driver);
+                    prop.store(outputStream, null);
+                    outputStream.close();
                 }
 
                 if (!printDialog.getPrintToFile()) {
 
                     // Print to device
-                    if(!handlePef.embossToDevice(deviceName, embossSettings)) {
+                    if(!handlePef.embossToDevice(driver, embossSettings)) {
                         return;
                     }
 
@@ -701,7 +722,7 @@ public class UnoGUI {
         try {
 
             InputStream input = new FileInputStream(
-                    new File(packageLocation + "/settings/embosser.xml"));
+                    new File(packageLocation + File.separator + "settings" + File.separator + "embosser.xml"));
             return (EmbossConfiguration)ConfigurationDecoder.readObject(input);
 
         } catch (Exception e) {
@@ -714,7 +735,7 @@ public class UnoGUI {
         try {
 
             OutputStream output = new FileOutputStream(
-                    new File(packageLocation + "/settings/embosser.xml"));
+                    new File(packageLocation + File.separator + "settings" + File.separator + "embosser.xml"));
             ConfigurationEncoder.writeObject(config, output);
 
         } catch (Exception e) {

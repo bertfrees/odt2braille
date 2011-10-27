@@ -80,7 +80,6 @@ public class Interpoint55PrintDialog implements XActionListener,
     private final static String L10N = Constants.OOO_L10N_PATH;
 
     private Interpoint55Embosser embosser = null;
-  //private SettingsIO settingsIO = null;
 
     private XComponentContext xContext = null;
 
@@ -150,8 +149,6 @@ public class Interpoint55PrintDialog implements XActionListener,
 
         this.embosser = embosser;
         this.xContext = xContext;
-
-      //settingsIO = new SettingsIO(xContext, xDesktopComponent);
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/Interpoint55PrintDialog.xdl";
@@ -239,14 +236,14 @@ public class Interpoint55PrintDialog implements XActionListener,
         logger.entering("Interpoint55PrintDialog", "execute");
 
         setLabels();
-        loadEmbossSettings();
+        //loadEmbossSettings();
         setDialogValues();
         addActionListeners();
         short ret = xDialog.execute();
         getDialogValues();
         xComponent.dispose();
         if (ret == ((short) PushButtonType.OK_value)) {
-            saveEmbossSettings();
+            //saveEmbossSettings();
             if (overWriteIniFile && !printToFile) {
                 overWriteIniFile();
             }

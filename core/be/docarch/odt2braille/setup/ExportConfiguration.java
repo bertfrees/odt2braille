@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.logging.Logger;
 
 import java.util.NoSuchElementException;
+import java.nio.charset.UnsupportedCharsetException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.FileFormatCatalog;
@@ -13,6 +14,7 @@ import be.docarch.odt2braille.FileFormatCatalog;
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.table.Table;
+import org.daisy.braille.table.BrailleConverter;
 import org.daisy.braille.table.TableCatalog;
 
 public class ExportConfiguration implements Serializable,
@@ -198,8 +200,13 @@ public class ExportConfiguration implements Serializable,
         @Override
         public boolean accept(Table value) {
             if (value == null) { return false; }
-            if (getEightDots() ^ value.newBrailleConverter().supportsEightDot()) { return false; }
-            return fileFormat.get().supportsTable(value);
+            try {
+                BrailleConverter converter = value.newBrailleConverter();
+                if (getEightDots() ^ converter.supportsEightDot()) { return false; }
+                return fileFormat.get().supportsTable(value);
+            } catch (UnsupportedCharsetException e) {
+                return false;
+            }
         }
         
         public Collection<Table> options() {

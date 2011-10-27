@@ -1531,13 +1531,16 @@ public class ODT {
         }
     }
 
-    public boolean getBodyMatter(File saveToFile)
+    public boolean getBodyMatter(File saveToFile,
+                                 Volume volume)
                           throws IOException,
                                  SAXException,
                                  TransformerConfigurationException,
                                  TransformerException,
                                  ConversionException,
                                  Exception {
+
+        if (volume instanceof PreliminaryVolume) { throw new ConversionException(); }
 
         // Dependencies
         lockConfiguration();
@@ -1554,7 +1557,7 @@ public class ODT {
         splitVolumesXSL.setParameter("paramFrontMatterEnabled", false);
         splitVolumesXSL.setParameter("paramBodyMatterEnabled", true);
         splitVolumesXSL.setParameter("paramRearMatterEnabled", true);
-        splitVolumesXSL.setParameter("paramAllVolumes", true);
+        splitVolumesXSL.setParameter("paramVolumeId", volume.getIdentifier());
         splitVolumesXSL.setParameter("paramNoteSectionTitle", configuration.getEndNotesPageTitle());
         splitVolumesXSL.setParameter("paramContinuedHeadingSuffix", configuration.continuedSuffix);
         
@@ -1650,7 +1653,6 @@ public class ODT {
 
         splitVolumesXSL.setParameter("paramBodyMatterEnabled", false);
         splitVolumesXSL.setParameter("paramRearMatterEnabled", false);
-        splitVolumesXSL.setParameter("paramAllVolumes", false);
         splitVolumesXSL.setParameter("paramVolumeId", (volume instanceof PreliminaryVolume) ? "" : volume.getIdentifier());
         splitVolumesXSL.setParameter("paramFrontMatterEnabled", volume.getFrontMatter());
         splitVolumesXSL.setParameter("paramTableOfContentEnabled", volume.getTableOfContent());

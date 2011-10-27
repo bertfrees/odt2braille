@@ -23,8 +23,8 @@
 	
 # Volumes
 
-    newPageBefore volume \*\evs
-    generic       &xpath(//dtb:volume[not(preceding::dtb:volume) and not(preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])]) \*\evs
+    newPageBefore volume
+    generic       &xpath(//dtb:volume[not(preceding::dtb:volume) and not(preceding::dtb:frontmatter[not(descendant::dtb:div[@class='toc'])])])
 	
 # Special Typefaces
 # Languages
