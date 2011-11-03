@@ -36,8 +36,6 @@
 
             exclude-result-prefixes="xsd style text table fo office draw" >
 
-            <xsl:variable name="all-styles" select="$styles | $automatic-styles" />
-
     <xsl:template name="is-empty">
         <xsl:param name="node" />
         <xsl:choose>

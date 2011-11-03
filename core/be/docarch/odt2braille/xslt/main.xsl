@@ -111,6 +111,7 @@
         <xsl:variable name="controller"       select="doc($controller-url)" />
         <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
         <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
+        <xsl:variable name="all-styles"       select="$styles | $automatic-styles" />
         <xsl:variable name="body"             select="/office:document-content/office:body" />
         <xsl:variable name="stylesheet"       select="document('')/xsl:stylesheet" />
 
@@ -536,15 +537,16 @@ INLINE ELEMENTS
                 </xsl:choose>
             </xsl:variable>
 
+            <!-- TODO: functies 'get-language' en 'get-country' toevoegen die ook kijkt naar parent styles !! -->
             <xsl:variable name="language">
-                <xsl:if test="$automatic-styles/style:style[@style:name=($style-name)]
+                <xsl:if test="$all-styles/style:style[@style:name=($style-name)]
                               /style:text-properties/@fo:language">
-                    <xsl:value-of select="$automatic-styles/style:style[@style:name=($style-name)]
+                    <xsl:value-of select="$all-styles/style:style[@style:name=($style-name)][1]
                                           /style:text-properties/@fo:language" />
-                    <xsl:if test="$automatic-styles/style:style[@style:name=($style-name)]
+                    <xsl:if test="$all-styles/style:style[@style:name=($style-name)]
                                   /style:text-properties/@fo:country">
                         <xsl:text>-</xsl:text>
-                        <xsl:value-of select="$automatic-styles/style:style[@style:name=($style-name)]
+                        <xsl:value-of select="$all-styles/style:style[@style:name=($style-name)][1]
                                               /style:text-properties/@fo:country"  />
                     </xsl:if>
                 </xsl:if>

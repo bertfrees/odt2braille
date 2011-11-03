@@ -41,6 +41,7 @@
         <xsl:param    name="styles-url"       as="xsd:string" />
         <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
         <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
+        <xsl:variable name="all-styles"       select="$styles | $automatic-styles" />
         <xsl:variable name="body"             select="/office:document-content/office:body" />
 
         <xsl:include href="common-templates.xsl" />

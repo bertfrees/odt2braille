@@ -255,14 +255,13 @@ public class Configuration implements Serializable {
     /*********************/
     /* PRIVATE CONSTANTS */
     /*********************/
-
-    private final ODT odtTransformer;
     
     private final String L10N_transcribersNotesPageTitle;
     private final String L10N_specialSymbolListTitle;
     private final String L10N_endNotesPageTitle;
     private final String L10N_tableOfContentTitle;
     private final String L10N_continuedSuffix;
+    private final String L10N_volume;
     private final String L10N_supplement;
     private final String L10N_preliminary;
     private final String L10N_transcriptionInfo;
@@ -282,18 +281,23 @@ public class Configuration implements Serializable {
     /***************/
     /* CONSTRUCTOR */
     /***************/
-    
-    protected Configuration(ODT transformer)
+
+    // for compatibility
+    public static Configuration newInstance() throws IOException,
+                                                     SAXException,
+                                                     Exception {
+        return ConfigurationBuilder.build();
+    }
+
+    protected Configuration(ODT odt)
                      throws IOException,
                             SAXException {
 
         logger.entering("Configuration","<init>");
 
-        odtTransformer = transformer;
-
-      //File odtContentFile = odtTransformer.getOdtContentFile();
-        File odtStylesFile = transformer.getOdtStylesFile();
-        File odtMetaFile = transformer.getOdtMetaFile();
+      //File odtContentFile = odt.getOdtContentFile();
+        File odtStylesFile = odt.getOdtStylesFile();
+        File odtMetaFile = odt.getOdtMetaFile();
         
         PAGE_NUMBER_IN_HEADER_FOOTER = XPathUtils.evaluateBoolean(odtStylesFile.toURL().openStream(),
                     "//office:master-styles//style:header/text:p/text:page-number or " +
@@ -315,7 +319,7 @@ public class Configuration implements Serializable {
             CREATOR = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/meta:initial-creator/text()",namespace);
         }
 
-        rootSection = transformer.extractSectionTree();
+        rootSection = odt.extractSectionTree();
         allSections = new ArrayList<String>();
 
         try {
@@ -329,10 +333,11 @@ public class Configuration implements Serializable {
 
         volumeSectionsMap = new HashMap<String,SectionVolume>();
 
-        String[] languages = transformer.extractLanguages();
+        String[] languages = odt.extractLanguages();
 
         ResourceBundle bundle = ResourceBundle.getBundle(Constants.L10N_PATH, stringToLocale(languages[0]));
 
+        L10N_volume = bundle.getString("volume");
         L10N_supplement = bundle.getString("supplement");
         L10N_preliminary = bundle.getString("preliminary");
         L10N_transcribersNotesPageTitle = bundle.getString("transcribersNotesPageTitle");
@@ -380,8 +385,8 @@ public class Configuration implements Serializable {
       //supplementaryPageNumberFormat = new SupplementaryPageNumberFormatSetting();
         beginningBraillePageNumber = new BeginningBraillePageNumberSetting();
 
-        paragraphStyles = new ParagraphStyleMap(transformer.extractParagraphStyles());
-        characterStyles = new CharacterStyleMap(transformer.extractCharacterStyles());
+        paragraphStyles = new ParagraphStyleMap(odt.extractParagraphStyles());
+        characterStyles = new CharacterStyleMap(odt.extractCharacterStyles());
         headingStyles = new HeadingStyleMap();
         tableStyles = new TableStyleMap();
         listStyles = new ListStyleMap();
@@ -449,7 +454,7 @@ public class Configuration implements Serializable {
             titlePageSection.set("TitlePage");
         }
 
-        bodyMatterVolume.setTitle("Volume @i");
+        bodyMatterVolume.setTitle(capitalizeFirstLetter(L10N_volume) + " @i");
         rearMatterVolume.setTitle(capitalizeFirstLetter(L10N_supplement));
         preliminaryVolume.setTitle(capitalizeFirstLetter(L10N_preliminary));
         

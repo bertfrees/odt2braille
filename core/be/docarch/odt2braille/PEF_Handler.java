@@ -46,7 +46,7 @@ import org.daisy.braille.embosser.UnsupportedWidthException;
  *
  * @author  Bert Frees
  */
-public class PefHandler {
+public class PEF_Handler {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String TMP_NAME = Constants.TMP_PREFIX;
@@ -56,13 +56,10 @@ public class PefHandler {
 
     /**
      * Creates a new <code>PEFHandler</code> instance.
-     *
-     * @param  pefUrl      The URL of the .pef file.
-     * @param  settings    The braille settings.
      */
-    public PefHandler(PEF pef) {
+    public PEF_Handler(PEF pef) {
 
-        logger.entering("HandlePEF", "<init>");
+        logger.entering("PEFHandler", "<init>");
 
         this.pef = pef;
     }
@@ -73,14 +70,14 @@ public class PefHandler {
                                     SAXException,
                                     UnsupportedWidthException {
 
-        logger.entering("HandlePEF", "convertToSingleFile");
+        logger.entering("PEFHandler", "convertToSingleFile");
 
         File output = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
         output.deleteOnExit();
 
         convertToFile(format, pef.getSinglePEF(), output);
 
-        logger.exiting("HandlePEF", "convertToSingleFile");
+        logger.exiting("PEFHandler", "convertToSingleFile");
 
         return output;
     }
@@ -92,7 +89,7 @@ public class PefHandler {
                                  SAXException,
                                  ConversionException {
 
-        logger.entering("HandlePEF", "convertToFiles");
+        logger.entering("PEFHandler", "convertToFiles");
 
         File[] outputFiles;
         File[] pefFiles;
@@ -110,7 +107,7 @@ public class PefHandler {
             
         }
 
-        logger.exiting("HandlePEF", "convertToFiles");
+        logger.exiting("PEFHandler", "convertToFiles");
 
         return outputFiles;
     }
@@ -118,7 +115,6 @@ public class PefHandler {
     /**
      * Convert to a generic braille file.
      *
-     * @param   type    {@link BrailleFileType#BRF}, {@link BrailleFileType#BRF_INTERPOINT} or {@link BrailleFileType#BRL}.
      * @param   output  The location where the output file will be saved.
      */
     private boolean convertToFile(FileFormat format,
@@ -129,7 +125,7 @@ public class PefHandler {
                                   SAXException,
                                   UnsupportedWidthException {
 
-        logger.entering("HandlePEF", "convertToFile");
+        logger.entering("PEFHandler", "convertToFile");
 
         // TableCatalog uses the context class loader
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -146,13 +142,13 @@ public class PefHandler {
 
         } Thread.currentThread().setContextClassLoader(cl);
 
-        logger.exiting("HandlePEF", "convertToFile");
+        logger.exiting("PEFHandler", "convertToFile");
 
         return true;
     }
 
     /**
-     * Convert to an embosser-specific braille file. The embosser type is specified in the braille settings.
+     * Convert to an embosser-specific braille file. The embosser type is specified in embossSettings.
      *
      * @param   output  The location where the output file will be saved.
      */
@@ -163,7 +159,7 @@ public class PefHandler {
                                 SAXException,
                                 UnsupportedWidthException {
 
-        logger.entering("HandlePEF", "embossToFile");
+        logger.entering("PEFHandler", "embossToFile");
 
         int offset = 0;
         int topOffset = 0;
@@ -190,17 +186,13 @@ public class PefHandler {
 
         } Thread.currentThread().setContextClassLoader(cl);
 
-        logger.exiting("HandlePEF", "embossToFile");
+        logger.exiting("PEFHandler", "embossToFile");
 
         return true;
     }
 
     /**
-     * Print the .pef file on a braille embosser. The embosser type is specified in the braille settings.
-     * If the "Interpoint 55" was selected, the .pef file is converted to a .brf file
-     * that can be interpreted by the wprint55 program, and wprint55 is executed. Otherwise,
-     * the .pef file is converted to the appropriate embosser-specific braille format with <code>embossToFile</code>
-     * and send to the specified printer device.
+     * Print the PEF file on a braille embosser. The embosser type is specified in embossSettings.
      *
      * @param   deviceName    The name of the printer device.
      */
@@ -212,7 +204,7 @@ public class PefHandler {
                                   SAXException,
                                   UnsupportedWidthException {
 
-        logger.entering("HandlePEF", "embossToDevice");
+        logger.entering("PEFHandler", "embossToDevice");
 
         File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
         prnFile.deleteOnExit();
@@ -223,7 +215,7 @@ public class PefHandler {
         PrinterDevice bd = new PrinterDevice(deviceName, true);
         bd.transmit(prnFile);
 
-        logger.exiting("HandlePEF", "embossToDevice");
+        logger.exiting("PEFHandler", "embossToDevice");
 
         return true;
     }

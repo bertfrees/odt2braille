@@ -20,6 +20,7 @@
 package be.docarch.odt2braille.checker;
 
 import java.io.File;
+import java.util.Date;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Set;
@@ -206,8 +207,9 @@ public class PostConversionBrailleChecker implements Checker {
     public Collection<Issue> getDetectedIssues() {
 
         List<Issue> issues = new ArrayList<Issue>();
+        Date date = new Date();
         for (Check c : detectedIssues) {
-            issues.add(new Issue(null, c, this));
+            issues.add(new Issue(null, c, this, date));
         }
         return issues;
     }

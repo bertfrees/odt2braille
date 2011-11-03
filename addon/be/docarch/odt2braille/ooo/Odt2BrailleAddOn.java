@@ -41,6 +41,8 @@ public final class Odt2BrailleAddOn extends WeakBase
               com.sun.star.lang.XInitialization,
               com.sun.star.frame.XDispatch
 {
+    private static final boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
+
     private final XComponentContext m_xContext;
     private com.sun.star.frame.XFrame m_xFrame;
     private static final String m_implementationName = Odt2BrailleAddOn.class.getName();
@@ -88,22 +90,16 @@ public final class Odt2BrailleAddOn extends WeakBase
     }
 
     @Override
-    public com.sun.star.frame.XDispatch queryDispatch( com.sun.star.util.URL aURL,
-                                                       String sTargetFrameName,
-                                                       int iSearchFlags )
-    {
-        if ( aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon"))
-        {
-            if ( aURL.Path.compareTo("SettingsCommand") == 0 ||
-                 aURL.Path.compareTo("FormatCommand") == 0 ) {
-                return this;
-            } else if (aURL.Path.compareTo("ExportCommand") == 0) {
-                return this;
-            } else if (aURL.Path.compareTo("EmbossCommand") == 0) {
-                return this;
-            } else if (aURL.Path.compareTo("InsertDotPatternCommand") == 0) {
-                return this;
-            } else if (aURL.Path.compareTo("InsertSixKeysCommand") == 0) {
+    public com.sun.star.frame.XDispatch queryDispatch(com.sun.star.util.URL aURL,
+                                                      String sTargetFrameName,
+                                                      int iSearchFlags) {
+
+        if (aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon")) {
+            if (aURL.Path.compareTo("FormatCommand") == 0 ||
+                aURL.Path.compareTo("ExportCommand") == 0 ||
+               (aURL.Path.compareTo("EmbossCommand") == 0  && !IS_MAC_OS) ||
+                aURL.Path.compareTo("InsertDotPatternCommand") == 0 ||
+                aURL.Path.compareTo("InsertSixKeysCommand") == 0) {
                 return this;
             }
         }
@@ -139,81 +135,28 @@ public final class Odt2BrailleAddOn extends WeakBase
     }
 
     @Override
-     public void dispatch( com.sun.star.util.URL aURL,
-                           com.sun.star.beans.PropertyValue[] aArguments )
-    {
-         if ( aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon"))
-        {
-             if ( aURL.Path.compareTo("SettingsCommand") == 0  ||
-                  aURL.Path.compareTo("FormatCommand") == 0) {
+    public void dispatch(com.sun.star.util.URL aURL,
+                         com.sun.star.beans.PropertyValue[] aArguments) {
 
-                 UnoGUI unoGui = null;
+        UnoGUI unoGui = null;
 
-                 try {
-                     unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.changeSettings();
-                 } finally {
-                     unoGui.cleanLogger();
-                 }
+        try {
 
-                 return;
-             }
-             
-             else if ( aURL.Path.compareTo("ExportCommand") == 0 ) {
+            if (aURL.Protocol.startsWith("be.docarch.odt2braille.ooo.odt2brailleaddon")) {
 
-                 UnoGUI unoGui = null;
+                unoGui = new UnoGUI(m_xContext, m_xFrame);
 
-                 try {
-                     unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.exportBraille();
-                 } finally {
-                     unoGui.cleanLogger();
-                 }
-
-                 return;
-             }
-
-             else if ( aURL.Path.compareTo("EmbossCommand") == 0 ) {
-
-                 UnoGUI unoGui = null;
-
-                 try {
-                     unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.embossBraille();
-                 } finally {
-                     unoGui.cleanLogger();
-                 }
-
-                 return;
-             }
-
-             else if ( aURL.Path.compareTo("InsertDotPatternCommand") == 0 ) {
-
-                 UnoGUI unoGui = null;
-
-                 try {
-                     unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.insertBraille();
-                 } finally {
-                     unoGui.cleanLogger();
-                 }
-
-                 return;
-             }
-
-             else if ( aURL.Path.compareTo("InsertSixKeysCommand") == 0 ) {
-
-                 UnoGUI unoGui = null;
-
-                 try {
-                     unoGui = new UnoGUI(m_xContext, m_xFrame);
-                     unoGui.sixKeyEntryMode();
-                 } finally {
-                     unoGui.cleanLogger();
-                 }
-
-                 return;
-             }
+                     if (aURL.Path.compareTo("FormatCommand") == 0)               { unoGui.changeSettings(); }
+                else if (aURL.Path.compareTo("ExportCommand") == 0 )              { unoGui.exportBraille(); }
+                else if (aURL.Path.compareTo("EmbossCommand") == 0 && !IS_MAC_OS) { unoGui.embossBraille(); }
+                else if (aURL.Path.compareTo("EmbossCommand") == 0)               { unoGui.embossBrailleAlternative(); }
+                else if (aURL.Path.compareTo("InsertDotPatternCommand") == 0 )    { unoGui.insertBraille(); }
+                else if (aURL.Path.compareTo("InsertSixKeysCommand") == 0 )       { unoGui.sixKeyEntryMode(); }
+            }
+        } finally {
+            if (unoGui != null) {
+                unoGui.cleanLogger();
+            }
         }
     }
 

@@ -803,23 +803,31 @@ getBraillePageString (void)
 	sprintf (brlPageString, "p%d", ud->braille_page_number);
       break;
     case roman:
-      strcpy (brlPageString, LETSIGN);
+      strcpy (brlPageString, " ");  // Bert Frees 28/10/2011
+      strcat (brlPageString, LETSIGN);
       strcat (brlPageString, makeRomanNumber (ud->braille_page_number));
       translationLength = strlen (brlPageString);
       break;
     case romancaps:
-      strcpy (brlPageString, LETSIGN);
+      strcpy (brlPageString, " "); // Bert Frees 28/10/2011
+      strcat (brlPageString, LETSIGN);
       strcat (brlPageString, makeRomanCapsNumber (ud->braille_page_number));
       translationLength = strlen (brlPageString);
       break;
     }
-
   for (k = 0; k < translationLength; k++)
     translationBuffer[k] = brlPageString[k];
   if (!lou_translateString (ud->mainBrailleTable, translationBuffer,
 			    &translationLength, ud->braille_page_string,
 			    &translatedLength, NULL, NULL, 0))
     return 0;
+  switch (ud->cur_brl_page_num_format) {  // Bert Frees 28/10/2011
+    case roman: case romancaps:
+      translatedLength--;
+      for (k = 0; k < translatedLength; k++)
+        ud->braille_page_string[k] = ud->braille_page_string[k+1];
+      ud->braille_page_string[k] = 0;
+  }
   ud->braille_page_string[translatedLength] = 0;
   widecharcpy(&(pageNumberString[pageNumberLength]), ud->braille_page_string, translatedLength);
   pageNumberLength += translatedLength;

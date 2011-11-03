@@ -49,6 +49,7 @@ import com.sun.star.awt.XTextListener;
 import com.sun.star.awt.ItemEvent;
 import com.sun.star.awt.TextEvent;
 import com.sun.star.awt.XButton;
+import com.sun.star.awt.XPrinterServer;
 import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
@@ -122,9 +123,19 @@ public class PrintDialog implements XItemListener,
         if (driver != null) { defaultDriver = driver; }
         
         availableDrivers = new ArrayList<String>();
-        DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+
+     /* DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
         PrintService[] printers = PrintServiceLookup.lookupPrintServices(flavor, null);
-        for (PrintService p : printers) { availableDrivers.add(p.getName()); }
+        for (PrintService p : printers) { availableDrivers.add(p.getName()); } */
+
+        XPrinterServer printerServer = (XPrinterServer)UnoRuntime.queryInterface(
+                                         XPrinterServer.class, xContext.getServiceManager().createInstanceWithContext(
+                                         "com.sun.star.awt.PrinterServer", xContext));
+        if (printerServer != null) {
+            for (String p : printerServer.getPrinterNames()) {
+                availableDrivers.add(p);
+            }
+        }
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(xContext);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/PrintDialog.xdl";

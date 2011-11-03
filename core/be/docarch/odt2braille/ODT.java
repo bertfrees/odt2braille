@@ -153,10 +153,10 @@ public class ODT {
     private Map<String,ParagraphStyle> automaticParagraphStyles = new TreeMap<String,ParagraphStyle>();
 
     public ODT(File odtFile)
-                   throws IOException,
-                          TransformerConfigurationException,
-                          TransformerException,
-                          ParserConfigurationException {
+        throws IOException,
+               TransformerConfigurationException,
+               TransformerException,
+               ParserConfigurationException {
         
         this (odtFile, null);
     }
@@ -169,11 +169,11 @@ public class ODT {
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
     public ODT(File odtFile,
-                          StatusIndicator statusIndicator)
-                   throws IOException,
-                          TransformerConfigurationException,
-                          TransformerException,
-                          ParserConfigurationException {
+               StatusIndicator statusIndicator)
+        throws IOException,
+               TransformerConfigurationException,
+               TransformerException,
+               ParserConfigurationException {
 
         logger.entering("ODT","<init>");
 

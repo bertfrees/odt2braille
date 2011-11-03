@@ -87,7 +87,7 @@ import be.docarch.odt2braille.setup.EmbossConfiguration;
 import be.docarch.odt2braille.setup.ConfigurationDecoder;
 import be.docarch.odt2braille.setup.ConfigurationEncoder;
 import be.docarch.odt2braille.ODT;
-import be.docarch.odt2braille.PefHandler;
+import be.docarch.odt2braille.PEF_Handler;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.LiblouisXMLException;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
@@ -361,7 +361,7 @@ public class UnoGUI {
             } else {
 
                 // Create PEFHandler entity
-                PefHandler handlePef = new PefHandler(pef);
+                PEF_Handler handlePef = new PEF_Handler(pef);
 
                 // Convert to Braille File
                 if (exportSettings.getMultipleFiles()) {
@@ -544,8 +544,8 @@ public class UnoGUI {
                 return;
             }
 
-            // Create EmbossPEF entity
-            PefHandler handlePef = new PefHandler(pef);
+            // Create PEFHandler entity
+            PEF_Handler handlePef = new PEF_Handler(pef);
 
             // Load embosser with paper
             Embosser embosser = embossSettings.getEmbosser();
@@ -672,6 +672,55 @@ public class UnoGUI {
         }
     }
 
+    public void embossBrailleAlternative() {
+    
+        logger.entering("UnoGUI", "embossBrailleMacOS");
+
+        ODT odt = null;
+        ProgressBar progressBar = null;
+
+        try {
+
+           //Start progress bar
+            progressBar = new ProgressBar(xFrame, oooLocale);
+            progressBar.start();
+            progressBar.setSteps(2);
+            progressBar.setStatus("Analysing document, loading settings...");
+
+            odt = openODT(progressBar);
+            loadConfiguration(odt);
+            ExportConfiguration exportSettings = loadExportConfiguration();
+
+            progressBar.finish(true);
+            progressBar.close();
+
+            PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
+            PEF pef = ODT2PEFConverter.convert(odt, exportSettings, checker, progressBar);
+
+            BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
+            if (!checkerDialog.execute()) {
+                logger.log(Level.INFO, "User cancelled export on warning");
+                return;
+            }
+
+
+
+            // TODO: Launch e2u.jar with PEF file as input
+
+
+
+
+            logger.exiting("UnoGUI", "embossBrailleMacOS");
+
+        } catch (Exception ex) {
+            handleUnexpectedException(ex);
+        } finally {
+            if (odt != null) {
+                odt.close();
+            }
+        }
+    }
+
     public void sixKeyEntryMode (){
 
         logger.entering("UnoGUI", "sixKeyEntryMode");
@@ -765,11 +814,11 @@ public class UnoGUI {
                 XStorable.class, xFrame.getController().getModel());
         storable.storeToURL(odtUnoUrl, conversionProperties);
         
-        progressBar.increment();
+        if (progressBar != null) { progressBar.increment(); }
         
         ODT odt = new ODT(odtFile, progressBar);
 
-        progressBar.increment();
+        if (progressBar != null) { progressBar.increment(); }
         
         logger.exiting("UnoGUI", "openODT");
         
