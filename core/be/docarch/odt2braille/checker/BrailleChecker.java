@@ -14,9 +14,9 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import net.sf.saxon.TransformerFactoryImpl;
 
-import be.docarch.accessibility.Check;
-import be.docarch.accessibility.RemoteRunnableChecker;
-import be.docarch.accessibility.Report;
+import be.docarch.accessodf.Check;
+import be.docarch.accessodf.RemoteRunnableChecker;
+import be.docarch.accessodf.Report;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.ODT;
 
@@ -57,8 +57,8 @@ public class BrailleChecker implements RemoteRunnableChecker {
                     new StreamSource(getClass().getResource(Constants.XSLT_PATH + "earl.xsl").toString()));
 
             earlXSL.setParameter("checkerID",                 getIdentifier());
-            earlXSL.setParameter("paramNoBrailleToc",         be.docarch.accessibility.Constants.A11Y_CHECKS + BrailleCheck.ID.A_NoBrailleToc.name());
-            earlXSL.setParameter("paramOmittedCaption",       be.docarch.accessibility.Constants.A11Y_CHECKS + BrailleCheck.ID.A_OmittedCaption.name());
+            earlXSL.setParameter("paramNoBrailleToc",         be.docarch.accessodf.Constants.A11Y_CHECKS + BrailleCheck.ID.A_NoBrailleToc.name());
+            earlXSL.setParameter("paramOmittedCaption",       be.docarch.accessodf.Constants.A11Y_CHECKS + BrailleCheck.ID.A_OmittedCaption.name());
 
             earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
             earlReport.deleteOnExit();

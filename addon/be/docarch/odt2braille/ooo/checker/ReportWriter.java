@@ -24,8 +24,8 @@ import com.sun.star.container.NoSuchElementException;
 import com.sun.star.rdf.RepositoryException;
 
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-import be.docarch.accessibility.Issue;
-import be.docarch.accessibility.Constants;
+import be.docarch.accessodf.Issue;
+import be.docarch.accessodf.Constants;
 
 /**
  *

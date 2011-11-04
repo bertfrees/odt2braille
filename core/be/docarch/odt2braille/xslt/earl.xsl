@@ -32,8 +32,8 @@
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
             xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
-            xmlns:ns1="http://www.docarch.be/accessibility-checker/"
-            xmlns:ns2="http://www.docarch.be/accessibility-checker/types#"
+            xmlns:ns1="http://www.docarch.be/accessodf/"
+            xmlns:ns2="http://www.docarch.be/accessodf/types#"
             xmlns:ns3="http://www.docarch.be/odt2braille/"
 
             exclude-result-prefixes="xsl xsd rdf earl foaf dct">

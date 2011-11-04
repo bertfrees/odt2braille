@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Release Number -->
-    <version value="0.1.1.rc23"/>
+    <version value="0.1.1"/>
     <!-- Platform Target (set with ANT) -->
     <platform value="@platform-oxt@"/>
     <!-- Identifier -->
     <identifier value="be.docarch.odt2braille.ooo.odt2brailleaddon"/>
-    <!-- OpenOffice.org Minimal Version -->
+    <!-- OpenOffice.org Minimal Version: TODO -->
+	
     <!-- Auto Update Link -->
     <update-information>
         <src xlink:href="http://odt2braille.sf.net/atom/update.feed.xml"/>
@@ -43,4 +44,3 @@
         <high-contrast xlink:href="images/odt2braille-logo-small.png"/>
     </icon>
 </description>
-<!--Created with OpenOffice.org API plug-in for NetBeans Version 2.0.6-->

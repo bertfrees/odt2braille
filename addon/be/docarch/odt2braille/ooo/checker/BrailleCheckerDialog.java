@@ -12,7 +12,7 @@ import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import be.docarch.odt2braille.ooo.UnoAwtUtils;
 import be.docarch.odt2braille.ooo.UnoUtils;
-import be.docarch.accessibility.Issue;
+import be.docarch.accessodf.Issue;
 
 /**
  *

@@ -33,7 +33,6 @@ import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserWriter;
 import org.daisy.braille.facade.PEFConverterFacade;
-import org.daisy.braille.pef.PEFHandler;
 import org.daisy.printing.PrinterDevice;
 
 import org.daisy.braille.embosser.UnsupportedWidthException;
@@ -46,7 +45,7 @@ import org.daisy.braille.embosser.UnsupportedWidthException;
  *
  * @author  Bert Frees
  */
-public class PEF_Handler {
+public class PEFHandler {
 
     private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String TMP_NAME = Constants.TMP_PREFIX;
@@ -57,7 +56,7 @@ public class PEF_Handler {
     /**
      * Creates a new <code>PEFHandler</code> instance.
      */
-    public PEF_Handler(PEF pef) {
+    public PEFHandler(PEF pef) {
 
         logger.entering("PEFHandler", "<init>");
 
@@ -132,12 +131,12 @@ public class PEF_Handler {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
             EmbosserWriter writer = format.newEmbosserWriter(new FileOutputStream(output));
-            PEFHandler.Builder builder = new PEFHandler.Builder(writer)
+            org.daisy.braille.pef.PEFHandler handler = new org.daisy.braille.pef.PEFHandler.Builder(writer)
                               .range(null)
                               .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
                               .offset(0)
-                              .topOffset(0);
-            PEFHandler handler = builder.build();
+                              .topOffset(0)
+                              .build();
             PEFConverterFacade.parsePefFile(input, handler);
 
         } Thread.currentThread().setContextClassLoader(cl);
@@ -176,12 +175,12 @@ public class PEF_Handler {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
             EmbosserWriter writer = embosser.newEmbosserWriter(new FileOutputStream(output));
-            PEFHandler.Builder builder = new PEFHandler.Builder(writer)
+            org.daisy.braille.pef.PEFHandler handler = new org.daisy.braille.pef.PEFHandler.Builder(writer)
                               .range(null)
                               .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
                               .offset(offset)
-                              .topOffset(topOffset);
-            PEFHandler handler = builder.build();
+                              .topOffset(topOffset)
+                              .build();
             PEFConverterFacade.parsePefFile(pef.getSinglePEF(), handler);
 
         } Thread.currentThread().setContextClassLoader(cl);

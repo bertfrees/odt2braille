@@ -87,7 +87,7 @@ import be.docarch.odt2braille.setup.EmbossConfiguration;
 import be.docarch.odt2braille.setup.ConfigurationDecoder;
 import be.docarch.odt2braille.setup.ConfigurationEncoder;
 import be.docarch.odt2braille.ODT;
-import be.docarch.odt2braille.PEF_Handler;
+import be.docarch.odt2braille.PEFHandler;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.LiblouisXMLException;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
@@ -361,7 +361,7 @@ public class UnoGUI {
             } else {
 
                 // Create PEFHandler entity
-                PEF_Handler handlePef = new PEF_Handler(pef);
+                PEFHandler handlePef = new PEFHandler(pef);
 
                 // Convert to Braille File
                 if (exportSettings.getMultipleFiles()) {
@@ -545,7 +545,7 @@ public class UnoGUI {
             }
 
             // Create PEFHandler entity
-            PEF_Handler handlePef = new PEF_Handler(pef);
+            PEFHandler handlePef = new PEFHandler(pef);
 
             // Load embosser with paper
             Embosser embosser = embossSettings.getEmbosser();

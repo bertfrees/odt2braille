@@ -3,7 +3,7 @@ package be.docarch.odt2braille.checker;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.MissingResourceException;
-import be.docarch.accessibility.Check;
+import be.docarch.accessodf.Check;
 
 /**
  *

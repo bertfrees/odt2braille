@@ -39,9 +39,9 @@ import be.docarch.odt2braille.setup.PEFConfiguration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.XPathUtils;
-import be.docarch.accessibility.Checker;
-import be.docarch.accessibility.Check;
-import be.docarch.accessibility.Issue;
+import be.docarch.accessodf.Checker;
+import be.docarch.accessodf.Check;
+import be.docarch.accessodf.Issue;
 
 /**
  * @author Bert Frees
