@@ -1,7 +1,7 @@
 /**
  *  odt2braille - Braille authoring in OpenOffice.org.
  *
- *  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+ *  Copyright (c) 2010-2011 by DocArch <http://www.docarch.be>.
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU Lesser General Public License as
@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
-package be.docarch.odt2braille;
+ 
+ package be.docarch.odt2braille;
 
 public class LiblouisXMLInstallationException extends LiblouisXMLException {
 

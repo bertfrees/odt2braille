@@ -8,6 +8,9 @@
     <identifier value="be.docarch.odt2braille.ooo.odt2brailleaddon"/>
     <!-- OpenOffice.org Minimal Version: TODO -->
 	
+    <dependencies>
+        <OpenOffice.org-minimal-version value="3.1" name="OpenOffice.org 3.1"/>
+    </dependencies>
     <!-- Auto Update Link -->
     <update-information>
         <src xlink:href="http://odt2braille.sf.net/atom/update.feed.xml"/>
