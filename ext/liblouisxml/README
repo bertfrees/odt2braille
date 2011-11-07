@@ -21,6 +21,7 @@ Windows/Mac
  + roman caps (Windows)
  + softreturn change (Windows)
  + roman numbers > 1000(Windows)
+ + roman numbers bug fix (cap sign) (Windows)
  
  => %ODT2BRAILLE_HOME%/tables/liblouisxml/src/branch_win_mac
 

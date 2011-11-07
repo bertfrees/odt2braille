@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package be.docarch.odt2braille;
+
+package be.docarch.odt2braille;
 
 /**
  * Exception that is called when the <code>xml2brl</code> program returns an error or doesn't terminate correctly.

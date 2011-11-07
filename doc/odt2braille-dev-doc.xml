@@ -80,13 +80,13 @@
   <section id="building">
    <title lang="en">Building</title>
    
-   <para lang="en">The project is build with Apache Ant. First <code>cd</code> to the odt2braille home directory. Before building you should edit the file <code>build.&lt;platform&gt;.properties</code>. The following targets are available:</para>
+   <para lang="en">The project is build with Apache Ant. First <code>cd</code> to the odt2braille home directory. Before building you should edit the file <code>build.&lt;platform&gt;.properties</code>. The following targets are available (see also <code>ant -projecthelp</code>):</para>
    <itemizedlist>
 	<listitem>
      <para><code>ant uno-package</code> : package the extension file (.oxt)</para>
 	</listitem>
 	<listitem>
-     <para><code>ant uno-run</code> : package the extension file (.oxt) and run it in OpenOffice.org.</para>
+     <para><code>ant uno-run</code> : package the extension file (.oxt) and deploy it in Writer.</para>
 	</listitem>
 	<listitem>
      <para><code>ant addon-jar</code> : build the extension jar</para>

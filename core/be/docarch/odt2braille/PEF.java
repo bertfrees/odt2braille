@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package be.docarch.odt2braille;
+
+package be.docarch.odt2braille;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -255,7 +255,7 @@ public class PEF {
 
             Volume volume = volumes.get(volumeCount);
 
-            // Body sections
+            // Body section
 
             logger.info("Processing volume " + (volumeCount + 1) + " : " + volume.getTitle());
 
@@ -292,7 +292,7 @@ public class PEF {
                 extractSpecialSymbols(bodyFile, volume, volumeCount, settings);
             }
 
-            // Preliminary sections
+            // Preliminary section
 
             if (volume.getFrontMatter() ||
                 volume.getTableOfContent() ||
@@ -301,7 +301,7 @@ public class PEF {
 
                 preliminaryFile = File.createTempFile(TMP_NAME, ".daisy.front." + (volumeCount + 1) + ".xml", TMP_DIR);
                 preliminaryFile.deleteOnExit();
-
+				
                 odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
                 liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                 liblouisXML.run();
@@ -310,12 +310,10 @@ public class PEF {
                 int pageCount = countPages(brailleFile, volume);
                 volume.setNumberOfPreliminaryPages(pageCount);
 
-                // Translate again with updated volume info
-                if (volume.getFrontMatter() && settings.getVolumeInfoEnabled()) {
-                    odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
-                    liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getTableOfContent()?volume.getFirstBraillePage():1);
-                    liblouisXML.run();
-                }
+                // Translate again with updated volume info and without volume separator marks
+                odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
+                liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getTableOfContent()?volume.getFirstBraillePage():1);
+                liblouisXML.run();
 
                 // Read pages
                 sectionElement = document.createElementNS(pefNS, "section");

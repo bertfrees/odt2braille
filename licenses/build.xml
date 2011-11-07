@@ -6,7 +6,7 @@
     
     <target name="java-headers">
         <loadfile property="javaheader" srcFile="java-header.txt"/>
-        <replaceregexp match="(/\*.*\*/.*)??^package " flags="sm"
+        <replaceregexp match="(/\*.*\*/.*)??package " flags="sm"
                        replace="${javaheader}package ">
             <fileset dir="..">
                 <include name="core/**/*.java"/>
@@ -17,7 +17,7 @@
 	
 	<target name="xslt-headers">
         <loadfile property="xsltheader" srcFile="xslt-header.txt"/>
-        <replaceregexp match="(^&lt;\?xml.*?\?>$)??.*?^&lt;xsl:stylesheet" flags="sm"
+        <replaceregexp match="(^&lt;\?xml.*?\?>$)??.*?&lt;xsl:stylesheet" flags="sm"
                        replace="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>${xsltheader}&lt;xsl:stylesheet">
             <fileset dir="..">
                 <include name="core/**/*.xsl"/>

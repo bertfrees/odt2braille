@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package be.docarch.odt2braille.ooo.dialog;
+
+package be.docarch.odt2braille.ooo.dialog;
 
 import com.sun.star.awt.ItemEvent;
 import com.sun.star.uno.UnoRuntime;

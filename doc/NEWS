@@ -210,11 +210,17 @@ Localisation:
 Version 0.1.1
 =============================
 
+!! oude bewaarde settings verloren
+
 bugs fixed:
 
 - Math
 - Multiple files checkbox
-- ...
+- Empty pages
+- Error when document contains only headings, tables, images, lists, .. but no paragraphs
+- Roman page numbers in preliminary pages
+- Embossers
+- Multiple languages
 
 embossers:
 
@@ -233,6 +239,7 @@ changes:
 - settings are stored elsewhere (not in custom properties)
 - export: filename01.brf, filename02.brf, .. if more than 9 parts
 - free to name sections (PreliminaryPages, TitlePage, Volume1, Volume2, Supplement1, ...)
+- Remember default printer
 
 added:
 
@@ -245,6 +252,7 @@ added:
 - volume management settings: automatic splitting in volumes
 - setting for hyphenation: minimum length of splitted parts
 - formulas: inline instead of as block
+- page number settings: Roman caps
 
 new tables:
 - Serbian

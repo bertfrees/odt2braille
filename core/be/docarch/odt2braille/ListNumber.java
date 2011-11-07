@@ -16,8 +16,8 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
- 
- package be.docarch.odt2braille;
+
+package be.docarch.odt2braille;
 
 /**
  * A <code>ListNumber</code> instance keeps track of the numbering of an OpenOffice.org list (or the sequence of OpenOffice.org headings).
