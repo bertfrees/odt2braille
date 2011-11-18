@@ -246,7 +246,7 @@ public class Configuration implements Serializable {
     /* PRIVATE STATIC CONSTANTS */
     /****************************/
 
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final Logger logger = Constants.getLogger();
     private static final NamespaceContext namespace = new NamespaceContext();
 
 

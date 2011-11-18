@@ -39,7 +39,7 @@ import be.docarch.accessodf.Issue;
  */
 public class BrailleCheckerDialog {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
 
     private Collection<Issue> detectedIssues;
     private XWindowPeer parentWindowPeer;

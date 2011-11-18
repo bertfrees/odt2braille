@@ -90,7 +90,7 @@ public class ExportConfiguration implements Serializable,
     /* PRIVATE STATIC CONSTANTS */
     /****************************/
 
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final Logger logger = Constants.getLogger();
     
     /****************************/
     /* PRIVATE CONSTANTS */

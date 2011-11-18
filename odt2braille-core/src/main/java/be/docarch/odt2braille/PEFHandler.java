@@ -47,9 +47,9 @@ import org.daisy.braille.embosser.UnsupportedWidthException;
  */
 public class PEFHandler {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
     private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final File TMP_DIR = Constants.getTempDirectory();
 
     private PEF pef = null;
 

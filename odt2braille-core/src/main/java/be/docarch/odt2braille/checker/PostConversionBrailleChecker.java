@@ -48,7 +48,7 @@ import be.docarch.accessodf.Issue;
  */
 public class PostConversionBrailleChecker implements Checker {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
 
     private Map<String,Check> checks;
 

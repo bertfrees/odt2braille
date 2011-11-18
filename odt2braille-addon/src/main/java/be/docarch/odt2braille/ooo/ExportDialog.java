@@ -43,6 +43,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.PropertyVetoException;
 
 import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.ooo.dialog.*;
@@ -55,12 +56,12 @@ import org.daisy.braille.embosser.FileFormat;
  */
 public class ExportDialog {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
+    private final static StatusIndicator statusIndicator = Constants.getStatusIndicator();
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
     private final Configuration settings;
     private final XComponentContext context;
-    private final ProgressBar progressbar;
     private final XDialog dialog;
     private final XComponent component;
     private final XControl control;
@@ -96,15 +97,13 @@ public class ExportDialog {
 
     public ExportDialog(XComponentContext ctxt,
                         ExportConfiguration exportSettings,
-                        Configuration cfg,
-                        ProgressBar pb)
+                        Configuration cfg)
                  throws com.sun.star.uno.Exception {
 
         logger.entering("ExportDialog", "<init>");
 
         this.settings = cfg;
         this.context = ctxt;
-        this.progressbar = pb;
 
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(context);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/ExportDialog.xdl";
@@ -142,12 +141,12 @@ public class ExportDialog {
                 if (event.Source.equals(button)) {
                     try {
                         if (settingsDialog == null) {
-                            progressbar.start();
-                            progressbar.setSteps(SettingsDialog.getSteps());
-                            progressbar.setStatus("Loading settings...");
-                            settingsDialog = new SettingsDialog(context, settings, progressbar);
-                            progressbar.finish(true);
-                            progressbar.close();
+                            statusIndicator.start();
+                            statusIndicator.setSteps(SettingsDialog.getSteps());
+                            statusIndicator.setStatus("Loading settings...");
+                            settingsDialog = new SettingsDialog(context, settings);
+                            statusIndicator.finish(true);
+                            statusIndicator.close();
                         }
                         settingsDialog.execute();
                     } catch (com.sun.star.uno.Exception e) {
