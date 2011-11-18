@@ -31,11 +31,11 @@ public abstract class Odt2BrailleTest {
     static {
 
         XMLUnit.setIgnoreWhitespace(true);
-        Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+        Logger logger = Constants.getLogger();
 
         try {
 
-            File logFile = File.createTempFile(Constants.TMP_PREFIX, ".log", Constants.getTmpDirectory());
+            File logFile = File.createTempFile(Constants.TMP_PREFIX, ".log", Constants.getTempDirectory());
           //logFile.deleteOnExit();
             Handler fh = new FileHandler(logFile.getAbsolutePath());
             fh.setFormatter(new SimpleFormatter());
@@ -83,7 +83,7 @@ public abstract class Odt2BrailleTest {
         settings.setBraillePageNumbers(false);
         settings.setPageSeparator(false);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         return pefBuilder.getSinglePEF();
     }

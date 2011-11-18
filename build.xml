@@ -11,7 +11,7 @@
     <tstamp><format property="ISO-TODAY" pattern="yyyy-MM-dd"/></tstamp>
     
     <property name="project-name" value="odt2braille"/>
-    <property name="release-version" value="0.1.1.rc10"/>
+    <property name="release-version" value="0.1.2.rc1"/>
 	
     <property name="on-debian" value="false"/>
 
@@ -368,7 +368,7 @@
         </copy>
     </target>
     
-    <!-- build core jar -->
+    <!-- build tools jar -->
     <target name="-build-tools" depends="-compile-tools">
 		<delete file="${dist.tools.jar}"/>
         <jar destfile="${dist.tools.jar}">

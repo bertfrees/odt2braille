@@ -45,7 +45,7 @@ import be.docarch.odt2braille.ODT;
  */
 public class BrailleChecker implements RemoteRunnableChecker {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
 
     private File odtFile = null;
     private File earlReport = null;
@@ -79,7 +79,7 @@ public class BrailleChecker implements RemoteRunnableChecker {
             earlXSL.setParameter("paramNoBrailleToc",         be.docarch.accessodf.Constants.A11Y_CHECKS + BrailleCheck.ID.A_NoBrailleToc.name());
             earlXSL.setParameter("paramOmittedCaption",       be.docarch.accessodf.Constants.A11Y_CHECKS + BrailleCheck.ID.A_OmittedCaption.name());
 
-            earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTmpDirectory());
+            earlReport = File.createTempFile(Constants.TMP_PREFIX, ".earl.rdf.xml", Constants.getTempDirectory());
             earlReport.deleteOnExit();
 
             checks = new HashMap<String,Check>();

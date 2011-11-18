@@ -31,7 +31,7 @@ public class TextBoxesTest extends Odt2BrailleTest {
         frameStyle.setPaddingAbove(0);
         frameStyle.setPaddingBelow(0);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

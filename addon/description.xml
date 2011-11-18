@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
     <!-- Release Number -->
-    <version value="0.1.1"/>
+    <version value="0.1.2.rc1"/>
     <!-- Platform Target (set with ANT) -->
     <platform value="@platform-oxt@"/>
     <!-- Identifier -->
     <identifier value="be.docarch.odt2braille.ooo.odt2brailleaddon"/>
-    <!-- OpenOffice.org Minimal Version: TODO -->
-	
+    <!-- OpenOffice.org Minimal Version -->
     <dependencies>
         <OpenOffice.org-minimal-version value="3.1" name="OpenOffice.org 3.1"/>
     </dependencies>
@@ -25,16 +24,14 @@
     </publisher>
     <!-- Description -->
     <extension-description>
-        <!-- <src xlink:href="description/desc_cs.txt"    lang="cs" /> -->
-        <!-- <src xlink:href="description/desc_da.txt"    lang="da" /> -->
-        <!-- <src xlink:href="description/desc_is.txt"    lang="is" /> -->
         <src lang="en" xlink:href="description/desc_en.txt"/>
         <src lang="ca" xlink:href="description/desc_ca.txt"/>
         <src lang="de" xlink:href="description/desc_de.txt"/>
+        <src lang="el" xlink:href="description/desc_el.txt"/>
         <src lang="es" xlink:href="description/desc_es.txt"/>
         <src lang="fr" xlink:href="description/desc_fr.txt"/>
         <src lang="it" xlink:href="description/desc_it.txt"/>
-        <src lang="" xlink:href="description/desc_nb.txt"/>
+        <src lang="nb" xlink:href="description/desc_nb.txt"/>
         <src lang="nl" xlink:href="description/desc_nl.txt"/>
         <src lang="pt" xlink:href="description/desc_pt.txt"/>
         <src lang="pt-BR" xlink:href="description/desc_pt-BR.txt"/>

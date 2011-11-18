@@ -196,16 +196,17 @@ public class EmbossConfiguration implements Serializable,
     public static final String EMFUSE =                  "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMFUSE";
     public static final String EMPRINT_SPOTDOT =         "com_viewplus.ViewPlusEmbosserProvider.EmbosserType.EMPRINT_SPOTDOT";
 
-    public static final String CUSTOM_SHEET_PAPER =      "be.docarch.odt2braille.CustomPaperProvider.PaperType.SHEET";
-    public static final String CUSTOM_ROLL_PAPER =       "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROLL";
-    public static final String CUSTOM_TRACTOR_PAPER =    "be.docarch.odt2braille.CustomPaperProvider.PaperType.TRACTOR";
-    public static final String A4_PAPER =                "org_daisy.ISO216PaperProvider.PaperSize.A4";
+    public static final String CUSTOM_SHEET_PAPER =        "be.docarch.odt2braille.CustomPaperProvider.PaperType.SHEET";
+    public static final String CUSTOM_ROLL_PAPER =         "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROLL";
+    public static final String CUSTOM_TRACTOR_PAPER =      "be.docarch.odt2braille.CustomPaperProvider.PaperType.TRACTOR";
+    public static final String CUSTOM_ROWS_COLUMNS_PAPER = "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROWS_COLUMNS";
+    public static final String A4_PAPER =                  "org_daisy.ISO216PaperProvider.PaperSize.A4";
 
     /****************************/
     /* PRIVATE STATIC CONSTANTS */
     /****************************/
 
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final Logger logger = Constants.getLogger();
     
     /*********************/
     /* PRIVATE CONSTANTS */
@@ -436,6 +437,7 @@ public class EmbossConfiguration implements Serializable,
         private Paper customSheetPaper = paperCatalog.get(CUSTOM_SHEET_PAPER);
         private Paper customTractorPaper = paperCatalog.get(CUSTOM_TRACTOR_PAPER);
         private Paper customRollPaper = paperCatalog.get(CUSTOM_ROLL_PAPER);
+        private Paper customRowsColumnsPaper = paperCatalog.get(CUSTOM_ROWS_COLUMNS_PAPER);
         private Collection<Paper> options = new HashSet();
 
         @Override
@@ -461,23 +463,29 @@ public class EmbossConfiguration implements Serializable,
 
         public boolean refresh() {
             options.clear();
-            Set<Paper.Type> types = new HashSet<Paper.Type>();
-            for (Paper p : paperCatalog.list()) {
-                if (getEmbosser().supportsPaper(p)) {
-                    options.add(p);
-                    types.add(p.getType());
+            // Generic embosser: only special rows/columns paper
+            if (getEmbosser().getIdentifier().equals(GENERIC_EMBOSSER)) {
+                options.add(customRowsColumnsPaper);
+            } else {
+                Set<Paper.Type> types = new HashSet<Paper.Type>();
+                for (Paper p : paperCatalog.list()) {
+                    if (getEmbosser().supportsPaper(p)) {
+                        options.add(p);
+                        types.add(p.getType());
+                    }
                 }
-            }
-            for (Paper.Type t : types) {
-                switch (t) {
-                    case SHEET: options.add(customSheetPaper); break;
-                    case TRACTOR: options.add(customTractorPaper); break;
-                    case ROLL: options.add(customRollPaper); break;
+                for (Paper.Type t : types) {
+                    switch (t) {
+                        case SHEET: options.add(customSheetPaper); break;
+                        case TRACTOR: options.add(customTractorPaper); break;
+                        case ROLL: options.add(customRollPaper); break;
+                    }
                 }
-            }
-            // Braille Box: only predefined paper sizes
-            if (getEmbosser().getIdentifier().equals(INDEX_BRAILLE_BOX_V4)) {
-                options.remove(customSheetPaper);
+                // Braille Box: only predefined paper sizes
+                if (getEmbosser().getIdentifier().equals(INDEX_BRAILLE_BOX_V4)) {
+                    options.remove(customSheetPaper);
+                }
+                options.remove(customRowsColumnsPaper);
             }
             if (accept(paper)) { return update(paper); }
             try {
@@ -567,14 +575,13 @@ public class EmbossConfiguration implements Serializable,
         @Override
         public boolean update(Length value) {
             if (!enabled()) { return false; }
-            if (!super.update(value)) { return false; }
             Paper p = paper.get();
             switch (p.getType()) {
                 case SHEET: ((CustomSheetPaper)p).setPageWidth(value); break;
                 case TRACTOR: ((CustomTractorPaper)p).setLengthAcrossFeed(value); break;
                 case ROLL: ((CustomRollPaper)p).setLengthAcrossFeed(value); break;
             }
-            return true;
+            return super.update(value);
         }
         public boolean refresh() {
             Paper p = paper.get();
@@ -607,13 +614,12 @@ public class EmbossConfiguration implements Serializable,
         @Override
         public boolean update(Length value) {
             if (!enabled()) { return false; }
-            if (!super.update(value)) { return false; }
             Paper p = paper.get();
             switch (p.getType()) {
                 case SHEET: ((CustomSheetPaper)p).setPageHeight(value); break;
                 case TRACTOR: ((CustomTractorPaper)p).setLengthAlongFeed(value); break;
             }
-            return true;
+            return super.update(value);
         }
         public boolean refresh() {
             Paper p = paper.get();
@@ -760,8 +766,8 @@ public class EmbossConfiguration implements Serializable,
     }
 
     public abstract class MarginSetting extends DependentNumberSetting {
-      //protected int min = 0;
-      //protected int max = 0;
+        protected int min = 0;
+        protected int max = Integer.MAX_VALUE;
         protected double unprintable = 0;
         public abstract int getOffset();
         protected boolean enabled = false;
@@ -799,16 +805,7 @@ public class EmbossConfiguration implements Serializable,
         /***********/
 
         private PrintPage printPage;
-        private Area printableArea;
-
-        private int maxMarginInner = 0;
-        private int maxMarginOuter = 0;
-        private int maxMarginTop = 0;
-        private int maxMarginBottom = 0;
-        private int minMarginInner = 0;
-        private int minMarginOuter = 0;
-        private int minMarginTop = 0;
-        private int minMarginBottom = 0;        
+        private Area printableArea;   
         
         private MarginSettings() {
         
@@ -824,7 +821,12 @@ public class EmbossConfiguration implements Serializable,
             /*******************
                SETTING LINKING
              *******************/
-            
+
+            inner.addListener(this);
+            outer.addListener(this);
+            top.addListener(this);
+            bottom.addListener(this);
+
             inner.addListener(outer);
             outer.addListener(inner);
             top.addListener(bottom);
@@ -843,13 +845,19 @@ public class EmbossConfiguration implements Serializable,
         
         private class InnerMarginSetting extends MarginSetting {
             public boolean accept(Integer value) {
-                return (value >= minMarginInner && value <= maxMarginInner);
+                return (value >= min && value <= max);
             }
             @Override
             public boolean refresh() {
                 enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printableArea.getOffsetX();
-                boolean update = update(Math.min(maxMarginInner, Math.max(minMarginInner, get())));
+                if (getEmbosser().supportsAligning()) {
+                    int cellsInWidth = getEmbosser().getMaxWidth(getPageFormat());
+                    max = Math.max(0, cellsInWidth - 1 - outer.get());
+                } else {
+                    max = 0;
+                }
+                boolean update = update(Math.min(max, Math.max(min, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
                 unprintable = newUnprintable;
                 return updateUnprintable || update;
@@ -861,13 +869,19 @@ public class EmbossConfiguration implements Serializable,
 
         private class OuterMarginSetting extends MarginSetting {
             public boolean accept(Integer value) {
-                return (value >= minMarginOuter && value <= maxMarginOuter);
+                return (value >= min && value <= max);
             }
             @Override
             public boolean refresh() {
                 enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printPage.getWidth() - printableArea.getWidth() - printableArea.getOffsetX();
-                boolean update = update(Math.min(maxMarginOuter, Math.max(minMarginOuter, get())));
+                if (getEmbosser().supportsAligning()) {
+                    int cellsInWidth = getEmbosser().getMaxWidth(getPageFormat());
+                    max = Math.max(0, cellsInWidth - 1 - inner.get());
+                } else {
+                    max = 0;
+                }
+                boolean update = update(Math.min(max, Math.max(min, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
                 unprintable = newUnprintable;
                 return updateUnprintable || update;
@@ -879,13 +893,19 @@ public class EmbossConfiguration implements Serializable,
 
         private class TopMarginSetting extends MarginSetting {
             public boolean accept(Integer value) {
-                return (value >= minMarginTop && value <= maxMarginTop);
+                return (value >= min && value <= max);
             }
             @Override
             public boolean refresh() {
                 enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printableArea.getOffsetY();
-                boolean update = update(Math.min(maxMarginTop, Math.max(minMarginTop, get())));
+                if (getEmbosser().supportsAligning()) {
+                    int linesInHeight = getEmbosser().getMaxHeight(getPageFormat());
+                    max = Math.max(0, linesInHeight - 1 - bottom.get());
+                } else {
+                    max = 0;
+                }
+                boolean update = update(Math.min(max, Math.max(min, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
                 unprintable = newUnprintable;
                 return updateUnprintable || update;
@@ -898,13 +918,19 @@ public class EmbossConfiguration implements Serializable,
 
         private class BottomMarginSetting extends MarginSetting {
             public boolean accept(Integer value) {
-                return (value >= minMarginBottom && value <= maxMarginBottom);
+                return (value >= min && value <= max);
             }
             @Override
             public boolean refresh() {
                 enabled = getEmbosser().supportsAligning() && pageFormat.isValid();
                 double newUnprintable = printPage.getHeight() - printableArea.getHeight() - printableArea.getOffsetY();
-                boolean update = update(Math.min(maxMarginBottom, Math.max(minMarginBottom, get())));
+                if (getEmbosser().supportsAligning()) {
+                    int linesInHeight = getEmbosser().getMaxHeight(getPageFormat());
+                    max = Math.max(0, linesInHeight - 1 - top.get());
+                } else {
+                    max = 0;
+                }
+                boolean update = update(Math.min(max, Math.max(min, get())));
                 boolean updateUnprintable = (unprintable != newUnprintable);
                 unprintable = newUnprintable;
                 return updateUnprintable || update;
@@ -920,44 +946,16 @@ public class EmbossConfiguration implements Serializable,
 
         public boolean refresh() {
 
-            maxMarginInner = 0;
-            maxMarginTop = 0;
-            maxMarginOuter = 0;
-            maxMarginBottom = 0;
-
             Embosser embosser = getEmbosser();
             PageFormat inputPage = getPageFormat();
 
             printPage = embosser.getPrintPage(inputPage);
             printableArea = embosser.getPrintableArea(inputPage);
 
-            int cellsInWidth = embosser.getMaxWidth(inputPage);
-            int linesInHeight = embosser.getMaxHeight(inputPage);
-
-            if (embosser.supportsAligning()) {
-
-                maxMarginInner = cellsInWidth;
-                maxMarginOuter = cellsInWidth;
-                maxMarginTop = linesInHeight;
-                maxMarginBottom = linesInHeight;
-            }
-
-            int tempMaxMarginInner = maxMarginInner;
-            int tempMaxMarginOuter = maxMarginOuter;
-            int tempMaxMarginTop = maxMarginTop;
-            int tempMaxMarginBottom = maxMarginBottom;
-            int tempMinCellsPerLine = 1;
-            int tempMinLinesPerPage = 1;
-
-            maxMarginInner =  (int)Math.min(tempMaxMarginInner,  cellsInWidth  - tempMinCellsPerLine);
-            maxMarginOuter =  (int)Math.min(tempMaxMarginOuter,  cellsInWidth  - tempMinCellsPerLine);
-            maxMarginTop =    (int)Math.min(tempMaxMarginTop,    linesInHeight - tempMinLinesPerPage);
-            maxMarginBottom = (int)Math.min(tempMaxMarginBottom, linesInHeight - tempMinLinesPerPage);
-
-            inner.fireEvent(inner.refresh(), true);
             outer.fireEvent(outer.refresh(), true);
-            top.fireEvent(top.refresh(), true);
+            inner.fireEvent(inner.refresh(), true);
             bottom.fireEvent(bottom.refresh(), true);
+            top.fireEvent(top.refresh(), true);
 
             return true;
         }

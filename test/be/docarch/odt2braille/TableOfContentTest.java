@@ -38,7 +38,7 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(3);
         level.setRunovers(9);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -70,7 +70,7 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(4);
         level.setRunovers(8);
 
-        pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         testPEF = pefBuilder.getSinglePEF();
 

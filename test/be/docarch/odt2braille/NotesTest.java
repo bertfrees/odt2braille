@@ -38,7 +38,7 @@ public class NotesTest extends Odt2BrailleTest {
         formats.get("a").setSpaceAfter(true);
         formats.get("i").setSpaceAfter(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

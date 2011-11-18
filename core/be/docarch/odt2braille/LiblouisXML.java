@@ -60,14 +60,14 @@ import org.daisy.braille.table.BrailleConverter;
  */
 public class LiblouisXML {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
 
     private final static String FILE_SEPARATOR = File.separator;
     private final static boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private final static boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
     private static final String LIBLOUISXML_EXEC_NAME = "xml2brl";
     private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final File TMP_DIR = Constants.getTempDirectory();
     private static final String LIBLOUISXML_VERSION_ATLEAST = "2.4.0";
 
     private String liblouisxmlExec = null;

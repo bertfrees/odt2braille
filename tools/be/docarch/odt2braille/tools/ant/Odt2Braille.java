@@ -51,14 +51,13 @@ public class Odt2Braille extends Task {
         try {
             if (inFile == null) { throw new BuildException("Input file not defined"); }
             if (inFile == null) { throw new BuildException("Output file not defined"); }
-            OdtTransformer tf = new OdtTransformer(inFile);
-            Configuration.setTransformer(tf);
-            Configuration config = Configuration.newInstance();
+            ODT odt = new ODT(inFile);
+            Configuration config = odt.getConfiguration();
             ExportConfiguration exportConfig = new ExportConfiguration();
             configuration.applyCommandsTo(config);
             exportConfiguration.applyCommandsTo(exportConfig);
           //ODT2PEFConverter.setLiblouisLocation();
-            PEF pef = ODT2PEFConverter.convert(config, exportConfig, null, null);
+            PEF pef = ODT2PEFConverter.convert(odt, exportConfig, null, null);
             pef.getSinglePEF().renameTo(outFile);
         } catch (BuildException e) {
             throw e;

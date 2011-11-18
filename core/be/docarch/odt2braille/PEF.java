@@ -72,14 +72,15 @@ import org.daisy.validator.Validator;
  */
 public class PEF {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
+    private final static StatusIndicator statusIndicator = Constants.getStatusIndicator();
     private static NamespaceContext namespace = new NamespaceContext();
 
     private static final BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final File TMP_DIR = Constants.getTempDirectory();
     private static final String L10N = Constants.L10N_PATH;
     private static final String pefNS = "http://www.daisy.org/ns/2008/pef";
 
@@ -87,7 +88,6 @@ public class PEF {
     private final LiblouisXML liblouisXML;
     private final ODT odt;
     private final PEFConfiguration pefSettings;
-    private final StatusIndicator statusIndicator;
     private final PostConversionBrailleChecker checker;
     private final Validator validator;
 
@@ -102,7 +102,7 @@ public class PEF {
                ConversionException,
                Exception {
 
-        this(odt, pefSettings, liblouisXML, null, null);
+        this(odt, pefSettings, liblouisXML, null);
 
     }
 
@@ -112,7 +112,6 @@ public class PEF {
      * @param flatOdtFile       The "flat XML" .odt file.
      *                          This single file is the concatenation of all XML files in a normal .odt file.
      * @param liblouisDirUrl    The URL of the liblouis executable. liblouis is used for the actual transcription to braille.
-     * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
      * @param settings          The <code>Configuration</code> that determine how the conversion is done.
      * @param checker           The <code>PostConversionBrailleChecker</code> that will check the braille document for possible accessibility issues.
      * @param oooLocale         The <code>Locale</code> for the user interface.
@@ -120,7 +119,6 @@ public class PEF {
     public PEF(ODT odt,
                PEFConfiguration pefSettings,
                LiblouisXML liblouisXML,
-               StatusIndicator statusIndicator,
                PostConversionBrailleChecker checker)
         throws IOException,
                TransformerException,
@@ -133,7 +131,6 @@ public class PEF {
         this.odt = odt;
         this.pefSettings = pefSettings;
         this.liblouisXML = liblouisXML;
-        this.statusIndicator = statusIndicator;
         this.checker = checker;
 
         pefFile = File.createTempFile(TMP_NAME, ".pef", TMP_DIR);
@@ -239,11 +236,9 @@ public class PEF {
         int rowgap = pefSettings.getEightDots()?1:0;
         int beginPage = settings.getBeginningBraillePageNumber();
 
-        if (statusIndicator != null) {
-            statusIndicator.start();
-            statusIndicator.setSteps(volumes.size());
-            statusIndicator.setStatus(ResourceBundle.getBundle(L10N, statusIndicator.getPreferredLocale()).getString("statusIndicatorStep"));
-        }
+        statusIndicator.start();
+        statusIndicator.setSteps(volumes.size());
+        statusIndicator.setStatus(ResourceBundle.getBundle(L10N, statusIndicator.getPreferredLocale()).getString("statusIndicatorStep"));
 
         for (int volumeCount=0; volumeCount<volumes.size(); volumeCount++) {
 
@@ -324,9 +319,7 @@ public class PEF {
                 if (checker != null) { checker.checkDaisyFile(preliminaryFile); }
             }
 
-            if (statusIndicator != null) {
-                statusIndicator.increment();
-            }
+            statusIndicator.increment();
         }
 
         if (checker != null) { checker.checkVolumes(volumes); }
@@ -350,6 +343,7 @@ public class PEF {
             return false;
         }
 
+        statusIndicator.finish(true);
         return true;
     }
 

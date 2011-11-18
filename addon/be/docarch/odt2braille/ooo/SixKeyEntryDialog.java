@@ -55,7 +55,8 @@ import be.docarch.odt2braille.Constants;
  */
 public class SixKeyEntryDialog implements XKeyHandler {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
+    
     private XText xText = null;
     private XTextCursor xTextCursor = null;
     private XExtendedToolkit myExtToolkit = null;

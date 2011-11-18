@@ -33,7 +33,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setFirstLine(0);
         style.setRunovers(3);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -58,7 +58,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setFirstLine(0);
         style.setRunovers(0);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -86,7 +86,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRepeatHeading(true);
         style.setHeadingSuffix("\u2812");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -112,7 +112,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRunovers(3);
         style.setMirrorTable(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -140,7 +140,7 @@ public class TablesTest extends Odt2BrailleTest {
         style.setRunovers(3);
         style.setColumnHeadings(true);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

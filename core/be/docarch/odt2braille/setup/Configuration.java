@@ -246,7 +246,7 @@ public class Configuration implements Serializable {
     /* PRIVATE STATIC CONSTANTS */
     /****************************/
 
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final Logger logger = Constants.getLogger();
     private static final NamespaceContext namespace = new NamespaceContext();
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private static final boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");

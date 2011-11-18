@@ -36,7 +36,7 @@ public class ListsTest extends Odt2BrailleTest {
         style2.setRunovers(6);
         style2.setPrefix("\u2836");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

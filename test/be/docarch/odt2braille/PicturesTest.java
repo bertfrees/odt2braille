@@ -30,7 +30,7 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 
@@ -58,7 +58,7 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null, null);
+        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
 
         File testPEF = pefBuilder.getSinglePEF();
 

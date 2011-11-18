@@ -59,6 +59,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.PropertyVetoException;
 
 import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.EmbossConfiguration;
 import be.docarch.odt2braille.setup.EmbossConfiguration.PageFormatProperty;
@@ -70,6 +71,7 @@ import org.daisy.paper.Paper;
 import org.daisy.braille.table.Table;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.tools.Length;
+import org.daisy.braille.tools.Length.UnitsOfLength;
 
 /**
  *
@@ -81,12 +83,12 @@ public class EmbossDialog {
                                   BETA,
                                   STABLE };
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
+    private final static StatusIndicator statusIndicator = Constants.getStatusIndicator();
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
     
     private final Configuration settings;
     private final XComponentContext context;
-    private final ProgressBar progressbar;
     private final XDialog dialog;
     private final XComponent component;
     private final Map<String,EmbosserStatus> embosserStatus;
@@ -150,15 +152,13 @@ public class EmbossDialog {
 
     public EmbossDialog(XComponentContext ctxt,
                         EmbossConfiguration embossSettings,
-                        Configuration cfg,
-                        ProgressBar pb)
+                        Configuration cfg)
                  throws com.sun.star.uno.Exception {
 
         logger.entering("EmbossDialog", "<init>");
 
         this.settings = cfg;
         this.context = ctxt;
-        this.progressbar = pb;
         
         XPackageInformationProvider xPkgInfo = PackageInformationProvider.get(context);
         String dialogUrl = xPkgInfo.getPackageLocation(Constants.OOO_PACKAGE_NAME) + "/dialogs/EmbossDialog.xdl";
@@ -210,12 +210,12 @@ public class EmbossDialog {
                 if (event.Source.equals(button)) {
                     try {
                         if (settingsDialog == null) {
-                            progressbar.start();
-                            progressbar.setSteps(SettingsDialog.getSteps());
-                            progressbar.setStatus("Loading settings...");
-                            settingsDialog = new SettingsDialog(context, settings, progressbar);
-                            progressbar.finish(true);
-                            progressbar.close();
+                            statusIndicator.start();
+                            statusIndicator.setSteps(SettingsDialog.getSteps());
+                            statusIndicator.setStatus("Loading settings...");
+                            settingsDialog = new SettingsDialog(context, settings);
+                            statusIndicator.finish(true);
+                            statusIndicator.close();
                         }
                         settingsDialog.execute();
                     } catch (com.sun.star.uno.Exception e) {
@@ -437,7 +437,7 @@ public class EmbossDialog {
         private final XNumericField numericField;
         private final XTextComponent textComponent;
         private final XListBox unitListbox;
-        private boolean inches = false;
+        private UnitsOfLength unit = UnitsOfLength.MILLIMETER;
         
         public PaperDimensionControl(XControl valueControl,
                                      XControl unitControl,
@@ -453,6 +453,8 @@ public class EmbossDialog {
             unitListbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, unitControl);
             unitListbox.addItem("mm", (short)0);
             unitListbox.addItem("in", (short)1);
+            unitListbox.addItem("cells", (short)2);
+            unitListbox.addItem("lines", (short)3);
             unitListbox.selectItemPos((short)0, true);
             link(dimension);
             unitListbox.addItemListener(this);
@@ -464,22 +466,42 @@ public class EmbossDialog {
         }
 
         private void updateUnit() {
-            inches = property.get().getUnitsOfLength() == Length.UnitsOfLength.INCH;
-            unitListbox.selectItemPos((short)(inches?1:0), true);
-            numericField.setDecimalDigits((short)(inches ? 2 : 0));
+            unit = property.get().getUnitsOfLength();
+            numericField.setDecimalDigits((short)((unit == UnitsOfLength.INCH) ? 2 : 0));
+            // TODO: update listbox items !
+            switch (unit) {
+                case INCH:   unitListbox.selectItemPos((short)1, true); break;
+                case COLUMN: unitListbox.selectItemPos((short)2, true); break;
+                case ROW:    unitListbox.selectItemPos((short)3, true); break;
+                default:     unitListbox.selectItemPos((short)0, true);
+            }
         }
 
         private void updateValue() {
             Length l = property.get();
-            numericField.setValue(inches ? l.asInches() : l.asMillimeter());
+            switch (unit) {
+                case INCH:   numericField.setValue(           l.asMillimeter() / Length.INCH_IN_MM);          break;
+                case COLUMN: numericField.setValue(Math.floor(l.asMillimeter() / Length.COLUMN_WIDTH_IN_MM)); break;
+                case ROW:    numericField.setValue(Math.floor(l.asMillimeter() / Length.ROW_HEIGHT_IN_MM));   break;
+                default:     numericField.setValue(           l.asMillimeter());
+            }
         }
 
         public void save() {
-            Length newValue = inches ? Length.newInchValue(numericField.getValue()) :
-                                       Length.newMillimeterValue(numericField.getValue());
+            Length newValue = null;
+            switch (unit) {
+                case INCH:   newValue = Length.newInchValue(numericField.getValue());    break;
+                case COLUMN: newValue = Length.newColumnsValue(numericField.getValue()); break;
+                case ROW:    newValue = Length.newRowsValue(numericField.getValue());    break;
+                default:     newValue = Length.newMillimeterValue(numericField.getValue());
+            }
             okButton.updateProperties();
             if (property.accept(newValue)) {
-                property.set(newValue);
+                try {
+                    property.set(newValue);
+                } catch (RuntimeException e) {
+                    okButton.disable();
+                }
             } else {
                 okButton.disable();
             }
@@ -490,8 +512,12 @@ public class EmbossDialog {
         }
         public void itemStateChanged(ItemEvent event) {
             if (event.Source.equals(unitListbox)) {
-                inches = (unitListbox.getSelectedItemPos()==(short)1);
-                numericField.setDecimalDigits((short)(inches?2:0));
+                short itemPos = unitListbox.getSelectedItemPos();
+                unit = (itemPos == 0) ? UnitsOfLength.MILLIMETER :
+                       (itemPos == 1) ? UnitsOfLength.INCH :
+                       (itemPos == 2) ? UnitsOfLength.COLUMN :
+                                        UnitsOfLength.ROW;
+                numericField.setDecimalDigits((short)((unit == UnitsOfLength.INCH) ? 2 : 0));
                 updateValue();
             }
         }

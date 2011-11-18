@@ -20,39 +20,33 @@
 package be.docarch.odt2braille;
 
 import org.daisy.braille.tools.Length;
-import org.daisy.paper.SheetPaper;
+import org.daisy.braille.tools.Length.UnitsOfLength;
 import be.docarch.odt2braille.CustomPaperProvider.PaperType;
 
-public class CustomSheetPaper extends SheetPaper {
+public class CustomRowsColumnsPaper extends CustomSheetPaper {
 
-    private Length width;
-    private Length height;
-
-    public CustomSheetPaper(String name, String desc) {
-        this(name, desc, Length.newMillimeterValue(210d), Length.newMillimeterValue(297d));
+    public CustomRowsColumnsPaper(String name, String desc) {
+        super(name, desc, Length.newColumnsValue(40), Length.newRowsValue(25));
     }
 
-    public CustomSheetPaper(String name, String desc, Length width, Length height) {
-        super(name, desc, PaperType.SHEET, width, height);
-        this.width = width;
-        this.height = height;
-    }
-
+    @Override
     public void setPageWidth(Length width) {
-        this.width = width;
+        if (width.getUnitsOfLength() != UnitsOfLength.COLUMN) {
+            throw new IllegalArgumentException("Page width must be defined in number of columns");
+        }
+        super.setPageWidth(width);
     }
 
+    @Override
     public void setPageHeight(Length height) {
-        this.height = height;
+        if (height.getUnitsOfLength() != UnitsOfLength.ROW) {
+            throw new IllegalArgumentException("Page height must be defined in number of rows");
+        }
+        super.setPageHeight(height);
     }
 
     @Override
-    public Length getPageHeight() {
-        return height;
-    }
-
-    @Override
-    public Length getPageWidth() {
-        return width;
+    public String getIdentifier() {
+        return PaperType.ROWS_COLUMNS.getClass().getCanonicalName() + "." + PaperType.ROWS_COLUMNS.toString();
     }
 }
