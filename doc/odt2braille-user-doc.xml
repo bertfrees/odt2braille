@@ -269,6 +269,7 @@
    
   <section id="lists">
    <title lang="en">Lists</title>
+   <title lang="nl">Lijsten</title>
     
     <itemizedlist>
      <listitem>
@@ -374,7 +375,7 @@
         <para lang="nl">Tabelcellen in kolom 2 beginnen in cel 3, evenals omlopende tekst.</para>
        </listitem>
        <listitem>
-        <para lang=>…</para>
+        <para>…</para>
        </listitem>
        <listitem>
         <para lang="en">Table cells in column 10 and beyond begin in cell 19.</para>
@@ -736,7 +737,9 @@
   </section>
 
   <section id="preliminary-pages">
-   <title lang="en">Preliminary Pages</title>  
+   <title lang="en">Preliminary Pages</title>
+   <title lang="nl">Inleidende pagina’s</title>
+   
    <para lang="en">Preliminary pages are those pages that precede the actual text of the document. These can include for example a title page, a special symbols page, a transcriber's note page, cover material, about the author, a dedication, acknowledgements, an abstract, a table of contents, author's notes, a preface, a foreword, an introduction or a prologue, etc.</para>
    <para lang="nl">Inleidende pagina’s zijn pagina’s die voorafgaan aan de pagina’s met de feitelijke tekst. Deze kunnen bestaan uit een titelpagina, een pagina met gebruikte symbolen, een  pagina met vertalersaantekeningen, omslagtekst, auteurinformatie, “opgedragen aan”, voorwoord, inleiding , inhoudsopgave, proloog, e.d.</para>
 
@@ -778,7 +781,7 @@
     <para lang="en">Typically a volume should have around 80-90 one-sided pages (the page count includes all pages, including the preliminary pages). Ideally, the next volume starts at a logical place, such as the beginning of a new chapter. As a guideline, there should not be a difference of more than 15 pages between two volumes.</para>
     <para lang="nl">Gewoonlijk bestaat een band uit 80-90 enkelzijdige braillepagina’s. Dit is inclusief inleidende pagina’s. Idealiter begint iedere volgende band op een logische plaats zoals het begin van een nieuw hoofdstuk. Het is raadzaam om geen grotere verschillen dan een aantal van 15 pagina’s te hebben tussen de verschillende banden.</para>
    </tip>
-   <para lang="en">Also, appendixes, glossaries, indexes, <link linkend="bibliographies">bibliographies</link>etc. are often more useful when bound in separate <emphasis>supplementary</emphasis> volumes (<emphasis>supplements</emphasis>). Finally, the <link linkend="preliminary-pages">extended preliminary pages</link> are sometimes bound in a separate <emphasis>preliminary</emphasis> volume, when the first volume would otherwise become to long.</para>
+   <para lang="en">Also, appendixes, glossaries, indexes, bibliographies, etc. are often more useful when bound in separate <emphasis>supplementary</emphasis> volumes (<emphasis>supplements</emphasis>). Finally, the <link linkend="preliminary-pages">extended preliminary pages</link> are sometimes bound in a separate <emphasis>preliminary</emphasis> volume, when the first volume would otherwise become to long.</para>
    <para lang="nl">Ook Appendices, verklarende woordenlijsten, indices, bibliografieën etc. zijn handiger wanneer ze in aparte aanvullende banden worden opgenomen. Tot slot worden ook de uitgebreide inleidende pagina’s vaak opgenomen in een aparte band, omdat anders de eerste band te groot zou worden.</para>
    
     <itemizedlist>
@@ -865,7 +868,7 @@
 
   <section id="special-symbols-list">
    <title lang="en">List of Special Symbols</title>
-   <title lang="en">Lijst van Speciale Symbolen</title>
+   <title lang="nl">Lijst van Speciale Symbolen</title>
 
     <itemizedlist>
 	 <listitem>
@@ -1060,7 +1063,7 @@
 
   <section id="hyphenation">
    <title lang="en">Hyphenation</title>
-   <title lang="en">Afbreken van woorden</title>
+   <title lang="nl">Afbreken van woorden</title>
    
    <itemizedlist>
 	<listitem>

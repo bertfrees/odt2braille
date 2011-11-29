@@ -2,16 +2,17 @@
 <project name="Odt2BrailleAddOn-doc" basedir=".">
     <description>Build user and developer documentation.</description>
 	
+	
 	<!-- USER DOCUMENTATION -->
 	<target name="user-doc" depends="-init">		
         <docbook2html docbook="odt2braille-user-doc.xml"
-                      html= "${doc.build.dir}/odt2braille-user-doc.html"/>
-   <!-- <docbook2fo docbook="odt2braille-user-doc.xml"
-                    fo="${doc.build.dir}/odt2braille-user-doc.fo"/>
-        <fo2pdf fo="${doc.build.dir}/odt2braille-user-doc.fo"
-                pdf="${doc.build.dir}/odt2braille-user-doc.pdf"/>
-        <docbook2odt docbook="odt2braille-user-doc.xml"
-                     odt="${doc.build.dir}/odt2braille-user-doc.odt"/> -->
+                      html= "${doc.build.dir}/odt2braille-user-doc-${lang}.html"/>
+		<docbook2fo docbook="odt2braille-user-doc.xml"
+                    fo="${doc.build.dir}/odt2braille-user-doc-${lang}.fo"/>
+        <fo2pdf fo="${doc.build.dir}/odt2braille-user-doc-${lang}.fo"
+                pdf="${doc.build.dir}/odt2braille-user-doc-${lang}.pdf"/>
+   <!-- <docbook2odt docbook="odt2braille-user-doc.xml"
+                     odt="${doc.build.dir}/odt2braille-user-doc-${lang}.odt"/> -->
 	</target>
 				
     <!-- DEVELOPER DOCUMENTATION -->
@@ -27,7 +28,7 @@
         <property name="saxon.jar" value="resources/saxon/saxon.jar"/>
         <property name="docbook2odf.home" value="resources/docbook2odf"/>
         <property name="doc.build.dir" value="build"/>
-		<property name="profile.lang" value="en"/>
+		<property name="lang" value="en"/>
         
         <taskdef name="fop"
         		 classname="org.apache.fop.tools.anttasks.Fop">
@@ -50,7 +51,7 @@
                     <arg value="@{html}"/>
                     <arg value="@{docbook}"/>
                     <arg value="${docbook-xsl.home}/html/profile-docbook.xsl"/>
-                    <arg value="profile.lang=${profile.lang}"/>
+                    <arg value="profile.lang=${lang}"/>
                     <arg value="section.autolabel=1"/>
                 </java>
             </sequential>
@@ -65,7 +66,7 @@
                     <arg value="@{fo}"/>
                     <arg value="@{docbook}"/>
                     <arg value="${docbook-xsl.home}/fo/profile-docbook.xsl"/>
-                    <arg value="profile.lang=${profile.lang}"/>
+                    <arg value="profile.lang=${lang}"/>
                     <arg value="section.autolabel=1"/>
                 </java>
             </sequential>
