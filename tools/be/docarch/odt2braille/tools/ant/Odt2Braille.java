@@ -2,167 +2,124 @@ package be.docarch.odt2braille.tools.ant;
 
 import java.io.File;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-
+import java.util.logging.Level;
+import java.text.DecimalFormat;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-
-import be.docarch.odt2braille.*;
-import be.docarch.odt2braille.setup.*;
+import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.ODT;
+import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.PEF;
+import be.docarch.odt2braille.ODT2PEFConverter;
+import be.docarch.odt2braille.PEFHandler;
+import be.docarch.odt2braille.PEFFileFormat;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
 
 /**
  *
  * @author Bert Frees
  */
 public class Odt2Braille extends Task {
+
+    private File srcFile;
+    private File targetFile;
+    private File liblouisDir;
+    private Bean configuration = new Bean(Configuration.class);
+    private Bean exportConfiguration = new Bean(ExportConfiguration.class);
     
-    private File inFile;
-    private File outFile;
-    private PropertyContainer configuration = new PropertyContainer(Configuration.class);
-    private PropertyContainer exportConfiguration = new PropertyContainer(ExportConfiguration.class);
-    
-    public void setOut(String file) {
-        outFile = new File(file);
-        if (outFile.exists()) {
-            throw new BuildException("Output file or directory '" + file + "' already exists");
+    public void setTargetfile(String file) {
+        targetFile = new File(file);
+        if (targetFile.exists()) {
+            throw new BuildException("Target file or directory '" + file + "' already exists");
         }
     }
     
-    public void setIn(String file) {
-        inFile = new File(file);
-        if (!inFile.exists()) {
-            throw new BuildException("Input file '" + file + "' does not exist");
+    public void setSrcfile(String file) {
+        srcFile = new File(file);
+        if (!srcFile.exists()) {
+            throw new BuildException("Source file '" + file + "' does not exist");
         }
     }
-    
-    public PropertyContainer createConfiguration() {
+
+    public void setLiblouisdir(String file) {
+        liblouisDir = new File(file);
+        if (!liblouisDir.exists() || !liblouisDir.isDirectory()) {
+            throw new BuildException("Liblouis directory '" + file + "' does not exist");
+        }
+    }
+
+    public Bean createConfiguration() {
+        validate();
         return configuration;
     }
     
-    public PropertyContainer createExportConfiguration() {
+    public Bean createExportconfiguration() {
+        validate();
         return exportConfiguration;
     }
     
     @Override
-    public void execute() {
+    public void execute() throws BuildException {
+        validate();
+        Constants.getLogger().setLevel(Level.SEVERE);
         try {
-            if (inFile == null) { throw new BuildException("Input file not defined"); }
-            if (inFile == null) { throw new BuildException("Output file not defined"); }
-            ODT odt = new ODT(inFile);
+            ODT odt = new ODT(srcFile);
+            Constants.setLiblouisDirectory(liblouisDir);
             Configuration config = odt.getConfiguration();
             ExportConfiguration exportConfig = new ExportConfiguration();
             configuration.applyCommandsTo(config);
             exportConfiguration.applyCommandsTo(exportConfig);
-          //ODT2PEFConverter.setLiblouisLocation();
-            PEF pef = ODT2PEFConverter.convert(odt, exportConfig, null, null);
-            pef.getSinglePEF().renameTo(outFile);
+            PEF pef = ODT2PEFConverter.convert(odt, exportConfig, null);
+
+            File[] brailleFiles;
+            if (exportConfig.getFileFormat() instanceof PEFFileFormat) {
+                if (exportConfig.getMultipleFiles()) {
+                    brailleFiles = pef.getPEFs();
+                } else {
+                    brailleFiles = new File[] { pef.getSinglePEF() };
+                }
+            } else {
+                PEFHandler pefHandler = new PEFHandler(pef);
+                if (exportConfig.getMultipleFiles()) {
+                    brailleFiles = pefHandler.convertToFiles(exportConfig.getFileFormat());
+                } else {
+                    brailleFiles = new File[] { pefHandler.convertToSingleFile(exportConfig.getFileFormat()) };
+                }
+            }
+            if (brailleFiles.length > 1) {
+                File newFile;
+                if (!targetFile.exists()) {
+                    targetFile.mkdir();
+                    String fileSeparator = System.getProperty("file.separator");
+                    String folderName = targetFile.getName();
+                    String brailleExt = exportConfig.getFileFormat().getFileExtension();
+                    List<Volume> volumes = pef.getVolumes();
+                    DecimalFormat format = new DecimalFormat();
+                    format.setMaximumFractionDigits(0);
+                    format.setMinimumIntegerDigits(1+(int)Math.floor(Math.log10(volumes.size())));
+                    format.setGroupingUsed(false);
+                    for (int i=0; i<brailleFiles.length; i++) {
+                        newFile = new File(targetFile.getAbsolutePath() + fileSeparator + folderName + "." + format.format(i+1) + brailleExt);
+                        if (newFile.exists()) { newFile.delete(); }
+                        brailleFiles[i].renameTo(newFile);
+                    }
+                }
+            } else {
+                if (!targetFile.exists()) {
+                    brailleFiles[0].renameTo(targetFile);
+                }
+            }
         } catch (BuildException e) {
             throw e;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BuildException(e);
         }
     }
-    
-    public class PropertyContainer {
-    
-        private List<Command> commands = new ArrayList<Command>();
-        protected Class type;
-        
-        public PropertyContainer() {}
-        
-        public PropertyContainer(Class type) {
-            this.type = type;
-        }
-        
-        public SetProperty createSet() {
-            if (type == null) { throw new BuildException("Property not defined"); }
-            SetProperty property = new SetProperty(type);
-            commands.add(property);
-            return property;
-        }
 
-        public GetProperty createGet() {
-            if (type == null) { throw new BuildException("Property not defined"); }
-            GetProperty property = new GetProperty(type);
-            commands.add(property);
-            return property;
-        }
-        
-        public void applyCommandsTo(Object object) {
-            for (Command command : commands) {
-                command.applyTo(object);
-            }        
-        }
-    }
-    
-    public class GetProperty extends PropertyContainer
-                          implements Command {
-    
-        private final Class objectType;
-        private Class returnType;
-        private Method method;
-        
-        public GetProperty(Class objectType) {
-            this.objectType = objectType;
-        }
-        
-        public void setProperty(String property) {
-            PropertyDescriptor desc = BeanInfo.getPropertyDescriptor(objectType, property);
-            if (desc == null) { throw new BuildException("Property '" + property + "' not supported by " + objectType.getCanonicalName()); }
-            method = desc.getReadMethod();
-            type = method.getReturnType().getClass();
-        }
-       
-
-        public void applyTo(Object object) {
-            if (method == null) { throw new BuildException("Property not defined"); }
-            try {
-                Object returnObject = method.invoke(object, new Object[]{});
-                applyCommandsTo(returnObject);
-            } catch (BuildException e) {
-                throw e;
-            } catch (Exception e) {
-                throw new BuildException(e);
-            }
-        }
-    }
-    
-    public class SetProperty implements Command {
-    
-        private final Class objectType;
-        private Method method;
-        private Object value;
-        
-        public SetProperty(Class objectType) {
-            this.objectType = objectType;
-        };
-        
-        public void setProperty(String property) {
-            PropertyDescriptor desc = BeanInfo.getPropertyDescriptor(objectType, property);
-            if (desc == null) { throw new BuildException("Property '" + property + "' not supported by " + objectType.getCanonicalName()); }
-            method = desc.getWriteMethod();
-            if (method == null) { throw new BuildException("Property '" + property + "' is read-only"); }
-        }
-
-        public void setValue(Object value) {
-            this.value = value;
-        }
-
-        public void applyTo(Object object) {
-            if (method == null) { throw new BuildException("Property not defined"); }
-            if (value == null) { throw new BuildException("No value defined for property '" + method.getName() + "'"); }
-            try {
-                method.invoke(object, new Object[]{value});
-            } catch (Exception e) {
-                throw new BuildException(e);
-            }
-        }
-    }
-    
-    public interface Command {
-        public void applyTo(Object object);
+    private void validate() throws BuildException {
+        if (srcFile == null) { throw new BuildException("Source file not defined"); }
+        if (targetFile == null) { throw new BuildException("Target file not defined"); }
+        if (liblouisDir == null) { throw new BuildException("Liblouis directory not defined"); }
     }
 }
