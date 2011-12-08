@@ -29,11 +29,14 @@ public class AdditionalBeanInfo {
 
     public static PropertyDescriptor getPropertyDescriptor(Class beanClass, String property) {
         PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(beanClass);
-        if (propertyDescriptors == null) { return null; }
-        for (int i=0; i<propertyDescriptors.length; i++) {
-            if (propertyDescriptors[i].getName().equals(property)) {
-                return propertyDescriptors[i];
+        while (propertyDescriptors != null) {
+            for (int i=0; i<propertyDescriptors.length; i++) {
+                if (propertyDescriptors[i].getName().equals(property)) {
+                    return propertyDescriptors[i];
+                }
             }
+            beanClass = beanClass.getSuperclass();
+            propertyDescriptors = getPropertyDescriptors(beanClass);
         }
         return null;
     }

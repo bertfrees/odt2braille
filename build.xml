@@ -27,24 +27,31 @@
             depends="addon-jar,images,registry,-delete-uno-package,-pre-uno-package,-do-uno-package,-post-uno-package"/>
     
     <target name="uno-run"
-	        description="Run UNO extension package in OpenOffice.org"
-	        depends="uno-package,-run-oo"/>
+            description="Run UNO extension package in OpenOffice.org"
+            depends="uno-package,-run-oo"/>
     
     <target name="addon-jar"
-            description="Build Addon jar"
+            description="Build addon JAR"
             depends="-uno-project-init,uno-idl-compile,-jar-idl-types,core-jar,compile,-pre-jar,-do-openoffice-manifest,-post-jar,-do-addon-jar" />
             
     <target name="core-jar"
-            description="Build Core jar"
-			depends="init,-make-liblouis-dir,-build-core" />
+            description="Build core JAR"
+            depends="init,-make-liblouis-dir,-build-core" />
    
     <target name="tools-jar"
-            description="Build Tools jar"
+            description="Build tools JAR"
             depends="core-jar,-build-tools"/>
+
+    <target name="addon-zip"
+            description="Make a ZIP that includes the extension file and the odt2braille fonts (TODO)"/>
+
+    <target name="tools-zip"
+            description="Make a ZIP that includes the tools JAR, the lib folder and the liblouis folder"
+            depends="tools-jar,-zip-tools"/>
 	
-	<target name="jar"
-			description="Default target: Build Core jar"
-	        depends="core-jar" />
+    <target name="jar"
+            description="Default target: Build core JAR"
+            depends="core-jar" />
 	
     <target name="javadoc"
             description="Build Javadoc"
@@ -58,20 +65,20 @@
             description="Compile project"
             depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" />
 			
-	<target name="l10n"
-			description="Re-encode localisation files">
-		<ant dir="l10n" inheritAll="false" />
-	</target>
-	
-	<target name="licenses"
-			description="Add license headers">
-		<ant dir="licenses" inheritAll="false" />
-	</target>
-			
-	<target name="brailleutils"
-			description="Build brailleutils jars">
-		<ant dir="ext/brailleutils/src/latest/braille" inheritAll="false" />
-	</target>
+    <target name="l10n"
+            description="Re-encode localisation files">
+        <ant dir="l10n" inheritAll="false" />
+    </target>
+
+    <target name="licenses"
+            description="Add license headers">
+        <ant dir="licenses" inheritAll="false" />
+    </target>
+
+    <target name="brailleutils"
+            description="Build brailleutils JARs">
+        <ant dir="ext/brailleutils/src/latest/braille" inheritAll="false" />
+    </target>
 	
 			
 <!--
@@ -370,7 +377,7 @@
     
     <!-- build tools jar -->
     <target name="-build-tools" depends="-compile-tools">
-		<delete file="${dist.tools.jar}"/>
+        <delete file="${dist.tools.jar}"/>
         <jar destfile="${dist.tools.jar}">
             <fileset dir="${build.tools.classes.dir}"/>
             <manifest>
@@ -382,6 +389,16 @@
                 <attribute name="Class-Path" value="${tools.classpath.attribute}"/>
             </manifest>
     	</jar>
+    </target>
+
+    <!-- zip tools -->
+    <target name="-zip-tools">
+        <delete file="${dist.tools.zip}"/>
+		<zip destfile="${dist.tools.zip}">
+		    <zipfileset file="${dist.tools.jar}" prefix="odt2braille"/>
+		    <zipfileset dir="${dist.dir}${file.separator}${external.jar.dir}" prefix="odt2braille/${external.jar.dir}"/>
+			<zipfileset dir="${dist.dir}${file.separator}liblouis" prefix="odt2braille/liblouis"/>
+        </zip>
     </target>
 
     <!-- rebuild extension with some fixes -->
