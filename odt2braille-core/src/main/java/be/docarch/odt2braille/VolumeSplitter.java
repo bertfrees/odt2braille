@@ -56,7 +56,6 @@ public abstract class VolumeSplitter {
             indicator.setStatus("Computing optimal volume sizes...");
 
             int[] allPages = odt.extractDocumentOutline();
-            System.out.flush();
             int[] optimalVolumes = computeOptimalVolumes(allPages,
                                                          volumeSettings.getMinVolumeSize(),
                                                          volumeSettings.getMaxVolumeSize(),
@@ -173,7 +172,7 @@ public abstract class VolumeSplitter {
             }
             return r;
         } else {
-            return new int[]{0};
+            return new int[]{0}; // throw Exception?
         }
     }
 }

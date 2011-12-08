@@ -34,363 +34,348 @@ import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
 
 public class BeanInfo {
     
-    private static final Map<Class,PropertyDescriptors> propertyDescriptors
-               = new HashMap<Class,PropertyDescriptors>();
+    private static final Map<Class,PropertyDescriptor[]> propertyDescriptorsMap
+               = new HashMap<Class,PropertyDescriptor[]>();
     
-    public static PropertyDescriptor[] getPropertyDescriptors(Class type) {
-        if (!propertyDescriptors.containsKey(type)) { return null; }
-        return propertyDescriptors.get(type).list;
+    public static PropertyDescriptor[] getPropertyDescriptors(Class beanClass) {
+        if (!propertyDescriptorsMap.containsKey(beanClass)) { return null; }
+        return propertyDescriptorsMap.get(beanClass);
     }
 
-    public static PropertyDescriptor getPropertyDescriptor(Class type, String property) {
-        if (!propertyDescriptors.containsKey(type)) { return null; }
-        return propertyDescriptors.get(type).get(property);
-    }
-
-    private static class PropertyDescriptors {
-
-        public final PropertyDescriptor[] list;
-        private final Map<String,PropertyDescriptor> map = new HashMap<String,PropertyDescriptor>();
-
-        public PropertyDescriptors(PropertyDescriptor[] array) {
-            list = array;
-            for (PropertyDescriptor d : array) {
-                map.put(d.getName(), d);
+    public static PropertyDescriptor getPropertyDescriptor(Class beanClass, String property) {
+        PropertyDescriptor[] propertyDescriptors = getPropertyDescriptors(beanClass);
+        if (propertyDescriptors == null) { return null; }
+        for (int i=0; i<propertyDescriptors.length; i++) {
+            if (propertyDescriptors[i].getName().equals(property)) {
+                return propertyDescriptors[i];
             }
         }
-
-        public PropertyDescriptor[] values() {
-            return list;
-        }
-
-        public PropertyDescriptor get(String property) {
-            return map.get(property);
-        }
+        return null;
     }
 
     static {
         
-        Class type;
+        Class beanClass;
         
         try {
             
             /* Configuration */
 
-            type = Configuration.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newReadOnlyPropertyDescriptor(type, "translationTables"),
-                newPropertyDescriptor(type, "mathCode"),
-                newPropertyDescriptor(type, "printPageNumbers"),
-                newPropertyDescriptor(type, "braillePageNumbers"),
-                newPropertyDescriptor(type, "continuePages"),
-                newPropertyDescriptor(type, "printPageNumberRange"),
-                newPropertyDescriptor(type, "pageSeparator"),
-                newPropertyDescriptor(type, "pageSeparatorNumber"),
-                newPropertyDescriptor(type, "ignoreEmptyPages"),
-                newPropertyDescriptor(type, "mergeUnnumberedPages"),
-                newPropertyDescriptor(type, "printPageNumberPosition"),
-                newPropertyDescriptor(type, "braillePageNumberPosition"),
-                newPropertyDescriptor(type, "pageNumberLineAtTop"),
-                newPropertyDescriptor(type, "pageNumberLineAtBottom"),
-                newPropertyDescriptor(type, "preliminaryPageNumberFormat"),
-                newPropertyDescriptor(type, "beginningBraillePageNumber"),
-                newReadOnlyPropertyDescriptor(type, "paragraphStyles"),
-                newReadOnlyPropertyDescriptor(type, "characterStyles"),
-                newReadOnlyPropertyDescriptor(type, "headingStyles"),
-                newReadOnlyPropertyDescriptor(type, "tableStyles"),
-                newReadOnlyPropertyDescriptor(type, "listStyles"),
-                newReadOnlyPropertyDescriptor(type, "tocStyle"),
-                newReadOnlyPropertyDescriptor(type, "frameStyle"),
-                newReadOnlyPropertyDescriptor(type, "footnoteStyle"),
-                newReadOnlyPropertyDescriptor(type, "pictureStyle"),
-                newReadOnlyPropertyDescriptor(type, "noteReferenceFormats"),
-                newPropertyDescriptor(type, "creator"),
-                newPropertyDescriptor(type, "hyphenate"),
-                newPropertyDescriptor(type, "minSyllableLength"),
-                newPropertyDescriptor(type, "transcribersNotesPageTitle"),
-                newPropertyDescriptor(type, "specialSymbolListTitle"),
-                newPropertyDescriptor(type, "endNotesPageTitle"),
-                newPropertyDescriptor(type, "frontMatterSection"),
-                newPropertyDescriptor(type, "repeatFrontMatterSection"),
-                newPropertyDescriptor(type, "titlePageSection"),
-                newPropertyDescriptor(type, "rearMatterSection"),
-                newPropertyDescriptor(type, "bodyMatterMode"),
-                newPropertyDescriptor(type, "rearMatterMode"),
-                newPropertyDescriptor(type, "preliminaryVolumeEnabled"),
-                newPropertyDescriptor(type, "volumeInfoEnabled"),
-                newPropertyDescriptor(type, "transcriptionInfoEnabled"),
-                newPropertyDescriptor(type, "volumeInfoStyleID"),
-                newPropertyDescriptor(type, "transcriptionInfoStyleID"),
-                newReadOnlyPropertyDescriptor(type, "preliminaryVolume"),
-                newReadOnlyPropertyDescriptor(type, "bodyMatterVolume"),
-                newReadOnlyPropertyDescriptor(type, "rearMatterVolume"),
-                newReadOnlyPropertyDescriptor(type, "sectionVolumeList"),
-                newReadOnlyPropertyDescriptor(type, "specialSymbolList")
-            }));
+            beanClass = Configuration.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newReadOnlyPropertyDescriptor(beanClass, "translationTables"),
+                newPropertyDescriptor(beanClass, "mathCode"),
+                newPropertyDescriptor(beanClass, "printPageNumbers"),
+                newPropertyDescriptor(beanClass, "braillePageNumbers"),
+                newPropertyDescriptor(beanClass, "continuePages"),
+                newPropertyDescriptor(beanClass, "printPageNumberRange"),
+                newPropertyDescriptor(beanClass, "pageSeparator"),
+                newPropertyDescriptor(beanClass, "pageSeparatorNumber"),
+                newPropertyDescriptor(beanClass, "ignoreEmptyPages"),
+                newPropertyDescriptor(beanClass, "mergeUnnumberedPages"),
+                newPropertyDescriptor(beanClass, "printPageNumberPosition"),
+                newPropertyDescriptor(beanClass, "braillePageNumberPosition"),
+                newPropertyDescriptor(beanClass, "pageNumberLineAtTop"),
+                newPropertyDescriptor(beanClass, "pageNumberLineAtBottom"),
+                newPropertyDescriptor(beanClass, "preliminaryPageNumberFormat"),
+                newPropertyDescriptor(beanClass, "beginningBraillePageNumber"),
+                newReadOnlyPropertyDescriptor(beanClass, "paragraphStyles"),
+                newReadOnlyPropertyDescriptor(beanClass, "characterStyles"),
+                newReadOnlyPropertyDescriptor(beanClass, "headingStyles"),
+                newReadOnlyPropertyDescriptor(beanClass, "tableStyles"),
+                newReadOnlyPropertyDescriptor(beanClass, "listStyles"),
+                newReadOnlyPropertyDescriptor(beanClass, "tocStyle"),
+                newReadOnlyPropertyDescriptor(beanClass, "frameStyle"),
+                newReadOnlyPropertyDescriptor(beanClass, "footnoteStyle"),
+                newReadOnlyPropertyDescriptor(beanClass, "pictureStyle"),
+                newReadOnlyPropertyDescriptor(beanClass, "noteReferenceFormats"),
+                newPropertyDescriptor(beanClass, "creator"),
+                newPropertyDescriptor(beanClass, "hyphenate"),
+                newPropertyDescriptor(beanClass, "minSyllableLength"),
+                newPropertyDescriptor(beanClass, "transcribersNotesPageTitle"),
+                newPropertyDescriptor(beanClass, "specialSymbolListTitle"),
+                newPropertyDescriptor(beanClass, "endNotesPageTitle"),
+                newPropertyDescriptor(beanClass, "frontMatterSection"),
+                newPropertyDescriptor(beanClass, "repeatFrontMatterSection"),
+                newPropertyDescriptor(beanClass, "titlePageSection"),
+                newPropertyDescriptor(beanClass, "rearMatterSection"),
+                newPropertyDescriptor(beanClass, "bodyMatterMode"),
+                newPropertyDescriptor(beanClass, "rearMatterMode"),
+                newPropertyDescriptor(beanClass, "preliminaryVolumeEnabled"),
+                newPropertyDescriptor(beanClass, "volumeInfoEnabled"),
+                newPropertyDescriptor(beanClass, "transcriptionInfoEnabled"),
+                newPropertyDescriptor(beanClass, "volumeInfoStyleID"),
+                newPropertyDescriptor(beanClass, "transcriptionInfoStyleID"),
+                newReadOnlyPropertyDescriptor(beanClass, "preliminaryVolume"),
+                newReadOnlyPropertyDescriptor(beanClass, "bodyMatterVolume"),
+                newReadOnlyPropertyDescriptor(beanClass, "rearMatterVolume"),
+                newReadOnlyPropertyDescriptor(beanClass, "sectionVolumeList"),
+                newReadOnlyPropertyDescriptor(beanClass, "specialSymbolList")
+            });
             
             /* ExportConfiguration */
             
-            type = ExportConfiguration.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "fileFormatType"),
-                newPropertyDescriptor(type, "duplex"),
-                newPropertyDescriptor(type, "eightDots"),
-                newPropertyDescriptor(type, "charSetType"),
-                newPropertyDescriptor(type, "multipleFiles"),
-                newPropertyDescriptor(type, "columns"),
-                newPropertyDescriptor(type, "rows")
-            }));
+            beanClass = ExportConfiguration.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "fileFormatType"),
+                newPropertyDescriptor(beanClass, "duplex"),
+                newPropertyDescriptor(beanClass, "eightDots"),
+                newPropertyDescriptor(beanClass, "charSetType"),
+                newPropertyDescriptor(beanClass, "multipleFiles"),
+                newPropertyDescriptor(beanClass, "columns"),
+                newPropertyDescriptor(beanClass, "rows")
+            });
             
             /* EmbossConfiguration */
             
-            type = EmbossConfiguration.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "embosserType"),
-                newPropertyDescriptor(type, "duplex"),
-                newPropertyDescriptor(type, "eightDots"),
-                newPropertyDescriptor(type, "charSetType"),
-                newPropertyDescriptor(type, "magazineMode"),
-                newPropertyDescriptor(type, "zFolding"),
-                newPropertyDescriptor(type, "paperType"),
-                newPropertyDescriptor(type, "pageOrientation"),
-                newPropertyDescriptor(type, "pageWidth"),
-                newPropertyDescriptor(type, "pageHeight"),
-                newReadOnlyPropertyDescriptor(type, "margins")
-            }));
+            beanClass = EmbossConfiguration.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "embosserType"),
+                newPropertyDescriptor(beanClass, "duplex"),
+                newPropertyDescriptor(beanClass, "eightDots"),
+                newPropertyDescriptor(beanClass, "charSetType"),
+                newPropertyDescriptor(beanClass, "magazineMode"),
+                newPropertyDescriptor(beanClass, "zFolding"),
+                newPropertyDescriptor(beanClass, "paperType"),
+                newPropertyDescriptor(beanClass, "pageOrientation"),
+                newPropertyDescriptor(beanClass, "pageWidth"),
+                newPropertyDescriptor(beanClass, "pageHeight"),
+                newReadOnlyPropertyDescriptor(beanClass, "margins")
+            });
             
             /* MarginSettings */
             
-            type = MarginSettings.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "inner"),
-                newPropertyDescriptor(type, "outer"),
-                newPropertyDescriptor(type, "top"),
-                newPropertyDescriptor(type, "bottom"),
-            }));
+            beanClass = MarginSettings.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "inner"),
+                newPropertyDescriptor(beanClass, "outer"),
+                newPropertyDescriptor(beanClass, "top"),
+                newPropertyDescriptor(beanClass, "bottom"),
+            });
             
             /* ParagraphStyle */
             
-            type = ParagraphStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "inherit"),
-                newPropertyDescriptor(type, "alignment"),
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "marginLeftRight"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "emptyParagraphs"),
-                newPropertyDescriptor(type, "hardPageBreaks"),
-                newPropertyDescriptor(type, "keepWithNext"),
-                newPropertyDescriptor(type, "dontSplit"),
-                newPropertyDescriptor(type, "widowControlEnabled"),
-                newPropertyDescriptor(type, "orphanControlEnabled"),
-                newPropertyDescriptor(type, "widowControl"),
-                newPropertyDescriptor(type, "orphanControl")
-            }));
+            beanClass = ParagraphStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "inherit"),
+                newPropertyDescriptor(beanClass, "alignment"),
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "marginLeftRight"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "emptyParagraphs"),
+                newPropertyDescriptor(beanClass, "hardPageBreaks"),
+                newPropertyDescriptor(beanClass, "keepWithNext"),
+                newPropertyDescriptor(beanClass, "dontSplit"),
+                newPropertyDescriptor(beanClass, "widowControlEnabled"),
+                newPropertyDescriptor(beanClass, "orphanControlEnabled"),
+                newPropertyDescriptor(beanClass, "widowControl"),
+                newPropertyDescriptor(beanClass, "orphanControl")
+            });
             
             /* HeadingStyle */
             
-            type = HeadingStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "alignment"),
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "marginLeftRight"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "newBraillePage"),
-                newPropertyDescriptor(type, "keepWithNext"),
-                newPropertyDescriptor(type, "dontSplit"),
-                newPropertyDescriptor(type, "upperBorderEnabled"),
-                newPropertyDescriptor(type, "lowerBorderEnabled"),
-                newPropertyDescriptor(type, "paddingAbove"),
-                newPropertyDescriptor(type, "paddingBelow"),
-                newPropertyDescriptor(type, "upperBorderStyle"),
-                newPropertyDescriptor(type, "lowerBorderStyle")
-            }));
+            beanClass = HeadingStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "alignment"),
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "marginLeftRight"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "newBraillePage"),
+                newPropertyDescriptor(beanClass, "keepWithNext"),
+                newPropertyDescriptor(beanClass, "dontSplit"),
+                newPropertyDescriptor(beanClass, "upperBorderEnabled"),
+                newPropertyDescriptor(beanClass, "lowerBorderEnabled"),
+                newPropertyDescriptor(beanClass, "paddingAbove"),
+                newPropertyDescriptor(beanClass, "paddingBelow"),
+                newPropertyDescriptor(beanClass, "upperBorderStyle"),
+                newPropertyDescriptor(beanClass, "lowerBorderStyle")
+            });
             
             /* CharacterStyle */
             
-            type = CharacterStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "inherit"),
-                newPropertyDescriptor(type, "italic"),
-                newPropertyDescriptor(type, "boldface"),
-                newPropertyDescriptor(type, "underline"),
-                newPropertyDescriptor(type, "capitals")
-            }));
+            beanClass = CharacterStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "inherit"),
+                newPropertyDescriptor(beanClass, "italic"),
+                newPropertyDescriptor(beanClass, "boldface"),
+                newPropertyDescriptor(beanClass, "underline"),
+                newPropertyDescriptor(beanClass, "capitals")
+            });
             
             /* ListStyle */
             
-            type = ListStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "linesBetween"),
-                newPropertyDescriptor(type, "dontSplit"),
-                newPropertyDescriptor(type, "dontSplitItems"),
-                newPropertyDescriptor(type, "prefix")
-            }));
+            beanClass = ListStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "linesBetween"),
+                newPropertyDescriptor(beanClass, "dontSplit"),
+                newPropertyDescriptor(beanClass, "dontSplitItems"),
+                newPropertyDescriptor(beanClass, "prefix")
+            });
             
             /* TableStyle */
             
-            type = TableStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "linesBetween"),
-                newPropertyDescriptor(type, "stairstepEnabled"),
-                newPropertyDescriptor(type, "columnDelimiter"),
-                newPropertyDescriptor(type, "indentPerColumn"),
-                newPropertyDescriptor(type, "dontSplit"),
-                newPropertyDescriptor(type, "dontSplitRows"),
-                newPropertyDescriptor(type, "mirrorTable"),
-                newPropertyDescriptor(type, "columnHeadings"),
-                newPropertyDescriptor(type, "rowHeadings"),
-                newPropertyDescriptor(type, "repeatHeading"),
-                newPropertyDescriptor(type, "headingSuffix"),
-                newPropertyDescriptor(type, "upperBorderEnabled"),
-                newPropertyDescriptor(type, "lowerBorderEnabled"),
-                newPropertyDescriptor(type, "paddingAbove"),
-                newPropertyDescriptor(type, "paddingBelow"),
-                newPropertyDescriptor(type, "upperBorderStyle"),
-                newPropertyDescriptor(type, "lowerBorderStyle"),
-                newPropertyDescriptor(type, "headingBorderStyle")
-            }));
+            beanClass = TableStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "linesBetween"),
+                newPropertyDescriptor(beanClass, "stairstepEnabled"),
+                newPropertyDescriptor(beanClass, "columnDelimiter"),
+                newPropertyDescriptor(beanClass, "indentPerColumn"),
+                newPropertyDescriptor(beanClass, "dontSplit"),
+                newPropertyDescriptor(beanClass, "dontSplitRows"),
+                newPropertyDescriptor(beanClass, "mirrorTable"),
+                newPropertyDescriptor(beanClass, "columnHeadings"),
+                newPropertyDescriptor(beanClass, "rowHeadings"),
+                newPropertyDescriptor(beanClass, "repeatHeading"),
+                newPropertyDescriptor(beanClass, "headingSuffix"),
+                newPropertyDescriptor(beanClass, "upperBorderEnabled"),
+                newPropertyDescriptor(beanClass, "lowerBorderEnabled"),
+                newPropertyDescriptor(beanClass, "paddingAbove"),
+                newPropertyDescriptor(beanClass, "paddingBelow"),
+                newPropertyDescriptor(beanClass, "upperBorderStyle"),
+                newPropertyDescriptor(beanClass, "lowerBorderStyle"),
+                newPropertyDescriptor(beanClass, "headingBorderStyle")
+            });
             
             /* TocStyle */
             
-            type = TocStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newReadOnlyPropertyDescriptor(type, "levels"),
-                newPropertyDescriptor(type, "title"),
-                newPropertyDescriptor(type, "printPageNumbers"),
-                newPropertyDescriptor(type, "braillePageNumbers"),
-                newPropertyDescriptor(type, "linesBetween"),
-                newPropertyDescriptor(type, "lineFillSymbol"),
-                newPropertyDescriptor(type, "evaluateUptoLevel")
-            }));
+            beanClass = TocStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newReadOnlyPropertyDescriptor(beanClass, "levels"),
+                newPropertyDescriptor(beanClass, "title"),
+                newPropertyDescriptor(beanClass, "printPageNumbers"),
+                newPropertyDescriptor(beanClass, "braillePageNumbers"),
+                newPropertyDescriptor(beanClass, "linesBetween"),
+                newPropertyDescriptor(beanClass, "lineFillSymbol"),
+                newPropertyDescriptor(beanClass, "evaluateUptoLevel")
+            });
             
             /* TocLevelStyle */
             
-            type = TocLevelStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers")
-            }));
+            beanClass = TocLevelStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers")
+            });
             
             /* FootnoteStyle */
             
-            type = FootnoteStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "alignment"),
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "marginLeftRight"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow")
-            }));
+            beanClass = FootnoteStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "alignment"),
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "marginLeftRight"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow")
+            });
             
             /* FrameStyle */
             
-            type = FrameStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "upperBorderEnabled"),
-                newPropertyDescriptor(type, "lowerBorderEnabled"),
-                newPropertyDescriptor(type, "paddingAbove"),
-                newPropertyDescriptor(type, "paddingBelow"),
-                newPropertyDescriptor(type, "upperBorderStyle"),
-                newPropertyDescriptor(type, "lowerBorderStyle")
-            }));
+            beanClass = FrameStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "upperBorderEnabled"),
+                newPropertyDescriptor(beanClass, "lowerBorderEnabled"),
+                newPropertyDescriptor(beanClass, "paddingAbove"),
+                newPropertyDescriptor(beanClass, "paddingBelow"),
+                newPropertyDescriptor(beanClass, "upperBorderStyle"),
+                newPropertyDescriptor(beanClass, "lowerBorderStyle")
+            });
             
             /* PictureStyle */
             
-            type = PictureStyle.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "firstLine"),
-                newPropertyDescriptor(type, "runovers"),
-                newPropertyDescriptor(type, "linesAbove"),
-                newPropertyDescriptor(type, "linesBelow"),
-                newPropertyDescriptor(type, "openingMark"),
-                newPropertyDescriptor(type, "closingMark"),
-                newPropertyDescriptor(type, "descriptionPrefix")
-            }));
+            beanClass = PictureStyle.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "firstLine"),
+                newPropertyDescriptor(beanClass, "runovers"),
+                newPropertyDescriptor(beanClass, "linesAbove"),
+                newPropertyDescriptor(beanClass, "linesBelow"),
+                newPropertyDescriptor(beanClass, "openingMark"),
+                newPropertyDescriptor(beanClass, "closingMark"),
+                newPropertyDescriptor(beanClass, "descriptionPrefix")
+            });
             
             /* Volume */
             
-            type = Volume.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "title"),
-                newPropertyDescriptor(type, "frontMatter"),
-                newPropertyDescriptor(type, "tableOfContent"),
-                newPropertyDescriptor(type, "transcribersNotesPage"),
-                newPropertyDescriptor(type, "specialSymbolList")
-            }));
+            beanClass = Volume.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "title"),
+                newPropertyDescriptor(beanClass, "frontMatter"),
+                newPropertyDescriptor(beanClass, "tableOfContent"),
+                newPropertyDescriptor(beanClass, "transcribersNotesPage"),
+                newPropertyDescriptor(beanClass, "specialSymbolList")
+            });
             
             /* SectionVolume */
             
-            type = SectionVolume.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "section")
-            }));
+            beanClass = SectionVolume.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "section")
+            });
 
             /* SplittableVolume */
-            type = SplittableVolume.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "preferredVolumeSize"),
-                newPropertyDescriptor(type, "maxVolumeSize"),
-                newPropertyDescriptor(type, "minVolumeSize"),
-                newPropertyDescriptor(type, "minLastVolumeSize")
-            }));
+            beanClass = SplittableVolume.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "preferredVolumeSize"),
+                newPropertyDescriptor(beanClass, "maxVolumeSize"),
+                newPropertyDescriptor(beanClass, "minVolumeSize"),
+                newPropertyDescriptor(beanClass, "minLastVolumeSize")
+            });
             
             /* SpecialSymbol */
             
-            type = SpecialSymbol.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "type"),
-                newPropertyDescriptor(type, "symbol"),
-                newPropertyDescriptor(type, "description"),
-                newPropertyDescriptor(type, "mode")
-            }));
+            beanClass = SpecialSymbol.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "type"),
+                newPropertyDescriptor(beanClass, "symbol"),
+                newPropertyDescriptor(beanClass, "description"),
+                newPropertyDescriptor(beanClass, "mode")
+            });
             
             /* TranslationTable */
             
-            type = TranslationTable.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                new PropertyDescriptor("id", type, "getID","setID")
-            }));
+            beanClass = TranslationTable.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                new PropertyDescriptor("id", beanClass, "getID","setID")
+            });
 
             /* NoteReferenceFormat */
 
-            type = NoteReferenceFormat.class;
-            propertyDescriptors.put(type, new PropertyDescriptors(new PropertyDescriptor[] {
-                newPropertyDescriptor(type, "spaceBefore"),
-                newPropertyDescriptor(type, "spaceAfter"),
-                newPropertyDescriptor(type, "prefix")
-            }));
+            beanClass = NoteReferenceFormat.class;
+            propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
+                newPropertyDescriptor(beanClass, "spaceBefore"),
+                newPropertyDescriptor(beanClass, "spaceAfter"),
+                newPropertyDescriptor(beanClass, "prefix")
+            });
 
             
         } catch (IntrospectionException e) {
         }
     }
     
-    private static PropertyDescriptor newPropertyDescriptor(Class type,
+    private static PropertyDescriptor newPropertyDescriptor(Class beanClass,
                                                             String property) 
                                                      throws IntrospectionException {
-        return new PropertyDescriptor(property, type);
+        return new PropertyDescriptor(property, beanClass);
     }
     
-    private static PropertyDescriptor newReadOnlyPropertyDescriptor(Class type,
+    private static PropertyDescriptor newReadOnlyPropertyDescriptor(Class beanClass,
                                                                     String property)
                                                              throws IntrospectionException {
-        return new PropertyDescriptor(property, type, 
+        return new PropertyDescriptor(property, beanClass, 
                 "get" + property.substring(0,1).toUpperCase() + property.substring(1).toLowerCase(), null);
     }
 }
