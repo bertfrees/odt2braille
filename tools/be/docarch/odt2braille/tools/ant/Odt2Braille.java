@@ -1,6 +1,8 @@
 package be.docarch.odt2braille.tools.ant;
 
 import java.io.File;
+import java.io.PrintStream;
+import java.util.Locale;
 import java.util.List;
 import java.util.logging.Level;
 import java.text.DecimalFormat;
@@ -13,6 +15,7 @@ import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.ODT2PEFConverter;
 import be.docarch.odt2braille.PEFHandler;
 import be.docarch.odt2braille.PEFFileFormat;
+import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 
@@ -27,6 +30,7 @@ public class Odt2Braille extends Task {
     private File liblouisDir;
     private Bean configuration = new Bean(Configuration.class);
     private Bean exportConfiguration = new Bean(ExportConfiguration.class);
+    private PrintStream out = System.out;
     
     public void setTargetfile(String file) {
         targetFile = new File(file);
@@ -63,6 +67,16 @@ public class Odt2Braille extends Task {
     public void execute() throws BuildException {
         validate();
         Constants.getLogger().setLevel(Level.SEVERE);
+        Constants.setStatusIndicator(new StatusIndicator() {
+            @Override
+            public void setStatus(String value) {
+                out.println(value);
+            }
+            @Override
+            public Locale getPreferredLocale() {
+                return Locale.getDefault();
+            }
+        });
         try {
             ODT odt = new ODT(srcFile);
             Constants.setLiblouisDirectory(liblouisDir);

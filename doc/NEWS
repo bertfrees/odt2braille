@@ -210,8 +210,6 @@ Localisation:
 Version 0.1.1
 =============================
 
-!! oude bewaarde settings verloren
-
 bugs fixed:
 
 - Math
@@ -272,3 +270,10 @@ Localisation:
 - Czech
 - Arabic
 - Polish
+
+=============================
+Version 0.1.2
+=============================
+
+Bugs fixed:
+- eindnoten: tekst die na noot kwam werd in noot zelf geplaatst

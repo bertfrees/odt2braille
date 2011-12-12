@@ -70,6 +70,9 @@ public class SetCommand implements Command {
     private static Object parse(String s, Class c) throws BuildException {
         if (c == String.class) {
             return s;
+        } else if (c == char.class ||
+                   c == Character.class) {
+            return s.charAt(0);
         } else if (c == boolean.class ||
                    c == Boolean.class) {
             return Boolean.parseBoolean(s);
