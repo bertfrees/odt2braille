@@ -850,10 +850,6 @@ INLINE ELEMENTS
             <xsl:with-param name="space-before" select="$paramNoterefSpaceBefore" />
             <xsl:with-param name="space-after"  select="$paramNoterefSpaceAfter"  />
         </xsl:call-template>
-        <xsl:variable name="note-class" select="@text:note-class" />
-        <xsl:if test="$note-class='endnote'">
-            <xsl:call-template name="endnote" />
-        </xsl:if>
     </xsl:template>
 
 
@@ -946,10 +942,13 @@ BLOCK ELEMENTS
                 </xsl:choose>
                 <xsl:if test="$notes">
 
-                    <!-- Footnotes -->
-                    <xsl:if test="current()//text:note[@text:note-class='footnote']">
-                        <xsl:call-template name="footnote">
-                            <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
+                    <!-- Footnotes & endnotes -->
+                    <xsl:variable name="foot-end-notes" as="element()*"
+                                  select="current()//text:note[@text:note-class='footnote' or
+                                                               @text:note-class='endnote']"/>
+                    <xsl:if test="$foot-end-notes">
+                        <xsl:call-template name="foot-end-notes">
+                            <xsl:with-param name="notes" select="$foot-end-notes" />
                         </xsl:call-template>
                     </xsl:if>
                 </xsl:if>
@@ -1023,11 +1022,14 @@ BLOCK ELEMENTS
                     </xsl:apply-templates>
                 </dtb:caption>
 
-                <!-- Footnotes -->
+                <!-- Footnotes & endnotes -->
                 <xsl:if test="$notes">
-                    <xsl:if test="current()//text:note[@text:note-class='footnote']">
-                        <xsl:call-template name="footnote">
-                            <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
+                    <xsl:variable name="foot-end-notes" as="element()*"
+                                  select="current()//text:note[@text:note-class='footnote' or
+                                                               @text:note-class='endnote']"/>
+                    <xsl:if test="$foot-end-notes">
+                        <xsl:call-template name="foot-end-notes">
+                            <xsl:with-param name="notes" select="$foot-end-notes" />
                         </xsl:call-template>
                     </xsl:if>
                 </xsl:if>
@@ -1103,11 +1105,14 @@ BLOCK ELEMENTS
                                 </xsl:when>
                             </xsl:choose>
 
-                            <!-- Footnotes -->
+                            <!-- Footnotes & endnotes -->
                             <xsl:if test="$notes">
-                                <xsl:if test="current()//text:note[@text:note-class='footnote']">
-                                    <xsl:call-template name="footnote">
-                                        <xsl:with-param name="notes" select="current()//text:note[@text:note-class='footnote']" />
+                                <xsl:variable name="foot-end-notes" as="element()*"
+                                              select="current()//text:note[@text:note-class='footnote' or
+                                                                           @text:note-class='endnote']"/>
+                                <xsl:if test="$foot-end-notes">
+                                    <xsl:call-template name="foot-end-notes">
+                                        <xsl:with-param name="notes" select="$foot-end-notes" />
                                     </xsl:call-template>
                                 </xsl:if>
                             </xsl:if>
@@ -1123,32 +1128,44 @@ BLOCK ELEMENTS
         </xsl:if>
     </xsl:template>
 
+
+    <!-- FOOTNOTES & ENDNOTES -->
+
+    <xsl:template name="foot-end-notes">
+        <xsl:param name="notes" />
+        <xsl:for-each select="$notes">
+            <xsl:choose>
+                <xsl:when test="current()/@text:note-class='footnote'">
+                    <xsl:call-template name="footnote"/>
+                </xsl:when>
+                <xsl:when test="current()/@text:note-class='endnote'">
+                    <xsl:call-template name="endnote"/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:for-each>
+    </xsl:template>
+
     <!-- FOOTNOTES -->
 
     <xsl:template name="footnote">
-        <xsl:param name="notes" />
-
-        <xsl:for-each select="$notes">
-            <dtb:note>
-                <xsl:attribute name="class">
-                    <xsl:value-of select="'footnote'" />
-                </xsl:attribute>
-                <xsl:call-template name="noteref" />
-                <xsl:apply-templates select="(current()/text:note-body/text:p)
-                                            |(current()/text:note-body/text:h)">
-                    <xsl:with-param name="frames"          select="false()" />
-                    <xsl:with-param name="notes"           select="false()" />
-                    <xsl:with-param name="specialtypeface" select="true()"  />
-                    <xsl:with-param name="omit-frames"     select="true()"  />
-                </xsl:apply-templates>
-            </dtb:note>
-        </xsl:for-each>
+        <dtb:note>
+            <xsl:attribute name="class">
+                <xsl:value-of select="'footnote'" />
+            </xsl:attribute>
+            <xsl:call-template name="noteref" />
+            <xsl:apply-templates select="(current()/text:note-body/text:p)
+                                        |(current()/text:note-body/text:h)">
+                <xsl:with-param name="frames"          select="false()" />
+                <xsl:with-param name="notes"           select="false()" />
+                <xsl:with-param name="specialtypeface" select="true()"  />
+                <xsl:with-param name="omit-frames"     select="true()"  />
+            </xsl:apply-templates>
+        </dtb:note>
     </xsl:template>
 
     <!-- ENDNOTE -->
 
-    <xsl:template name="endnote" >
-
+    <xsl:template name="endnote">
         <xsl:variable name="end-of-section">
             <xsl:call-template name="get-endnote-section">
                 <xsl:with-param name="start-section" select="./ancestor::text:section[1]" />
@@ -1393,15 +1410,17 @@ BLOCK ELEMENTS
                             </xsl:otherwise>
                         </xsl:choose>
 
-                        <!-- Table footnotes  -->
+                        <!-- Table footnotes & endnotes  -->
                         <xsl:variable name="depth" select="count(current()/ancestor::*)" />
-                        <xsl:variable name="notes" select="current()//text:note[@text:note-class='footnote'
-                                                                           and (count(ancestor::table:table[1]/ancestor::*) = $depth)
-                                                                           and (count(ancestor::text:list[1]/ancestor::*) &lt; $depth)
-                                                                           and (count(ancestor::draw:frame[1]/ancestor::*) &lt; $depth) ]" />
-                        <xsl:if test="$notes">
-                            <xsl:call-template name="footnote">
-                                <xsl:with-param name="notes" select="$notes" />
+                        <xsl:variable name="foot-end-notes" as="element()*"
+                                      select="current()//text:note[(@text:note-class='footnote' or
+                                                                    @text:note-class='endnote')
+                                                              and (count(ancestor::table:table[1]/ancestor::*) = $depth)
+                                                              and (count(ancestor::text:list[1]/ancestor::*) &lt; $depth)
+                                                              and (count(ancestor::draw:frame[1]/ancestor::*) &lt; $depth) ]" />
+                        <xsl:if test="$foot-end-notes">
+                            <xsl:call-template name="foot-end-notes">
+                                <xsl:with-param name="notes" select="$foot-end-notes" />
                             </xsl:call-template>
                         </xsl:if>
                     </dtb:div>
@@ -1713,12 +1732,15 @@ BLOCK ELEMENTS
                     </dtb:div>
                 </xsl:if>
 
-                <!-- Footnotes in caption -->
+                <!-- Footnotes & endnotes in caption -->
                 <xsl:if test="$caption-id">
                     <xsl:variable name="caption" select="$body//text:p[@xml:id=$caption-id][1]" />
-                    <xsl:if test="$caption//text:note[@text:note-class='footnote']">
-                        <xsl:call-template name="footnote">
-                            <xsl:with-param name="notes" select="$caption//text:note[@text:note-class='footnote']" />
+                    <xsl:variable name="foot-end-notes" as="element()*"
+                                  select="$caption//text:note[@text:note-class='footnote' or
+                                                              @text:note-class='endnote']" />
+                    <xsl:if test="$foot-end-notes">
+                        <xsl:call-template name="foot-end-notes">
+                            <xsl:with-param name="notes" select="foot-end-notes" />
                         </xsl:call-template>
                     </xsl:if>
                 </xsl:if>
