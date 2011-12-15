@@ -1,7 +1,6 @@
 package be.docarch.odt2braille.ant;
 
 import java.io.File;
-import java.io.PrintStream;
 import java.util.Locale;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,7 +29,6 @@ public class Odt2Braille extends Task {
     private File liblouisDir;
     private Bean configuration = new Bean(Configuration.class);
     private Bean exportConfiguration = new Bean(ExportConfiguration.class);
-    private PrintStream out = System.out;
     
     public void setTargetfile(String file) {
         targetFile = new File(file);
@@ -70,7 +68,7 @@ public class Odt2Braille extends Task {
         Constants.setStatusIndicator(new StatusIndicator() {
             @Override
             public void setStatus(String value) {
-                out.println(value);
+                System.out.println(value);
             }
             @Override
             public Locale getPreferredLocale() {
