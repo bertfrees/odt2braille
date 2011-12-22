@@ -36,8 +36,8 @@ public class StatusIndicator {
      * Creates a new <code>StatusIndicator</code> instance.
      *
      */
-    public StatusIndicator() {
-        
+    public StatusIndicator() {        
+
         this.value = 0;
         this.increment = 0;
 

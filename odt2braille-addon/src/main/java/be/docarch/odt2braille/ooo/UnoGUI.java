@@ -195,13 +195,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Overwrite the default settings with settings loaded from the OpenOffice.org Writer document,
-     * execute the "Braille Configuration" dialog that enables users to change these settings
-     * and store the new settings if the user confirms.
-     *
-     * @return          <code>true</code> if the new settings were succesfully saved.
-     */
     public void changeSettings() {
 
         logger.entering("UnoGUI", "changeSettings");
@@ -257,22 +250,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Export the document as a generic or embosser-specific braille file.
-     *
-     * <ul>
-     * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
-     *     if necessary, a first warning box with possible accessibility issues is shown.</li>
-     * <li>The user selects the location of the output file in a "Save as" dialog.</li>
-     * <li>The document is converted to a temporary .pef file.</li>
-     * <li>If necessary, a second warning box with possible accessibility issues is shown.</li>
-     * <li>The .pef file is converted to the specified output format and stored at its final location.</li>
-     * </ul>
-     *
-     * @return          <code>true</code> if the document is succesfully exported to a braille file,
-     *                  <code>false</code> if the user aborts the process at any time.
-     */
     public void exportBraille () {
 
         logger.entering("UnoGUI", "exportBraille");
@@ -450,24 +427,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Print the document on a braille embosser.
-     *
-     * <ul>
-     * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
-     *     if necessary, a first warning box with possible accessibility issues is shown.</li>
-     * <li>Either the "Emboss" dialog or the "Emboss on Interpoint 55" is shown, depending on the selected embosser type.</li>
-     * <li>The document is converted to a temporary .pef file.</li>
-     * <li>If necessary, a second warning box with possible accessibility issues is shown.</li>
-     * <li>If the "Interpoint 55" was selected, the .pef file is converted to a .brf file
-     *     that can be interpreted by the wprint55 program, and wprint55 is executed. Otherwise,
-     *     the .pef file is converted to the appropriate embosser-specific braille format and send to the specified printer device.</li>
-     * </ul>
-     *
-     * @return          <code>true</code> if the document is succesfully printed on a braille embosser,
-     *                  <code>false</code> if the user aborts the process at any time.
-     */
     public void embossBraille () {
 
         logger.entering("UnoGUI", "embossBraille");
@@ -699,14 +658,17 @@ public class UnoGUI {
 
             // TODO: Launch e2u.jar with PEF file as input
 
-
-
+			
+			
 
             logger.exiting("UnoGUI", "embossBrailleMacOS");
 
         } catch (Exception ex) {
             handleUnexpectedException(ex);
         } finally {
+            if (progressBar != null) {
+                progressBar.close();
+            }
             if (odt != null) {
                 odt.close();
             }
@@ -932,7 +894,7 @@ public class UnoGUI {
      * Handling of an unexpected exception.
      * A message box is shown with a reference to the log file.
      *
-     * @param   ex     The exception
+     * @param   e     The exception
      */
     private void handleUnexpectedException(Exception e) {
 
