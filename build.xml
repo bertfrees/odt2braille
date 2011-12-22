@@ -21,7 +21,12 @@
   /- ===========================================================================
   /-->
 
-  
+    <!-- Hook target for NetBeans.
+         'core-jar' can be changed into something else, depending on what you want to happen when you click 'Build' -->
+    <target name="jar"
+            description="Hook target for NetBeans"
+            depends="core-jar" />
+
     <target name="uno-package"
             description="Create UNO extension package"
             depends="addon-jar,images,registry,-delete-uno-package,-pre-uno-package,-do-uno-package,-post-uno-package"/>
@@ -48,10 +53,6 @@
     <target name="tools-zip"
             description="Make a ZIP that includes the tools JAR, the lib folder and the liblouis folder"
             depends="tools-jar,-zip-tools"/>
-	
-    <target name="jar"
-            description="Default target: Build core JAR"
-            depends="core-jar" />
 	
     <target name="javadoc"
             description="Build Javadoc"
