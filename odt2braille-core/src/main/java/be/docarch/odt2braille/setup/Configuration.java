@@ -266,7 +266,6 @@ public class Configuration implements Serializable {
 
     private final boolean PAGE_NUMBER_IN_HEADER_FOOTER;
 
-
     /***********/
     /* PRIVATE */
     /***********/
@@ -274,6 +273,8 @@ public class Configuration implements Serializable {
     private Element rootSection;
     private List<String> allSections;
     private Map<String,SectionVolume> volumeSectionsMap;
+    private ParagraphStyle rootParagraphStyle = null;
+    private CharacterStyle rootCharacterStyle = null;
 
 
     /***************/
@@ -385,6 +386,15 @@ public class Configuration implements Serializable {
 
         paragraphStyles = new ParagraphStyleMap(odt.extractParagraphStyles());
         characterStyles = new CharacterStyleMap(odt.extractCharacterStyles());
+        
+        for (ParagraphStyle style : paragraphStyles.values()) {
+            if (style.getParentStyle() == null) {
+                rootParagraphStyle = style; break;
+            }
+        }
+        
+        if (rootParagraphStyle == null) { throw new RuntimeException("Root paragraph style not found"); }
+        
         headingStyles = new HeadingStyleMap();
         tableStyles = new TableStyleMap();
         listStyles = new ListStyleMap();
@@ -1036,7 +1046,7 @@ public class Configuration implements Serializable {
 
     public class ParagraphStyleSetting extends OptionSetting<ParagraphStyle> {
 
-        private ParagraphStyle style = paragraphStyles.get("Standard");
+        private ParagraphStyle style = rootParagraphStyle;
 
         public Collection<ParagraphStyle> options() { return paragraphStyles.values(); }
 

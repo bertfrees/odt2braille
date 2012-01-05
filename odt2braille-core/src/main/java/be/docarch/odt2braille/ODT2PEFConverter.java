@@ -53,10 +53,7 @@ public class ODT2PEFConverter {
         PEF pef = new PEF(odt, pefConfiguration, liblouisXML, checker);
 
         // Convert
-        if(!pef.makePEF()) {
-            Constants.getStatusIndicator().finish(false);
-            throw new ConversionException("Conversion exception");
-        }
+        pef.makePEF();
 
         // Check PEF file
         if (checker != null) {

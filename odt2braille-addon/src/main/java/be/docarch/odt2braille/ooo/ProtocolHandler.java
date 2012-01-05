@@ -35,6 +35,8 @@ import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.util.URL;
 
+import be.docarch.odt2braille.Constants;
+
 public final class ProtocolHandler extends WeakBase
 		implements XServiceInfo, XDispatchProvider, XInitialization, XDispatch {
 	
@@ -109,18 +111,22 @@ public final class ProtocolHandler extends WeakBase
 	
 	/* XDispatch */
 	public void dispatch(URL url, PropertyValue[] args) {
-		if (url.Protocol.startsWith("be.docarch.odt2braille")) {
-			init();
-			if (url.Path.compareTo("FormatCommand") == 0)
-				gui.changeSettings();
-			else if (url.Path.compareTo("ExportCommand") == 0)
-				gui.exportBraille();
-			else if (url.Path.compareTo("EmbossCommand") == 0)
-				gui.embossBraille();
-			else if (url.Path.compareTo("InsertDotPatternCommand") == 0)
-				gui.insertBraille();
-			else if (url.Path.compareTo("InsertSixKeysCommand") == 0)
-				gui.sixKeyEntryMode(); }
+		try {
+			if (url.Protocol.startsWith("be.docarch.odt2braille")) {
+				init();
+				if (url.Path.compareTo("FormatCommand") == 0)
+					gui.changeSettings();
+				else if (url.Path.compareTo("ExportCommand") == 0)
+					gui.exportBraille();
+				else if (url.Path.compareTo("EmbossCommand") == 0)
+					gui.embossBraille();
+				else if (url.Path.compareTo("InsertDotPatternCommand") == 0)
+					gui.insertBraille();
+				else if (url.Path.compareTo("InsertSixKeysCommand") == 0)
+					gui.sixKeyEntryMode(); }
+		} finally {
+			Constants.flushLogger();
+		}
 	}
 	
 	public void addStatusListener(XStatusListener listener, URL url) {}

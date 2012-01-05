@@ -176,7 +176,7 @@ public class PEF {
      *
      */
 
-    public boolean makePEF() throws IOException,
+    public void makePEF() throws IOException,
                                     ParserConfigurationException,
                                     TransformerException,
                                     InterruptedException,
@@ -344,11 +344,11 @@ public class PEF {
         logger.exiting("PEF", "makePEF");
 
         if (!validatePEF(pefFile)) {
-            return false;
+            Constants.getStatusIndicator().finish(false);
+            throw new ConversionException("PEF file invalid");
         }
 
         statusIndicator.finish(true);
-        return true;
     }
 
     /**

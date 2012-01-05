@@ -44,7 +44,8 @@ public class Constants {
     private static File liblouisDir;
     private static File tablesDir;
     private static File logFile;
-    private static Logger logger;
+    private static Logger customLogger;
+    private static Logger defaultLogger;
     private static Handler logFileHandler;
     private static StatusIndicator statusIndicator;
 
@@ -60,36 +61,53 @@ public class Constants {
         return tempDirectory;
     }
 
-    public static boolean setLogger(Logger logger) {
-        if (Constants.logger != null) { return false; }
-        Constants.logger = logger;
-        return true;
+    public static void setLogger(Logger logger) {
+        Constants.customLogger = logger;
     }
 
     public static Logger getLogger() {
-        if (logger == null) {
-            logger = Logger.getLogger("be.docarch.odt2braille");
-            logger.setLevel(Level.FINEST);
+        if (customLogger != null) {
+            return customLogger;
+        } else {
+            return getDefaultLogger();
+        }
+    }
+    
+    private static Logger getDefaultLogger() {
+        if (defaultLogger == null) {
+            defaultLogger = Logger.getLogger("be.docarch.odt2braille");
+            defaultLogger.setLevel(Level.FINEST);
             try {
                 logFile = File.createTempFile(TMP_PREFIX, ".log", getTempDirectory());
                 logFileHandler = new FileHandler(logFile.getAbsolutePath());
-                logFile.deleteOnExit();
                 logFileHandler.setFormatter(new SimpleFormatter());
-                logger.addHandler(logFileHandler);
+                logFile.deleteOnExit();
+                defaultLogger.addHandler(logFileHandler);
+                defaultLogger.log(Level.INFO, "log file: {0}", logFile.getAbsolutePath());
             } catch (IOException e) {
+                defaultLogger.log(Level.SEVERE, null, e);
             }
         }
-        return logger;
+        return defaultLogger;
     }
 
     public static File getLogFile() {
         return logFile;
     }
-
-    public static void cleanLogger () {
-        if (logFileHandler != null) {
+    
+    public static void flushLogger() {
+        if (logFileHandler != null && defaultLogger != null) {
             logFileHandler.flush();
+        }
+    }
+    
+    public static void closeLogger () {
+        if (logFileHandler != null && defaultLogger != null) {
+            defaultLogger.entering("Constants", "cleanLogger");
             logFileHandler.close();
+            defaultLogger.removeHandler(logFileHandler);
+            defaultLogger = null;
+            logFileHandler = null;
         }
     }
 
