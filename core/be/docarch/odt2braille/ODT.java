@@ -436,7 +436,11 @@ public class ODT {
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
             if (firstNode != null) {
                 statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
+                try {
+                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
+                } catch (NumberFormatException e) {
+                    statusIndicator.setSteps(0);
+                }
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1"));
                 insertPagination(contentRoot, stylesRoot, firstNode, 0, "Standard", true);
                 statusIndicator.finish(true);

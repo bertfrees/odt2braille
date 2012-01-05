@@ -906,11 +906,4 @@ public class UnoGUI {
         UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title, message);
 
     }
-
-    /**
-     * Flush and close the logfile handler.
-     */
-    public void cleanLogger () {
-        Constants.cleanLogger();
-    }
 }
