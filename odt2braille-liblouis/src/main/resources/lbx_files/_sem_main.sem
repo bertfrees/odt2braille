@@ -20,6 +20,7 @@
     no bodymatter
     no rearmatter
     skip flag
+    keepWithNextDiv div,keep-with-next,true
 	
 # Volumes
 
@@ -114,16 +115,16 @@
 	wrap-heading9   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h9])
 	wrap-heading10  &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading[descendant::dtb:h10])
 
-	pad-heading1    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h1])
-	pad-heading2    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h2])
-	pad-heading3    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h3])
-	pad-heading4    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h4])
-	pad-heading5    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h5])
-	pad-heading6    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h6])
-	pad-heading7    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h7])
-	pad-heading8    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h8])
-	pad-heading9    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h9])
-	pad-heading10   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='border'][child::dtb:h10])
+	pad-heading1    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h1])
+	pad-heading2    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h2])
+	pad-heading3    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h3])
+	pad-heading4    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h4])
+	pad-heading5    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h5])
+	pad-heading6    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h6])
+	pad-heading7    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h7])
+	pad-heading8    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h8])
+	pad-heading9    &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h9])
+	pad-heading10   &xpath(//*[not(self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li)]/dtb:heading/dtb:div[@class='padding'][child::dtb:h10])
 	
 	contentsheader  &xpath(//dtb:div[@class='toc']//dtb:h1)
 	no              &xpath(//*[self::dtb:th or self::dtb:td or self::dtb:note or self::dtb:li]/*[self::dtb:heading or self::dtb:paragraph])
@@ -211,7 +212,7 @@
 # Tables
 	
     table table
-    pad-table &xpath(//dtb:table/dtb:div[@class='border'])
+    pad-table &xpath(//dtb:table/dtb:div[@class='padding'])
     no thead
     no tbody
     tablerow tr
@@ -246,38 +247,38 @@
 # ----------------------------------------------------------------------------------------------
 # Borders (_sem_borders.sem)
 
-    boxline &xpath(//dtb:table//dtb:hr[preceding-sibling::*[1][self::dtb:thead]])                                     3
+    boxline &xpath(//dtb:table//dtb:hr[preceding-sibling::*[1][self::dtb:thead]])                       3
 
-#	boxline &xpath(//dtb:table/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]])                   ?
-#	boxline &xpath(//dtb:table/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]])                   ?
-#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border']]])     ?
-#	boxline &xpath(//dtb:div[@class='frame']/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border']]])     ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h1]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h2]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h3]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h4]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h5]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h6]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h7]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h8]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h9]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[following-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h10]]]) ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h1]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h2]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h3]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h4]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h5]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h6]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h7]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h8]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h9]]])  ?
-#	boxline &xpath(//dtb:heading/dtb:hr[preceding-sibling::*[1][self::dtb:div[@class='border'][child::dtb:h10]]]) ?
+#	boxline &xpath(//dtb:table/dtb:div[@class='border' and @at='top']/dtb:hr)                           ?
+#	boxline &xpath(//dtb:table/dtb:div[@class='border' and @at='bottom']/dtb:hr)                        ?
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='top']/dtb:hr)             ?
+#	boxline &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='bottom']/dtb:hr)          ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h1]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h2]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h3]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h4]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h5]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h6]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h7]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h8]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h9]/dtb:div[@class='border' and @at='top']/dtb:hr)     ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h10]/dtb:div[@class='border' and @at='top']/dtb:hr)    ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h1]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h2]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h3]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h4]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h5]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h6]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h7]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h8]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h9]/dtb:div[@class='border' and @at='bottom']/dtb:hr)  ?
+#	boxline &xpath(//dtb:heading[descendant::dtb:h10]/dtb:div[@class='border' and @at='bottom']/dtb:hr) ?
 # ----------------------------------------------------------------------------------------------
 
 # Textboxes
 
     frame div,class,frame
-    pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='border'])
+    pad-frame &xpath(//dtb:div[@class='frame']/dtb:div[@class='padding'])
 
 # Pictures
 

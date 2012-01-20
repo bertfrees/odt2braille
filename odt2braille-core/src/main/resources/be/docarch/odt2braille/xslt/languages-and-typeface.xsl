@@ -38,10 +38,8 @@
                     omit-xml-declaration="no"
                     xalan:indent-amount="3" />
 
-        <xsl:param name="paramLanguages"                as="xsd:string*"   />
+        <xsl:param name="paramLocales"                  as="xsd:string*"   />
         <xsl:param name="paramTranslationTables"        as="xsd:string*"   />
-        <xsl:param name="paramGrades"                   as="xsd:integer*"  />
-        <xsl:param name="paramEightDots"                as="xsd:boolean*"  />
 
         <xsl:param name="paramMathCode"                 as="xsd:string"    />
 
@@ -53,19 +51,12 @@
 
         <xsl:variable name="main-lang">
             <xsl:variable name="index" as="xsd:integer">
-                <xsl:call-template name="get-language-index">
-                    <xsl:with-param name="language" select="dtb:dtbook/@xml:lang" />
+                <xsl:call-template name="get-locale-index">
+                    <xsl:with-param name="locale" select="dtb:dtbook/@xml:lang" />
                 </xsl:call-template>
             </xsl:variable>
             <xsl:if test="$index>0">
                 <xsl:value-of select="$paramTranslationTables[$index]" />
-                <xsl:if test="$paramGrades[$index] > -1">
-                    <xsl:text>-g</xsl:text>
-                    <xsl:value-of select="$paramGrades[$index]" />
-                </xsl:if>
-                <xsl:if test="$paramEightDots[$index]">
-                    <xsl:text>-8d</xsl:text>
-                </xsl:if>
             </xsl:if>
         </xsl:variable>
 
@@ -295,20 +286,13 @@
         <xsl:choose>
             <xsl:when test="count($node/ancestor::dtb:span[@lang]) > 0 ">
                 <xsl:variable name="index" as="xsd:integer">
-                    <xsl:call-template name="get-language-index">
-                        <xsl:with-param name="language" select="$node/ancestor::dtb:span[@lang][1]/@lang" />
+                    <xsl:call-template name="get-locale-index">
+                        <xsl:with-param name="locale" select="$node/ancestor::dtb:span[@lang][1]/@lang" />
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
                     <xsl:when test="$index>0">
                         <xsl:value-of select="$paramTranslationTables[$index]" />
-                        <xsl:if test="$paramGrades[$index] > -1">
-                            <xsl:text>-g</xsl:text>
-                            <xsl:value-of select="$paramGrades[$index]" />
-                        </xsl:if>
-                        <xsl:if test="$paramEightDots[$index]">
-                            <xsl:text>-8d</xsl:text>
-                        </xsl:if>
                     </xsl:when>
                     <xsl:otherwise>
                         <xsl:value-of select="$main-lang" />
@@ -322,11 +306,12 @@
     </xsl:template>
     
 
-    <xsl:template name="get-language-index">
-        <xsl:param name="language" />
+    <xsl:template name="get-locale-index">
+        <xsl:param name="locale" />
         <xsl:call-template name="first-index-of">
-            <xsl:with-param name="array" select="$paramLanguages"/>
-            <xsl:with-param name="value" select="$language"/>
+            <xsl:with-param name="array" select="$paramLocales"/>
+            <xsl:with-param name="value" select="$locale"/>
+            <xsl:with-param name="case-sensitive" select="false()"/>
         </xsl:call-template>
     </xsl:template>
 
@@ -505,9 +490,10 @@
     <xsl:template name="first-index-of">
         <xsl:param name="array"/>
         <xsl:param name="value"/>
+        <xsl:param name="case-sensitive" as="xsd:boolean" select="true()"/>
         <xsl:variable name="occurences" as="xsd:integer*">
             <xsl:for-each select="$array">
-                <xsl:if test=".=$value">
+                <xsl:if test="(.=$value) or (not($case-sensitive) and (lower-case(.)=lower-case($value)))">
                     <xsl:sequence select="position()" />
                 </xsl:if>
             </xsl:for-each>

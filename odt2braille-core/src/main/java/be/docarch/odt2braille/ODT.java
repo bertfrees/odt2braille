@@ -1737,10 +1737,8 @@ public class ODT {
 
             List<String> manualVolumeSections = new ArrayList<String>();
             List<String> manualVolumeIDs = new ArrayList<String>();
-            List<String> languages = new ArrayList<String>();
+            List<String> locales = new ArrayList<String>();
             List<String> translationTables = new ArrayList<String>();
-            List<Integer> grades = new ArrayList<Integer>();
-            List<Boolean> eightDots = new ArrayList<Boolean>();
             List<String> configuredParagraphStyles = new ArrayList<String>();
             List<String> keepEmptyParagraphStyles = new ArrayList<String>();
             List<String> characterStyles = new ArrayList<String>();
@@ -1775,11 +1773,9 @@ public class ODT {
             for (Locale locale : configuration.getTranslationTables().keys()) {
             
                 TranslationTable t = configuration.getTranslationTables().get(locale);
-            
-                languages.add(locale.toString().replaceAll("_", "-"));
-                translationTables.add(t.getLocale());
-                grades.add(t.getGrade());
-                eightDots.add(t.getDots() == TranslationTable.Dots.EIGHTDOTS);
+                
+                locales.add(locale.toString().replaceAll("_", "-"));
+                translationTables.add(t.getID());
             
             }
 
@@ -1846,10 +1842,8 @@ public class ODT {
             mainXSL.setParameter("paramHeadingUpperBorder",        headingUpperBorder.toArray(new Boolean[headingUpperBorder.size()]));
             mainXSL.setParameter("paramHeadingLowerBorder",        headingLowerBorder.toArray(new Boolean[headingLowerBorder.size()]));
 
-            languagesAndTypefaceXSL.setParameter("paramLanguages",            languages.toArray(new String[languages.size()]));
+            languagesAndTypefaceXSL.setParameter("paramLocales",              locales.toArray(new String[locales.size()]));
             languagesAndTypefaceXSL.setParameter("paramTranslationTables",    translationTables.toArray(new String[translationTables.size()]));
-            languagesAndTypefaceXSL.setParameter("paramGrades",               grades.toArray(new Integer[grades.size()]));
-            languagesAndTypefaceXSL.setParameter("paramEightDots",            eightDots.toArray(new Boolean[eightDots.size()]));
             languagesAndTypefaceXSL.setParameter("paramMathCode",             configuration.getMathCode().name().toLowerCase());
 
             languagesAndTypefaceXSL.setParameter("paramCharacterStyles",      characterStyles.toArray(new String[characterStyles.size()]));

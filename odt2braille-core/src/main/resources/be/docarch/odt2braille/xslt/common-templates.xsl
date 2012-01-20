@@ -192,6 +192,73 @@
         </xsl:choose>
     </xsl:template>
 
+    <xsl:template name="get-language">
+        <xsl:param name="style-name" />
+        <xsl:param name="family" />
+        <xsl:variable name="language"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:text-properties/@fo:language" />
+        <xsl:choose>
+            <xsl:when test="$language">
+                <xsl:value-of select="$language" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name" />
+                        <xsl:with-param name="family"     select="$family"     />
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="not($parent-style-name='')">
+                        <xsl:call-template name="get-language">
+                            <xsl:with-param name="style-name" select="$parent-style-name" />
+                            <xsl:with-param name="family"     select="$family"            />
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="''" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template name="get-country">
+        <xsl:param name="style-name" />
+        <xsl:param name="family" />
+        <xsl:variable name="language"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:text-properties/@fo:language" />
+        <xsl:variable name="country"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:text-properties/@fo:country" />
+        <xsl:choose>
+            <xsl:when test="$language">
+                <xsl:value-of select="$country" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name" />
+                        <xsl:with-param name="family"     select="$family"     />
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="not($parent-style-name='')">
+                        <xsl:call-template name="get-country">
+                            <xsl:with-param name="style-name" select="$parent-style-name" />
+                            <xsl:with-param name="family"     select="$family"            />
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="''" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
     <xsl:template name="get-font-style">
         <xsl:param name="style-name" />
         <xsl:param name="family"     />
@@ -199,7 +266,7 @@
                       select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
                                           /style:text-properties/@fo:font-style" />
         <xsl:choose>
-            <xsl:when test="not($font-style='')">
+            <xsl:when test="$font-style">
                 <xsl:value-of select="$font-style" />
             </xsl:when>
             <xsl:otherwise>
@@ -231,7 +298,7 @@
                       select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
                                           /style:text-properties/@fo:font-weight" />
         <xsl:choose>
-            <xsl:when test="not($font-weight='')">
+            <xsl:when test="$font-weight">
                 <xsl:value-of select="$font-weight" />
             </xsl:when>
             <xsl:otherwise>
@@ -263,7 +330,7 @@
                       select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
                                           /style:text-properties/@fo:font-variant" />
         <xsl:choose>
-            <xsl:when test="not($font-variant='')">
+            <xsl:when test="$font-variant">
                 <xsl:value-of select="$font-variant" />
             </xsl:when>
             <xsl:otherwise>
@@ -295,7 +362,7 @@
                       select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
                                           /style:text-properties/@fo:text-transform" />
         <xsl:choose>
-            <xsl:when test="not($text-transform='')">
+            <xsl:when test="$text-transform">
                 <xsl:value-of select="$text-transform" />
             </xsl:when>
             <xsl:otherwise>
@@ -327,7 +394,7 @@
                       select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
                                           /style:text-properties/@style:text-underline-style" />
         <xsl:choose>
-            <xsl:when test="not($underline-style='')">
+            <xsl:when test="$underline-style">
                 <xsl:value-of select="$underline-style" />
             </xsl:when>
             <xsl:otherwise>
@@ -342,6 +409,80 @@
                         <xsl:call-template name="get-underline-style">
                             <xsl:with-param name="style-name" select="$parent-style-name" />
                             <xsl:with-param name="family"     select="$family"            />
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="''" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
+    <xsl:template name="get-border-top">
+        <xsl:param name="style-name" />
+        <xsl:variable name="family" select="'graphic'"/>
+        <xsl:variable name="border-top"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:graphic-properties/@fo:border-top" />
+        <xsl:variable name="border"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:graphic-properties/@fo:border" />
+        <xsl:choose>
+            <xsl:when test="$border-top">
+                <xsl:value-of select="$border-top" />
+            </xsl:when>
+            <xsl:when test="$border">
+                <xsl:value-of select="$border" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name" />
+                        <xsl:with-param name="family"     select="$family"     />
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="not($parent-style-name='')">
+                        <xsl:call-template name="get-border-top">
+                            <xsl:with-param name="style-name" select="$parent-style-name" />
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="''" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+
+    <xsl:template name="get-border-bottom">
+        <xsl:param name="style-name" />
+        <xsl:variable name="family" select="'graphic'"/>
+        <xsl:variable name="border-bottom"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:graphic-properties/@fo:border-bottom" />
+        <xsl:variable name="border"
+                      select="$all-styles//style:style[@style:name=$style-name and @style:family=$family]
+                                          /style:graphic-properties/@fo:border" />
+        <xsl:choose>
+            <xsl:when test="$border-bottom">
+                <xsl:value-of select="$border-bottom" />
+            </xsl:when>
+            <xsl:when test="$border">
+                <xsl:value-of select="$border" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name" />
+                        <xsl:with-param name="family"     select="$family"     />
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="not($parent-style-name='')">
+                        <xsl:call-template name="get-border-top">
+                            <xsl:with-param name="style-name" select="$parent-style-name" />
                         </xsl:call-template>
                     </xsl:when>
                     <xsl:otherwise>
