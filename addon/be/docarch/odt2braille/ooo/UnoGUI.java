@@ -729,6 +729,7 @@ public class UnoGUI {
             return (EmbossConfiguration)ConfigurationDecoder.readObject(input);
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
             return new EmbossConfiguration();
         }
     }
@@ -739,6 +740,33 @@ public class UnoGUI {
 
             OutputStream output = new FileOutputStream(
                     new File(packageLocation + File.separator + "settings" + File.separator + "embosser.xml"));
+            ConfigurationEncoder.writeObject(config, output);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+    
+    private ExportConfiguration loadExportConfiguration() {
+
+        try {
+
+            InputStream input = new FileInputStream(
+                    new File(packageLocation + File.separator + "settings" + File.separator + "export.xml"));
+            return (ExportConfiguration)ConfigurationDecoder.readObject(input);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+            return new ExportConfiguration();
+        }
+    }
+
+    private void saveExportConfiguration(ExportConfiguration config) {
+
+        try {
+
+            OutputStream output = new FileOutputStream(
+                    new File(packageLocation + File.separator + "settings" + File.separator + "export.xml"));
             ConfigurationEncoder.writeObject(config, output);
 
         } catch (Exception e) {
@@ -827,47 +855,6 @@ public class UnoGUI {
         }
 
         logger.exiting("UnoGUI", "saveConfiguration");
-    }
-
-    private ExportConfiguration loadExportConfiguration() {
-
-        try {
-
-            XResource document = getDocumentNode();
-            XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_EXPORT, null);
-            if (statements.hasMoreElements()) {
-                 String xml = ((Statement)statements.nextElement()).Object.getStringValue();
-                 InputStream input = new ByteArrayInputStream(xml.getBytes(RDF_ENCODING));
-                 return (ExportConfiguration)ConfigurationDecoder.readObject(input);
-            }
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
-        }
-
-        return new ExportConfiguration();
-    }
-
-    private void saveExportConfiguration(ExportConfiguration config) {
-
-        try {
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ConfigurationEncoder.writeObject(config, output);
-            String xml = output.toString(RDF_ENCODING).replaceFirst("<\\?xml.*?\\?>", "");
-
-            XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
-            XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);
-            XResource document = getDocumentNode();
-
-            metadataGraph.removeStatements(document, CONFIGURATION_EXPORT, null);
-            metadataGraph.addStatement(document, CONFIGURATION_EXPORT, configuration);
-
-            xModifiable.setModified(true);
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
-        }
     }
 
     private XResource getDocumentNode() throws IllegalArgumentException,

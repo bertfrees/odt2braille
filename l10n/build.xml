@@ -4,7 +4,7 @@
 	
 	<target name="l10n">
 	
-	    <property name="jdk.home" value="C:\Program Files (x86)\Java\jdk1.6.0_17"/>
+	    <property name="jdk.home" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home"/>
 		<property name="native2ascii.executable" value="${jdk.home}/bin/native2ascii"/>
 	
         <macrodef name="utf8-to-ascii">

@@ -44,6 +44,16 @@
 
 	softreturn &xpath(//dtb:span/dtb:br)
 	softreturn &xpath(//dtb:p/dtb:br)
+	softreturn &xpath(//dtb:h1/dtb:br)
+	softreturn &xpath(//dtb:h2/dtb:br)
+	softreturn &xpath(//dtb:h3/dtb:br)
+	softreturn &xpath(//dtb:h4/dtb:br)
+	softreturn &xpath(//dtb:h5/dtb:br)
+	softreturn &xpath(//dtb:h6/dtb:br)
+	softreturn &xpath(//dtb:h7/dtb:br)
+	softreturn &xpath(//dtb:h8/dtb:br)
+	softreturn &xpath(//dtb:h9/dtb:br)
+	softreturn &xpath(//dtb:h10/dtb:br)
 	blankline  &xpath(//*[not(self::dtb:span or self::dtb:p)]/dtb:br)
 	
 # Page numbers

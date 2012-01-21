@@ -1789,7 +1789,8 @@ public class ODT {
 
             }
 
-            for (HeadingStyle headStyle : configuration.getHeadingStyles().values()) {
+            for (int i=1; i<=10; i++) {
+                HeadingStyle headStyle = configuration.getHeadingStyles().get(i);
                 headingUpperBorder.add(headStyle.getUpperBorderEnabled());
                 headingLowerBorder.add(headStyle.getLowerBorderEnabled());
             }
