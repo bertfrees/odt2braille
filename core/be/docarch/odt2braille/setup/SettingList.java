@@ -19,6 +19,7 @@
 
 package be.docarch.odt2braille.setup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class SettingList<V> {
@@ -50,4 +51,22 @@ public abstract class SettingList<V> {
     @Override
     public int hashCode() { return values().hashCode(); }
 
+    // TODO: Event uitsuren naar SettingListListener bij listUpdated
+    //        * add()
+    //        * remove()
+    //        * clear()
+
+    private List<SettingListListener> listeners;
+
+    public void addListener(SettingListListener listener) {
+        if (listeners == null) { listeners = new ArrayList<SettingListListener>(); }
+        listeners.add(listener);
+    }
+
+    protected void fireEvent() {
+        if (listeners == null) { return; }
+        for (SettingListListener listener : listeners) {
+            listener.listUpdated(this);
+        }
+    }
 }

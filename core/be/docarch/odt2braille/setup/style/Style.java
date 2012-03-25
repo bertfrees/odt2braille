@@ -19,11 +19,13 @@
 
 package be.docarch.odt2braille.setup.style;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Bert Frees
  */
-public class Style {
+public class Style implements Serializable {
 
     public enum Alignment {LEFT, CENTERED, RIGHT};
     public enum FollowPrint { IGNORE, FOLLOW_PRINT };

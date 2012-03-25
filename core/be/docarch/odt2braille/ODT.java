@@ -74,7 +74,6 @@ import org.apache.xpath.XPathAPI;
 public class ODT {
 
     private static final Logger logger = Constants.getLogger();
-    private static final ProgressMonitor statusIndicator = Constants.getStatusIndicator();
     
     private static final NamespaceContext NAMESPACE = new NamespaceContext();
     private static final DocumentBuilder docBuilder;
@@ -109,7 +108,7 @@ public class ODT {
     private File usedStylesFile = null;
     private Map<String,Style> usedParagraphStyles = null;
     private Map<String,Style> usedCharacterStyles = null;
-    private String[] usedLanguages = null;
+    private Collection<Locale> usedLocales = null;
     
     private Locale odtLocale = null;
     private Integer pageCount = null;
@@ -136,7 +135,7 @@ public class ODT {
         odtContentDocument = null;
         usedParagraphStyles = null;
         usedCharacterStyles = null;
-        usedLanguages = null;
+        usedLocales = null;
         odtLocale = null;
         for (ODTListener listener : listeners) {
             listener.odtUpdated(this);
@@ -209,11 +208,11 @@ public class ODT {
         return odtContentDocument;
     }
 
-    public String[] getUsedLanguages() {
+    public Collection<Locale> getUsedLocales() {
 
-        if (usedLanguages == null) {
+        if (usedLocales == null) {
         
-            usedLanguages = new String[0];
+            usedLocales = new ArrayList<Locale>();
             
             try {
                 
@@ -235,13 +234,11 @@ public class ODT {
                         
                 transformer.convert(getContentFile(), usedLanguagesFile);
 
-                usedLanguages = new String[XPathUtils.evaluateNumber(usedLanguagesFile.toURL().openStream(), 
-                        "count(/my:languages/my:language)", NAMESPACE).intValue()];
-                usedLanguages[0] = XPathUtils.evaluateString(usedLanguagesFile.toURL().openStream(),
-                               "/my:languages/my:language[@class='main'][1]/@name", NAMESPACE);
-                for (int i=1; i<usedLanguages.length; i++) {
-                    usedLanguages[i] = XPathUtils.evaluateString(usedLanguagesFile.toURL().openStream(),
-                                   "/my:languages/my:language[not(@class='main')][" + i + "]/@name", NAMESPACE);
+                int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(),
+                        "count(/my:languages/my:language)", NAMESPACE).intValue();
+                for (int i=0; i<count; i++) {
+                    usedLocales.add(stringToLocale(XPathUtils.evaluateString(usedLanguagesFile.toURL().openStream(),
+                                   "/my:languages/my:language[not(@class='main')][" + i + "]/@name", NAMESPACE)));
                 }
                 
                 // Clean up
@@ -251,7 +248,7 @@ public class ODT {
             }
         }
 
-        return usedLanguages;
+        return new ArrayList<Locale>(usedLocales);
 
     }
 
@@ -550,6 +547,21 @@ public class ODT {
             } else {
                 return this;
             }
+        }
+    }
+    
+    
+    /********************/
+    /* HELPER FUNCTIONS */
+    /********************/
+    
+    private static Locale stringToLocale(String s) {
+
+        if (!s.contains("-")) {
+            return new Locale(s);
+        } else {
+            int i = s.indexOf("-");
+            return new Locale(s.substring(0,i), s.substring(i+1));
         }
     }
 }

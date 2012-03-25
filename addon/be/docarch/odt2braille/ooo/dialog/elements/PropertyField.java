@@ -35,9 +35,9 @@ import com.sun.star.beans.PropertyVetoException;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
 
-public abstract class PropertyField<P extends Property> implements Field,
-                                                                   PropertyListener,
-                                                                   DialogElementListener {
+public abstract class PropertyField<P extends Property<?>> implements Field,
+                                                                      PropertyListener,
+                                                                      DialogElementListener {
     protected P property;
     protected final XPropertySet propertySet;
     private final Collection<Integer> hashes = new HashSet<Integer>();
@@ -56,6 +56,7 @@ public abstract class PropertyField<P extends Property> implements Field,
     }
 
     public void link(P property) {
+    	//unlisten
         this.property = property;
         listenProperty(property);
         update();
@@ -69,6 +70,12 @@ public abstract class PropertyField<P extends Property> implements Field,
                 hashes.add(hash);
             }
         }
+    }
+    
+    public void unlistenProperty(P property) {
+    	
+    	// property.removeListener(this)
+    	
     }
     
     public void propertyUpdated(PropertyEvent event) {

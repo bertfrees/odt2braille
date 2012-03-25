@@ -36,7 +36,7 @@ import java.util.Collection;
  * @author Bert Frees
  */
 public class TocStyle extends Style
-                      implements Serializable {
+                               implements Serializable {
 
     private static final int LEVELS = 10;
     private final Configuration configuration;

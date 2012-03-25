@@ -56,7 +56,9 @@ import org.daisy.paper.PaperCatalog;
 public class EmbossConfiguration implements Serializable,
                                             PEFConfiguration {
     
-    /**************/
+	private static final long serialVersionUID = 1L;
+	
+	/**************/
     /* PROPERTIES */
     /**************/
     
@@ -376,7 +378,7 @@ public class EmbossConfiguration implements Serializable,
         }
         
         public Collection<Table> options() {
-            Collection<Table> options = new ArrayList();
+            Collection<Table> options = new ArrayList<Table>();
             for (Table tab : charSetCatalog.list()) {
                 if (accept(tab)) {
                     options.add(tab);
@@ -432,7 +434,7 @@ public class EmbossConfiguration implements Serializable,
         private Paper customTractorPaper = paperCatalog.get(CUSTOM_TRACTOR_PAPER);
         private Paper customRollPaper = paperCatalog.get(CUSTOM_ROLL_PAPER);
         private Paper customRowsColumnsPaper = paperCatalog.get(CUSTOM_ROWS_COLUMNS_PAPER);
-        private Collection<Paper> options = new HashSet();
+        private Collection<Paper> options = new HashSet<Paper>();
 
         @Override
         public boolean accept(Paper value) {
@@ -441,7 +443,7 @@ public class EmbossConfiguration implements Serializable,
         }
 
         public Collection<Paper> options() {
-            return new ArrayList(options);
+            return new ArrayList<Paper>(options);
         }
 
         protected boolean update(Paper value) {

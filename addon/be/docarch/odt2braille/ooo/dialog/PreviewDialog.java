@@ -567,9 +567,9 @@ public class PreviewDialog implements XItemListener,
         //        XPathAPI.eval(sections.get(currentSection-1).getDOMElement(), "page[" + currentPage + "]/preceding::page").bool());
 	            XPathAPI.eval(root, "/pef/body/volume[" + currentVolume + "]/section[" + currentSection + "]/page[" + currentPage + "]/preceding::page").bool());
 
-        //nextButtonProperties.setPropertyValue("Enabled",
+        nextButtonProperties.setPropertyValue("Enabled",
         //        XPathAPI.eval(sections.get(currentSection-1).getDOMElement(), "page[" + currentPage + "]/following::page").bool());
-        /       XPathAPI.eval(root, "/pef/body/volume[" + currentVolume + "]/section[" + currentSection + "]/page[" + currentPage + "]/following::page").bool());
+                XPathAPI.eval(root, "/pef/body/volume[" + currentVolume + "]/section[" + currentSection + "]/page[" + currentPage + "]/following::page").bool());
 
         decreaseFontSizeButtonProperties.setPropertyValue("Enabled", fontSize > MIN_FONTSIZE);
         increaseFontSizeButtonProperties.setPropertyValue("Enabled", fontSize < MAX_FONTSIZE);

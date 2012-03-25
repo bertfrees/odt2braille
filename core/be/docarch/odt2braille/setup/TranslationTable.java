@@ -131,8 +131,8 @@ public class TranslationTable implements Serializable {
 
         private String locale = DEFAULT_LOCALE;
 
-        public Collection options() {
-            return localeOptions;
+        public Collection<String> options() {
+            return new HashSet<String>(localeOptions);
         }
 
         public String get() {

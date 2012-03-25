@@ -232,7 +232,6 @@ public class Configuration implements Serializable {
     /* PRIVATE STATIC CONSTANTS */
     /****************************/
 
-    private static final Logger logger = Constants.getLogger();
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private static final boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
 
@@ -299,7 +298,6 @@ public class Configuration implements Serializable {
         L10N_endNotesPageTitle = bundle.getString("endNotesTitle");
         L10N_tableOfContentTitle = bundle.getString("tableOfContentTitle");
         
-        
 //        L10N_transcriptionInfo = bundle.getString("transcriptionInfo");
 
         /***************************
@@ -308,7 +306,7 @@ public class Configuration implements Serializable {
 
         /* DECLARATION */
 
-        translationTables = new TranslationTableMap();
+        translationTables = new TranslationTableMap(odt.getUsedLocales());
         noteReferenceFormats = new NoteReferenceFormatsMap();
 
         mathCode = new MathCodeSetting();
@@ -428,15 +426,6 @@ public class Configuration implements Serializable {
         bodyMatterMode.set(VolumeManagementMode.AUTOMATIC);
         sectionVolumeList.refresh();
 
-        String[] languages = odt.getUsedLanguages();
-        String mainTableLocale = TranslationTable.computeLocale(MAIN_LOCALE);
-        translationTables.get(MAIN_LOCALE).locale.set(mainTableLocale);
-        for (String language : languages) {
-            TranslationTable t = translationTables.get(stringToLocale(language));
-            t.locale.set(mainTableLocale);
-            t.grade.set(0);
-        }
-
 
         /* LINKING */
 
@@ -484,20 +473,26 @@ public class Configuration implements Serializable {
     public class TranslationTableMap extends SettingMap<Locale,TranslationTable> {
 
         private final Map<Locale,TranslationTable> map = new HashMap<Locale,TranslationTable>();
+        
+        public TranslationTableMap(Collection<Locale> locales) {
+            String mainTableLocale = TranslationTable.computeLocale(MAIN_LOCALE);
+            for (Locale locale : locales) {
+            	TranslationTable t = new TranslationTable(locale);
+            	t.locale.set(mainTableLocale);
+            	if (!locale.equals(MAIN_LOCALE)) {
+            		t.grade.set(1);
+                    t.grade.set(0);
+            	}
+                map.put(locale, t);
+            }
+        }
 
         public TranslationTable get(Locale key) {
-            add(key);
             return map.get(key);
         }
 
         public Collection<TranslationTable> values() { return map.values(); }
         public Collection<Locale> keys() { return map.keySet(); }
-
-        protected void add(Locale key) {
-            if (!map.containsKey(key)) {
-                map.put(key, new TranslationTable(key));
-            }
-        }
     }
 
     public class NoteReferenceFormatsMap extends SettingMap<String,NoteReferenceFormat> {
@@ -521,7 +516,7 @@ public class Configuration implements Serializable {
         public Collection<NoteReferenceFormat> values() { return map.values(); }
         public Collection<String> keys() { return map.keySet(); }
 
-        protected void add(String key) {
+        private void add(String key) {
             if (!map.containsKey(key)) {
                 map.put(key, new NoteReferenceFormat());
             }
@@ -928,7 +923,6 @@ public class Configuration implements Serializable {
         public ParagraphStyle get(String key) { return map.get(key); }
         public Collection<ParagraphStyle> values() { return map.values(); }
         public Collection<String> keys() { return map.keySet(); }
-        protected void add(String key) {}
     }
 
     public class CharacterStyleMap extends SettingMap<String,CharacterStyle> {
@@ -956,7 +950,6 @@ public class Configuration implements Serializable {
         public CharacterStyle get(String key) { return map.get(key); }
         public Collection<CharacterStyle> values() { return map.values(); }
         public Collection<String> keys() { return map.keySet(); }
-        protected void add(String key) {}
     }
 
     public class HeadingStyleMap extends SettingMap<Integer,HeadingStyle> {
@@ -970,7 +963,6 @@ public class Configuration implements Serializable {
         public HeadingStyle get(Integer key) { return map.get(key); }
         public Collection<HeadingStyle> values() { return map.values(); }
         public Collection<Integer> keys() { return map.keySet(); }
-        protected void add(Integer key) {}
     }
 
     public class TableStyleMap extends SettingMap<String,TableStyle> {
@@ -984,11 +976,6 @@ public class Configuration implements Serializable {
         public TableStyle get(String key) { return map.get(key); }
         public Collection<TableStyle> values() { return map.values(); }
         public Collection<String> keys() { return map.keySet(); }
-        protected void add(String key) {
-            if (!map.containsKey(key)) {
-                map.put(key, new TableStyle(key));
-            }
-        }
     }
 
     public class ListStyleMap extends SettingMap<Integer,ListStyle> {
@@ -1008,7 +995,6 @@ public class Configuration implements Serializable {
         public ListStyle get(Integer key) { return map.get(key); }
         public Collection<ListStyle> values() { return map.values(); }
         public Collection<Integer> keys() { return map.keySet(); }
-        protected void add(Integer key) {}
     }
 
     public class ParagraphStyleSetting extends OptionSetting<ParagraphStyle> {
@@ -1377,16 +1363,6 @@ public class Configuration implements Serializable {
 
     private String capitalizeFirstLetter(String in) {
         return in.substring(0,1).toUpperCase() + in.substring(1);
-    }
-
-    private static Locale stringToLocale(String s) {
-
-        if (!s.contains("-")) {
-            return new Locale(s);
-        } else {
-            int i = s.indexOf("-");
-            return new Locale(s.substring(0,i), s.substring(i+1));
-        }
     }
 
     private boolean sectionInBodyMatter(String section) {

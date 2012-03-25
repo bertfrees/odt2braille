@@ -23,15 +23,19 @@ import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Property<T> {
+    
+    public abstract T get();
 
     private List<PropertyListener> listeners;
     
-    public abstract T get();
-    
     public void addListener(PropertyListener listener) {
-        
         if (listeners == null) { listeners = new ArrayList<PropertyListener>(); }
         listeners.add(listener);
+    }
+    
+    public void removeListener(PropertyListener listener) {
+    	// enkel toegelaten indien listener zelf geen Property is ! 
+    	
     }
     
     protected void fireEvent(boolean valueChanged, boolean contextChanged) {

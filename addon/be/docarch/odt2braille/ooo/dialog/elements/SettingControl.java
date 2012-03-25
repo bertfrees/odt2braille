@@ -30,9 +30,9 @@ import com.sun.star.lang.EventObject;
 import com.sun.star.lang.IllegalArgumentException;
 import com.sun.star.lang.WrappedTargetException;
 
-public abstract class SettingControl<S extends Setting> extends PropertyField<S>
-                                                     implements Control,
-                                                                XEventListener {
+public abstract class SettingControl<S extends Setting<?>> extends PropertyField<S>
+                                                           implements Control,
+                                                                      XEventListener {
 
     public SettingControl(XControl control) {
         super(control);

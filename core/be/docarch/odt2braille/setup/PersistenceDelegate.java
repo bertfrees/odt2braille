@@ -107,7 +107,7 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                     oldValue = oldMap.get(key);
                     newValue = newMap.get(key);
 
-                    if (!oldValue.equals(newValue)) {
+                    if (newValue != null && !oldValue.equals(newValue)) {
                         if (!(key instanceof String || key instanceof Integer)) {
                             out.writeExpression(instantiate(key, out));
                         }

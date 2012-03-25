@@ -70,6 +70,7 @@
             description="Build user and developer documentation"
             depends="-build-documentation"/>
 
+    <!-- TODO: licenses build.xml bestand en header bestanden uit licences folder verwijderen -->
     <target name="licenses"
             description="Add license headers">
         <ant dir="licenses" inheritAll="false" />
@@ -165,6 +166,8 @@
         <property name="dist.tools.jar" value="${dist.dir}/${tools.jar}"/>
         <property name="dist.tools.zip" value="${dist.dir}/${tools.zip}"/>
         <property name="dist.javadoc.dir" value="${dist.dir}/javadoc"/>
+
+        <!-- TODO: dist/lib folder niet kopiëren naar .oxt indien core.deploy.dir isset -->
         <pathconvert property="core.deploy.dir"><path path="${dist.dir}/lib"/></pathconvert>
 
         <property name="build.dir" value="build"/>

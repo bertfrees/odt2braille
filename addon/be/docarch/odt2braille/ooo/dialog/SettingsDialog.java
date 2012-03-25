@@ -3509,7 +3509,7 @@ public class SettingsDialog {
             listeners.add(listener);
         }
 
-        public void listenControl(boolean onOff) {
+        private void listenControl(boolean onOff) {
             if (onOff) {
                 listbox.addItemListener(this);
             } else {

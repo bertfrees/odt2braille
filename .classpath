@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="addon"/>
+	<classpathentry kind="src" path="core"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="tools"/>
+	<classpathentry kind="lib" path="lib/accessodf.jar"/>
+	<classpathentry kind="lib" path="lib/ant.jar"/>
+	<classpathentry kind="lib" path="lib/brailleUtils-catalog-1.2b.jar"/>
+	<classpathentry kind="lib" path="lib/brailleUtils-core-1.2b.jar"/>
+	<classpathentry kind="lib" path="lib/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/junit-4.4.jar"/>
+	<classpathentry kind="lib" path="lib/saxon9he.jar"/>
+	<classpathentry kind="lib" path="lib/xalan.jar"/>
+	<classpathentry kind="lib" path="lib/xmlunit-1.2.jar"/>
+	<classpathentry kind="lib" path="/Applications/OpenOffice.org.app/Contents/basis-link/ure-link/share/java/juh.jar"/>
+	<classpathentry kind="lib" path="/Applications/OpenOffice.org.app/Contents/basis-link/ure-link/share/java/jurt.jar"/>
+	<classpathentry kind="lib" path="/Applications/OpenOffice.org.app/Contents/basis-link/ure-link/share/java/ridl.jar"/>
+	<classpathentry kind="lib" path="/Applications/OpenOffice.org.app/Contents/basis-link/program/classes/unoil.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
