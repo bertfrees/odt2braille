@@ -39,7 +39,7 @@
         <xsl:variable name="automatic-styles" select="/office:document-content/office:automatic-styles" />
         <xsl:variable name="all-styles"       select="$styles | $automatic-styles" />
 
-        <xsl:include  href="common-templates.xsl" />
+        <xsl:include  href="style-templates.xsl" />
 
     <xsl:template match="@*|node()">
         <xsl:copy>

@@ -69,7 +69,7 @@ public class NamespaceContext implements javax.xml.namespace.NamespaceContext {
         } else if ("pef".equals(prefix)){
             return "http://www.daisy.org/ns/2008/pef";
 
-        } else if ("o2b".equals(prefix)){
+        } else if ("my".equals(prefix)){
             return "http://odt2braille.sf.net";
 
         } else {
@@ -115,7 +115,7 @@ public class NamespaceContext implements javax.xml.namespace.NamespaceContext {
             return "pef";
 
         } else if("http://odt2braille.sf.net".equals(namespaceURI)){
-            return "o2b";
+            return "my";
 
         } else {
             return null;

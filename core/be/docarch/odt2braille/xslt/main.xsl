@@ -23,35 +23,34 @@
 
 <xsl:stylesheet version="2.0"
 
-        xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-        xmlns:ns1="http://www.docarch.be/odt2braille/"
-        xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        xmlns:dc="http://purl.org/dc/elements/1.1/"
-        xmlns:math="http://www.w3.org/1998/Math/MathML"
-        xmlns:dom="http://www.w3.org/2001/xml-events"
-        xmlns:xforms="http://www.w3.org/2002/xforms"
-        xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:exsl="http://exslt.org/common"
-        xmlns:xalan="http://xml.apache.org/xslt"
-        xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
-        xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
-        xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
-        xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
-        xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
-        xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
-        xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
-        xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
-        xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
-        xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
-        xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"
-        xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
-        xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
-        xmlns:o2b="http://odt2braille.sf.net"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                xmlns:ns1="http://www.docarch.be/odt2braille/"
+                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:dc="http://purl.org/dc/elements/1.1/"
+                xmlns:math="http://www.w3.org/1998/Math/MathML"
+                xmlns:dom="http://www.w3.org/2001/xml-events"
+                xmlns:xforms="http://www.w3.org/2002/xforms"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                xmlns:exsl="http://exslt.org/common"
+                xmlns:xalan="http://xml.apache.org/xslt"
+                xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
+                xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
+                xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
+                xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0"
+                xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0"
+                xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
+                xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0"
+                xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0"
+                xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0"
+                xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0"
+                xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0"
+                xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0"
+                xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
 
-        exclude-result-prefixes="o2b dtb exsl office style dom xforms xsi xsd text table draw fo
+                exclude-result-prefixes="dtb exsl office style dom xforms xsi xsd text table draw fo
                                  xlink number svg chart dr3d math form script dc meta xalan rdf ns1" >
 
         <xsl:output method="xml"
@@ -81,6 +80,7 @@
         <xsl:param name="paramPictureOpeningMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
         <xsl:param name="paramPictureClosingMark"         as="xsd:string"   select="'&#x2820;&#x2804;'"/>
 
+        <xsl:param name="paramConfiguredCharacterStyles"  as="xsd:string*"  />
         <xsl:param name="paramConfiguredParagraphStyles"  as="xsd:string*"  />
         <xsl:param name="paramKeepEmptyParagraphStyles"   as="xsd:string*"  />
         <xsl:param name="paramNoterefNumberPrefixes"      as="xsd:string*"  />
@@ -131,7 +131,7 @@
                                    table:table table:table-row table:table-cell draw:frame draw:image office:annotation
                                    math:math math:annotation math:semantics math:mo math:mi math:mrow math:msup" />
 
-        <xsl:include href="common-templates.xsl" />
+        <xsl:include href="style-templates.xsl" />
 
     <!--
 =============
@@ -156,7 +156,7 @@ DOCUMENT ROOT
             <dtb:book>
 
                 <!-- FRONTMATTER -->
-                <dtb:frontmatter>                    
+                <dtb:frontmatter>
                     <xsl:variable name="frontmatter-section" as="xsd:string">
                         <xsl:call-template name="get-frontmatter-section" />
                     </xsl:variable>
@@ -257,7 +257,7 @@ TOP LEVEL
             <xsl:when test="name(current())='table:table'">
                 <xsl:call-template name="table"/>
             </xsl:when>
-            
+
             <!-- BIBLIOGRAPHY -->
             <xsl:when test="name(current())='text:bibliography'">
                 <xsl:call-template name="bibliography" />
@@ -274,13 +274,13 @@ TOP LEVEL
             </xsl:when>
 
             <!-- SECTIONS -->
-            <xsl:when test="name(current())='text:section'">                
+            <xsl:when test="name(current())='text:section'">
                 <xsl:variable name="section-name" select="@text:name" />
                 <xsl:variable name="frontmatter-section" as="xsd:string">
                     <xsl:call-template name="get-frontmatter-section"/>
                 </xsl:variable>
                 <xsl:choose>
-                    
+
                     <!-- NOT RENDERED FRONTMATTER -->
                     <xsl:when test="$section-name=$frontmatter-section and not($frontmatter-mode)">
                         <xsl:if test="$pagenumbers">
@@ -416,7 +416,7 @@ TOP LEVEL
             </dtb:note-section>
         </xsl:if>
     </xsl:template>
-    
+
 
     <!--
 ===============
@@ -706,16 +706,16 @@ INLINE ELEMENTS
 
         <xsl:if test="string(.) or count(./*) > 0">
 
-            <xsl:variable name="character-style-name">
-                <xsl:call-template name="get-character-style-name">
+            <xsl:variable name="configured-style-name">
+                <xsl:call-template name="get-configured-character-style">
                     <xsl:with-param name="style-name" select="current()/@text:style-name" />
                 </xsl:call-template>
             </xsl:variable>
             <xsl:choose>
-                <xsl:when test="$specialtypeface and not($character-style-name='')">
+                <xsl:when test="$specialtypeface and not($configured-style-name='')">
                     <dtb:span>
                         <xsl:attribute name="style">
-                            <xsl:value-of select="$character-style-name" />
+                            <xsl:value-of select="$configured-style-name" />
                         </xsl:attribute>
                         <xsl:apply-templates select="current()" mode="language">
                             <xsl:with-param name="pagenum"         select="$pagenum" />
@@ -909,7 +909,7 @@ BLOCK ELEMENTS
         <xsl:variable name="lower-border" as="xsd:boolean">
             <xsl:value-of select="$paramHeadingLowerBorder[$outline-level]" />
         </xsl:variable>
-        
+
         <xsl:variable name="content">
             <xsl:if test="current()/child::* | current()/text()">
                 <xsl:element name="dtb:h{$outline-level}">
@@ -973,7 +973,7 @@ BLOCK ELEMENTS
                     <dtb:hr/>
                 </dtb:div>
             </xsl:if>
-            
+
             <xsl:choose>
                 <xsl:when test="$upper-border or $lower-border">
                     <dtb:div class="padding">
@@ -984,7 +984,7 @@ BLOCK ELEMENTS
                     <xsl:copy-of select="$content"/>
                 </xsl:otherwise>
             </xsl:choose>
-            
+
             <!-- Bottom boxline -->
             <xsl:if test="$lower-border">
                 <dtb:div class="border" at="bottom">
@@ -1043,7 +1043,7 @@ BLOCK ELEMENTS
                 <xsl:with-param name="node" select="." />
             </xsl:call-template>
         </xsl:variable>
-        
+
         <xsl:choose>
 
             <!-- CAPTION -->
@@ -1084,17 +1084,10 @@ BLOCK ELEMENTS
                         <!-- Empty paragraph -->
                         <xsl:apply-templates select="pagebreak" />
                         <xsl:variable name="keep-empty" as="xsd:boolean">
-                            <xsl:choose>
-                                <xsl:when test="string-length($configured-style-name) > 0">
-                                    <xsl:call-template name="get-keep-empty-para-style">
-                                        <xsl:with-param name="style-name" select="$configured-style-name" />
-                                    </xsl:call-template>
-                                </xsl:when>
-                                <xsl:otherwise>
-                                    <xsl:value-of select="false()" />
-                                </xsl:otherwise>
-                            </xsl:choose>
-                        </xsl:variable>                        
+                            <xsl:call-template name="get-keep-empty">
+                                <xsl:with-param name="style-name" select="$configured-style-name" />
+                            </xsl:call-template>
+                        </xsl:variable>
                         <xsl:if test="$keep-empty">
                             <dtb:br />
                         </xsl:if>
@@ -1291,7 +1284,7 @@ BLOCK ELEMENTS
 
         <xsl:param name="transposed"       as="xsd:boolean" select="false()" />
         <xsl:param name="transpose-tables" as="xsd:boolean" select="false()" />
-                
+
         <xsl:choose>
             <xsl:when test="$transpose-tables">
                 <dtb:div class="transposition">
@@ -1302,7 +1295,7 @@ BLOCK ELEMENTS
                 </dtb:div>
             </xsl:when>
             <xsl:otherwise>
-                
+
                 <xsl:variable name="styleName"  select="current()/@table:style-name" />
                 <xsl:variable name="tableName" select="@table:name" />
                 <xsl:variable name="border">
@@ -2026,6 +2019,7 @@ HELP TEMPLATES
                 <xsl:variable name="parent-style-name">
                     <xsl:call-template name="get-parent-style-name">
                         <xsl:with-param name="style-name" select="$style-name"/>
+                        <xsl:with-param name="family"     select="'paragraph'"/>
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
@@ -2043,14 +2037,55 @@ HELP TEMPLATES
     </xsl:template>
 
 
-    <xsl:template name="get-keep-empty-para-style">
+    <xsl:template name="get-configured-character-style">
         <xsl:param name="style-name" as="xsd:string"/>
-        <xsl:call-template name="array-contains-value">
-            <xsl:with-param name="array" select="$paramKeepEmptyParagraphStyles"/>
-            <xsl:with-param name="value" select="$style-name"/>
-        </xsl:call-template>
+        <xsl:variable name="contains" as="xsd:boolean">
+            <xsl:call-template name="array-contains-value">
+                <xsl:with-param name="array" select="$paramConfiguredCharacterStyles"/>
+                <xsl:with-param name="value" select="$style-name"/>
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:choose>
+            <xsl:when test="$contains">
+                <xsl:value-of select="$style-name" />
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:variable name="parent-style-name">
+                    <xsl:call-template name="get-parent-style-name">
+                        <xsl:with-param name="style-name" select="$style-name"/>
+                        <xsl:with-param name="family"     select="'text'"/>
+                    </xsl:call-template>
+                </xsl:variable>
+                <xsl:choose>
+                    <xsl:when test="string-length($parent-style-name) > 0">
+                        <xsl:call-template name="get-configured-character-style">
+                            <xsl:with-param name="style-name" select="$parent-style-name"/>
+                        </xsl:call-template>
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:value-of select="''" />
+                    </xsl:otherwise>
+                </xsl:choose>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
+    
 
+    <xsl:template name="get-keep-empty">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:choose>
+            <xsl:when test="string-length($style-name) > 0">
+                <xsl:call-template name="array-contains-value">
+                    <xsl:with-param name="array" select="$paramKeepEmptyParagraphStyles"/>
+                    <xsl:with-param name="value" select="$style-name"/>
+                </xsl:call-template>
+            </xsl:when>
+            <xsl:otherwise>
+                <xsl:value-of select="false()" />
+            </xsl:otherwise>
+        </xsl:choose>
+    </xsl:template>
+    
 
     <xsl:template name="get-noteref-prefix">
         <xsl:param name="num-format" as="xsd:string" />

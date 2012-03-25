@@ -19,23 +19,23 @@
 
 package be.docarch.odt2braille;
 
-import java.util.logging.Logger;
+import be.docarch.odt2braille.convert.ConversionException;
+import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.utils.FileCreator;
+
 import java.io.File;
 import java.io.FileOutputStream;
-
 import java.io.IOException;
-import org.xml.sax.SAXException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.print.PrintException;
-
-import be.docarch.odt2braille.setup.EmbossConfiguration;
+import org.xml.sax.SAXException;
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserWriter;
+import org.daisy.braille.embosser.UnsupportedWidthException;
 import org.daisy.braille.facade.PEFConverterFacade;
 import org.daisy.printing.PrinterDevice;
-
-import org.daisy.braille.embosser.UnsupportedWidthException;
 
 /**
  * This class handles the processing of a .pef file.
@@ -48,8 +48,6 @@ import org.daisy.braille.embosser.UnsupportedWidthException;
 public class PEFHandler {
 
     private final static Logger logger = Constants.getLogger();
-    private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTempDirectory();
 
     private PEF pef = null;
 
@@ -57,9 +55,6 @@ public class PEFHandler {
      * Creates a new <code>PEFHandler</code> instance.
      */
     public PEFHandler(PEF pef) {
-
-        logger.entering("PEFHandler", "<init>");
-
         this.pef = pef;
     }
 
@@ -69,14 +64,9 @@ public class PEFHandler {
                                     SAXException,
                                     UnsupportedWidthException {
 
-        logger.entering("PEFHandler", "convertToSingleFile");
-
-        File output = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
-        output.deleteOnExit();
+        File output = FileCreator.createTempFile(format.getFileExtension());
 
         convertToFile(format, pef.getSinglePEF(), output);
-
-        logger.exiting("PEFHandler", "convertToSingleFile");
 
         return output;
     }
@@ -88,8 +78,6 @@ public class PEFHandler {
                                  SAXException,
                                  ConversionException {
 
-        logger.entering("PEFHandler", "convertToFiles");
-
         File[] outputFiles;
         File[] pefFiles;
             
@@ -100,13 +88,10 @@ public class PEFHandler {
         outputFiles = new File[pefFiles.length];
         for (int i=0; i<outputFiles.length; i++) {
 
-            outputFiles[i] = File.createTempFile(TMP_NAME, format.getFileExtension(), TMP_DIR);
-            outputFiles[i].deleteOnExit();
+            outputFiles[i] = FileCreator.createTempFile(format.getFileExtension());
             convertToFile(format, pefFiles[i], outputFiles[i]);
             
         }
-
-        logger.exiting("PEFHandler", "convertToFiles");
 
         return outputFiles;
     }
@@ -124,7 +109,7 @@ public class PEFHandler {
                                   SAXException,
                                   UnsupportedWidthException {
 
-        logger.entering("PEFHandler", "convertToFile");
+        logger.log(Level.INFO,"Converting PEF to {0} file", format.getFileExtension());
 
         // TableCatalog uses the context class loader
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -140,8 +125,8 @@ public class PEFHandler {
             PEFConverterFacade.parsePefFile(input, handler);
 
         } Thread.currentThread().setContextClassLoader(cl);
-
-        logger.exiting("PEFHandler", "convertToFile");
+        
+        logger.log(Level.INFO, "Output written to {0}", output.getName());
 
         return true;
     }
@@ -151,15 +136,12 @@ public class PEFHandler {
      *
      * @param   output  The location where the output file will be saved.
      */
-    public boolean embossToFile(File output,
-                                EmbossConfiguration embossSettings)
-                         throws ParserConfigurationException,
-                                IOException,
-                                SAXException,
-                                UnsupportedWidthException {
-
-        logger.entering("PEFHandler", "embossToFile");
-
+    public void embossToFile(File output,
+                             EmbossConfiguration embossSettings)
+                      throws Exception {
+        
+        logger.info("Converting PEF to embosser file");
+        
         int offset = 0;
         int topOffset = 0;
 
@@ -184,10 +166,8 @@ public class PEFHandler {
             PEFConverterFacade.parsePefFile(pef.getSinglePEF(), handler);
 
         } Thread.currentThread().setContextClassLoader(cl);
-
-        logger.exiting("PEFHandler", "embossToFile");
-
-        return true;
+        
+        logger.log(Level.INFO, "Output written to {0}", output.getName());
     }
 
     /**
@@ -195,28 +175,18 @@ public class PEFHandler {
      *
      * @param   deviceName    The name of the printer device.
      */
-    public boolean embossToDevice(String deviceName,
-                                  EmbossConfiguration embossSettings)
-                           throws IOException,
-                                  PrintException,
-                                  ParserConfigurationException,
-                                  SAXException,
-                                  UnsupportedWidthException {
+    public void embossToDevice(String deviceName,
+                               EmbossConfiguration embossSettings)
+                        throws Exception {
 
-        logger.entering("PEFHandler", "embossToDevice");
-
-        File prnFile = File.createTempFile(TMP_NAME, ".prn", TMP_DIR);
-        prnFile.deleteOnExit();
+        File prnFile = FileCreator.createTempFile(".prn");
         
-        if (!embossToFile(prnFile, embossSettings)) {
-            return false;
-        }
+        embossToFile(prnFile, embossSettings);
+                
         PrinterDevice bd = new PrinterDevice(deviceName, true);
         bd.transmit(prnFile);
-
-        logger.exiting("PEFHandler", "embossToDevice");
-
-        return true;
+        
+        // prnFile.delete();
     }
 
 //    private int getPageCount() throws MalformedURLException,

@@ -22,12 +22,10 @@ package be.docarch.odt2braille;
 import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
-
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.FileFormatProvider;
 import org.daisy.factory.FactoryCatalog;
 import org.daisy.factory.FactoryFilter;
-
 import org_daisy.BrailleEditorsFileFormatProvider;
 
 /**

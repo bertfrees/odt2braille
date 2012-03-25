@@ -23,13 +23,13 @@
 
 <xsl:stylesheet version="2.0"
 
-            xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-            xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-            xmlns:math="http://www.w3.org/1998/Math/MathML"
-            xmlns:xalan="http://xml.apache.org/xslt"
-            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:o2b="http://odt2braille.sf.net"
-            exclude-result-prefixes="o2b dtb math xalan xsd" >
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
+                xmlns:math="http://www.w3.org/1998/Math/MathML"
+                xmlns:xalan="http://xml.apache.org/xslt"
+                xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                
+                exclude-result-prefixes="dtb math xalan xsd" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
@@ -40,30 +40,23 @@
 
         <xsl:param name="paramLocales"                  as="xsd:string*"   />
         <xsl:param name="paramTranslationTables"        as="xsd:string*"   />
+        <xsl:param name="paramMainTranslationTable"     as="xsd:string"    />
 
         <xsl:param name="paramMathCode"                 as="xsd:string"    />
 
-        <xsl:param name="paramCharacterStyles"          as="xsd:string*"   />
-        <xsl:param name="paramCapsFollowPrint"          as="xsd:boolean*"  />
-        <xsl:param name="paramItalicFollowPrint"        as="xsd:boolean*"  />
-        <xsl:param name="paramBoldfaceFollowPrint"      as="xsd:boolean*"  />
-        <xsl:param name="paramUnderlineFollowPrint"     as="xsd:boolean*"  />
+        <xsl:param name="paramKeepCapsStyles"           as="xsd:string*"  />
+        <xsl:param name="paramKeepItalicStyles"         as="xsd:string*"  />
+        <xsl:param name="paramKeepBoldfaceStyles"       as="xsd:string*"  />
+        <xsl:param name="paramKeepUnderlineStyles"      as="xsd:string*"  />
 
-        <xsl:variable name="main-lang">
-            <xsl:variable name="index" as="xsd:integer">
-                <xsl:call-template name="get-locale-index">
-                    <xsl:with-param name="locale" select="dtb:dtbook/@xml:lang" />
-                </xsl:call-template>
-            </xsl:variable>
-            <xsl:if test="$index>0">
-                <xsl:value-of select="$paramTranslationTables[$index]" />
-            </xsl:if>
-        </xsl:variable>
+        <xsl:variable name="main-lang" select="$paramMainTranslationTable" />
 
         <xsl:strip-space elements="dtb:strong dtb:em dtb:paragraph dtb:p dtb:div dtb:a dtb:note dtb:noteref
                                    dtb:span dtb:list dtb:li dtb:caption dtb:table dtb:tr dtb:td dtb:th dtb:thead dtb:tbody
                                    dtb:heading dtb:h1 dtb:h2 dtb:h3 dtb:h4 dtb:h5 dtb:h6 dtb:h7 dtb:h8 dtb:h9 dtb:h10" />
 
+        <xsl:include href="common-templates.xsl" />
+        
 
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -364,26 +357,33 @@
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
-        <xsl:variable name="char-style-index" as="xsd:integer">
-            <xsl:call-template name="get-char-style-index">
-                <xsl:with-param name="style" select="$style" />
+        <xsl:variable name="keep-boldface" as="xsd:boolean">
+            <xsl:call-template name="get-keep-boldface">
+                <xsl:with-param name="style-name" select="$style" />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="keep-italic" as="xsd:boolean">
+            <xsl:call-template name="get-keep-italic">
+                <xsl:with-param name="style-name" select="$style" />
+            </xsl:call-template>
+        </xsl:variable>
+        <xsl:variable name="keep-underline" as="xsd:boolean">
+            <xsl:call-template name="get-keep-underline">
+                <xsl:with-param name="style-name" select="$style" />
             </xsl:call-template>
         </xsl:variable>
         <xsl:choose>
-            <xsl:when test="(not($char-style-index>0)
-                             or ($char-style-index>0 and $paramBoldfaceFollowPrint[$char-style-index]))
+            <xsl:when test="$keep-boldface
                         and (count($node/ancestor::dtb:span[@font-weight='bold'  ][1]/ancestor::*)
                            > count($node/ancestor::dtb:span[@font-weight='normal'][1]/ancestor::*))">
                 <xsl:value-of select="'strong'" />
             </xsl:when>
-            <xsl:when test="(not($char-style-index>0)
-                             or ($char-style-index>0 and $paramItalicFollowPrint[$char-style-index]))
+            <xsl:when test="$keep-italic
                         and (count($node/ancestor::dtb:span[@font-style='italic'][1]/ancestor::*)
                            > count($node/ancestor::dtb:span[@font-style='normal'][1]/ancestor::*))">
                 <xsl:value-of select="'em'" />
             </xsl:when>
-            <xsl:when test="(not($char-style-index>0)
-                             or ($char-style-index>0 and $paramUnderlineFollowPrint[$char-style-index]))
+            <xsl:when test="$keep-underline
                         and (count($node/ancestor::dtb:span[@underline-style][not(@underline-style='none')][1]/ancestor::*)
                            > count($node/ancestor::dtb:span                  [    @underline-style='none' ][1]/ancestor::*))">
                 <xsl:value-of select="'em'" />
@@ -393,25 +393,27 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
+    
 
     <xsl:template name="get-caps">
         <xsl:param name="node" />
-        <xsl:variable name="char-style-index" as="xsd:integer">
+        <xsl:variable name="style" as="xsd:string">
             <xsl:choose>
                 <xsl:when test="$node/ancestor::dtb:span[@style]">
-                    <xsl:call-template name="get-char-style-index">
-                        <xsl:with-param name="style" select="$node/ancestor::dtb:span[@style][1]/@style" />
-                    </xsl:call-template>
+                    <xsl:value-of select="$node/ancestor::dtb:span[@style][1]/@style" />
                 </xsl:when>
                 <xsl:otherwise>
-                    <xsl:value-of select="-1" />
+                    <xsl:value-of select="''" />
                 </xsl:otherwise>
             </xsl:choose>
         </xsl:variable>
+        <xsl:variable name="keep-caps" as="xsd:boolean">
+            <xsl:call-template name="get-keep-caps">
+                <xsl:with-param name="style-name" select="$style" />
+            </xsl:call-template>
+        </xsl:variable>
         <xsl:choose>            
-            <xsl:when test="not($char-style-index>0)
-                            or ($char-style-index>0 and $paramCapsFollowPrint[$char-style-index])">
+            <xsl:when test="$keep-caps">
                 <xsl:choose>
                     <xsl:when test="count($node/ancestor::dtb:span[                     @text-transform='uppercase' ][1]/ancestor::*)
                                   > count($node/ancestor::dtb:span[@text-transform][not(@text-transform='uppercase')][1]/ancestor::*)">
@@ -433,11 +435,38 @@
     </xsl:template>
 
 
-    <xsl:template name="get-char-style-index">
-        <xsl:param name="style" />
-        <xsl:call-template name="first-index-of">
-            <xsl:with-param name="array" select="$paramCharacterStyles"/>
-            <xsl:with-param name="value" select="$style"/>
+    <xsl:template name="get-keep-boldface">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:call-template name="array-contains-value">
+            <xsl:with-param name="array" select="$paramKeepBoldfaceStyles"/>
+            <xsl:with-param name="value" select="$style-name"/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    
+    <xsl:template name="get-keep-italic">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:call-template name="array-contains-value">
+            <xsl:with-param name="array" select="$paramKeepItalicStyles"/>
+            <xsl:with-param name="value" select="$style-name"/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    
+    <xsl:template name="get-keep-underline">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:call-template name="array-contains-value">
+            <xsl:with-param name="array" select="$paramKeepUnderlineStyles"/>
+            <xsl:with-param name="value" select="$style-name"/>
+        </xsl:call-template>
+    </xsl:template>
+    
+    
+    <xsl:template name="get-keep-caps">
+        <xsl:param name="style-name" as="xsd:string"/>
+        <xsl:call-template name="array-contains-value">
+            <xsl:with-param name="array" select="$paramKeepCapsStyles"/>
+            <xsl:with-param name="value" select="$style-name"/>
         </xsl:call-template>
     </xsl:template>
 
@@ -484,28 +513,6 @@
             </xsl:when>
             <xsl:otherwise>
                 <xsl:value-of select="true()" />
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-
-    <xsl:template name="first-index-of">
-        <xsl:param name="array"/>
-        <xsl:param name="value"/>
-        <xsl:param name="case-sensitive" as="xsd:boolean" select="true()"/>
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$array">
-                <xsl:if test="(.=$value) or (not($case-sensitive) and (lower-case(.)=lower-case($value)))">
-                    <xsl:sequence select="position()" />
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:value-of select="$occurences[1]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="-1" />
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>

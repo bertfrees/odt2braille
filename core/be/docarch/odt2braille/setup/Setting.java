@@ -21,8 +21,6 @@ package be.docarch.odt2braille.setup;
 
 public abstract class Setting<T> extends Property<T> {
 
-    private boolean locked = false;
-
     public abstract boolean accept(T value);
 
     protected abstract boolean update(T value);
@@ -35,10 +33,6 @@ public abstract class Setting<T> extends Property<T> {
     }
 
     public boolean enabled() {
-        return !locked;
-    }
-    
-    protected void lock() {
-        locked = true;
+        return true;
     }
 }

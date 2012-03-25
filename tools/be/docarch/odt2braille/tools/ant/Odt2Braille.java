@@ -5,6 +5,7 @@ import java.util.Locale;
 import java.util.List;
 import java.util.logging.Level;
 import java.text.DecimalFormat;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
 import be.docarch.odt2braille.Volume;
@@ -14,7 +15,7 @@ import be.docarch.odt2braille.PEF;
 import be.docarch.odt2braille.ODT2PEFConverter;
 import be.docarch.odt2braille.PEFHandler;
 import be.docarch.odt2braille.PEFFileFormat;
-import be.docarch.odt2braille.StatusIndicator;
+import be.docarch.odt2braille.ProgressMonitor;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 
@@ -29,14 +30,14 @@ public class Odt2Braille extends Task {
     private File liblouisDir;
     private Bean configuration = new Bean(Configuration.class);
     private Bean exportConfiguration = new Bean(ExportConfiguration.class);
-    
+
     public void setTargetfile(String file) {
         targetFile = new File(file);
         if (targetFile.exists()) {
             throw new BuildException("Target file or directory '" + file + "' already exists");
         }
     }
-    
+
     public void setSrcfile(String file) {
         srcFile = new File(file);
         if (!srcFile.exists()) {
@@ -60,12 +61,12 @@ public class Odt2Braille extends Task {
         validate();
         return exportConfiguration;
     }
-    
+
     @Override
     public void execute() throws BuildException {
         validate();
         Constants.getLogger().setLevel(Level.SEVERE);
-        Constants.setStatusIndicator(new StatusIndicator() {
+        Constants.setStatusIndicator(new ProgressMonitor() {
             @Override
             public void setStatus(String value) {
                 System.out.println(value);

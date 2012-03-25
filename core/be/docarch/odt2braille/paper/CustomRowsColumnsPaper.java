@@ -1,0 +1,53 @@
+/**
+ *  odt2braille - Braille authoring in OpenOffice.org.
+ *
+ *  Copyright (c) 2010-2011 by DocArch <http://www.docarch.be>.
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License as
+ *  published by the Free Software Foundation, either version 3 of the
+ *  License, or (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+package be.docarch.odt2braille.paper;
+
+import be.docarch.odt2braille.paper.CustomPaperProvider.PaperType;
+
+import org.daisy.braille.tools.Length;
+import org.daisy.braille.tools.Length.UnitsOfLength;
+
+public class CustomRowsColumnsPaper extends CustomSheetPaper {
+
+    public CustomRowsColumnsPaper(String name, String desc) {
+        super(name, desc, Length.newColumnsValue(40), Length.newRowsValue(25));
+    }
+
+    @Override
+    public void setPageWidth(Length width) {
+        if (width.getUnitsOfLength() != UnitsOfLength.COLUMN) {
+            throw new IllegalArgumentException("Page width must be defined in number of columns");
+        }
+        super.setPageWidth(width);
+    }
+
+    @Override
+    public void setPageHeight(Length height) {
+        if (height.getUnitsOfLength() != UnitsOfLength.ROW) {
+            throw new IllegalArgumentException("Page height must be defined in number of rows");
+        }
+        super.setPageHeight(height);
+    }
+
+    @Override
+    public String getIdentifier() {
+        return PaperType.ROWS_COLUMNS.getClass().getCanonicalName() + "." + PaperType.ROWS_COLUMNS.toString();
+    }
+}

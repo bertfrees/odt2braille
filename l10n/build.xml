@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="odt2braille-l10n" default="l10n" basedir=".">
     <description>Convert UTF-8 encoded properties files into ASCII encoded files.</description>
-	
-	<target name="l10n">
-	
-	    <property name="jdk.home" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home"/>
-		<property name="native2ascii.executable" value="${jdk.home}/bin/native2ascii"/>
-	
+
+    <target name="l10n">
+        <property name="jdk.home" value="/System/Library/Frameworks/JavaVM.framework/Versions/1.5.0/Home"/>
+        <property name="native2ascii.executable" value="${jdk.home}/bin/native2ascii"/>
         <macrodef name="utf8-to-ascii">
-                <attribute name="path"/>
-        	<attribute name="dir"/>
+            <attribute name="path"/>
+            <attribute name="dir"/>
             <sequential>
                 <delete>
                     <fileset dir="../@{dir}/@{path}" includes="*.properties"/>
@@ -26,10 +24,9 @@
                 </apply>
             </sequential>
         </macrodef>
-        
+
         <utf8-to-ascii path="be/docarch/odt2braille/l10n" dir="core"/>
         <utf8-to-ascii path="be/docarch/odt2braille/ooo/l10n" dir="addon"/>
-        <utf8-to-ascii path="be/docarch/odt2braille/checker/l10n" dir="core"/>
 
-	</target>
+    </target>
 </project>

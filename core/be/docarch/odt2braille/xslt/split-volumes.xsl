@@ -50,8 +50,8 @@
             <xsl:param name="paramExtendedToc"                as="xsd:boolean"  select="false()" />
             <xsl:param name="paramTableOfContentTitle"        as="xsd:string"   select="'TABLE OF CONTENTS'" />
 
-        <xsl:param name="paramTNPageEnabled"                  as="xsd:boolean"  select="false()" />
-            <xsl:param name="paramTNPageTitle"                as="xsd:string"   select='"TRANSCRIBER&apos;S NOTES"' />
+        <xsl:param name="paramTnPageEnabled"                  as="xsd:boolean"  select="false()" />
+            <xsl:param name="paramTnPageTitle"                as="xsd:string"   select='"TRANSCRIBER&apos;S NOTES"' />
             <xsl:param name="paramTranscribersNotes"          as="xsd:string*"  />
 
         <xsl:param name="paramSpecialSymbolsListEnabled"      as="xsd:boolean"  select="false()" />
@@ -70,7 +70,7 @@
         <xsl:param name="paramContinuedHeadingSuffix"         as="xsd:string"   select="'(Cont.)'"    />
 
         <xsl:strip-space elements="dtb:book dtb:div" />
-        
+
 
     <xsl:template match="@*|node()">
         <xsl:copy>
@@ -83,7 +83,7 @@
     <xsl:template match="dtb:frontmatter">
 
         <xsl:if test="$paramFrontMatterEnabled or
-                      $paramTNPageEnabled or
+                      $paramTnPageEnabled or
                       $paramSpecialSymbolsListEnabled or
                       $paramTableOfContentEnabled">
             <xsl:copy>
@@ -104,7 +104,7 @@
 
                     <!-- Notesection -->
                     <xsl:variable name="endnotes" as="element()*">
-                        <xsl:for-each select="$front/descendant::dtb:note[@class='endnote']">                            
+                        <xsl:for-each select="$front/descendant::dtb:note[@class='endnote']">
                             <xsl:variable name="end-of-section" select="@end-of-section" />
                             <xsl:if test="(string-length($end-of-section)=0)
                                     or not($front/dtb:note-section[@section-name=$end-of-section])">
@@ -125,7 +125,7 @@
                 </xsl:if>
 
                 <!-- Transcriber's notes page -->
-                <xsl:if test="$paramTNPageEnabled">
+                <xsl:if test="$paramTnPageEnabled">
                     <xsl:call-template name="tn-page" />
                 </xsl:if>
 
@@ -195,7 +195,7 @@
                     <xsl:apply-templates select="$omitted-preceding-siblings"/>
                 </dtb:div>
             </xsl:if>
-            
+
             <!-- Body -->
             <xsl:variable name="first-child" select="./child::*[not(self::dtb:pagenum or
                                                                     self::dtb:pagebreak or
@@ -269,7 +269,7 @@
 
     <xsl:template name="note-section">
         <xsl:param name="notes" />
-        
+
         <dtb:note-section newpage="yes">
             <dtb:heading>
                 <dtb:h1 class="dummy">
@@ -354,7 +354,7 @@
             <dtb:tn-page newpage="yes">
                 <dtb:heading>
                     <dtb:h1 class="dummy">
-                        <xsl:value-of select="$paramTNPageTitle" />
+                        <xsl:value-of select="$paramTnPageTitle" />
                     </dtb:h1>
                 </dtb:heading>
                 <xsl:for-each select="$paramTranscribersNotes">

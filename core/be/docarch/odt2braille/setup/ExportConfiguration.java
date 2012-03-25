@@ -19,17 +19,15 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.ArrayList;
-import java.util.logging.Logger;
-
-import java.util.NoSuchElementException;
-import java.nio.charset.UnsupportedCharsetException;
-
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.FileFormatCatalog;
 
+import java.io.Serializable;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.Collection;
+import java.util.ArrayList;
+import java.util.logging.Logger;
+import java.util.NoSuchElementException;
 import org.daisy.braille.embosser.FileFormat;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.table.Table;
@@ -103,8 +101,6 @@ public class ExportConfiguration implements Serializable,
     
     public ExportConfiguration() {
 
-        logger.entering("ExportConfiguration","<init>");
-
         /************
            CATALOGS
          ************/
@@ -166,8 +162,6 @@ public class ExportConfiguration implements Serializable,
         fileFormat.addListener(eightDots);
         fileFormat.addListener(charSet);
         eightDots.addListener(charSet);
-
-        logger.exiting("ExportConfiguration","<init>");
         
     }
     

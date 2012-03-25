@@ -19,34 +19,8 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.io.Serializable;
-import java.io.File;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Date;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-import java.util.logging.Logger;
-import java.text.SimpleDateFormat;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import org.w3c.dom.traversal.NodeIterator;
-import org.apache.xpath.XPathAPI;
-
-import org.xml.sax.SAXException;
-import java.io.IOException;
-import java.util.NoSuchElementException;
-import javax.xml.transform.TransformerException;
-
 import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.NamespaceContext;
 import be.docarch.odt2braille.ODT;
-import be.docarch.odt2braille.XPathUtils;
 import be.docarch.odt2braille.setup.style.ListStyle;
 import be.docarch.odt2braille.setup.style.FootnoteStyle;
 import be.docarch.odt2braille.setup.style.CharacterStyle;
@@ -57,6 +31,27 @@ import be.docarch.odt2braille.setup.style.TableStyle;
 import be.docarch.odt2braille.setup.style.FrameStyle;
 import be.docarch.odt2braille.setup.style.PictureStyle;
 
+import java.io.Serializable;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.NoSuchElementException;
+import javax.xml.transform.TransformerException;
+import org.apache.xpath.XPathAPI;
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.w3c.dom.traversal.NodeIterator;
+import org.xml.sax.SAXException;
+
+
 /**
  * Collection of all braille-related settings and properties of an OpenOffice.org document.
  *
@@ -65,16 +60,6 @@ import be.docarch.odt2braille.setup.style.PictureStyle;
 public class Configuration implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    /********************/
-    /* PUBLIC CONSTANTS */
-    /********************/
-
-    public final Locale mainLocale;
-    public final String date;
-    public final String continuedSuffix;
-    public final String transcriptionInfo;
-
 
     /************/
     /* SETTINGS */
@@ -216,6 +201,7 @@ public class Configuration implements Serializable {
     /* GETTERS */
     
     public SettingMap<Locale,TranslationTable>    getTranslationTables()    { return translationTables; }
+    public TranslationTable                       getMainTranslationTable() { return translationTables.get(MAIN_LOCALE); }
     public SettingMap<String,NoteReferenceFormat> getNoteReferenceFormats() { return noteReferenceFormats; }
     public SettingMap<String,ParagraphStyle>      getParagraphStyles()      { return paragraphStyles; }
     public SettingMap<String,CharacterStyle>      getCharacterStyles()      { return characterStyles; }
@@ -237,7 +223,7 @@ public class Configuration implements Serializable {
     /***************************/
 
     public static enum MathCode { NEMETH, UKMATHS, MARBURG, WISKUNDE };
-    public static enum PageNumberFormat { NORMAL, ROMAN, ROMANCAPS, P, S, BLANK };
+    public static enum PageNumberFormat { NORMAL, ROMAN, ROMANCAPS, LETTER, LETTERCAPS, P, S, BLANK };
     public static enum PageNumberPosition { TOP_LEFT, TOP_RIGHT, TOP_CENTER, BOTTOM_LEFT, BOTTOM_RIGHT, BOTTOM_CENTER };
     public static enum VolumeManagementMode { SINGLE, MANUAL, AUTOMATIC };
 
@@ -247,7 +233,6 @@ public class Configuration implements Serializable {
     /****************************/
 
     private static final Logger logger = Constants.getLogger();
-    private static final NamespaceContext namespace = new NamespaceContext();
     private static final boolean IS_WINDOWS = System.getProperty("os.name").toLowerCase().contains("windows");
     private static final boolean IS_MAC_OS = System.getProperty("os.name").toLowerCase().contains("mac os");
 
@@ -260,13 +245,12 @@ public class Configuration implements Serializable {
     private final String L10N_specialSymbolListTitle;
     private final String L10N_endNotesPageTitle;
     private final String L10N_tableOfContentTitle;
-    private final String L10N_continuedSuffix;
     private final String L10N_volume;
     private final String L10N_supplement;
     private final String L10N_preliminary;
-    private final String L10N_transcriptionInfo;
 
     private final boolean PAGE_NUMBER_IN_HEADER_FOOTER;
+    private final Locale MAIN_LOCALE;
 
     /***********/
     /* PRIVATE */
@@ -275,52 +259,23 @@ public class Configuration implements Serializable {
     private Element rootSection;
     private List<String> allSections;
     private Map<String,SectionVolume> volumeSectionsMap;
-    private ParagraphStyle rootParagraphStyle = null;
-    private CharacterStyle rootCharacterStyle = null;
+    private ParagraphStyle standardParagraphStyle = null;
+    private CharacterStyle standardCharacterStyle = null;
 
 
     /***************/
     /* CONSTRUCTOR */
     /***************/
 
-    // for compatibility
-    public static Configuration newInstance() throws IOException,
-                                                     SAXException,
-                                                     Exception {
-        return ConfigurationBuilder.build();
-    }
-
     protected Configuration(ODT odt)
                      throws IOException,
-                            SAXException {
+                            SAXException,
+                            Exception {
 
-        logger.entering("Configuration","<init>");
-
-      //File odtContentFile = odt.getOdtContentFile();
-        File odtStylesFile = odt.getOdtStylesFile();
-        File odtMetaFile = odt.getOdtMetaFile();
+        PAGE_NUMBER_IN_HEADER_FOOTER = odt.pageNumberInHeaderOrFooter();
+        MAIN_LOCALE = odt.getLocale();
         
-        PAGE_NUMBER_IN_HEADER_FOOTER = XPathUtils.evaluateBoolean(odtStylesFile.toURL().openStream(),
-                    "//office:master-styles//style:header/text:p/text:page-number or " +
-                    "//office:master-styles//style:footer/text:p/text:page-number", namespace);
-
-        String DATE;
-        if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/dc:date",namespace)) {
-            DATE = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/dc:date/text()",namespace).substring(0, 4);
-        } else if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/meta:creation-date",namespace)) {
-            DATE = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/meta:creation-date/text()",namespace).substring(0, 4);
-        } else {
-            DATE = (new SimpleDateFormat("yyyy")).format(new Date());
-        }
-
-        String CREATOR = "";
-        if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/dc:creator",namespace)) {
-            CREATOR = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/dc:creator/text()",namespace);
-        } else if (XPathUtils.evaluateBoolean(odtMetaFile.toURL().openStream(), "//office:meta/meta:initial-creator",namespace)) {
-            CREATOR = XPathUtils.evaluateString(odtMetaFile.toURL().openStream(), "//office:meta/meta:initial-creator/text()",namespace);
-        }
-
-        rootSection = odt.extractSectionTree();
+        rootSection = odt.getSectionTree();
         allSections = new ArrayList<String>();
 
         try {
@@ -334,9 +289,7 @@ public class Configuration implements Serializable {
 
         volumeSectionsMap = new HashMap<String,SectionVolume>();
 
-        String[] languages = odt.extractLanguages();
-
-        ResourceBundle bundle = ResourceBundle.getBundle(Constants.L10N_PATH, stringToLocale(languages[0]));
+        ResourceBundle bundle = ResourceBundle.getBundle(Constants.L10N_PATH, odt.getLocale());
 
         L10N_volume = bundle.getString("volume");
         L10N_supplement = bundle.getString("supplement");
@@ -345,19 +298,9 @@ public class Configuration implements Serializable {
         L10N_specialSymbolListTitle = bundle.getString("specialSymbolsListTitle");
         L10N_endNotesPageTitle = bundle.getString("endNotesTitle");
         L10N_tableOfContentTitle = bundle.getString("tableOfContentTitle");
-        L10N_continuedSuffix = bundle.getString("continuedSuffix");
-        L10N_transcriptionInfo = bundle.getString("transcriptionInfo");
         
-
-        /********************
-           PUBLIC CONSTANTS
-         ********************/
-
-        mainLocale = stringToLocale(languages[0]);
-        date = DATE;
-        continuedSuffix = L10N_continuedSuffix;
-        transcriptionInfo = L10N_transcriptionInfo;
-
+        
+//        L10N_transcriptionInfo = bundle.getString("transcriptionInfo");
 
         /***************************
            PROPERTIES and SETTINGS
@@ -386,16 +329,16 @@ public class Configuration implements Serializable {
       //supplementaryPageNumberFormat = new SupplementaryPageNumberFormatSetting();
         beginningBraillePageNumber = new BeginningBraillePageNumberSetting();
 
-        paragraphStyles = new ParagraphStyleMap(odt.extractParagraphStyles());
-        characterStyles = new CharacterStyleMap(odt.extractCharacterStyles());
+        paragraphStyles = new ParagraphStyleMap(odt.getUsedParagraphStyles());
+        characterStyles = new CharacterStyleMap(odt.getUsedCharacterStyles());
         
         for (ParagraphStyle style : paragraphStyles.values()) {
             if (style.getParentStyle() == null) {
-                rootParagraphStyle = style; break;
+                standardParagraphStyle = style; break;
             }
         }
         
-        if (rootParagraphStyle == null) { throw new RuntimeException("Root paragraph style not found"); }
+        if (standardParagraphStyle == null) { throw new RuntimeException("Root paragraph style not found"); }
         
         headingStyles = new HeadingStyleMap();
         tableStyles = new TableStyleMap();
@@ -449,7 +392,7 @@ public class Configuration implements Serializable {
 
         tocStyle.setTitle(L10N_tableOfContentTitle.toUpperCase());
 
-        creator.set(CREATOR);
+        creator.set(odt.getCreator());
         hyphenate.set(false);
         volumeInfoEnabled.set(false);
         transcriptionInfoEnabled.set(false);
@@ -467,7 +410,7 @@ public class Configuration implements Serializable {
         bodyMatterVolume.setTitle(capitalizeFirstLetter(L10N_volume) + " @i");
         rearMatterVolume.setTitle(capitalizeFirstLetter(L10N_supplement));
         preliminaryVolume.setTitle(capitalizeFirstLetter(L10N_preliminary));
-        
+
         bodyMatterVolume.setFrontMatter(true);
         rearMatterVolume.setFrontMatter(true);
         preliminaryVolume.setFrontMatter(true);
@@ -485,8 +428,9 @@ public class Configuration implements Serializable {
         bodyMatterMode.set(VolumeManagementMode.AUTOMATIC);
         sectionVolumeList.refresh();
 
-        String mainTableLocale = TranslationTable.computeLocale(mainLocale);
-        translationTables.get(mainLocale).locale.set(mainTableLocale);
+        String[] languages = odt.getUsedLanguages();
+        String mainTableLocale = TranslationTable.computeLocale(MAIN_LOCALE);
+        translationTables.get(MAIN_LOCALE).locale.set(mainTableLocale);
         for (String language : languages) {
             TranslationTable t = translationTables.get(stringToLocale(language));
             t.locale.set(mainTableLocale);
@@ -527,11 +471,12 @@ public class Configuration implements Serializable {
         rearMatterSection.addListener(sectionVolumeList);
         rearMatterMode.addListener(sectionVolumeList);
 
-        logger.exiting("Configuration","<init>");
-
     }
 
-
+    protected void reset() {}
+    
+    protected void update() {}
+    
     /*****************/
     /* INNER CLASSES */
     /*****************/
@@ -962,13 +907,22 @@ public class Configuration implements Serializable {
 
         private final Map<String,ParagraphStyle> map = new HashMap<String,ParagraphStyle>();
 
-        public ParagraphStyleMap(Collection<ParagraphStyle> styles) {
-            for (ParagraphStyle style : styles) {
-                if (!style.getAutomatic()) {
-                    map.put(style.getID(), style);
-                    style.setInherit(true);
+        public ParagraphStyleMap(Collection<ODT.Style> styles) {
+            for (ODT.Style style : styles) {
+                if (!style.isAutomatic()) {
+                    addStyle(style).setInherit(true);
                 }
             }
+        }
+        
+        private ParagraphStyle addStyle(ODT.Style style) {
+            if (style == null) { return null; }
+            ParagraphStyle paragraphStyle = map.get(style.getName());
+            if (paragraphStyle == null) {
+                paragraphStyle = new ParagraphStyle(style.getName(), style.getDisplayName(), addStyle(style.getParentStyle()));
+                map.put(style.getName(), paragraphStyle);
+            }
+            return paragraphStyle;
         }
 
         public ParagraphStyle get(String key) { return map.get(key); }
@@ -980,12 +934,23 @@ public class Configuration implements Serializable {
     public class CharacterStyleMap extends SettingMap<String,CharacterStyle> {
 
         private final Map<String,CharacterStyle> map = new HashMap<String,CharacterStyle>();
-
-        public CharacterStyleMap(Collection<CharacterStyle> styles) {
-            for (CharacterStyle style : styles) {
-                map.put(style.getID(), style);
-                style.setInherit(true);
+        
+        public CharacterStyleMap(Collection<ODT.Style> styles) {
+            for (ODT.Style style : styles) {
+                if (!style.isAutomatic()) {
+                    addStyle(style).setInherit(true);
+                }
             }
+        }
+        
+        private CharacterStyle addStyle(ODT.Style style) {
+            if (style == null) { return null; }
+            CharacterStyle characterStyle = map.get(style.getName());
+            if (characterStyle == null) {
+                characterStyle = new CharacterStyle(style.getName(), style.getDisplayName(), addStyle(style.getParentStyle()));
+                map.put(style.getName(), characterStyle);
+            }
+            return characterStyle;
         }
 
         public CharacterStyle get(String key) { return map.get(key); }
@@ -1048,7 +1013,7 @@ public class Configuration implements Serializable {
 
     public class ParagraphStyleSetting extends OptionSetting<ParagraphStyle> {
 
-        private ParagraphStyle style = rootParagraphStyle;
+        private ParagraphStyle style = standardParagraphStyle;
 
         public Collection<ParagraphStyle> options() { return paragraphStyles.values(); }
 
@@ -1072,16 +1037,16 @@ public class Configuration implements Serializable {
 
         public SpecialSymbolList() {
 
-            String translationTable = getTranslationTables().get(mainLocale).getLocale();
+            String translationTable = getTranslationTables().get(MAIN_LOCALE).getLocale();
 
-            list.add(new SpecialSymbol(SpecialSymbol.Type.ELLIPSIS,                    mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.DOUBLE_DASH,                 mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.LETTER_INDICATOR,            mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.NUMBER_INDICATOR,            mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.TRANSCRIBERS_NOTE_INDICATOR, mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.NOTE_REFERENCE_INDICATOR,    mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.ITALIC_INDICATOR,            mainLocale, translationTable));
-            list.add(new SpecialSymbol(SpecialSymbol.Type.BOLDFACE_INDICATOR,          mainLocale, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.ELLIPSIS,                    MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.DOUBLE_DASH,                 MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.LETTER_INDICATOR,            MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.NUMBER_INDICATOR,            MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.TRANSCRIBERS_NOTE_INDICATOR, MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.NOTE_REFERENCE_INDICATOR,    MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.ITALIC_INDICATOR,            MAIN_LOCALE, translationTable));
+            list.add(new SpecialSymbol(SpecialSymbol.Type.BOLDFACE_INDICATOR,          MAIN_LOCALE, translationTable));
         }
 
         public SpecialSymbol get(int index) {
@@ -1095,6 +1060,14 @@ public class Configuration implements Serializable {
         public List<SpecialSymbol> values() { return new ArrayList(list); }
         public void clear() { list.clear(); }
         public boolean canAdd() { return true; }
+        
+     // public boolean canRemove() { return (type == ELLIPSIS of
+     //                                              DOUBLE DASH of
+     //                                              TRANSCRIBERS_NOTE_INDICATOR); }
+     //
+     // De waarden van deze symbolen kunnen ook niet veranderd worden
+     // Liblouis gebruiken om de braille weer te geven
+     // (De waarden moeten effectief gebruikt worden bij de omzetting)
 
         public SpecialSymbol add() {
             SpecialSymbol symbol = new SpecialSymbol();
@@ -1396,11 +1369,6 @@ public class Configuration implements Serializable {
         public void propertyUpdated(PropertyEvent event) { refresh(); }
 
     }
-
-    /********************/
-
-
-    public void lock() { }
 
 
     /********************/

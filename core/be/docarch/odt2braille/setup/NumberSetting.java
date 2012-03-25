@@ -23,6 +23,8 @@ public class NumberSetting extends Setting<Integer> {
 
     protected int number = 0;
     
+    public NumberSetting() {}
+    
     public boolean accept(Integer value) {
         return value >= 0;
     }

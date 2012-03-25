@@ -78,7 +78,7 @@ public class TranslationTable implements Serializable {
     }
    
 
-    protected TranslationTable(Locale loc) {
+    public TranslationTable(Locale loc) {
 
         /***********************
            SETTING DECLARATION

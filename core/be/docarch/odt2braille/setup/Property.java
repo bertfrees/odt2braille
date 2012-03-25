@@ -19,12 +19,12 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.ArrayList;
 
 public abstract class Property<T> {
 
-    private Collection<PropertyListener> listeners;
+    private List<PropertyListener> listeners;
     
     public abstract T get();
     

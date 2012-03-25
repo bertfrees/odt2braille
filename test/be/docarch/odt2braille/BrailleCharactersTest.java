@@ -3,10 +3,7 @@ package be.docarch.odt2braille;
 import java.io.File;
 import org.junit.Test;
 
-/**
- *
- * @author Bert Frees
- */
+//@org.junit.Ignore
 public class BrailleCharactersTest extends Odt2BrailleTest {
 
     @Test
@@ -16,8 +13,11 @@ public class BrailleCharactersTest extends Odt2BrailleTest {
 
         File correctPEF = new File(resources + fileName + ".pef");
         File testODT = new File(resources + fileName + ".odt");
-        File testPEF = simpleODT2PEF(testODT);
+        
+        ConversionResult result = convertODT2PEF(testODT);
 
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
     }
 }

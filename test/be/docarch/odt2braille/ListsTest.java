@@ -1,16 +1,12 @@
 package be.docarch.odt2braille;
 
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.style.ListStyle;
+
 import java.io.File;
 import org.junit.Test;
 
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.ExportConfiguration;
-import be.docarch.odt2braille.setup.style.ListStyle;
-
-/**
- *
- * @author Bert Frees
- */
+//@org.junit.Ignore
 public class ListsTest extends Odt2BrailleTest {
 
     @Test
@@ -20,7 +16,6 @@ public class ListsTest extends Odt2BrailleTest {
         File testODT = new File(resources + "lists.odt");
 
         ODT odt = new ODT(testODT);
-        ExportConfiguration exportSettings = new ExportConfiguration();
 
         Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
@@ -36,10 +31,10 @@ public class ListsTest extends Odt2BrailleTest {
         style2.setRunovers(6);
         style2.setPrefix("\u2836");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
+        ConversionResult result = convertODT2PEF(odt, settings);
 
-        File testPEF = pefBuilder.getSinglePEF();
-
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
     }
 }

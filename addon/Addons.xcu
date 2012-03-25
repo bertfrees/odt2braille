@@ -23,7 +23,7 @@
                                 <value>be.docarch.odt2braille.ooo.odt2brailleaddon:ExportCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
-							
+
                                 <value xml:lang="en">~Export as Braille…</value>
 
                                 <value xml:lang="ca">~Exporta a braille…</value>
@@ -63,9 +63,9 @@
                                 <value>be.docarch.odt2braille.ooo.odt2brailleaddon:EmbossCommand</value>
                             </prop>
                             <prop oor:name="Title" oor:type="xs:string">
-							
+
                                 <value xml:lang="en">~Emboss…</value>
-								
+
                                 <value xml:lang="ca">~Imprimeix en braille…</value>
                                 <value xml:lang="cs">~Braillský tisk…</value>
                                 <value xml:lang="de">~Prägen…</value>
@@ -79,7 +79,6 @@
                                 <value xml:lang="pt-BR">~Gravar…</value>
                                 <value xml:lang="sl">~Izboči …</value>
                                 <value xml:lang="sv">~Punktutskrift…</value>
-								
                             </prop>
                         </node>
                     </node>
@@ -100,9 +99,9 @@
                     <node oor:name="MenuItems">
                         <node oor:name="M3" oor:op="replace">
                             <prop oor:name="Title" oor:type="xs:string">
-							
+
                                 <value xml:lang="en">~Braille Characters</value>
-								
+
                                 <value xml:lang="ca">~Caràcters braille</value>
                                 <value xml:lang="cs">~Braillský znak z bodů z klávesnice</value>
                                 <value xml:lang="de">~Braillezeichen</value>
@@ -116,7 +115,6 @@
                                 <value xml:lang="pt-BR">~Caracteres Braille</value>
                                 <value xml:lang="sl">~Znaki brajice</value>
                                 <value xml:lang="sv">~Punktskriftstecken</value>
-								
                             </prop>
                             <node oor:name="Submenu">
                                 <node oor:name="M4" oor:op="replace">
@@ -129,7 +127,7 @@
                                         <value xml:lang="ca">~Entrada mitjançant el patró de punts…</value>
                                         <value xml:lang="cs">~123-456…</value>
                                         <value xml:lang="de">~Punktmustereingabemodus…</value>
-										<value xml:lang="el">~Λειτουργία εισαγωγής πρότυπων χαρακτήρων (π.χ. 12-1235-1-24)…</value>
+                                        <value xml:lang="el">~Λειτουργία εισαγωγής πρότυπων χαρακτήρων (π.χ. 12-1235-1-24)…</value>
                                         <value xml:lang="es">~Entrada mediante patrón de puntos…</value>
                                         <value xml:lang="fr">~Mode de saisie point-à-point…</value>
                                         <value xml:lang="it">~Immissione a schema punti…</value>
@@ -138,7 +136,6 @@
                                         <value xml:lang="pt-BR">~Modo de entrada por padrão de pontos…</value>
                                         <value xml:lang="sl">~Vnosni način vzorca luknjic …</value>
                                         <value xml:lang="sv">~Inmatning enligt tecken beskrivning…</value>
-										
                                     </prop>
                                 </node>
                                 <node oor:name="M5" oor:op="replace">
@@ -151,7 +148,7 @@
                                         <value xml:lang="ca">~Mode de 6 tecles…</value>
                                         <value xml:lang="cs">~SDF-JKL…</value>
                                         <value xml:lang="de">~6-Tasten Eingabemodus…</value>
-										<value xml:lang="el">~Λειτουργία εισαγωγής χαρακτήρων Braille με τη χρήση των 6 κλειδιών (S-D-F-J-K-L)…</value>
+                                        <value xml:lang="el">~Λειτουργία εισαγωγής χαρακτήρων Braille με τη χρήση των 6 κλειδιών (S-D-F-J-K-L)…</value>
                                         <value xml:lang="es">~Modo 6 teclas…</value>
                                         <value xml:lang="fr">~Mode de saisie 6-touches…</value>
                                         <value xml:lang="it">~Immissione a 6 tasti…</value>
@@ -160,11 +157,10 @@
                                         <value xml:lang="pt-BR">~Modo de entrada por 6 teclas…</value>
                                         <value xml:lang="sl">~Vnosni način šestih tipk …</value>
                                         <value xml:lang="sv">~Emulera punktskriftstangentbord…</value>
-										
-								   <!-- <value xml:lang="da">~</value> -->
-								   <!-- <value xml:lang="is">~</value> -->
-								   <!-- <value xml:lang="nb">~</value> -->
-										
+
+                                        <!-- <value xml:lang="da">~</value> -->
+                                        <!-- <value xml:lang="is">~</value> -->
+                                        <!-- <value xml:lang="nb">~</value> -->
                                     </prop>
                                 </node>
                             </node>

@@ -19,17 +19,17 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.util.Locale;
-import java.beans.XMLEncoder;
-
-import be.docarch.odt2braille.setup.style.*;
-import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
 import be.docarch.odt2braille.setup.Configuration.SplittableVolume;
 import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
+import be.docarch.odt2braille.setup.style.*;
+import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
+
+import java.beans.XMLEncoder;
+import java.io.OutputStream;
+import java.io.BufferedOutputStream;
+import java.util.Locale;
 import org.daisy.braille.tools.Length;
 
 public class ConfigurationEncoder {

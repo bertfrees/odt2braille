@@ -19,6 +19,13 @@
 
 package be.docarch.odt2braille.ooo;
 
+import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.Locale;
+
 import com.sun.star.beans.PropertyValue;
 import com.sun.star.container.XNameAccess;
 import com.sun.star.frame.XFrame;
@@ -28,13 +35,6 @@ import com.sun.star.lang.XMultiServiceFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.XInterface;
-
-import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.Locale;
 
 /**
  * This class was taken from com.versusoft.packages.ooo

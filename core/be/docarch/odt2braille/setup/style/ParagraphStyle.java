@@ -37,7 +37,6 @@ public class ParagraphStyle extends Style {
     /************************/
 
     private final String id;
-    private final boolean automatic;
     private final String displayName;
     private final ParagraphStyle parentStyle;
 
@@ -61,7 +60,6 @@ public class ParagraphStyle extends Style {
     /* GETTERS */
 
     public String         getID()                   { return id; }
-    public boolean        getAutomatic()            { return automatic; }
     public String         getDisplayName()          { return displayName; }
     public ParagraphStyle getParentStyle()          { return parentStyle; }
 
@@ -101,12 +99,10 @@ public class ParagraphStyle extends Style {
 
 
     public ParagraphStyle(String id,
-                          boolean automatic,
                           String displayName,
                           ParagraphStyle parentStyle) {
 
         this.id = id;
-        this.automatic = automatic;
         this.displayName = displayName;
         this.parentStyle = parentStyle;
 
@@ -227,14 +223,6 @@ public class ParagraphStyle extends Style {
         widowControlEnabled.addListener(widowControl);
         orphanControlEnabled.addListener(orphanControl);
 
-    }
-
-    public ParagraphStyle getNonAutomaticStyle() {
-        if (getAutomatic()) {
-            return getParentStyle().getNonAutomaticStyle();
-        } else {
-            return this;
-        }    
     }
 
     /*****************/

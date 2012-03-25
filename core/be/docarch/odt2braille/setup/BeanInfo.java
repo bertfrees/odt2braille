@@ -19,18 +19,17 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.beans.PropertyDescriptor;
-
-import java.beans.IntrospectionException;
-
 import be.docarch.odt2braille.setup.style.*;
 import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 import be.docarch.odt2braille.setup.Configuration.SectionVolume;
 import be.docarch.odt2braille.setup.Configuration.SplittableVolume;
 import be.docarch.odt2braille.setup.Configuration.Volume;
 import be.docarch.odt2braille.setup.EmbossConfiguration.MarginSettings;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.beans.PropertyDescriptor;
+import java.beans.IntrospectionException;
 
 public class BeanInfo {
     

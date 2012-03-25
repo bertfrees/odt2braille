@@ -1,12 +1,12 @@
 package be.docarch.odt2braille;
 
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.style.PictureStyle;
+
 import java.io.File;
 import org.junit.Test;
 
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.ExportConfiguration;
-import be.docarch.odt2braille.setup.style.PictureStyle;
-
+//@org.junit.Ignore
 public class PicturesTest extends Odt2BrailleTest {
 
     @Test
@@ -16,7 +16,6 @@ public class PicturesTest extends Odt2BrailleTest {
         File testODT = new File(resources + "pictures.odt");
 
         ODT odt = new ODT(testODT);
-        ExportConfiguration exportSettings = new ExportConfiguration();
 
         Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
@@ -30,11 +29,11 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
+        ConversionResult result = convertODT2PEF(odt, settings);
 
-        File testPEF = pefBuilder.getSinglePEF();
-
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
     }
 
     @Test
@@ -44,7 +43,6 @@ public class PicturesTest extends Odt2BrailleTest {
         File testODT = new File(resources + "picture_captions.odt");
 
         ODT odt = new ODT(testODT);
-        ExportConfiguration exportSettings = new ExportConfiguration();
 
         Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(false);
@@ -58,10 +56,10 @@ public class PicturesTest extends Odt2BrailleTest {
         style.setClosingMark("\u2820\u2804");
         style.setDescriptionPrefix("Picture description:");
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
+        ConversionResult result = convertODT2PEF(odt, settings);
 
-        File testPEF = pefBuilder.getSinglePEF();
-
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
     }
 }

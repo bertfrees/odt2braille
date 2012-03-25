@@ -25,12 +25,12 @@
 
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:o2b="http://odt2braille.sf.net"
+            xmlns:my="http://odt2braille.sf.net"
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
             xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
 
-            exclude-result-prefixes="xsd o2b office style text" >
+            exclude-result-prefixes="xsd my office style text" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
@@ -44,7 +44,7 @@
         <xsl:variable name="all-styles"       select="$styles | $automatic-styles" />
         <xsl:variable name="body"             select="/office:document-content/office:body" />
 
-        <xsl:include href="common-templates.xsl" />
+        <xsl:include href="style-templates.xsl" />
 
     <xsl:template match="/">
 
@@ -82,7 +82,7 @@
         <xsl:variable name="distinct-character-styles"
                       select="distinct-values($character-styles)" />
 
-        <o2b:styles>
+        <my:styles>
             <xsl:for-each select="$distinct-paragraph-styles">
                 <xsl:variable name="family" select="'paragraph'" />
                 <xsl:variable name="style-name" select="." />
@@ -98,7 +98,7 @@
                         <xsl:with-param name="family"     select="$family"     />
                     </xsl:call-template>
                 </xsl:variable>
-                <o2b:style>
+                <my:style>
                     <xsl:attribute name="family" select="$family" />
                     <xsl:attribute name="name"   select="." />
                     <xsl:if test="not($display-name = '')">
@@ -110,7 +110,7 @@
                     <xsl:if test="$automatic-styles/style:style[@style:name=$style-name and @style:family=$family]">
                         <xsl:attribute name="automatic" select="'true'" />
                     </xsl:if>
-                </o2b:style>
+                </my:style>
             </xsl:for-each>
             <xsl:for-each select="$distinct-character-styles">
                 <xsl:variable name="family" select="'text'" />
@@ -128,7 +128,7 @@
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:if test="not($automatic-styles/style:style[@style:name=$style-name and @style:family=$family])">
-                    <o2b:style>
+                    <my:style>
                         <xsl:attribute name="family" select="$family" />
                         <xsl:attribute name="name"   select="." />
                         <xsl:if test="not($display-name = '')">
@@ -137,10 +137,10 @@
                         <xsl:if test="not($parent-style-name = '')">
                             <xsl:attribute name="parent-style-name" select="$parent-style-name" />
                         </xsl:if>
-                    </o2b:style>
+                    </my:style>
                 </xsl:if>
             </xsl:for-each>
-        </o2b:styles>
+        </my:styles>
     </xsl:template>
     
     <xsl:template name="get-style-sequence">

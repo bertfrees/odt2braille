@@ -19,16 +19,16 @@
 
 package be.docarch.odt2braille.setup.style;
 
-import java.io.Serializable;
-import java.util.Map;
-import java.util.HashMap;
-
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.Setting;
 import be.docarch.odt2braille.setup.TextSetting;
 import be.docarch.odt2braille.setup.NumberSetting;
 import be.docarch.odt2braille.setup.DependentYesNoSetting;
 import be.docarch.odt2braille.setup.SettingMap;
+
+import java.io.Serializable;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Collection;
 
 /**

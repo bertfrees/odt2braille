@@ -1,13 +1,13 @@
 package be.docarch.odt2braille;
 
-import java.io.File;
-import org.junit.Test;
-
 import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.setup.style.TocStyle;
 import be.docarch.odt2braille.setup.style.TocStyle.TocLevelStyle;
 
+import java.io.File;
+import org.junit.Test;
+
+//@org.junit.Ignore
 public class TableOfContentTest extends Odt2BrailleTest {
 
     @Test
@@ -18,7 +18,6 @@ public class TableOfContentTest extends Odt2BrailleTest {
         // Configuration 1
         File correctPEF = new File(resources + "toc_config1.pef");
         ODT odt = new ODT(testODT);
-        ExportConfiguration exportSettings = new ExportConfiguration();
 
         Configuration settings = odt.getConfiguration();
         settings.setBraillePageNumbers(true);
@@ -38,16 +37,15 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(3);
         level.setRunovers(9);
 
-        PEF pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
+        ConversionResult result = convertODT2PEF(odt, settings);
 
-        File testPEF = pefBuilder.getSinglePEF();
-
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
 
         // Configuration 2
         correctPEF = new File(resources + "toc_config2.pef");        
         odt = new ODT(testODT);
-        exportSettings = new ExportConfiguration();
         
         settings = odt.getConfiguration();
         settings.setBraillePageNumbers(true);
@@ -70,10 +68,10 @@ public class TableOfContentTest extends Odt2BrailleTest {
         level.setFirstLine(4);
         level.setRunovers(8);
 
-        pefBuilder = ODT2PEFConverter.convert(odt, exportSettings, null);
+        result = convertODT2PEF(odt, settings);
 
-        testPEF = pefBuilder.getSinglePEF();
-
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctPEF, result.getPEFFile())) {
+            result.cleanUp();
+        }
     }
 }

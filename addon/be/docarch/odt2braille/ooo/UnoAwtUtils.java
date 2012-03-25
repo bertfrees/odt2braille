@@ -34,7 +34,6 @@ import com.sun.star.ui.dialogs.XFilterManager;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
 
-
 /**
  * This class was taken from com.versusoft.packages.ooo
  *

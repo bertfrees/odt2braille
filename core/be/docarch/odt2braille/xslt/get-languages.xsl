@@ -25,12 +25,13 @@
 
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            xmlns:o2b="http://odt2braille.sf.net"
+            xmlns:my="http://odt2braille.sf.net"
+
             xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
             xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
             xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0"
 
-            exclude-result-prefixes="xsd o2b office style fo" >
+            exclude-result-prefixes="xsd my office style fo" >
 
     <xsl:output method="xml"
                 encoding="UTF-8"
@@ -65,16 +66,17 @@
         <xsl:variable name="distinct-languages"
                       select="distinct-values($languages)" />
 
-        <o2b:languages>
-            <o2b:language>
+        <my:languages>
+            <my:language>
                 <xsl:attribute name="name"  select="$main-language" />
                 <xsl:attribute name="class" select="'main'" />
-            </o2b:language>
+            </my:language>
             <xsl:for-each select="$distinct-languages">
-                <o2b:language>
+                <my:language>
                     <xsl:attribute name="name" select="." />
-                </o2b:language>
+                </my:language>
             </xsl:for-each>
-        </o2b:languages>
+        </my:languages>
     </xsl:template>
 </xsl:stylesheet>
+

@@ -44,10 +44,13 @@
                     indent="yes"
                     omit-xml-declaration="no"/>
 
-        <xsl:param    name="paramNoBrailleToc"    as="xsd:string" />
-        <xsl:param    name="paramOmittedCaption"  as="xsd:string" />
+        <xsl:param    name="paramNoBrailleToc"        as="xsd:string" />
+        <xsl:param    name="paramOmittedCaption"      as="xsd:string" />
+        <xsl:param    name="paramOmittedInBraille"    as="xsd:string" />
+        <xsl:param    name="paramNotInBrailleVolume"  as="xsd:string" />
+        <xsl:param    name="paramTransposedInBraille" as="xsd:string" />
 
-        <xsl:param    name="checkerID"            as="xsd:string"  select="'http://docarch.be/odt2braille/checker/BrailleChecker'" />
+        <xsl:param    name="checkerID"            as="xsd:string"  />
         <xsl:param    name="paramTimestamp"       as="xsd:string"  />
         <xsl:param    name="paramTocEnabled"      as="xsd:boolean" />
         <xsl:param    name="content-url"          as="xsd:string"  />

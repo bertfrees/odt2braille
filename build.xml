@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="odt2braille" default="jar" basedir="."
          xmlns:j2seproject3="http://www.netbeans.org/ns/j2se-project/3">
-         
+
     <description>Builds, tests, and runs the project extension project.</description>
 
     <fail message="Please build using Ant 1.8.0 or higher.">
         <condition><not><antversion atleast="1.8.0"/></not></condition>
     </fail>
 
-    <tstamp><format property="ISO-TODAY" pattern="yyyy-MM-dd"/></tstamp>
-    
-    <property name="project-name" value="odt2braille"/>
-    <property name="release-version" value="0.1.2.rc1"/>
-	
-    <property name="on-debian" value="false"/>
 
 <!--
   /- ===========================================================================
-  /- MAIN TARGETS                                                           
+  /- MAIN TARGETS
   /- ===========================================================================
   /-->
 
     <!-- Hook target for NetBeans.
-         'core-jar' can be changed into something else, depending on what you want to happen when you click 'Build' -->
+         'core-jar' can be changed into something else, depending on what you
+         want to happen when you click 'Build' -->
     <target name="jar"
             description="Hook target for NetBeans"
             depends="core-jar" />
@@ -30,19 +25,19 @@
     <target name="uno-package"
             description="Create UNO extension package"
             depends="addon-jar,images,registry,-delete-uno-package,-pre-uno-package,-do-uno-package,-post-uno-package"/>
-    
+
     <target name="uno-run"
             description="Run UNO extension package in OpenOffice.org"
             depends="uno-package,-run-oo"/>
-    
+
     <target name="addon-jar"
             description="Build addon JAR"
             depends="-uno-project-init,uno-idl-compile,-jar-idl-types,core-jar,compile,-pre-jar,-do-openoffice-manifest,-post-jar,-do-addon-jar" />
-            
+
     <target name="core-jar"
             description="Build core JAR"
             depends="init,-make-liblouis-dir,-build-core" />
-   
+
     <target name="tools-jar"
             description="Build tools JAR"
             depends="core-jar,-build-tools"/>
@@ -53,11 +48,11 @@
     <target name="tools-zip"
             description="Make a ZIP that includes the tools JAR, the lib folder and the liblouis folder"
             depends="tools-jar,-zip-tools"/>
-	
+
     <target name="javadoc"
             description="Build Javadoc"
             depends="init,-javadoc-build" />
-    
+
     <target name="test"
             description="Run unit tests"
             depends="init,-make-liblouis-dir,compile-test,-pre-test-run,-do-test-run,-test-report,-post-test-run" />
@@ -65,31 +60,41 @@
     <target name="compile"
             description="Compile project"
             depends="init,deps-jar,-verify-automatic-build,-pre-pre-compile,-pre-compile,-do-compile,-post-compile" />
-			
+
     <target name="l10n"
             description="Re-encode localisation files">
         <ant dir="l10n" inheritAll="false" />
     </target>
+
+    <target name="doc"
+            description="Build user and developer documentation"
+            depends="-build-documentation"/>
 
     <target name="licenses"
             description="Add license headers">
         <ant dir="licenses" inheritAll="false" />
     </target>
 
-    <target name="brailleutils"
-            description="Build brailleutils JARs">
-        <ant dir="ext/brailleutils/src/latest/braille" inheritAll="false" />
+    <target name="clean"
+            description="Clean build products"
+            depends="init,deps-clean,-do-clean,-post-clean" />
+
+    <target name="braille-utils"
+            description="Build brailleutils JARs"
+            depends="-load-properties">
+        <fail unless="brailleUtils.src.dir">Must set brailleUtils.src.dir property</fail>
+        <ant dir="${brailleUtils.src.dir}" inheritAll="false" />
     </target>
-	
-			
+
+
 <!--
-  /- ===========================================================================
-  /- OVERRIDE TARGETS                                                           
-  /- ===========================================================================
+  /- =======================================================================
+  /- OVERRIDE TARGETS         TODO: get rid of this !
+  /- =======================================================================
   /-->
-  
-  
-    <target name="-pre-init" depends="-init-build,-copy-external-jars"/>
+
+
+    <target name="-pre-init" depends="-init-build"/>
     <target name="-pre-compile"/>
     <target name="-post-uno-package" depends="-rebuild-extension"/>
     <target name="-profile-post-init"/>
@@ -102,104 +107,199 @@
     <target name="-post-compile-test"/>
     <target name="-pre-compile-test"/>
     <target name="-post-clean"/>
-  
-  
-<!-- =========================================================================== -->
-  
-    
-    <!-- initialise -->
-    <target name="-init-build"
-            depends="-windows-properties,-macosx-properties,-linux-properties,-debian-properties">
 
-        <property file="build.properties"/>
-		
-        <pathconvert property="project.home">
-            <path path="."/>
-        </pathconvert>
 
-        <pathconvert property="core.deploy.dir">
-            <path path="${dist.dir}/${external.jar.dir}"/>
-        </pathconvert>
-		
-        <pathconvert property="core.classpath.attribute" pathsep=" " dirsep="/">
-            <path path="${javac.core.classpath}"/>
-            <firstmatchmapper>
-                <chainedmapper>
-                    <globmapper from="${project.home}/*" to="*" handledirsep="yes" />
-                    <flattenmapper/>
-                </chainedmapper>
-                <globmapper from="${core.deploy.dir}/*" to="*"/>
-                <globmapper from="/*" to="file:///*"/>
-                <globmapper from="*" to="file:///*"/>
-            </firstmatchmapper>
-        </pathconvert>
-		
-        <pathconvert property="addon.classpath.attribute" pathsep=" " dirsep="/">
-            <path path="${core.deploy.dir}/${core.jar}"/>
-            <firstmatchmapper>
-                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
-                <globmapper from="/*" to="file:///*"/>
-                <globmapper from="*" to="file:///*"/>
-            </firstmatchmapper>
-        </pathconvert>
-        
-        <pathconvert property="tools.classpath.attribute" pathsep=" " dirsep="/">
-            <path path="${core.deploy.dir}/${core.jar}"/>
-            <firstmatchmapper>
-                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
-                <globmapper from="/*" to="file:///*"/>
-                <globmapper from="*" to="file:///*"/>
-            </firstmatchmapper>
-        </pathconvert>
+<!--
+  /- =======================================================================
+  /- PROPERTIES                                                         
+  /- =======================================================================
+  /-->
 
-        <available file="${dist.dir}${file.separator}${external.jar.dir}"
-                   property="external.jar.dir.exists"/>
-        <available file="${dist.dir}${file.separator}liblouis"
-                   property="dist.liblouis.dir.exists"/>
+
+    <target name="-properties" depends="-load-properties,
+                                        -platform-properties,
+                                        -common-properties"/>
+
+    <!-- load properties from file -->
+    <target name="-load-properties">
+        <property name="properties.file" value="build.properties"/>
+        <property file="${properties.file}"/>
     </target>
-	
-	
-    <!-- load platform dependent properties -->
+
+    <!-- platform dependent properties -->
+    <target name="-platform-properties"
+            depends="-windows-properties,-mac-properties,-linux-properties"/>
+
+    <!-- common properties -->
+    <target name="-common-properties">
+
+        <property name="project.name" value="odt2braille"/>
+        <property name="release.version" value="0.1.2.rc1"/>
+
+        <pathconvert property="project.home"><path path="."/></pathconvert>
+
+        <tstamp><format property="ISO-TODAY" pattern="yyyy-MM-dd"/></tstamp>
+
+        <property name="core.jar" value="odt2braille.jar"/>
+        <property name="addon.jar" value="odt2braille-addon.jar"/>
+        <property name="tools.jar" value="odt2braille-tools.jar"/>
+        <property name="tools.zip" value="odt2braille.zip"/>
+
+        <property name="src.core.dir" value="core"/>
+        <property name="src.addon.dir" value="addon"/>
+        <property name="src.tools.dir" value="tools"/>
+        <property name="test.src.dir" value="test"/>
+        <property name="images.dir" value="images"/>
+        <property name="registry.dir" value="registry"/>
+        <property name="help.dir" value="help"/>
+        <property name="dialogs.dir" value="dialogs"/>
+        <property name="licenses.dir" value="licenses"/>
+        <property name="templates.dir" value="templates"/>
+        <property name="settings.dir" value="settings"/>
+        <property name="description.dir" value="description"/>
+        <property name="meta.inf.dir" value="${src.addon.dir}/META-INF"/>
+
+        <property name="dist.dir" value="dist"/>
+        <property name="dist.core.jar" value="${dist.dir}/lib/${core.jar}"/>
+        <property name="dist.addon.jar" value="${dist.dir}/${addon.jar}"/>
+        <property name="dist.tools.jar" value="${dist.dir}/${tools.jar}"/>
+        <property name="dist.tools.zip" value="${dist.dir}/${tools.zip}"/>
+        <property name="dist.javadoc.dir" value="${dist.dir}/javadoc"/>
+        <pathconvert property="core.deploy.dir"><path path="${dist.dir}/lib"/></pathconvert>
+
+        <property name="build.dir" value="build"/>
+        <property name="build.addon.classes.dir" value="${build.dir}/addon-classes"/>
+        <property name="build.core.classes.dir" value="${build.dir}/core-classes"/>
+        <property name="build.tools.classes.dir" value="${build.dir}/tools-classes"/>
+        <property name="build.oxt.dir" value="${build.dir}/oxt"/>
+        <property name="build.test.classes.dir" value="${build.dir}/test/classes"/>
+        <property name="build.test.results.dir" value="${build.dir}/test/results"/>
+        <property name="build.test.report.dir" value="${build.dir}/test/report"/>
+        <property name="build.generated.dir" value="${build.dir}/generated"/>
+        <property name="build.generated.sources.dir" value="${build.dir}/generated-sources"/>
+
+        <property name="javac.deprecation" value="false"/>
+        <property name="javac.source" value="1.5"/>
+        <property name="javac.target" value="1.5"/>
+
+        <property name="build.classes.excludes" value="**/*.java,**/*.form,**/*.xcu,**/*.xcs,**/*.idl,**/*manifest.xml"/>
+        <property name="endorsed.classpath" value=""/>
+        <property name="excludes" value=""/>
+        <property name="includes" value="**"/>
+
+        <property name="sdk.bin.dir" value="${sdk.dir}/bin"/>
+        <property name="ure.bin.dir" value="${ure.dir}/bin"/>
+        <property name="office.tool.path" value="${office.program.dir}:${sdk.bin.dir}:${basis.dir}/program:${ure.bin.dir}"/>
+
+        <property name="uno.project.type" value="office.addon.project"/>
+        <property name="registration.classname" value="be.docarch.odt2braille.ooo.Odt2BrailleAddOn"/>
+        <property name="idl_types.jar" value="Odt2BrailleAddOn_IDL_types.jar"/>
+        <property name="central.registration.class" value="be.docarch.odt2braille.ooo.CentralRegistrationClass"/>
+        <property name="manifest.package.extensions" value="**/*.xcu,**/*.xcs,**/*.xdl,**/*.xlb,**/*.xba,**/*.default"/>
+        <property name="image.extensions" value="**/*.png,**/*.jpg,**/*.jpeg,**/*.gif"/>
+        <property name="help.content.extensions" value="**/*.xhp,**/*.tree,${image.extensions}"/>
+        <property name="dialog.content.extensions" value="**/*.xdl,**/*.properties,**/*.default,${image.extensions}"/>
+        <property name="office.startup.options" value=""/>
+
+        <property name="javadoc.additionalparam" value=""/>
+        <property name="javadoc.author" value="false"/>
+        <property name="javadoc.encoding" value=""/>
+        <property name="javadoc.noindex" value="false"/>
+        <property name="javadoc.nonavbar" value="false"/>
+        <property name="javadoc.notree" value="false"/>
+        <property name="javadoc.private" value="false"/>
+        <property name="javadoc.splitindex" value="true"/>
+        <property name="javadoc.use" value="true"/>
+        <property name="javadoc.version" value="false"/>
+        <property name="javadoc.windowtitle" value=""/>
+
+        <property name="build.doc.dir" value="doc/build"/>
+        <property name="doc.lang" value="en"/>
+        <property name="user.doc" value="odt2braille-user-doc"/>
+        <property name="dev.doc" value="odt2braille-dev-doc"/>
+
+        <!-- default file references -->
+        <property name="brailleUtils-core.jar" value="lib/brailleUtils-core-1.2b.jar"/>
+        <property name="brailleUtils-catalog.jar" value="lib/brailleUtils-catalog-1.2b.jar"/>
+        <property name="accessodf.jar" value="lib/accessodf.jar"/>
+        <property name="commons-io.jar" value="lib/commons-io-1.4.jar"/>
+        <property name="saxon.jar" value="lib/saxon9he.jar"/>
+        <property name="xalan.jar" value="lib/xalan.jar"/>
+        <property name="ant.jar" value="lib/ant.jar"/>
+        <property name="junit.jar" value="lib/junit-4.4.jar"/>
+        <property name="xmlunit.jar" value="lib/xmlunit-1.2.jar"/>
+    </target>
+
+    <!-- windows -->
     <target name="-windows-properties" if="is.windows" depends="-detect-os">
-        <property file="build.windows.properties"/>
+        <property name="target.os" value="windows_x86"/>
+        <fail if="core.deploy.dir">core.deploy.dir property not supported on Windows</fail>
+        <fail unless="oo.dir">Must set oo.dir property</fail>
+        <fail if="basis.dir">basis.dir property cannot be set manually on Windows</fail>
+        <fail if="ure.dir">ure.dir property cannot be set manually on Windows</fail>
+        <fail if="java.dir">java.dir property cannot be set manually on Windows</fail>
+        <fail if="classes.dir">classes.dir property cannot be set manually on Windows</fail>
+        <fail if="office.program.dir">office.program.dir property cannot be set manually on Windows</fail>
+        <property name="basis.dir" value="${oo.dir}${file.separator}Basis"/>
+        <property name="ure.dir" value="${oo.dir}${file.separator}URE"/>
+        <property name="java.dir" value="${ure.dir}${file.separator}java"/>
+        <property name="classes.dir"
+                  value="${basis.dir}${file.separator}program${file.separator}classes"/>
+        <property name="office.program.dir"
+                  value="${oo.dir}${file.separator}program"/>
+        <property name="oo.unotypes.rdb"
+                  value="-X${ure.dir}${file.separator}misc${file.separator}types.rdb"/>
+        <property name="oo.offapi.rdb"
+                  value="-X${basis.dir}${file.separator}program${file.separator}offapi.rdb"/>
     </target>
 
-    <target name="-macosx-properties" if="is.macosx" depends="-detect-os">
-        <property file="build.macosx.properties"/>
+    <!-- mac os -->
+    <target name="-mac-properties" if="is.mac" depends="-detect-os">
+        <property name="target.os" value="macosx_x86"/>
+        <fail if="core.deploy.dir">core.deploy.dir property not supported on Mac</fail>
+        <fail unless="oo.dir">Must set oo.dir property</fail>
+        <fail if="basis.dir">basis.dir property cannot be set manually on Mac</fail>
+        <fail if="ure.dir">ure.dir property cannot be set manually on Mac</fail>
+        <fail if="java.dir">java.dir property cannot be set manually on Mac</fail>
+        <fail if="classes.dir">classes.dir property cannot be set manually on Mac</fail>
+        <fail if="office.program.dir">office.program.dir property cannot be set manually on Mac</fail>
+        <property name="basis.dir"
+                  value="${oo.dir}${file.separator}basis-link"/>
+        <property name="ure.dir"
+                  value="${basis.dir}${file.separator}ure-link"/>
+        <property name="java.dir"
+                  value="${ure.dir}${file.separator}share${file.separator}java"/>
+        <property name="classes.dir"
+                  value="${basis.dir}${file.separator}program${file.separator}classes"/>
+        <property name="office.program.dir"
+                  value="${oo.dir}${file.separator}MacOS"/>
+        <property name="oo.unotypes.rdb"
+                  value="-X${ure.dir}${file.separator}share${file.separator}misc${file.separator}types.rdb"/>
+        <property name="oo.offapi.rdb"
+                  value="-X${basis.dir}${file.separator}program${file.separator}offapi.rdb"/>
     </target>
 
+    <!-- linux -->
     <target name="-linux-properties" if="is.linux" depends="-detect-os">
-        <property file="build.linux.properties"/>
+        <property name="target.os" value="linux_x86"/>
+        <fail if="oo.dir">oo.dir property not supported on Linux</fail>
+        <fail unless="basis.dir">Must set basis.dir property</fail>
+        <fail unless="ure.dir">Must set ure.dir property</fail>
+        <fail unless="java.dir">Must set java.dir property</fail>
+        <fail unless="classes.dir">Must set classes.dir property</fail>
+        <fail unless="office.program.dir">Must set office.program.dir property</fail>
+        <property name="oo.unotypes.rdb"
+                  value="-X${ure.dir}${file.separator}share${file.separator}misc${file.separator}types.rdb"/>
+        <property name="oo.offapi.rdb"
+                  value="-X${basis.dir}${file.separator}program${file.separator}offapi.rdb"/>
     </target>
 
-    <target name="-debian-properties" if="is.debian" depends="-detect-os">
-        <property file="build.debian.properties"/>
-    </target>
-
-    <!-- ask target.os as an input -->
-    <target name="-prompt-target-os">
-        <input message="Choose extension target platform:"
-               validargs="${list.target.os}"
-               addproperty="target.os" />
-
-        <condition property="target.is.windows">
-            <equals arg1="${target.os}" arg2="windows_x86"/>
-        </condition>
-        <condition property="target.is.macosx">
-            <equals arg1="${target.os}" arg2="macosx_x86"/>
-        </condition>
-        <condition property="target.is.linux">
-            <equals arg1="${target.os}" arg2="linux_x86"/>
-        </condition>
-    </target>
-    
-    
     <!-- detect os -->
     <target name="-detect-os">
         <condition property="is.windows">
             <os family="windows"/>
         </condition>
-        <condition property="is.macosx">
+        <condition property="is.mac">
            <and>
                <os family="mac"/>
                <os family="unix"/>
@@ -209,40 +309,149 @@
             <and>
                 <os family="unix"/>
                 <not><os family="mac"/></not>
-                <not><istrue value="${on-debian}"/></not>
-            </and>
-        </condition>
-        <condition property="is.debian">
-            <and>
-                <os family="unix"/>
-                <not><os family="mac"/></not>
-                <istrue value="${on-debian}"/>
             </and>
         </condition>
     </target>
 
 
-    <!-- make external jars folder -->
-    <target name="-copy-external-jars" depends="-init-build" unless="external.jar.dir.exists">
-        <pathconvert property="core.classpath.space.sep" pathsep=" ">
-            <path path="${javac.core.classpath}"/>
-            <map from="${project.home}${file.separator}" to=""/>
-        </pathconvert>
-        <mkdir dir="${dist.dir}${file.separator}${external.jar.dir}" />
-        <copy todir="${dist.dir}${file.separator}${external.jar.dir}" flatten="true">
-            <fileset dir="." includes="${core.classpath.space.sep}"/>
+<!--
+  /- =======================================================================
+  /- COPY (EMBED) DEPENDENCY JARS                                                        
+  /- =======================================================================
+  /-->
+
+
+    <target name="-copy-jars"
+            depends="-init-copy-jars,
+                     -copy-brailleUtils-jars-from-src-dir,
+                     -copy-brailleUtils-core-jar,
+                     -copy-brailleUtils-catalog-jar,
+                     -copy-accessodf-jar,
+                     -copy-commons-io-jar,
+                     -copy-saxon-jar,
+                     -copy-xalan-jar"/>
+
+    <target name="-init-copy-jars">
+
+        <delete dir="${dist.dir}/lib"/>
+        <mkdir dir="${dist.dir}/lib"/>
+
+        <condition property="brailleUtils-core.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${brailleUtils-core.jar}"/></not>
+        </condition>
+        <condition property="brailleUtils-catalog.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${brailleUtils-catalog.jar}"/></not>
+        </condition>
+        <condition property="accessodf.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${accessodf.jar}"/></not>
+        </condition>
+        <condition property="commons-io.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${commons-io.jar}"/></not>
+        </condition>
+        <condition property="saxon.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${saxon.jar}"/></not>
+        </condition>
+        <condition property="xalan.jar.is.relative">
+            <not><matches pattern="^\/.*" string="${xalan.jar}"/></not>
+        </condition>
+
+    </target>
+
+    <target name="-copy-brailleUtils-jars-from-src-dir" if="brailleUtils.src.dir">
+        <copy todir="${dist.dir}/lib" flatten="true">
+            <path>
+                <pathelement location="${brailleUtils.src.dir}/ant-build/output/dist/brailleUtils-core-1.2b.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/ant-build/output/dist/brailleUtils-catalog-1.2b.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/isorelax.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/jing.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/wstx-lgpl-3.2.8.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/xercesImpl.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/xml-apis.jar"/>
+                <pathelement location="${brailleUtils.src.dir}/lib/stax-api-1.0.1.jar"/>
+            </path>
         </copy>
+        <property name="path.brailleUtils-core"    value="${dist.dir}/lib/brailleUtils-core-1.2b.jar"/>
+        <property name="path.brailleUtils-catalog" value="${dist.dir}/lib/brailleUtils-catalog-1.2b.jar"/>
     </target>
 
+    <target name="-copy-brailleUtils-core-jar"
+            unless="brailleUtils.src.dir"
+            if="brailleUtils-core.jar.is.relative">
+        <copy todir="${dist.dir}/lib" flatten="true">
+            <path>
+                <pathelement location="${brailleUtils-core.jar}"/>
+                <pathelement location="lib/isorelax.jar"/>
+                <pathelement location="lib/jing.jar"/>
+                <pathelement location="lib/wstx-lgpl-3.2.8.jar"/>
+                <pathelement location="lib/xercesImpl.jar"/>
+                <pathelement location="lib/xml-apis.jar"/>
+                <pathelement location="lib/stax-api-1.0.1.jar"/>
+            </path>
+        </copy>
+        <basename file="${brailleUtils-core.jar}" property="brailleUtils-core.basename"/>
+        <property name="brailleUtils-core.path" value="${dist.dir}/lib/${brailleUtils-core.basename}"/>
+    </target>
+
+    <target name="-copy-brailleUtils-catalog-jar"
+            unless="brailleUtils.src.dir"
+            if="brailleUtils-catalog.jar.is.relative">
+        <copy todir="${dist.dir}/lib" file="${brailleUtils-catalog.jar}"/>
+        <basename file="${brailleUtils-catalog.jar}" property="brailleUtils-catalog.basename"/>
+        <property name="path.brailleUtils-catalog" value="${dist.dir}/lib/${brailleUtils-catalog.basename}"/>
+    </target>
+
+    <target name="-copy-accessodf-jar" if="accessodf.jar.is.relative">
+        <copy todir="${dist.dir}/lib" file="${accessodf.jar}"/>
+        <basename file="${accessodf.jar}" property="accessodf.basename"/>
+        <property name="path.accessodf" value="${dist.dir}/lib/${accessodf.basename}"/>
+    </target>
+
+    <target name="-copy-commons-io-jar" if="commons-io.jar.is.relative">
+        <copy todir="${dist.dir}/lib" file="${commons-io.jar}"/>
+        <basename file="${commons-io.jar}" property="commons-io.basename"/>
+        <property name="path.commons-io" value="${dist.dir}/lib/${commons-io.basename}"/>
+    </target>
+
+    <target name="-copy-saxon-jar" if="saxon.jar.is.relative">
+        <copy todir="${dist.dir}/lib" file="${saxon.jar}"/>
+        <basename file="${saxon.jar}" property="saxon.basename"/>
+        <property name="path.saxon" value="${dist.dir}/lib/${saxon.basename}"/>
+    </target>
+
+    <target name="-copy-xalan-jar" if="xalan.jar.is.relative">
+        <copy todir="${dist.dir}/lib" file="${xalan.jar}"/>
+        <basename file="${xalan.jar}" property="xalan.basename"/>
+        <property name="path.xalan" value="${dist.dir}/lib/${xalan.basename}"/>
+    </target>
+
+
+<!--
+  /- =======================================================================
+  /- MAKE LIBLOUIS FOLDER                                                       
+  /- =======================================================================
+  /-->
+
+
+    <target name="-init-liblouis-dir">
+        <available file="${dist.dir}${file.separator}liblouis"
+                   property="liblouis.dir.exists"/>
+        <condition property="target.is.windows">
+            <equals arg1="${target.os}" arg2="windows_x86"/>
+        </condition>
+        <condition property="target.is.macosx">
+            <equals arg1="${target.os}" arg2="macosx_x86"/>
+        </condition>
+    </target>
 
     <!-- make liblouis folder -->
-    <target name="-make-liblouis-dir" unless="dist.liblouis.dir.exists">
+    <target name="-make-liblouis-dir"
+            depends="-init-liblouis-dir"
+            unless="liblouis.dir.exists">
         <mkdir dir="${dist.dir}${file.separator}liblouis" />
         <antcall target="-copy-liblouis-files"/>
         <antcall target="-copy-liblouis-bin"/>
     </target>
-    
-    
+
     <!-- copy liblouis files -->
     <target name="-copy-liblouis-files">
         <copy todir="${dist.dir}${file.separator}liblouis${file.separator}files"
@@ -264,14 +473,12 @@
             </fileset>
         </copy>
     </target>
-    
 
     <!-- copy liblouis binaries -->
-    <target name="-copy-liblouis-bin"
-            depends="-prompt-target-os,-copy-liblouis-bin-win,-copy-liblouis-bin-mac"/>
-            
-    
-    <!-- copy windows binaries -->
+    <target name="-copy-liblouis-bin" depends="-copy-liblouis-bin-win,
+                                               -copy-liblouis-bin-mac"/>
+
+    <!-- copy liblouis windows binaries -->
     <target name="-copy-liblouis-bin-win" if="target.is.windows">
         <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin">
             <fileset dir="ext${file.separator}liblouis${file.separator}bin">
@@ -288,9 +495,8 @@
             </fileset>
         </copy>
     </target>
-	
-	
-    <!-- copy mac os binaries -->
+
+    <!-- copy liblouis mac os binaries -->
     <target name="-copy-liblouis-bin-mac" if="target.is.macosx">
         <copy todir="${dist.dir}${file.separator}liblouis${file.separator}bin">
             <fileset dir="ext${file.separator}liblouis${file.separator}bin">
@@ -308,19 +514,113 @@
         </copy>
     </target>
 
+
+<!--
+  /- =======================================================================
+  /- BUILD                                                         
+  /- =======================================================================
+  /-->
+
+
+    <target name="-init-build"
+            depends="-properties,-copy-jars">
+
+        <property name="path.brailleUtils-core" value="${brailleUtils-core.jar}"/>
+        <property name="path.brailleUtils-catalog" value="${brailleUtils-catalog.jar}"/>
+        <property name="path.accessodf" value="${accessodf.jar}"/>
+        <property name="path.commons-io" value="${commons-io.jar}"/>
+        <property name="path.saxon" value="${saxon.jar}"/>
+        <property name="path.xalan" value="${xalan.jar}"/>
+
+        <!-- javac classpath -->
+
+        <path id="core.classpath">
+            <pathelement location="${path.accessodf}"/>
+            <pathelement location="${path.commons-io}"/>
+            <pathelement location="${path.saxon}"/>
+            <pathelement location="${path.xalan}"/>
+            <pathelement location="${path.brailleUtils-catalog}"/>
+            <pathelement location="${path.brailleUtils-core}"/>
+        </path>
+
+        <path id="openoffice.classpath">
+            <pathelement location="${java.dir}/juh.jar"/>
+            <pathelement location="${java.dir}/jurt.jar"/>
+            <pathelement location="${java.dir}/ridl.jar"/>
+            <pathelement location="${classes.dir}/unoil.jar"/>
+        </path>
+
+        <path id="addon.classpath">
+            <pathelement location="${build.core.classes.dir}"/>
+            <path refid="core.classpath"/>
+            <path refid="openoffice.classpath"/>
+        </path>
+
+        <path id="tools.classpath">
+            <path location="${build.core.classes.dir}"/>
+            <path refid="core.classpath"/>
+            <pathelement location="${ant.jar}"/>
+        </path>
+
+        <path id="test.classpath">
+            <path location="${build.core.classes.dir}"/>
+            <path refid="core.classpath"/>
+            <pathelement location="${junit.jar}"/>
+            <pathelement location="${xmlunit.jar}"/>
+        </path>
+
+        <pathconvert property="javac.addon.classpath"
+                     refid="addon.classpath" pathsep=":" dirsep="/"/>
+
+        <pathconvert property="javac.test.classpath"
+                     refid="test.classpath" pathsep=":" dirsep="/"/>
+
+        <property name="run.test.classpath"
+                  value="${javac.test.classpath}:${build.test.classes.dir}"/>
+
+        <!-- manifest's classpath attribute -->
+
+        <pathconvert property="core.manifest.classpath" pathsep=" " dirsep="/">
+            <path refid="core.classpath"/>
+            <firstmatchmapper>
+                <globmapper from="${core.deploy.dir}/*" to="*"/>
+                <globmapper from="${project.home}/${dist.dir}/lib/*" to="*" handledirsep="yes" />
+                <globmapper from="/*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
+            </firstmatchmapper>
+        </pathconvert>
+
+        <pathconvert property="addon.manifest.classpath" pathsep=" " dirsep="/">
+            <path path="${core.deploy.dir}/${core.jar}"/>
+            <firstmatchmapper>
+                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
+                <globmapper from="/*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
+            </firstmatchmapper>
+        </pathconvert>
+
+        <pathconvert property="tools.manifest.classpath" pathsep=" " dirsep="/">
+            <path path="${core.deploy.dir}/${core.jar}"/>
+            <firstmatchmapper>
+                <globmapper from="${project.home}/${dist.dir}/*" to="*" handledirsep="yes" />
+                <globmapper from="/*" to="file:///*"/>
+                <globmapper from="*" to="file:///*"/>
+            </firstmatchmapper>
+        </pathconvert>
+
+    </target>
+
     <!-- compile core -->
     <target name="-compile-core" depends="-init-build">
         <delete dir="${build.core.classes.dir}"/>
-    	<mkdir dir="${build.core.classes.dir}"/>
+        <mkdir dir="${build.core.classes.dir}"/>
         <javac srcdir="${src.core.dir}" destdir="${build.core.classes.dir}"
                includeantruntime="false" debug="true" encoding="UTF-8"
                source="${javac.source}" target="${javac.target}"
                includes="**" excludes="">
-            <classpath>
-                <path path="${javac.core.classpath}"/>
-            </classpath>
+            <classpath refid="core.classpath"/>
         </javac>
-		<copy todir="${build.core.classes.dir}">
+        <copy todir="${build.core.classes.dir}">
             <fileset dir="${src.core.dir}">
                 <patternset>
                     <include name="META-INF/**/*.*"/>
@@ -333,36 +633,34 @@
             </fileset>
         </copy>
     </target>
-    
+
     <!-- build core jar -->
     <target name="-build-core" depends="-compile-core">
-		<delete file="${dist.core.jar}"/>
+        <delete file="${dist.core.jar}"/>
         <jar destfile="${dist.core.jar}">
             <fileset dir="${build.core.classes.dir}"/>
             <manifest>
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Built-On" value="${ISO-TODAY}"/>
                 <attribute name="Implementation-Title" value="${project.name}"/>
-                <attribute name="Implementation-Version" value="${release-version}"/>
+                <attribute name="Implementation-Version" value="${release.version}"/>
                 <attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
-                <attribute name="Class-Path" value="${core.classpath.attribute}"/>
+                <attribute name="Class-Path" value="${core.manifest.classpath}"/>
             </manifest>
-    	</jar>
+        </jar>
     </target>
-    
+
     <!-- compile tools -->
     <target name="-compile-tools" depends="-init-build">
         <delete dir="${build.tools.classes.dir}"/>
-    	<mkdir dir="${build.tools.classes.dir}"/>
+        <mkdir dir="${build.tools.classes.dir}"/>
         <javac srcdir="${src.tools.dir}" destdir="${build.tools.classes.dir}"
                includeantruntime="false" debug="true" encoding="UTF-8"
                source="${javac.source}" target="${javac.target}"
                includes="**" excludes="">
-            <classpath>
-                <path path="${javac.tools.classpath}"/>
-            </classpath>
+            <classpath refid="tools.classpath"/>
         </javac>
-		<copy todir="${build.tools.classes.dir}">
+        <copy todir="${build.tools.classes.dir}">
             <fileset dir="${src.tools.dir}">
                 <patternset>
                     <include name="META-INF/**/*.*"/>
@@ -375,7 +673,7 @@
             </fileset>
         </copy>
     </target>
-    
+
     <!-- build tools jar -->
     <target name="-build-tools" depends="-compile-tools">
         <delete file="${dist.tools.jar}"/>
@@ -385,11 +683,11 @@
                 <attribute name="Built-By" value="${user.name}"/>
                 <attribute name="Built-On" value="${ISO-TODAY}"/>
                 <attribute name="Implementation-Title" value="${project.name}-tools"/>
-                <attribute name="Implementation-Version" value="${release-version}"/>
+                <attribute name="Implementation-Version" value="${release.version}"/>
                 <attribute name="Implementation-URL" value="http://odt2braille.sourceforge.net"/>
-                <attribute name="Class-Path" value="${tools.classpath.attribute}"/>
+                <attribute name="Class-Path" value="${tools.manifest.classpath}"/>
             </manifest>
-    	</jar>
+        </jar>
     </target>
 
     <!-- zip tools -->
@@ -397,7 +695,7 @@
         <delete file="${dist.tools.zip}"/>
 		<zip destfile="${dist.tools.zip}">
 		    <zipfileset file="${dist.tools.jar}" prefix="odt2braille"/>
-		    <zipfileset dir="${dist.dir}${file.separator}${external.jar.dir}" prefix="odt2braille/${external.jar.dir}"/>
+		    <zipfileset dir="${dist.dir}${file.separator}lib" prefix="odt2braille/lib"/>
 			<zipfileset dir="${dist.dir}${file.separator}liblouis" prefix="odt2braille/liblouis"/>
         </zip>
     </target>
@@ -409,7 +707,7 @@
         <delete dir="${build.oxt.dir}" />
         <mkdir dir="${build.oxt.dir}" />
         <unzip src="${uno.package.name}" dest="${build.oxt.dir}" />
-  
+
         <!-- add templates folder -->
         <copy todir="${build.oxt.dir}${file.separator}${templates.dir}">
             <fileset dir="${templates.dir}" />
@@ -424,7 +722,7 @@
         <copy todir="${build.oxt.dir}${file.separator}${settings.dir}">
             <fileset dir="${settings.dir}" />
         </copy>
-		
+
         <!-- add licenses folder -->
         <copy todir="${build.oxt.dir}${file.separator}${licenses.dir}">
             <fileset dir="${licenses.dir}" />
@@ -444,11 +742,159 @@
              basedir="${build.oxt.dir}" />		
 		
     </target>
+
+
+<!--
+  /- ===========================================================================
+  /- DOCUMENTATION
+  /- ===========================================================================
+  /-->
+    
+    
+    <target name="-build-documentation"
+            depends="-init-documentation,-user-documentation,-dev-documentation"/>
+                     
+    <target name="-init-documentation"
+            depends="-properties">
+        <delete dir="${build.doc.dir}"/>
+    	<mkdir dir="${build.doc.dir}"/>
+    </target>
+    
+    <!-- user documentation -->
+    <target name="-user-documentation"
+            depends="-user-documentation-html,
+                     -user-documentation-pdf"/>
+    
+	<target name="-user-documentation-html" depends="-init-macrodef-docbook-html">
+		<docbook-html docbook="doc/${user.doc}.xml" html="${build.doc.dir}/${user.doc}-${doc.lang}.html"/>
+	</target>
+    
+    <target name="-user-documentation-pdf" depends="-init-macrodef-docbook-pdf">
+		<docbook-html docbook="doc/${user.doc}.xml" pdf="${build.doc.dir}/${user.doc}-${doc.lang}.pdf"/>
+	</target>
+    
+    <target name="-user-documentation-odt" depends="-init-macrodef-docbook-odt">
+		<docbook-html docbook="doc/${user.doc}.xml" odt="${build.doc.dir}/${user.doc}-${doc.lang}.odt"/>
+	</target>
+    
+    <!-- developer documentation -->
+    <target name="-dev-documentation"
+            depends="-dev-documentation-html"/>
+    
+	<target name="-dev-documentation-html" depends="-init-macrodef-docbook-html">
+		<docbook-html docbook="doc/${dev.doc}.xml" html="${build.doc.dir}/${dev.doc}.html"/>
+	</target>
+    
+    <target name="-dev-documentation-pdf" depends="-init-macrodef-docbook-pdf">
+		<docbook-html docbook="doc/${dev.doc}.xml" pdf="${build.doc.dir}/${dev.doc}.pdf"/>
+	</target>
+    
+    <target name="-dev-documentation-odt" depends="-init-macrodef-docbook-odt">
+		<docbook-html docbook="doc/${dev.doc}.xml" odt="${build.doc.dir}/${dev.doc}.odt"/>
+	</target>
+    
+    <!-- macrodefs -->
+    <target name="-init-macrodef-docbook-html">
+        <fail unless="docbook-xsl.dir">Must set docbook-xsl.dir property</fail>
+        <fail unless="saxon.jar"/>
+        <macrodef name="docbook-html">
+            <attribute name="docbook"/>
+            <attribute name="html"/>
+            <sequential>
+                <java jar="${saxon.jar}" fork="yes">
+                    <arg value="-o"/>
+                    <arg value="@{html}"/>
+                    <arg value="@{docbook}"/>
+                    <arg value="${docbook-xsl.dir}/html/profile-docbook.xsl"/>
+                    <arg value="profile.lang=${doc.lang}"/>
+                    <arg value="section.autolabel=1"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    <target name="-init-macrodef-docbook-pdf"
+            depends="-init-macrodef-docbook-fo,
+                     -init-macrodef-fo-pdf">
+        <macrodef name="docbook-pdf">
+            <attribute name="docbook"/>
+            <attribute name="pdf"/>
+            <sequential>
+                <docbook-fo docbook="@{docbook}" fo="@{pdf}.fo"/>
+                <fo-pdf fo="@{pdf}.fo" pdf="@{pdf}"/>
+            </sequential>
+        </macrodef>
+            
+    </target>
+    
+    <target name="-init-macrodef-docbook-fo">
+        <fail unless="docbook-xsl.dir">Must set docbook-xsl.dir property</fail>
+        <fail unless="saxon.jar"/>
+        <macrodef name="docbook-fo">
+            <attribute name="docbook"/>
+            <attribute name="fo"/>
+            <sequential>
+                <java jar="${saxon.jar}" fork="yes">
+                    <arg value="-o"/>
+                    <arg value="@{fo}"/>
+                    <arg value="@{docbook}"/>
+                    <arg value="${docbook-xsl.dir}/fo/profile-docbook.xsl"/>
+                    <arg value="profile.lang=${doc.lang}"/>
+                    <arg value="section.autolabel=1"/>
+                </java>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    <target name="-init-macrodef-fo-pdf"
+            depends="-init-taskdef-fop">
+        <macrodef name="fo2pdf">
+            <attribute name="fo"/>
+            <attribute name="pdf"/>
+            <sequential>
+                <fop fofile="@{fo}" outfile="@{pdf}"/>
+            </sequential>
+        </macrodef>
+    </target>
+    
+    <target name="-init-taskdef-fop">
+        <fail unless="fop.dir">Must set fop.dir property</fail>
+        <taskdef name="fop" classname="org.apache.fop.tools.anttasks.Fop">
+            <classpath>
+                <fileset dir="${fop.dir}/lib">
+                    <include name="*.jar"/>
+                </fileset>
+                <fileset dir="${fop.dir}">
+                    <include name="fop.jar"/>
+                </fileset>
+            </classpath>
+        </taskdef>
+    </target>
+                     
+    <target name="-init-macrodef-docbook-odt">
+        <fail unless="docbook2odf.dir">Must set docbook2odf.dir property</fail>
+        <macrodef name="docbook-odt">
+            <attribute name="docbook"/>
+            <attribute name="odt"/>
+            <sequential>
+            	<delete file="${docbook2odf.dir}/utils/temp.xml"/>
+                <delete file="${docbook2odf.dir}/utils/temp.odt"/>
+                <copy file="@{docbook}" tofile="${docbook2odf.dir}/utils/temp.xml"/>
+                <exec dir="${docbook2odf.dir}/utils" executable="./docbook2odf">
+                    <arg value="-o"/>
+    			    <arg value="temp.odt"/>
+                    <arg value="temp.xml"/>
+                </exec>
+                <move file="${docbook2odf.dir}/utils/temp.odt" tofile="@{odt}"/>
+                <delete file="${docbook2odf.dir}/utils/temp.xml"/>
+            </sequential>
+        </macrodef>
+    </target>
     
   
 <!--
   /- ===========================================================================
-  /- BUILD_UNO_IMPL.XML                                                       
+  /- BUILD_UNO_IMPL.XML     TODO: get rid of this                                                  
   /- ===========================================================================
   /-->
 
@@ -610,7 +1056,7 @@
     <!-- enter the class path with external jars -->
     <target name="-do-class-path">
         <manifest file="${build.dir}/MANIFEST.MF" mode="update">
-            <attribute name="Class-Path" value="${addon.classpath.attribute}"/>
+            <attribute name="Class-Path" value="${addon.manifest.classpath}"/>
         </manifest>
     </target>
     
@@ -771,7 +1217,7 @@
     
 <!--
   /- ===========================================================================
-  /- BUILD_IMPL.XML                                                             
+  /- BUILD_IMPL.XML     TODO: get rid of this                                                        
   /- ===========================================================================
   /-->
 
@@ -877,27 +1323,6 @@
                         <path path="@{classpath}"/>
                     </classpath>
                 </depend>
-            </sequential>
-        </macrodef>
-        
-        <macrodef name="force-recompile" uri="http://www.netbeans.org/ns/j2se-project/3">
-            <attribute default="${build.addon.classes.dir}" name="destdir"/>
-            <sequential>
-                <fail unless="javac.includes">Must set javac.includes</fail>
-                <pathconvert pathsep="${line.separator}" property="javac.includes.binary">
-                    <path>
-                        <filelist dir="@{destdir}" files="${javac.includes}"/>
-                    </path>
-                    <globmapper from="*.java" to="*.class"/>
-                </pathconvert>
-                <tempfile deleteonexit="true" property="javac.includesfile.binary"/>
-                <echo file="${javac.includesfile.binary}" message="${javac.includes.binary}"/>
-                <delete>
-                    <files includesfile="${javac.includesfile.binary}"/>
-                </delete>
-                <delete>
-                    <fileset file="${javac.includesfile.binary}"/>
-                </delete>
             </sequential>
         </macrodef>
     </target>
@@ -1106,7 +1531,6 @@
         <delete dir="${dist.dir}" followsymlinks="false" includeemptydirs="true"/>
     </target>
 
-    <target depends="init,deps-clean,-do-clean,-post-clean" description="Clean build products." name="clean"/>
     <target name="-check-call-dep">
         <property file="${call.built.properties}" prefix="already.built."/>
         <condition property="should.call.dep">

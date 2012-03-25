@@ -19,10 +19,11 @@
 
 package be.docarch.odt2braille.setup;
 
+import be.docarch.odt2braille.Constants;
+
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.io.Serializable;
-import be.docarch.odt2braille.Constants;
 
 public class SpecialSymbol implements Serializable {
 
@@ -71,7 +72,7 @@ public class SpecialSymbol implements Serializable {
                               ALWAYS };
 
 
-    public SpecialSymbol() {
+    protected SpecialSymbol() {
 
         type = new EnumSetting<Type>(Type.class);
         symbol = new SymbolSetting();
@@ -86,9 +87,9 @@ public class SpecialSymbol implements Serializable {
         type.addListener(mode);
     }
 
-    public SpecialSymbol(Type type,
-                         Locale locale,
-                         String mainTableLocale) {
+    protected SpecialSymbol(Type type,
+                            Locale locale,
+                            String mainTableLocale) {
 
         this();
         setType(type);
@@ -185,7 +186,7 @@ public class SpecialSymbol implements Serializable {
     public class ModeSetting extends EnumSetting<Mode>
                           implements Dependent {
 
-        public ModeSetting() { super(Mode.class); }
+        private ModeSetting() { super(Mode.class); }
 
         @Override
         public boolean accept(Mode value) {

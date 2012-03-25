@@ -92,6 +92,9 @@
 # Paragraphs
 # Headings
 
+    no paragraph
+    para p
+
 	heading1  h1
 	heading2  h2
 	heading3  h3

@@ -19,21 +19,19 @@
 
 package be.docarch.odt2braille.setup;
 
+import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.paper.CustomSheetPaper;
+import be.docarch.odt2braille.paper.CustomRollPaper;
+import be.docarch.odt2braille.paper.CustomTractorPaper;
+
 import java.io.Serializable;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
 import java.util.NoSuchElementException;
-import java.nio.charset.UnsupportedCharsetException;
-
-import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.CustomSheetPaper;
-import be.docarch.odt2braille.CustomRollPaper;
-import be.docarch.odt2braille.CustomTractorPaper;
-
 import org.daisy.braille.embosser.Embosser;
 import org.daisy.braille.embosser.EmbosserFeatures;
 import org.daisy.braille.embosser.EmbosserCatalog;
@@ -220,8 +218,6 @@ public class EmbossConfiguration implements Serializable,
     
     public EmbossConfiguration() {
 
-        logger.entering("EmbossConfiguration","<init>");
-
         /************
            CATALOGS
          ************/
@@ -319,8 +315,6 @@ public class EmbossConfiguration implements Serializable,
         pageFormat.addListener(margins);
         pageFormat.addListener(columns);
         pageFormat.addListener(rows);
-
-        logger.exiting("EmbossConfiguration","<init>");
         
     }
     

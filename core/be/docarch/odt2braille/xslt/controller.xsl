@@ -49,7 +49,7 @@
         <xsl:param name="paramRepeatFrontMatterSection" as="xsd:string"   />
         <xsl:param name="paramTitlePageSection"         as="xsd:string"   />
         <xsl:param name="paramRearMatterSection"        as="xsd:string"   />
-        <xsl:param name="paramVolumeSections"           as="xsd:string*"  />
+        <xsl:param name="paramManualVolumeSections"     as="xsd:string*"  />
 
         <xsl:param    name="styles-url"       as="xsd:string" />
         <xsl:variable name="styles"           select="doc($styles-url)/office:document-styles/office:styles" />
@@ -96,7 +96,7 @@
             </xsl:choose>
         </xsl:variable>
 
-        <xsl:include href="common-templates.xsl" />
+        <xsl:include href="style-templates.xsl" />
 
 
     <xsl:template match="/">
@@ -132,12 +132,13 @@
                 <xsl:attribute name="rdf:about" select="concat('section:/', $section-name)" />
             </ns1:Rearmatter>
         </xsl:if>
-        <xsl:variable name="i" as="xsd:integer">
-            <xsl:call-template name="get-volume-index">
-                <xsl:with-param name="section-name" select="$section-name" />
+        <xsl:variable name="section-is-volume" as="xsd:boolean">
+            <xsl:call-template name="array-contains-value">
+                <xsl:with-param name="array" select="$paramManualVolumeSections" />
+                <xsl:with-param name="value" select="$section-name" />
             </xsl:call-template>
         </xsl:variable>
-        <xsl:if test="$i>0">
+        <xsl:if test="$section-is-volume">
             <xsl:choose>
                 <xsl:when test="$frontmatter[@text:name=$section-name]"/>
                 <xsl:when test="$repeat-frontmatter[@text:name=$section-name]"/>
@@ -156,27 +157,6 @@
             </xsl:choose>
         </xsl:if>
     </xsl:template>
-
-    <xsl:template name="get-volume-index">
-        <xsl:param name="section-name" as="xsd:string" />
-        <xsl:variable name="occurences" as="xsd:integer*">
-            <xsl:for-each select="$paramVolumeSections">
-                <xsl:variable name="i" select="position()" />
-                <xsl:if test=".=$section-name">
-                    <xsl:sequence select="$i" />
-                </xsl:if>
-            </xsl:for-each>
-        </xsl:variable>
-        <xsl:choose>
-            <xsl:when test="$occurences[1]">
-                <xsl:value-of select="$occurences[1]" />
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:value-of select="-1" />
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-
 
     <!-- TABLE CAPTIONS -->
 

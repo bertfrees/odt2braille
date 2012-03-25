@@ -19,14 +19,14 @@
 
 package be.docarch.odt2braille.ooo;
 
+import be.docarch.odt2braille.ProgressMonitor;
+
 import java.util.Locale;
 
 import com.sun.star.task.XStatusIndicator;
 import com.sun.star.task.XStatusIndicatorFactory;
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.frame.XFrame;
-
-import be.docarch.odt2braille.StatusIndicator;
 
 /**
  * Extension of <code>be.docarch.odt2braille.StatusIndicator</code> that visualizes the progress in a progress bar.
@@ -35,7 +35,7 @@ import be.docarch.odt2braille.StatusIndicator;
  * @see         StatusIndicator
  * @author      Bert Frees
  */
-public class ProgressBar extends StatusIndicator {
+public class ProgressBar extends ProgressMonitor {
 
     private XStatusIndicatorFactory xStatusIndicatorFactory = null;
     private XStatusIndicator xStatusIndicator = null;

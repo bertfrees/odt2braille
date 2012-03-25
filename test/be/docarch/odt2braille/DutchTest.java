@@ -3,10 +3,7 @@ package be.docarch.odt2braille;
 import java.io.File;
 import org.junit.Test;
 
-/**
- *
- * @author Bert Frees
- */
+//@org.junit.Ignore
 public class DutchTest extends Odt2BrailleTest {
 
     @Test
@@ -17,10 +14,13 @@ public class DutchTest extends Odt2BrailleTest {
         File correctODT = new File(resources + fileName + ".braille.odt");
         File testODT = new File(resources + fileName + ".odt");
 
-        File correctPEF = simpleODT2PEF(correctODT);
-        File testPEF = simpleODT2PEF(testODT);
+        ConversionResult correctResult = convertODT2PEF(correctODT);
+        ConversionResult testResult = convertODT2PEF(testODT);
 
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctResult.getPEFFile(), testResult.getPEFFile())) {
+            correctResult.cleanUp();
+            testResult.cleanUp();
+        }
     }
 
     @Test
@@ -31,9 +31,12 @@ public class DutchTest extends Odt2BrailleTest {
         File correctODT = new File(resources + fileName + ".braille.odt");
         File testODT = new File(resources + fileName + ".odt");
 
-        File correctPEF = simpleODT2PEF(correctODT);
-        File testPEF = simpleODT2PEF(testODT);
+        ConversionResult correctResult = convertODT2PEF(correctODT);
+        ConversionResult testResult = convertODT2PEF(testODT);
 
-        comparePEFs(correctPEF, testPEF);
+        if (comparePEFs(correctResult.getPEFFile(), testResult.getPEFFile())) {
+            correctResult.cleanUp();
+            testResult.cleanUp();
+        }
     }
 }
