@@ -3,19 +3,20 @@ package be.docarch.odt2braille.tools.ant;
 import java.io.File;
 import java.util.Locale;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.text.DecimalFormat;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.ODT;
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
-import be.docarch.odt2braille.ODT2PEFConverter;
 import be.docarch.odt2braille.PEFHandler;
 import be.docarch.odt2braille.PEFFileFormat;
 import be.docarch.odt2braille.ProgressMonitor;
+import be.docarch.odt2braille.convert.ODT2PEFConverter;
+import be.docarch.odt2braille.convert.ODT2PEFConverterParameters;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 
@@ -83,7 +84,13 @@ public class Odt2Braille extends Task {
             ExportConfiguration exportConfig = new ExportConfiguration();
             configuration.applyCommandsTo(config);
             exportConfiguration.applyCommandsTo(exportConfig);
-            PEF pef = ODT2PEFConverter.convert(odt, exportConfig, null);
+            ODT2PEFConverter converter = new ODT2PEFConverter();
+            ODT2PEFConverterParameters parameters 
+                    = new ODT2PEFConverterParameters(config, exportConfig);
+            for (Map.Entry<String,Object> parameter : parameters) {
+                converter.setParameter(parameter.getKey(), parameter.getValue());
+            }
+            PEF pef = converter.convert(odt);
 
             File[] brailleFiles;
             if (exportConfig.getFileFormat() instanceof PEFFileFormat) {
@@ -107,7 +114,7 @@ public class Odt2Braille extends Task {
                     String fileSeparator = System.getProperty("file.separator");
                     String folderName = targetFile.getName();
                     String brailleExt = exportConfig.getFileFormat().getFileExtension();
-                    List<Volume> volumes = pef.getVolumes();
+                    List<PEF.Volume> volumes = pef.getVolumes();
                     DecimalFormat format = new DecimalFormat();
                     format.setMaximumFractionDigits(0);
                     format.setMinimumIntegerDigits(1+(int)Math.floor(Math.log10(volumes.size())));
