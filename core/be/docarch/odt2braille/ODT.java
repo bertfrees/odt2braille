@@ -106,6 +106,7 @@ public class ODT {
     private File odtSettingsFile = null;
     
     private File usedStylesFile = null;
+    private File usedLocalesFile = null;
     private Map<String,Style> usedParagraphStyles = null;
     private Map<String,Style> usedCharacterStyles = null;
     private Collection<Locale> usedLocales = null;
@@ -163,6 +164,10 @@ public class ODT {
             usedStylesFile.delete();
             usedStylesFile = null;
         }
+        if (usedLocalesFile != null) {
+        	usedLocalesFile.delete();
+        	usedLocalesFile = null;
+        }
         if (zip != null) {
             try {
                 zip.close();
@@ -216,9 +221,9 @@ public class ODT {
             
             try {
                 
-                File usedLanguagesFile = FileCreator.createTempFile(".languages.xml");
+                usedLocalesFile = FileCreator.createTempFile(".languages.xml");
                 
-                logger.log(Level.INFO, "Determining used languages: {0}", usedLanguagesFile.getName());
+                logger.log(Level.INFO, "Determining used languages: {0}", usedLocalesFile.getName());
                 
                 XSLTransformer transformer = new XSLTransformer("get-languages") {
                     @Override
@@ -232,23 +237,22 @@ public class ODT {
                     }
                 };
                         
-                transformer.convert(getContentFile(), usedLanguagesFile);
+                transformer.convert(getContentFile(), usedLocalesFile);
 
-                int count = XPathUtils.evaluateNumber(usedStylesFile.toURL().openStream(),
+                int count = XPathUtils.evaluateNumber(usedLocalesFile.toURL().openStream(),
                         "count(/my:languages/my:language)", NAMESPACE).intValue();
-                for (int i=0; i<count; i++) {
-                    usedLocales.add(stringToLocale(XPathUtils.evaluateString(usedLanguagesFile.toURL().openStream(),
-                                   "/my:languages/my:language[not(@class='main')][" + i + "]/@name", NAMESPACE)));
+                for (int i=1; i<=count; i++) {
+                	String localeName = XPathUtils.evaluateString(usedLocalesFile.toURL().openStream(),
+                            "/my:languages/my:language[" + i + "]/@name", NAMESPACE);
+                	usedLocales.add(stringToLocale(localeName));
                 }
-                
-                // Clean up
-                usedLanguagesFile.delete();
 
             } catch (Exception e) {
+            	logger.log(Level.SEVERE, null, e);
             }
         }
-
-        return new ArrayList<Locale>(usedLocales);
+        
+        return new HashSet<Locale>(usedLocales);
 
     }
 

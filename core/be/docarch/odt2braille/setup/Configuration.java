@@ -1022,7 +1022,7 @@ public class Configuration implements Serializable {
         private List<SpecialSymbol> list = new ArrayList<SpecialSymbol>();
 
         public SpecialSymbolList() {
-
+        	
             String translationTable = getTranslationTables().get(MAIN_LOCALE).getLocale();
 
             list.add(new SpecialSymbol(SpecialSymbol.Type.ELLIPSIS,                    MAIN_LOCALE, translationTable));

@@ -110,10 +110,10 @@ public abstract class Odt2BrailleTest {
     public static class ConversionResult {
         
         private final ODT odt;
-        private final Converter converter;
+        private final Converter<?,?> converter;
         private final PEF pef;
         
-        private ConversionResult(ODT odt, Converter converter, PEF pef) {
+        private ConversionResult(ODT odt, Converter<?,?> converter, PEF pef) {
             this.odt = odt;
             this.converter = converter;
             this.pef = pef;

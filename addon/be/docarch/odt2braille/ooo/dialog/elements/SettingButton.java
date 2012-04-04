@@ -26,8 +26,8 @@ import com.sun.star.awt.XControl;
 import com.sun.star.awt.XActionListener;
 import com.sun.star.awt.XButton;
 
-public abstract class SettingButton<S extends Setting> extends SettingControl<S>
-                                                    implements XActionListener {
+public abstract class SettingButton<S extends Setting<?>> extends SettingControl<S>
+                                                          implements XActionListener {
 
     protected final XButton button;
     
