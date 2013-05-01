@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<assembly>
+	<id>linux_x86</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<baseDirectory>/</baseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target</directory>
+			<includes>
+				<include>odt2braille-anttask-${project.version}.jar</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency</directory>
+			<includes>
+				<include>*.jar</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/liblouis/linux_x86</directory>
+			<outputDirectory>/liblouis</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
