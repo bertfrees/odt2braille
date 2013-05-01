@@ -133,6 +133,13 @@ public class Odt2Braille extends Task {
     private void validate() throws BuildException {
         if (srcFile == null) { throw new BuildException("Source file not defined"); }
         if (targetFile == null) { throw new BuildException("Target file not defined"); }
-        if (liblouisDir == null) { throw new BuildException("Liblouis directory not defined"); }
+        if (liblouisDir == null) {
+            try {
+                setLiblouisdir(new File(new File(
+                    Odt2Braille.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()).getParentFile(), "liblouis").getAbsolutePath());
+            } catch (Exception e) {
+                throw new BuildException("Liblouis directory not defined");
+            }
+        }
     }
 }
