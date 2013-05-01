@@ -26,24 +26,28 @@ public class SetCommand implements Command {
         
     public void setProperty(String property) {
         this.property = property;
-
-        AdditionalBeanInfo.PropertyDescriptor p1 = AdditionalBeanInfo.getPropertyDescriptor(parentBeanClass, property);
-        if (p1 != null) {
-            valueClass = p1.getPropertyType();
-            keyClass = p1.getKeyType();
-            writeMethods = p1.getWriteMethods();
-            if (writeMethods == null) { throw new BuildException("Property '" + property + "' is read-only"); }
-            return;
-        }
-        PropertyDescriptor p2 = BeanInfo.getPropertyDescriptor(parentBeanClass, property);
-        if (p2 != null) {
-            valueClass = p2.getPropertyType();
-            if (!SettingMap.class.isAssignableFrom(valueClass) &&
-                !SettingList.class.isAssignableFrom(valueClass)) {
-                writeMethods = new Method[]{p2.getWriteMethod()};
+        
+        Class type = parentBeanClass;
+        while (type != null) {
+            AdditionalBeanInfo.PropertyDescriptor p1 = AdditionalBeanInfo.getPropertyDescriptor(type, property);
+            if (p1 != null) {
+                valueClass = p1.getPropertyType();
+                keyClass = p1.getKeyType();
+                writeMethods = p1.getWriteMethods();
                 if (writeMethods == null) { throw new BuildException("Property '" + property + "' is read-only"); }
                 return;
             }
+            PropertyDescriptor p2 = BeanInfo.getPropertyDescriptor(type, property);
+            if (p2 != null) {
+                valueClass = p2.getPropertyType();
+                if (!SettingMap.class.isAssignableFrom(valueClass) &&
+                    !SettingList.class.isAssignableFrom(valueClass)) {
+                    writeMethods = new Method[]{p2.getWriteMethod()};
+                    if (writeMethods == null) { throw new BuildException("Property '" + property + "' is read-only"); }
+                    return;
+                }
+            }
+            type = type.getSuperclass();
         }
         
         throw new BuildException("Property '" + property + "' not supported");

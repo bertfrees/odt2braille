@@ -25,22 +25,26 @@ public class GetCommand extends Bean
 
     public void setProperty(String property) {
         this.property = property;
-
-        AdditionalBeanInfo.PropertyDescriptor p1 = AdditionalBeanInfo.getPropertyDescriptor(parentBeanClass, property);
-        if (p1 != null) {
-            beanClass = p1.getPropertyType();
-            keyClass = p1.getKeyType();
-            readMethods = p1.getReadMethods();
-            return;
-        }
-        PropertyDescriptor p2 = BeanInfo.getPropertyDescriptor(parentBeanClass, property);
-        if (p2 != null) {
-            beanClass = p2.getPropertyType();
-            if (!SettingMap.class.isAssignableFrom(beanClass) &&
-                !SettingList.class.isAssignableFrom(beanClass)) {
-                readMethods = new Method[]{p2.getReadMethod()};
+        
+        Class type = parentBeanClass;
+        while (type != null) {
+            AdditionalBeanInfo.PropertyDescriptor p1 = AdditionalBeanInfo.getPropertyDescriptor(type, property);
+            if (p1 != null) {
+                beanClass = p1.getPropertyType();
+                keyClass = p1.getKeyType();
+                readMethods = p1.getReadMethods();
                 return;
             }
+            PropertyDescriptor p2 = BeanInfo.getPropertyDescriptor(type, property);
+            if (p2 != null) {
+                beanClass = p2.getPropertyType();
+                if (!SettingMap.class.isAssignableFrom(beanClass) &&
+                    !SettingList.class.isAssignableFrom(beanClass)) {
+                    readMethods = new Method[]{p2.getReadMethod()};
+                    return;
+                }
+            }
+            type = type.getSuperclass();
         }
         throw new BuildException("Property '" + property + "' is not supported");
     }
@@ -111,6 +115,7 @@ public class GetCommand extends Bean
         } catch(Exception e) {
             throw new BuildException(e);
         }
-        applyCommandsTo(object);
+        if (object != null)
+            applyCommandsTo(object);
     }
 }
