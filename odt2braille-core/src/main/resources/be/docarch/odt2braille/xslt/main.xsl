@@ -389,7 +389,7 @@ TOP LEVEL
         <xsl:param    name="rearmatter-mode"     select="false()" as="xsd:boolean" />
         <xsl:param    name="without-notesection" select="false()" as="xsd:boolean" />
 
-        <xsl:variable name="style-name"    select="@text:style-name" />
+        <xsl:variable name="style-name"    select="string(@text:style-name)" />
         <xsl:variable name="section-name"  select="@text:name"       />
         <xsl:variable name="frontmatter-section" as="xsd:string">
             <xsl:call-template name="get-frontmatter-section"/>
@@ -530,7 +530,7 @@ INLINE ELEMENTS
                         <xsl:value-of select="'Internet_20_link'" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="current()/@text:style-name" />
+                        <xsl:value-of select="string(@text:style-name)" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
@@ -588,7 +588,7 @@ INLINE ELEMENTS
                         <xsl:value-of select="'Internet_20_link'" />
                     </xsl:when>
                     <xsl:otherwise>
-                        <xsl:value-of select="current()/@text:style-name" />
+                        <xsl:value-of select="string(@text:style-name)" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:variable>
@@ -688,7 +688,7 @@ INLINE ELEMENTS
 
             <xsl:variable name="character-style-name">
                 <xsl:call-template name="get-character-style-name">
-                    <xsl:with-param name="style-name" select="current()/@text:style-name" />
+                    <xsl:with-param name="style-name" select="string(@text:style-name)" />
                 </xsl:call-template>
             </xsl:variable>
             <xsl:choose>
@@ -993,7 +993,7 @@ BLOCK ELEMENTS
         <xsl:param name="omit-frames"      as="xsd:boolean" select="false()" />
         <xsl:param name="transpose-frames" as="xsd:boolean" select="false()" />
 
-        <xsl:variable name="style-name" select="@text:style-name" />
+        <xsl:variable name="style-name" select="string(@text:style-name)" />
         <xsl:variable name="is-paragraph" as="xsd:boolean">
             <xsl:call-template name="is-paragraph">
                 <xsl:with-param name="node" select="." />
@@ -1922,30 +1922,30 @@ HELP TEMPLATES
 
     <xsl:template name="get-configured-paragraph-style">
         <xsl:param name="style-name" as="xsd:string"/>
-        <xsl:variable name="contains" as="xsd:boolean">
-            <xsl:call-template name="array-contains-value">
-                <xsl:with-param name="array" select="$paramConfiguredParagraphStyles"/>
-                <xsl:with-param name="value" select="$style-name"/>
-            </xsl:call-template>
-        </xsl:variable>
         <xsl:choose>
-            <xsl:when test="$contains">
-                <xsl:value-of select="$style-name" />
+            <xsl:when test="$style-name=''">
+                <xsl:value-of select="''" />
             </xsl:when>
             <xsl:otherwise>
-                <xsl:variable name="parent-style-name">
-                    <xsl:call-template name="get-parent-style-name">
-                        <xsl:with-param name="style-name" select="$style-name"/>
+                <xsl:variable name="contains" as="xsd:boolean">
+                    <xsl:call-template name="array-contains-value">
+                        <xsl:with-param name="array" select="$paramConfiguredParagraphStyles"/>
+                        <xsl:with-param name="value" select="$style-name"/>
                     </xsl:call-template>
                 </xsl:variable>
                 <xsl:choose>
-                    <xsl:when test="string-length($parent-style-name) > 0">
+                    <xsl:when test="$contains">
+                        <xsl:value-of select="$style-name" />
+                    </xsl:when>
+                    <xsl:otherwise>
+                        <xsl:variable name="parent-style-name">
+                            <xsl:call-template name="get-parent-style-name">
+                                <xsl:with-param name="style-name" select="$style-name"/>
+                            </xsl:call-template>
+                        </xsl:variable>
                         <xsl:call-template name="get-configured-paragraph-style">
                             <xsl:with-param name="style-name" select="$parent-style-name"/>
                         </xsl:call-template>
-                    </xsl:when>
-                    <xsl:otherwise>
-                        <xsl:value-of select="''" />
                     </xsl:otherwise>
                 </xsl:choose>
             </xsl:otherwise>

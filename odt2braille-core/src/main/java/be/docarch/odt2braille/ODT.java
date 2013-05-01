@@ -572,7 +572,6 @@ public class ODT {
         int offset = 0;
         String enumType = "";
         String styleName = null;
-        String nodeName = null;
         String xpath = null;
         String temp = null;
         String value = null;
@@ -585,7 +584,8 @@ public class ODT {
         boolean followPrint = false;
         boolean thisIsFirst = isFirst;
 
-        nodeName = node.getNodeName();
+        NamedNodeMap attr = node.getAttributes();
+        String nodeName = node.getNodeName();
 
         // Decide whether or not to append pagenumber
 
@@ -600,18 +600,22 @@ public class ODT {
                 softPageBreaksAfter = 1;
             }
 
-        } else if (nodeName.equals("text:p") ){
+        } else if (nodeName.equals("text:p")) {
 
-            styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
-            ParagraphStyle style = configuration.getParagraphStyles().get(styleName);
-            if (style == null) { style = automaticParagraphStyles.get(styleName); }
-            if (style != null) { style = style.getNonAutomaticStyle(); }
-            if (style != null) { followPrint = (style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT); }
+            if (attr.getNamedItem("text:style-name") != null) {
+                styleName = attr.getNamedItem("text:style-name").getNodeValue();
+                ParagraphStyle style = configuration.getParagraphStyles().get(styleName);
+                if (style == null) { style = automaticParagraphStyles.get(styleName); }
+                if (style != null) { style = style.getNonAutomaticStyle(); }
+                if (style != null) { followPrint = (style.getHardPageBreaks() == ParagraphStyle.FollowPrint.FOLLOW_PRINT); }
+            }
 
         } else if (nodeName.equals("text:h")) {
 
-            styleName = node.getAttributes().getNamedItem("text:style-name").getNodeValue();
-            int level = Integer.parseInt(node.getAttributes().getNamedItem("text:outline-level").getNodeValue());
+            if (attr.getNamedItem("text:style-name") != null) {
+                styleName = attr.getNamedItem("text:style-name").getNodeValue();
+            }
+            int level = Integer.parseInt(attr.getNamedItem("text:outline-level").getNodeValue());
             HeadingStyle style = configuration.getHeadingStyles().get(level);
             if (style != null) { newBraillePage = style.getNewBraillePage(); }
             NodeList softPageBreakDescendants = ((Element)node).getElementsByTagName("text:soft-page-break");
@@ -621,16 +625,18 @@ public class ODT {
 
         } else if (nodeName.equals("text:list")) {
             
-            if (node.getAttributes().getNamedItem("text:style-name") != null) {
-
+            if (attr.getNamedItem("text:style-name") != null) {
                 xpath = "./*//@style-name";
                 if (XPathAPI.eval(node, xpath).bool()) {
                     styleName = XPathAPI.eval(node, xpath).str();
                 }
             }
+
         } else if (nodeName.equals("table:table")) {
-        
-            styleName = node.getAttributes().getNamedItem("table:style-name").getNodeValue();
+            
+            if (attr.getNamedItem("table:style-name") != null) {
+                styleName = attr.getNamedItem("table:style-name").getNodeValue();
+            }
         
         } else if (nodeName.equals("text:table-of-content")   ||
                    nodeName.equals("text:alphabetical-index") ||
