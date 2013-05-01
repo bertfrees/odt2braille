@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<assembly>
+	<id>windows_x86</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<baseDirectory>/</baseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources/lbx_files</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/tables</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/generated-resources/tables</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency/bin/i386-mingw32-gpp</directory>
+			<includes>
+				<include>xml2brl.exe</include>
+				<include>liblouis.dll</include>
+				<include>liblouisxml.dll</include>
+				<include>libxml2.dll</include>
+			</includes>
+			<outputDirectory>bin</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
