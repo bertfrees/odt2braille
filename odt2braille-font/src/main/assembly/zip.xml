@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<assembly>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<baseDirectory>/</baseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources</directory>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>
