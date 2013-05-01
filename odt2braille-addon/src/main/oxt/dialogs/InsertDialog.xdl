@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog4" dlg:left="304" dlg:top="151" dlg:width="320" dlg:height="110" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xe6e6e6" dlg:border="0xc0c0c0" dlg:font-name="odt2braille 6 dot" dlg:font-height="36" dlg:font-stylename="Regular" dlg:font-family="modern" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="1" dlg:border="0xc0c0c0"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="193" dlg:top="88" dlg:width="45" dlg:height="12" dlg:grab-focus="false"/>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField1" dlg:tab-index="3" dlg:disabled="true" dlg:left="15" dlg:top="17" dlg:width="292" dlg:height="24" dlg:readonly="true"/>
+  <dlg:textfield dlg:style-id="1" dlg:id="TextField2" dlg:tab-index="0" dlg:left="15" dlg:top="58" dlg:width="292" dlg:height="14"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="2" dlg:left="79" dlg:top="88" dlg:width="45" dlg:height="12" dlg:button-type="cancel"/>
+  <dlg:button dlg:id="CommandButton3" dlg:tab-index="4" dlg:left="136" dlg:top="88" dlg:width="45" dlg:height="12" dlg:grab-focus="false"/>
+ </dlg:bulletinboard>
+</dlg:window>

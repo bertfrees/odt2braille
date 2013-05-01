@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<description xmlns="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Release Number -->
+    <version value="${odt2braille.version}"/>
+    <!-- Platform Target -->
+    <platform value="${target.os}"/>
+    <!-- Identifier -->
+    <identifier value="be.docarch.odt2braille.ooo.odt2brailleaddon"/>
+    <!-- OpenOffice.org Minimal Version -->
+    <dependencies>
+        <OpenOffice.org-minimal-version value="${openoffice.version}" name="OpenOffice.org ${openoffice.version}"/>
+    </dependencies>
+    <!-- Auto Update Link -->
+    <update-information>
+        <src xlink:href="http://odt2braille.sf.net/atom/update.feed.xml"/>
+    </update-information>
+    <!-- Extension Dialog Displayed Name -->
+    <display-name>
+        <name lang="en">odt2braille</name>
+    </display-name>
+    <!-- Publisher Name -->
+    <publisher>
+        <name lang="en" xlink:href="http://www.aegis-project.eu/">ÆGIS</name>
+    </publisher>
+    <!-- Description -->
+    <extension-description>
+        <src lang="en" xlink:href="description/desc_en.txt"/>
+        <src lang="ca" xlink:href="description/desc_ca.txt"/>
+        <src lang="de" xlink:href="description/desc_de.txt"/>
+        <src lang="el" xlink:href="description/desc_el.txt"/>
+        <src lang="es" xlink:href="description/desc_es.txt"/>
+        <src lang="fr" xlink:href="description/desc_fr.txt"/>
+        <src lang="it" xlink:href="description/desc_it.txt"/>
+        <src lang="nb" xlink:href="description/desc_nb.txt"/>
+        <src lang="nl" xlink:href="description/desc_nl.txt"/>
+        <src lang="pt" xlink:href="description/desc_pt.txt"/>
+        <src lang="pt-BR" xlink:href="description/desc_pt-BR.txt"/>
+        <src lang="sl" xlink:href="description/desc_sl.txt"/>
+        <src lang="sv" xlink:href="description/desc_sv.txt"/>
+    </extension-description>
+    <!-- Extension Dialog Icon -->
+    <icon>
+        <default xlink:href="images/odt2braille-logo-small.png"/>
+        <high-contrast xlink:href="images/odt2braille-logo-small.png"/>
+    </icon>
+</description>

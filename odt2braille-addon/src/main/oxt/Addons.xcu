@@ -1,0 +1,286 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
+    <node oor:name="AddonUI">
+        <node oor:name="OfficeMenuBarMerging">
+            <node oor:name="be.docarch.odt2braille" oor:op="replace">
+                <node oor:name="S1" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:PickList\.uno:ExportToPDF</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="M1" oor:op="replace">
+                            <prop oor:name="URL">
+                                <value>be.docarch.odt2braille:ExportCommand</value>
+                            </prop>
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value xml:lang="en">${exportMenu.en}</value>
+                                <value xml:lang="ca">${exportMenu.ca}</value>
+                                <value xml:lang="cs">${exportMenu.cs}</value>
+                                <value xml:lang="de">${exportMenu.de}</value>
+                                <value xml:lang="el">${exportMenu.el}</value>
+                                <value xml:lang="es">${exportMenu.es}</value>
+                                <value xml:lang="fr">${exportMenu.fr}</value>
+                                <value xml:lang="it">${exportMenu.it}</value>
+                                <value xml:lang="nb">${exportMenu.nb}</value>
+                                <value xml:lang="nl">${exportMenu.nl}</value>
+                                <value xml:lang="pt">${exportMenu.pt}</value>
+                                <value xml:lang="pt-BR">${exportMenu.pt_BR}</value>
+                                <value xml:lang="sl">${exportMenu.sl}</value>
+                                <value xml:lang="sv">${exportMenu.sv}</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+                <node oor:name="S2" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:PickList\.uno:Print</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="M2" oor:op="replace">
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>be.docarch.odt2braille:EmbossCommand</value>
+                            </prop>
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value xml:lang="en">${embossMenu.en}</value>
+                                <value xml:lang="ca">${embossMenu.ca}</value>
+                                <value xml:lang="cs">${embossMenu.cs}</value>
+                                <value xml:lang="de">${embossMenu.de}</value>
+                                <value xml:lang="el">${embossMenu.el}</value>
+                                <value xml:lang="es">${embossMenu.es}</value>
+                                <value xml:lang="fr">${embossMenu.fr}</value>
+                                <value xml:lang="it">${embossMenu.it}</value>
+                                <value xml:lang="nb">${embossMenu.nb}</value>
+                                <value xml:lang="nl">${embossMenu.nl}</value>
+                                <value xml:lang="pt">${embossMenu.pt}</value>
+                                <value xml:lang="pt-BR">${embossMenu.pt_BR}</value>
+                                <value xml:lang="sl">${embossMenu.sl}</value>
+                                <value xml:lang="sv">${embossMenu.sv}</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node>
+                <node oor:name="S3" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:InsertMenu\.uno:InsertSymbol</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="M3" oor:op="replace">
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value xml:lang="en">${insertMenu.en}</value>
+                                <value xml:lang="ca">${insertMenu.ca}</value>
+                                <value xml:lang="cs">${insertMenu.cs}</value>
+                                <value xml:lang="de">${insertMenu.de}</value>
+                                <value xml:lang="el">${insertMenu.el}</value>
+                                <value xml:lang="es">${insertMenu.es}</value>
+                                <value xml:lang="fr">${insertMenu.fr}</value>
+                                <value xml:lang="it">${insertMenu.it}</value>
+                                <value xml:lang="nb">${insertMenu.nb}</value>
+                                <value xml:lang="nl">${insertMenu.nl}</value>
+                                <value xml:lang="pt">${insertMenu.pt}</value>
+                                <value xml:lang="pt-BR">${insertMenu.pt_BR}</value>
+                                <value xml:lang="sl">${insertMenu.sl}</value>
+                                <value xml:lang="sv">${insertMenu.sv}</value>
+                            </prop>
+                            <node oor:name="Submenu">
+                                <node oor:name="M4" oor:op="replace">
+                                    <prop oor:name="URL" oor:type="xs:string">
+                                        <value>be.docarch.odt2braille:InsertDotPatternCommand</value>
+                                    </prop>
+                                    <prop oor:name="Title" oor:type="xs:string">
+                                        <value xml:lang="en">${dotPatternEntryMode.en}</value>
+                                        <value xml:lang="ca">${dotPatternEntryMode.ca}</value>
+                                        <value xml:lang="cs">${dotPatternEntryMode.cs}</value>
+                                        <value xml:lang="de">${dotPatternEntryMode.de}</value>
+                                        <value xml:lang="el">${dotPatternEntryMode.el}</value>
+                                        <value xml:lang="es">${dotPatternEntryMode.es}</value>
+                                        <value xml:lang="fr">${dotPatternEntryMode.fr}</value>
+                                        <value xml:lang="it">${dotPatternEntryMode.it}</value>
+                                        <value xml:lang="nl">${dotPatternEntryMode.nl}</value>
+                                        <value xml:lang="pt">${dotPatternEntryMode.pt}</value>
+                                        <value xml:lang="pt-BR">${dotPatternEntryMode.pt_BR}</value>
+                                        <value xml:lang="sl">${dotPatternEntryMode.sl}</value>
+                                        <value xml:lang="sv">${dotPatternEntryMode.sv}</value>
+                                    </prop>
+                                </node>
+                                <node oor:name="M5" oor:op="replace">
+                                    <prop oor:name="URL" oor:type="xs:string">
+                                        <value>be.docarch.odt2braille:InsertSixKeysCommand</value>
+                                    </prop>
+                                    <prop oor:name="Title" oor:type="xs:string">
+                                        <value xml:lang="en">${6keyEntryMode.en}</value>
+                                        <value xml:lang="ca">${6keyEntryMode.ca}</value>
+                                        <value xml:lang="cs">${6keyEntryMode.cs}</value>
+                                        <value xml:lang="de">${6keyEntryMode.de}</value>
+                                        <value xml:lang="el">${6keyEntryMode.el}</value>
+                                        <value xml:lang="es">${6keyEntryMode.es}</value>
+                                        <value xml:lang="fr">${6keyEntryMode.fr}</value>
+                                        <value xml:lang="it">${6keyEntryMode.it}</value>
+                                        <value xml:lang="nl">${6keyEntryMode.nl}</value>
+                                        <value xml:lang="pt">${6keyEntryMode.pt}</value>
+                                        <value xml:lang="pt-BR">${6keyEntryMode.pt_BR}</value>
+                                        <value xml:lang="sl">${6keyEntryMode.sl}</value>
+                                        <value xml:lang="sv">${6keyEntryMode.sv}</value>
+                                    </prop>
+                                </node>
+                            </node>
+                        </node>
+                    </node>
+                </node>
+                <node oor:name="S6" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:FormatMenu\.uno:GraphicDialog</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="M6a" oor:op="replace">
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>private:separator</value>
+                            </prop>
+                        </node>
+                            <node oor:name="M6b" oor:op="replace">
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>be.docarch.odt2braille:FormatCommand</value>
+                            </prop>
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value xml:lang="en">~Braille…</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node> <!--
+                <node oor:name="S7" oor:op="replace">
+                    <prop oor:name="MergePoint">
+                        <value>.uno:PickList\.uno:SetDocumentProperties</value>
+                    </prop>
+                    <prop oor:name="MergeCommand">
+                        <value>AddAfter</value>
+                    </prop>
+                    <prop oor:name="MergeFallback">
+                        <value>AddPath</value>
+                    </prop>
+                    <prop oor:name="MergeContext">
+                        <value>com.sun.star.text.TextDocument</value>
+                    </prop>
+                    <node oor:name="MenuItems">
+                        <node oor:name="M7" oor:op="replace">
+                            <prop oor:name="URL" oor:type="xs:string">
+                                <value>be.docarch.odt2braille:SettingsCommand</value>
+                            </prop>
+                            <prop oor:name="Title" oor:type="xs:string">
+                                <value xml:lang="en">${settingsMenu.en}</value>
+                                <value xml:lang="ca">${settingsMenu.ca}</value>
+                                <value xml:lang="cs">${settingsMenu.cs}</value>
+                                <value xml:lang="de">${settingsMenu.de}</value>
+                                <value xml:lang="es">${settingsMenu.es}</value>
+                                <value xml:lang="fr">${settingsMenu.fr}</value>
+                                <value xml:lang="it">${settingsMenu.it}</value>
+                                <value xml:lang="nb">${settingsMenu.nb}</value>
+                                <value xml:lang="nl">${settingsMenu.nl}</value>
+                                <value xml:lang="pt">${settingsMenu.pt}</value>
+                                <value xml:lang="pt-BR">${settingsMenu.pt_BR}</value>
+                                <value xml:lang="sl">${settingsMenu.sl}</value>
+                                <value xml:lang="sv">${settingsMenu.sv}</value>
+                            </prop>
+                        </node>
+                    </node>
+                </node> -->
+            </node>
+        </node>
+        <node oor:name="Images">
+            <node oor:name="be.docarch.odt2braille.exportcommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:ExportCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+            <node oor:name="be.docarch.odt2braille.embosscommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:EmbossCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+            <node oor:name="be.docarch.odt2braille.formatcommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:FormatCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+            <node oor:name="be.docarch.odt2braille.settingscommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:SettingsCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+            <node oor:name="be.docarch.odt2braille.insertdotpatterncommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:InsertDotPatternCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+            <node oor:name="be.docarch.odt2braille.insertsixkeyscommand.images" oor:op="replace">
+                <prop oor:name="URL" oor:type="xs:string">
+                    <value>be.docarch.odt2braille:InsertSixKeysCommand</value>
+                </prop>
+                <node oor:name="UserDefinedImages">
+                    <prop oor:name="ImageSmallURL">
+                        <value>%origin%/images/braille-16px.gif</value>
+                    </prop>
+                </node>
+            </node>
+        </node>
+    </node>
+</oor:component-data>

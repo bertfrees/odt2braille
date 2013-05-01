@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog2" dlg:left="304" dlg:top="153" dlg:width="21" dlg:height="33" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xe6e6e6" dlg:border="0xc0c0c0" dlg:font-name="odt2braille 6 dot" dlg:font-height="36" dlg:font-stylename="Regular" dlg:font-family="modern" dlg:font-weight="100"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField1" dlg:tab-index="0" dlg:disabled="true" dlg:left="3" dlg:top="5" dlg:width="15" dlg:height="24" dlg:maxlength="1" dlg:readonly="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

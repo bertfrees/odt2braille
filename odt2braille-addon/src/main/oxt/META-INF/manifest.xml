@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest:manifest xmlns:manifest="http://openoffice.org/2001/manifest">
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Java"
+                       manifest:full-path="odt2braille-addon-${project.version}.jar"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="Paths.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="Addons.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
+                       manifest:full-path="ProtocolHandler.xcu"/>
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.executable"
+                       manifest:full-path="liblouis/bin/xml2brl"/>
+</manifest:manifest>
