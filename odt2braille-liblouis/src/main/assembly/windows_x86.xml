@@ -19,13 +19,7 @@
 			<outputDirectory>files</outputDirectory>
 		</fileSet>
 		<fileSet>
-			<directory>target/dependency/bin/i386-mingw32-gpp</directory>
-			<includes>
-				<include>xml2brl.exe</include>
-				<include>liblouis.dll</include>
-				<include>liblouisxml.dll</include>
-				<include>libxml2.dll</include>
-			</includes>
+			<directory>src/main/resources/native/windows_x86</directory>
 			<outputDirectory>bin</outputDirectory>
 		</fileSet>
 	</fileSets>

@@ -273,40 +273,6 @@
 			<build>
 				<plugins>
 					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>linux_x86</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>org.liblouis</groupId>
-											<artifactId>louisxml</artifactId>
-											<classifier>i386-mingw32-gpp-executable</classifier>
-											<type>nar</type>
-										</artifactItem>
-										<artifactItem>
-											<groupId>org.liblouis</groupId>
-											<artifactId>louis</artifactId>
-											<classifier>i386-mingw32-gpp-executable</classifier>
-											<type>nar</type>
-										</artifactItem>
-										<artifactItem>
-											<groupId>org.xmlsoft</groupId>
-											<artifactId>xml2</artifactId>
-											<classifier>i386-mingw32-gpp-executable</classifier>
-											<type>nar</type>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
 						<artifactId>maven-assembly-plugin</artifactId>
 						<executions>
 							<execution>
