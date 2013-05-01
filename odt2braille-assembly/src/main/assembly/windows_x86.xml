@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<assembly>
+	<id>windows_x86</id>
+	<formats>
+		<format>zip</format>
+	</formats>
+	<baseDirectory>/</baseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>target/dependency</directory>
+			<includes>
+				<include>odt2braille-addon-*-windows_x86.oxt</include>
+			</includes>
+			<outputDirectory>/</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency</directory>
+			<includes>
+				<include>*.ttf</include>
+			</includes>
+			<outputDirectory>/font</outputDirectory>
+		</fileSet>
+	</fileSets>
+</assembly>

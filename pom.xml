@@ -34,6 +34,7 @@
 		<module>odt2braille-font</module>
 		<module>odt2braille-core</module>
 		<module>odt2braille-addon</module>
+		<module>odt2braille-assembly</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
