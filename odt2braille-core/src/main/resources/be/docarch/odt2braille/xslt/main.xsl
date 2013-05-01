@@ -424,11 +424,9 @@ INLINE ELEMENTS
     <!-- TEXTNODES -->
 
     <xsl:template match="text()">
-        <xsl:if test="not(contains(., '&#xa;'))">
-            <dtb:text>
-                <xsl:call-template name="soft-hyphen" />
-            </dtb:text>
-        </xsl:if>
+        <dtb:text>
+            <xsl:call-template name="soft-hyphen" />
+        </dtb:text>
     </xsl:template>
 
     <xsl:template match="text()" mode="convert-breaks">
