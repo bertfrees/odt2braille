@@ -280,7 +280,7 @@
 		</pluginRepository>
 		<pluginRepository>
 			<id>bertfrees-github-snapshots</id>
-			<url>http://bertfrees.github.com/maven-snapshots/</url>
+			<url>http://bertfrees.github.com/snapshots</url>
 		</pluginRepository>
 	</pluginRepositories>
 	<distributionManagement>
