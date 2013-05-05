@@ -1,0 +1,18 @@
+#!/bin/bash
+
+USER=bertfrees
+MYSQL_USER=o330251admin
+MYSQL_PASSWORD=***
+
+cd `dirname $0`/..
+mvn l10n:sql
+scp target/l10n/sql/* ${USER},odt2braille@shell.sourceforge.net:~/tmp/
+
+COMMAND="cd ~/tmp/"
+for FILE in $(ls target/l10n/sql); do
+    COMMAND="${COMMAND}
+echo \"Executing SQL script: ${FILE} ...\"
+mysql -h mysql-o -u ${MYSQL_USER} --password=${MYSQL_PASSWORD} o330251_l10n < ${FILE}"
+done
+
+ssh ${USER},odt2braille@shell.sourceforge.net "$COMMAND"
