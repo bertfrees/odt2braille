@@ -1,0 +1,5 @@
+#!/bin/bash
+
+USER=bertfrees
+
+scp `dirname $0`/../target/*.zip ${USER},odt2braille@shell.sourceforge.net:/home/frs/project/odt2braille/snapshots
