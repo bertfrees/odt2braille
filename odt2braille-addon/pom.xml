@@ -59,6 +59,9 @@
 			<resource>
 				<targetPath>be/docarch/odt2braille/ooo/l10n</targetPath>
 				<directory>target/l10n/bundles/dialogs</directory>
+				<excludes>
+					<exclude>dialogs__help.properties</exclude>
+				</excludes>
 			</resource>
 		</resources>
 		<plugins>

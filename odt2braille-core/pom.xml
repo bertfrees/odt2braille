@@ -47,6 +47,9 @@
 			<resource>
 				<targetPath>be/docarch/odt2braille/l10n</targetPath>
 				<directory>target/l10n/bundles/core</directory>
+				<excludes>
+					<exclude>core__help.properties</exclude>
+				</excludes>
 			</resource>
 			<resource>
 				<targetPath>be/docarch/odt2braille/l10n</targetPath>
