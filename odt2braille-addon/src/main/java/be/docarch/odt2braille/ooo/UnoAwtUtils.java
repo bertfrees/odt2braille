@@ -111,9 +111,7 @@ public class UnoAwtUtils {
         // Initialize the message box factory
         XMessageBoxFactory messageBoxFactory = (XMessageBoxFactory) UnoRuntime.queryInterface(XMessageBoxFactory.class, parentWindowPeer.getToolkit());
 
-        Rectangle messageBoxRectangle = new Rectangle();
-
-        XMessageBox box = messageBoxFactory.createMessageBox(parentWindowPeer, messageBoxRectangle, messageBoxType, messageBoxButtons, messageBoxTitle, message);
+        XMessageBox box = messageBoxFactory.createMessageBox(parentWindowPeer, com.sun.star.awt.MessageBoxType.MESSAGEBOX, messageBoxButtons, messageBoxTitle, message);
         return box.execute();
     }
 
