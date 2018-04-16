@@ -3,6 +3,11 @@
 
 odt2braille is a Braille extension to [LibreOffice][] Writer. odt2braille will enable authors to print documents to a Braille embosser and to export documents as Braille files. 
 
+Tickets
+-------
+
+The source code was moved from SourceForge to Github, but the tickets are still [at SourceForge](https://sourceforge.net/p/odt2braille/feature-requests).
+
 Authors
 -------
 
