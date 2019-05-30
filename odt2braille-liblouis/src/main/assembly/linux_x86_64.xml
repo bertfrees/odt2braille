@@ -5,23 +5,14 @@
 		<format>zip</format>
 	</formats>
 	<baseDirectory>/</baseDirectory>
+	<componentDescriptors>
+		<componentDescriptor>src/main/assembly/files.xml</componentDescriptor>
+	</componentDescriptors>
 	<fileSets>
-		<fileSet>
-			<directory>src/main/resources/lbx_files</directory>
-			<outputDirectory>files</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>src/main/resources/tables</directory>
-			<outputDirectory>files</outputDirectory>
-		</fileSet>
-		<fileSet>
-			<directory>target/generated-resources/tables</directory>
-			<outputDirectory>files</outputDirectory>
-		</fileSet>
 		<fileSet>
 			<directory>target/dependency/bin/amd64-Linux-gpp</directory>
 			<includes>
-				<include>xml2brl</include>
+				<include>file2brl</include>
 			</includes>
 			<outputDirectory>bin</outputDirectory>
 		</fileSet>
@@ -29,7 +20,7 @@
 			<directory>target/dependency/lib/amd64-Linux-gpp/shared</directory>
 			<includes>
 				<include>liblouis.so</include>
-				<include>liblouisxml.so</include>
+				<include>liblouisutdml.so</include>
 			</includes>
 			<outputDirectory>bin</outputDirectory>
 		</fileSet>

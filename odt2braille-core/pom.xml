@@ -15,16 +15,20 @@
 	<name>odt2braille :: Core</name>
 	<dependencies>
 		<dependency>
+			<groupId>org.liblouis</groupId>
+			<artifactId>liblouis-java</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>be.docarch</groupId>
-			<artifactId>accessodf-core</artifactId>
+			<artifactId>accessodf-api</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>net.sf.saxon</groupId>
-			<artifactId>Saxon-HE</artifactId>
+			<groupId>org.daisy.libs</groupId>
+			<artifactId>saxon-he</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.daisy.libs</groupId>

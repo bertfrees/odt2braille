@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <assembly>
-	<id>windows_x86</id>
+	<id>windows_x86_64</id>
 	<formats>
 		<format>zip</format>
 	</formats>
@@ -24,6 +24,13 @@
 				<include>file2brl.exe</include>
 			</includes>
 			<outputDirectory>bin</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency/bin/x86_64-w64-mingw32-gpp</directory>
+			<includes>
+				<include>liblouis.dll</include>
+			</includes>
+			<outputDirectory>bin/64</outputDirectory>
 		</fileSet>
 	</fileSets>
 </assembly>

@@ -1781,7 +1781,7 @@ public class ODT {
                 TranslationTable t = configuration.getTranslationTables().get(locale);
                 
                 locales.add(locale.toString().replaceAll("_", "-"));
-                translationTables.add(t.getID());
+                translationTables.add("_display.dis," + t.getFileName() + ",_misc");
             
             }
 
@@ -1851,7 +1851,7 @@ public class ODT {
 
             languagesAndTypefaceXSL.setParameter("paramLocales",              locales.toArray(new String[locales.size()]));
             languagesAndTypefaceXSL.setParameter("paramTranslationTables",    translationTables.toArray(new String[translationTables.size()]));
-            languagesAndTypefaceXSL.setParameter("paramMathCode",             configuration.getMathCode().name().toLowerCase());
+            languagesAndTypefaceXSL.setParameter("paramMathTable",            "_display.dis," + configuration.getMathCode().name().toLowerCase() + ".ctb,_misc");
 
             languagesAndTypefaceXSL.setParameter("paramCharacterStyles",      characterStyles.toArray(new String[characterStyles.size()]));
             languagesAndTypefaceXSL.setParameter("paramBoldfaceFollowPrint",  boldfaceFollowPrint.toArray(new Boolean[boldfaceFollowPrint.size()]));

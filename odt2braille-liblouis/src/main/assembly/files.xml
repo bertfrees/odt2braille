@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<component>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/resources/lbx_files</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main/resources/tables</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency/share/liblouis/tables</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>target/dependency/share/liblouisutdml/lbu_files</directory>
+			<outputDirectory>files</outputDirectory>
+		</fileSet>
+	</fileSets>
+</component>

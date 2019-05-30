@@ -27,9 +27,11 @@ import java.io.Writer;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
@@ -77,7 +79,7 @@ public class LiblouisXML {
     private Configuration settings = null;
     private PEFConfiguration pefSettings = null;
 
-    private List configurationList = new ArrayList();
+    private List<String> configurationList = new ArrayList<String>();
 
     BrailleConverter liblouisTable = new LiblouisTable().newBrailleConverter();
 
@@ -105,11 +107,11 @@ public class LiblouisXML {
         if (IS_WINDOWS) {
 
             liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" +
-                                                      FILE_SEPARATOR + "xml2brl.exe").getAbsolutePath();
+                                                      FILE_SEPARATOR + "file2brl.exe").getAbsolutePath();
         } else {
 
             liblouisxmlExec = new File(liblouisPath + FILE_SEPARATOR + "bin" +
-                                                      FILE_SEPARATOR + "xml2brl").getAbsolutePath();
+                                                      FILE_SEPARATOR + "file2brl").getAbsolutePath();
         }
 
         logger.exiting("LiblouisXML", "<init>");
@@ -146,8 +148,12 @@ public class LiblouisXML {
             if (!paraStyle.getInherit()) {
 
                 s = "firstLineIndent " + (paraStyle.getFirstLine() - paraStyle.getRunovers()) + sep
-                  + "leftMargin "      + paraStyle.getRunovers() + sep
-                  + "centeredMargin "  + paraStyle.getMarginLeftRight() + sep
+                  + "leftMargin "      + (paraStyle.getAlignment() == Alignment.CENTERED
+                                             ? paraStyle.getMarginLeftRight()
+                                             : paraStyle.getRunovers()) + sep
+                  + "rightMargin "     + (paraStyle.getAlignment() == Alignment.CENTERED
+                                             ? paraStyle.getMarginLeftRight()
+                                             : 0) + sep
                   + "linesBefore "     + 0 + sep
                   + "linesAfter "      + 0 + sep
                   + "format "          + alignmentMap.get(paraStyle.getAlignment()) + sep;
@@ -169,8 +175,12 @@ public class LiblouisXML {
             int level = headStyle.getLevel();
 
             s = "firstLineIndent " + (headStyle.getFirstLine() - headStyle.getRunovers()) + sep
-              + "leftMargin "      + headStyle.getRunovers() + sep
-              + "centeredMargin "  + headStyle.getMarginLeftRight() + sep
+              + "leftMargin "      + (headStyle.getAlignment() == Alignment.CENTERED
+                                         ? headStyle.getMarginLeftRight()
+                                         : headStyle.getRunovers()) + sep
+              + "rightMargin "     + (headStyle.getAlignment() == Alignment.CENTERED
+                                         ? headStyle.getMarginLeftRight()
+                                         : 0) + sep
               + "linesBefore "     + 0 + sep
               + "linesAfter "      + 0 + sep
               + "format "          + alignmentMap.get(headStyle.getAlignment()) + sep;
@@ -268,8 +278,12 @@ public class LiblouisXML {
         HeadingStyle contentsHeader = settings.getHeadingStyles().get(1);
 
         s = "firstLineIndent " + (contentsHeader.getFirstLine() - contentsHeader.getRunovers()) + sep
-          + "leftMargin "      + contentsHeader.getRunovers() + sep
-          + "centeredMargin "  + contentsHeader.getMarginLeftRight() + sep
+          + "leftMargin "      + (contentsHeader.getAlignment() == Alignment.CENTERED
+                                     ? contentsHeader.getMarginLeftRight()
+                                     : contentsHeader.getRunovers()) + sep
+          + "rightMargin "     + (contentsHeader.getAlignment() == Alignment.CENTERED
+                                     ? contentsHeader.getMarginLeftRight()
+                                     : 0) + sep
           + "linesBefore "     + contentsHeader.getLinesAbove() + sep
           + "linesAfter "      + contentsHeader.getLinesBelow() + sep
           + "format "          + alignmentMap.get(contentsHeader.getAlignment()) + sep;
@@ -295,8 +309,12 @@ public class LiblouisXML {
         s = "linesBefore "     + footnoteStyle.getLinesAbove() + sep
           + "linesAfter "      + footnoteStyle.getLinesBelow() + sep
           + "firstLineIndent " + (footnoteStyle.getFirstLine() - footnoteStyle.getRunovers()) + sep
-          + "leftMargin "      + footnoteStyle.getRunovers() + sep
-          + "centeredMargin "  + footnoteStyle.getMarginLeftRight() + sep
+          + "leftMargin "      + (footnoteStyle.getAlignment() == Alignment.CENTERED
+                                     ? footnoteStyle.getMarginLeftRight()
+                                     : footnoteStyle.getRunovers()) + sep
+          + "rightMargin "     + (footnoteStyle.getAlignment() == Alignment.CENTERED
+                                     ? footnoteStyle.getMarginLeftRight()
+                                     : 0) + sep
           + "format "          + alignmentMap.get(footnoteStyle.getAlignment()) + sep;
         bufferedWriter.write("style footnote" + sep + s);
 
@@ -312,7 +330,22 @@ public class LiblouisXML {
           + "leftMargin "      + pictureStyle.getRunovers() + sep
           + "format "          + alignmentMap.get(Style.Alignment.LEFT) + sep;
         bufferedWriter.write("style picturenote" + sep + s);
-        
+
+        // Borders
+
+        Set<String> borderChars = new HashSet<String>();
+        borderChars.add(liblouisTable.toText(String.valueOf(tableStyle.getUpperBorderStyle())));
+        borderChars.add(liblouisTable.toText(String.valueOf(tableStyle.getLowerBorderStyle())));
+        borderChars.add(liblouisTable.toText(String.valueOf(frameStyle.getUpperBorderStyle())));
+        borderChars.add(liblouisTable.toText(String.valueOf(frameStyle.getLowerBorderStyle())));
+        for (HeadingStyle headStyle : settings.getHeadingStyles().values()) {
+          borderChars.add(liblouisTable.toText(String.valueOf(headStyle.getUpperBorderStyle())));
+          borderChars.add(liblouisTable.toText(String.valueOf(headStyle.getLowerBorderStyle())));
+        }
+
+        for (String c : borderChars)
+          bufferedWriter.write("style boxline" + c + sep + "topBoxline " + c + sep);
+
         bufferedWriter.close();
         if (stylesFile.exists()) { stylesFile.delete(); }
         newStylesFile.renameTo(stylesFile);
@@ -358,22 +391,30 @@ public class LiblouisXML {
         bufferedWriter.write("# BORDERS STYLES FILE" + sep +
                              "# generated by be.docarch.odt2braille.LiblouisXML#createStylesFiles()" + sep + sep);
 
-        bufferedWriter.write("boxline &xpath(//dtb:table/dtb:div[@class='border' and @at='top']/dtb:hr) "
-                + liblouisTable.toText(String.valueOf(tableStyle.getUpperBorderStyle())) + sep);
-        bufferedWriter.write("boxline &xpath(//dtb:table/dtb:div[@class='border' and @at='bottom']/dtb:hr) "
-                + liblouisTable.toText(String.valueOf(tableStyle.getLowerBorderStyle())) + sep);
-        bufferedWriter.write("boxline &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='top']/dtb:hr) "
-                + liblouisTable.toText(String.valueOf(frameStyle.getUpperBorderStyle())) + sep);
-        bufferedWriter.write("boxline &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='bottom']/dtb:hr) "
-                + liblouisTable.toText(String.valueOf(frameStyle.getLowerBorderStyle())) + sep);
+        bufferedWriter.write("boxline"
+                + liblouisTable.toText(String.valueOf(tableStyle.getUpperBorderStyle()))
+                + " &xpath(//dtb:table/dtb:div[@class='border' and @at='top']/dtb:hr) "
+                + sep);
+        bufferedWriter.write("boxline"
+                + liblouisTable.toText(String.valueOf(tableStyle.getLowerBorderStyle()))
+                + " &xpath(//dtb:table/dtb:div[@class='border' and @at='bottom']/dtb:hr) "
+                + sep);
+        bufferedWriter.write("boxline"
+                + liblouisTable.toText(String.valueOf(frameStyle.getUpperBorderStyle()))
+                + " &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='top']/dtb:hr) "
+                + sep);
+        bufferedWriter.write("boxline"
+                + liblouisTable.toText(String.valueOf(frameStyle.getLowerBorderStyle()))
+                + " &xpath(//dtb:div[@class='frame']/dtb:div[@class='border' and @at='bottom']/dtb:hr) "
+                + sep);
 
         for (HeadingStyle headStyle : settings.getHeadingStyles().values()) {
-            bufferedWriter.write("boxline &xpath(//dtb:heading[descendant::dtb:h" + headStyle.getLevel()
-                    + "]/dtb:div[@class='border' and @at='top']/dtb:hr) "
-                    + liblouisTable.toText(String.valueOf(headStyle.getUpperBorderStyle())) + sep);
-            bufferedWriter.write("boxline &xpath(//dtb:heading[descendant::dtb:h" + headStyle.getLevel()
-                    + "]/dtb:div[@class='border' and @at='bottom']/dtb:hr) "
-                    + liblouisTable.toText(String.valueOf(headStyle.getLowerBorderStyle())) + sep);
+            bufferedWriter.write("boxline"
+                    + liblouisTable.toText(String.valueOf(headStyle.getUpperBorderStyle()))
+                    + " &xpath(//dtb:heading[descendant::dtb:h" + headStyle.getLevel() + "]/dtb:div[@class='border' and @at='top']/dtb:hr)" + sep);
+            bufferedWriter.write("boxline"
+                    + liblouisTable.toText(String.valueOf(headStyle.getLowerBorderStyle()))
+                    + " &xpath(//dtb:heading[descendant::dtb:h" + headStyle.getLevel() + "]/dtb:div[@class='border' and @at='bottom']/dtb:hr)" + sep);
         }
 
         bufferedWriter.close();
@@ -385,7 +426,7 @@ public class LiblouisXML {
     }
 
     /**
-     * Execute the <code>xml2brl</code> program.
+     * Execute the <code>file2brl</code> program.
      * An xml-file is translated to a braille file.
      * Before executing, <code>liblouisxml</code> has to be configured.
      *
@@ -398,10 +439,6 @@ public class LiblouisXML {
         logger.entering("LiblouisXML","run");
 
         Process process;
-        Runtime runtime = Runtime.getRuntime();
-        String exec_cmd[] = new String[configurationList.size()];
-
-        configurationList.toArray(exec_cmd);
 
         int i;
         String message = null;
@@ -409,26 +446,27 @@ public class LiblouisXML {
         String errors = "";
 
         message = "liblouisxml:  ";
-        for (i=0;i<exec_cmd.length;i++) {
-            message += "\n" + exec_cmd[i] + " \\";
+        for (String s : configurationList) {
+            message += "\n" + s + " \\";
         }
 
         logger.log(Level.INFO,message);
 
+        ProcessBuilder builder = new ProcessBuilder(configurationList);
+        builder.directory(Constants.getTempDirectory());
+        builder.environment().put("LOUIS_TABLEPATH", new File(liblouisPath + FILE_SEPARATOR + "files").getAbsolutePath());
         try {
-            process = runtime.exec(exec_cmd);
+            process = builder.start();
         } catch (IOException e) {
             if (!IS_WINDOWS) {
-                runtime.exec(new String[] { "chmod", "775", liblouisxmlExec }).waitFor();
-                process = runtime.exec(exec_cmd);
+                Runtime.getRuntime().exec(new String[] { "chmod", "775", liblouisxmlExec }).waitFor();
+                process = builder.start();
             } else {
                 throw e;
             }
         }
 
-        if (process.waitFor() != 0) {
-            throw new LiblouisXMLException("liblouisxml did not terminate correctly");
-        }
+        boolean success = process.waitFor() == 0;
         InputStream stderr = process.getErrorStream();
         InputStreamReader isr = new InputStreamReader(stderr);
         BufferedReader br = new BufferedReader(isr);
@@ -442,16 +480,18 @@ public class LiblouisXML {
             stderr.close();
         }
 
+        if (!errors.equals(""))
+          logger.log(Level.INFO, "stderr:  " + "\n" + errors);
+        
+        if (!success)
+            throw new LiblouisXMLException("liblouisxml did not terminate correctly");
+        
         logger.exiting("LiblouisXML","run");
 
-        if (!errors.equals("")) {
-            throw new LiblouisXMLException("liblouisxml error:  " + "\n" + errors);
-        }
-        
     }
 
     /**
-     * Configure the <code>xml2brl</code> program.
+     * Configure the <code>file2brl</code> program.
      * @see <a href="http://code.google.com/p/liblouisxml/"><code>liblouisxml</code></a>
      * <ul>
      * <li><code>literaryTextTable</code>, <code>printPages</code>, <code>cellsPerLine</code> and <code>linesPerPage</code>
@@ -478,16 +518,15 @@ public class LiblouisXML {
 
         String math = settings.getMathCode().name().toLowerCase();
         TranslationTable t = settings.getTranslationTables().get(settings.mainLocale);
-        String translationTable = "__" + t.getID();
-        String backTranslationTable = "__" + t.getID() + (t.getLocale().equals("nl-BE")?"-back":"");
+        String translationTable = "_display.dis," + t.getFileName() + ",_misc";
         String configFiles = liblouisPath + FILE_SEPARATOR + "files" + FILE_SEPARATOR + "_cfg_main.cfg," + "_cfg_styles.cfg";
         String semanticFiles = "_sem_main.sem," +
                                "_sem_paragraphs.sem," +
                                "_sem_borders.sem," +
                               (extractpprangemode?"_sem_extractpprangemode.sem,":"") +
                               (settings.getTableStyles().get("Default").getStairstepEnabled()?"_sem_stairsteptable.sem,":"") +
-                              "_sem_" + math + ".sem";
-        String mathTable = "__" + math;
+                              math + ".sem";
+        String mathTable = "_display.dis," + math + ".ctb,_misc";
         String editTables = "_edit_" + math;
 
         configurationList.add(liblouisxmlExec);
@@ -495,7 +534,6 @@ public class LiblouisXML {
         configurationList.add(configFiles);
 
         configurationList.add("-C" + "literaryTextTable="            + translationTable);
-        configurationList.add("-C" + "interlineBackTable="           + backTranslationTable);
         configurationList.add("-C" + "semanticFiles="                + semanticFiles);
         configurationList.add("-C" + "mathtextTable="                + translationTable);
         configurationList.add("-C" + "mathexprTable="                + mathTable);
@@ -503,8 +541,7 @@ public class LiblouisXML {
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
         configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(pefSettings.getColumns()));
         configurationList.add("-C" + "linesPerPage="                 + Integer.toString(pefSettings.getRows()));
-        if (settings.minSyllableLength.enabled()) {
-            configurationList.add("-C" + "minSyllableLength="        + Integer.toString(settings.getMinSyllableLength())); }
+        configurationList.add("-C" + "minSyllableLength="            + (settings.minSyllableLength.enabled()?Integer.toString(settings.getMinSyllableLength()):0));
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));
         configurationList.add("-C" + "pageSeparator="                + (settings.getPageSeparator()?"yes":"no"));

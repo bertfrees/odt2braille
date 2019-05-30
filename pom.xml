@@ -36,48 +36,50 @@
 		<module>odt2braille-anttask</module>
 		<module>odt2braille-addon</module>
 		<module>odt2braille-assembly</module>
+		<module>libs/accessodf/accessodf-api</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<odt2braille.version>${project.version}</odt2braille.version>
-		<odt2braille.font.version>1.2</odt2braille.font.version>
 		<openoffice.version>3.2.0</openoffice.version>
-		<liblouis.version>2.3.0-odt2braille-0.1.1-SNAPSHOT</liblouis.version>
-		<liblouisxml.version>2.4.0-odt2braille-0.1.1-SNAPSHOT</liblouisxml.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
-			<!-- odt2braille Modules -->
+			<!--
+			    odt2braille modules
+			-->
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-core</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-addon</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-liblouis</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>${project.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-font</artifactId>
-				<version>${odt2braille.font.version}</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
-			<!-- Third-Party Libraries -->
+			<!--
+			    third-party libraries
+			-->
 			<dependency>
 				<groupId>be.docarch</groupId>
-				<artifactId>accessodf-core</artifactId>
+				<artifactId>accessodf-api</artifactId>
 				<version>0.1.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.daisy.libs</groupId>
 				<artifactId>brailleutils-core</artifactId>
-				<version>1.2.0-beta-SNAPSHOT</version>
+				<version>1.2.0</version>
 				<exclusions>
 					<exclusion>
 						<groupId>net.sf.saxon</groupId>
@@ -88,28 +90,16 @@
 			<dependency>
 				<groupId>org.daisy.libs</groupId>
 				<artifactId>brailleutils-catalog</artifactId>
-				<version>1.2.0-beta-SNAPSHOT</version>
+				<version>1.2.0</version>
 			</dependency>
 			<dependency>
-				<groupId>net.sf.saxon</groupId>
-				<artifactId>Saxon-HE</artifactId>
-				<version>9.4</version>
+				<groupId>org.daisy.libs</groupId>
+				<artifactId>saxon-he</artifactId>
+				<version>9.8.0.8</version>
 				<exclusions>
 					<exclusion>
-						<groupId>dom4j</groupId>
-						<artifactId>dom4j</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>org.jdom</groupId>
-						<artifactId>jdom</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>xml-resolver</groupId>
-						<artifactId>xml-resolver</artifactId>
-					</exclusion>
-					<exclusion>
-						<groupId>xom</groupId>
-						<artifactId>xom</artifactId>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>Saxon-HE</artifactId>
 					</exclusion>
 				</exclusions>
 			</dependency>
@@ -127,42 +117,48 @@
 				<groupId>org.openoffice</groupId>
 				<artifactId>juh</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>jurt</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>ridl</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>unoil</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.ant</groupId>
 				<artifactId>ant</artifactId>
 				<version>1.8.2</version>
-				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.liblouis</groupId>
+				<artifactId>liblouis-java</artifactId>
+				<version>4.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>org.liblouis</groupId>
 				<artifactId>louis</artifactId>
-				<version>${liblouis.version}</version>
+				<version>3.11.0</version>
 				<type>nar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.liblouis</groupId>
-				<artifactId>louisxml</artifactId>
-				<version>${liblouisxml.version}</version>
+				<artifactId>louisutdml</artifactId>
+				<version>2.8.0-p1-SNAPSHOT</version>
+				<type>nar</type>
+			</dependency>
+			<dependency>
+				<groupId>org.daisy.libs</groupId>
+				<artifactId>xml2</artifactId>
+				<version>2.7.3</version>
 				<type>nar</type>
 			</dependency>
 		</dependencies>
@@ -185,6 +181,30 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.0</version>
+					<configuration>
+						<source>1.5</source>
+						<target>1.5</target>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.10</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-assembly-plugin</artifactId>
+					<version>2.6</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+				<plugin>
 					<groupId>be.docarch</groupId>
 					<artifactId>l10n-maven-plugin</artifactId>
 					<version>1.0-SNAPSHOT</version>
@@ -198,26 +218,6 @@
 		</pluginManagement>
 	</build>
 	<profiles>
-		<profile>
-			<id>java</id>
-			<activation>
-				<file>
-					<exists>src/main/java</exists>
-				</file>
-			</activation>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-compiler-plugin</artifactId>
-						<version>3.0</version>
-						<configuration>
-							<source>1.5</source>
-							<target>1.5</target>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
 		<profile>
 			<id>addon</id>
 			<activation>
@@ -266,23 +266,7 @@
 			<name>Maven Central</name>
 			<url>http://repo.maven.apache.org/maven2/</url>
 		</repository>
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>oss.sonatype.org github Release Repository Snapshot Repository</name>
-			<url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-		</repository>
 	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>oss.sonatype.org github Release Repository Snapshot Repository</name>
-			<url>http://oss.sonatype.org/content/repositories/snapshots/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>bertfrees-github-snapshots</id>
-			<url>http://bertfrees.github.com/snapshots</url>
-		</pluginRepository>
-	</pluginRepositories>
 	<distributionManagement>
 		<repository>
 			<id>sonatype-nexus-staging</id>

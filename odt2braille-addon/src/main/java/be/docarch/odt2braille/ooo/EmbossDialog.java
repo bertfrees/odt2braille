@@ -453,8 +453,9 @@ public class EmbossDialog {
             unitListbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, unitControl);
             unitListbox.addItem("mm", (short)0);
             unitListbox.addItem("in", (short)1);
-            unitListbox.addItem("cells", (short)2);
-            unitListbox.addItem("lines", (short)3);
+            // FIXME: needed to partly revert r186
+            // unitListbox.addItem("cells", (short)2);
+            // unitListbox.addItem("lines", (short)3);
             unitListbox.selectItemPos((short)0, true);
             link(dimension);
             unitListbox.addItemListener(this);
@@ -471,8 +472,9 @@ public class EmbossDialog {
             // TODO: update listbox items !
             switch (unit) {
                 case INCH:   unitListbox.selectItemPos((short)1, true); break;
-                case COLUMN: unitListbox.selectItemPos((short)2, true); break;
-                case ROW:    unitListbox.selectItemPos((short)3, true); break;
+                // FIXME: needed to partly revert r186
+                // case COLUMN: unitListbox.selectItemPos((short)2, true); break;
+                // case ROW:    unitListbox.selectItemPos((short)3, true); break;
                 default:     unitListbox.selectItemPos((short)0, true);
             }
         }
@@ -481,8 +483,9 @@ public class EmbossDialog {
             Length l = property.get();
             switch (unit) {
                 case INCH:   numericField.setValue(           l.asMillimeter() / Length.INCH_IN_MM);          break;
-                case COLUMN: numericField.setValue(Math.floor(l.asMillimeter() / Length.COLUMN_WIDTH_IN_MM)); break;
-                case ROW:    numericField.setValue(Math.floor(l.asMillimeter() / Length.ROW_HEIGHT_IN_MM));   break;
+                // FIXME: needed to partly revert r186
+                // case COLUMN: numericField.setValue(Math.floor(l.asMillimeter() / Length.COLUMN_WIDTH_IN_MM)); break;
+                // case ROW:    numericField.setValue(Math.floor(l.asMillimeter() / Length.ROW_HEIGHT_IN_MM));   break;
                 default:     numericField.setValue(           l.asMillimeter());
             }
         }
@@ -491,8 +494,9 @@ public class EmbossDialog {
             Length newValue = null;
             switch (unit) {
                 case INCH:   newValue = Length.newInchValue(numericField.getValue());    break;
-                case COLUMN: newValue = Length.newColumnsValue(numericField.getValue()); break;
-                case ROW:    newValue = Length.newRowsValue(numericField.getValue());    break;
+                // FIXME: needed to partly revert r186
+                // case COLUMN: newValue = Length.newColumnsValue(numericField.getValue()); break;
+                // case ROW:    newValue = Length.newRowsValue(numericField.getValue());    break;
                 default:     newValue = Length.newMillimeterValue(numericField.getValue());
             }
             okButton.updateProperties();
@@ -514,9 +518,11 @@ public class EmbossDialog {
             if (event.Source.equals(unitListbox)) {
                 short itemPos = unitListbox.getSelectedItemPos();
                 unit = (itemPos == 0) ? UnitsOfLength.MILLIMETER :
-                       (itemPos == 1) ? UnitsOfLength.INCH :
+                       // FIXME: needed to partly revert r186
+                       /*(itemPos == 1) ? UnitsOfLength.INCH :
                        (itemPos == 2) ? UnitsOfLength.COLUMN :
-                                        UnitsOfLength.ROW;
+                                        UnitsOfLength.ROW;*/
+                                        UnitsOfLength.INCH;
                 numericField.setDecimalDigits((short)((unit == UnitsOfLength.INCH) ? 2 : 0));
                 updateValue();
             }

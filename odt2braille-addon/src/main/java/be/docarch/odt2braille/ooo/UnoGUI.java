@@ -889,7 +889,7 @@ public class UnoGUI {
 
         String message = L10N_Unexpected_Exception_Message + ": " + Constants.getLogFile().getAbsolutePath();
         if (e instanceof LiblouisXMLException ||
-            e instanceof IllegalArgumentException) { message = e.getMessage(); }
+            e instanceof IllegalArgumentException) { message = e.getMessage() + "\n" + message; }
         UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title, message);
 
     }

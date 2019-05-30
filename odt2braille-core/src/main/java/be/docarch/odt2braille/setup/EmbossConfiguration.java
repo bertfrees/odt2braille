@@ -199,7 +199,8 @@ public class EmbossConfiguration implements Serializable,
     public static final String CUSTOM_SHEET_PAPER =        "be.docarch.odt2braille.CustomPaperProvider.PaperType.SHEET";
     public static final String CUSTOM_ROLL_PAPER =         "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROLL";
     public static final String CUSTOM_TRACTOR_PAPER =      "be.docarch.odt2braille.CustomPaperProvider.PaperType.TRACTOR";
-    public static final String CUSTOM_ROWS_COLUMNS_PAPER = "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROWS_COLUMNS";
+    // FIXME: needed to partly revert r186
+    // public static final String CUSTOM_ROWS_COLUMNS_PAPER = "be.docarch.odt2braille.CustomPaperProvider.PaperType.ROWS_COLUMNS";
     public static final String A4_PAPER =                  "org_daisy.ISO216PaperProvider.PaperSize.A4";
 
     /****************************/
@@ -437,7 +438,8 @@ public class EmbossConfiguration implements Serializable,
         private Paper customSheetPaper = paperCatalog.get(CUSTOM_SHEET_PAPER);
         private Paper customTractorPaper = paperCatalog.get(CUSTOM_TRACTOR_PAPER);
         private Paper customRollPaper = paperCatalog.get(CUSTOM_ROLL_PAPER);
-        private Paper customRowsColumnsPaper = paperCatalog.get(CUSTOM_ROWS_COLUMNS_PAPER);
+        // FIXME: needed to partly revert r186
+        // private Paper customRowsColumnsPaper = paperCatalog.get(CUSTOM_ROWS_COLUMNS_PAPER);
         private Collection<Paper> options = new HashSet();
 
         @Override
@@ -464,9 +466,10 @@ public class EmbossConfiguration implements Serializable,
         public boolean refresh() {
             options.clear();
             // Generic embosser: only special rows/columns paper
-            if (getEmbosser().getIdentifier().equals(GENERIC_EMBOSSER)) {
+            // FIXME: needed to partly revert r186
+            /*if (getEmbosser().getIdentifier().equals(GENERIC_EMBOSSER)) {
                 options.add(customRowsColumnsPaper);
-            } else {
+            } else {*/
                 Set<Paper.Type> types = new HashSet<Paper.Type>();
                 for (Paper p : paperCatalog.list()) {
                     if (getEmbosser().supportsPaper(p)) {
@@ -485,8 +488,8 @@ public class EmbossConfiguration implements Serializable,
                 if (getEmbosser().getIdentifier().equals(INDEX_BRAILLE_BOX_V4)) {
                     options.remove(customSheetPaper);
                 }
-                options.remove(customRowsColumnsPaper);
-            }
+                // options.remove(customRowsColumnsPaper);
+            //}
             if (accept(paper)) { return update(paper); }
             try {
                 return update(options.iterator().next());

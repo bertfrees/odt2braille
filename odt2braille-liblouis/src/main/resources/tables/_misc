@@ -1,31 +1,7 @@
 # ----------------------------------------------------------------------------------------------
 #  odt2braille - Braille authoring in OpenOffice.org.
-#  Copyright (c) 2010 by DocArch <http://www.docarch.be>.
+#  Copyright (c) 2010, 2019 by DocArch <http://www.docarch.be>.
 # ----------------------------------------------------------------------------------------------
-
-sign        \x0040        47                  @                   COMMERCIAL AT
-digit       \x0030        356                 0                   DIGIT ZERO
-digit       \x0031        2                   1                   DIGIT ONE
-digit       \x0032        23                  2                   DIGIT TWO
-digit       \x0033        25                  3                   DIGIT THREE
-digit       \x0034        256                 4                   DIGIT FOUR
-digit       \x0035        26                  5                   DIGIT FIVE
-digit       \x0036        235                 6                   DIGIT SIX
-digit       \x0037        2356                7                   DIGIT SEVEN
-digit       \x0038        236                 8                   DIGIT EIGHT
-digit       \x0039        35                  9                   DIGIT NINE
-uplow       \x0041\x0061  1,1                 Aa                  LATIN CAPITAL LETTER A - LATIN SMALL LETTER A
-uplow       \x0042\x0062  12,12               Bb                  LATIN CAPITAL LETTER B - LATIN SMALL LETTER B
-uplow       \x0043\x0063  14,14               Cc                  LATIN CAPITAL LETTER C - LATIN SMALL LETTER C
-uplow       \x0044\x0064  145,145             Dd                  LATIN CAPITAL LETTER D - LATIN SMALL LETTER D
-uplow       \x0045\x0065  15,15               Ee                  LATIN CAPITAL LETTER E - LATIN SMALL LETTER E
-uplow       \x0046\x0066  124,124             Ff                  LATIN CAPITAL LETTER F - LATIN SMALL LETTER F
-
-# ----------------------------------------------------------------------------------------------
-# Braille patterns
-# ----------------------------------------------------------------------------------------------
-sign \x2800 28a
-include braille-patterns.cti
 
 # ----------------------------------------------------------------------------------------------
 # Undefined
@@ -35,23 +11,16 @@ undefined                 1456
 # ----------------------------------------------------------------------------------------------
 # Spaces
 # ----------------------------------------------------------------------------------------------
-include spaces.ctb
+display     \x2800        28a
+always      \x2800        28a
 always      \x00A0        a
 repeated    \s            0
-
-# ----------------------------------------------------------------------------------------------
-# Soft hyphen
-# ----------------------------------------------------------------------------------------------
-sign        \x00AD        36
-sign        \xE00F        123456789abcd
-midword     \x00AD        123456789abcd
-replace     \x00AD
 
 # ----------------------------------------------------------------------------------------------
 # Volume separator
 # ----------------------------------------------------------------------------------------------
 sign        \xE000        123456789abcde
-context     ["\evs"]      @123456789abcde
+noback context     ["\evs"]      @123456789abcde
 
 # ----------------------------------------------------------------------------------------------
 

@@ -40,8 +40,7 @@
 
         <xsl:param name="paramLocales"                  as="xsd:string*"   />
         <xsl:param name="paramTranslationTables"        as="xsd:string*"   />
-
-        <xsl:param name="paramMathCode"                 as="xsd:string"    />
+        <xsl:param name="paramMathTable"                as="xsd:string"    />
 
         <xsl:param name="paramCharacterStyles"          as="xsd:string*"   />
         <xsl:param name="paramCapsFollowPrint"          as="xsd:boolean*"  />
@@ -92,8 +91,7 @@
     <xsl:template match="math:math">
         <dtb:span>
             <xsl:attribute name="lang">
-                <xsl:text>__</xsl:text>
-                <xsl:value-of select="$paramMathCode" />
+                <xsl:value-of select="$paramMathTable" />
             </xsl:attribute>
             <xsl:copy>
                 <xsl:apply-templates select="@*|node()"/>
@@ -144,7 +142,6 @@
                 <xsl:when test="not($lang=$main-lang)">
                     <dtb:span>
                         <xsl:attribute name="lang">
-                            <xsl:text>__</xsl:text>
                             <xsl:value-of select="$lang" />
                         </xsl:attribute>
                         <dtb:span class="lang-wrap">

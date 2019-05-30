@@ -16,6 +16,10 @@
 	<dependencies>
 		<dependency>
 			<groupId>be.docarch</groupId>
+			<artifactId>accessodf-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>be.docarch</groupId>
 			<artifactId>odt2braille-core</artifactId>
 		</dependency>
 		<dependency>
@@ -33,18 +37,22 @@
 		<dependency>
 			<groupId>org.openoffice</groupId>
 			<artifactId>juh</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openoffice</groupId>
 			<artifactId>jurt</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openoffice</groupId>
 			<artifactId>ridl</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openoffice</groupId>
 			<artifactId>unoil</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-io</groupId>
@@ -98,7 +106,6 @@
 				<groupId>be.docarch</groupId>
 				<artifactId>oxt-maven-plugin</artifactId>
 				<configuration>
-					<centralRegistrationClass>be.docarch.odt2braille.ooo.registration.CentralRegistration</centralRegistrationClass>
 					<registrationClasses>be.docarch.odt2braille.ooo.ProtocolHandler</registrationClasses>
 					<classPath>lib/*.jar</classPath>
 					<resources>
@@ -251,61 +258,6 @@
 			</build>
 		</profile>
 		<profile>
-			<id>macosx_x86</id>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-dependency-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>macosx_x86</id>
-								<phase>prepare-package</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>be.docarch</groupId>
-											<artifactId>odt2braille-liblouis</artifactId>
-											<classifier>macosx_x86</classifier>
-											<type>zip</type>
-											<outputDirectory>target/liblouis/macosx_x86</outputDirectory>
-										</artifactItem>
-									</artifactItems>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>be.docarch</groupId>
-						<artifactId>oxt-maven-plugin</artifactId>
-						<executions>
-							<execution>
-								<id>macosx_x86</id>
-								<phase>package</phase>
-								<goals>
-									<goal>oxt</goal>
-								</goals>
-								<configuration>
-									<classifier>macosx_x86</classifier>
-									<filters combine.children="append">
-										<filter>src/main/filters/macosx_x86.properties</filter>
-									</filters>
-									<resources combine.children="append">
-										<resource>
-											<targetPath>liblouis</targetPath>
-											<directory>target/liblouis/macosx_x86</directory>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-		<profile>
 			<id>macosx_x86_64</id>
 			<build>
 				<plugins>
@@ -406,6 +358,61 @@
 										<resource>
 											<targetPath>liblouis</targetPath>
 											<directory>target/liblouis/windows_x86</directory>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>windows_x86_64</id>
+			<build>
+				<plugins>
+					<plugin>
+						<artifactId>maven-dependency-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>windows_x86_64</id>
+								<phase>prepare-package</phase>
+								<goals>
+									<goal>unpack</goal>
+								</goals>
+								<configuration>
+									<artifactItems>
+										<artifactItem>
+											<groupId>be.docarch</groupId>
+											<artifactId>odt2braille-liblouis</artifactId>
+											<classifier>windows_x86_64</classifier>
+											<type>zip</type>
+											<outputDirectory>target/liblouis/windows_x86_64</outputDirectory>
+										</artifactItem>
+									</artifactItems>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>be.docarch</groupId>
+						<artifactId>oxt-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>windows_x86_64</id>
+								<phase>package</phase>
+								<goals>
+									<goal>oxt</goal>
+								</goals>
+								<configuration>
+									<classifier>windows_x86_64</classifier>
+									<filters combine.children="append">
+										<filter>src/main/filters/windows_x86_64.properties</filter>
+									</filters>
+									<resources combine.children="append">
+										<resource>
+											<targetPath>liblouis</targetPath>
+											<directory>target/liblouis/windows_x86_64</directory>
 										</resource>
 									</resources>
 								</configuration>

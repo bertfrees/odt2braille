@@ -9,5 +9,5 @@
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"
                        manifest:full-path="ProtocolHandler.xcu"/>
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.executable"
-                       manifest:full-path="liblouis/bin/xml2brl"/>
+                       manifest:full-path="liblouis/bin/file2brl"/>
 </manifest:manifest>

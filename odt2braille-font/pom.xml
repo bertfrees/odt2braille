@@ -20,8 +20,11 @@
 				<executions>
 					<execution>
 						<phase>package</phase>
-						<goals><goal>single</goal></goals>
+						<goals>
+							<goal>single</goal>
+						</goals>
 						<configuration>
+							<appendAssemblyId>false</appendAssemblyId>
 							<descriptors>
 								<descriptor>src/main/assembly/zip.xml</descriptor>
 							</descriptors>

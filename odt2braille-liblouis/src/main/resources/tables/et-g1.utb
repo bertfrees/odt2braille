@@ -1,4 +1,15 @@
+#-display-name: Estonian braille
+#
+#+locale: et
+#+type: literary
+#+contraction: no
+#+grade: 1
+#
 # ----------------------------------------------------------------------------------------------
+#
+#-copyright: Bert Frees
+#-copyright: Toomas <it@tek.tartu.ee>
+#-license: LGPLv3
 #
 #  Copyright (C) 2012,2013 by Bert Frees <bertfrees(at)gmail(dot)com>
 #

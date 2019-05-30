@@ -40,7 +40,7 @@ public class ConfigurationBuilder {
             throw new Exception("Exception: ODT is not set");
         }
 
-        TranslationTable.setTablesFolder(Constants.getTablesDirectory());
+        TranslationTable.setLiblouisFolder(Constants.getLiblouisDirectory());
         return new Configuration(odt);
     }
 }

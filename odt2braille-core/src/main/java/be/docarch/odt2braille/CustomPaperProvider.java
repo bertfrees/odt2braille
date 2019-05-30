@@ -30,7 +30,13 @@ import org.daisy.paper.PaperProvider;
  */
 public class CustomPaperProvider implements PaperProvider {
 
-    enum PaperType { SHEET, TRACTOR, ROLL, ROWS_COLUMNS };
+    enum PaperType {
+        SHEET,
+        TRACTOR,
+        ROLL
+        // FIXME: partly reverted r186
+        //, ROWS_COLUMNS
+    };
 
     private final ArrayList<Paper> papers;
 
@@ -39,7 +45,8 @@ public class CustomPaperProvider implements PaperProvider {
         papers.add(new CustomSheetPaper("Custom sheet...", "Sheet paper with adjustable width and height"));
         papers.add(new CustomTractorPaper("Custom tractor paper...", "Tractor paper with adjustable width and height"));
         papers.add(new CustomRollPaper("Custom roll...", "Roll paper with adjustable width"));
-        papers.add(new CustomRowsColumnsPaper("Custom ...", "Paper with adjustable rows and columns (intended for generic embosser)"));
+        // FIXME: partly reverted r186
+        // papers.add(new CustomRowsColumnsPaper("Custom ...", "Paper with adjustable rows and columns (intended for generic embosser)"));
     }
 
     public Collection<Paper> list() {

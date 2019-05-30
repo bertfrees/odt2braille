@@ -21,13 +21,24 @@ package be.docarch.odt2braille.setup;
 
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Collections;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.IdentityHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 
-public class TranslationTable implements Serializable {
+import org.liblouis.CompilationException;
+import org.liblouis.Louis;
+import org.liblouis.Table;
+import org.liblouis.TableInfo;
+import org.liblouis.TableResolver;
+
+public class TranslationTable implements TranslationTableProperties, Serializable {
 
     /*************
     /* SETTINGS */
@@ -36,20 +47,80 @@ public class TranslationTable implements Serializable {
     public final OptionSetting<String> locale;
     public final DependentOptionSetting<Integer> grade;
     public final DependentOptionSetting<Dots> dots;
-    
+
+    private String fileName;
+
     /* GETTERS */
     
-    public String getLocale() { return locale.get(); }
-    public int    getGrade()  { return grade.get(); }
-    public Dots   getDots()   { return dots.get(); }
+    public String getLocale()   { return locale.get(); }
+    public int    getGrade()    { return grade.get(); }
+    public Dots   getDots()     { return dots.get(); }
 
-    
-    /***************************/
-    /* PUBLIC STATIC CONSTANTS */
-    /***************************/
-
-    public static enum Dots { SIXDOTS, EIGHTDOTS };
-
+    public String getFileName() {
+        if (fileName == null) {
+            Table table = null;
+            for (Table option : TranslationTable.options) {
+                TranslationTableProperties props = fromTableInfo(option.getInfo());
+                if (props.getLocale().equals(locale.get()) && props.getGrade() == grade.get() && props.getDots() == dots.get()) {
+                    table = option;
+                }
+            }
+            if (table == null)
+                throw new RuntimeException(); // should not happen
+            try {
+                fileName = table.getTranslator().getTable();
+            } catch (CompilationException e) {
+                throw new RuntimeException(e);
+            }
+            if (!"yes".equals(table.getInfo().get("has-nocross"))) {
+                final Locale locale = Locale.forLanguageTag(TranslationTable.this.locale.get());
+                if ("cs".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_cs.dic"; // hyph_cs_CZ.dic
+                else if ("da".equals(locale.getLanguage()))
+                    fileName += ",hyph_da_DK.dic";
+                else if ("de".equals(locale.getLanguage()))
+                    fileName += ",hyph_de_DE.dic";
+                else if ("en".equals(locale.getLanguage()))
+                    fileName += ",hyph_en_US.dic";
+                else if ("eo".equals(locale.getLanguage()))
+                    fileName += ",hyph_eo.dic";
+                else if ("es".equals(locale.getLanguage()))
+                    fileName += ",hyph_es_ES.dic";
+                else if ("et".equals(locale.getLanguage()))
+                    ; // fileName += ",_hyphenation_et.dic";
+                else if ("fr".equals(locale.getLanguage()))
+                    fileName += ",hyph_fr_FR.dic";
+                else if ("ga".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_ga.dic";
+                else if ("hr".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_hr.dic";
+                else if ("hu".equals(locale.getLanguage()))
+                    fileName += ",hyph_hu_HU.dic";
+                else if ("is".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_is.dic";
+                else if ("it".equals(locale.getLanguage()))
+                    fileName += ",hyph_it_IT.dic";
+                else if ("nl".equals(locale.getLanguage())) {
+                    if ("BE".equals(locale.getCountry()))
+                        fileName += ",_hyphenation_nl-BE.dic"; // hyph_nl_NL.dic
+                    else
+                        fileName += ",hyph_nl_NL.dic";
+                } else if ("no".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_no.dic"; // hyph_nb_NO.dic / hyph_nn_NO.dic
+                else if ("pl".equals(locale.getLanguage()))
+                    fileName += ",hyph_pl_PL.dic";
+                else if ("pt".equals(locale.getLanguage()))
+                    fileName += ",hyph_pt_PT.dic";
+                else if ("ru".equals(locale.getLanguage()))
+                    fileName += ",hyph_ru.dic";
+                else if ("sv".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_sv.dic"; // hyph_sv_SE.dic
+                else if ("tr".equals(locale.getLanguage()))
+                    ; // fileName += ",_hyphenation_tr.dic";
+            }
+        }
+        return fileName;
+    }
 
     /****************************/
     /* PRIVATE STATIC CONSTANTS */
@@ -57,18 +128,54 @@ public class TranslationTable implements Serializable {
 
     private static final String DEFAULT_LOCALE = "en-US";
 
-    private static final FilenameFilter filter = new TranslationTableFilter();
-
-    private static final Collection<String> options = new HashSet<String>();
+    private static final Collection<Table> options = new HashSet<Table>();
     private static final Collection<String> localeOptions = new HashSet<String>();
 
-    protected static void setTablesFolder(File folder) throws Exception {
+    private static boolean initialized = false;
+
+    static void setLiblouisFolder(File folder) throws Exception {
+        if (initialized) return;
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            if (System.getProperty("os.arch").contains("64"))
+                Louis.setLibraryPath(new File(folder, "bin" + File.separator + "64" + File.separator + "liblouis.dll"));
+            else
+                Louis.setLibraryPath(new File(folder, "bin" + File.separator + "liblouis.dll"));
+        } else if (System.getProperty("os.name").toLowerCase().contains("mac"))
+            Louis.setLibraryPath(new File(folder, "bin" + File.separator + "liblouis.dylib"));
+        else
+            Louis.setLibraryPath(new File(folder, "bin" + File.separator + "liblouis.so"));
+        setTablesFolder(new File(folder, "files"));
+        initialized = true;
+    }
+
+    private static void setTablesFolder(final File folder) throws Exception {
         if (!folder.exists()) {
             throw new Exception("Folder doesn't exist");
         }
-        for (String table : folder.list(filter)) {
-            options.add(table.substring(2));
-            localeOptions.add(table.substring(2,table.lastIndexOf("-g")));
+        final Set<String> list = new HashSet<String>();
+        for (String f : folder.list()) list.add(f);
+        Louis.setTableResolver(new TableResolver() {
+                public URL resolve(String table, URL base) {
+                    File f = new File(folder, table);
+                    if (f.exists())
+                        try {
+                            return f.toURI().toURL();
+                        } catch (MalformedURLException e) {
+                            throw new RuntimeException(e); // should not happen
+                        }
+                    return null;
+                }
+                public Set<String> list() {
+                    return list;
+                }
+            }
+        );
+        for (Table t : Louis.listTables()) {
+            TranslationTableProperties props = fromTableInfo(t.getInfo());
+            if (props != null) {
+                options.add(t);
+                localeOptions.add(props.getLocale());
+            }
         }
         if (options.size() == 0) {
             throw new Exception("Folder doesn't contain any tables");
@@ -76,7 +183,7 @@ public class TranslationTable implements Serializable {
     }
    
 
-    protected TranslationTable(Locale loc) {
+    TranslationTable(Locale loc) {
 
         /***********************
            SETTING DECLARATION
@@ -105,19 +212,22 @@ public class TranslationTable implements Serializable {
     }
 
     public String getID() {
-        return locale.get() + "-g" + grade.get() + (dots.get()==Dots.EIGHTDOTS?"-8d":"");
+        return toID(this);
     }
-    
+
     public void setID(String value) {
-        if (!options.contains(value)) { return; }
         if (value.equals(getID())) { return; }
-        locale.set(value.substring(0,value.lastIndexOf("-g")));
-        if (value.endsWith("-8d")) {
-            grade.set(Integer.parseInt(value.substring(value.lastIndexOf("-g")+2),value.lastIndexOf("-8d")));
-            dots.set(Dots.EIGHTDOTS);
-        } else {
-            grade.set(Integer.parseInt(value.substring(value.lastIndexOf("-g")+2)));
-            dots.set(Dots.SIXDOTS);
+        TranslationTableProperties newProps = fromID(value);
+        for (Table option : TranslationTable.options) {
+            TranslationTableProperties props = fromTableInfo(option.getInfo());
+            if (props.getLocale().equals(newProps.getLocale())
+                && props.getGrade() == newProps.getGrade()
+                && props.getDots() == newProps.getDots()) {
+                locale.update(props.getLocale());
+                grade.update(props.getGrade());
+                dots.update(props.getDots());
+                return;
+            }
         }
     }
 
@@ -140,6 +250,7 @@ public class TranslationTable implements Serializable {
         protected boolean update(String value) {
             if (value.equals(locale)) { return false; }
             locale = value;
+            fileName = null;
             return true;
         }
     };
@@ -160,6 +271,7 @@ public class TranslationTable implements Serializable {
         protected boolean update(Integer value) {
             if (value==grade) { return false; }
             grade = value;
+            fileName = null;
             return true;
         }
 
@@ -173,14 +285,10 @@ public class TranslationTable implements Serializable {
         public void refreshOptions() {
             options.clear();
             String locale = getLocale();
-            for (String option : TranslationTable.options) {
-                if (option.matches(locale + "-g[0-9](-8d)?")) {
-                    int i = option.lastIndexOf("-g") + 2;
-                    options.add(Integer.parseInt(option.substring(i,i+1)));
-                }
-            }
-            if (options.size() > 1 && !TranslationTable.options.contains(locale + "-g0-8d")) {
-                options.remove(0);
+            for (Table option : TranslationTable.options) {
+                TranslationTableProperties props = fromTableInfo(option.getInfo());
+                if (props.getLocale().equals(locale))
+                    options.add(props.getGrade());
             }
         }
     };
@@ -201,6 +309,7 @@ public class TranslationTable implements Serializable {
         protected boolean update(Dots value) {
             if (value==dots) { return false; }
             dots = value;
+            fileName = null;
             return true;
         }
 
@@ -215,12 +324,10 @@ public class TranslationTable implements Serializable {
             options.clear();
             String locale = getLocale();
             int grade = getGrade();
-            for (String option : TranslationTable.options) {
-                if (option.equals(locale + "-g" + grade)) {
-                    options.add(Dots.SIXDOTS);
-                } else if (option.equals(locale + "-g" + grade + "-8d")) {
-                    options.add(Dots.EIGHTDOTS);
-                }
+            for (Table option : TranslationTable.options) {
+                TranslationTableProperties props = fromTableInfo(option.getInfo());
+                if (props.getLocale().equals(locale) && props.getGrade() == grade)
+                    options.add(props.getDots());
             }
         }
     };
@@ -261,19 +368,61 @@ public class TranslationTable implements Serializable {
         }
         return DEFAULT_LOCALE;
     }
-    
-    /******************/
-    /* FILENAMEFILTER */
-    /******************/
 
-    private static class TranslationTableFilter implements FilenameFilter {
+    private static String toID(TranslationTableProperties table) {
+        return table.getLocale() + "-g" + table.getGrade() + (table.getDots()==Dots.EIGHTDOTS?"-8d":"");
+    }
 
-        private static final String regex = "^__[a-z]+(-[A-Z]+)?-g[0-9](-8d)?$";
+    private static String toQuery(TranslationTableProperties table) {
+        return "locale:" + table.getLocale() + " grade:" + table.getGrade() + " dots:" + (table.getDots()==Dots.EIGHTDOTS?"8":"6");
+    }
 
-        public boolean accept(File directory,
-                              String filename) {
+    private static TranslationTableProperties fromID(String value) {
+        final String locale = value.substring(0,value.lastIndexOf("-g"));
+        final int grade = value.endsWith("-8d")
+            ? Integer.parseInt(value.substring(value.lastIndexOf("-g")+2),value.lastIndexOf("-8d"))
+            : Integer.parseInt(value.substring(value.lastIndexOf("-g")+2));
+        final Dots dots = value.endsWith("-8d")
+            ? Dots.EIGHTDOTS
+            : Dots.SIXDOTS;
+        return new TranslationTableProperties() {
+            public String getLocale() { return locale; }
+            public int    getGrade()  { return grade;  }
+            public Dots   getDots()   { return dots;   }
+        };
+    }
 
-            return filename.matches(regex);
+    private static Map<TableInfo,TranslationTableProperties> fromTableInfo = new IdentityHashMap<TableInfo,TranslationTableProperties>();
+
+    private static TranslationTableProperties fromTableInfo(TableInfo meta) {
+        if (fromTableInfo.containsKey(meta))
+            return fromTableInfo.get(meta);
+        final String locale = meta.get("locale");
+        if (locale == null) return null;
+        final int grade; {
+            try {
+                String g = meta.get("grade");
+                if (g == null) return null;
+                if (!g.matches("^[0-9]$")) return null;
+                grade = Integer.parseInt(g);
+            } catch(NumberFormatException e) {
+                return null;
+            }
         }
+        final Dots dots; {
+            String d = meta.get("dots");
+            if (d == null || d.equals("6"))
+                dots = Dots.SIXDOTS;
+            else if (d.equals("8"))
+                dots = Dots.EIGHTDOTS;
+            else return null;
+        }
+        TranslationTableProperties props = new TranslationTableProperties() {
+            public String getLocale() { return locale; }
+            public int    getGrade()  { return grade;  }
+            public Dots   getDots()   { return dots;   }
+        };
+        fromTableInfo.put(meta, props);
+        return props;
     }
 }
