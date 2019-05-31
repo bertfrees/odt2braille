@@ -79,6 +79,7 @@ public class EmbossConfiguration implements Serializable,
     public final EmbosserSetting           embosser;
     public final CharacterSetSetting       charSet;
     public final DependentYesNoSetting     duplex;
+    public final Setting<Boolean>          doubleLineSpacing;
     public final DependentYesNoSetting     eightDots;
     public final DependentYesNoSetting     zFolding;
     public final DependentYesNoSetting     magazineMode;
@@ -93,37 +94,39 @@ public class EmbossConfiguration implements Serializable,
     
     /* GETTERS */
     
-    public Embosser       getEmbosser()   { return embosser.get(); }
-    public Table          getCharSet()    { return charSet.get(); }
-    public Paper          getPaper()      { return paper.get(); }
-    public PageFormat     getPageFormat() { return pageFormat.get(); }
+    public Embosser       getEmbosser()    { return embosser.get(); }
+    public Table          getCharSet()     { return charSet.get(); }
+    public Paper          getPaper()       { return paper.get(); }
+    public PageFormat     getPageFormat()  { return pageFormat.get(); }
 
-    public MarginSettings getMargins()    { return margins; }
+    public MarginSettings getMargins()     { return margins; }
             
-    public String   getEmbosserType()     { return embosser.getType(); }
-    public String   getCharSetType()      { return charSet.getType(); }
-    public String   getPaperType()        { return paper.getType(); }
-    public Length   getPageWidth()        { return pageWidth.get(); }
-    public Length   getPageHeight()       { return pageHeight.get(); }
-    public boolean  getPageOrientation()  { return pageOrientation.get(); }
-    public boolean  getDuplex()           { return duplex.get(); }
-    public boolean  getEightDots()        { return eightDots.get(); }
-    public boolean  getZFolding()         { return zFolding.get(); }
-    public boolean  getMagazineMode()     { return magazineMode.get(); }
+    public String   getEmbosserType()      { return embosser.getType(); }
+    public String   getCharSetType()       { return charSet.getType(); }
+    public String   getPaperType()         { return paper.getType(); }
+    public Length   getPageWidth()         { return pageWidth.get(); }
+    public Length   getPageHeight()        { return pageHeight.get(); }
+    public boolean  getPageOrientation()   { return pageOrientation.get(); }
+    public boolean  getDuplex()            { return duplex.get(); }
+    public boolean  getDoubleLineSpacing() { return doubleLineSpacing.get(); }
+    public boolean  getEightDots()         { return eightDots.get(); }
+    public boolean  getZFolding()          { return zFolding.get(); }
+    public boolean  getMagazineMode()      { return magazineMode.get(); }
 
     
     /* SETTERS */
             
-    public void setEmbosserType    (String value)  { embosser.setType(value); }
-    public void setCharSetType     (String value)  { charSet.setType(value); }
-    public void setPaperType       (String value)  { paper.setType(value); }
-    public void setPageWidth       (Length value)  { pageWidth.set(value); }
-    public void setPageHeight      (Length value)  { pageHeight.set(value); }
-    public void setPageOrientation (boolean value) { pageOrientation.set(value); }
-    public void setDuplex          (boolean value) { duplex.set(value); }
-    public void setEightDots       (boolean value) { eightDots.set(value); }
-    public void setZFolding        (boolean value) { zFolding.set(value); }
-    public void setMagazineMode    (boolean value) { magazineMode.set(value); }
+    public void setEmbosserType      (String value)  { embosser.setType(value); }
+    public void setCharSetType       (String value)  { charSet.setType(value); }
+    public void setPaperType         (String value)  { paper.setType(value); }
+    public void setPageWidth         (Length value)  { pageWidth.set(value); }
+    public void setPageHeight        (Length value)  { pageHeight.set(value); }
+    public void setPageOrientation   (boolean value) { pageOrientation.set(value); }
+    public void setDuplex            (boolean value) { duplex.set(value); }
+    public void setDoubleLineSpacing (boolean value) { doubleLineSpacing.set(value); }
+    public void setEightDots         (boolean value) { eightDots.set(value); }
+    public void setZFolding          (boolean value) { zFolding.set(value); }
+    public void setMagazineMode      (boolean value) { magazineMode.set(value); }
 
     
     /***************************/
@@ -253,6 +256,7 @@ public class EmbossConfiguration implements Serializable,
         pageHeight = new PageHeightSetting();
         pageOrientation = new PageOrientationSetting();
         duplex = new DuplexSetting();
+        doubleLineSpacing = new YesNoSetting();
         eightDots = new EightDotsSetting();
         zFolding = new ZFoldingSetting();
         magazineMode = new MagazineModeSetting();
@@ -267,6 +271,7 @@ public class EmbossConfiguration implements Serializable,
          **************************/
         
         duplex.set(true);
+        doubleLineSpacing.set(false);
         eightDots.set(false);
         magazineMode.set(false);
         zFolding.set(false);

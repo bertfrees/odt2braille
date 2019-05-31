@@ -391,12 +391,23 @@ public class PEF {
                     textNode = document.createTextNode(liblouisTable.toBraille(line));
                     rowElement.appendChild(textNode);
                     pageElement.appendChild(rowElement);
-                    if (IS_WINDOWS) { bufferedReader.readLine(); }
                 }
 
                 sectionElement.appendChild(pageElement);
                 pageCount++;
-                if (bufferedReader.read() != '\f') { throw new Exception("unexpected character, should be form feed"); }
+                int ff;
+                if ((ff = bufferedReader.read()) != '\f') {
+                    for (;;) {
+                        if (ff == -1)
+                            break;
+                        else if (ff == '\f')
+                            break;
+                        else if (ff == '\r' || ff == '\n')
+                            ff = bufferedReader.read();
+                        else
+                            throw new Exception("unexpected character, should be form feed");
+                    }
+                }
                 nextPage = nextPage = bufferedReader.ready() && (maxPages > pageCount || maxPages == -1);
             }
 

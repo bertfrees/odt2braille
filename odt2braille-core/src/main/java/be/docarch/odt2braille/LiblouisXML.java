@@ -528,6 +528,7 @@ public class LiblouisXML {
                               math + ".sem";
         String mathTable = "_display.dis," + math + ".ctb,_misc";
         String editTables = "_edit_" + math;
+        String lineEnd = IS_WINDOWS ? "\\r\\n" : "\\n";
 
         configurationList.add(liblouisxmlExec);
         configurationList.add("-f");
@@ -540,7 +541,10 @@ public class LiblouisXML {
         configurationList.add("-C" + "editTable="                    + editTables);
         configurationList.add("-C" + "beginningPageNumber="          + beginPage);
         configurationList.add("-C" + "cellsPerLine="                 + Integer.toString(pefSettings.getColumns()));
-        configurationList.add("-C" + "linesPerPage="                 + Integer.toString(pefSettings.getRows()));
+        configurationList.add("-C" + "linesPerPage="                 + Integer.toString(pefSettings.getDoubleLineSpacing()
+                                                                                        ? ((1 + pefSettings.getRows()) / 2)
+                                                                                        : pefSettings.getRows()));
+        configurationList.add("-C" + "lineEnd="                      + (pefSettings.getDoubleLineSpacing()?(lineEnd+lineEnd):lineEnd));
         configurationList.add("-C" + "minSyllableLength="            + (settings.minSyllableLength.enabled()?Integer.toString(settings.getMinSyllableLength()):0));
         configurationList.add("-C" + "hyphenate="                    + (settings.getHyphenate()?"yes":"no"));
         configurationList.add("-C" + "printPages="                   + (settings.getPrintPageNumbers()?"yes":"no"));

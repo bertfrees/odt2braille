@@ -46,6 +46,7 @@ public class ExportConfiguration implements Serializable,
     public final FileFormatSetting      fileFormat;
     public final CharacterSetSetting    charSet;
     public final DependentYesNoSetting  duplex;
+    public final Setting<Boolean>       doubleLineSpacing;
     public final DependentYesNoSetting  eightDots;
     public final Setting<Boolean>       multipleFiles;
     public final Setting<Integer>       columns;
@@ -54,27 +55,29 @@ public class ExportConfiguration implements Serializable,
     
     /* GETTERS */
     
-    public FileFormat getFileFormat()   { return fileFormat.get(); }
-    public Table      getCharSet()      { return charSet.get(); }
+    public FileFormat getFileFormat()      { return fileFormat.get(); }
+    public Table      getCharSet()         { return charSet.get(); }
     
-    public String   getFileFormatType() { return fileFormat.getType(); }
-    public String   getCharSetType()    { return charSet.getType(); }
-    public boolean  getDuplex()         { return duplex.get(); }
-    public boolean  getEightDots()      { return eightDots.get(); }
-    public int      getColumns()        { return columns.get(); }
-    public int      getRows()           { return rows.get(); }
-    public boolean  getMultipleFiles()  { return multipleFiles.get(); }
+    public String   getFileFormatType()    { return fileFormat.getType(); }
+    public String   getCharSetType()       { return charSet.getType(); }
+    public boolean  getDuplex()            { return duplex.get(); }
+    public boolean  getDoubleLineSpacing() { return doubleLineSpacing.get(); }
+    public boolean  getEightDots()         { return eightDots.get(); }
+    public int      getColumns()           { return columns.get(); }
+    public int      getRows()              { return rows.get(); }
+    public boolean  getMultipleFiles()     { return multipleFiles.get(); }
     
     
     /* SETTERS */
     
-    public void setFileFormatType (String value)  { fileFormat.setType(value); }
-    public void setCharSetType    (String value)  { charSet.setType(value); }
-    public void setDuplex         (boolean value) { duplex.set(value); }
-    public void setEightDots      (boolean value) { eightDots.set(value); }
-    public void setColumns        (int value)     { columns.set(value); }
-    public void setRows           (int value)     { rows.set(value); }
-    public void setMultipleFiles  (boolean value) { multipleFiles.set(value); }
+    public void setFileFormatType    (String value)  { fileFormat.setType(value); }
+    public void setCharSetType       (String value)  { charSet.setType(value); }
+    public void setDuplex            (boolean value) { duplex.set(value); }
+    public void setDoubleLineSpacing (boolean value) { doubleLineSpacing.set(value); }
+    public void setEightDots         (boolean value) { eightDots.set(value); }
+    public void setColumns           (int value)     { columns.set(value); }
+    public void setRows              (int value)     { rows.set(value); }
+    public void setMultipleFiles     (boolean value) { multipleFiles.set(value); }
     
     
     /***************************/
@@ -129,6 +132,7 @@ public class ExportConfiguration implements Serializable,
         fileFormat = new FileFormatSetting();
         charSet = new CharacterSetSetting();
         duplex = new DuplexSetting();
+        doubleLineSpacing = new YesNoSetting();
         eightDots = new EightDotsSetting();
         multipleFiles = new MultipleFilesSetting();
 
@@ -148,6 +152,7 @@ public class ExportConfiguration implements Serializable,
          **************************/
         
         duplex.set(true);
+        doubleLineSpacing.set(false);
         eightDots.set(false);
         multipleFiles.set(false);
         columns.set(40);

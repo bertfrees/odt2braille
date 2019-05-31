@@ -113,6 +113,7 @@ public class EmbossDialog {
     private final ListBox<Paper> paperListBox;
     
     private final CheckBox duplexCheckBox;
+    private final CheckBox doubleLineSpacingCheckBox;
     private final CheckBox eightDotsCheckBox;
     private final CheckBox zFoldingCheckBox;
     private final CheckBox magazineModeCheckBox;
@@ -134,6 +135,7 @@ public class EmbossDialog {
     private final Label charSetLabel;
     private final Label paperLabel;
     private final Label duplexLabel;
+    private final Label doubleLineSpacingLabel;
     private final Label eightDotsLabel;
     private final Label zFoldingLabel;
     private final Label magazineModeLabel;
@@ -308,6 +310,8 @@ public class EmbossDialog {
         
         duplexCheckBox = new CheckBox(container.getControl("CheckBox1"));
         
+        doubleLineSpacingCheckBox = new CheckBox(container.getControl("CheckBox6"));
+
         eightDotsCheckBox = new CheckBox(container.getControl("CheckBox3"));
 
         zFoldingCheckBox = new CheckBox(container.getControl("CheckBox2"));
@@ -359,6 +363,9 @@ public class EmbossDialog {
         duplexLabel = new Label(container.getControl("Label8"),
                                 bundle.getString("duplexLabel"));
         
+        doubleLineSpacingLabel = new Label(container.getControl("Label19"),
+                                           bundle.getString("doubleLineSpacingLabel"));
+        
         eightDotsLabel = new Label(container.getControl("Label15"),
                                    bundle.getString("eightDotsLabel"));
         
@@ -407,6 +414,7 @@ public class EmbossDialog {
         charSetListBox.link(embossSettings.charSet);
         paperListBox.link(embossSettings.paper);
         duplexCheckBox.link(embossSettings.duplex);
+        doubleLineSpacingCheckBox.link(embossSettings.doubleLineSpacing);
         eightDotsCheckBox.link(embossSettings.eightDots);
         zFoldingCheckBox.link(embossSettings.zFolding);
         magazineModeCheckBox.link(embossSettings.magazineMode);

@@ -79,6 +79,7 @@ public class ExportDialog {
     private final ListBox<FileFormat> fileFormatListBox;
     private final ListBox<Table> charSetListBox;
     private final CheckBox duplexCheckBox;
+    private final CheckBox doubleLineSpacingCheckBox;
     private final CheckBox eightDotsCheckBox;
     private final CheckBox multipleFilesCheckBox;
     private final NumericSettingControl columnsField;
@@ -89,6 +90,7 @@ public class ExportDialog {
     private final Label fileFormatLabel;
     private final Label charSetLabel;
     private final Label duplexLabel;
+    private final Label doubleLineSpacingLabel;
     private final Label eightDotsLabel;
     private final Label multipleFilesLabel;
     private final Label columnsLabel;
@@ -196,6 +198,8 @@ public class ExportDialog {
 
         duplexCheckBox = new CheckBox(container.getControl("CheckBox1"));
 
+        doubleLineSpacingCheckBox = new CheckBox(container.getControl("CheckBox4"));
+
         eightDotsCheckBox = new CheckBox(container.getControl("CheckBox2"));
 
         multipleFilesCheckBox = new CheckBox(container.getControl("CheckBox3"));
@@ -216,6 +220,9 @@ public class ExportDialog {
         duplexLabel = new Label(container.getControl("Label8"),
                                 bundle.getString("duplexLabel"));
 
+        doubleLineSpacingLabel = new Label(container.getControl("Label9"),
+                                           bundle.getString("doubleLineSpacingLabel"));
+
         eightDotsLabel = new Label(container.getControl("Label1"),
                                    bundle.getString("eightDotsLabel"));
 
@@ -233,6 +240,7 @@ public class ExportDialog {
         fileFormatListBox.link(exportSettings.fileFormat);
         charSetListBox.link(exportSettings.charSet);
         duplexCheckBox.link(exportSettings.duplex);
+        doubleLineSpacingCheckBox.link(exportSettings.doubleLineSpacing);
         eightDotsCheckBox.link(exportSettings.eightDots);
         multipleFilesCheckBox.link(exportSettings.multipleFiles);
         columnsField.link(exportSettings.columns);

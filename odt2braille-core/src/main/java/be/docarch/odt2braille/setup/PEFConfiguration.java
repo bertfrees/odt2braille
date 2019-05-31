@@ -25,5 +25,6 @@ public interface PEFConfiguration {
     public int     getRows();
     public boolean getDuplex();
     public boolean getEightDots();
+    public boolean getDoubleLineSpacing();
 
 }

@@ -675,4 +675,45 @@
 			</x:expect>
 		</x:scenario>
 		
+		<x:scenario label="line-spacing">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/line-spacing.odt')"/>
+				<x:input port="config">
+					<!-- use settings stored in ODT file -->
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/line-spacing.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected"
+			          type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="inline">
+					<pef xmlns="http://www.daisy.org/ns/2008/pef" version="2008-1">
+						<head>
+							<meta xmlns:dc="http://purl.org/dc/elements/1.1/">
+								<dc:format>application/x-pef+xml</dc:format>
+							</meta>
+						</head>
+						<body>
+							<volume cols="40" duplex="false" rowgap="0" rows="25">
+								<section>
+									<page>
+										<row>⠨⠓⠑⠁⠙⠊⠝⠛</row>
+										<row/>
+										<row>⠨⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓</row>
+										<row/>
+										<row>⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓⠀⠏⠁⠗⠁⠛⠗⠁⠏⠓</row>
+										<row/>
+										<row>⠏⠁⠗⠁⠛⠗⠁⠏⠓⠲</row>
+									</page>
+								</section>
+							</volume>
+						</body>
+					</pef>
+				</x:document>
+			</x:expect>
+		</x:scenario>
+	</x:scenario>
+	
 </x:description>

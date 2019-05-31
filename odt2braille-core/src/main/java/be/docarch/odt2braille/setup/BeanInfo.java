@@ -122,6 +122,7 @@ public class BeanInfo {
             propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
                 newPropertyDescriptor(beanClass, "fileFormatType"),
                 newPropertyDescriptor(beanClass, "duplex"),
+                newPropertyDescriptor(beanClass, "doubleLineSpacing"),
                 newPropertyDescriptor(beanClass, "eightDots"),
                 newPropertyDescriptor(beanClass, "charSetType"),
                 newPropertyDescriptor(beanClass, "multipleFiles"),
@@ -135,6 +136,7 @@ public class BeanInfo {
             propertyDescriptorsMap.put(beanClass, new PropertyDescriptor[] {
                 newPropertyDescriptor(beanClass, "embosserType"),
                 newPropertyDescriptor(beanClass, "duplex"),
+                newPropertyDescriptor(beanClass, "doubleLineSpacing"),
                 newPropertyDescriptor(beanClass, "eightDots"),
                 newPropertyDescriptor(beanClass, "charSetType"),
                 newPropertyDescriptor(beanClass, "magazineMode"),
