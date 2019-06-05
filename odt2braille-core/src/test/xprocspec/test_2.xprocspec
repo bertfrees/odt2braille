@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<x:description xmlns:x="http://www.daisy.org/ns/xprocspec"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:da="http://docarch.be/">
+	
+	<x:script>
+		<p:declare-step version="1.0" type="x:twice-odt2braille" name="main">
+			<p:option name="source1" required="true"/>
+			<p:option name="source2" required="true"/>
+			<p:input port="config" sequence="true"/>
+			<p:option name="liblouis-dir" required="true"/>
+			<p:option name="result1" required="true"/>
+			<p:option name="result2" required="true"/>
+			<p:option name="result1-brf" required="false"/>
+			<p:option name="result2-brf" required="false"/>
+			<p:import href="../resources/library.xpl"/>
+			<da:odt2braille>
+				<p:with-option name="source" select="$source1"/>
+				<p:input port="config">
+					<p:pipe step="main" port="config"/>
+				</p:input>
+				<p:with-option name="liblouis-dir" select="$liblouis-dir"/>
+				<p:with-option name="result-brf" select="$result1-brf"/>
+			</da:odt2braille>
+			<p:store>
+				<p:with-option name="href" select="$result1"/>
+			</p:store>
+			<da:odt2braille>
+				<p:with-option name="source" select="$source2"/>
+				<p:input port="config">
+					<p:pipe step="main" port="config"/>
+				</p:input>
+				<p:with-option name="liblouis-dir" select="$liblouis-dir"/>
+				<p:with-option name="result-brf" select="$result2-brf"/>
+			</da:odt2braille>
+			<p:store>
+				<p:with-option name="href" select="$result2"/>
+			</p:store>
+		</p:declare-step>
+	</x:script>
+	
+	<x:scenario label="_">
+		<x:call step="x:twice-odt2braille">
+			<x:option name="liblouis-dir" select="resolve-uri('../../../target/liblouis/')"/>
+			<x:input port="config">
+				<x:document type="inline">
+					<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+						<void property="braillePageNumbers">
+							<boolean>false</boolean>
+						</void>
+						<void property="pageSeparator">
+							<boolean>false</boolean>
+						</void>
+						<void property="mathCode">
+							<object class="be.docarch.odt2braille.setup.Configuration$MathCode" method="valueOf">
+								<string>WISKUNDE</string>
+							</object>
+						</void>
+					</object>
+				</x:document>
+			</x:input>
+		</x:call>
+		
+		<x:scenario label="dutch_general">
+			<x:call>
+				<x:option name="source1" select="resolve-uri('../resources/dutch_general.odt')"/>
+				<x:option name="source2" select="resolve-uri('../resources/dutch_general.braille.odt')"/>
+				<x:option name="result1" select="concat($temp-dir,'/dutch_general.pef')"/>
+				<x:option name="result2" select="concat($temp-dir,'/dutch_general.braille.pef')"/>
+				<x:option name="result1-brf" select="concat($temp-dir,'/dutch_general.brf')"/>
+				<x:option name="result2-brf" select="concat($temp-dir,'/dutch_general.braille.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="file" href="dutch_general.pef" base-uri="temp-dir"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="dutch_general.braille.pef" base-uri="temp-dir"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="dutch_italic">
+			<x:call>
+				<x:option name="source1" select="resolve-uri('../resources/dutch_italic.odt')"/>
+				<x:option name="source2" select="resolve-uri('../resources/dutch_italic.braille.odt')"/>
+				<x:option name="result1" select="concat($temp-dir,'/dutch_italic.pef')"/>
+				<x:option name="result2" select="concat($temp-dir,'/dutch_italic.braille.pef')"/>
+				<x:option name="result1-brf" select="concat($temp-dir,'/dutch_italic.brf')"/>
+				<x:option name="result2-brf" select="concat($temp-dir,'/dutch_italic.braille.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="file" href="dutch_italic.pef" base-uri="temp-dir"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="dutch_italic.braille.pef" base-uri="temp-dir"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="woluwe_code">
+			<x:call>
+				<x:option name="source1" select="resolve-uri('../resources/woluwe_code.odt')"/>
+				<x:option name="source2" select="resolve-uri('../resources/woluwe_code.braille.odt')"/>
+				<x:option name="result1" select="concat($temp-dir,'/woluwe_code.pef')"/>
+				<x:option name="result2" select="concat($temp-dir,'/woluwe_code.braille.pef')"/>
+				<x:option name="result1-brf" select="concat($temp-dir,'/woluwe_code.brf')"/>
+				<x:option name="result2-brf" select="concat($temp-dir,'/woluwe_code.braille.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="file" href="woluwe_code.pef" base-uri="temp-dir"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="woluwe_code.braille.pef" base-uri="temp-dir"/>
+			</x:expect>
+		</x:scenario>
+	</x:scenario>
+	
+</x:description>

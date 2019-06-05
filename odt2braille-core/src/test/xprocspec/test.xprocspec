@@ -3,4 +3,676 @@
                xmlns:da="http://docarch.be/"
                script="../resources/library.xpl">
 	
+	<x:scenario label="_">
+		<x:call step="da:odt2braille">
+			<x:option name="liblouis-dir" select="resolve-uri('../../../target/liblouis/')"/>
+		</x:call>
+		
+		<x:scenario label="butterfly">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/butterfly.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/butterfly.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/butterfly.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="lists">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/lists.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="listStyles">
+								<void index="1">
+									<void property="linesAbove">
+										<int>1</int>
+									</void>
+									<void property="linesBelow">
+										<int>1</int>
+									</void>
+									<void property="firstLine">
+										<int>0</int>
+									</void>
+									<void property="runovers">
+										<int>4</int>
+									</void>
+									<void property="prefix">
+										<string>⠒</string>
+									</void>
+								</void>
+								<void index="2">
+									<void property="firstLine">
+										<int>2</int>
+									</void>
+									<void property="runovers">
+										<int>6</int>
+									</void>
+									<void property="prefix">
+										<string>⠶</string>
+									</void>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/lists.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/lists.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="footnotes">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/footnotes.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="footnoteStyle">
+								<void property="firstLine">
+									<int>6</int>
+								</void>
+								<void property="runovers">
+									<int>4</int>
+								</void>
+							</void>
+							<void property="noteReferenceFormats">
+								<void method="get">
+									<string>1</string>
+									<void property="prefix">
+										<string>⠔⠔</string>
+									</void>
+									<void property="spaceAfter">
+										<boolean>true</boolean>
+									</void>
+								</void>
+								<void method="get">
+									<string>a</string>
+									<void property="prefix">
+										<string>⠔⠔⠰</string>
+									</void>
+									<void property="spaceAfter">
+										<boolean>true</boolean>
+									</void>
+								</void>
+								<void method="get">
+									<string>i</string>
+									<void property="prefix">
+										<string>⠔⠔⠰</string>
+									</void>
+									<void property="spaceAfter">
+										<boolean>true</boolean>
+									</void>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/footnotes.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/footnotes.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="pictures">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/pictures.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="pictureStyle">
+								<void property="linesAbove">
+									<int>1</int>
+								</void>
+								<void property="linesBelow">
+									<int>1</int>
+								</void>
+								<void property="firstLine">
+									<int>6</int>
+								</void>
+								<void property="runovers">
+									<int>4</int>
+								</void>
+								<void property="openingMark">
+									<string>⠠⠄</string>
+								</void>
+								<void property="closingMark">
+									<string>⠠⠄</string>
+								</void>
+								<void property="descriptionPrefix">
+									<string>Picture description:</string>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/pictures.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/pictures.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="picture_captions">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/picture_captions.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="pictureStyle">
+								<void property="linesAbove">
+									<int>1</int>
+								</void>
+								<void property="linesBelow">
+									<int>1</int>
+								</void>
+								<void property="firstLine">
+									<int>6</int>
+								</void>
+								<void property="runovers">
+									<int>4</int>
+								</void>
+								<void property="openingMark">
+									<string>⠠⠄</string>
+								</void>
+								<void property="closingMark">
+									<string>⠠⠄</string>
+								</void>
+								<void property="descriptionPrefix">
+									<string>Picture description:</string>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/picture_captions.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/picture_captions.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="toc">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/toc.odt')"/>
+			</x:call>
+			<x:scenario label="config1">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>true</boolean>
+								</void>
+								<void property="printPageNumbers">
+									<boolean>false</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="bodyMatterVolume">
+									<void property="tableOfContent">
+										<boolean>true</boolean>
+									</void>
+								</void>
+								<void property="headingStyles">
+									<void index="1">
+										<void property="newBraillePage">
+											<boolean>true</boolean>
+										</void>
+									</void>
+								</void>
+								<void property="tocStyle">
+									<void property="braillePageNumbers">
+										<boolean>true</boolean>
+									</void>
+									<void property="evaluateUptoLevel">
+										<int>2</int>
+									</void>
+									<void property="title">
+										<string>TABLE OF CONTENTS</string>
+									</void>
+									<void property="levels">
+										<void index="1">
+											<void property="firstLine">
+												<int>0</int>
+											</void>
+											<void property="runovers">
+												<int>6</int>
+											</void>
+										</void>
+										<void index="2">
+											<void property="firstLine">
+												<int>3</int>
+											</void>
+											<void property="runovers">
+												<int>9</int>
+											</void>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/toc_config1.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/toc_config1.pef"/>
+				</x:expect>
+			</x:scenario>
+			
+			<x:scenario label="config2">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>true</boolean>
+								</void>
+								<void property="printPageNumbers">
+									<boolean>true</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="bodyMatterVolume">
+									<void property="tableOfContent">
+										<boolean>true</boolean>
+									</void>
+								</void>
+								<void property="headingStyles">
+									<void index="1">
+										<void property="newBraillePage">
+											<boolean>true</boolean>
+										</void>
+									</void>
+								</void>
+								<void property="tocStyle">
+									<void property="braillePageNumbers">
+										<boolean>true</boolean>
+									</void>
+									<void property="printPageNumbers">
+										<boolean>true</boolean>
+									</void>
+									<void property="evaluateUptoLevel">
+										<int>3</int>
+									</void>
+									<void property="title">
+										<string>CONTENTS</string>
+									</void>
+									<void property="levels">
+										<void index="1">
+											<void property="firstLine">
+												<int>0</int>
+											</void>
+											<void property="runovers">
+												<int>4</int>
+											</void>
+										</void>
+										<void index="2">
+											<void property="firstLine">
+												<int>2</int>
+											</void>
+											<void property="runovers">
+												<int>6</int>
+											</void>
+										</void>
+										<void index="3">
+											<void property="firstLine">
+												<int>4</int>
+											</void>
+											<void property="runovers">
+												<int>8</int>
+											</void>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/toc_config2.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/toc_config2.pef"/>
+				</x:expect>
+			</x:scenario>
+		</x:scenario>
+		
+		<x:scenario label="tables">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/tables.odt')"/>
+			</x:call>
+			<x:scenario label="linear">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>false</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="tableStyles">
+									<void method="get">
+										<string>Default</string>
+										<void property="stairstepEnabled">
+											<boolean>false</boolean>
+										</void>
+										<void property="columnDelimiter">
+											<string>⠰</string>
+										</void>
+										<void property="firstLine">
+											<int>0</int>
+										</void>
+										<void property="runovers">
+											<int>3</int>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/tables_linear.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/tables_linear.pef"/>
+				</x:expect>
+			</x:scenario>
+			
+			<x:scenario label="stairstep">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>false</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="tableStyles">
+									<void method="get">
+										<string>Default</string>
+										<void property="stairstepEnabled">
+											<boolean>true</boolean>
+										</void>
+										<void property="indentPerColumn">
+											<int>3</int>
+										</void>
+										<void property="firstLine">
+											<int>0</int>
+										</void>
+										<void property="runovers">
+											<int>0</int>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/tables_stairstep.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/tables_stairstep.pef"/>
+				</x:expect>
+			</x:scenario>
+			
+			<x:scenario label="repeat_heading">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>false</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="tableStyles">
+									<void method="get">
+										<string>Default</string>
+										<void property="stairstepEnabled">
+											<boolean>false</boolean>
+										</void>
+										<void property="columnDelimiter">
+											<string>⠰</string>
+										</void>
+										<void property="firstLine">
+											<int>0</int>
+										</void>
+										<void property="runovers">
+											<int>3</int>
+										</void>
+										<void property="columnHeadings">
+											<boolean>true</boolean>
+										</void>
+										<void property="repeatHeading">
+											<boolean>true</boolean>
+										</void>
+										<void property="headingSuffix">
+											<string>⠒</string>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/tables_repeat_heading.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/tables_repeat_heading.pef"/>
+				</x:expect>
+			</x:scenario>
+			
+			<x:scenario label="invert">
+				<x:call>
+					<x:input port="config">
+						<x:document type="inline">
+							<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+								<void property="braillePageNumbers">
+									<boolean>false</boolean>
+								</void>
+								<void property="pageSeparator">
+									<boolean>false</boolean>
+								</void>
+								<void property="tableStyles">
+									<void method="get">
+										<string>Default</string>
+										<void property="stairstepEnabled">
+											<boolean>false</boolean>
+										</void>
+										<void property="columnDelimiter">
+											<string>⠰</string>
+										</void>
+										<void property="firstLine">
+											<int>0</int>
+										</void>
+										<void property="runovers">
+											<int>3</int>
+										</void>
+										<void property="mirrorTable">
+											<boolean>true</boolean>
+										</void>
+									</void>
+								</void>
+							</object>
+						</x:document>
+					</x:input>
+					<x:option name="result-brf" select="concat($temp-dir,'/tables_invert.brf')"/>
+				</x:call>
+				<x:context label="the result">
+					<x:document type="port" port="result"/>
+				</x:context>
+				<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+					<x:document type="file" href="../resources/tables_invert.pef"/>
+				</x:expect>
+			</x:scenario>
+		</x:scenario>
+		
+		<x:scenario label="table_captions">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/table_captions.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="tableStyles">
+								<void method="get">
+									<string>Default</string>
+									<void property="stairstepEnabled">
+										<boolean>false</boolean>
+									</void>
+									<void property="columnDelimiter">
+										<string>⠰</string>
+									</void>
+									<void property="firstLine">
+										<int>0</int>
+									</void>
+									<void property="runovers">
+										<int>3</int>
+									</void>
+									<void property="columnHeadings">
+										<boolean>true</boolean>
+									</void>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/table_captions.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/table_captions.pef"/>
+			</x:expect>
+		</x:scenario>
+		
+		<x:scenario label="textboxes">
+			<x:call>
+				<x:option name="source" select="resolve-uri('../resources/textboxes.odt')"/>
+				<x:input port="config">
+					<x:document type="inline">
+						<object class="be.docarch.odt2braille.setup.ConfigurationBuilder" method="build">
+							<void property="braillePageNumbers">
+								<boolean>false</boolean>
+							</void>
+							<void property="pageSeparator">
+								<boolean>false</boolean>
+							</void>
+							<void property="frameStyle">
+								<void property="linesAbove">
+									<int>0</int>
+								</void>
+								<void property="linesBelow">
+									<int>0</int>
+								</void>
+								<void property="upperBorderEnabled">
+									<boolean>true</boolean>
+								</void>
+								<void property="lowerBorderEnabled">
+									<boolean>true</boolean>
+								</void>
+								<void property="upperBorderStyle">
+									<char>⠶</char>
+								</void>
+								<void property="lowerBorderStyle">
+									<char>⠛</char>
+								</void>
+								<void property="paddingAbove">
+									<int>0</int>
+								</void>
+								<void property="paddingBelow">
+									<int>0</int>
+								</void>
+							</void>
+						</object>
+					</x:document>
+				</x:input>
+				<x:option name="result-brf" select="concat($temp-dir,'/textboxes.brf')"/>
+			</x:call>
+			<x:context label="the result">
+				<x:document type="port" port="result"/>
+			</x:context>
+			<x:expect label="the result must be as expected" type="custom" href="x-compare.xpl" step="x:pef-compare">
+				<x:document type="file" href="../resources/textboxes.pef"/>
+			</x:expect>
+		</x:scenario>
+		
 </x:description>
