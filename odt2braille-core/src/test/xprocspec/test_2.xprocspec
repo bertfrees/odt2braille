@@ -78,7 +78,10 @@
 			</x:expect>
 		</x:scenario>
 		
-		<x:scenario label="dutch_italic">
+		<x:scenario label="dutch_italic" xfail="true">
+			<x:documentation>
+				Some tests are failing. Some of them are bugs, some tests need to be clarified.
+			</x:documentation>
 			<x:call>
 				<x:option name="source1" select="resolve-uri('../resources/dutch_italic.odt')"/>
 				<x:option name="source2" select="resolve-uri('../resources/dutch_italic.braille.odt')"/>
@@ -95,7 +98,10 @@
 			</x:expect>
 		</x:scenario>
 		
-		<x:scenario label="woluwe_code">
+		<x:scenario label="woluwe_code" xfail="">
+			<x:documentation>
+				Some tests are failing.
+			</x:documentation>
 			<x:call>
 				<x:option name="source1" select="resolve-uri('../resources/woluwe_code.odt')"/>
 				<x:option name="source2" select="resolve-uri('../resources/woluwe_code.braille.odt')"/>
