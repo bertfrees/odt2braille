@@ -1,0 +1,3 @@
+<xproc-config xmlns="http://xmlcalabash.com/ns/configuration" xmlns:da="http://docarch.be/">
+	<implementation type="da:odt2braille" class-name="be.docarch.odt2braille.xproc.Odt2Braille"/>
+</xproc-config>

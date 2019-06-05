@@ -22,6 +22,8 @@ package be.docarch.odt2braille;
 import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.TreeMap;
 import java.util.Map;
 import java.util.Collection;
@@ -33,6 +35,7 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.regex.Pattern;
 import javax.xml.transform.Transformer;
@@ -266,9 +269,16 @@ public class ODT {
                                            Exception {
 
         if (configurationLocked) { throw new Exception ("Configuration is locked"); }
+        return loadConfiguration(new ByteArrayInputStream(xml.getBytes(encoding)));
+    }
+
+    public Configuration loadConfiguration(InputStream xml)
+                                    throws IOException,
+                                           Exception {
+
+        if (configurationLocked) { throw new Exception ("Configuration is locked"); }
         ConfigurationBuilder.setODT(this);
-        ByteArrayInputStream input = new ByteArrayInputStream(xml.getBytes(encoding));
-        Configuration newConfig = (Configuration)ConfigurationDecoder.readObject(input);
+        Configuration newConfig = (Configuration)ConfigurationDecoder.readObject(xml);
         if (newConfig != null) { configuration = newConfig; }
         return configuration;
     }
@@ -2204,6 +2214,15 @@ public class ODT {
 
     public File getControllerFile() {
         return controllerFile;
+    }
+
+    public InputStream getFileAsStream(String path) {
+        try {
+            ZipEntry entry = zip.getEntry(path);
+            if (entry != null)
+                return zip.getInputStream(entry);
+        } catch (IOException e) {}
+        return null;
     }
 
     public Locale getOdtLocale() {
