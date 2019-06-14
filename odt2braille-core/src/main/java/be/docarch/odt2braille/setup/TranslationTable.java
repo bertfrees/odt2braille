@@ -100,12 +100,9 @@ public class TranslationTable implements TranslationTableProperties, Serializabl
                     fileName += ",_hyphenation_is.dic";
                 else if ("it".equals(locale.getLanguage()))
                     fileName += ",hyph_it_IT.dic";
-                else if ("nl".equals(locale.getLanguage())) {
-                    if ("BE".equals(locale.getCountry()))
-                        fileName += ",_hyphenation_nl-BE.dic"; // hyph_nl_NL.dic
-                    else
-                        fileName += ",hyph_nl_NL.dic";
-                } else if ("no".equals(locale.getLanguage()))
+                else if ("nl".equals(locale.getLanguage()))
+                    fileName += ",_hyphenation_nl.dic"; // hyph_nl_NL.dic
+                else if ("no".equals(locale.getLanguage()))
                     fileName += ",_hyphenation_no.dic"; // hyph_nb_NO.dic / hyph_nn_NO.dic
                 else if ("pl".equals(locale.getLanguage()))
                     fileName += ",hyph_pl_PL.dic";
