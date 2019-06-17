@@ -49,7 +49,9 @@ public class MapListBox<K,V> implements DialogElement,
 
         listbox = (XListBox)UnoRuntime.queryInterface(XListBox.class, control);
         map = settingMap;
-        key = map.keys().iterator().next();
+        options.addAll(map.keys());
+        Collections.sort(options, this);
+        key = options.iterator().next();
         update();
     }
 

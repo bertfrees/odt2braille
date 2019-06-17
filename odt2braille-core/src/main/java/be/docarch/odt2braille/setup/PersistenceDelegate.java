@@ -57,6 +57,10 @@ public class PersistenceDelegate extends DefaultPersistenceDelegate {
                     return new Expression(oldInstance, Length.class, "newInchValue", new Object[]{oldLength.getLength()});
                 case CENTIMETER:
                     return new Expression(oldInstance, Length.class, "newCentimeterValue", new Object[]{oldLength.getLength()});
+                case ROW:
+                    return new Expression(oldInstance, Length.class, "newRowsValue", new Object[]{oldLength.getLength()});
+                case COLUMN:
+                    return new Expression(oldInstance, Length.class, "newColumnsValue", new Object[]{oldLength.getLength()});
             }
         }
 

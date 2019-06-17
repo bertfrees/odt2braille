@@ -52,7 +52,7 @@ import be.docarch.odt2braille.Constants;
  */
 public class PostConversionDialog implements XActionListener {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
     private final static String L10N = Constants.OOO_L10N_PATH;
 
     private PreviewDialog preview = null;

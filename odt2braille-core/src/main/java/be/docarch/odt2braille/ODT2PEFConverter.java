@@ -34,8 +34,7 @@ public class ODT2PEFConverter {
 
     public static PEF convert(ODT odt,
                               PEFConfiguration pefConfiguration,
-                              PostConversionBrailleChecker checker,
-                              StatusIndicator indicator)
+                              PostConversionBrailleChecker checker)
                        throws TransformerConfigurationException,
                               TransformerException,
                               InterruptedException,
@@ -51,13 +50,10 @@ public class ODT2PEFConverter {
         LiblouisXML liblouisXML = new LiblouisXML(odt.getConfiguration(), pefConfiguration, Constants.getLiblouisDirectory());
 
         // Create PEF
-        PEF pef = new PEF(odt, pefConfiguration, liblouisXML, indicator, checker);
+        PEF pef = new PEF(odt, pefConfiguration, liblouisXML, checker);
 
         // Convert
-        if(!pef.makePEF()) {
-            if (indicator != null) { indicator.finish(false); }
-            throw new ConversionException("Conversion exception");
-        }
+        pef.makePEF();
 
         // Check PEF file
         if (checker != null) {

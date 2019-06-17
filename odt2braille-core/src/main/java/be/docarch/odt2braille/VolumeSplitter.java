@@ -51,6 +51,10 @@ public abstract class VolumeSplitter {
 
             SplittableVolume volumeSettings = configuration.getBodyMatterVolume();
 
+            StatusIndicator indicator = Constants.getStatusIndicator();
+            indicator.start();
+            indicator.setStatus("Computing optimal volume sizes...");
+
             int[] allPages = odt.extractDocumentOutline();
             int[] optimalVolumes = computeOptimalVolumes(allPages,
                                                          volumeSettings.getMinVolumeSize(),
@@ -63,6 +67,8 @@ public abstract class VolumeSplitter {
             }
 
             odt.splitInAutomaticVolumes(volumes);
+
+            indicator.finish(true);
         }
 
         return volumes;
@@ -166,7 +172,7 @@ public abstract class VolumeSplitter {
             }
             return r;
         } else {
-            return new int[]{0};
+            return new int[]{0}; // throw Exception?
         }
     }
 }

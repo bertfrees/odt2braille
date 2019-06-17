@@ -65,6 +65,7 @@ import com.sun.star.beans.UnknownPropertyException;
 import com.sun.star.beans.PropertyVetoException;
 
 import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.ooo.dialog.*;
 import be.docarch.odt2braille.setup.NoteReferenceFormat;
 import be.docarch.odt2braille.setup.SpecialSymbol;
@@ -94,7 +95,8 @@ import be.docarch.odt2braille.setup.style.CharacterStyle;
 
 public class SettingsDialog {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
+    private final static StatusIndicator statusIndicator = Constants.getStatusIndicator();
     private final static String L10N_BUNDLE = Constants.OOO_L10N_PATH;
 
     private final static int roadMapWidth = 85;
@@ -655,13 +657,12 @@ public class SettingsDialog {
      * @param   xContext
      */
     public SettingsDialog(XComponentContext ctxt,
-                          Configuration cfg,
-                          ProgressBar pb)
+                          Configuration cfg)
                    throws com.sun.star.uno.Exception {
 
         logger.entering("SettingsDialog", "<init>");
 
-        pb.increment();
+        statusIndicator.increment();
 
         this.context = ctxt;
         this.settings = cfg;
@@ -730,7 +731,7 @@ public class SettingsDialog {
             L10N_languages.put(locale, locale.getDisplayName(oooLocale));
         }
 
-        pb.increment();
+        statusIndicator.increment();
 
         /**********/
         /* COMMON */
@@ -838,7 +839,7 @@ public class SettingsDialog {
         roadmap.addListener(backButton);
         roadmap.addListener(nextButton);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /****************/
         /* GENERAL PAGE */
@@ -937,7 +938,7 @@ public class SettingsDialog {
         volumeInfoStyleListBox.link(settings.volumeInfoStyle);
         minSyllableLengthField.link(settings.minSyllableLength);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /******************/
         /* LANGUAGES PAGE */
@@ -1009,7 +1010,7 @@ public class SettingsDialog {
         languagesListBox.addListener(gradeListBox);
         languagesListBox.addListener(eightDotsCheckBox);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /*****************/
         /* TYPEFACE PAGE */
@@ -1138,7 +1139,7 @@ public class SettingsDialog {
         characterStyleListBox.addListener(characterUnderlineListBox);
         characterStyleListBox.addListener(characterCapitalsListBox);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /*******************/
         /* PARAGRAPHS PAGE */
@@ -1404,7 +1405,7 @@ public class SettingsDialog {
         paragraphStyleListBox.addListener(paragraphWidowControlField);
         paragraphStyleListBox.addListener(paragraphOrphanControlField);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /*****************/
         /* HEADINGS PAGE */
@@ -1669,7 +1670,7 @@ public class SettingsDialog {
         headingLevelListBox.addListener(headingUpperBorderButton);
         headingLevelListBox.addListener(headingLowerBorderButton);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /**************/
         /* LISTS PAGE */
@@ -1829,7 +1830,7 @@ public class SettingsDialog {
         listLevelListBox.addListener(listDontSplitCheckBox);
         listLevelListBox.addListener(listDontSplitItemsCheckBox);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /***************/
         /* TABLES PAGE */
@@ -2077,7 +2078,7 @@ public class SettingsDialog {
         tableStyleListBox.addListener(tableColumnDelimiterButton);
         tableStyleListBox.addListener(tableHeadingSuffixButton);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /**************/
         /* NOTES PAGE */
@@ -2197,7 +2198,7 @@ public class SettingsDialog {
         notesNoterefFormatListBox.addListener(notesNoterefSpaceBeforeCheckBox);
         notesNoterefFormatListBox.addListener(notesNoterefSpaceAfterCheckBox);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /*****************/
         /* PICTURES PAGE */
@@ -2250,7 +2251,7 @@ public class SettingsDialog {
         picturesOpeningMarkButton.link(settings.getPictureStyle().openingMark);
         picturesClosingMarkButton.link(settings.getPictureStyle().closingMark);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /********************/
         /* PAGENUMBERS PAGE */
@@ -2348,7 +2349,7 @@ public class SettingsDialog {
         numbersAtTopOnSepLineCheckBox.link(settings.pageNumberLineAtTop);
         numbersAtBottomOnSepLineCheckBox.link(settings.pageNumberLineAtBottom);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /***************************/
         /* DOCUMENT STRUCTURE PAGE */
@@ -2528,7 +2529,7 @@ public class SettingsDialog {
         singleRearVolumeRadioButton.link(settings.rearMatterMode);
         manualRearVolumesRadioButton.link(settings.rearMatterMode);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /**************************/
         /* VOLUME MANAGEMENT PAGE */
@@ -2671,7 +2672,7 @@ public class SettingsDialog {
         volumesListBox.addListener(volumeTranscribersNotePageCheckBox);
         volumesListBox.addListener(volumeTableOfContentsCheckBox);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /*************************/
         /* TABLE OF CONTENT PAGE */
@@ -2762,7 +2763,7 @@ public class SettingsDialog {
         tableOfContentsLevelListBox.addListener(tableOfContentsFirstLineField);
         tableOfContentsLevelListBox.addListener(tableOfContentsRunoversField);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /************************/
         /* SPECIAL SYMBOLS PAGE */
@@ -2906,7 +2907,7 @@ public class SettingsDialog {
         specialSymbolsListBox.addListener(specialSymbolsMode2RadioButton);
         specialSymbolsListBox.addListener(specialSymbolsMode3RadioButton);
 
-        pb.increment();
+        statusIndicator.increment();
 
         /********************/
         /* MATHEMATICS PAGE */
@@ -2930,7 +2931,7 @@ public class SettingsDialog {
         
         mathListBox.link(settings.mathCode);
 
-        pb.increment();
+        statusIndicator.increment();
 
         logger.exiting("SettingsDialog", "<init>");
     }

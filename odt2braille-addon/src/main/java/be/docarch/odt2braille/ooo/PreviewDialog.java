@@ -95,7 +95,7 @@ public class PreviewDialog implements XItemListener,
                                       XActionListener,
                                       XWindowListener {
 
-    private final static Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private final static Logger logger = Constants.getLogger();
     private final static String OOO_L10N = Constants.OOO_L10N_PATH;
 
     private static final String FONT_6_DOT = "odt2braille 6 dot";

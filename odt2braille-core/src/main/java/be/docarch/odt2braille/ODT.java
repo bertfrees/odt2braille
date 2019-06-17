@@ -90,16 +90,16 @@ import be.docarch.odt2braille.setup.style.Style.FollowPrint;
  */
 public class ODT {
 
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
+    private static final Logger logger = Constants.getLogger();
     private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final File TMP_DIR = Constants.getTempDirectory();
     private static final String XSLT = Constants.XSLT_PATH;
     private static final String L10N = Constants.L10N_PATH;
+    private static final StatusIndicator statusIndicator = Constants.getStatusIndicator();
 
     private static NamespaceContext namespace = null;
     private TransformerFactoryImpl tFactory = null;
 
-    private StatusIndicator statusIndicator = null;
     private Configuration configuration = null;
 
     private ZipFile zip = null;
@@ -152,15 +152,6 @@ public class ODT {
     private ListNumber currentNumber = null;
     private Map<String,ParagraphStyle> automaticParagraphStyles = new TreeMap<String,ParagraphStyle>();
 
-    public ODT(File odtFile)
-        throws IOException,
-               TransformerConfigurationException,
-               TransformerException,
-               ParserConfigurationException {
-        
-        this (odtFile, null);
-    }
-
     /**
      * Creates a new <code>ODT</code> instance.
      *
@@ -168,8 +159,7 @@ public class ODT {
      * @param statusIndicator   The <code>StatusIndicator</code> that will be used.
      * @param oooLocale         The <code>Locale</code> for the user interface.
      */
-    public ODT(File odtFile,
-               StatusIndicator statusIndicator)
+    public ODT(File odtFile)
         throws IOException,
                TransformerConfigurationException,
                TransformerException,
@@ -177,10 +167,7 @@ public class ODT {
 
         logger.entering("ODT","<init>");
 
-        this.statusIndicator = statusIndicator;
-        if (statusIndicator != null) {
-            oooLocale = statusIndicator.getPreferredLocale();
-        }
+        oooLocale = statusIndicator.getPreferredLocale();
 
         tFactory = new net.sf.saxon.TransformerFactoryImpl();
 
@@ -448,16 +435,16 @@ public class ODT {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
             if (firstNode != null) {
-                if (statusIndicator != null) {
-                    statusIndicator.start();
+                statusIndicator.start();
+                try {
                     statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
-                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1"));
+                } catch (NumberFormatException e) {
+                    statusIndicator.setSteps(0);
                 }
+                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep1"));
                 insertPagination(contentRoot, stylesRoot, firstNode, 0, "Standard", true);
-                if (statusIndicator != null) {
-                    statusIndicator.finish(true);
-                    statusIndicator.close();
-                }
+                statusIndicator.finish(true);
+                statusIndicator.close();
             }
 
             documentSaved = false;
@@ -486,16 +473,12 @@ public class ODT {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
             if (firstNode != null) {
-                if (statusIndicator != null) {
-                    statusIndicator.start();
-                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
-                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
-                }
+                statusIndicator.start();
+                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
+                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
                 insertHeadingNumbering(contentRoot, stylesRoot, firstNode, true);
-                if (statusIndicator != null) {
-                    statusIndicator.finish(true);
-                    statusIndicator.close();
-                }
+                statusIndicator.finish(true);
+                statusIndicator.close();
             }
 
             documentSaved = false;
@@ -524,16 +507,12 @@ public class ODT {
 
             Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
             if (firstNode != null) {
-                if (statusIndicator != null) {
-                    statusIndicator.start();
-                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
-                    statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
-                    }
+                statusIndicator.start();
+                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
+                statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
                 insertListNumbering(contentRoot, stylesRoot, firstNode, 0, true);
-                if (statusIndicator != null) {
-                    statusIndicator.finish(true);
-                    statusIndicator.close();
-                }
+                statusIndicator.finish(true);
+                statusIndicator.close();
             }
 
             documentSaved = false;
@@ -790,9 +769,7 @@ public class ODT {
             insertAfterNode = pageNode;
             thisIsFirst = false;
 
-            if (statusIndicator != null) {
-                statusIndicator.increment();
-            }
+            statusIndicator.increment();
         }
 
         // Process all children
@@ -1124,9 +1101,7 @@ public class ODT {
                             // logger.info("<num> " + display + " added to heading");
                         }
 
-                        if (statusIndicator != null) {
-                            statusIndicator.increment();
-                        }
+                        statusIndicator.increment();
                     }
                 }
 
@@ -1274,9 +1249,7 @@ public class ODT {
 
                     level = 1;
 
-                    if (statusIndicator != null) {
-                        statusIndicator.increment();
-                    }
+                    statusIndicator.increment();
 
                     if (linkedLists.containsKey(id)) {
 
@@ -1770,10 +1743,8 @@ public class ODT {
 
             List<String> manualVolumeSections = new ArrayList<String>();
             List<String> manualVolumeIDs = new ArrayList<String>();
-            List<String> languages = new ArrayList<String>();
+            List<String> locales = new ArrayList<String>();
             List<String> translationTables = new ArrayList<String>();
-            List<Integer> grades = new ArrayList<Integer>();
-            List<Boolean> eightDots = new ArrayList<Boolean>();
             List<String> configuredParagraphStyles = new ArrayList<String>();
             List<String> keepEmptyParagraphStyles = new ArrayList<String>();
             List<String> characterStyles = new ArrayList<String>();
@@ -1808,11 +1779,9 @@ public class ODT {
             for (Locale locale : configuration.getTranslationTables().keys()) {
             
                 TranslationTable t = configuration.getTranslationTables().get(locale);
-            
-                languages.add(locale.toString().replaceAll("_", "-"));
-                translationTables.add(t.getLocale());
-                grades.add(t.getGrade());
-                eightDots.add(t.getDots() == TranslationTable.Dots.EIGHTDOTS);
+                
+                locales.add(locale.toString().replaceAll("_", "-"));
+                translationTables.add(t.getID());
             
             }
 
@@ -1826,7 +1795,8 @@ public class ODT {
 
             }
 
-            for (HeadingStyle headStyle : configuration.getHeadingStyles().values()) {
+            for (int i=1; i<=10; i++) {
+                HeadingStyle headStyle = configuration.getHeadingStyles().get(i);
                 headingUpperBorder.add(headStyle.getUpperBorderEnabled());
                 headingLowerBorder.add(headStyle.getLowerBorderEnabled());
             }
@@ -1879,10 +1849,8 @@ public class ODT {
             mainXSL.setParameter("paramHeadingUpperBorder",        headingUpperBorder.toArray(new Boolean[headingUpperBorder.size()]));
             mainXSL.setParameter("paramHeadingLowerBorder",        headingLowerBorder.toArray(new Boolean[headingLowerBorder.size()]));
 
-            languagesAndTypefaceXSL.setParameter("paramLanguages",            languages.toArray(new String[languages.size()]));
+            languagesAndTypefaceXSL.setParameter("paramLocales",              locales.toArray(new String[locales.size()]));
             languagesAndTypefaceXSL.setParameter("paramTranslationTables",    translationTables.toArray(new String[translationTables.size()]));
-            languagesAndTypefaceXSL.setParameter("paramGrades",               grades.toArray(new Integer[grades.size()]));
-            languagesAndTypefaceXSL.setParameter("paramEightDots",            eightDots.toArray(new Boolean[eightDots.size()]));
             languagesAndTypefaceXSL.setParameter("paramMathCode",             configuration.getMathCode().name().toLowerCase());
 
             languagesAndTypefaceXSL.setParameter("paramCharacterStyles",      characterStyles.toArray(new String[characterStyles.size()]));

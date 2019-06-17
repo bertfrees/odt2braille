@@ -20,7 +20,13 @@
 package be.docarch.odt2braille;
 
 import java.io.File;
+import java.util.logging.Handler;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
 
+import java.io.IOException;
 
 /**
  *
@@ -28,22 +34,81 @@ import java.io.File;
  */
 public class Constants {
 
-    public static final String LOGGER_NAME = "be.docarch.odt2braille";
     public static final String OOO_PACKAGE_NAME = "be.docarch.odt2braille.ooo.odt2brailleaddon";
-
     public static final String XSLT_PATH = "/be/docarch/odt2braille/xslt/";
     public static final String L10N_PATH = "be/docarch/odt2braille/l10n/core";
     public static final String OOO_L10N_PATH = "be/docarch/odt2braille/ooo/l10n/dialogs";
-
     public static final String TMP_PREFIX = "odt2braille.";
-    private static final File TMP_DIRECTORY = new File(System.getProperty("java.io.tmpdir") + File.separator + "odt2braille");
-
+    
+    private static File tempDirectory;
     private static File liblouisDir;
     private static File tablesDir;
+    private static File logFile;
+    private static Logger customLogger;
+    private static Logger defaultLogger;
+    private static Handler logFileHandler;
+    private static StatusIndicator statusIndicator;
 
-    public static File getTmpDirectory() {
-        if (!TMP_DIRECTORY.isDirectory()) { TMP_DIRECTORY.mkdir(); }
-        return TMP_DIRECTORY;
+    public static boolean setTempDirectory(File dir) {
+        if (tempDirectory != null) { return false; }
+        tempDirectory = dir;
+        return true;
+    }
+    
+    public static File getTempDirectory() {
+        if (tempDirectory == null) { tempDirectory = new File(System.getProperty("java.io.tmpdir") + File.separator + "odt2braille"); }
+        if (!tempDirectory.isDirectory()) { tempDirectory.mkdir(); }
+        return tempDirectory;
+    }
+
+    public static void setLogger(Logger logger) {
+        Constants.customLogger = logger;
+    }
+
+    public static Logger getLogger() {
+        if (customLogger != null) {
+            return customLogger;
+        } else {
+            return getDefaultLogger();
+        }
+    }
+    
+    private static Logger getDefaultLogger() {
+        if (defaultLogger == null) {
+            defaultLogger = Logger.getLogger("be.docarch.odt2braille");
+            defaultLogger.setLevel(Level.FINEST);
+            try {
+                logFile = File.createTempFile(TMP_PREFIX, ".log", getTempDirectory());
+                logFileHandler = new FileHandler(logFile.getAbsolutePath());
+                logFileHandler.setFormatter(new SimpleFormatter());
+                logFile.deleteOnExit();
+                defaultLogger.addHandler(logFileHandler);
+                defaultLogger.log(Level.INFO, "log file: {0}", logFile.getAbsolutePath());
+            } catch (IOException e) {
+                defaultLogger.log(Level.SEVERE, null, e);
+            }
+        }
+        return defaultLogger;
+    }
+
+    public static File getLogFile() {
+        return logFile;
+    }
+    
+    public static void flushLogger() {
+        if (logFileHandler != null && defaultLogger != null) {
+            logFileHandler.flush();
+        }
+    }
+    
+    public static void closeLogger () {
+        if (logFileHandler != null && defaultLogger != null) {
+            defaultLogger.entering("Constants", "cleanLogger");
+            logFileHandler.close();
+            defaultLogger.removeHandler(logFileHandler);
+            defaultLogger = null;
+            logFileHandler = null;
+        }
     }
 
     public static boolean setLiblouisDirectory(File dir) throws Exception {
@@ -64,5 +129,18 @@ public class Constants {
     public static File getTablesDirectory() throws Exception {
         if (liblouisDir == null) { throw new Exception("Liblouis directory not set"); }
         return tablesDir;
+    }
+
+    public static boolean setStatusIndicator(StatusIndicator indicator) {
+        if (statusIndicator != null) { return false; }
+        statusIndicator = indicator;
+        return true;
+    }
+
+    public static StatusIndicator getStatusIndicator() {
+        if (statusIndicator == null) {
+            statusIndicator = new StatusIndicator();
+        }
+        return statusIndicator;
     }
 }

@@ -32,10 +32,7 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
-import java.util.logging.Handler;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
-import java.util.logging.SimpleFormatter;
 
 import com.sun.star.uno.UnoRuntime;
 import com.sun.star.uno.XComponentContext;
@@ -106,10 +103,11 @@ import be_interpoint.Interpoint55Embosser;
  */
 public class UnoGUI {
 
+    private static final Logger logger = Constants.getLogger();
+    
     private static final String TMP_NAME = Constants.TMP_PREFIX;
-    private static final File TMP_DIR = Constants.getTmpDirectory();
+    private static final File TMP_DIR = Constants.getTempDirectory();
     private static final String FLAT_XML_FILTER_NAME = "writer8";
-    private static final Logger logger = Logger.getLogger(Constants.LOGGER_NAME);
     private static final String L10N = Constants.OOO_L10N_PATH;
     private static final String META_FILE = "meta/odt2braille/configuration.rdf";
     private static final String RDF_ENCODING = "UTF-8";
@@ -133,8 +131,6 @@ public class UnoGUI {
     private XRepository xRepository;
     private XNamedGraph metadataGraph;
 
-    private Handler fh;
-    private File logFile;
     private Locale oooLocale;
 
     public UnoGUI(XComponentContext m_xContext,
@@ -168,14 +164,6 @@ public class UnoGUI {
                 metadataGraph = xRepository.getGraph(URI.create(xContext, xDMA.getNamespace() + META_FILE));
             }
 
-            // Configuring logger
-            logFile = File.createTempFile(TMP_NAME, ".log", TMP_DIR);
-            logFile.deleteOnExit();
-            fh = new FileHandler(logFile.getAbsolutePath());
-            fh.setFormatter(new SimpleFormatter());
-            logger.addHandler(fh);
-            logger.setLevel(Level.FINEST);
-
             // Locale
             try { oooLocale = UnoUtils.getUILocale(m_xContext); } catch (Exception e) {
                   oooLocale = Locale.ENGLISH; }
@@ -207,13 +195,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Overwrite the default settings with settings loaded from the OpenOffice.org Writer document,
-     * execute the "Braille Configuration" dialog that enables users to change these settings
-     * and store the new settings if the user confirms.
-     *
-     * @return          <code>true</code> if the new settings were succesfully saved.
-     */
     public void changeSettings() {
 
         logger.entering("UnoGUI", "changeSettings");
@@ -226,17 +207,18 @@ public class UnoGUI {
 
             // Start progress bar
             progressBar = new ProgressBar(xFrame, oooLocale);
+            Constants.setStatusIndicator(progressBar);
             progressBar.start();
             progressBar.setSteps(3 + SettingsDialog.getSteps());
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            odt = openODT(progressBar);
+            odt = openODT();
             loadConfiguration(odt);
             progressBar.increment();
 
             // Create dialog
-            dialog = new SettingsDialog(xContext, odt.getConfiguration(), progressBar);
+            dialog = new SettingsDialog(xContext, odt.getConfiguration());
 
             // Close progress bar
             progressBar.finish(true);
@@ -268,22 +250,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Export the document as a generic or embosser-specific braille file.
-     *
-     * <ul>
-     * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
-     *     if necessary, a first warning box with possible accessibility issues is shown.</li>
-     * <li>The user selects the location of the output file in a "Save as" dialog.</li>
-     * <li>The document is converted to a temporary .pef file.</li>
-     * <li>If necessary, a second warning box with possible accessibility issues is shown.</li>
-     * <li>The .pef file is converted to the specified output format and stored at its final location.</li>
-     * </ul>
-     *
-     * @return          <code>true</code> if the document is succesfully exported to a braille file,
-     *                  <code>false</code> if the user aborts the process at any time.
-     */
     public void exportBraille () {
 
         logger.entering("UnoGUI", "exportBraille");
@@ -296,12 +262,13 @@ public class UnoGUI {
 
             // Start progress bar
             progressBar = new ProgressBar(xFrame, oooLocale);
+            Constants.setStatusIndicator(progressBar);
             progressBar.start();
             progressBar.setSteps(3);
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            odt = openODT(progressBar);
+            odt = openODT();
             loadConfiguration(odt);
             progressBar.increment();
 
@@ -309,7 +276,7 @@ public class UnoGUI {
             ExportConfiguration exportSettings = loadExportConfiguration();
 
             // Create export dialog
-            ExportDialog dialog = new ExportDialog(xContext, exportSettings, odt.getConfiguration(), progressBar);
+            ExportDialog dialog = new ExportDialog(xContext, exportSettings, odt.getConfiguration());
 
             // Close progress bar
             progressBar.finish(true);
@@ -329,7 +296,7 @@ public class UnoGUI {
             PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
 
             // Convert to PEF
-            PEF pef = ODT2PEFConverter.convert(odt, exportSettings, checker, progressBar);
+            PEF pef = ODT2PEFConverter.convert(odt, exportSettings, checker);
 
             // Show warning
             BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
@@ -460,24 +427,6 @@ public class UnoGUI {
         }
     }
 
-    /**
-     * Print the document on a braille embosser.
-     *
-     * <ul>
-     * <li>First, <code>changeSettings</code> is called.</li>
-     * <li>A newly created {@link PostConversionBrailleChecker} checks the settings and the flat .odt file, and
-     *     if necessary, a first warning box with possible accessibility issues is shown.</li>
-     * <li>Either the "Emboss" dialog or the "Emboss on Interpoint 55" is shown, depending on the selected embosser type.</li>
-     * <li>The document is converted to a temporary .pef file.</li>
-     * <li>If necessary, a second warning box with possible accessibility issues is shown.</li>
-     * <li>If the "Interpoint 55" was selected, the .pef file is converted to a .brf file
-     *     that can be interpreted by the wprint55 program, and wprint55 is executed. Otherwise,
-     *     the .pef file is converted to the appropriate embosser-specific braille format and send to the specified printer device.</li>
-     * </ul>
-     *
-     * @return          <code>true</code> if the document is succesfully printed on a braille embosser,
-     *                  <code>false</code> if the user aborts the process at any time.
-     */
     public void embossBraille () {
 
         logger.entering("UnoGUI", "embossBraille");
@@ -489,12 +438,13 @@ public class UnoGUI {
 
             // Start progress bar
             progressBar = new ProgressBar(xFrame, oooLocale);
+            Constants.setStatusIndicator(progressBar);
             progressBar.start();
             progressBar.setSteps(3);
             progressBar.setStatus("Analysing document, loading settings...");
 
             // Export document to flat XML file & load settings
-            odt = openODT(progressBar);
+            odt = openODT();
             loadConfiguration(odt);
             progressBar.increment();
 
@@ -502,7 +452,7 @@ public class UnoGUI {
             EmbossConfiguration embossSettings = loadEmbossConfiguration();
 
             // Create emboss dialog
-            EmbossDialog embossDialog = new EmbossDialog(xContext, embossSettings, odt.getConfiguration(), progressBar);
+            EmbossDialog embossDialog = new EmbossDialog(xContext, embossSettings, odt.getConfiguration());
 
             // Close progress bar
             progressBar.finish(true);
@@ -522,7 +472,7 @@ public class UnoGUI {
             PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
 
             // Convert to PEF
-            PEF pef = ODT2PEFConverter.convert(odt, embossSettings, checker, progressBar);
+            PEF pef = ODT2PEFConverter.convert(odt, embossSettings, checker);
 
             // Show warning            
             BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
@@ -683,11 +633,12 @@ public class UnoGUI {
 
            //Start progress bar
             progressBar = new ProgressBar(xFrame, oooLocale);
+            Constants.setStatusIndicator(progressBar);
             progressBar.start();
             progressBar.setSteps(2);
             progressBar.setStatus("Analysing document, loading settings...");
 
-            odt = openODT(progressBar);
+            odt = openODT();
             loadConfiguration(odt);
             ExportConfiguration exportSettings = loadExportConfiguration();
 
@@ -695,7 +646,7 @@ public class UnoGUI {
             progressBar.close();
 
             PostConversionBrailleChecker checker = new PostConversionBrailleChecker();
-            PEF pef = ODT2PEFConverter.convert(odt, exportSettings, checker, progressBar);
+            PEF pef = ODT2PEFConverter.convert(odt, exportSettings, checker);
 
             BrailleCheckerDialog checkerDialog = new BrailleCheckerDialog(checker, xContext, parentWindowPeer);
             if (!checkerDialog.execute()) {
@@ -707,14 +658,17 @@ public class UnoGUI {
 
             // TODO: Launch e2u.jar with PEF file as input
 
-
-
+			
+			
 
             logger.exiting("UnoGUI", "embossBrailleMacOS");
 
         } catch (Exception ex) {
             handleUnexpectedException(ex);
         } finally {
+            if (progressBar != null) {
+                progressBar.close();
+            }
             if (odt != null) {
                 odt.close();
             }
@@ -775,6 +729,7 @@ public class UnoGUI {
             return (EmbossConfiguration)ConfigurationDecoder.readObject(input);
 
         } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
             return new EmbossConfiguration();
         }
     }
@@ -791,13 +746,39 @@ public class UnoGUI {
             logger.log(Level.SEVERE, null, e);
         }
     }
+    
+    private ExportConfiguration loadExportConfiguration() {
 
-    private ODT openODT(ProgressBar progressBar)
-                 throws IOException,
-                        TransformerException,
-                        TransformerConfigurationException,
-                        ParserConfigurationException,
-                        com.sun.star.uno.Exception {
+        try {
+
+            InputStream input = new FileInputStream(
+                    new File(packageLocation + File.separator + "settings" + File.separator + "export.xml"));
+            return (ExportConfiguration)ConfigurationDecoder.readObject(input);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+            return new ExportConfiguration();
+        }
+    }
+
+    private void saveExportConfiguration(ExportConfiguration config) {
+
+        try {
+
+            OutputStream output = new FileOutputStream(
+                    new File(packageLocation + File.separator + "settings" + File.separator + "export.xml"));
+            ConfigurationEncoder.writeObject(config, output);
+
+        } catch (Exception e) {
+            logger.log(Level.SEVERE, null, e);
+        }
+    }
+
+    private ODT openODT() throws IOException,
+                                 TransformerException,
+                                 TransformerConfigurationException,
+                                 ParserConfigurationException,
+                                 com.sun.star.uno.Exception {
     
         logger.entering("UnoGUI", "openODT");
 
@@ -813,12 +794,12 @@ public class UnoGUI {
         XStorable storable = (XStorable) UnoRuntime.queryInterface(
                 XStorable.class, xFrame.getController().getModel());
         storable.storeToURL(odtUnoUrl, conversionProperties);
-        
-        if (progressBar != null) { progressBar.increment(); }
-        
-        ODT odt = new ODT(odtFile, progressBar);
 
-        if (progressBar != null) { progressBar.increment(); }
+        Constants.getStatusIndicator().increment();
+        
+        ODT odt = new ODT(odtFile);
+
+        Constants.getStatusIndicator().increment();
         
         logger.exiting("UnoGUI", "openODT");
         
@@ -876,47 +857,6 @@ public class UnoGUI {
         logger.exiting("UnoGUI", "saveConfiguration");
     }
 
-    private ExportConfiguration loadExportConfiguration() {
-
-        try {
-
-            XResource document = getDocumentNode();
-            XEnumeration statements = metadataGraph.getStatements(document, CONFIGURATION_EXPORT, null);
-            if (statements.hasMoreElements()) {
-                 String xml = ((Statement)statements.nextElement()).Object.getStringValue();
-                 InputStream input = new ByteArrayInputStream(xml.getBytes(RDF_ENCODING));
-                 return (ExportConfiguration)ConfigurationDecoder.readObject(input);
-            }
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
-        }
-
-        return new ExportConfiguration();
-    }
-
-    private void saveExportConfiguration(ExportConfiguration config) {
-
-        try {
-
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ConfigurationEncoder.writeObject(config, output);
-            String xml = output.toString(RDF_ENCODING).replaceFirst("<\\?xml.*?\\?>", "");
-
-            XURI RDF_XMLLITERAL = URI.createKnown(xContext, URIs.RDF_XMLLITERAL);
-            XLiteral configuration = Literal.createWithType(xContext, xml, RDF_XMLLITERAL);
-            XResource document = getDocumentNode();
-
-            metadataGraph.removeStatements(document, CONFIGURATION_EXPORT, null);
-            metadataGraph.addStatement(document, CONFIGURATION_EXPORT, configuration);
-
-            xModifiable.setModified(true);
-
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, null, e);
-        }
-    }
-
     private XResource getDocumentNode() throws IllegalArgumentException,
                                                NoSuchElementException,
                                                RepositoryException,
@@ -941,26 +881,16 @@ public class UnoGUI {
      * Handling of an unexpected exception.
      * A message box is shown with a reference to the log file.
      *
-     * @param   ex     The exception
+     * @param   e     The exception
      */
     private void handleUnexpectedException(Exception e) {
 
         logger.log(Level.SEVERE, null, e);
 
-        String message = L10N_Unexpected_Exception_Message + ": " + logFile.getAbsolutePath();
+        String message = L10N_Unexpected_Exception_Message + ": " + Constants.getLogFile().getAbsolutePath();
         if (e instanceof LiblouisXMLException ||
             e instanceof IllegalArgumentException) { message = e.getMessage(); }
         UnoAwtUtils.showErrorMessageBox(parentWindowPeer, L10N_Exception_MessageBox_Title, message);
 
-    }
-
-    /**
-     * Flush and close the logfile handler.
-     */
-    public void cleanLogger () {
-        if (fh != null) {
-            fh.flush();
-            fh.close();
-        }
     }
 }
