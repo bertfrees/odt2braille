@@ -16255,3 +16255,22 @@ zz2i
 zz3in
 zz3or
 z4z5w
+
+% FIXME: support non-standard hyphenation
+% for now just don't hyphenate in the cases below (because no hyphenation is better than bad hyphenation)
+% principiële, weeën
+6ë
+% ruïne
+6ï
+% vacuüm, geüpdatet
+6ü
+% coöperatie
+6ö
+% autootje
+oo6tje
+% vlaatje
+aa6tje
+% cafeetje
+ee6tje
+% parapluutje
+uu6tje

@@ -284,7 +284,7 @@ ISO8859-1
 .m4
 .1ma
 .ma5d
-.ma5ï4
+.ma6ï4
 .1me
 .me4e
 .mee2l
@@ -368,6 +368,7 @@ ISO8859-1
 .oo4t
 .oo4tj2
 .oot5je4s3
+.oo6tje
 .op5e4e4
 .o1pi5
 .op5l2
@@ -757,7 +758,7 @@ ae3r
 ae2s3
 ae4s5t
 a3eu
-a3ë
+a6ë
 a4ër
 4a1fa
 af3a4a4
@@ -868,7 +869,7 @@ a4it
 ai5tj2
 ai3tr4
 a4i3u4
-a1ï
+a6ï
 aïn4
 aï2ns5
 aï3s3o4
@@ -1482,7 +1483,7 @@ auto3p
 2au4ts3
 auw3a
 4a4u1z
-a4ü
+a6ü
 a1v2
 ava2s2t4
 av4e
@@ -1538,7 +1539,7 @@ bal3d1w
 ba1le4
 bal3e1v2
 ba1li
-ba3li3ë
+ba3li6ë
 bal4k2l4
 ba3lo
 ba4ls4
@@ -1937,7 +1938,7 @@ cet3o4o2
 1cé
 c3g
 4c4h.
-3cha1ï
+3cha6ï
 5ch2a1o
 3chas
 1chau
@@ -2124,7 +2125,7 @@ da4gs
 dag4s3t
 da2gu
 3dai
-da3ï
+da6ï
 da3ke
 da4ker
 2da4k5k4
@@ -2530,7 +2531,7 @@ d3o4ps
 d3o2p5z
 4d5or1g
 do1ri
-d3o4ri3ë
+d3o4ri6ë
 d3ork
 do4rs
 dors5m
@@ -3047,7 +3048,7 @@ eets2t
 eet5s1te
 ee5v2
 ee5z
-e3ë
+e6ë
 e5ën3
 e5ër
 e1fa
@@ -3880,7 +3881,7 @@ er1o3v2
 ero4x
 e4r3oxi
 e3ro1z
-e3rö
+e3r6ö
 er1p
 erp2l2
 er4plu
@@ -4277,7 +4278,7 @@ e2z3z4
 ê2p
 ê3per
 ê5t
-3ë
+6ë
 4ë.
 ë2b
 ë3c
@@ -4527,7 +4528,7 @@ fo1r1u
 fo3t
 2f3ou1d
 4f1o2v2
-3fö
+3f6ö
 4f5p4
 f3pe4rs
 fper1s4t
@@ -4995,7 +4996,7 @@ g1li
 gl4ic
 g5li3ce
 g5lich
-3gli3ë
+3gli6ë
 g2l4if
 gli2j
 g5li2j2s
@@ -5375,6 +5376,7 @@ hee5sto
 hee2t
 hee3tj2
 hee5tje4s3
+hee6tje
 he2f
 he4i
 h4eid
@@ -5787,7 +5789,7 @@ ie3d2r4
 ie4dro
 ie4d3w
 i1e4e4
-ie3ë2
+ie6ë2
 i4e3fi
 ie2f2l2
 ie3fle
@@ -5943,7 +5945,7 @@ ieze1l5a
 i3és
 i1é1t
 i1è1
-i3ë
+i6ë
 i4ëg
 ië1v2
 i4ëva
@@ -6503,7 +6505,7 @@ i3z4e
 ize3t
 î3
 ît4
-1ï
+6ï
 2ï.
 ï5a
 ï1c
@@ -7186,7 +7188,7 @@ kie5s1te
 kie4tj2
 kie3z
 kiez4e4
-2ki3ë
+2ki6ë
 ki2j
 ki2jk
 kij2k5l4
@@ -8183,7 +8185,7 @@ l3ma4a4
 lmaa1t5
 lm3a4ca
 lm3af
-lma5ï4
+lma6ï4
 l3mak
 lm3ar1c
 lm3a4rt
@@ -8528,7 +8530,7 @@ m4ag
 m4a3g1l4
 ma5go
 ma3gr4
-ma1ï4
+ma6ï4
 ma5ka2
 ma5ke
 5ma3k4r4
@@ -9031,14 +9033,14 @@ na1dr4
 na5dra
 2n1a2d1v2
 5n4ae
-n3a3ë
+n3a6ë
 4n1af
 naf3l2
 na3f4lu
 n2a3g4
 n2a1h
 3nai
-3na1ï
+3na6ï
 n2a1ke
 n4a3k4l4
 na3kr4
@@ -9415,7 +9417,7 @@ ng5lop
 n1go
 n3go4e
 n2g3of
-n3go3ï
+n3go6ï
 n2g1on
 ng2o4o2
 n2g5oor
@@ -9613,7 +9615,7 @@ n5of5fi
 n3o2ge
 n5o1gi
 1no1gr4
-3no3ï
+3no6ï
 n2ok
 no3k4l4
 no3k2w
@@ -10177,7 +10179,7 @@ oe4t3ra
 oe4ts
 oet4s3p
 oe4t3w
-2o3ë
+2o6ë
 o1fa
 of3ar
 of3a1t
@@ -10273,7 +10275,7 @@ oi5sc
 ois3p
 oi2s3t2
 oi4s5t1j2
-o3ï
+o6ï
 2o1j
 2ok
 o1ka
@@ -10650,7 +10652,7 @@ oo1t5o
 o2ot3r4
 oo4ts
 oot4s2l4
-o1ö
+o6ö
 2opa
 o4p3ac
 op3ad
@@ -10762,7 +10764,7 @@ or1g
 or2gl4
 o1ri
 o5ri1a
-3ori3ë
+3ori6ë
 or4ig
 o5ri4g.
 ori3ge
@@ -10889,7 +10891,7 @@ os1te
 os5t4e.
 os4t4em
 ost2er
-o5ste1ro3ï
+o5ste1ro6ï
 o4s4th
 os4to
 os4t2ol
@@ -11047,6 +11049,7 @@ oys4
 o1z
 oz4e
 ozet5
+6ö
 ö3l
 ö1p
 öpe1
@@ -11171,7 +11174,7 @@ pe3de
 pe3do
 p4e4e4
 3pe4e.
-3pee3ë
+3pee6ë
 pee2l
 pe2e5li
 4pee2n
@@ -11396,7 +11399,7 @@ poets2t
 poet4s1te
 poets5t4e.
 3poe1z
-3p2o3ë
+3p2o6ë
 p2o1fa
 3po1gi
 po5gr4
@@ -12360,14 +12363,14 @@ roe1r4e
 roe4re2i
 roe2t4j2
 4roe1v2
-3r2o3ë
+3r2o6ë
 ro4f1f
 r5of5fi
 r4o1fi
 ro3f3l2
 ro1ge
 ro3ge1s5
-1ro3ï
+1ro6ï
 r2ok
 ro3k4l4
 3ro2k1m
@@ -13151,7 +13154,7 @@ si3ci4
 si3co
 s4ie
 3si4e.
-3sie3ë2
+3sie6ë2
 sie5fr4
 si2ek
 sie5k2l4
@@ -13251,7 +13254,7 @@ s1k4i
 sk4ie
 3s4kie1d
 skie3s
-3s2ki3ë
+3s2ki6ë
 sk4is
 ski5sc
 s2k3j
@@ -13461,7 +13464,7 @@ s1o1ge
 so3g1l4
 3so3gy
 5s4oi
-3so3ï
+3so6ï
 3s2ok
 s2ol
 5so4l.
@@ -13586,7 +13589,7 @@ s3plu
 sp4o
 s2po4e
 s3poe2s3
-4s3p2o3ë
+4s3p2o6ë
 4spog
 4s1pol
 2s3pom
@@ -14611,7 +14614,7 @@ t4o5rec
 t5or1ga
 t4o1ri
 3to5ri1a
-t3o4ri3ë
+t3o4ri6ë
 tor3k
 tor1m
 tor4m3a
@@ -14709,7 +14712,7 @@ t3roe1d
 t3roes
 5tro3fy1
 3trog
-t4ro3ï
+t4ro6ï
 5tr2o1j
 4tr4o4l.
 5tro2l3a
@@ -15375,7 +15378,7 @@ u4s5l4
 u4s1m
 u2s5n4
 uso2
-u3s3o3ï
+u3s3o6ï
 us3os4
 u2s3p
 us5pi
@@ -15501,7 +15504,7 @@ uze3t4
 uz2i
 uz4ie2
 û4t3s4
-1ü
+6ü
 ü4b
 ü1n
 ü3ri
@@ -16255,3 +16258,10 @@ zz2i
 zz3in
 zz3or
 z4z5w
+oo6tje
+oo4tj2
+aa6t4je
+aa2t3j2
+ee6tje
+uu6tje
+uu2tj2
