@@ -4,6 +4,11 @@
 		<fileSet>
 			<directory>src/main/resources/files</directory>
 			<outputDirectory>files</outputDirectory>
+			<excludes>
+				<exclude>*.in</exclude>
+				<exclude>Makefile</exclude>
+				<exclude>substrings.pl</exclude>
+			</excludes>
 		</fileSet>
 		<fileSet>
 			<directory>target/dependency/share/liblouis/tables</directory>
