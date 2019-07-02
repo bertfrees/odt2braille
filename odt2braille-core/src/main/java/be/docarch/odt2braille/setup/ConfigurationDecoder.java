@@ -45,7 +45,8 @@ public class ConfigurationDecoder {
 
             XMLDecoder xmlDecoder = new XMLDecoder(bis, null, new ExceptionListener() {
                     public void exceptionThrown(Exception e) {
-                        logger.log(Level.SEVERE, null, e); }});
+                        if (!(e.getMessage() != null && e.getMessage().startsWith("Unsupported attribute: xmlns:")))
+                            logger.log(Level.SEVERE, null, e); }});
             object = xmlDecoder.readObject();
             
         } Thread.currentThread().setContextClassLoader(cl);
