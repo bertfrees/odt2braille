@@ -444,8 +444,10 @@ public class LiblouisXML {
         String message = null;
         String line = null;
         String errors = "";
+        String tablePath = new File(liblouisPath + FILE_SEPARATOR + "files").getAbsolutePath();
 
         message = "liblouisxml:  ";
+        message += "\nLOUIS_TABLEPATH=" + tablePath + " \\";
         for (String s : configurationList) {
             message += "\n" + s + " \\";
         }
@@ -454,7 +456,7 @@ public class LiblouisXML {
 
         ProcessBuilder builder = new ProcessBuilder(configurationList);
         builder.directory(Constants.getTempDirectory());
-        builder.environment().put("LOUIS_TABLEPATH", new File(liblouisPath + FILE_SEPARATOR + "files").getAbsolutePath());
+        builder.environment().put("LOUIS_TABLEPATH", tablePath);
         try {
             process = builder.start();
         } catch (IOException e) {
