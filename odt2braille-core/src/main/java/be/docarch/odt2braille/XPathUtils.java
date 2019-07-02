@@ -20,12 +20,21 @@
 package be.docarch.odt2braille;
 
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+
+import net.sf.saxon.xpath.XPathFactoryImpl;
+
+import org.apache.xpath.XPathAPI;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 
 /**
@@ -37,107 +46,120 @@ import org.xml.sax.InputSource;
  */
 public class XPathUtils {
 
-    public static Double evaluateNumber(InputStream stream, String expression, NamespaceContext namespace){
-        Double number = null;
-        try{
-            //creation de la source
-            InputSource source = new InputSource(stream);
+    private static final Logger logger = Constants.getLogger();
 
-            //creation du XPath
-
-/**** Removed by Bert Frees ***************************************
-            XPathFactory fabrique = XPathFactory.newInstance();
-/**** Added by Bert Frees *****************************************/
-            XPathFactory fabrique = new net.sf.saxon.xpath.XPathFactoryImpl();
-/******************************************************************/
-
-            XPath xpath = fabrique.newXPath();
-
-            //namespaces
-            if(namespace!=null)
-                xpath.setNamespaceContext(namespace);
-
-            //evaluation de l'expression XPath
-            XPathExpression exp = xpath.compile(expression);
-            number = (Double)exp.evaluate(source,XPathConstants.NUMBER);
-
-        }catch(XPathExpressionException xpee){
-            xpee.printStackTrace();
+    public static Double evaluateNumber(InputStream stream, String expression, NamespaceContext namespace) {
+        try {
+            return (Double)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.NUMBER);
+        } catch (XPathExpressionException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
         }
-        return number;
     }
 
-    public static Double evaluateNumber(InputStream stream, String expression){
-        return evaluateNumber(stream,expression,null);
-    }
-
-
-    public static Boolean evaluateBoolean(InputStream stream, String expression, NamespaceContext namespace){
-        Boolean b = null;
-        try{
-            //creation de la source
-            InputSource source = new InputSource(stream);
-
-            //creation du XPath
-
-/**** Removed by Bert Frees ***************************************
-            XPathFactory fabrique = XPathFactory.newInstance();
-/**** Added by Bert Frees *****************************************/
-            XPathFactory fabrique = new net.sf.saxon.xpath.XPathFactoryImpl();
-/******************************************************************/
-
-            XPath xpath = fabrique.newXPath();
-
-            //namespaces
-            if(namespace!=null)
-                xpath.setNamespaceContext(namespace);
-
-            //evaluation de l'expression XPath
-            XPathExpression exp = xpath.compile(expression);
-            b = (Boolean)exp.evaluate(source,XPathConstants.BOOLEAN);
-
-        }catch(XPathExpressionException xpee){
-            xpee.printStackTrace();
+    public static Integer evaluateInteger(Node context, String expression) {
+        try {
+            return Integer.parseInt(XPathAPI.eval(context, expression).str());
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
         }
-        return b;
     }
 
-    public static Boolean evaluateBoolean(InputStream stream, String expression){
-        return evaluateBoolean(stream,expression,null);
-    }
-
-    public static String evaluateString(InputStream stream, String expression, NamespaceContext namespace){
-        String string = null;
-        try{
-            //creation de la source
-            InputSource source = new InputSource(stream);
-
-            //creation du XPath
-
-/**** Removed by Bert Frees ***************************************
-            XPathFactory fabrique = XPathFactory.newInstance();
-/**** Added by Bert Frees *****************************************/
-            XPathFactory fabrique = new net.sf.saxon.xpath.XPathFactoryImpl();
-/******************************************************************/
-
-            XPath xpath = fabrique.newXPath();
-
-            if(namespace != null){
-                xpath.setNamespaceContext(namespace);
-            }
-
-            //evaluation de l'expression XPath
-            XPathExpression exp = xpath.compile(expression);
-            string = (String)exp.evaluate(source,XPathConstants.STRING);
-
-        }catch(XPathExpressionException xpee){
-            xpee.printStackTrace();
+    public static Boolean evaluateBoolean(InputStream stream, String expression, NamespaceContext namespace) {
+        try {
+            return (Boolean)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.BOOLEAN);
+        } catch (XPathExpressionException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
         }
-        return string;
-    }
-      public static String evaluateString(InputStream stream, String expression){
-        return evaluateString(stream,expression,null);
     }
 
+    public static Boolean evaluateBoolean(Node context, String expression) {
+        try {
+            return XPathAPI.eval(context, expression).bool();
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    public static String evaluateString(InputStream stream, String expression, NamespaceContext namespace) {
+        try {
+            return (String)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.STRING);
+        } catch (XPathExpressionException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    public static String evaluateString(Node context, String expression) {
+        try {
+            return XPathAPI.eval(context, expression).str();
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    public static Node evaluateNode(Element context, String expression) {
+        try {
+            return XPathAPI.selectSingleNode(context, expression);
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    public static NodeIterator evaluateNodeIterator(Node context, String expression) {
+        try {
+            return XPathAPI.selectNodeIterator(context, expression);
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    public static NodeList evaluateNodeList(Node context, String expression) {
+        try {
+            return XPathAPI.selectNodeList(context, expression);
+        } catch (TransformerException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
+    private static XPath getXPath(NamespaceContext namespace) {
+        XPath xpath = new XPathFactoryImpl().newXPath();
+        if (namespace != null)
+            xpath.setNamespaceContext(namespace);
+        return xpath;
+    }
 }
-

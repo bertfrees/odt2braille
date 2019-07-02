@@ -19,8 +19,9 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.io.Serializable;
+import java.io.IOException;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Date;
@@ -30,18 +31,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.text.SimpleDateFormat;
-import org.w3c.dom.Node;
-import org.w3c.dom.Element;
-import org.w3c.dom.traversal.NodeIterator;
-import org.apache.xpath.XPathAPI;
-
-import org.xml.sax.SAXException;
-import java.io.IOException;
-import java.util.NoSuchElementException;
-import javax.xml.transform.TransformerException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.NamespaceContext;
@@ -56,6 +49,11 @@ import be.docarch.odt2braille.setup.style.HeadingStyle;
 import be.docarch.odt2braille.setup.style.TableStyle;
 import be.docarch.odt2braille.setup.style.FrameStyle;
 import be.docarch.odt2braille.setup.style.PictureStyle;
+
+import org.w3c.dom.Node;
+import org.w3c.dom.Element;
+import org.w3c.dom.traversal.NodeIterator;
+import org.xml.sax.SAXException;
 
 /**
  * Collection of all braille-related settings and properties of an OpenOffice.org document.
@@ -321,13 +319,10 @@ public class Configuration implements Serializable {
         rootSection = odt.extractSectionTree();
         allSections = new ArrayList<String>();
 
-        try {
-            NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, "descendant::section");
-            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                String name = section.getAttributes().getNamedItem("name").getNodeValue();
-                allSections.add(name);
-            }
-        } catch (TransformerException e) {
+        NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "descendant::section");
+        for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+            String name = section.getAttributes().getNamedItem("name").getNodeValue();
+            allSections.add(name);
         }
 
         volumeSectionsMap = new HashMap<String,SectionVolume>();
@@ -794,12 +789,10 @@ public class Configuration implements Serializable {
             String xpath = "./descendant::section[@name";
             if (getRearMatterSection() != null) { xpath += " and following::section[@name='" + getRearMatterSection() + "']"; }
             xpath += "]";
-            try {
-                NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, xpath);
-                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                    options.add(section.getAttributes().getNamedItem("name").getNodeValue());
-                }
-            } catch (TransformerException e) {}
+            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
+            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                options.add(section.getAttributes().getNamedItem("name").getNodeValue());
+            }
             return options;
         }
 
@@ -834,13 +827,11 @@ public class Configuration implements Serializable {
         public Collection<String> options() {
             Collection<String> options = new ArrayList<String>();
             if (getFrontMatterSection() != null) {
-                try {
-                    options.add(getFrontMatterSection());
-                    NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
-                    for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                        options.add(section.getAttributes().getNamedItem("name").getNodeValue());
-                    }
-                } catch (TransformerException e) {}
+                options.add(getFrontMatterSection());
+                NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
+                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                    options.add(section.getAttributes().getNamedItem("name").getNodeValue());
+                }
             }
             return options;
         }
@@ -876,13 +867,11 @@ public class Configuration implements Serializable {
         public Collection<String> options() {
             Collection<String> options = new ArrayList<String>();
             if (getFrontMatterSection() != null) {
-                try {
-                    options.add(getFrontMatterSection());
-                    NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
-                    for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                        options.add(section.getAttributes().getNamedItem("name").getNodeValue());
-                    }
-                } catch (TransformerException e) {}
+                options.add(getFrontMatterSection());
+                NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
+                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                    options.add(section.getAttributes().getNamedItem("name").getNodeValue());
+                }
             }
             return options;
         }
@@ -922,12 +911,9 @@ public class Configuration implements Serializable {
                 xpath += " and preceding::section[@name='" + getFrontMatterSection() + "']";
             }
             xpath += "]";
-            try {
-                NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, xpath);
-                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                    options.add(section.getAttributes().getNamedItem("name").getNodeValue());
-                }
-            } catch (TransformerException e) {
+            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
+            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                options.add(section.getAttributes().getNamedItem("name").getNodeValue());
             }
             return options;
         }
@@ -1430,22 +1416,14 @@ public class Configuration implements Serializable {
         }
         xpath += "]";
 
-        try {
-            return (XPathAPI.selectSingleNode(rootSection, xpath) != null);
-        } catch (TransformerException e) {
-            return false;
-        }
+        return (XPathUtils.evaluateNode(rootSection, xpath) != null);
     }
 
     private boolean sectionInRearMatter(String section) {
 
         if (getRearMatterSection() == null) { return false; }
-        try {
-            return (XPathAPI.selectSingleNode(rootSection,
-                        "//section[@name='" + getRearMatterSection() + "']/descendant::section[@name='" + section + "']") != null);
-        } catch (TransformerException e) {
-            return false;
-        }
+        return (XPathUtils.evaluateNode(rootSection,
+                    "//section[@name='" + getRearMatterSection() + "']/descendant::section[@name='" + section + "']") != null);
     }
 
     private List<String> getBodyMatterVolumeSections() {
@@ -1457,12 +1435,9 @@ public class Configuration implements Serializable {
             if (volumeSectionsMap.containsKey(section)) {
                 if (sectionInBodyMatter(section)) {
                     if (lastSection != null) {
-                        try {
-                            if (XPathAPI.selectSingleNode(rootSection, "//section[@name='" + lastSection + "']" +
-                                    "/descendant::section[@name='" + section + "']") != null) {
-                                continue;
-                            }
-                        } catch (TransformerException e) {
+                        if (XPathUtils.evaluateNode(rootSection, "//section[@name='" + lastSection + "']" +
+                                "/descendant::section[@name='" + section + "']") != null) {
+                            continue;
                         }
                     }
                     sections.add(section);
@@ -1484,12 +1459,9 @@ public class Configuration implements Serializable {
                 if (volumeSectionsMap.containsKey(section)) {
                     if (sectionInRearMatter(section)) {
                         if (lastSection != null) {
-                            try {
-                                if (XPathAPI.selectSingleNode(rootSection, "//section[@name='" + lastSection + "']" +
-                                        "/descendant::section[@name='" + section + "']") != null) {
-                                    continue;
-                                }
-                            } catch (TransformerException e) {
+                            if (XPathUtils.evaluateNode(rootSection, "//section[@name='" + lastSection + "']" +
+                                    "/descendant::section[@name='" + section + "']") != null) {
+                                continue;
                             }
                         }
                         sections.add(section);
@@ -1523,13 +1495,10 @@ public class Configuration implements Serializable {
             xpath += " and not(ancestor::section[@name='" + section + "'])";
         }
         xpath += "]";
-        try {
-            NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, xpath);
-            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                String name = section.getAttributes().getNamedItem("name").getNodeValue();
-                availableSections.add(name);
-            }
-        } catch (TransformerException e) {
+        NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
+        for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+            String name = section.getAttributes().getNamedItem("name").getNodeValue();
+            availableSections.add(name);
         }
 
         return availableSections;
@@ -1549,13 +1518,10 @@ public class Configuration implements Serializable {
                 xpath += " and not(ancestor::section[@name='" + section + "'])";
             }
             xpath += "]";
-            try {
-                NodeIterator sections = XPathAPI.selectNodeIterator(rootSection, xpath);
-                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
-                    String name = section.getAttributes().getNamedItem("name").getNodeValue();
-                    availableSections.add(name);
-                }
-            } catch (TransformerException e) {
+            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
+            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                String name = section.getAttributes().getNamedItem("name").getNodeValue();
+                availableSections.add(name);
             }
         }
 

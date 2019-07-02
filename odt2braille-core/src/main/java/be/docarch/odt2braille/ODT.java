@@ -53,7 +53,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
-import org.apache.xpath.XPathAPI;
 
 import java.io.IOException;
 import org.xml.sax.SAXException;
@@ -443,11 +442,11 @@ public class ODT {
             Element stylesRoot = stylesDoc.getDocumentElement();
             Element metaRoot = metaDoc.getDocumentElement();
 
-            Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
             if (firstNode != null) {
                 statusIndicator.start();
                 try {
-                    statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(metaRoot, "//meta/document-statistic/@page-count").str()));
+                    statusIndicator.setSteps(XPathUtils.evaluateInteger(metaRoot, "//meta/document-statistic/@page-count"));
                 } catch (NumberFormatException e) {
                     statusIndicator.setSteps(0);
                 }
@@ -481,10 +480,10 @@ public class ODT {
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
 
-            Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
             if (firstNode != null) {
                 statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//h)").str()));
+                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//body/text//h)"));
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
                 insertHeadingNumbering(contentRoot, stylesRoot, firstNode, true);
                 statusIndicator.finish(true);
@@ -515,10 +514,10 @@ public class ODT {
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
 
-            Node firstNode = XPathAPI.selectSingleNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
             if (firstNode != null) {
                 statusIndicator.start();
-                statusIndicator.setSteps(Integer.parseInt(XPathAPI.eval(contentRoot, "count(//body/text//list[@id])").str()));
+                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//body/text//list[@id])"));
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
                 insertListNumbering(contentRoot, stylesRoot, firstNode, 0, true);
                 statusIndicator.finish(true);
@@ -616,8 +615,8 @@ public class ODT {
             
             if (attr.getNamedItem("text:style-name") != null) {
                 xpath = "./*//@style-name";
-                if (XPathAPI.eval(node, xpath).bool()) {
-                    styleName = XPathAPI.eval(node, xpath).str();
+                if (XPathUtils.evaluateBoolean(node, xpath)) {
+                    styleName = XPathUtils.evaluateString(node, xpath);
                 }
             }
 
@@ -653,16 +652,16 @@ public class ODT {
 
             xpath = "//automatic-styles/style[@name='" + styleName + "']/paragraph-properties"; // TODO: hoeft niet in automatic-styles te zitten !
 
-            if (XPathAPI.eval(contentRoot, xpath + "[@page-number='auto']").bool()) {
-                if (XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str().length() > 0) {
+            if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@page-number='auto']")) {
+                if (XPathUtils.evaluateString(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").length() > 0) {
                     hardPageBreaksBefore ++;
                 }
-            } else if (XPathAPI.eval(contentRoot, xpath + "[@page-number>0]").bool()) {
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@page-number>0]")) {
                 hardPageBreaksBefore ++;
-                pagenum = Integer.parseInt(XPathAPI.eval(contentRoot, xpath + "/@page-number").str()) - 1;
-            } else if (XPathAPI.eval(contentRoot, xpath + "[@break-before='page']").bool()) {
+                pagenum = XPathUtils.evaluateInteger(contentRoot, xpath + "/@page-number") - 1;
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@break-before='page']")) {
                 hardPageBreaksBefore ++;
-            } else if (XPathAPI.eval(contentRoot, xpath + "[@break-after='page']").bool()) {
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@break-after='page']")) {
                 hardPageBreaksAfter ++;
             }
         }
@@ -686,13 +685,13 @@ public class ODT {
                 // Update masterPageName
 
                 if (!thisIsFirst) {
-                    temp = XPathAPI.eval(stylesRoot, "//master-styles/master-page[@name='" + masterPageName + "']/@next-style-name").str();
+                    temp = XPathUtils.evaluateString(stylesRoot, "//master-styles/master-page[@name='" + masterPageName + "']/@next-style-name");
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
                 }
                 if (softPageBreaksBefore + hardPageBreaksBefore > 0 && styleName != null) {
-                    temp = XPathAPI.eval(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").str();
+                    temp = XPathUtils.evaluateString(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name");
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
@@ -702,24 +701,24 @@ public class ODT {
 
                 xpath = "(count(//master-styles/master-page[@name='" + masterPageName + "']/header/p/page-number)" +
                         "+count(//master-styles/master-page[@name='" + masterPageName + "']/footer/p/page-number))>0";
-                inclPageNum = XPathAPI.eval(stylesRoot, xpath).bool();
+                inclPageNum = XPathUtils.evaluateBoolean(stylesRoot, xpath);
 
                 xpath = "//master-styles/master-page[@name='" + masterPageName + "']/@page-layout-name";
-                String pageLayoutName = XPathAPI.eval(stylesRoot, xpath).str();
+                String pageLayoutName = XPathUtils.evaluateString(stylesRoot, xpath);
 
                 xpath = "//automatic-styles/page-layout[@name='" + pageLayoutName + "']/page-layout-properties/@num-format";
-                enumType = XPathAPI.eval(stylesRoot, xpath).str();
+                enumType = XPathUtils.evaluateString(stylesRoot, xpath);
 
                 if (inclPageNum) {
 
                     xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@num-format";
-                    temp = XPathAPI.eval(stylesRoot, xpath).str();
+                    temp = XPathUtils.evaluateString(stylesRoot, xpath);
                     if(temp.length()>0){
                         enumType = temp;
                     }
 
                     xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@page-adjust";
-                    temp = XPathAPI.eval(stylesRoot, xpath).str();
+                    temp = XPathUtils.evaluateString(stylesRoot, xpath);
                     if (!temp.equals("")) {
                         offset = Integer.parseInt(temp);
                     }
@@ -893,7 +892,7 @@ public class ODT {
 
             // Process all headings outside frames
 
-            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::h[not(ancestor::frame)]");
+            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::h[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
                 insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -901,7 +900,7 @@ public class ODT {
 
             // Process all frames of depth = 1
 
-            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
+            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
                 insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -917,14 +916,14 @@ public class ODT {
                     String styleName = attr.getNamedItem("text:style-name").getNodeValue();
                     String parentStyleName = "";
                     while (styleName.length() > 0) {
-                        if (XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@list-style-name").bool() ||
-                            XPathAPI.eval(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name").bool()) {
+                        if (XPathUtils.evaluateBoolean(contentRoot, "//style[@name='" + styleName + "']/@list-style-name") ||
+                            XPathUtils.evaluateBoolean(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name")) {
                             outlineNumbering = false;
                             break;
                         }
-                        parentStyleName = XPathAPI.eval(contentRoot, "//style[@name='" + styleName + "']/@parent-style-name").str();
+                        parentStyleName = XPathUtils.evaluateString(contentRoot, "//style[@name='" + styleName + "']/@parent-style-name");
                         if (parentStyleName.length() == 0) {
-                            parentStyleName = XPathAPI.eval(stylesRoot, "//style[@name='" + styleName + "']/@parent-style-name").str();
+                            parentStyleName = XPathUtils.evaluateString(stylesRoot, "//style[@name='" + styleName + "']/@parent-style-name");
                         }
                         styleName = parentStyleName;
                     }
@@ -951,33 +950,33 @@ public class ODT {
                             for (int i=0;i<10;i++) {
 
                                 xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@bullet-char";
-                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
                                     numFormat[i] = "bullet";
                                 } else {
                                     xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@num-format";
-                                    numFormat[i] = XPathAPI.eval(stylesRoot, xpath).str();
+                                    numFormat[i] = XPathUtils.evaluateString(stylesRoot, xpath);
                                 }
                                 xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@start-value";
-                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
-                                    startValue[i] = Integer.parseInt(XPathAPI.eval(stylesRoot, xpath).str());
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
+                                    startValue[i] = XPathUtils.evaluateInteger(stylesRoot, xpath);
                                 } else {
                                     startValue[i] = 1;
                                 }
                                 xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@display-levels";
-                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
-                                    displayLevels[i] = Integer.parseInt(XPathAPI.eval(stylesRoot, xpath).str());
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
+                                    displayLevels[i] = XPathUtils.evaluateInteger(stylesRoot, xpath);
                                 } else {
                                     displayLevels[i] = 1;
                                 }
                                 xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-prefix";
-                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
-                                    prefix[i] = XPathAPI.eval(stylesRoot, xpath).str();
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
+                                    prefix[i] = XPathUtils.evaluateString(stylesRoot, xpath);
                                 } else {
                                     prefix[i] = "";
                                 }
                                 xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-suffix";
-                                if (XPathAPI.eval(stylesRoot, xpath).bool()) {
-                                    suffix[i] = XPathAPI.eval(stylesRoot, xpath).str();
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
+                                    suffix[i] = XPathUtils.evaluateString(stylesRoot, xpath);
                                 } else {
                                     suffix[i] = "";
                                 }
@@ -987,7 +986,7 @@ public class ODT {
 
                         }
 
-                        if (!XPathAPI.eval(node, "./ancestor::frame").bool()) {
+                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::frame")) {
                             if (outlineNumber==null) {
                                 outlineNumber = new ListNumber(outlineProperties);
                             }
@@ -1117,11 +1116,11 @@ public class ODT {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = Integer.parseInt(XPathAPI.eval(node, "count(./ancestor-or-self::frame)").str());
+                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::frame)");
 
                 // Process all heading descendants
 
-                nodes = XPathAPI.selectNodeList(node, "./descendant::h[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathUtils.evaluateNodeList(node, "./descendant::h[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -1129,7 +1128,7 @@ public class ODT {
 
                 // Process all frame descendants
 
-                nodes = XPathAPI.selectNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathUtils.evaluateNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertHeadingNumbering(contentRoot, stylesRoot, next, false);
@@ -1190,23 +1189,23 @@ public class ODT {
 
             // Initialization
 
-            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id]");
+            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id]");
 
             for (int i=0;i<nodes.getLength();i++) {
 
                 next = nodes.item(i);
                 attr = next.getAttributes();
-                id = XPathAPI.eval(next, "./@id").str();
+                id = XPathUtils.evaluateString(next, "./@id");
 
                 if (attr.getNamedItem("text:style-name") != null) {
 
                     listStyleName = attr.getNamedItem("text:style-name").getNodeValue();
                     tmp = id;
 
-                    if (XPathAPI.eval(next, "./@continue-list").bool()) {
-                        tmp = XPathAPI.eval(next, "./@continue-list").str();
-                    } else if (XPathAPI.eval(next, "./@continue-numbering").bool()) {
-                        if (XPathAPI.eval(next, "./@continue-numbering").str().equals("true")) {
+                    if (XPathUtils.evaluateBoolean(next, "./@continue-list")) {
+                        tmp = XPathUtils.evaluateString(next, "./@continue-list");
+                    } else if (XPathUtils.evaluateBoolean(next, "./@continue-numbering")) {
+                        if (XPathUtils.evaluateString(next, "./@continue-numbering").equals("true")) {
                             if (prevId!=null) {
                                 tmp = prevId;
                             }
@@ -1233,7 +1232,7 @@ public class ODT {
 
             // Process all lists[@id] outside frames
 
-            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id][not(ancestor::frame)]");
+            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id][not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
                 insertListNumbering(contentRoot, stylesRoot, next, 0, false);
@@ -1241,7 +1240,7 @@ public class ODT {
 
             // Process all frames of depth = 1
 
-            nodes = XPathAPI.selectNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
+            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
             for (int i=0;i<nodes.getLength();i++) {
                 next = nodes.item(i);
                 insertListNumbering(contentRoot, stylesRoot, next, 0, false);
@@ -1251,11 +1250,11 @@ public class ODT {
 
             if (nodeName.equals("text:list")) {
 
-                if (XPathAPI.eval(node, "@id").bool()) {
+                if (XPathUtils.evaluateBoolean(node, "@id")) {
 
                     // Main list
 
-                    id = XPathAPI.eval(node, "@id").str();
+                    id = XPathUtils.evaluateString(node, "@id");
 
                     level = 1;
 
@@ -1286,33 +1285,33 @@ public class ODT {
                             for (int i=0;i<10;i++) {
 
                                 xpath = xpathBase + "*[@level='" + (i+1) + "'][1]/@bullet-char";
-                                if (XPathAPI.eval(root, xpath).bool()) {
+                                if (XPathUtils.evaluateBoolean(root, xpath)) {
                                     numFormat[i] = "bullet";
                                 } else {
                                     xpath = xpathBase + "*[@level='" + (i+1) + "'][1]/@num-format";
-                                    numFormat[i] = XPathAPI.eval(root, xpath).str();
+                                    numFormat[i] = XPathUtils.evaluateString(root, xpath);
                                 }
                                 xpath = xpathBase + "*[@level='" + (i+1) + "']/@start-value";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    startValue[i] = Integer.parseInt(XPathAPI.eval(root, xpath).str());
+                                if (XPathUtils.evaluateBoolean(root, xpath)) {
+                                    startValue[i] = XPathUtils.evaluateInteger(root, xpath);
                                 } else {
                                     startValue[i] = 1;
                                 }
                                 xpath = xpathBase + "*[@level='" + (i+1) + "']/@display-levels";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    displayLevels[i] = Integer.parseInt(XPathAPI.eval(root, xpath).str());
+                                if (XPathUtils.evaluateBoolean(root, xpath)) {
+                                    displayLevels[i] = XPathUtils.evaluateInteger(root, xpath);
                                 } else {
                                     displayLevels[i] = 1;
                                 }
                                 xpath = xpathBase + "*[@level='" + (i+1) + "']/@num-prefix";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    prefix[i] = XPathAPI.eval(root, xpath).str();
+                                if (XPathUtils.evaluateBoolean(root, xpath)) {
+                                    prefix[i] = XPathUtils.evaluateString(root, xpath);
                                 } else {
                                     prefix[i] = "";
                                 }
                                 xpath = xpathBase + "*[@level='" + (i+1) + "']/@num-suffix";
-                                if (XPathAPI.eval(root, xpath).bool()) {
-                                    suffix[i] = XPathAPI.eval(root, xpath).str();
+                                if (XPathUtils.evaluateBoolean(root, xpath)) {
+                                    suffix[i] = XPathUtils.evaluateString(root, xpath);
                                 } else {
                                     suffix[i] = "";
                                 }
@@ -1324,7 +1323,7 @@ public class ODT {
 
                         // Update currentnumber
 
-                        if (!XPathAPI.eval(node, "./ancestor::frame").bool()) {
+                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::frame")) {
                             if (!listNumber.containsKey(id)) {
                                 listNumber.put(id, new ListNumber(listProperties.get(listStyleName)));
                             }
@@ -1343,7 +1342,7 @@ public class ODT {
 
                 // Process all children of type 'list-item' or 'list-header'
 
-                nodes = XPathAPI.selectNodeList(node, "list-item | list-header");
+                nodes = XPathUtils.evaluateNodeList(node, "list-item | list-header");
                 for (int i=0;i<nodes.getLength();i++) {
                     child = nodes.item(i);
                     insertListNumbering(contentRoot, stylesRoot, child, level, false);
@@ -1355,7 +1354,7 @@ public class ODT {
                     isListHeader = true;
                 }
 
-                nodes = XPathAPI.selectNodeList(node, "p | h | list");
+                nodes = XPathUtils.evaluateNodeList(node, "p | h | list");
 
                 for (int j=0;j<nodes.getLength();j++) {
 
@@ -1499,11 +1498,11 @@ public class ODT {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = Integer.parseInt(XPathAPI.eval(node, "count(./ancestor-or-self::frame)").str());
+                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::frame)");
 
                 // Process all descendants of type list[@id]
 
-                nodes = XPathAPI.selectNodeList(node, "./descendant::list[@id][count(ancestor::frame)=" + depth + "]");
+                nodes = XPathUtils.evaluateNodeList(node, "./descendant::list[@id][count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertListNumbering(contentRoot, stylesRoot, next, level, false);
@@ -1511,7 +1510,7 @@ public class ODT {
 
                 // Process all frame descendants
 
-                nodes = XPathAPI.selectNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
+                nodes = XPathUtils.evaluateNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
                 for (int i=0;i<nodes.getLength();i++) {
                     next = nodes.item(i);
                     insertListNumbering(contentRoot, stylesRoot, next, 0, false);
@@ -2106,7 +2105,7 @@ public class ODT {
         Element rootSection = doc.getDocumentElement();
 
         try {
-            Node bodyText = XPathAPI.selectSingleNode(contentDoc.getDocumentElement(), "//body/text[1]");
+            Node bodyText = XPathUtils.evaluateNode(contentDoc.getDocumentElement(), "//body/text[1]");
             copySectionNodes(bodyText, rootSection, doc);
         } catch (TransformerException e) {
         }
@@ -2122,7 +2121,7 @@ public class ODT {
                            throws TransformerException {
         Element e;
         String name;
-        NodeIterator iterator = XPathAPI.selectNodeIterator(from, "section");
+        NodeIterator iterator = XPathUtils.evaluateNodeIterator(from, "section");
         for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
             name = n.getAttributes().getNamedItem("text:name").getNodeValue();
             e = doc.createElement("section");
@@ -2145,18 +2144,18 @@ public class ODT {
         Document daisy = docBuilder.parse(daisyFile);
         Node root = daisy.getDocumentElement();
 
-        int pageCount =  Integer.parseInt(XPathAPI.eval(root, "count(//bodymatter/volume[1]//pagenum)").str());
+        int pageCount =  XPathUtils.evaluateInteger(root, "count(//bodymatter/volume[1]//pagenum)");
         int[] outline = new int[pageCount];
         NodeIterator iterator;
         int lvl;
         for (int i=0; i<pageCount; i++) {
             outline[i] = 0;
-            iterator = XPathAPI.selectNodeIterator(root, "//bodymatter/volume[1]/heading" +
-                                                            "//*[(self::h1 or self::h2 or self::h3 or " +
-                                                                 "self::h4 or self::h5 or self::h6 or " +
-                                                                 "self::h7 or self::h8 or self::h9 or self::h10) " +
-                                                             "and not(@dummy) " +
-                                                             "and count(preceding::pagenum[ancestor::bodymatter])=" + (i+1) +"]");
+            iterator = XPathUtils.evaluateNodeIterator(root, "//bodymatter/volume[1]/heading" +
+                                                             "//*[(self::h1 or self::h2 or self::h3 or " +
+                                                                  "self::h4 or self::h5 or self::h6 or " +
+                                                                  "self::h7 or self::h8 or self::h9 or self::h10) " +
+                                                              "and not(@dummy) " +
+                                                              "and count(preceding::pagenum[ancestor::bodymatter])=" + (i+1) +"]");
 
             for (Node node = iterator.nextNode(); node != null; node = iterator.nextNode()) {
                 try {
@@ -2186,7 +2185,7 @@ public class ODT {
         parseDocument();
 
         Set<String> characters = new HashSet<String>();
-        NodeList nodes = XPathAPI.selectNodeList(contentDoc.getDocumentElement(), "//body/text[1]//note-citation");
+        NodeList nodes = XPathUtils.evaluateNodeList(contentDoc.getDocumentElement(), "//body/text[1]//note-citation");
         for (int i=0; i<nodes.getLength(); i++) {
             characters.add(nodes.item(i).getNodeValue());
         }
