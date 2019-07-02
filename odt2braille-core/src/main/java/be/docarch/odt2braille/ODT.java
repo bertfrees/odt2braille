@@ -50,7 +50,6 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
-import org.w3c.dom.traversal.NodeIterator;
 import org.xml.sax.InputSource;
 import org.xml.sax.EntityResolver;
 
@@ -875,7 +874,6 @@ public class ODT {
         int prevLevel;
         Node next = null;
         ListNumber number = null;
-        NodeList nodes = null;
         Node headingText = null;
 
         NamedNodeMap attr = node.getAttributes();
@@ -892,18 +890,14 @@ public class ODT {
 
             // Process all headings outside frames
 
-            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::h[not(ancestor::frame)]");
-            for (int i=0;i<nodes.getLength();i++) {
-                next = nodes.item(i);
-                insertHeadingNumbering(contentRoot, stylesRoot, next, false);
+            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:h[not(ancestor::draw:frame)]", namespace)) {
+                insertHeadingNumbering(contentRoot, stylesRoot, n, false);
             }
 
             // Process all frames of depth = 1
 
-            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
-            for (int i=0;i<nodes.getLength();i++) {
-                next = nodes.item(i);
-                insertHeadingNumbering(contentRoot, stylesRoot, next, false);
+            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]", namespace)) {
+                insertHeadingNumbering(contentRoot, stylesRoot, n, false);
             }
 
         } else {
@@ -1120,18 +1114,14 @@ public class ODT {
 
                 // Process all heading descendants
 
-                nodes = XPathUtils.evaluateNodeList(node, "./descendant::h[count(ancestor::frame)=" + depth + "]");
-                for (int i=0;i<nodes.getLength();i++) {
-                    next = nodes.item(i);
-                    insertHeadingNumbering(contentRoot, stylesRoot, next, false);
+                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::text:h[count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                    insertHeadingNumbering(contentRoot, stylesRoot, n, false);
                 }
 
                 // Process all frame descendants
 
-                nodes = XPathUtils.evaluateNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
-                for (int i=0;i<nodes.getLength();i++) {
-                    next = nodes.item(i);
-                    insertHeadingNumbering(contentRoot, stylesRoot, next, false);
+                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::draw:frame[count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                    insertHeadingNumbering(contentRoot, stylesRoot, n, false);
                 }
             }
         }
@@ -1169,9 +1159,6 @@ public class ODT {
         int prevLevel = 0;
         Element numNode = null;
         Node listText = null;
-        Node next = null;
-        Node child = null;
-        NodeList nodes = null;
         ListStyleProperties properties = null;
 
         String nodeName = node.getNodeName();
@@ -1189,23 +1176,20 @@ public class ODT {
 
             // Initialization
 
-            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id]");
+            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id]", namespace)) {
 
-            for (int i=0;i<nodes.getLength();i++) {
-
-                next = nodes.item(i);
-                attr = next.getAttributes();
-                id = XPathUtils.evaluateString(next, "./@id");
+                attr = n.getAttributes();
+                id = XPathUtils.evaluateString(n, "./@id");
 
                 if (attr.getNamedItem("text:style-name") != null) {
 
                     listStyleName = attr.getNamedItem("text:style-name").getNodeValue();
                     tmp = id;
 
-                    if (XPathUtils.evaluateBoolean(next, "./@continue-list")) {
-                        tmp = XPathUtils.evaluateString(next, "./@continue-list");
-                    } else if (XPathUtils.evaluateBoolean(next, "./@continue-numbering")) {
-                        if (XPathUtils.evaluateString(next, "./@continue-numbering").equals("true")) {
+                    if (XPathUtils.evaluateBoolean(n, "./@continue-list")) {
+                        tmp = XPathUtils.evaluateString(n, "./@continue-list");
+                    } else if (XPathUtils.evaluateBoolean(n, "./@continue-numbering")) {
+                        if (XPathUtils.evaluateString(n, "./@continue-numbering").equals("true")) {
                             if (prevId!=null) {
                                 tmp = prevId;
                             }
@@ -1232,18 +1216,14 @@ public class ODT {
 
             // Process all lists[@id] outside frames
 
-            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::list[@id][not(ancestor::frame)]");
-            for (int i=0;i<nodes.getLength();i++) {
-                next = nodes.item(i);
-                insertListNumbering(contentRoot, stylesRoot, next, 0, false);
+            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id][not(ancestor::draw:frame)]", namespace)) {
+                insertListNumbering(contentRoot, stylesRoot, n, 0, false);
             }
 
             // Process all frames of depth = 1
 
-            nodes = XPathUtils.evaluateNodeList(contentRoot, "//body/text/sequence-decls/following::frame[not(ancestor::frame)]");
-            for (int i=0;i<nodes.getLength();i++) {
-                next = nodes.item(i);
-                insertListNumbering(contentRoot, stylesRoot, next, 0, false);
+            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]", namespace)) {
+                insertListNumbering(contentRoot, stylesRoot, n, 0, false);
             }
 
         } else {
@@ -1342,9 +1322,7 @@ public class ODT {
 
                 // Process all children of type 'list-item' or 'list-header'
 
-                nodes = XPathUtils.evaluateNodeList(node, "list-item | list-header");
-                for (int i=0;i<nodes.getLength();i++) {
-                    child = nodes.item(i);
+                for (Node child : XPathUtils.evaluateNodes(node, "text:list-item | text:list-header", namespace)) {
                     insertListNumbering(contentRoot, stylesRoot, child, level, false);
                 }
 
@@ -1354,11 +1332,8 @@ public class ODT {
                     isListHeader = true;
                 }
 
-                nodes = XPathUtils.evaluateNodeList(node, "p | h | list");
+                for (Node child : XPathUtils.evaluateNodes(node, "text:p | text:h | text:list", namespace)) {
 
-                for (int j=0;j<nodes.getLength();j++) {
-
-                    child = nodes.item(j);
                     numNode = null;
 
                     if (child.getNodeType() == Node.ELEMENT_NODE) {
@@ -1502,18 +1477,14 @@ public class ODT {
 
                 // Process all descendants of type list[@id]
 
-                nodes = XPathUtils.evaluateNodeList(node, "./descendant::list[@id][count(ancestor::frame)=" + depth + "]");
-                for (int i=0;i<nodes.getLength();i++) {
-                    next = nodes.item(i);
-                    insertListNumbering(contentRoot, stylesRoot, next, level, false);
+                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::text:list[@xml:id][count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                    insertListNumbering(contentRoot, stylesRoot, n, level, false);
                 }
 
                 // Process all frame descendants
 
-                nodes = XPathUtils.evaluateNodeList(node, "./descendant::frame[count(ancestor::frame)=" + depth + "]");
-                for (int i=0;i<nodes.getLength();i++) {
-                    next = nodes.item(i);
-                    insertListNumbering(contentRoot, stylesRoot, next, 0, false);
+                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::draw:frame[count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                    insertListNumbering(contentRoot, stylesRoot, n, 0, false);
                 }
             }
         }
@@ -2121,8 +2092,7 @@ public class ODT {
                            throws TransformerException {
         Element e;
         String name;
-        NodeIterator iterator = XPathUtils.evaluateNodeIterator(from, "section");
-        for (Node n = iterator.nextNode(); n != null; n = iterator.nextNode()) {
+        for (Node n : XPathUtils.evaluateNodes(from, "text:section", namespace)) {
             name = n.getAttributes().getNamedItem("text:name").getNodeValue();
             e = doc.createElement("section");
             e.setAttribute("name", name);
@@ -2146,18 +2116,16 @@ public class ODT {
 
         int pageCount =  XPathUtils.evaluateInteger(root, "count(//bodymatter/volume[1]//pagenum)");
         int[] outline = new int[pageCount];
-        NodeIterator iterator;
         int lvl;
         for (int i=0; i<pageCount; i++) {
             outline[i] = 0;
-            iterator = XPathUtils.evaluateNodeIterator(root, "//bodymatter/volume[1]/heading" +
-                                                             "//*[(self::h1 or self::h2 or self::h3 or " +
-                                                                  "self::h4 or self::h5 or self::h6 or " +
-                                                                  "self::h7 or self::h8 or self::h9 or self::h10) " +
-                                                              "and not(@dummy) " +
-                                                              "and count(preceding::pagenum[ancestor::bodymatter])=" + (i+1) +"]");
-
-            for (Node node = iterator.nextNode(); node != null; node = iterator.nextNode()) {
+            for (Node node : XPathUtils.evaluateNodes(root, "//dtb:bodymatter/dtb:volume[1]/dtb:heading" +
+                                                            "//*[(self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or " +
+                                                                 "self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or " +
+                                                                 "self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10) " +
+                                                             "and not(@dummy) " +
+                                                             "and count(preceding::dtb:pagenum[ancestor::dtb:bodymatter])=" + (i+1) +"]",
+                                                      namespace)) {
                 try {
                     lvl = Integer.parseInt(node.getNodeName().substring(5));
                     if (outline[i]==0 && lvl>0) {
@@ -2185,9 +2153,8 @@ public class ODT {
         parseDocument();
 
         Set<String> characters = new HashSet<String>();
-        NodeList nodes = XPathUtils.evaluateNodeList(contentDoc.getDocumentElement(), "//body/text[1]//note-citation");
-        for (int i=0; i<nodes.getLength(); i++) {
-            characters.add(nodes.item(i).getNodeValue());
+        for (Node n : XPathUtils.evaluateNodes(contentDoc.getDocumentElement(), "//office:body/office:text[1]//text:note-citation", namespace)) {
+            characters.add(n.getNodeValue());
         }
 
         logger.exiting("ODT","extractNoterefCharacters");

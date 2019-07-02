@@ -33,7 +33,10 @@ public class NamespaceContext implements javax.xml.namespace.NamespaceContext {
     }
 
     public String getNamespaceURI(String prefix) {
-        if ("dc".equals(prefix)) {
+        if ("xml".equals(prefix)) {
+            return "http://www.w3.org/XML/1998/namespace";
+
+        } else if ("dc".equals(prefix)) {
             return "http://purl.org/dc/elements/1.1/";
 
         } else if ("office".equals(prefix)) {

@@ -20,6 +20,8 @@
 package be.docarch.odt2braille;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.xml.namespace.NamespaceContext;
@@ -144,16 +146,25 @@ public class XPathUtils {
         }
     }
 
-    public static NodeList evaluateNodeList(Node context, String expression) {
+    public static NodeList evaluateNodeList(Node context, String expression, NamespaceContext namespace) {
         try {
-            return XPathAPI.selectNodeList(context, expression);
-        } catch (TransformerException e) {
+            return (NodeList)getXPath(namespace).compile(expression).evaluate(context, XPathConstants.NODESET);
+        } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw e;
         }
+    }
+
+    public static Iterable<Node> evaluateNodes(Node context, String expression, NamespaceContext namespace) {
+        NodeList nodeList = evaluateNodeList(context, expression, namespace);
+        List<Node> list = new ArrayList<Node>();
+        for (int i = 0; i < nodeList.getLength(); i++) {
+            list.add(nodeList.item(i));
+        }
+        return list;
     }
 
     private static XPath getXPath(NamespaceContext namespace) {

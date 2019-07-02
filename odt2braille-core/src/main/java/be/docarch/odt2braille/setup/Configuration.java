@@ -319,8 +319,7 @@ public class Configuration implements Serializable {
         rootSection = odt.extractSectionTree();
         allSections = new ArrayList<String>();
 
-        NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "descendant::section");
-        for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+        for (Node section : XPathUtils.evaluateNodes(rootSection, "descendant::section", null)) {
             String name = section.getAttributes().getNamedItem("name").getNodeValue();
             allSections.add(name);
         }
@@ -789,8 +788,7 @@ public class Configuration implements Serializable {
             String xpath = "./descendant::section[@name";
             if (getRearMatterSection() != null) { xpath += " and following::section[@name='" + getRearMatterSection() + "']"; }
             xpath += "]";
-            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
-            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+            for (Node section : XPathUtils.evaluateNodes(rootSection, xpath, null)) {
                 options.add(section.getAttributes().getNamedItem("name").getNodeValue());
             }
             return options;
@@ -828,8 +826,7 @@ public class Configuration implements Serializable {
             Collection<String> options = new ArrayList<String>();
             if (getFrontMatterSection() != null) {
                 options.add(getFrontMatterSection());
-                NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
-                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                for (Node section : XPathUtils.evaluateNodes(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section", null)) {
                     options.add(section.getAttributes().getNamedItem("name").getNodeValue());
                 }
             }
@@ -868,8 +865,7 @@ public class Configuration implements Serializable {
             Collection<String> options = new ArrayList<String>();
             if (getFrontMatterSection() != null) {
                 options.add(getFrontMatterSection());
-                NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section");
-                for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+                for (Node section : XPathUtils.evaluateNodes(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section", null)) {
                     options.add(section.getAttributes().getNamedItem("name").getNodeValue());
                 }
             }
@@ -911,8 +907,7 @@ public class Configuration implements Serializable {
                 xpath += " and preceding::section[@name='" + getFrontMatterSection() + "']";
             }
             xpath += "]";
-            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
-            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+            for (Node section : XPathUtils.evaluateNodes(rootSection, xpath, null)) {
                 options.add(section.getAttributes().getNamedItem("name").getNodeValue());
             }
             return options;
@@ -1495,8 +1490,7 @@ public class Configuration implements Serializable {
             xpath += " and not(ancestor::section[@name='" + section + "'])";
         }
         xpath += "]";
-        NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
-        for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+        for (Node section : XPathUtils.evaluateNodes(rootSection, xpath, null)) {
             String name = section.getAttributes().getNamedItem("name").getNodeValue();
             availableSections.add(name);
         }
@@ -1518,8 +1512,7 @@ public class Configuration implements Serializable {
                 xpath += " and not(ancestor::section[@name='" + section + "'])";
             }
             xpath += "]";
-            NodeIterator sections = XPathUtils.evaluateNodeIterator(rootSection, xpath);
-            for (Node section = sections.nextNode(); section != null; section = sections.nextNode()) {
+            for (Node section : XPathUtils.evaluateNodes(rootSection, xpath, null)) {
                 String name = section.getAttributes().getNamedItem("name").getNodeValue();
                 availableSections.add(name);
             }
