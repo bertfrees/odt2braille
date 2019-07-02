@@ -255,13 +255,13 @@ public class PEF {
             if (!(volume instanceof PreliminaryVolume)) {
 
                 bodyFile = File.createTempFile(TMP_NAME, ".daisy.body." + (volumeCount + 1) + ".xml", TMP_DIR);
-                bodyFile.deleteOnExit();
                 brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
-                brailleFile.deleteOnExit();
 
                 odt.getBodyMatter(bodyFile, volume);
                 liblouisXML.configure(bodyFile, brailleFile, false, beginPage);
                 liblouisXML.run();
+                bodyFile.deleteOnExit();
+                brailleFile.deleteOnExit();
 
                 // Read pages
                 sectionElement = document.createElementNS(pefNS, "section");
@@ -295,13 +295,12 @@ public class PEF {
                 volume.getSpecialSymbolListEnabled()) {
 
                 preliminaryFile = File.createTempFile(TMP_NAME, ".daisy.front." + (volumeCount + 1) + ".xml", TMP_DIR);
-                preliminaryFile.deleteOnExit();
                 brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
-                brailleFile.deleteOnExit();
 
                 odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
                 liblouisXML.configure(preliminaryFile, brailleFile, true, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                 liblouisXML.run();
+                brailleFile.deleteOnExit();
 
                 // Page range
                 int pageCount = countPages(brailleFile, volume);
@@ -309,10 +308,11 @@ public class PEF {
 
                 // Translate again with updated volume info and without volume separator marks
                 brailleFile = File.createTempFile(TMP_NAME, ".txt", TMP_DIR);
-                brailleFile.deleteOnExit();
                 odt.getFrontMatter(preliminaryFile, volume, volumeInfo);
                 liblouisXML.configure(preliminaryFile, brailleFile, false, volume.getTableOfContent()?volume.getFirstBraillePage():1);
                 liblouisXML.run();
+                preliminaryFile.deleteOnExit();
+                brailleFile.deleteOnExit();
 
                 // Read pages
                 sectionElement = document.createElementNS(pefNS, "section");
