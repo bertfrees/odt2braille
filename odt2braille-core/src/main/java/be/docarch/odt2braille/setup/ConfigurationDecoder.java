@@ -19,11 +19,18 @@
 
 package be.docarch.odt2braille.setup;
 
+import java.beans.ExceptionListener;
+import java.beans.XMLDecoder;
 import java.io.InputStream;
 import java.io.BufferedInputStream;
-import java.beans.XMLDecoder;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import be.docarch.odt2braille.Constants;
 
 public class ConfigurationDecoder {
+
+    private static final Logger logger = Constants.getLogger();
 
     /*
      * @return An instance of Configuration, EmbossConfiguration or ExportConfiguration
@@ -36,7 +43,9 @@ public class ConfigurationDecoder {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(Configuration.class.getClassLoader()); {
 
-            XMLDecoder xmlDecoder = new XMLDecoder(bis);
+            XMLDecoder xmlDecoder = new XMLDecoder(bis, null, new ExceptionListener() {
+                    public void exceptionThrown(Exception e) {
+                        logger.log(Level.SEVERE, null, e); }});
             object = xmlDecoder.readObject();
             
         } Thread.currentThread().setContextClassLoader(cl);
