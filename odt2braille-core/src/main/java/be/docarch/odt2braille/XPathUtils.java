@@ -62,6 +62,18 @@ public class XPathUtils {
         }
     }
 
+    public static Double evaluateNumber(Node context, String expression, NamespaceContext namespace) {
+        try {
+            return (Double)getXPath(namespace).compile(expression).evaluate(context, XPathConstants.NUMBER);
+        } catch (XPathExpressionException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw new RuntimeException(e);
+        } catch (RuntimeException e) {
+            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
+            throw e;
+        }
+    }
+
     public static Integer evaluateInteger(Node context, String expression) {
         try {
             return Integer.parseInt(XPathAPI.eval(context, expression).str());

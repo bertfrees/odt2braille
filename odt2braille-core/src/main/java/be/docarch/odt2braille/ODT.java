@@ -2118,23 +2118,18 @@ public class ODT {
         int[] outline = new int[pageCount];
         int lvl;
         for (int i=0; i<pageCount; i++) {
-            outline[i] = 0;
-            for (Node node : XPathUtils.evaluateNodes(root, "//dtb:bodymatter/dtb:volume[1]/dtb:heading" +
-                                                            "//*[(self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or " +
-                                                                 "self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or " +
-                                                                 "self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10) " +
-                                                             "and not(@dummy) " +
-                                                             "and count(preceding::dtb:pagenum[ancestor::dtb:bodymatter])=" + (i+1) +"]",
-                                                      namespace)) {
-                try {
-                    lvl = Integer.parseInt(node.getNodeName().substring(5));
-                    if (outline[i]==0 && lvl>0) {
-                        outline[i] = lvl;
-                    } else if (lvl<outline[i]) {
-                        outline[i] = lvl;
-                    }
-                } catch (Exception e) {}
-            }
+            outline[i] = XPathUtils.evaluateNumber(
+                root,
+                "(min(//dtb:bodymatter/dtb:volume[1]/dtb:heading"                                 +
+                "     //*[(self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or "                      +
+                "          self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or "                      +
+                "          self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10) "       +
+                "      and not(@dummy) "                                                          +
+                "      and count(preceding::dtb:pagenum[ancestor::dtb:bodymatter])=" + (i+1) +"]" +
+                "     /number(substring(local-name(.),2))),"                                      +
+                " 0)[1]",
+                namespace
+            ).intValue();
         }
 
         logger.exiting("ODT","extractDocumentOutline");
