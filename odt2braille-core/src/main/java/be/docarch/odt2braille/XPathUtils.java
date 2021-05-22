@@ -21,9 +21,11 @@ package be.docarch.odt2braille;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.NoSuchElementException;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
@@ -72,6 +74,14 @@ public class XPathUtils {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw e;
         }
+    }
+
+    public static Integer evaluateInteger(InputStream stream, String expression, NamespaceContext namespace) {
+        return evaluateNumber(stream, expression, namespace).intValue();
+    }
+
+    public static Integer evaluateInteger(Node context, String expression, NamespaceContext namespace) {
+        return evaluateNumber(context, expression, namespace).intValue();
     }
 
     public static Integer evaluateInteger(Node context, String expression) {
@@ -146,7 +156,7 @@ public class XPathUtils {
         }
     }
 
-    public static NodeIterator evaluateNodeIterator(Node context, String expression) {
+    private static NodeIterator evaluateNodeIterator(Node context, String expression) {
         try {
             return XPathAPI.selectNodeIterator(context, expression);
         } catch (TransformerException e) {
@@ -158,7 +168,38 @@ public class XPathUtils {
         }
     }
 
-    public static NodeList evaluateNodeList(Node context, String expression, NamespaceContext namespace) {
+    public static Iterable<Node> evaluateNodes(final Node context, final String expression) {
+        return new Iterable<Node>() {
+            public Iterator<Node> iterator() {
+                return new Iterator<Node>() {
+                    NodeIterator nodeIterator = evaluateNodeIterator(context, expression);
+                    Node next = null;
+                    boolean nextComputed = false;
+                    public boolean hasNext() {
+                        if (!nextComputed) {
+                            next = nodeIterator.nextNode();
+                            nextComputed = true;
+                        }
+                        return next != null;
+                    }
+                    public Node next() {
+                        if (hasNext()) {
+                            Node ret = next;
+                            next = null;
+                            nextComputed = false;
+                            return ret;
+                        } else
+                            throw new NoSuchElementException();
+                    }
+                    public void remove() {
+                        throw new UnsupportedOperationException();
+                    }
+                };
+            }
+        };
+    }
+
+    private static NodeList evaluateNodeList(Node context, String expression, NamespaceContext namespace) {
         try {
             return (NodeList)getXPath(namespace).compile(expression).evaluate(context, XPathConstants.NODESET);
         } catch (XPathExpressionException e) {
