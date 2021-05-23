@@ -1,12 +1,29 @@
 package be.docarch.odt2braille.ant;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.util.Locale;
 import java.util.List;
 import java.util.logging.Level;
 import java.text.DecimalFormat;
+
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+
+import net.sf.saxon.dom.DocumentBuilderImpl;
+
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
+import org.w3c.dom.Element;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
 import be.docarch.odt2braille.Volume;
 import be.docarch.odt2braille.ODT;
 import be.docarch.odt2braille.Constants;
@@ -16,6 +33,7 @@ import be.docarch.odt2braille.PEFHandler;
 import be.docarch.odt2braille.PEFFileFormat;
 import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.ConfigurationDecoder;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 
 /**
@@ -78,9 +96,64 @@ public class Odt2Braille extends Task {
         try {
             ODT odt = new ODT(srcFile);
             Constants.setLiblouisDirectory(liblouisDir);
-            Configuration config = odt.getConfiguration();
-            ExportConfiguration exportConfig = new ExportConfiguration();
-            configuration.applyCommandsTo(config);
+
+            // load configuration stored in the ODT file
+            // assume the path to the configuration is meta/odt2braille/configuration.rdf
+            ExportConfiguration exportConfig = null;
+            InputStream configRDF = odt.getFileAsStream("meta/odt2braille/configuration.rdf");
+            if (configRDF != null) {
+                Document doc = new DocumentBuilderImpl().parse(configRDF);
+                // general configuration
+                NodeList nodes = doc.getElementsByTagNameNS(
+                    "http://www.docarch.be/odt2braille/", "general-configuration");
+                outer: for (int i = 0; i < nodes.getLength(); i++) {
+                    Element e = (Element)nodes.item(i);
+                    NodeList nnodes = e.getChildNodes();
+                    for (int ii = 0; ii < nnodes.getLength(); ii++) {
+                        Node nn = nnodes.item(ii);
+                        if (nn instanceof Element) {
+                            // serialize again
+                            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                            transformer.setOutputProperty(OutputKeys.INDENT, "no");
+                            ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            StreamResult result = new StreamResult(os);
+                            transformer.transform(new DOMSource(nn), result);
+                            odt.loadConfiguration(new ByteArrayInputStream(os.toByteArray()));
+                            break outer;
+                        }
+                    }
+                }
+                // export configuration
+                nodes = doc.getElementsByTagNameNS(
+                    "http://www.docarch.be/odt2braille/", "export-configuration");
+                outer: for (int i = 0; i < nodes.getLength(); i++) {
+                    Element e = (Element)nodes.item(i);
+                    NodeList nnodes = e.getChildNodes();
+                    for (int ii = 0; ii < nnodes.getLength(); ii++) {
+                        Node nn = nnodes.item(ii);
+                        if (nn instanceof Element) {
+                            // serialize again
+                            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                            transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                            transformer.setOutputProperty(OutputKeys.INDENT, "no");
+                            ByteArrayOutputStream os = new ByteArrayOutputStream();
+                            StreamResult result = new StreamResult(os);
+                            transformer.transform(new DOMSource(nn), result);
+                            exportConfig = (ExportConfiguration)ConfigurationDecoder.readObject(
+                                new ByteArrayInputStream(os.toByteArray()));
+                            break outer;
+                        }
+                    }
+                }
+            }
+
+            // overwrite configuration with properties from Ant script
+            configuration.applyCommandsTo(odt.getConfiguration());
+            if (exportConfig == null)
+                exportConfig = new ExportConfiguration();
             exportConfiguration.applyCommandsTo(exportConfig);
             PEF pef = ODT2PEFConverter.convert(odt, exportConfig, null);
 
