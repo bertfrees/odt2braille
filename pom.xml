@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>be.docarch</groupId>
 	<artifactId>odt2braille</artifactId>
-	<version>0.1.1-p1-SNAPSHOT</version>
+	<version>0.1.1-p1-OO4.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>odt2braille</name>
 	<description>An extension to OpenOffice.org Writer that enables authors to print documents to a Braille embosser and to export documents as Braille files.</description>
@@ -39,9 +39,8 @@
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<odt2braille.version>${project.version}</odt2braille.version>
-		<odt2braille.font.version>1.2</odt2braille.font.version>
-		<openoffice.version>3.2.0</openoffice.version>
+		<openoffice.version>4.0.0</openoffice.version>
+		<openoffice.systemPath>/opt/openoffice4</openoffice.systemPath>
 		<liblouis.version>2.3.0-odt2braille-0.1.1-SNAPSHOT</liblouis.version>
 		<liblouisxml.version>2.4.0-odt2braille-0.1.1-SNAPSHOT</liblouisxml.version>
 	</properties>
@@ -51,22 +50,22 @@
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-core</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>0.1.1-p1-OO4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-addon</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>0.1.1-p1-OO4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-liblouis</artifactId>
-				<version>${odt2braille.version}</version>
+				<version>0.1.1-p1-OO4.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>be.docarch</groupId>
 				<artifactId>odt2braille-font</artifactId>
-				<version>${odt2braille.font.version}</version>
+				<version>1.2-SNAPSHOT</version>
 			</dependency>
 			<!-- Third-Party Libraries -->
 			<dependency>
@@ -77,7 +76,7 @@
 			<dependency>
 				<groupId>org.daisy.libs</groupId>
 				<artifactId>brailleutils-core</artifactId>
-				<version>1.2.0-beta-SNAPSHOT</version>
+				<version>1.2.0</version>
 				<exclusions>
 					<exclusion>
 						<groupId>net.sf.saxon</groupId>
@@ -88,7 +87,7 @@
 			<dependency>
 				<groupId>org.daisy.libs</groupId>
 				<artifactId>brailleutils-catalog</artifactId>
-				<version>1.2.0-beta-SNAPSHOT</version>
+				<version>1.2.0</version>
 			</dependency>
 			<dependency>
 				<groupId>net.sf.saxon</groupId>
@@ -127,25 +126,29 @@
 				<groupId>org.openoffice</groupId>
 				<artifactId>juh</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
+				<scope>system</scope>
+				<systemPath>${openoffice.systemPath}/program/classes/juh.jar</systemPath>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>jurt</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
+				<scope>system</scope>
+				<systemPath>${openoffice.systemPath}/program/classes/jurt.jar</systemPath>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>ridl</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
+				<scope>system</scope>
+				<systemPath>${openoffice.systemPath}/program/classes/ridl.jar</systemPath>
 			</dependency>
 			<dependency>
 				<groupId>org.openoffice</groupId>
 				<artifactId>unoil</artifactId>
 				<version>${openoffice.version}</version>
-				<scope>provided</scope>
+				<scope>system</scope>
+				<systemPath>${openoffice.systemPath}/program/classes/unoil.jar</systemPath>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.ant</groupId>
