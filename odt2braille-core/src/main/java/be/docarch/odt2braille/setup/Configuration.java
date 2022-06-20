@@ -1331,6 +1331,10 @@ public class Configuration implements Serializable {
                     return volume;
                 }
             }
+            // Max number of manual volumes reached
+            // Note that this can cause "target should not be null" errors in ConfigurationDecoder
+            // if the configuration has more volumes than there are sections, however these errors
+            // are not fatal.
             return null;
         }
 
