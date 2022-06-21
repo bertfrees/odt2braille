@@ -394,7 +394,13 @@ public class TranslationTable implements TranslationTableProperties, Serializabl
     private static TranslationTableProperties fromTableInfo(TableInfo meta) {
         if (fromTableInfo.containsKey(meta))
             return fromTableInfo.get(meta);
-        final String locale = meta.get("locale");
+        String language = meta.get("language");
+        if (language == null) return null; // should not happen: always present in table
+        String region = meta.get("region");
+        if (region == null) return null; // should not happen: if not present in table, defaults to language
+        if (!Locale.forLanguageTag(region).getLanguage().equals(language))
+            return null;
+        final String locale = region;
         if (locale == null) return null;
         final int grade; {
             try {

@@ -1,7 +1,7 @@
 M2_HOME := $(HOME)/.m2/repository
 
-LOUISUTDML_VERSION := 2.8.0-p1-SNAPSHOT
-LOUIS_VERSION := 3.11.0
+LOUISUTDML_VERSION := 2.11.0-p1-SNAPSHOT
+LOUIS_VERSION := 3.21.0-p1
 
 rwildcard = $(shell [ -d $1 ] && find $1 -type f -name '$2' | sed 's/ /\\ /g')
 
