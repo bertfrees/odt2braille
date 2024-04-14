@@ -36,7 +36,7 @@
 		<module>odt2braille-anttask</module>
 		<module>odt2braille-addon</module>
 		<module>odt2braille-assembly</module>
-		<module>libs/accessodf/accessodf-api</module>
+		<module>libs/accessodf</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
