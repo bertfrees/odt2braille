@@ -31,20 +31,22 @@
 			<artifactId>saxon-he</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.daisy.libs</groupId>
-			<artifactId>brailleutils-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.daisy.libs</groupId>
-			<artifactId>brailleutils-catalog</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>xalan</groupId>
-			<artifactId>xalan</artifactId>
+			<groupId>org.daisy.dotify</groupId>
+			<artifactId>dotify.library</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.daisy.libs</groupId>
 			<artifactId>com.xmlcalabash</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!--
+		    xproc-engine-calabash is put in test dependencies and not in plugin dependencies because
+		    the way XMLCalabash loads extension steps (da:odt2braille), namely via the current class
+		    loader, requires that the class loader that loaded XMLCalabash can also find Odt2Braille.
+		-->
+		<dependency>
+			<groupId>org.daisy.maven</groupId>
+			<artifactId>xproc-engine-calabash</artifactId>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

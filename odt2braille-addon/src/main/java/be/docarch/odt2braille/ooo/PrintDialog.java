@@ -19,15 +19,18 @@
 
 package be.docarch.odt2braille.ooo;
 
-import javax.print.DocFlavor;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
 import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+
+import be.docarch.odt2braille.Constants;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -54,9 +57,8 @@ import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
-import be.docarch.odt2braille.Constants;
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserFeatures;
+import org.daisy.dotify.api.embosser.Embosser;
+import org.daisy.dotify.api.embosser.EmbosserFeatures;
 
 /**
  * Show an OpenOffice.org dialog window for selecting the embosser driver.

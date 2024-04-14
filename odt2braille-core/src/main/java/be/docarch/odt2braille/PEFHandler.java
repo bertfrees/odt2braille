@@ -19,23 +19,27 @@
 
 package be.docarch.odt2braille;
 
-import java.util.logging.Logger;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-
+import java.io.InputStream;
 import java.io.IOException;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.ParserConfigurationException;
+import java.util.logging.Logger;
+
 import javax.print.PrintException;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 
 import be.docarch.odt2braille.setup.EmbossConfiguration;
-import org.daisy.braille.embosser.FileFormat;
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserWriter;
-import org.daisy.braille.facade.PEFConverterFacade;
-import org.daisy.printing.PrinterDevice;
 
-import org.daisy.braille.embosser.UnsupportedWidthException;
+import org.daisy.braille.utils.pef.PrinterDevice;
+import org.daisy.braille.utils.pef.UnsupportedWidthException;
+import org.daisy.dotify.api.embosser.FileFormat;
+import org.daisy.dotify.api.embosser.Embosser;
+import org.daisy.dotify.api.embosser.EmbosserWriter;
+
+import org.xml.sax.SAXException;
 
 /**
  * This class handles the processing of a .pef file.
@@ -131,13 +135,13 @@ public class PEFHandler {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
             EmbosserWriter writer = format.newEmbosserWriter(new FileOutputStream(output));
-            org.daisy.braille.pef.PEFHandler handler = new org.daisy.braille.pef.PEFHandler.Builder(writer)
+            org.daisy.braille.utils.pef.PEFHandler handler = new org.daisy.braille.utils.pef.PEFHandler.Builder(writer)
                               .range(null)
-                              .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
+                              .align(org.daisy.braille.utils.pef.PEFHandler.Alignment.INNER)
                               .offset(0)
                               .topOffset(0)
                               .build();
-            PEFConverterFacade.parsePefFile(input, handler);
+            parsePefFile(input, handler);
 
         } Thread.currentThread().setContextClassLoader(cl);
 
@@ -175,13 +179,13 @@ public class PEFHandler {
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
             EmbosserWriter writer = embosser.newEmbosserWriter(new FileOutputStream(output));
-            org.daisy.braille.pef.PEFHandler handler = new org.daisy.braille.pef.PEFHandler.Builder(writer)
+            org.daisy.braille.utils.pef.PEFHandler handler = new org.daisy.braille.utils.pef.PEFHandler.Builder(writer)
                               .range(null)
-                              .align(org.daisy.braille.pef.PEFHandler.Alignment.INNER)
+                              .align(org.daisy.braille.utils.pef.PEFHandler.Alignment.INNER)
                               .offset(offset)
                               .topOffset(topOffset)
                               .build();
-            PEFConverterFacade.parsePefFile(pef.getSinglePEF(), handler);
+            parsePefFile(pef.getSinglePEF(), handler);
 
         } Thread.currentThread().setContextClassLoader(cl);
 
@@ -233,4 +237,22 @@ public class PEFHandler {
 //                    "count(//pef:page)", namespace));
 //        }
 //    }
+
+    private static void parsePefFile(File file, org.daisy.braille.utils.pef.PEFHandler ph)
+                              throws ParserConfigurationException,
+                                     SAXException,
+                                     IOException,
+                                     UnsupportedWidthException {
+        SAXParserFactory spf = SAXParserFactory.newInstance();
+        spf.setNamespaceAware(true);
+        SAXParser sp = spf.newSAXParser();
+        try (InputStream is = new FileInputStream(file)) {
+            sp.parse(is, ph);
+        } catch (SAXException e) {
+            if (ph.hasWidthError())
+                throw new UnsupportedWidthException(e);
+            else
+                throw e;
+        }
+    }
 }

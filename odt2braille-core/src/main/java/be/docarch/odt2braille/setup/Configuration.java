@@ -865,7 +865,9 @@ public class Configuration implements Serializable {
             Collection<String> options = new ArrayList<String>();
             if (getFrontMatterSection() != null) {
                 options.add(getFrontMatterSection());
-                for (Node section : XPathUtils.evaluateNodes(rootSection, "//section[@name='" + getFrontMatterSection() + "']/descendant::section", null)) {
+                for (Node section : XPathUtils.evaluateNodes(rootSection,
+                                                             "//section[@name='" + getFrontMatterSection() + "']/descendant::section",
+                                                             null)) {
                     options.add(section.getAttributes().getNamedItem("name").getNodeValue());
                 }
             }
@@ -1406,23 +1408,24 @@ public class Configuration implements Serializable {
 
     private boolean sectionInBodyMatter(String section) {
 
-        String xpath = "//section[@name='" + section + "'";
+        String xpath = "exists(//section[@name='" + section + "'";
         if (getFrontMatterSection() != null) {
             xpath += " and preceding::section[@name='" + getFrontMatterSection() + "']";
         }
         if (getRearMatterSection() != null) {
             xpath += " and following::section[@name='" + getRearMatterSection() + "']";
         }
-        xpath += "]";
+        xpath += "])";
 
-        return (XPathUtils.evaluateNode(rootSection, xpath) != null);
+        return XPathUtils.evaluateBoolean(rootSection, xpath, null);
     }
 
     private boolean sectionInRearMatter(String section) {
 
         if (getRearMatterSection() == null) { return false; }
-        return (XPathUtils.evaluateNode(rootSection,
-                    "//section[@name='" + getRearMatterSection() + "']/descendant::section[@name='" + section + "']") != null);
+        return XPathUtils.evaluateBoolean(rootSection,
+                    "exists(//section[@name='" + getRearMatterSection() + "']/descendant::section[@name='" + section + "'])",
+                    null);
     }
 
     private List<String> getBodyMatterVolumeSections() {
@@ -1434,8 +1437,8 @@ public class Configuration implements Serializable {
             if (volumeSectionsMap.containsKey(section)) {
                 if (sectionInBodyMatter(section)) {
                     if (lastSection != null) {
-                        if (XPathUtils.evaluateNode(rootSection, "//section[@name='" + lastSection + "']" +
-                                "/descendant::section[@name='" + section + "']") != null) {
+                        if (XPathUtils.evaluateBoolean(rootSection, "exists(//section[@name='" + lastSection + "']" +
+                                "/descendant::section[@name='" + section + "'])", null)) {
                             continue;
                         }
                     }
@@ -1458,8 +1461,8 @@ public class Configuration implements Serializable {
                 if (volumeSectionsMap.containsKey(section)) {
                     if (sectionInRearMatter(section)) {
                         if (lastSection != null) {
-                            if (XPathUtils.evaluateNode(rootSection, "//section[@name='" + lastSection + "']" +
-                                    "/descendant::section[@name='" + section + "']") != null) {
+                            if (XPathUtils.evaluateBoolean(rootSection, "exists(//section[@name='" + lastSection + "']" +
+                                    "/descendant::section[@name='" + section + "'])", null)) {
                                 continue;
                             }
                         }

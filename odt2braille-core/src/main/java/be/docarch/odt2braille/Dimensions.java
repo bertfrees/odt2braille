@@ -19,7 +19,7 @@
 
 package be.docarch.odt2braille;
 
-public class Dimensions implements org.daisy.paper.Dimensions {
+public class Dimensions implements org.daisy.dotify.api.paper.Dimensions {
 
     private double width;
     private double height;

@@ -19,7 +19,6 @@
 
 package be.docarch.odt2braille.ooo;
 
-import be.docarch.odt2braille.setup.PropertyEvent;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Map;
@@ -60,18 +59,20 @@ import com.sun.star.beans.PropertyVetoException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.StatusIndicator;
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.EmbossConfiguration;
-import be.docarch.odt2braille.setup.EmbossConfiguration.PageFormatProperty;
-import be.docarch.odt2braille.setup.Setting;
-import be.docarch.odt2braille.setup.Property;
-import be.docarch.odt2braille.setup.PropertyListener;
 import be.docarch.odt2braille.ooo.dialog.*;
-import org.daisy.paper.Paper;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.tools.Length;
-import org.daisy.braille.tools.Length.UnitsOfLength;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.EmbossConfiguration.PageFormatProperty;
+import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.setup.Property;
+import be.docarch.odt2braille.setup.PropertyEvent;
+import be.docarch.odt2braille.setup.PropertyListener;
+import be.docarch.odt2braille.setup.Setting;
+
+import org.daisy.dotify.api.embosser.Embosser;
+import org.daisy.dotify.api.paper.Length;
+import org.daisy.dotify.api.paper.Length.UnitsOfLength;
+import org.daisy.dotify.api.paper.Paper;
+import org.daisy.dotify.api.table.Table;
 
 /**
  *

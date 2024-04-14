@@ -26,17 +26,17 @@
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
             xmlns:math="http://www.w3.org/1998/Math/MathML"
-            xmlns:xalan="http://xml.apache.org/xslt"
+            xmlns:saxon="http://saxon.sf.net/"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:o2b="http://odt2braille.sf.net"
-            exclude-result-prefixes="o2b dtb math xalan xsd" >
+            exclude-result-prefixes="o2b dtb math saxon xsd" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
                     media-type="text/xml"
                     indent="yes"
-                    omit-xml-declaration="no"
-                    xalan:indent-amount="3" />
+                    omit-xml-declaration="no"/>
+                    <!-- saxon:indent-spaces="3" -->
 
         <xsl:param name="paramLocales"                  as="xsd:string*"   />
         <xsl:param name="paramTranslationTables"        as="xsd:string*"   />

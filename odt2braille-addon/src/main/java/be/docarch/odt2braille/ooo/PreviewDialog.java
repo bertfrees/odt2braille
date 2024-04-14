@@ -19,21 +19,29 @@
 
 package be.docarch.odt2braille.ooo;
 
-import java.util.Locale;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import org.xml.sax.EntityResolver;
-import org.xml.sax.InputSource;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.apache.xpath.XPathAPI;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import be.docarch.odt2braille.Constants;
+import be.docarch.odt2braille.PEF;
+import be.docarch.odt2braille.Volume;
+import be.docarch.odt2braille.PreliminaryVolume;
+import be.docarch.odt2braille.RomanNumbering;
+import be.docarch.odt2braille.setup.PEFConfiguration;
+import be.docarch.odt2braille.setup.ExportConfiguration;
+import be.docarch.odt2braille.setup.EmbossConfiguration;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.setup.Configuration.PageNumberFormat;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -68,24 +76,19 @@ import com.sun.star.awt.FontDescriptor;
 import com.sun.star.beans.XPropertySet;
 import com.sun.star.beans.XMultiPropertySet;
 
-import java.io.IOException;
+import org.apache.xpath.XPathAPI;
+
+import org.daisy.dotify.api.table.Table;
+import org.daisy.dotify.api.table.BrailleConverter;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import javax.xml.transform.TransformerException;
-import javax.xml.parsers.ParserConfigurationException;
-
-import be.docarch.odt2braille.Constants;
-import be.docarch.odt2braille.PEF;
-import be.docarch.odt2braille.Volume;
-import be.docarch.odt2braille.PreliminaryVolume;
-import be.docarch.odt2braille.RomanNumbering;
-import be.docarch.odt2braille.setup.PEFConfiguration;
-import be.docarch.odt2braille.setup.ExportConfiguration;
-import be.docarch.odt2braille.setup.EmbossConfiguration;
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.setup.Configuration.PageNumberFormat;
-
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.BrailleConverter;
 
 /**
  *

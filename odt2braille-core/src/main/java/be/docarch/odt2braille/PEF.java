@@ -23,6 +23,8 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.ArrayList;
@@ -34,8 +36,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
 import java.util.logging.Level;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import be.docarch.odt2braille.setup.SpecialSymbol;
+import be.docarch.odt2braille.setup.PEFConfiguration;
+import be.docarch.odt2braille.setup.Configuration;
+import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
+
+import org.daisy.braille.utils.pef.PEFFileSplitter;
+import org.daisy.dotify.api.table.BrailleConverter;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.Element;
@@ -43,22 +57,7 @@ import org.w3c.dom.DOMImplementation;
 import org.w3c.dom.ProcessingInstruction;
 import org.apache.commons.io.IOUtils;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import org.xml.sax.SAXException;
-
-import be.docarch.odt2braille.setup.SpecialSymbol;
-import be.docarch.odt2braille.setup.PEFConfiguration;
-import be.docarch.odt2braille.setup.Configuration;
-import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
-
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.pef.PEFValidator;
-import org.daisy.braille.pef.PEFFileSplitter;
-import org.daisy.validator.ValidatorFactory;
-import org.daisy.validator.Validator;
 
 /**
  * This class provides a way to convert a flat .odt file to a
@@ -89,7 +88,10 @@ public class PEF {
     private final ODT odt;
     private final PEFConfiguration pefSettings;
     private final PostConversionBrailleChecker checker;
-    private final Validator validator;
+
+    // FIXME: to validating the result PEFs, get a PEFValidator instance
+    // (implemented in dotify.task.impl) through the streamline API.
+    //private final Validator validator;
 
     private final VolumeManager manager;
 
@@ -142,14 +144,14 @@ public class PEF {
         liblouisXML.createStylesFiles();
 
         // Validator
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
+        /*ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
             ValidatorFactory factory = ValidatorFactory.newInstance();
             validator = factory.newValidator(PEFValidator.class.getCanonicalName());
             validator.setFeature(PEFValidator.FEATURE_MODE, PEFValidator.Mode.LIGHT_MODE);
 
-        } Thread.currentThread().setContextClassLoader(cl);
+        } Thread.currentThread().setContextClassLoader(cl);*/
 
         logger.exiting("PEF", "<init>");
     }
@@ -336,17 +338,14 @@ public class PEF {
 
         root.appendChild(bodyElement);
 
-        document.insertBefore((ProcessingInstruction)document.createProcessingInstruction(
-                "xml-stylesheet","type='text/css' href='pef.css'"), document.getFirstChild());
-
         OdtUtils.saveDOM(document, pefFile);
 
         logger.exiting("PEF", "makePEF");
 
-        if (!validatePEF(pefFile)) {
-            Constants.getStatusIndicator().finish(false);
-            throw new ConversionException("PEF file invalid");
-        }
+        //if (!validatePEF(pefFile)) {
+        //    Constants.getStatusIndicator().finish(false);
+        //    throw new ConversionException("PEF file invalid");
+        //}
 
         statusIndicator.finish(true);
     }
@@ -576,7 +575,7 @@ public class PEF {
         volume.setSpecialSymbols(specialSymbols);
     }
 
-    private boolean validatePEF(File pefFile)
+    /*private boolean validatePEF(File pefFile)
                          throws IOException,
                                 MalformedURLException {
 
@@ -599,7 +598,7 @@ public class PEF {
 
             return false;
         }
-    }
+    }*/
 
     public File getSinglePEF() {
 
@@ -634,7 +633,7 @@ public class PEF {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader()); {
 
-            PEFFileSplitter splitter = new PEFFileSplitter();
+            PEFFileSplitter splitter = new PEFFileSplitter(x -> true); // no validation
             splitter.split(input, output);
 
         } Thread.currentThread().setContextClassLoader(cl);

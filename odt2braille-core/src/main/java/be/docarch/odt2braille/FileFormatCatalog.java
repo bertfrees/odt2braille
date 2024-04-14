@@ -23,12 +23,11 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.HashMap;
 
-import org.daisy.braille.embosser.FileFormat;
-import org.daisy.braille.embosser.FileFormatProvider;
-import org.daisy.factory.FactoryCatalog;
-import org.daisy.factory.FactoryFilter;
-
-import org_daisy.BrailleEditorsFileFormatProvider;
+import org.daisy.braille.utils.impl.provider.BrailleEditorsFileFormatProvider;
+import org.daisy.dotify.api.embosser.FileFormat;
+import org.daisy.dotify.api.factory.FactoryCatalog;
+import org.daisy.dotify.api.factory.FactoryProperties;
+import org.daisy.dotify.api.table.TableCatalog;
 
 /**
  *
@@ -43,17 +42,13 @@ public class FileFormatCatalog implements FactoryCatalog<FileFormat> {
         map = new HashMap<String, FileFormat>();
 
         FileFormat pef = new PEFFileFormat();
-        FileFormatProvider provider = new BrailleEditorsFileFormatProvider();
+        BrailleEditorsFileFormatProvider provider = new BrailleEditorsFileFormatProvider();
+        provider.setTableCatalog(TableCatalog.newInstance());
 
         map.put(pef.getIdentifier(), pef);
-        for (FileFormat format : provider.list()) {
-            map.put(format.getIdentifier(), format);
+        for (FactoryProperties p : provider.list()) {
+            map.put(p.getIdentifier(), provider.newFactory(p.getIdentifier()));
         }
-    }
-
-    @Override
-    public Collection<FileFormat> list() {
-        return map.values();
     }
 
     @Override
@@ -61,18 +56,7 @@ public class FileFormatCatalog implements FactoryCatalog<FileFormat> {
         return map.get(identifier);
     }
 
-    @Override
-    public Object getFeature(String key) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setFeature(String key, Object value) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Collection<FileFormat> list(FactoryFilter<FileFormat> filter) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Collection<FileFormat> list() {
+        return map.values();
     }
 }

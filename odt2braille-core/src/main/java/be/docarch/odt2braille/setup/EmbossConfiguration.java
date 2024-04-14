@@ -20,40 +20,41 @@
 package be.docarch.odt2braille.setup;
 
 import java.io.Serializable;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collection;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
 import java.util.NoSuchElementException;
-import java.nio.charset.UnsupportedCharsetException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.CustomSheetPaper;
 import be.docarch.odt2braille.CustomRollPaper;
 import be.docarch.odt2braille.CustomTractorPaper;
 
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserFeatures;
-import org.daisy.braille.embosser.EmbosserCatalog;
-import org.daisy.braille.embosser.EmbosserProperties.PrintMode;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableCatalog;
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.tools.Length;
-import org.daisy.paper.Paper;
-import org.daisy.paper.SheetPaper;
-import org.daisy.paper.TractorPaper;
-import org.daisy.paper.RollPaper;
-import org.daisy.paper.PageFormat;
-import org.daisy.paper.SheetPaperFormat;
-import org.daisy.paper.SheetPaperFormat.Orientation;
-import org.daisy.paper.RollPaperFormat;
-import org.daisy.paper.TractorPaperFormat;
-import org.daisy.paper.Area;
-import org.daisy.paper.PrintPage;
-import org.daisy.paper.PaperCatalog;
+import org.daisy.dotify.api.embosser.Embosser;
+import org.daisy.dotify.api.embosser.EmbosserFactoryProperties;
+import org.daisy.dotify.api.embosser.EmbosserFeatures;
+import org.daisy.dotify.api.embosser.EmbosserCatalog;
+import org.daisy.dotify.api.embosser.EmbosserProperties.PrintMode;
+import org.daisy.dotify.api.embosser.PrintPage;
+import org.daisy.dotify.api.factory.FactoryProperties;
+import org.daisy.dotify.api.paper.Length;
+import org.daisy.dotify.api.paper.Paper;
+import org.daisy.dotify.api.paper.SheetPaper;
+import org.daisy.dotify.api.paper.TractorPaper;
+import org.daisy.dotify.api.paper.RollPaper;
+import org.daisy.dotify.api.paper.PageFormat;
+import org.daisy.dotify.api.paper.SheetPaperFormat;
+import org.daisy.dotify.api.paper.SheetPaperFormat.Orientation;
+import org.daisy.dotify.api.paper.RollPaperFormat;
+import org.daisy.dotify.api.paper.TractorPaperFormat;
+import org.daisy.dotify.api.paper.Area;
+import org.daisy.dotify.api.paper.PaperCatalog;
+import org.daisy.dotify.api.table.Table;
+import org.daisy.dotify.api.table.TableCatalog;
+import org.daisy.dotify.api.table.BrailleConverter;
 
 public class EmbossConfiguration implements Serializable,
                                             PEFConfiguration {
@@ -239,7 +240,7 @@ public class EmbossConfiguration implements Serializable,
 
         } Thread.currentThread().setContextClassLoader(cl);
 
-        for (Embosser e : embosserCatalog.list()) {
+        for (EmbosserFactoryProperties e : embosserCatalog.listEmbossers()) {
             embosserOptions.add(e.getIdentifier());
         }
 
@@ -341,7 +342,10 @@ public class EmbossConfiguration implements Serializable,
         private Embosser embosser = embosserCatalog.get(DEFAULT_EMBOSSER);
 
         public Collection<Embosser> options() {
-            return embosserCatalog.list();
+            Collection<Embosser> options = new ArrayList();
+            for (EmbosserFactoryProperties p : embosserCatalog.listEmbossers())
+                options.add(embosserCatalog.get(p.getIdentifier()));
+            return options;
         }
 
         @Override
@@ -389,9 +393,10 @@ public class EmbossConfiguration implements Serializable,
         
         public Collection<Table> options() {
             Collection<Table> options = new ArrayList();
-            for (Table tab : charSetCatalog.list()) {
-                if (accept(tab)) {
-                    options.add(tab);
+            for (FactoryProperties p : charSetCatalog.list()) {
+                Table t = charSetCatalog.get(p.getIdentifier());
+                if (accept(t)) {
+                    options.add(t);
                 }
             }
             return options;

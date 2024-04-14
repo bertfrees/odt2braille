@@ -34,8 +34,7 @@
         xmlns:xforms="http://www.w3.org/2002/xforms"
         xmlns:xsd="http://www.w3.org/2001/XMLSchema"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns:exsl="http://exslt.org/common"
-        xmlns:xalan="http://xml.apache.org/xslt"
+        xmlns:saxon="http://saxon.sf.net/"
         xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0"
         xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0"
         xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0"
@@ -51,15 +50,15 @@
         xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0"
         xmlns:o2b="http://odt2braille.sf.net"
 
-        exclude-result-prefixes="o2b dtb exsl office style dom xforms xsi xsd text table draw fo
-                                 xlink number svg chart dr3d math form script dc meta xalan rdf ns1" >
+        exclude-result-prefixes="o2b dtb office style dom xforms xsi xsd text table draw fo
+                                 xlink number svg chart dr3d math form script dc meta saxon rdf ns1" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
                     media-type="text/xml"
                     indent="yes"
-                    omit-xml-declaration="no"
-                    xalan:indent-amount="3" />
+                    omit-xml-declaration="no"/>
+                    <!-- saxon:indent-spaces="3" -->
 
         <!-- XSLT Parameters  -->
 

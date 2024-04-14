@@ -20,22 +20,22 @@
 package be.docarch.odt2braille;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.BufferedWriter;
-import java.io.Writer;
 import java.io.File;
 import java.io.FileWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import java.io.IOException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 
@@ -54,7 +54,8 @@ import be.docarch.odt2braille.setup.style.PictureStyle;
 import be.docarch.odt2braille.setup.style.FootnoteStyle;
 import be.docarch.odt2braille.setup.style.Style;
 import be.docarch.odt2braille.setup.style.Style.Alignment;
-import org.daisy.braille.table.BrailleConverter;
+
+import org.daisy.dotify.api.table.BrailleConverter;
 
 /**
  *

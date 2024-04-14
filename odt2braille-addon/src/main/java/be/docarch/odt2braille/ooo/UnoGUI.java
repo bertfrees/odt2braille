@@ -19,61 +19,60 @@
 
 package be.docarch.odt2braille.ooo;
 
-import java.io.File;
-import java.io.OutputStream;
-import java.io.InputStream;
-import java.io.FileOutputStream;
-import java.io.FileInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.ResourceBundle;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.uno.XComponentContext;
-import com.sun.star.uno.AnyConverter;
-import com.sun.star.beans.PropertyValue;
-import com.sun.star.lang.XComponent;
-import com.sun.star.lang.XMultiComponentFactory;
-import com.sun.star.frame.XStorable;
-import com.sun.star.frame.XDesktop;
-import com.sun.star.frame.XController;
-import com.sun.star.frame.XModel;
-import com.sun.star.frame.XFrame;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.awt.XWindowPeer;
-import com.sun.star.awt.XWindow;
-import com.sun.star.text.XTextViewCursor;
-import com.sun.star.text.XTextViewCursorSupplier;
-import com.sun.star.util.XModifiable;
-import com.sun.star.container.XEnumeration;
-import com.sun.star.rdf.XResource;
-import com.sun.star.rdf.Statement;
-import com.sun.star.rdf.XURI;
-import com.sun.star.rdf.URIs;
-import com.sun.star.rdf.URI;
-import com.sun.star.rdf.Literal;
-import com.sun.star.rdf.XLiteral;
-import com.sun.star.rdf.XDocumentMetadataAccess;
-import com.sun.star.rdf.XRepository;
-import com.sun.star.rdf.XNamedGraph;
-
-import org.xml.sax.SAXException;
-import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+
+import com.sun.star.awt.XWindow;
+import com.sun.star.awt.XWindowPeer;
+import com.sun.star.beans.PropertyValue;
 import com.sun.star.beans.PropertyVetoException;
-import com.sun.star.lang.IllegalArgumentException;
-import com.sun.star.lang.WrappedTargetException;
 import com.sun.star.container.ElementExistException;
 import com.sun.star.container.NoSuchElementException;
+import com.sun.star.container.XEnumeration;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.frame.XController;
+import com.sun.star.frame.XDesktop;
+import com.sun.star.frame.XFrame;
+import com.sun.star.frame.XModel;
+import com.sun.star.frame.XStorable;
+import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.lang.XComponent;
+import com.sun.star.lang.XMultiComponentFactory;
+import com.sun.star.rdf.Literal;
 import com.sun.star.rdf.RepositoryException;
+import com.sun.star.rdf.Statement;
+import com.sun.star.rdf.URI;
+import com.sun.star.rdf.URIs;
+import com.sun.star.rdf.XDocumentMetadataAccess;
+import com.sun.star.rdf.XLiteral;
+import com.sun.star.rdf.XNamedGraph;
+import com.sun.star.rdf.XRepository;
+import com.sun.star.rdf.XResource;
+import com.sun.star.rdf.XURI;
+import com.sun.star.text.XTextViewCursor;
+import com.sun.star.text.XTextViewCursorSupplier;
+import com.sun.star.uno.AnyConverter;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.uno.XComponentContext;
+import com.sun.star.util.XModifiable;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.PEF;
@@ -90,9 +89,12 @@ import be.docarch.odt2braille.LiblouisXMLException;
 import be.docarch.odt2braille.checker.PostConversionBrailleChecker;
 import be.docarch.odt2braille.ooo.checker.BrailleCheckerDialog;
 import be.docarch.odt2braille.ooo.checker.ReportWriter;
-import org.daisy.braille.embosser.Embosser;
-import org.daisy.braille.embosser.EmbosserFeatures;
-import be_interpoint.Interpoint55Embosser;
+
+import org.daisy.braille.utils.impl.provider.interpoint.Interpoint55Embosser;
+import org.daisy.dotify.api.embosser.Embosser;
+import org.daisy.dotify.api.embosser.EmbosserFeatures;
+
+import org.xml.sax.SAXException;
 
 /**
  * The <code>changeSettings</code>, <code>exportBraille</code> and <code>embossBraille</code> methods

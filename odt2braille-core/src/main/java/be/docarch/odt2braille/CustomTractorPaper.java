@@ -19,9 +19,10 @@
 
 package be.docarch.odt2braille;
 
-import org.daisy.braille.tools.Length;
-import org.daisy.paper.TractorPaper;
 import be.docarch.odt2braille.CustomPaperProvider.PaperType;
+
+import org.daisy.dotify.api.paper.Length;
+import org.daisy.dotify.api.paper.TractorPaper;
 
 public class CustomTractorPaper extends TractorPaper {
 
@@ -29,7 +30,7 @@ public class CustomTractorPaper extends TractorPaper {
     private Length along;
 
     public CustomTractorPaper(String name, String desc) {
-        super(name, desc, PaperType.TRACTOR, Length.newMillimeterValue(210d), Length.newInchValue(11d));
+        super(name, desc, PaperType.TRACTOR.toString(), Length.newMillimeterValue(210d), Length.newInchValue(11d));
         across = super.getLengthAcrossFeed();
         along = super.getLengthAlongFeed();
     }

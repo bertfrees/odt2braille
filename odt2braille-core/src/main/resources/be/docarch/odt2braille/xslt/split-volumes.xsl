@@ -25,16 +25,16 @@
 
             xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
             xmlns:dtb="http://www.daisy.org/z3986/2005/dtbook/"
-            xmlns:xalan="http://xml.apache.org/xslt"
+            xmlns:saxon="http://saxon.sf.net/"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-            exclude-result-prefixes="dtb xalan xsd" >
+            exclude-result-prefixes="dtb saxon xsd" >
 
         <xsl:output method="xml"
                     encoding="UTF-8"
                     media-type="text/xml"
                     indent="yes"
-                    omit-xml-declaration="no"
-                    xalan:indent-amount="3" />
+                    omit-xml-declaration="no"/>
+                    <!-- saxon:indent-spaces="3" -->
 
         <!-- XSLT Parameters  -->
 

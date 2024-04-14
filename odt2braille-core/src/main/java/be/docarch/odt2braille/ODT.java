@@ -208,7 +208,7 @@ public class ODT {
 
         namespace = new NamespaceContext();
         odtLocale = new Locale(XPathUtils.evaluateString(odtStylesFile.toURL().openStream(),
-                "//office:styles/style:default-style/style:text-properties/@fo:language",namespace).toLowerCase(),
+                "//office:styles/style:default-style/style:text-properties/@fo:language", namespace).toLowerCase(),
                                XPathUtils.evaluateString(odtStylesFile.toURL().openStream(),
                 "//office:styles/style:default-style/style:text-properties/@fo:country", namespace).toUpperCase());
 
@@ -441,11 +441,11 @@ public class ODT {
             Element stylesRoot = stylesDoc.getDocumentElement();
             Element metaRoot = metaDoc.getDocumentElement();
 
-            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following-sibling::*[1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//office:body/office:text/text:sequence-decls/following-sibling::*[1]", namespace);
             if (firstNode != null) {
                 statusIndicator.start();
                 try {
-                    statusIndicator.setSteps(XPathUtils.evaluateInteger(metaRoot, "//meta/document-statistic/@page-count"));
+                    statusIndicator.setSteps(XPathUtils.evaluateInteger(metaRoot, "//office:meta/meta:document-statistic/@meta:page-count", namespace));
                 } catch (NumberFormatException e) {
                     statusIndicator.setSteps(0);
                 }
@@ -479,10 +479,10 @@ public class ODT {
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
 
-            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following::h[1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:h[1]", namespace);
             if (firstNode != null) {
                 statusIndicator.start();
-                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//body/text//h)"));
+                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//office:body/office:text//text:h)", namespace));
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep2"));
                 insertHeadingNumbering(contentRoot, stylesRoot, firstNode, true);
                 statusIndicator.finish(true);
@@ -513,10 +513,10 @@ public class ODT {
             Element contentRoot = contentDoc.getDocumentElement();
             Element stylesRoot = stylesDoc.getDocumentElement();
 
-            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//body/text/sequence-decls/following::list[@id][1]");
+            Node firstNode = XPathUtils.evaluateNode(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id][1]", namespace);
             if (firstNode != null) {
                 statusIndicator.start();
-                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//body/text//list[@id])"));
+                statusIndicator.setSteps(XPathUtils.evaluateInteger(contentRoot, "count(//office:body/office:text//text:list[@xml:id])", namespace));
                 statusIndicator.setStatus(ResourceBundle.getBundle(L10N, oooLocale).getString("statusIndicatorStep3"));
                 insertListNumbering(contentRoot, stylesRoot, firstNode, 0, true);
                 statusIndicator.finish(true);
@@ -613,9 +613,9 @@ public class ODT {
         } else if (nodeName.equals("text:list")) {
             
             if (attr.getNamedItem("text:style-name") != null) {
-                xpath = "./*//@style-name";
-                if (XPathUtils.evaluateBoolean(node, xpath)) {
-                    styleName = XPathUtils.evaluateString(node, xpath);
+                xpath = "./*//@text:style-name";
+                if (XPathUtils.evaluateBoolean(node, xpath, namespace)) {
+                    styleName = XPathUtils.evaluateString(node, xpath, namespace);
                 }
             }
 
@@ -649,18 +649,21 @@ public class ODT {
 
         if (styleName != null) {
 
-            xpath = "//automatic-styles/style[@name='" + styleName + "']/paragraph-properties"; // TODO: hoeft niet in automatic-styles te zitten !
+            xpath = "//office:automatic-styles/style:style[@style:name='" + styleName + "']/style:paragraph-properties"; // TODO: hoeft niet in automatic-styles te zitten !
 
-            if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@page-number='auto']")) {
-                if (XPathUtils.evaluateString(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name").length() > 0) {
+            if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@style:page-number='auto']", namespace)) {
+                if (XPathUtils.evaluateString(contentRoot,
+                                              "//office:automatic-styles/style:style[@style:name='" + styleName + "']/@style:master-page-name",
+                                              namespace)
+                              .length() > 0) {
                     hardPageBreaksBefore ++;
                 }
-            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@page-number>0]")) {
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@style:page-number>0]", namespace)) {
                 hardPageBreaksBefore ++;
-                pagenum = XPathUtils.evaluateInteger(contentRoot, xpath + "/@page-number") - 1;
-            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@break-before='page']")) {
+                pagenum = XPathUtils.evaluateInteger(contentRoot, xpath + "/@style:page-number", namespace) - 1;
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@fo:break-before='page']", namespace)) {
                 hardPageBreaksBefore ++;
-            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@break-after='page']")) {
+            } else if (XPathUtils.evaluateBoolean(contentRoot, xpath + "[@fo:break-after='page']", namespace)) {
                 hardPageBreaksAfter ++;
             }
         }
@@ -684,13 +687,17 @@ public class ODT {
                 // Update masterPageName
 
                 if (!thisIsFirst) {
-                    temp = XPathUtils.evaluateString(stylesRoot, "//master-styles/master-page[@name='" + masterPageName + "']/@next-style-name");
+                    temp = XPathUtils.evaluateString(stylesRoot,
+                                                     "//office:master-styles/style:master-page[@style:name='" + masterPageName + "']/@style:next-style-name",
+                                                     namespace);
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
                 }
                 if (softPageBreaksBefore + hardPageBreaksBefore > 0 && styleName != null) {
-                    temp = XPathUtils.evaluateString(contentRoot, "//automatic-styles/style[@name='" + styleName + "']/@master-page-name");
+                    temp = XPathUtils.evaluateString(contentRoot,
+                                                     "//office:automatic-styles/style:style[@style:name='" + styleName + "']/@style:master-page-name",
+                                                     namespace);
                     if (!temp.equals("")) {
                         masterPageName = temp;
                     }
@@ -698,26 +705,26 @@ public class ODT {
 
                 // Update inclPageNum, enumType and offset
 
-                xpath = "(count(//master-styles/master-page[@name='" + masterPageName + "']/header/p/page-number)" +
-                        "+count(//master-styles/master-page[@name='" + masterPageName + "']/footer/p/page-number))>0";
-                inclPageNum = XPathUtils.evaluateBoolean(stylesRoot, xpath);
+                xpath = "(count(//office:master-styles/style:master-page[@style:name='" + masterPageName + "']/style:header/text:p/text:page-number)" +
+                        "+count(//office:master-styles/style:master-page[@style:name='" + masterPageName + "']/style:footer/text:p/text:page-number))>0";
+                inclPageNum = XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace);
 
-                xpath = "//master-styles/master-page[@name='" + masterPageName + "']/@page-layout-name";
-                String pageLayoutName = XPathUtils.evaluateString(stylesRoot, xpath);
+                xpath = "//office:master-styles/style:master-page[@style:name='" + masterPageName + "']/@style:page-layout-name";
+                String pageLayoutName = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
 
-                xpath = "//automatic-styles/page-layout[@name='" + pageLayoutName + "']/page-layout-properties/@num-format";
-                enumType = XPathUtils.evaluateString(stylesRoot, xpath);
+                xpath = "//office:automatic-styles/style:page-layout[@style:name='" + pageLayoutName + "']/style:page-layout-properties/@style:num-format";
+                enumType = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
 
                 if (inclPageNum) {
 
-                    xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@num-format";
-                    temp = XPathUtils.evaluateString(stylesRoot, xpath);
+                    xpath = "//office:master-styles/style:master-page[@style:name='" + masterPageName + "']//text:page-number[1]/@style:num-format";
+                    temp = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
                     if(temp.length()>0){
                         enumType = temp;
                     }
 
-                    xpath = "//master-styles/master-page[@name='" + masterPageName + "']//page-number[1]/@page-adjust";
-                    temp = XPathUtils.evaluateString(stylesRoot, xpath);
+                    xpath = "//office:master-styles/style:master-page[@style:name='" + masterPageName + "']//text:page-number[1]/@text:page-adjust";
+                    temp = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
                     if (!temp.equals("")) {
                         offset = Integer.parseInt(temp);
                     }
@@ -890,13 +897,17 @@ public class ODT {
 
             // Process all headings outside frames
 
-            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:h[not(ancestor::draw:frame)]", namespace)) {
+            for (Node n : XPathUtils.evaluateNodes(contentRoot,
+                                                   "//office:body/office:text/text:sequence-decls/following::text:h[not(ancestor::draw:frame)]",
+                                                   namespace)) {
                 insertHeadingNumbering(contentRoot, stylesRoot, n, false);
             }
 
             // Process all frames of depth = 1
 
-            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]", namespace)) {
+            for (Node n : XPathUtils.evaluateNodes(contentRoot,
+                                                   "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]",
+                                                   namespace)) {
                 insertHeadingNumbering(contentRoot, stylesRoot, n, false);
             }
 
@@ -910,14 +921,22 @@ public class ODT {
                     String styleName = attr.getNamedItem("text:style-name").getNodeValue();
                     String parentStyleName = "";
                     while (styleName.length() > 0) {
-                        if (XPathUtils.evaluateBoolean(contentRoot, "//style[@name='" + styleName + "']/@list-style-name") ||
-                            XPathUtils.evaluateBoolean(stylesRoot,  "//style[@name='" + styleName + "']/@list-style-name")) {
+                        if (XPathUtils.evaluateBoolean(contentRoot,
+                                                       "//style:style[@style:name='" + styleName + "']/@style:list-style-name",
+                                                       namespace) ||
+                            XPathUtils.evaluateBoolean(stylesRoot,
+                                                       "//style:style[@style:name='" + styleName + "']/@style:list-style-name",
+                                                       namespace)) {
                             outlineNumbering = false;
                             break;
                         }
-                        parentStyleName = XPathUtils.evaluateString(contentRoot, "//style[@name='" + styleName + "']/@parent-style-name");
+                        parentStyleName = XPathUtils.evaluateString(contentRoot,
+                                                                    "//style:style[@style:name='" + styleName + "']/@style:parent-style-name",
+                                                                    namespace);
                         if (parentStyleName.length() == 0) {
-                            parentStyleName = XPathUtils.evaluateString(stylesRoot, "//style[@name='" + styleName + "']/@parent-style-name");
+                            parentStyleName = XPathUtils.evaluateString(stylesRoot,
+                                                                        "//style:style[@style:name='" + styleName + "']/@style:parent-style-name",
+                                                                        namespace);
                         }
                         styleName = parentStyleName;
                     }
@@ -943,34 +962,34 @@ public class ODT {
 
                             for (int i=0;i<10;i++) {
 
-                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@bullet-char";
-                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
+                                xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "'][1]/@text:bullet-char";
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace)) {
                                     numFormat[i] = "bullet";
                                 } else {
-                                    xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "'][1]/@num-format";
-                                    numFormat[i] = XPathUtils.evaluateString(stylesRoot, xpath);
+                                    xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "'][1]/@style:num-format";
+                                    numFormat[i] = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
                                 }
-                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@start-value";
-                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
-                                    startValue[i] = XPathUtils.evaluateInteger(stylesRoot, xpath);
+                                xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "']/@text:start-value";
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace)) {
+                                    startValue[i] = XPathUtils.evaluateInteger(stylesRoot, xpath, namespace);
                                 } else {
                                     startValue[i] = 1;
                                 }
-                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@display-levels";
-                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
-                                    displayLevels[i] = XPathUtils.evaluateInteger(stylesRoot, xpath);
+                                xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "']/@text:display-levels";
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace)) {
+                                    displayLevels[i] = XPathUtils.evaluateInteger(stylesRoot, xpath, namespace);
                                 } else {
                                     displayLevels[i] = 1;
                                 }
-                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-prefix";
-                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
-                                    prefix[i] = XPathUtils.evaluateString(stylesRoot, xpath);
+                                xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "']/@style:num-prefix";
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace)) {
+                                    prefix[i] = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
                                 } else {
                                     prefix[i] = "";
                                 }
-                                xpath = "//styles/outline-style[@name='Outline']/*[@level='" + (i+1) + "']/@num-suffix";
-                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath)) {
-                                    suffix[i] = XPathUtils.evaluateString(stylesRoot, xpath);
+                                xpath = "//office:styles/text:outline-style[@style:name='Outline']/*[@text:level='" + (i+1) + "']/@style:num-suffix";
+                                if (XPathUtils.evaluateBoolean(stylesRoot, xpath, namespace)) {
+                                    suffix[i] = XPathUtils.evaluateString(stylesRoot, xpath, namespace);
                                 } else {
                                     suffix[i] = "";
                                 }
@@ -980,7 +999,7 @@ public class ODT {
 
                         }
 
-                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::frame")) {
+                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::draw:frame", namespace)) {
                             if (outlineNumber==null) {
                                 outlineNumber = new ListNumber(outlineProperties);
                             }
@@ -1110,7 +1129,7 @@ public class ODT {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::frame)");
+                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::draw:frame)", namespace);
 
                 // Process all heading descendants
 
@@ -1176,20 +1195,22 @@ public class ODT {
 
             // Initialization
 
-            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id]", namespace)) {
+            for (Node n : XPathUtils.evaluateNodes(contentRoot,
+                                                   "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id]",
+                                                   namespace)) {
 
                 attr = n.getAttributes();
-                id = XPathUtils.evaluateString(n, "./@id");
+                id = XPathUtils.evaluateString(n, "./@xml:id", namespace);
 
                 if (attr.getNamedItem("text:style-name") != null) {
 
                     listStyleName = attr.getNamedItem("text:style-name").getNodeValue();
                     tmp = id;
 
-                    if (XPathUtils.evaluateBoolean(n, "./@continue-list")) {
-                        tmp = XPathUtils.evaluateString(n, "./@continue-list");
-                    } else if (XPathUtils.evaluateBoolean(n, "./@continue-numbering")) {
-                        if (XPathUtils.evaluateString(n, "./@continue-numbering").equals("true")) {
+                    if (XPathUtils.evaluateBoolean(n, "./@text:continue-list", namespace)) {
+                        tmp = XPathUtils.evaluateString(n, "./@text:continue-list", namespace);
+                    } else if (XPathUtils.evaluateBoolean(n, "./@text:continue-numbering", namespace)) {
+                        if (XPathUtils.evaluateString(n, "./@text:continue-numbering", namespace).equals("true")) {
                             if (prevId!=null) {
                                 tmp = prevId;
                             }
@@ -1216,13 +1237,17 @@ public class ODT {
 
             // Process all lists[@id] outside frames
 
-            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id][not(ancestor::draw:frame)]", namespace)) {
+            for (Node n : XPathUtils.evaluateNodes(contentRoot,
+                                                   "//office:body/office:text/text:sequence-decls/following::text:list[@xml:id][not(ancestor::draw:frame)]",
+                                                   namespace)) {
                 insertListNumbering(contentRoot, stylesRoot, n, 0, false);
             }
 
             // Process all frames of depth = 1
 
-            for (Node n : XPathUtils.evaluateNodes(contentRoot, "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]", namespace)) {
+            for (Node n : XPathUtils.evaluateNodes(contentRoot,
+                                                   "//office:body/office:text/text:sequence-decls/following::draw:frame[not(ancestor::draw:frame)]",
+                                                   namespace)) {
                 insertListNumbering(contentRoot, stylesRoot, n, 0, false);
             }
 
@@ -1230,11 +1255,11 @@ public class ODT {
 
             if (nodeName.equals("text:list")) {
 
-                if (XPathUtils.evaluateBoolean(node, "@id")) {
+                if (XPathUtils.evaluateBoolean(node, "@xml:id", namespace)) {
 
                     // Main list
 
-                    id = XPathUtils.evaluateString(node, "@id");
+                    id = XPathUtils.evaluateString(node, "@xml:id", namespace);
 
                     level = 1;
 
@@ -1259,39 +1284,39 @@ public class ODT {
                             displayLevels = new int[10];
                             startValue = new int[10];
 
-                            xpathBase = "//" + (autolist?"automatic-":"") + "styles/list-style[@name='" + listStyleName + "']/";
+                            xpathBase = "//office:" + (autolist?"automatic-":"") + "styles/text:list-style[@style:name='" + listStyleName + "']/";
                             Node root = autolist?contentRoot:stylesRoot;
 
                             for (int i=0;i<10;i++) {
 
-                                xpath = xpathBase + "*[@level='" + (i+1) + "'][1]/@bullet-char";
-                                if (XPathUtils.evaluateBoolean(root, xpath)) {
+                                xpath = xpathBase + "*[@text:level='" + (i+1) + "'][1]/@text:bullet-char";
+                                if (XPathUtils.evaluateBoolean(root, xpath, namespace)) {
                                     numFormat[i] = "bullet";
                                 } else {
-                                    xpath = xpathBase + "*[@level='" + (i+1) + "'][1]/@num-format";
-                                    numFormat[i] = XPathUtils.evaluateString(root, xpath);
+                                    xpath = xpathBase + "*[@text:level='" + (i+1) + "'][1]/@style:num-format";
+                                    numFormat[i] = XPathUtils.evaluateString(root, xpath, namespace);
                                 }
-                                xpath = xpathBase + "*[@level='" + (i+1) + "']/@start-value";
-                                if (XPathUtils.evaluateBoolean(root, xpath)) {
-                                    startValue[i] = XPathUtils.evaluateInteger(root, xpath);
+                                xpath = xpathBase + "*[@text:level='" + (i+1) + "']/@text:start-value";
+                                if (XPathUtils.evaluateBoolean(root, xpath, namespace)) {
+                                    startValue[i] = XPathUtils.evaluateInteger(root, xpath, namespace);
                                 } else {
                                     startValue[i] = 1;
                                 }
-                                xpath = xpathBase + "*[@level='" + (i+1) + "']/@display-levels";
-                                if (XPathUtils.evaluateBoolean(root, xpath)) {
-                                    displayLevels[i] = XPathUtils.evaluateInteger(root, xpath);
+                                xpath = xpathBase + "*[@text:level='" + (i+1) + "']/@text:display-levels";
+                                if (XPathUtils.evaluateBoolean(root, xpath, namespace)) {
+                                    displayLevels[i] = XPathUtils.evaluateInteger(root, xpath, namespace);
                                 } else {
                                     displayLevels[i] = 1;
                                 }
-                                xpath = xpathBase + "*[@level='" + (i+1) + "']/@num-prefix";
-                                if (XPathUtils.evaluateBoolean(root, xpath)) {
-                                    prefix[i] = XPathUtils.evaluateString(root, xpath);
+                                xpath = xpathBase + "*[@text:level='" + (i+1) + "']/@style:num-prefix";
+                                if (XPathUtils.evaluateBoolean(root, xpath, namespace)) {
+                                    prefix[i] = XPathUtils.evaluateString(root, xpath, namespace);
                                 } else {
                                     prefix[i] = "";
                                 }
-                                xpath = xpathBase + "*[@level='" + (i+1) + "']/@num-suffix";
-                                if (XPathUtils.evaluateBoolean(root, xpath)) {
-                                    suffix[i] = XPathUtils.evaluateString(root, xpath);
+                                xpath = xpathBase + "*[@text:level='" + (i+1) + "']/@style:num-suffix";
+                                if (XPathUtils.evaluateBoolean(root, xpath, namespace)) {
+                                    suffix[i] = XPathUtils.evaluateString(root, xpath, namespace);
                                 } else {
                                     suffix[i] = "";
                                 }
@@ -1303,7 +1328,7 @@ public class ODT {
 
                         // Update currentnumber
 
-                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::frame")) {
+                        if (!XPathUtils.evaluateBoolean(node, "./ancestor::draw:frame", namespace)) {
                             if (!listNumber.containsKey(id)) {
                                 listNumber.put(id, new ListNumber(listProperties.get(listStyleName)));
                             }
@@ -1473,17 +1498,21 @@ public class ODT {
 
             } else if (nodeName.equals("draw:frame")) {
 
-                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::frame)");
+                int depth = XPathUtils.evaluateInteger(node, "count(./ancestor-or-self::draw:frame)", namespace);
 
                 // Process all descendants of type list[@id]
 
-                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::text:list[@xml:id][count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                for (Node n : XPathUtils.evaluateNodes(node,
+                                                       "./descendant::text:list[@xml:id][count(ancestor::draw:frame)=" + depth + "]",
+                                                       namespace)) {
                     insertListNumbering(contentRoot, stylesRoot, n, level, false);
                 }
 
                 // Process all frame descendants
 
-                for (Node n : XPathUtils.evaluateNodes(node, "./descendant::draw:frame[count(ancestor::draw:frame)=" + depth + "]", namespace)) {
+                for (Node n : XPathUtils.evaluateNodes(node,
+                                                       "./descendant::draw:frame[count(ancestor::draw:frame)=" + depth + "]",
+                                                       namespace)) {
                     insertListNumbering(contentRoot, stylesRoot, n, 0, false);
                 }
             }
@@ -1897,7 +1926,9 @@ public class ODT {
 
             }
 
-            languages = new String[XPathUtils.evaluateInteger(usedLanguagesFile.toURL().openStream(), "count(/o2b:languages/o2b:language)", namespace)];
+            languages = new String[XPathUtils.evaluateInteger(usedLanguagesFile.toURL().openStream(),
+                                                              "count(/o2b:languages/o2b:language)",
+                                                              namespace)];
             languages[0] = XPathUtils.evaluateString(usedLanguagesFile.toURL().openStream(),
                            "/o2b:languages/o2b:language[@class='main'][1]/@name", namespace);
             for (int i=1; i<languages.length; i++) {
@@ -1943,7 +1974,9 @@ public class ODT {
 
             }
 
-            int count = XPathUtils.evaluateInteger(usedStylesFile.toURL().openStream(), "count(/o2b:styles/o2b:style[@family='paragraph'])", namespace);
+            int count = XPathUtils.evaluateInteger(usedStylesFile.toURL().openStream(),
+                                                   "count(/o2b:styles/o2b:style[@family='paragraph'])",
+                                                   namespace);
             for (int i=1; i<=count; i++) {
                 String styleName = XPathUtils.evaluateString(usedStylesFile.toURL().openStream(),
                     "/o2b:styles/o2b:style[@family='paragraph'][" + i + "]/@name", namespace);
@@ -2076,7 +2109,7 @@ public class ODT {
         Element rootSection = doc.getDocumentElement();
 
         try {
-            Node bodyText = XPathUtils.evaluateNode(contentDoc.getDocumentElement(), "//body/text[1]");
+            Node bodyText = XPathUtils.evaluateNode(contentDoc.getDocumentElement(), "//office:body/office:text[1]", namespace);
             copySectionNodes(bodyText, rootSection, doc);
         } catch (TransformerException e) {
         }
@@ -2090,14 +2123,16 @@ public class ODT {
                                   Element to,
                                   Document doc)
                            throws TransformerException {
-        Element e;
-        String name;
-        for (Node n : XPathUtils.evaluateNodes(from, "text:section", namespace)) {
-            name = n.getAttributes().getNamedItem("text:name").getNodeValue();
-            e = doc.createElement("section");
-            e.setAttribute("name", name);
-            to.appendChild(e);
-            copySectionNodes(n, e, doc);
+        if (from != null) {
+            Element e;
+            String name;
+            for (Node n : XPathUtils.evaluateNodes(from, "text:section", namespace)) {
+                name = n.getAttributes().getNamedItem("text:name").getNodeValue();
+                e = doc.createElement("section");
+                e.setAttribute("name", name);
+                to.appendChild(e);
+                copySectionNodes(n, e, doc);
+            }
         }
     }
 
@@ -2114,17 +2149,18 @@ public class ODT {
         Document daisy = docBuilder.parse(daisyFile);
         Node root = daisy.getDocumentElement();
 
-        int pageCount =  XPathUtils.evaluateInteger(root, "count(//bodymatter/volume[1]//pagenum)");
+        int pageCount =  XPathUtils.evaluateInteger(root, "count(//*:bodymatter/*:volume[1]//*:pagenum)", namespace);
         int[] outline = new int[pageCount];
         int lvl;
         for (int i=0; i<pageCount; i++) {
             outline[i] = 0;
-            for (Node node : XPathUtils.evaluateNodes(root, "//bodymatter/volume[1]/heading" +
-                                                            "//*[(self::h1 or self::h2 or self::h3 or " +
-                                                                 "self::h4 or self::h5 or self::h6 or " +
-                                                                 "self::h7 or self::h8 or self::h9 or self::h10) " +
+            for (Node node : XPathUtils.evaluateNodes(root, "//dtb:bodymatter/dtb:volume[1]/dtb:heading" +
+                                                            "//*[(self::dtb:h1 or self::dtb:h2 or self::dtb:h3 or " +
+                                                                 "self::dtb:h4 or self::dtb:h5 or self::dtb:h6 or " +
+                                                                 "self::dtb:h7 or self::dtb:h8 or self::dtb:h9 or self::dtb:h10) " +
                                                              "and not(@dummy) " +
-                                                             "and count(preceding::pagenum[ancestor::bodymatter])=" + (i+1) +"]")) {
+                                                             "and count(preceding::*:pagenum[ancestor::*:bodymatter])=" + (i+1) +"]",
+                                                      namespace)) {
                 try {
                     lvl = Integer.parseInt(node.getNodeName().substring(5));
                     if (outline[i]==0 && lvl>0) {

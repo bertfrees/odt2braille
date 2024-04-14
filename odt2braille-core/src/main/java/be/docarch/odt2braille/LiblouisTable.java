@@ -21,10 +21,10 @@ package be.docarch.odt2braille;
 
 import java.nio.charset.Charset;
 
-import org.daisy.braille.table.AbstractTable;
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.table.EmbosserBrailleConverter;
-import org.daisy.braille.table.EmbosserBrailleConverter.EightDotFallbackMethod;
+import org.daisy.braille.utils.impl.tools.table.AbstractTable;
+import org.daisy.braille.utils.impl.tools.table.EmbosserBrailleConverter;
+import org.daisy.dotify.api.embosser.EightDotFallbackMethod;
+import org.daisy.dotify.api.table.BrailleConverter;
 
 /**
  *

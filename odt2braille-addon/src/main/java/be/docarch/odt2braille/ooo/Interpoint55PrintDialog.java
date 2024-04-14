@@ -19,13 +19,16 @@
 
 package be.docarch.odt2braille.ooo;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.Properties;
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import be.docarch.odt2braille.Constants;
 
 import com.sun.star.uno.XComponentContext;
 import com.sun.star.uno.UnoRuntime;
@@ -53,10 +56,7 @@ import com.sun.star.deployment.PackageInformationProvider;
 import com.sun.star.deployment.XPackageInformationProvider;
 import com.sun.star.beans.XPropertySet;
 
-import java.io.IOException;
-
-import be.docarch.odt2braille.Constants;
-import be_interpoint.Interpoint55Embosser;
+import org.daisy.braille.utils.impl.provider.interpoint.Interpoint55Embosser;
 
 /**
  * Show an OpenOffice.org dialog window for embossing with the Interpoint55 printer. With this dialog, a user can choose

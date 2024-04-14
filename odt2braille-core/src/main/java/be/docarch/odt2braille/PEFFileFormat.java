@@ -20,11 +20,13 @@
 package be.docarch.odt2braille;
 
 import java.io.OutputStream;
-import org.daisy.braille.embosser.EmbosserWriter;
-import org.daisy.braille.embosser.FileFormat;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.TableFilter;
-import org.daisy.factory.Factory;
+
+import org.daisy.dotify.api.embosser.EmbosserWriter;
+import org.daisy.dotify.api.embosser.FileFormat;
+import org.daisy.dotify.api.factory.Factory;
+import org.daisy.dotify.api.factory.FactoryProperties;
+import org.daisy.dotify.api.table.Table;
+import org.daisy.dotify.api.table.TableFilter;
 
 /**
  *
@@ -41,7 +43,7 @@ public class PEFFileFormat implements FileFormat {
 
         this.tableFilter = new TableFilter() {
             @Override
-            public boolean accept(Table object) {
+            public boolean accept(FactoryProperties p) {
                 return false;
             }
         };
@@ -64,6 +66,11 @@ public class PEFFileFormat implements FileFormat {
 
     @Override
     public boolean supportsDuplex() {
+        return true;
+    }
+
+	@Override
+    public boolean supportsVolumes() {
         return true;
     }
 

@@ -19,8 +19,9 @@
 
 package be.docarch.odt2braille;
 
-import org.daisy.braille.tools.Length;
-import org.daisy.paper.SheetPaper;
+import org.daisy.dotify.api.paper.Length;
+import org.daisy.dotify.api.paper.SheetPaper;
+
 import be.docarch.odt2braille.CustomPaperProvider.PaperType;
 
 public class CustomSheetPaper extends SheetPaper {
@@ -33,7 +34,7 @@ public class CustomSheetPaper extends SheetPaper {
     }
 
     public CustomSheetPaper(String name, String desc, Length width, Length height) {
-        super(name, desc, PaperType.SHEET, width, height);
+        super(name, desc, PaperType.SHEET.toString(), width, height);
         this.width = width;
         this.height = height;
     }

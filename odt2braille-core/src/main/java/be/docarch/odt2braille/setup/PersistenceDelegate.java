@@ -19,15 +19,17 @@
 
 package be.docarch.odt2braille.setup;
 
-import java.util.Locale;
-import java.util.List;
+
+import java.lang.reflect.Method;
 import java.beans.DefaultPersistenceDelegate;
 import java.beans.Expression;
 import java.beans.Encoder;
 import java.beans.PropertyDescriptor;
 import java.beans.Statement;
-import java.lang.reflect.Method;
-import org.daisy.braille.tools.Length;
+import java.util.Locale;
+import java.util.List;
+
+import org.daisy.dotify.api.paper.Length;
 
 public class PersistenceDelegate extends DefaultPersistenceDelegate {
 

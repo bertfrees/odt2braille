@@ -23,32 +23,32 @@ import java.util.logging.Logger;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import com.sun.star.uno.XComponentContext;
-import com.sun.star.uno.UnoRuntime;
-import com.sun.star.lang.XComponent;
-import com.sun.star.awt.XDialog;
-import com.sun.star.awt.XControlContainer;
-import com.sun.star.awt.PushButtonType;
-import com.sun.star.awt.XControl;
-import com.sun.star.awt.ActionEvent;
-import com.sun.star.awt.XDialogProvider2;
-import com.sun.star.awt.DialogProvider2;
-import com.sun.star.deployment.PackageInformationProvider;
-import com.sun.star.deployment.XPackageInformationProvider;
-import com.sun.star.beans.XPropertySet;
-
-import com.sun.star.lang.IllegalArgumentException;
-import com.sun.star.lang.WrappedTargetException;
-import com.sun.star.beans.UnknownPropertyException;
-import com.sun.star.beans.PropertyVetoException;
-
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.StatusIndicator;
 import be.docarch.odt2braille.setup.Configuration;
 import be.docarch.odt2braille.setup.ExportConfiguration;
 import be.docarch.odt2braille.ooo.dialog.*;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.embosser.FileFormat;
+
+import com.sun.star.awt.ActionEvent;
+import com.sun.star.awt.DialogProvider2;
+import com.sun.star.awt.PushButtonType;
+import com.sun.star.awt.XControl;
+import com.sun.star.awt.XControlContainer;
+import com.sun.star.awt.XDialog;
+import com.sun.star.awt.XDialogProvider2;
+import com.sun.star.beans.PropertyVetoException;
+import com.sun.star.beans.UnknownPropertyException;
+import com.sun.star.beans.XPropertySet;
+import com.sun.star.deployment.PackageInformationProvider;
+import com.sun.star.deployment.XPackageInformationProvider;
+import com.sun.star.lang.IllegalArgumentException;
+import com.sun.star.lang.WrappedTargetException;
+import com.sun.star.lang.XComponent;
+import com.sun.star.uno.UnoRuntime;
+import com.sun.star.uno.XComponentContext;
+
+import org.daisy.dotify.api.embosser.FileFormat;
+import org.daisy.dotify.api.table.Table;
 
 /**
  *

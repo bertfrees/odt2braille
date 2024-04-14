@@ -20,21 +20,21 @@
 package be.docarch.odt2braille.setup;
 
 import java.io.Serializable;
+import java.nio.charset.UnsupportedCharsetException;
 import java.util.Collection;
 import java.util.ArrayList;
 import java.util.logging.Logger;
-
 import java.util.NoSuchElementException;
-import java.nio.charset.UnsupportedCharsetException;
 
 import be.docarch.odt2braille.Constants;
 import be.docarch.odt2braille.FileFormatCatalog;
 
-import org.daisy.braille.embosser.FileFormat;
-import org.daisy.braille.embosser.EmbosserFeatures;
-import org.daisy.braille.table.Table;
-import org.daisy.braille.table.BrailleConverter;
-import org.daisy.braille.table.TableCatalog;
+import org.daisy.dotify.api.embosser.FileFormat;
+import org.daisy.dotify.api.embosser.EmbosserFeatures;
+import org.daisy.dotify.api.factory.FactoryProperties;
+import org.daisy.dotify.api.table.Table;
+import org.daisy.dotify.api.table.BrailleConverter;
+import org.daisy.dotify.api.table.TableCatalog;
 
 public class ExportConfiguration implements Serializable,
                                             PEFConfiguration {
@@ -235,9 +235,10 @@ public class ExportConfiguration implements Serializable,
         
         public Collection<Table> options() {
             Collection<Table> options = new ArrayList();
-            for (Table tab : charSetCatalog.list()) {
-                if (accept(tab)) {
-                    options.add(tab);
+            for (FactoryProperties p : charSetCatalog.list()) {
+                Table t = charSetCatalog.get(p.getIdentifier());
+                if (accept(t)) {
+                    options.add(t);
                 }
             }
             return options;

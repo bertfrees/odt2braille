@@ -21,24 +21,20 @@ package be.docarch.odt2braille;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.NoSuchElementException;
 import javax.xml.namespace.NamespaceContext;
-import javax.xml.transform.TransformerException;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 
 import net.sf.saxon.xpath.XPathFactoryImpl;
 
-import org.apache.xpath.XPathAPI;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.w3c.dom.traversal.NodeIterator;
+
 import org.xml.sax.InputSource;
 
 /**
@@ -52,9 +48,9 @@ public class XPathUtils {
 
     private static final Logger logger = Constants.getLogger();
 
-    public static Double evaluateNumber(InputStream stream, String expression, NamespaceContext namespace) {
+    public static Double evaluateNumber(InputStream context, String expression, NamespaceContext namespace) {
         try {
-            return (Double)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.NUMBER);
+            return (Double)getXPath(namespace).compile(expression).evaluate(new InputSource(context), XPathConstants.NUMBER);
         } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
@@ -76,29 +72,17 @@ public class XPathUtils {
         }
     }
 
-    public static Integer evaluateInteger(InputStream stream, String expression, NamespaceContext namespace) {
-        return evaluateNumber(stream, expression, namespace).intValue();
+    public static Integer evaluateInteger(InputStream context, String expression, NamespaceContext namespace) {
+        return evaluateNumber(context, expression, namespace).intValue();
     }
 
     public static Integer evaluateInteger(Node context, String expression, NamespaceContext namespace) {
         return evaluateNumber(context, expression, namespace).intValue();
     }
 
-    public static Integer evaluateInteger(Node context, String expression) {
+    public static Boolean evaluateBoolean(InputStream context, String expression, NamespaceContext namespace) {
         try {
-            return Integer.parseInt(XPathAPI.eval(context, expression).str());
-        } catch (TransformerException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw e;
-        }
-    }
-
-    public static Boolean evaluateBoolean(InputStream stream, String expression, NamespaceContext namespace) {
-        try {
-            return (Boolean)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.BOOLEAN);
+            return (Boolean)getXPath(namespace).compile(expression).evaluate(new InputSource(context), XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
@@ -108,21 +92,9 @@ public class XPathUtils {
         }
     }
 
-    public static Boolean evaluateBoolean(Node context, String expression) {
+    public static Boolean evaluateBoolean(Node context, String expression, NamespaceContext namespace) {
         try {
-            return XPathAPI.eval(context, expression).bool();
-        } catch (TransformerException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw e;
-        }
-    }
-
-    public static String evaluateString(InputStream stream, String expression, NamespaceContext namespace) {
-        try {
-            return (String)getXPath(namespace).compile(expression).evaluate(new InputSource(stream), XPathConstants.STRING);
+            return (Boolean)getXPath(namespace).compile(expression).evaluate(context, XPathConstants.BOOLEAN);
         } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
@@ -132,10 +104,10 @@ public class XPathUtils {
         }
     }
 
-    public static String evaluateString(Node context, String expression) {
+    public static String evaluateString(InputStream context, String expression, NamespaceContext namespace) {
         try {
-            return XPathAPI.eval(context, expression).str();
-        } catch (TransformerException e) {
+            return (String)getXPath(namespace).compile(expression).evaluate(new InputSource(context), XPathConstants.STRING);
+        } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
@@ -144,10 +116,10 @@ public class XPathUtils {
         }
     }
 
-    public static Node evaluateNode(Element context, String expression) {
+    public static String evaluateString(Node context, String expression, NamespaceContext namespace) {
         try {
-            return XPathAPI.selectSingleNode(context, expression);
-        } catch (TransformerException e) {
+            return (String)getXPath(namespace).compile(expression).evaluate(context, XPathConstants.STRING);
+        } catch (XPathExpressionException e) {
             logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
             throw new RuntimeException(e);
         } catch (RuntimeException e) {
@@ -156,47 +128,11 @@ public class XPathUtils {
         }
     }
 
-    private static NodeIterator evaluateNodeIterator(Node context, String expression) {
-        try {
-            return XPathAPI.selectNodeIterator(context, expression);
-        } catch (TransformerException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw new RuntimeException(e);
-        } catch (RuntimeException e) {
-            logger.log(Level.SEVERE, "Error evaluating xpath: " + expression, e);
-            throw e;
-        }
-    }
-
-    public static Iterable<Node> evaluateNodes(final Node context, final String expression) {
-        return new Iterable<Node>() {
-            public Iterator<Node> iterator() {
-                return new Iterator<Node>() {
-                    NodeIterator nodeIterator = evaluateNodeIterator(context, expression);
-                    Node next = null;
-                    boolean nextComputed = false;
-                    public boolean hasNext() {
-                        if (!nextComputed) {
-                            next = nodeIterator.nextNode();
-                            nextComputed = true;
-                        }
-                        return next != null;
-                    }
-                    public Node next() {
-                        if (hasNext()) {
-                            Node ret = next;
-                            next = null;
-                            nextComputed = false;
-                            return ret;
-                        } else
-                            throw new NoSuchElementException();
-                    }
-                    public void remove() {
-                        throw new UnsupportedOperationException();
-                    }
-                };
-            }
-        };
+    public static Node evaluateNode(Element context, String expression, NamespaceContext namespace) {
+        NodeList nodeList = evaluateNodeList(context, expression, namespace);
+        if (nodeList.getLength() > 0)
+            return nodeList.item(0);
+        return null;
     }
 
     private static NodeList evaluateNodeList(Node context, String expression, NamespaceContext namespace) {

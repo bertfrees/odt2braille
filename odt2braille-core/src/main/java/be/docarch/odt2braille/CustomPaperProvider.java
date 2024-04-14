@@ -21,8 +21,9 @@ package be.docarch.odt2braille;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import org.daisy.paper.Paper;
-import org.daisy.paper.PaperProvider;
+
+import org.daisy.dotify.api.paper.Paper;
+import org.daisy.dotify.api.paper.PaperProvider;
 
 /**
  *
@@ -36,6 +37,12 @@ public class CustomPaperProvider implements PaperProvider {
         ROLL
         // FIXME: partly reverted r186
         //, ROWS_COLUMNS
+        ;
+
+        @Override
+        public String toString() {
+            return "be.docarch.odt2braille.CustomPaperProvider.PaperType" + super.toString();
+        }
     };
 
     private final ArrayList<Paper> papers;
