@@ -37,7 +37,7 @@
 		<dependency>
 			<groupId>org.daisy.libs</groupId>
 			<artifactId>com.xmlcalabash</artifactId>
-			<scope>test</scope>
+			<scope>provided</scope>
 		</dependency>
 		<!--
 		    xproc-engine-calabash is put in test dependencies and not in plugin dependencies because
