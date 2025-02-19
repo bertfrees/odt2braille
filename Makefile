@@ -3,7 +3,7 @@ M2_HOME := $(shell $(MVN) org.apache.maven.plugins:maven-help-plugin:3.4.0:effec
                    | grep localRepository                                                     \
                    | sed 's| *<localRepository>\(.*\)</localRepository> *|\1|g'               )
 
-LOUISUTDML_VERSION := 2.11.0-p1-SNAPSHOT
+LOUISUTDML_VERSION := 2.11.0-p1
 LOUIS_VERSION := 3.21.0-p1
 
 rwildcard = $(shell [ -d $1 ] && find $1 -type f -name '$2' | sed 's/ /\\ /g')
@@ -43,12 +43,14 @@ $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-Mac
 	       -Dartifact=org.liblouis:louis:$(LOUIS_VERSION):nar:x86_64-MacOSX-gpp-shared
 endif
 
+ifneq (,$(findstring -SNAPSHOT,$(LOUISUTDML_VERSION)))
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-x86_64-MacOSX-gpp-shared.nar \
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-x86_64-MacOSX-gpp-executable.nar : \
 		libs/liblouisutdml/pom.xml \
 		$(call rwildcard,libs/liblouisutdml/src/,*) \
 		$(M2_HOME)/com/github/maven-nar/nar-maven-plugin/3.5.3-SNAPSHOT/nar-maven-plugin-3.5.3-SNAPSHOT.jar
 	$(MAKE) -C $(dir $<) clean compile-macosx install
+endif
 
 install-windows : \
 		$(M2_HOME)/be/docarch/oxt-maven-plugin/1.0-SNAPSHOT/oxt-maven-plugin-1.0-SNAPSHOT.jar \
@@ -73,8 +75,10 @@ $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64
 	       -Dartifact=org.liblouis:louis:$(LOUIS_VERSION):nar:x86_64-w64-mingw32-gpp-executable
 endif
 
+ifneq (,$(findstring -SNAPSHOT,$(LOUISUTDML_VERSION)))
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-i686-w64-mingw32-gpp-executable.nar : \
 		libs/liblouisutdml/pom.xml \
 		$(call rwildcard,libs/liblouisutdml/src/,*) \
 		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar
 	$(MAKE) -C $(dir $<) clean compile-windows install
+endif

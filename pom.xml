@@ -145,7 +145,7 @@
 			<dependency>
 				<groupId>org.liblouis</groupId>
 				<artifactId>louisutdml</artifactId>
-				<version>2.11.0-p1-SNAPSHOT</version>
+				<version>2.11.0-p1</version>
 				<type>nar</type>
 			</dependency>
 			<dependency>
