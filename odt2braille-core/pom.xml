@@ -111,7 +111,7 @@
 						<artifactId>maven-dependency-plugin</artifactId>
 						<executions>
 							<execution>
-								<id>macosx_x86_64</id>
+								<id>macosx_aarch64</id>
 								<phase>generate-test-resources</phase>
 								<goals>
 									<goal>unpack</goal>
@@ -121,7 +121,7 @@
 										<artifactItem>
 											<groupId>be.docarch</groupId>
 											<artifactId>odt2braille-liblouis</artifactId>
-											<classifier>macosx_x86_64</classifier>
+											<classifier>macosx_aarch64</classifier>
 											<type>zip</type>
 											<outputDirectory>target/liblouis</outputDirectory>
 										</artifactItem>
