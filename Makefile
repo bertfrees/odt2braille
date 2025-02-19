@@ -36,7 +36,7 @@ ifneq (,$(findstring -SNAPSHOT,$(LOUIS_VERSION)))
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-MacOSX-gpp-shared.nar : \
 		libs/liblouis/pom.xml \
 		$(call rwildcard,libs/liblouis/src/,*)
-	make -C $(dir $<) clean compile-macosx install
+	$(MAKE) -C $(dir $<) clean compile-macosx install
 else
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-MacOSX-gpp-shared.nar :
 	$(MVN) org.apache.maven.plugins:maven-dependency-plugin:3.0.0:get \
@@ -48,7 +48,7 @@ $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML
 		libs/liblouisutdml/pom.xml \
 		$(call rwildcard,libs/liblouisutdml/src/,*) \
 		$(M2_HOME)/com/github/maven-nar/nar-maven-plugin/3.5.3-SNAPSHOT/nar-maven-plugin-3.5.3-SNAPSHOT.jar
-	make -C $(dir $<) clean compile-macosx install
+	$(MAKE) -C $(dir $<) clean compile-macosx install
 
 install-windows : \
 		$(M2_HOME)/be/docarch/oxt-maven-plugin/1.0-SNAPSHOT/oxt-maven-plugin-1.0-SNAPSHOT.jar \
@@ -63,7 +63,7 @@ $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-m
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar : \
 		libs/liblouis/pom.xml \
 		$(call rwildcard,libs/liblouis/src/,*)
-	make -C $(dir $<) clean compile-windows install
+	$(MAKE) -C $(dir $<) clean compile-windows install
 else
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar :
 	$(MVN) org.apache.maven.plugins:maven-dependency-plugin:3.0.0:get \
@@ -77,4 +77,4 @@ $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML
 		libs/liblouisutdml/pom.xml \
 		$(call rwildcard,libs/liblouisutdml/src/,*) \
 		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar
-	make -C $(dir $<) clean compile-windows install
+	$(MAKE) -C $(dir $<) clean compile-windows install
