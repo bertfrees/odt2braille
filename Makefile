@@ -62,8 +62,7 @@ ifneq (,$(findstring -SNAPSHOT,$(LOUIS_VERSION)))
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar \
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar : \
 		libs/liblouis/pom.xml \
-		$(call rwildcard,libs/liblouis/src/,*) \
-		$(M2_HOME)/com/github/maven-nar/nar-maven-plugin/3.5.3-SNAPSHOT/nar-maven-plugin-3.5.3-SNAPSHOT.jar
+		$(call rwildcard,libs/liblouis/src/,*)
 	make -C $(dir $<) clean compile-windows install
 else
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar :
