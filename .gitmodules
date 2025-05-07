@@ -1,18 +1,18 @@
 [submodule "utils/oxt-maven-plugin"]
 	path = utils/oxt-maven-plugin
-	url = git@github.com:bertfrees/oxt-maven-plugin.git
+	url = https://github.com/bertfrees/oxt-maven-plugin.git
 [submodule "utils/l10n-maven-plugin"]
 	path = utils/l10n-maven-plugin
-	url = git@github.com:bertfrees/l10n-maven-plugin.git
+	url = https://github.com/bertfrees/l10n-maven-plugin.git
 [submodule "libs/accessodf"]
 	path = libs/accessodf
-	url = git@github.com:bertfrees/accessodf.git
+	url = https://github.com/bertfrees/accessodf.git
 [submodule "utils/nar-maven-plugin"]
 	path = utils/nar-maven-plugin
-	url = git@github.com:bertfrees/maven-nar-plugin.git
+	url = https://github.com/bertfrees/maven-nar-plugin.git
 [submodule "libs/liblouisutdml"]
 	path = libs/liblouisutdml
-	url = git@github.com:liblouis/liblouisutdml-nar.git
+	url = https://github.com/liblouis/liblouisutdml-nar.git
 [submodule "libs/liblouis"]
 	path = libs/liblouis
-	url = git@github.com:liblouis/liblouis-nar.git
+	url = https://github.com/liblouis/liblouis-nar.git
