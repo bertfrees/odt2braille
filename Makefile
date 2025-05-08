@@ -36,10 +36,7 @@ rwildcard = $(shell if (new File("$1").isDirectory()) glob("$1**/$2").forEach(x 
 
 install : \
 		$(M2_HOME)/be/docarch/oxt-maven-plugin/1.0-SNAPSHOT/oxt-maven-plugin-1.0-SNAPSHOT.jar \
-		$(M2_HOME)/be/docarch/l10n-maven-plugin/1.0-SNAPSHOT/l10n-maven-plugin-1.0-SNAPSHOT.jar \
-		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-aarch64-MacOSX-gpp-shared.nar \
-		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-shared.nar \
-		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-executable.nar
+		$(M2_HOME)/be/docarch/l10n-maven-plugin/1.0-SNAPSHOT/l10n-maven-plugin-1.0-SNAPSHOT.jar
 	exec("$(SHELL)", $(call quote-for-java,$(mvn)), "--", "clean", "install", "-Pmacosx_aarch64");
 
 # Maven can not automatically resolve these dependencies
@@ -59,18 +56,18 @@ $(M2_HOME)/com/github/maven-nar/nar-maven-plugin/3.5.3-SNAPSHOT/nar-maven-plugin
 	exec(new File("$(dir $<)"), "$(CURDIR)/$(SHELL)", $(call quote-for-java,$(mvn)), "--", "clean", "install");
 
 ifneq (,$(findstring -SNAPSHOT,$(LOUIS_VERSION)))
+install : \
+		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-aarch64-MacOSX-gpp-shared.nar \
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-aarch64-MacOSX-gpp-shared.nar : \
 		libs/liblouis/pom.xml \
 		$(call rwildcard,libs/liblouis/src/,*)
 	exec("$(MAKE)", "-C", "$(dir $<)", "clean", "compile-macosx", "install");
-else
-$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-aarch64-MacOSX-gpp-shared.nar :
-	exec("$(SHELL)", $(call quote-for-java,$(mvn)), "--", \
-	     "org.apache.maven.plugins:maven-dependency-plugin:3.0.0:get", \
-	     "-Dartifact=org.liblouis:louis:$(LOUIS_VERSION):nar:aarch64-MacOSX-gpp-shared");
 endif
 
 ifneq (,$(findstring -SNAPSHOT,$(LOUISUTDML_VERSION)))
+install : \
+		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-shared.nar \
+		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-executable.nar
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-shared.nar \
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-aarch64-MacOSX-gpp-executable.nar : \
 		libs/liblouisutdml/pom.xml \
@@ -81,30 +78,23 @@ endif
 
 install-windows : \
 		$(M2_HOME)/be/docarch/oxt-maven-plugin/1.0-SNAPSHOT/oxt-maven-plugin-1.0-SNAPSHOT.jar \
-		$(M2_HOME)/be/docarch/l10n-maven-plugin/1.0-SNAPSHOT/l10n-maven-plugin-1.0-SNAPSHOT.jar \
-		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar \
-		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar \
-		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-i686-w64-mingw32-gpp-executable.nar
+		$(M2_HOME)/be/docarch/l10n-maven-plugin/1.0-SNAPSHOT/l10n-maven-plugin-1.0-SNAPSHOT.jar
 	exec("$(SHELL)", $(call quote-for-java,$(mvn)), "--", "clean", "install", "-Pwindows_x86");
 
 ifneq (,$(findstring -SNAPSHOT,$(LOUIS_VERSION)))
+install-windows : \
+		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar \
+		$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar \
 $(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar : \
 		libs/liblouis/pom.xml \
 		$(call rwildcard,libs/liblouis/src/,*)
 	exec("$(MAKE)", "-C", "$(dir $<)", "clean", "compile-windows", "install");
-else
-$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-i686-w64-mingw32-gpp-executable.nar :
-	exec("$(SHELL)", $(call quote-for-java,$(mvn)), "--", \
-	     "org.apache.maven.plugins:maven-dependency-plugin:3.0.0:get", \
-	     "-Dartifact=org.liblouis:louis:$(LOUIS_VERSION):nar:i686-w64-mingw32-gpp-executable");
-$(M2_HOME)/org/liblouis/louis/$(LOUIS_VERSION)/louis-$(LOUIS_VERSION)-x86_64-w64-mingw32-gpp-executable.nar :
-	exec("$(SHELL)", $(call quote-for-java,$(mvn)), "--", \
-	     "org.apache.maven.plugins:maven-dependency-plugin:3.0.0:get", \
-	     "-Dartifact=org.liblouis:louis:$(LOUIS_VERSION):nar:x86_64-w64-mingw32-gpp-executable");
 endif
 
 ifneq (,$(findstring -SNAPSHOT,$(LOUISUTDML_VERSION)))
+install-windows : \
+		$(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-i686-w64-mingw32-gpp-executable.nar
 $(M2_HOME)/org/liblouis/louisutdml/$(LOUISUTDML_VERSION)/louisutdml-$(LOUISUTDML_VERSION)-i686-w64-mingw32-gpp-executable.nar : \
 		libs/liblouisutdml/pom.xml \
 		$(call rwildcard,libs/liblouisutdml/src/,*) \
